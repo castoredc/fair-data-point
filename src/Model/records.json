@@ -1,0 +1,516 @@
+{
+  "_links": {
+    "self": {
+      "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record?page=1"
+    },
+    "first": {
+      "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record"
+    },
+    "last": {
+      "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record?page=1"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "id": "NL-TES-000001",
+        "record_id": "NL-TES-000001",
+        "last_opened_step": "B5F2E67E-1D57-3292-80BB-2AD65E76928F",
+        "progress": 87,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-07 16:10:14.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "FBC956DA-4AE9-F760-132A-8E4B87A41BCB",
+        "updated_on": {
+          "date": "2018-02-08 17:37:17.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000001"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000002",
+        "record_id": "NL-TES-000002",
+        "last_opened_step": "B5F2E67E-1D57-3292-80BB-2AD65E76928F",
+        "progress": 93,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:58:11.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:58:11.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000002"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000003",
+        "record_id": "NL-TES-000003",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:58:11.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:58:11.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000003"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000004",
+        "record_id": "NL-TES-000004",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:58:12.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:58:12.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000004"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000005",
+        "record_id": "NL-TES-000005",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:58:12.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:58:12.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000005"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000006",
+        "record_id": "NL-TES-000006",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:59:05.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:59:05.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000006"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000007",
+        "record_id": "NL-TES-000007",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:59:05.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:59:05.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000007"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000008",
+        "record_id": "NL-TES-000008",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:59:06.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:59:06.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000008"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000009",
+        "record_id": "NL-TES-000009",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:59:06.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:59:06.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000009"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000010",
+        "record_id": "NL-TES-000010",
+        "last_opened_step": "B5F2E67E-1D57-3292-80BB-2AD65E76928F",
+        "progress": 87,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:59:06.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:59:06.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000010"
+          }
+        }
+      },
+      {
+        "id": "NL-TES-000011",
+        "record_id": "NL-TES-000011",
+        "last_opened_step": null,
+        "progress": 0,
+        "status": "open",
+        "archived": false,
+        "archived_reason": null,
+        "created_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "created_on": {
+          "date": "2018-02-28 10:59:07.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "updated_by": "01844759-3EE3-83B9-EE00-0ED4C15B06AC",
+        "updated_on": {
+          "date": "2018-02-28 10:59:07.000000",
+          "timezone_type": 3,
+          "timezone": "Europe\/Amsterdam"
+        },
+        "randomized_id": null,
+        "randomization_group": null,
+        "randomization_group_name": null,
+        "_embedded": {
+          "institute": {
+            "id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "institute_id": "7D6CCEAA-9AA0-A620-5537-B204DA802A76",
+            "name": "Test Institute",
+            "abbreviation": "TES",
+            "code": "TES",
+            "order": 0,
+            "deleted": false,
+            "_links": {
+              "self": {
+                "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/institute\/7D6CCEAA-9AA0-A620-5537-B204DA802A76"
+              }
+            }
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "https:\/\/data.castoredc.com\/api\/study\/57051B03-59C1-23A3-3ADA-7AA791481606\/record\/NL-TES-000011"
+          }
+        }
+      }
+    ]
+  },
+  "page_count": 1,
+  "page_size": 25,
+  "total_items": 11,
+  "page": 1
+}

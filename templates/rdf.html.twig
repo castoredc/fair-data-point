@@ -1,0 +1,19 @@
+<https://CastorURI.nl/Person/{{ record.record_id }}> a <http://purl.obolibrary.org/obo/OBI_0000093> .
+
+<https://CastorURI.nl/Diagnosis/{{ record.record_id }}> a <{{ record.rd_diagnosis_orpha }}> .
+
+<https://CastorURI.nl/Person/{{ record.record_id }}> <http://purl.obolibrary.org/obo/ERO_0002100> <https://CastorURI.nl/Diagnosis/{{ record.record_id }}> .
+
+<https://CastorURI.nl/BirthDate/{{ record.record_id }}> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C68615> ;
+<http://semanticscience.org/resource/SIO_000300> "{{ record.date_of_birth }}"^^<http://www.w3.org/2001/XMLSchema#date> .
+
+<https://CastorURI.nl/Person/{{ record.record_id }}> <http://semanticscience.org/resource/SIO_000008> <https://CastorURI.nl/BirthDate/{{ record.record_id }}> .
+
+<https://CastorURI.nl/Activity/{{ record.record_id }}> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C130322> .
+
+<https://CastorURI.nl/Score/{{ record.record_id }}> a <http://purl.bioontology.org/ontology/SNOMEDCT/715823002> , <http://purl.obolibrary.org/obo/NCIT_C25613> ;
+<http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_score }}"^^<http://www.w3.org/2001/XMLSchema#int> .
+
+<https://CastorURI.nl/Activity/{{ record.record_id }}> <http://www.w3.org/ns/prov#wasGeneratedBy> <https://CastorURI.nl/Score/{{ record.record_id }}> .
+
+<https://CastorURI.nl/Person/{{ record.record_id }}> <http://purl.obolibrary.org/obo/RO_0000056> <https://CastorURI.nl/Activity/{{ record.record_id }}> .
