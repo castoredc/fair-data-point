@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\ApiClient;
+use EasyRdf_Namespace;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -10,19 +11,89 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class RDFRendererController extends Controller
 {
-
     private $studyId = '57051B03-59C1-23A3-3ADA-7AA791481606';
     private $secret = '25e3956844bb52ea99c4230c139a3f67';
     private $clientId = '34413D8C-05D9-A974-F3ED-654A2EBE2FDC';
-
+    private $url = 'vasca.pilot.castoredc.com';
 
     /**
      * @Route("/fdp", name="fdp_render")
      */
     public function fdpAction()
     {
-        
+        $graph = new \EasyRdf_Graph();
+        EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
 
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:title', 'Castor EDC VASCA FAIR Data Point');
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:identifier', 'CastorEDC-VASCA');
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:hasVersion', '0.1');
+        $graph->addLiteral(
+            'https://' . $this->url . '/fdp',
+            'dcterms:description',
+            'Lorum ipsum dolar si amet.'
+        );
+        $graph->addResource('https://' . $this->url . '/fdp', 'dcterms:publisher', 'https://vascern.eu/');
+        $graph->addResource(
+            'https://' . $this->url . '/fdp',
+            'dcterms:language',
+            'http://id.loc.gov/vocabulary/iso639-1/en'
+        );
+        $graph->addResource(
+            'https://' . $this->url . '/fdp',
+            'dcterms:license',
+            'TBD'
+        );
+        $graph->addResource(
+            'https://' . $this->url . '/fdp',
+            'http://www.re3data.org/schema/3-0#dataCatalog',
+            'https://' . $this->url . '/fdp/vasca'
+        );
+
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
+
+    /**
+     * @Route("/fdp/vasca", name="fdp_vasca_render")
+     */
+    public function vascaAction()
+    {
+        $graph = new \EasyRdf_Graph();
+        EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
+
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:title', 'Castor EDC VASCA FAIR Data Point');
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:identifier', 'CastorEDC-VASCA');
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:hasVersion', '0.1');
+        $graph->addLiteral(
+            'https://' . $this->url . '/fdp',
+            'dcterms:description',
+            'Lorum ipsum dolar si amet.'
+        );
+        $graph->addResource('https://' . $this->url . '/fdp', 'dcterms:publisher', 'https://vascern.eu/');
+        $graph->addResource(
+            'https://' . $this->url . '/fdp',
+            'dcterms:language',
+            'http://id.loc.gov/vocabulary/iso639-1/en'
+        );
+        $graph->addResource(
+            'https://' . $this->url . '/fdp',
+            'dcterms:license',
+            'TBD'
+        );
+        $graph->addResource(
+            'https://' . $this->url . '/fdp',
+            'http://www.re3data.org/schema/3-0#dataCatalog',
+            'https://' . $this->url . '/fdp/vasca'
+        );
+
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
     }
 
     /**
