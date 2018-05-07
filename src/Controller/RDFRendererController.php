@@ -24,15 +24,16 @@ class RDFRendererController extends Controller
         $graph = new \EasyRdf_Graph();
         EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
 
-        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:title', 'Castor EDC VASCA FAIR Data Point');
+        $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:title', 'Registry of vascular anomalies');
         $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:identifier', 'CastorEDC-VASCA');
         $graph->addLiteral('https://' . $this->url . '/fdp', 'dcterms:hasVersion', '0.1');
         $graph->addLiteral(
             'https://' . $this->url . '/fdp',
             'dcterms:description',
-            'Lorum ipsum dolar si amet.'
+            'Databases of the ERN vascular anomalies'
         );
-        $graph->addResource('https://' . $this->url . '/fdp', 'dcterms:publisher', 'https://vascern.eu/');
+        $graph->addResource('https://' . $this->url . '/fdp', 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
+        $graph->addResource('https://' . $this->url . '/fdp', 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
         $graph->addResource(
             'https://' . $this->url . '/fdp',
             'dcterms:language',
