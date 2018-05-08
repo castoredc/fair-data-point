@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class RDFRendererController extends Controller
 {
-    private $studyId = '57051B03-59C1-23A3-3ADA-7AA791481606';
     private $secret = '25e3956844bb52ea99c4230c139a3f67';
     private $clientId = '34413D8C-05D9-A974-F3ED-654A2EBE2FDC';
     #private $url = 'https://vasca.pilot.castoredc.com';
@@ -42,6 +41,8 @@ class RDFRendererController extends Controller
 
         $graph = new \EasyRdf_Graph();
 
+        $graph->addResource($this->url, 'a', 'r3d:Repository');
+
         $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
         $graph->addLiteral($this->url, 'dcterms:hasVersion', '0.1');
         $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
@@ -70,6 +71,8 @@ class RDFRendererController extends Controller
 
         $graph = new \EasyRdf_Graph();
 
+        $graph->addResource($this->url, 'a', 'dcat:Catalog');
+
         $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
         $graph->addLiteral($this->url, 'dcterms:hasVersion', '0.1');
         $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
@@ -92,9 +95,9 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/fdp/{catalog}/{study}", name="study_render")
+     * @Route("/fdp/{catalog}/{study}", name="dataset_render")
      */
-    public function studyAction($catalog, $study)
+    public function datasetAction($catalog, $study)
     {
         $this->url .= '/fdp/' . $catalog . '/' . $study;
 
@@ -103,6 +106,8 @@ class RDFRendererController extends Controller
         $study = $apiClient->getStudy($study);
 
         $graph = new \EasyRdf_Graph();
+
+        $graph->addResource($this->url, 'a', 'dcat:Dataset');
 
         $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
         $graph->addLiteral($this->url, 'dcterms:hasVersion', $study['version']);
@@ -136,13 +141,14 @@ class RDFRendererController extends Controller
 
         $graph = new \EasyRdf_Graph();
 
+        $graph->addResource($this->url, 'a', 'dcat:Distribution');
+
         $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
         $graph->addLiteral($this->url, 'dcterms:hasVersion', $study['version']);
         $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
 
         $graph->addResource($this->url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
         $graph->addResource($this->url, 'dcterms:license', 'TBD');
-        $graph->addResource($this->url, 'a', 'dcat:Distribution');
 
         $graph->addResource($this->url, 'dcat:accessURL', $this->url . '/rdf');
         $graph->addLiteral($this->url, 'dcat:mediaType', 'text/turtle');
@@ -165,17 +171,16 @@ class RDFRendererController extends Controller
         $apiClient = new ApiClient();
         $apiClient->auth($this->clientId, $this->secret);
 
-        $metadatas = $apiClient->getMetadata($this->studyId);
-        $apiFields = $apiClient->getFields($this->studyId);
+        $metadatas = $apiClient->getMetadata($study);
+        $apiFields = $apiClient->getFields($study);
+        $records = $apiClient->getRecords($study);
+
         $fields = [];
         $fieldVariables = [];
-        foreach($apiFields as $field)
-        {
+        foreach($apiFields as $field) {
             $fieldVariables[$field['id']] = $field['field_variable_name'];
             $fields[$field['id']] = $field;
         }
-
-        $records = $apiClient->getRecords($this->studyId);
 
         $templateData = [
             'records' => []
@@ -185,7 +190,7 @@ class RDFRendererController extends Controller
             if ($record['archived']) {
                 continue;
             }
-            $values = $apiClient->getRecordDataPoints($this->studyId, $record['record_id']);
+            $values = $apiClient->getRecordDataPoints($study, $record['record_id']);
             $fieldValues = [];
 
             foreach ($values as $value) {
