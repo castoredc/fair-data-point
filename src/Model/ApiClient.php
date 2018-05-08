@@ -59,6 +59,23 @@ class ApiClient
         $this->token = $data['access_token'];
     }
 
+
+    public function getStudy(string $studyId)
+    {
+        $response = $this->client->request(
+            'GET',
+            $this->server . '/api/study/' . $studyId,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Accept' => 'application/json'
+                ]
+            ]
+        );
+        $study = json_decode($response->getBody(), true);
+        return $study;
+    }
+
     public function getRecords(string $studyId)
     {
         if ($this->useCache) {
