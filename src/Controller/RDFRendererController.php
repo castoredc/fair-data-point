@@ -16,9 +16,16 @@ class RDFRendererController extends Controller
     private $clientId = '34413D8C-05D9-A974-F3ED-654A2EBE2FDC';
     #private $url = 'https://vasca.pilot.castoredc.com';
     private $url = 'http://127.0.0.1:8000';
+    private $metadataName = 'SNOMED';
 
     private $studies = [
         'radboud' => '57051B03-59C1-23A3-3ADA-7AA791481606'
+    ];
+
+    private $optionGroupFields = [
+        'radio',
+        'dropdown',
+        'checkbox'
     ];
 
     public function __construct()
@@ -91,7 +98,7 @@ class RDFRendererController extends Controller
     {
         $this->url .= '/fdp/' . $catalog . '/' . $study;
 
-        $apiClient = new ApiClient($useCache = false);
+        $apiClient = new ApiClient();
         $apiClient->auth($this->clientId, $this->secret);
         $study = $apiClient->getStudy($study);
 
@@ -123,7 +130,7 @@ class RDFRendererController extends Controller
     {
         $this->url .= '/fdp/' . $catalog . '/' . $study. '/distribution';
 
-        $apiClient = new ApiClient($useCache = false);
+        $apiClient = new ApiClient();
         $apiClient->auth($this->clientId, $this->secret);
         $study = $apiClient->getStudy($study);
 
@@ -155,8 +162,19 @@ class RDFRendererController extends Controller
     {
         $this->url .= '/fdp/' . $catalog . '/' . $study;
 
-        $apiClient = new ApiClient($useCache = false);
+        $apiClient = new ApiClient();
         $apiClient->auth($this->clientId, $this->secret);
+
+        $metadatas = $apiClient->getMetadata($this->studyId);
+        $apiFields = $apiClient->getFields($this->studyId);
+        $fields = [];
+        $fieldVariables = [];
+        foreach($apiFields as $field)
+        {
+            $fieldVariables[$field['id']] = $field['field_variable_name'];
+            $fields[$field['id']] = $field;
+        }
+
         $records = $apiClient->getRecords($this->studyId);
 
         $templateData = [
@@ -171,21 +189,30 @@ class RDFRendererController extends Controller
             $fieldValues = [];
 
             foreach ($values as $value) {
-                $fieldValues[$value['field_id']] = $value['field_value'];
+                $fieldId = $value['field_id'];
+                $fieldVariable = $fieldVariables[$value['field_id']];
+
+                if(in_array($fields[$fieldId]['field_type'], $this->optionGroupFields) && isset($metadatas[$fieldId]) && isset($metadatas[$fieldId][$value['field_value']]))
+                {
+                    $fieldValues[$fieldVariable] = $metadatas[$fieldId][$value['field_value']][$this->metadataName];
+                }
+                else
+                {
+                    $fieldValues[$fieldVariable] = $value['field_value'];
+                }
             }
 
             $templateData['records'][] = [
                 'record_id' => $record['record_id'],
-                'rd_diagnosis_orpha' => $fieldValues['8321A9FE-D4F7-2D81-580C-4E6424D818C0'] ?? 'unknown',
-                'date_of_birth' => $fieldValues['B9768A6C-DB47-C614-0953-486962582374'] ?? 'unknown',
-                'whodas_score' => $fieldValues['56E1641F-65D0-DBA3-D28A-391A9850B4F7'] ?? 'unknown',
+                'rd_diagnosis_orpha' => $fieldValues['rd_diagnosis_orpha'] ?? 'unknown',
+                'date_of_birth' => $fieldValues['date_of_birth'] ?? 'unknown',
+                'whodas_score' => $fieldValues['whodas_score'] ?? 'unknown',
             ];
 
             $templateData['castor'] = [
                 'uri' => $this->url
             ];
         }
-
 
         return $this->render('rdf-list.html.twig', $templateData,
             new Response(

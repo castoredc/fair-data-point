@@ -19,31 +19,22 @@ class ApiClient
      */
     private $server = '';
 
-    /**
-     * @var bool
-     */
-    private $useCache = false;
+    private $pageSize = 1000;
 
     /**
      * ApiClient constructor.
-     * @param bool $useCache
      * @param string $server
      */
     public function __construct(
-        $useCache = false,
         $server = 'https://data.castoredc.com'
     )
     {
         $this->client = new Client();
         $this->server = $server;
-        $this->useCache = $useCache;
     }
 
     public function auth(string $clientId, string $secret)
     {
-        if ($this->useCache) {
-            return;
-        }
         $response = $this->client->request('POST',
             $this->server . '/oauth/token',
             [
@@ -58,7 +49,6 @@ class ApiClient
         $data = json_decode($response->getBody(), true);
         $this->token = $data['access_token'];
     }
-
 
     public function getStudy(string $studyId)
     {
@@ -76,34 +66,80 @@ class ApiClient
         return $study;
     }
 
+    public function getMetadata(string $studyId)
+    {
+        $pages = 1;
+        $metadatas = [];
+        for($page = 1; $page <= $pages; $page++) {
+            $response = $this->client->request(
+                'GET',
+                $this->server . '/api/study/' . $studyId . '/metadata?page=' . $page . '&page_size=' . $this->pageSize,
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Accept' => 'application/json'
+                    ]
+                ]
+            );
+            $body = json_decode($response->getBody(), true);
+            $pages = $body['page_count'];
+
+            foreach($body['_embedded']['metadatas'] as $metadata)
+            {
+                $metadatas[$metadata['element_id']][$metadata['description']][$metadata['metadata_type']['name']] = $metadata['value'];
+            }
+        }
+        return $metadatas;
+    }
+
+    public function getFields(string $studyId)
+    {
+        $pages = 1;
+        $fields = [];
+        for($page = 1; $page <= $pages; $page++) {
+            $response = $this->client->request(
+                'GET',
+                $this->server . '/api/study/' . $studyId . '/field?page=' . $page . '&page_size=' . $this->pageSize,
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Accept' => 'application/json'
+                    ]
+                ]
+            );
+            $body = json_decode($response->getBody(), true);
+            $pages = $body['page_count'];
+
+            $fields = array_merge($fields, $body['_embedded']['fields']);
+        }
+        return $fields;
+    }
+
     public function getRecords(string $studyId)
     {
-        if ($this->useCache) {
-            $records = (json_decode(file_get_contents(__DIR__ . '/records.json'), true));
-            return $records['_embedded']['records'];
-
-        }
-        $response = $this->client->request(
-            'GET',
-            $this->server . '/api/study/' . $studyId . '/record',
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Accept' => 'application/json'
+        $pages = 1;
+        $records = [];
+        for($page = 1; $page <= $pages; $page++) {
+            $response = $this->client->request(
+                'GET',
+                $this->server . '/api/study/' . $studyId . '/record?page='. $page .'&page_size=' . $this->pageSize,
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Accept' => 'application/json'
+                    ]
                 ]
-            ]
-        );
-        $records = json_decode($response->getBody(), true);
-        return $records['_embedded']['records'];
+            );
+            $body = json_decode($response->getBody(), true);
+            $pages = $body['page_count'];
+
+            $records = array_merge($records, $body['_embedded']['records']);
+        }
+        return $records;
     }
 
     public function getRecordDataPoints(string $studyId, string $recordId)
     {
-        if ($this->useCache) {
-            $data = (json_decode(file_get_contents(__DIR__ . '/record-data.json'), true));
-            return $data['_embedded']['items'];
-
-        }
         $response = $this->client->request(
             'GET',
             $this->server . '/api/study/' . $studyId . '/record/' . $recordId . '/data-point-collection/study',
@@ -114,8 +150,10 @@ class ApiClient
                 ]
             ]
         );
-        $data = json_decode($response->getBody(), true);
-        return $data['_embedded']['items'];
+        $body = json_decode($response->getBody(), true);
+        $dataPoints = $body['_embedded']['items'];
+
+        return $dataPoints;
     }
 
 }
