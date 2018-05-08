@@ -207,6 +207,7 @@ class RDFRendererController extends Controller
                 'rd_diagnosis_orpha' => $fieldValues['rd_diagnosis_orpha'] ?? 'unknown',
                 'date_of_birth' => $fieldValues['date_of_birth'] ?? 'unknown',
                 'whodas_score' => $fieldValues['whodas_score'] ?? 'unknown',
+                'sex' => $fieldValues['sex'] ?? 'unknown',
             ];
 
             $templateData['castor'] = [
