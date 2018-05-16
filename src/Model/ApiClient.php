@@ -29,7 +29,7 @@ class ApiClient
         $server = 'https://data.castoredc.com'
     )
     {
-        $this->client = new Client();
+        $this->client = new Client(['verify' => false]);
         $this->server = $server;
     }
 
