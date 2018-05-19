@@ -2,13 +2,10 @@
 
 namespace App\Controller;
 
-use App\Authenticator\CastorAuthenticator;
 use App\Model\ApiClient;
-use App\Model\UnverifiedSSLOAuthClient;
+use App\Service\CastorAuth;
 use EasyRdf_Namespace;
-use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,8 +20,13 @@ class RDFRendererController extends Controller
     private $url = 'http://127.0.0.1:8000';
     private $metadataName = 'SNOMED';
 
-    /** @var CastorAuthenticator */
+    /** @var CastorAuth */
     private $authenticator;
+
+    /**
+     * @var CastorAuth\RouteParametersStorage
+     */
+    private $routeStorage;
 
     private $studies = [
         'radboud' => '57051B03-59C1-23A3-3ADA-7AA791481606'
@@ -36,60 +38,32 @@ class RDFRendererController extends Controller
         'checkbox'
     ];
 
-    private function getAuthenticator(): CastorAuthenticator
+    public function __construct(CastorAuth $castorAuth, CastorAuth\RouteParametersStorage $routeParametersStorage)
     {
-        if (!empty($this->authenticator)) {
-            return $this->authenticator;
-        }
-
-        $this->authenticator = new CastorAuthenticator(
-            $_SERVER['CASTOR_OAUTH_CLIENT_ID'],
-            $_SERVER['CASTOR_OAUTH_CLIENT_SECRET'],
-            $_SERVER['CASTOR_OAUTH_REDIRECT_URL'],
-            $_SERVER['CASTOR_API_URL'],
-            $verifySSL = true
-        );
-        return $this->authenticator;
-    }
-
-    public function __construct()
-    {
+        $this->authenticator = $castorAuth;
+        $this->routeStorage = $routeParametersStorage;
         EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
     }
 
     private function checkRouteAccessWithOauth(Request $request, $routeName, $routeParameters = [])
     {
-        $code = $request->get('code');
-        if (!empty($code)) {
-            try {
-                $token = $this->getAuthenticator()->getAccessTokenByCode($code);
-                return $this->redirectToRoute(
-                    $routeName,
-                    array_merge(
-                        $routeParameters,
-                        ['token' => $token]
-                    )
-                );
-            } catch (\Exception $x) {
-                return $this->redirect($this->getAuthenticator()->getAuthorizationUrl());
-            }
-        }
-        if (!$this->getAuthenticator()->hasAccess($request->get('token'))) {
-            return $this->redirect($this->getAuthenticator()->getAuthorizationUrl());
+        if (!$this->authenticator->isTokenValid($request->get('token'))) {
+            $this->routeStorage->setRouteParameters(new CastorAuth\RouteParameters($routeName, $routeParameters));
+            return $this->redirect($this->authenticator->getAuthorizationUrl());
         }
 
         return true;
     }
 
     /**
-     *  @Route("/test", name="test")
+     *  @Route("/test/{name}", name="test")
      */
-    public function authTestAction(Request $request)
+    public function authTestAction(Request $request, $name)
     {
-        if (($result = $this->checkRouteAccessWithOauth($request, 'test')) !== true) {
+        if (($result = $this->checkRouteAccessWithOauth($request, 'test', ['name' => $name])) !== true) {
             return $result;
         }
-        return new JsonResponse(['Hello world']);
+        return new JsonResponse(['Hello ' . $name]);
     }
 
     /**
@@ -220,12 +194,20 @@ class RDFRendererController extends Controller
         );
     }
 
-
     /**
      * @Route("/fdp/{catalog}/{study}/distribution/rdf", name="rdf_render")
      */
-    public function rdfAction($catalog, $study)
+    public function rdfAction(Request $request, $catalog, $study)
     {
+        // Uncomment lines below to enable authentication
+//        if (($result = $this->checkRouteAccessWithOauth(
+//            $request,
+//            'rdf_render',
+//            ['catalog' => $catalog, 'study' => $study]
+//            )) !== true) {
+//            return $result;
+//        }
+
         $this->url .= '/fdp/' . $catalog . '/' . $study;
 
         $apiClient = new ApiClient();
