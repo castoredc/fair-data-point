@@ -4,19 +4,17 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Model\UnverifiedSSLOAuthClient;
-use App\Service\CastorAuth\RouteParameters;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\OAuth2\Client\Token\AccessToken;
 
 /**
  * Temp solution for Authentication of some endpoints. Should be replaced with proper Authentication using User
  * objects etc
- *
- * @package App\Authenticator
+
+ * @package App\Service
  */
 class CastorAuth
 {
-
     /**
      * @var string
      */
