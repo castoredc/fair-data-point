@@ -135,7 +135,14 @@ class ApiClient
 
             $records = array_merge($records, $body['_embedded']['records']);
         }
-        return $records;
+
+        $return = [];
+        foreach($records as $record)
+        {
+            $return[$record['record_id']] = $record;
+        }
+
+        return $return;
     }
 
     public function getRecordDataPoints(string $studyId, string $recordId)
