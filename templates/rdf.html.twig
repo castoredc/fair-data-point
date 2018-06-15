@@ -1,24 +1,116 @@
-# Record {{ record.record_id }}
-<{{ castor.uri }}/{{ record.record_id }}> a <http://purl.obolibrary.org/obo/OBI_0000093> .
+# Record {{ record.record_id }} #
 
-<{{ castor.uri }}/Diagnosis/{{ record.record_id }}> a <{{ record.rd_diagnosis_orpha }}> .
+<{{ castor.uri }}/{{ record.record_id }}#person> a <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+<{{ castor.uri }}/{{ record.record_id }}#patient> a <http://purl.obolibrary.org/obo/OBI_0000093> .
+<{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000087> <{{ castor.uri }}/{{ record.record_id }}#patient> .
 
-<{{ castor.uri }}/Person/{{ record.record_id }}> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/Diagnosis/{{ record.record_id }}> .
+{% if record.date_of_birth is defined and record.date_of_birth is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#birthdate> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C68615> ;
+    <http://semanticscience.org/resource/SIO_000300.rdf> "{{ record.date_of_birth }}" .
+<{{ castor.uri }}/{{ record.record_id }}#person> <http://semanticscience.org/resource/SIO_000008.rdf> <{{ castor.uri }}/{{ record.record_id }}#birthdate> .
+{% endif %}
 
-<{{ castor.uri }}/Sex/{{ record.record_id }}> a <{{ record.sex }}> .
+{% if record.status is defined and record.status is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#status> a <{{ record.status }}> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000086> <{{ castor.uri }}/{{ record.record_id }}#status> .
+{% endif %}
 
-<{{ castor.uri }}/Patient/{{ record.record_id }}> <http://purl.obolibrary.org/obo/ERO_0001966> <{{ castor.uri }}/Sex/{{ record.record_id }}> .
+{% if record.first_contact is defined and record.first_contact is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#visit> a <http://purl.obolibrary.org/obo/NCIT_C39564> .
+    <{{ castor.uri }}/{{ record.record_id }}#visitdate> a <http://purl.bioontology.org/ontology/LNC/76423-3> ;
+    <http://semanticscience.org/resource/SIO_000300.rdf> "{{ record.first_contact }}" .
+    <{{ castor.uri }}/{{ record.record_id }}#visit> <http://semanticscience.org/resource/SIO_000008.rdf> <{{ castor.uri }}/{{ record.record_id }}#visitdate> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000056> <{{ castor.uri }}/{{ record.record_id }}#visit> .
+{% endif %}
 
-<{{ castor.uri }}/BirthDate/{{ record.record_id }}> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C68615> ;
-<http://semanticscience.org/resource/SIO_000300> "{{ record.date_of_birth }}"^^<http://www.w3.org/2001/XMLSchema#date> .
+{% if record.sex is defined and record.sex is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#gender> a <{{ record.sex }}> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0001966> <{{ castor.uri }}/{{ record.record_id }}#gender> .
+{% endif %}
 
-<{{ castor.uri }}/Person/{{ record.record_id }}> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/BirthDate/{{ record.record_id }}> .
+{% if record.diagnosis_present is defined and record.diagnosis_present == "Yes" %}
+    # TODO Update with Orpha / Alpha / ICD check
+    <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
+    <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://www.orpha.net/ORDO/Orphanet_211277> .
 
-<{{ castor.uri }}/Activity/{{ record.record_id }}> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C130322> .
+    <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <https://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> .
+    {% if record.date_of_diagnosis is defined and record.date_of_diagnosis is not null %}
+        # What to do with antenatal, birth and undetermined
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://semanticscience.org/resource/SIO_000300.rdf> "{{ record.date_of_diagnosis }}" .
+    {% endif %}
 
-<{{ castor.uri }}/Score/{{ record.record_id }}> a <http://purl.bioontology.org/ontology/SNOMEDCT/715823002> , <http://purl.obolibrary.org/obo/NCIT_C25613> ;
-<http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_score }}"^^<http://www.w3.org/2001/XMLSchema#int> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#diagnosis> .
+{% endif %}
 
-<{{ castor.uri }}/Activity/{{ record.record_id }}> <http://www.w3.org/ns/prov#wasGeneratedBy> <{{ castor.uri }}/Score/{{ record.record_id }}> .
+{% if record.age_at_onset is defined and  record.age_at_onset is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#symptomage> a <http://purl.obolibrary.org/obo/NCIT_C124353> .
+    {% if record.age_at_onset == 'Date' %}
+        <{{ castor.uri }}/{{ record.record_id }}#symptomage> <http://semanticscience.org/resource/SIO_000300.rdf> "{{ record.date_of_onset }}" .
+    {% else %}
+        <{{ castor.uri }}/{{ record.record_id }}#symptomagevalue> a <{{ record.age_at_onset }}> .
+        <{{ castor.uri }}/{{ record.record_id }}#symptomage> <http://semanticscience.org/resource/SIO_000300.rdf> <{{ castor.uri }}/{{ record.record_id }}#symptomagevalue> .
+    {% endif %}
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://semanticscience.org/resource/SIO_000008.rdf> <{{ castor.uri }}/{{ record.record_id }}#symptomage> .
+{% endif %}
 
-<{{ castor.uri }}/Person/{{ record.record_id }}> <http://purl.obolibrary.org/obo/RO_0000056> <{{ castor.uri }}/Activity/{{ record.record_id }}> .
+{% if record.genetic_diagnosis_codesystem is defined and  record.genetic_diagnosis_codesystem is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C20826> .
+    {% if record.genetic_diagnosis_hgvs is defined and  record.genetic_diagnosis_hgvs is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#variant> a <http://purl.obolibrary.org/obo/VariO_0001> ;
+        <https://www.w3.org/2000/01/rdf-schema#label> "{{ record.genetic_diagnosis_hgvs }}" ;
+        <https://www.wikidata.org/wiki/Property:P3331> "{{ record.genetic_diagnosis_hgvs }}" .
+    {% elseif record.genetic_diagnosis_hgnc is defined and record.genetic_diagnosis_hgnc is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#variant> a <http://purl.obolibrary.org/obo/VariO_0001> ;
+        <https://www.w3.org/2000/01/rdf-schema#label> "{{ record.genetic_diagnosis_hgnc }}" ;
+        <https://www.wikidata.org/wiki/Property:P354> "{{ record.genetic_diagnosis_hgnc }}" .
+    {% elseif record.genetic_diagnosis_omim is defined and record.genetic_diagnosis_omim is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#variant> a <http://purl.obolibrary.org/obo/VariO_0001> ;
+        <https://www.w3.org/2000/01/rdf-schema#label> "{{ record.genetic_diagnosis_omim }}" ;
+        <https://www.wikidata.org/wiki/Property:P492> "{{ record.genetic_diagnosis_omim }}" .
+    {% endif %}
+    <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> <https://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#variant> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> .
+{% endif %}
+
+{% if record.undiagnosed_hpo is defined and record.undiagnosed_hpo is not null %}
+<{{ castor.uri }}/{{ record.record_id }}#phenotype> a <http://purl.obolibrary.org/obo/HP_{{ record.undiagnosed_hpo }}> .
+<{{ castor.uri }}/{{ record.record_id }}#person> <http://rdf.biosemantics.org/ontologies/rd-connect/59e1324d_567b_42e1_bc88_203004e660da> <{{ castor.uri }}/{{ record.record_id }}#phenotype> .
+{% endif %}
+
+{% if record.biological_sample is defined and record.biological_sample is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#specimen> a <http://purl.obolibrary.org/obo/OBI_0000112> .
+    {% if record.link_biobank is defined and record.link_biobank == 'Yes' and  record.link_biobank_url is defined and record.link_biobank_url is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#specimen> <http://semanticscience.org/resource/SIO_000300.rdf> <{{ record.link_biobank_url }}> .
+    {% endif %}
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://rdf.biosemantics.org/ontologies/rd-connect/6c9783cd_d632_4e8b_bc0c_a83ea200f1b1> <{{ castor.uri }}/{{ record.record_id }}#specimen> .
+{% endif %}
+
+{% if record.agreement_contact is defined and record.agreement_contact is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#consentcontact> a <http://purl.obolibrary.org/obo/ICO_0000149> ;
+    <http://semanticscience.org/resource/SIO_000300.rdf> <{{ record.agreement_contact }}> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://semanticscience.org/resource/SIO_000008.rdf> <{{ castor.uri }}/{{ record.record_id }}#consentcontact> .
+{% endif %}
+
+{% if record.consent_reuse is defined and record.consent_reuse is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#consentreuse> a <http://purl.obolibrary.org/obo/ICO_0000181> ;
+    <http://semanticscience.org/resource/SIO_000300.rdf> <{{ record.consent_reuse }}> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://semanticscience.org/resource/SIO_000008.rdf> <{{ castor.uri }}/{{ record.record_id }}#consentreuse> .
+{% endif %}
+
+{% if record.eupid_pseudonym is defined and record.eupid_pseudonym is not null %}
+<{{ castor.uri }}/{{ record.record_id }}#identifier> a <http://rdf.biosemantics.org/ontologies/rd-connect/23d2f73b_6bb4_4c8f_af98_a3bb4a1f8e30> ;
+<http://purl.org/dc/terms/identifier> "{{ record.eupid_pseudonym }}" ;
+<http://purl.obolibrary.org/obo/IAO_0000219> <{{ castor.uri }}/{{ record.record_id }}#person> .
+{% endif %}
+
+{% if record.whodas_score is defined and record.whodas_score is not null %}
+    <{{ castor.uri }}/{{ record.record_id }}#score> a <http://purl.obolibrary.org/obo/NCIT_C25613> ;
+    <http://semanticscience.org/resource/SIO_000300.rdf> "{{ record.whodas_score }}" .
+    <{{ castor.uri }}/{{ record.record_id }}#scoretype> a <http://purl.bioontology.org/ontology/SNOMEDCT/715823002> .
+
+    <{{ castor.uri }}/{{ record.record_id }}#questionnaire> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C130322> .
+    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000056> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
+
+    <{{ castor.uri }}/{{ record.record_id }}#score> <http://semanticscience.org/resource/SIO_000332> <{{ castor.uri }}/{{ record.record_id }}#scoretype> ;
+    <http://www.w3.org/ns/prov#wasGeneratedBy> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
+{% endif %}
