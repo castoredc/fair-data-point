@@ -7,6 +7,7 @@ use App\Service\CastorAuth;
 use EasyRdf_Namespace;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class RDFRendererController extends Controller
 {
-    private $secret = '25e3956844bb52ea99c4230c139a3f67';
-    private $clientId = '34413D8C-05D9-A974-F3ED-654A2EBE2FDC';
-    #private $url = 'https://vasca.pilot.castoredc.com';
-    private $url = 'http://127.0.0.1:8000';
     private $metadataName = 'SNOMED';
 
     /** @var CastorAuth */
@@ -38,10 +35,20 @@ class RDFRendererController extends Controller
         'checkbox'
     ];
 
+    /**
+     * @var ApiClient
+     */
+    private $apiClient;
+
     public function __construct(CastorAuth $castorAuth, CastorAuth\RouteParametersStorage $routeParametersStorage)
     {
         $this->authenticator = $castorAuth;
         $this->routeStorage = $routeParametersStorage;
+
+
+        $this->apiClient = new ApiClient();
+        $this->apiClient->auth(getenv('CASTOR_OAUTH_CLIENT_ID'), getenv('CASTOR_OAUTH_CLIENT_SECRET'));
+
         EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
     }
 
@@ -56,38 +63,43 @@ class RDFRendererController extends Controller
     }
 
     /**
-     *  @Route("/test/{name}", name="test")
+     * @Route("/test/{name}", name="test")
+     * @param Request $request
+     * @return string
      */
-    public function authTestAction(Request $request, $name)
+    /* public function authTestAction(Request $request, $name)
     {
         if (($result = $this->checkRouteAccessWithOauth($request, 'test', ['name' => $name])) !== true) {
             return $result;
         }
         return new JsonResponse(['Hello ' . $name]);
-    }
+    } */
+
 
     /**
      * @Route("/fdp", name="fdp_render")
+     * @param Request $request
+     * @return Response
      */
-    public function fdpAction()
+    public function fdpAction(Request $request)
     {
-        $this->url .= '/fdp';
+        $url =  getenv('FDP_URL') . '/fdp';
 
         $graph = new \EasyRdf_Graph();
 
-        $graph->addResource($this->url, 'a', 'r3d:Repository');
+        $graph->addResource($url, 'a', 'r3d:Repository');
 
-        $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($this->url, 'dcterms:hasVersion', '0.1');
-        $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:hasVersion', '0.1');
+        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
 
-        $graph->addResource($this->url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($this->url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
+        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
+        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
 
-        $graph->addResource($this->url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($this->url, 'dcterms:license', 'TBD');
+        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
+        $graph->addResource($url, 'dcterms:license', 'TBD');
 
-        $graph->addResource($this->url, 'http://www.re3data.org/schema/3-0#dataCatalog', $this->url . '/vasca');
+        $graph->addResource($url, 'http://www.re3data.org/schema/3-0#dataCatalog', $url . '/vasca');
 
         return new Response(
             $graph->serialise('turtle'),
@@ -98,27 +110,30 @@ class RDFRendererController extends Controller
 
     /**
      * @Route("/fdp/{catalog}", name="catalog_render")
+     * @param Request $request
+     * @param $catalog
+     * @return Response
      */
-    public function catalogAction($catalog)
+    public function catalogAction(Request $request, $catalog)
     {
-        $this->url .= '/fdp/' . $catalog;
+        $url = getenv('FDP_URL') . '/fdp/' . $catalog;
 
         $graph = new \EasyRdf_Graph();
 
-        $graph->addResource($this->url, 'a', 'dcat:Catalog');
+        $graph->addResource($url, 'a', 'dcat:Catalog');
 
-        $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($this->url, 'dcterms:hasVersion', '0.1');
-        $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:hasVersion', '0.1');
+        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
 
-        $graph->addResource($this->url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($this->url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
+        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
+        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
 
-        $graph->addResource($this->url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($this->url, 'dcterms:license', 'TBD');
+        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
+        $graph->addResource($url, 'dcterms:license', 'TBD');
 
         foreach($this->studies as $study) {
-            $graph->addResource($this->url, 'dcat:dataset', $this->url . '/' . $study);
+            $graph->addResource($url, 'dcat:dataset', $url . '/' . $study);
         }
 
         return new Response(
@@ -130,30 +145,32 @@ class RDFRendererController extends Controller
 
     /**
      * @Route("/fdp/{catalog}/{study}", name="dataset_render")
+     * @param Request $request
+     * @param $catalog
+     * @param $study
+     * @return Response
      */
-    public function datasetAction($catalog, $study)
+    public function datasetAction(Request $request, $catalog, $study)
     {
-        $this->url .= '/fdp/' . $catalog . '/' . $study;
+        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study;
 
-        $apiClient = new ApiClient();
-        $apiClient->auth($this->clientId, $this->secret);
-        $study = $apiClient->getStudy($study);
+        $study = $this->apiClient->getStudy($study);
 
         $graph = new \EasyRdf_Graph();
 
-        $graph->addResource($this->url, 'a', 'dcat:Dataset');
+        $graph->addResource($url, 'a', 'dcat:Dataset');
 
-        $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($this->url, 'dcterms:hasVersion', $study['version']);
-        $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
+        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
 
-        $graph->addResource($this->url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($this->url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
+        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
+        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
 
-        $graph->addResource($this->url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($this->url, 'dcterms:license', 'TBD');
-        $graph->addResource($this->url, 'dcat:theme', 'http://www.wikidata.org/entity/Q7916449');
-        $graph->addResource($this->url, 'dcat:distribution', $this->url . '/distribution');
+        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
+        $graph->addResource($url, 'dcterms:license', 'TBD');
+        $graph->addResource($url, 'dcat:theme', 'http://www.wikidata.org/entity/Q7916449');
+        $graph->addResource($url, 'dcat:distribution', $url . '/distribution');
 
         return new Response(
             $graph->serialise('turtle'),
@@ -164,28 +181,31 @@ class RDFRendererController extends Controller
 
     /**
      * @Route("/fdp/{catalog}/{study}/distribution", name="distribution_render")
+     * @param Request $request
+     * @param $catalog
+     * @param $study
+     * @return Response
      */
-    public function distributionAction($catalog, $study)
+    public function distributionAction(Request $request, $catalog, $study)
     {
-        $this->url .= '/fdp/' . $catalog . '/' . $study. '/distribution';
+        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study. '/distribution';
 
-        $apiClient = new ApiClient();
-        $apiClient->auth($this->clientId, $this->secret);
-        $study = $apiClient->getStudy($study);
+        
+        $study = $this->apiClient->getStudy($study);
 
         $graph = new \EasyRdf_Graph();
 
-        $graph->addResource($this->url, 'a', 'dcat:Distribution');
+        $graph->addResource($url, 'a', 'dcat:Distribution');
 
-        $graph->addLiteral($this->url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($this->url, 'dcterms:hasVersion', $study['version']);
-        $graph->addLiteral($this->url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
+        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
 
-        $graph->addResource($this->url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($this->url, 'dcterms:license', 'TBD');
+        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
+        $graph->addResource($url, 'dcterms:license', 'TBD');
 
-        $graph->addResource($this->url, 'dcat:accessURL', $this->url . '/rdf');
-        $graph->addLiteral($this->url, 'dcat:mediaType', 'text/turtle');
+        $graph->addResource($url, 'dcat:accessURL', $url . '/rdf');
+        $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
 
         return new Response(
             $graph->serialise('turtle'),
@@ -195,7 +215,44 @@ class RDFRendererController extends Controller
     }
 
     /**
+     * @param ApiClient $apiClient
+     * @param $studyId
+     * @param $recordId
+     * @param $fields
+     * @param $fieldVariables
+     * @param $metadatas
+     * @return array
+     */
+    private function getRecord(ApiClient $apiClient, $studyId, $recordId, $fields, $fieldVariables, $metadatas)
+    {
+        $values = $this->apiClient->getRecordDataPoints($studyId, $recordId);
+        $fieldValues = [
+            'record_id' => $recordId
+        ];
+
+        foreach ($values as $value) {
+            $fieldId = $value['field_id'];
+            $fieldVariable = $fieldVariables[$value['field_id']];
+
+            if(in_array($fields[$fieldId]['field_type'], $this->optionGroupFields) && isset($metadatas[$fieldId]) && isset($metadatas[$fieldId][$value['field_value']]))
+            {
+                $fieldValues[$fieldVariable] = $metadatas[$fieldId][$value['field_value']][$this->metadataName];
+            }
+            else
+            {
+                $fieldValues[$fieldVariable] = $value['field_value'];
+            }
+        }
+
+        return $fieldValues;
+    }
+
+    /**
      * @Route("/fdp/{catalog}/{study}/distribution/rdf", name="rdf_render")
+     * @param Request $request
+     * @param $catalog
+     * @param $study
+     * @return Response
      */
     public function rdfAction(Request $request, $catalog, $study)
     {
@@ -208,14 +265,11 @@ class RDFRendererController extends Controller
 //            return $result;
 //        }
 
-        $this->url .= '/fdp/' . $catalog . '/' . $study;
+        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study . '/distribution/rdf';
 
-        $apiClient = new ApiClient();
-        $apiClient->auth($this->clientId, $this->secret);
-
-        $metadatas = $apiClient->getMetadata($study);
-        $apiFields = $apiClient->getFields($study);
-        $records = $apiClient->getRecords($study);
+        $metadatas = $this->apiClient->getMetadata($study);
+        $apiFields = $this->apiClient->getFields($study);
+        $records = $this->apiClient->getRecords($study);
 
         $fields = [];
         $fieldVariables = [];
@@ -232,42 +286,76 @@ class RDFRendererController extends Controller
             if ($record['archived']) {
                 continue;
             }
-            $values = $apiClient->getRecordDataPoints($study, $record['record_id']);
-            $fieldValues = [];
 
-            foreach ($values as $value) {
-                $fieldId = $value['field_id'];
-                $fieldVariable = $fieldVariables[$value['field_id']];
-
-                if(in_array($fields[$fieldId]['field_type'], $this->optionGroupFields) && isset($metadatas[$fieldId]) && isset($metadatas[$fieldId][$value['field_value']]))
-                {
-                    $fieldValues[$fieldVariable] = $metadatas[$fieldId][$value['field_value']][$this->metadataName];
-                }
-                else
-                {
-                    $fieldValues[$fieldVariable] = $value['field_value'];
-                }
-            }
-
-            $templateData['records'][] = [
-                'record_id' => $record['record_id'],
-                'rd_diagnosis_orpha' => $fieldValues['rd_diagnosis_orpha'] ?? 'unknown',
-                'date_of_birth' => $fieldValues['date_of_birth'] ?? 'unknown',
-                'whodas_score' => $fieldValues['whodas_score'] ?? 'unknown',
-                'sex' => $fieldValues['sex'] ?? 'unknown',
-            ];
-
-            $templateData['castor'] = [
-                'uri' => $this->url
-            ];
+            $templateData['records'][] = $this->getRecord($this->apiClient, $study, $record['record_id'], $fields, $fieldVariables, $metadatas);
         }
+
+        $templateData['castor'] = [
+            'uri' => $url
+        ];
 
         return $this->render('rdf-list.html.twig', $templateData,
             new Response(
                 'Content',
                 Response::HTTP_OK,
                 array('content-type' => 'text/turtle')
-            ));
+            )
+        );
+    }
+
+    /**
+     * @Route("/fdp/{catalog}/{study}/distribution/rdf/{record}", name="rdf_record_render")
+     * @param Request $request
+     * @param $catalog
+     * @param $study
+     * @param $record
+     * @return Response
+     */
+    public function rdfRecordAction(Request $request, $catalog, $study, $record)
+    {
+        // Uncomment lines below to enable authentication
+//        if (($result = $this->checkRouteAccessWithOauth(
+//            $request,
+//            'rdf_render',
+//            ['catalog' => $catalog, 'study' => $study]
+//            )) !== true) {
+//            return $result;
+//        }
+
+        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study . '/distribution/rdf';
+
+        $metadatas = $this->apiClient->getMetadata($study);
+        $apiFields = $this->apiClient->getFields($study);
+        $records = $this->apiClient->getRecords($study);
+
+        $fields = [];
+        $fieldVariables = [];
+        foreach($apiFields as $field) {
+            $fieldVariables[$field['id']] = $field['field_variable_name'];
+            $fields[$field['id']] = $field;
+        }
+
+        if(!isset($records[$record]))
+        {
+            throw new NotFoundHttpException('The record you are trying to open, does not exist.');
+        }
+        if ($records[$record]['archived']) {
+            throw new NotFoundHttpException('The record you are trying to open is archived.');
+        }
+
+        $templateData['record'] = $this->getRecord($this->apiClient, $study, $record, $fields, $fieldVariables, $metadatas);
+        $templateData['castor'] = [
+            'uri' => $url
+        ];
+
+        return $this->render('rdf.html.twig', $templateData,
+            new Response(
+                'Content',
+                Response::HTTP_OK,
+                array('content-type' => 'text/turtle')
+            )
+        );
+
     }
     
 }
