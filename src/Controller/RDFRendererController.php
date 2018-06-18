@@ -7,6 +7,7 @@ use App\Service\CastorAuth;
 use EasyRdf_Namespace;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -204,6 +205,7 @@ class RDFRendererController extends Controller
         $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
         $graph->addResource($url, 'dcterms:license', 'TBD');
 
+        $graph->addResource($url, 'dcat:downloadURL', $url . '/rdf?download=1');
         $graph->addResource($url, 'dcat:accessURL', $url . '/rdf');
         $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
 
@@ -256,7 +258,7 @@ class RDFRendererController extends Controller
      */
     public function rdfAction(Request $request, $catalog, $study)
     {
-        // Uncomment lines below to enable authentication
+//        // Uncomment lines below to enable authentication
 //        if (($result = $this->checkRouteAccessWithOauth(
 //            $request,
 //            'rdf_render',
@@ -294,12 +296,25 @@ class RDFRendererController extends Controller
             'uri' => $url
         ];
 
-        return $this->render('rdf-list.html.twig', $templateData,
-            new Response(
-                'Content',
-                Response::HTTP_OK,
-                array('content-type' => 'text/turtle')
-            )
+        $content = $this->renderView('rdf-list.html.twig', $templateData);
+        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
+
+        if($request->query->has('download') && $request->query->get('download') == true)
+        {
+            $response = new Response($trimmedContent);
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $study . '_' . time() . '.ttl'
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
+        }
+
+        return new Response(
+            $trimmedContent,
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
         );
     }
 
@@ -313,7 +328,7 @@ class RDFRendererController extends Controller
      */
     public function rdfRecordAction(Request $request, $catalog, $study, $record)
     {
-        // Uncomment lines below to enable authentication
+//        // Uncomment lines below to enable authentication
 //        if (($result = $this->checkRouteAccessWithOauth(
 //            $request,
 //            'rdf_render',
@@ -348,12 +363,26 @@ class RDFRendererController extends Controller
             'uri' => $url
         ];
 
-        return $this->render('rdf.html.twig', $templateData,
-            new Response(
-                'Content',
-                Response::HTTP_OK,
-                array('content-type' => 'text/turtle')
-            )
+
+        $content = $this->renderView('rdf.html.twig', $templateData);
+        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
+
+        if($request->query->has('download') && $request->query->get('download') == true)
+        {
+            $response = new Response($trimmedContent);
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $study . '_' . $record . '_' . time() . '.ttl'
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
+        }
+
+        return new Response(
+            $trimmedContent,
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
         );
 
     }
