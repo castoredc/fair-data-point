@@ -29,7 +29,7 @@
 {% endif %}
 
 {% if record.diagnosis_present is defined and record.diagnosis_present == "Yes" %}
-    # TODO Update with Orpha / Alpha / ICD check
+    # TODO Update with Orpha / ICD check
     {% if record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'Orpha' %}
     <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
     <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://www.orpha.net/ORDO/Orphanet_{{ record.rd_diagnosis_orpha|replace({'-':''}) }}> .

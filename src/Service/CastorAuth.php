@@ -74,7 +74,7 @@ class CastorAuth
             'redirectUri'             => $this->redirectURL,
             'urlAuthorize'            => $this->authURL . '/oauth/authorize',
             'urlAccessToken'          => $this->authURL . '/oauth/token',
-            'urlResourceOwnerDetails' => $this->authURL . '/oauth/resource'
+            'urlResourceOwnerDetails' => $this->authURL . '/oauth/test-resource'
         ];
         if (!$verifySSL) {
             $providerConfig['verify'] = false;
