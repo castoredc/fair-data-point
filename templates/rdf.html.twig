@@ -13,6 +13,12 @@
 {% if record.status is defined and record.status is not null %}
     <{{ castor.uri }}/{{ record.record_id }}#status> a <{{ record.status }}> .
     <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000086> <{{ castor.uri }}/{{ record.record_id }}#status> .
+
+    {% if record.status == "http://purl.obolibrary.org/obo/PATO_0001422" and record.date_of_death is defined and record.date_of_death is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#deathdate> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C70810> .
+        <{{ castor.uri }}/{{ record.record_id }}#deathdate> <http://semanticscience.org/resource/SIO_000300> <{{ record.date_of_death }}> .
+        <{{ castor.uri }}/{{ record.record_id }}#status> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#deathdate>
+    {% endif %}
 {% endif %}
 
 {% if record.first_contact is defined and record.first_contact is not null %}
@@ -42,6 +48,8 @@
             <{{ castor.uri }}/{{ record.record_id }}#diagnosisagevalue> a <{{ record.age_at_diagnosis }}> .
             <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> <http://semanticscience.org/resource/SIO_000300> <{{ castor.uri }}/{{ record.record_id }}#diagnosisagevalue> .
         {% endif %}
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> a <http://www.ebi.ac.uk/efo/EFO_0004918>
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#diagnosisage>
     {% endif %}
 
     <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#diagnosis> .
@@ -73,8 +81,15 @@
         <https://www.w3.org/2000/01/rdf-schema#label> "{{ record.genetic_diagnosis_omim }}" ;
         <https://www.wikidata.org/wiki/Property:P492> "{{ record.genetic_diagnosis_omim }}" .
     {% endif %}
-    <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> <https://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#variant> .
-    <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> .
+    {% if record.diagnosis_present == 'Yes' %}
+        <{{ castor.uri }}/{{ record.record_id }}#genetictest> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C15709> .
+        <{{ castor.uri }}/{{ record.record_id }}#genetictest> <https://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#variant> .
+        <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/PATO_0001668> <{{ castor.uri }}/{{ record.record_id }}#genetictest> .
+    {% else %}
+        <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C20826> .
+        <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> <https://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#variant> .
+        <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#geneticdiagnosis> .
+    {% endif %}
 {% endif %}
 
 {% if record.undiagnosed_hpo is defined and record.undiagnosed_hpo is not null %}
@@ -82,7 +97,7 @@
 <{{ castor.uri }}/{{ record.record_id }}#person> <http://rdf.biosemantics.org/ontologies/rd-connect/59e1324d_567b_42e1_bc88_203004e660da> <{{ castor.uri }}/{{ record.record_id }}#phenotype> .
 {% endif %}
 
-{% if record.biological_sample is defined and record.biological_sample is not null %}
+{% if record.biological_sample is defined and record.biological_sample == 'Yes' %}
     <{{ castor.uri }}/{{ record.record_id }}#specimen> a <http://purl.obolibrary.org/obo/OBI_0000112> .
     {% if record.link_biobank is defined and record.link_biobank == 'Yes' and  record.link_biobank_url is defined and record.link_biobank_url is not null %}
         <{{ castor.uri }}/{{ record.record_id }}#specimen> <http://semanticscience.org/resource/SIO_000300> <{{ record.link_biobank_url }}> .
