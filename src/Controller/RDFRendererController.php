@@ -289,7 +289,12 @@ class RDFRendererController extends Controller
                 continue;
             }
 
-            $templateData['records'][] = $this->getRecord($this->apiClient, $study, $record['record_id'], $fields, $fieldVariables, $metadatas);
+            $data = $this->getRecord($this->apiClient, $study, $record['record_id'], $fields, $fieldVariables, $metadatas);
+
+            if($data['informed_consent'] == 'Yes')
+            {
+                $templateData['records'][] = $data;
+            }
         }
 
         $templateData['castor'] = [
