@@ -17,7 +17,7 @@
     {% if record.status == "http://purl.obolibrary.org/obo/PATO_0001422" and record.date_of_death is defined and record.date_of_death is not null %}
         <{{ castor.uri }}/{{ record.record_id }}#deathdate> a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C70810> .
         <{{ castor.uri }}/{{ record.record_id }}#deathdate> <http://semanticscience.org/resource/SIO_000300> <{{ record.date_of_death }}> .
-        <{{ castor.uri }}/{{ record.record_id }}#status> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#deathdate>
+        <{{ castor.uri }}/{{ record.record_id }}#status> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#deathdate> .
     {% endif %}
 {% endif %}
 
@@ -48,8 +48,8 @@
             <{{ castor.uri }}/{{ record.record_id }}#diagnosisagevalue> a <{{ record.age_at_diagnosis }}> .
             <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> <http://semanticscience.org/resource/SIO_000300> <{{ castor.uri }}/{{ record.record_id }}#diagnosisagevalue> .
         {% endif %}
-        <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> a <http://www.ebi.ac.uk/efo/EFO_0004918>
-        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#diagnosisage>
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> a <http://www.ebi.ac.uk/efo/EFO_0004918> .
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> .
     {% endif %}
 
     <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#diagnosis> .
