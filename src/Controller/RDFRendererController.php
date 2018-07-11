@@ -27,7 +27,8 @@ class RDFRendererController extends Controller
     private $routeStorage;
 
     private $studies = [
-        'radboud' => '57051B03-59C1-23A3-3ADA-7AA791481606'
+        'test' => '57051B03-59C1-23A3-3ADA-7AA791481606',
+        'radboudumc' => '13AD6C43-0CA0-C51F-7EB5-32DCC237C87E'
     ];
 
     private $optionGroupFields = [
@@ -161,7 +162,7 @@ class RDFRendererController extends Controller
 
         $graph->addResource($url, 'a', 'dcat:Dataset');
 
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
+        $graph->addLiteral($url, 'dcterms:title', $study['name']);
         $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
         $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
 
