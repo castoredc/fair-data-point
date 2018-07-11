@@ -124,13 +124,40 @@
 {% endif %}
 
 {% if record.whodas_score is defined and record.whodas_score is not empty %}
-    <{{ castor.uri }}/{{ record.record_id }}#score> a <http://purl.obolibrary.org/obo/NCIT_C25613> ;
-    <http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_score }}" .
-    <{{ castor.uri }}/{{ record.record_id }}#scoretype> a <http://purl.bioontology.org/ontology/SNOMEDCT/715823002> .
-
     <{{ castor.uri }}/{{ record.record_id }}#questionnaire> a <http://purl.obolibrary.org/obo/NCIT_C130322> .
     <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000056> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
 
-    <{{ castor.uri }}/{{ record.record_id }}#score> <http://semanticscience.org/resource/SIO_000332> <{{ castor.uri }}/{{ record.record_id }}#scoretype> ;
+    <{{ castor.uri }}/{{ record.record_id }}#scoretype> a <http://purl.bioontology.org/ontology/SNOMEDCT/715823002> .
+
+    <{{ castor.uri }}/{{ record.record_id }}#score> a <http://purl.obolibrary.org/obo/NCIT_C25613> ;
+    <http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_score }}" ;
+    <http://semanticscience.org/resource/SIO_000332> <{{ castor.uri }}/{{ record.record_id }}#scoretype> ;
     <http://www.w3.org/ns/prov#wasGeneratedBy> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
+
+    {% if record.whodas_h1 is defined and record.whodas_h1 is not empty %}
+        <{{ castor.uri }}/{{ record.record_id }}#scoredifficultiestype> a <http://purl.obolibrary.org/obo/NCIT_C130916> .
+
+        <{{ castor.uri }}/{{ record.record_id }}#scoredifficulties> a <http://purl.obolibrary.org/obo/NCIT_C25301> ;
+        <http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_h1 }}" ;
+        <http://semanticscience.org/resource/SIO_000332> <{{ castor.uri }}/{{ record.record_id }}#scoredifficultiestype> ;
+        <http://www.w3.org/ns/prov#wasGeneratedBy> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
+    {% endif %}
+
+    {% if record.whodas_h2 is defined and record.whodas_h2 is not empty %}
+        <{{ castor.uri }}/{{ record.record_id }}#scoreunabletype> a <http://purl.obolibrary.org/obo/NCIT_C130917> .
+
+        <{{ castor.uri }}/{{ record.record_id }}#scoreunable> a <http://purl.obolibrary.org/obo/NCIT_C25301> ;
+        <http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_h1 }}" ;
+        <http://semanticscience.org/resource/SIO_000332> <{{ castor.uri }}/{{ record.record_id }}#scoreunabletype> ;
+        <http://www.w3.org/ns/prov#wasGeneratedBy> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
+    {% endif %}
+
+    {% if record.whodas_h3 is defined and record.whodas_h3 is not empty %}
+        <{{ castor.uri }}/{{ record.record_id }}#scorereducedtype> a <http://purl.obolibrary.org/obo/NCIT_C130918> .
+
+        <{{ castor.uri }}/{{ record.record_id }}#scorereduced> a <http://purl.obolibrary.org/obo/NCIT_C25301> ;
+        <http://semanticscience.org/resource/SIO_000300> "{{ record.whodas_h3 }}" ;
+        <http://semanticscience.org/resource/SIO_000332> <{{ castor.uri }}/{{ record.record_id }}#scorereducedtype> ;
+        <http://www.w3.org/ns/prov#wasGeneratedBy> <{{ castor.uri }}/{{ record.record_id }}#questionnaire> .
+    {% endif %}
 {% endif %}
