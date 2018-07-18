@@ -35,12 +35,16 @@
 {% endif %}
 
 {% if record.diagnosis_present is defined and record.diagnosis_present == "Yes" %}
-    # TODO Update with Orpha / ICD check
-    {% if record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'Orpha' %}
-    <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
-    <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://www.orpha.net/ORDO/Orphanet_{{ record.rd_diagnosis_orpha|replace({'-':''}) }}> .
+    {% if record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'Orpha' and record.rd_diagnosis_orpha is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://www.orpha.net/ORDO/Orphanet_{{ record.rd_diagnosis_orpha|replace({'-':''}) }}> .
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> .
+    {% elseif record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'ICD10' and record.rd_diagnosis_icd10 is not null %}
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
+        <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://purl.bioontology.org/ontology/ICD10/{{ record.rd_diagnosis_icd10|replace({'-':''}) }}> .
         <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> .
     {% endif %}
+
     {% if record.age_at_diagnosis is defined and record.age_at_diagnosis is not null %}
         {% if record.age_at_diagnosis == 'Date' %}
             <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> <http://semanticscience.org/resource/SIO_000300> "{{ record.date_of_diagnosis }}" .
