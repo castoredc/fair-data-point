@@ -1,0 +1,89 @@
+# baseURI: http://localhost:3030/study
+# imports: http://localhost:3030/system
+
+@prefix : <http://localhost:3030/study#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix system: <http://localhost:3030/system#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://localhost:3030/study>
+  rdf:type owl:Ontology ;
+  owl:imports <http://localhost:3030/system> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:element
+  rdf:type owl:Class ;
+  rdfs:comment "Composing element of the study" ;
+  rdfs:label "Element" ;
+  rdfs:subClassOf owl:Thing ;
+.
+:element_description
+  rdf:type rdf:Property ;
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The description of the study element" ;
+  rdfs:domain :element ;
+  rdfs:label "Element Description" ;
+  rdfs:range xsd:string ;
+.
+:element_name
+  rdf:type rdf:Property ;
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The name of the study element" ;
+  rdfs:domain :element ;
+  rdfs:label "Element Name" ;
+  rdfs:range xsd:string ;
+.
+:element_order
+  rdf:type rdf:Property ;
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The order of the study element in the study or study phase" ;
+  rdfs:domain :element ;
+  rdfs:label "Element Order" ;
+  rdfs:range xsd:int ;
+.
+:has_step
+  rdf:type rdf:Property ;
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links the study phase to its step" ;
+  rdfs:domain :phase ;
+  rdfs:label "Has Step" ;
+  rdfs:range :phase_step ;
+.
+:phase
+  rdf:type owl:Class ;
+  system:synonym "visit" ;
+  rdfs:comment "Study phase" ;
+  rdfs:label "Study Phase" ;
+  rdfs:subClassOf :element ;
+.
+:phase_duration
+  rdf:type rdf:Property ;
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The duration of the study phase (in months)" ;
+  rdfs:domain :phase ;
+  rdfs:label "Study Phase Duration (Months)" ;
+  rdfs:range xsd:int ;
+.
+:phase_step
+  rdf:type owl:Class ;
+  rdfs:comment "Study phase step" ;
+  rdfs:label "Study Phase Step" ;
+  rdfs:subClassOf :element ;
+.
+:study
+  rdf:type owl:Class ;
+  system:synonym "clinical_research" ;
+  rdfs:comment "Clinical research or study" ;
+  rdfs:label "Study" ;
+  rdfs:subClassOf owl:Thing ;
+.
+:study_identifier
+  rdf:type rdf:Property ;
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The unique identifier of the study in the system" ;
+  rdfs:domain :study ;
+  rdfs:label "Study Identifier" ;
+  rdfs:range xsd:string ;
+.
