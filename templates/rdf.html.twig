@@ -1,14 +1,9 @@
 # Record {{ record.record_id }} #
 
-<{{ castor.uri }}/{{ record.record_id }}#person> a <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+<{{ castor.uri }}/{{ record.record_id }}#person> a <http://purl.obolibrary.org/obo/NCBITaxon_9606> ;
+    <https://www.w3.org/2000/01/rdf-schema#label> "{{ record.record_id }}".
 <{{ castor.uri }}/{{ record.record_id }}#patient> a <http://purl.obolibrary.org/obo/OBI_0000093> .
 <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/RO_0000087> <{{ castor.uri }}/{{ record.record_id }}#patient> .
-
-{% if record.date_of_birth is defined and record.date_of_birth is not null %}
-    <{{ castor.uri }}/{{ record.record_id }}#birthdate> a <http://purl.obolibrary.org/obo/NCIT_C68615> ;
-    <http://semanticscience.org/resource/SIO_000300> "{{ record.date_of_birth }}" .
-<{{ castor.uri }}/{{ record.record_id }}#person> <http://semanticscience.org/resource/SIO_000008> <{{ castor.uri }}/{{ record.record_id }}#birthdate> .
-{% endif %}
 
 {% if record.status is defined and record.status is not null %}
     <{{ castor.uri }}/{{ record.record_id }}#status> a <{{ record.status }}> .
@@ -35,17 +30,17 @@
 {% endif %}
 
 {% if record.diagnosis_present is defined and record.diagnosis_present == "Yes" %}
-    {% if record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'Orpha' and record.rd_diagnosis_orpha is not null %}
+    {% if record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'Orpha' and record.rd_diagnosis_orpha is defined and record.rd_diagnosis_orpha is not null %}
         <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
         <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://www.orpha.net/ORDO/Orphanet_{{ record.rd_diagnosis_orpha|replace({'-':''}) }}> .
         <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> .
-    {% elseif record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'ICD10' and record.rd_diagnosis_icd10 is not null %}
+    {% elseif record.rd_diagnosis_code is defined and record.rd_diagnosis_code == 'ICD10' and record.rd_diagnosis_icd10 is defined and record.rd_diagnosis_icd10 is not null %}
         <{{ castor.uri }}/{{ record.record_id }}#diagnosis> a <http://semanticscience.org/resource/SIO_001331> .
         <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> a <http://purl.bioontology.org/ontology/ICD10/{{ record.rd_diagnosis_icd10|replace({'-':''}) }}> .
         <{{ castor.uri }}/{{ record.record_id }}#diagnosis> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <{{ castor.uri }}/{{ record.record_id }}#diagnosiscode> .
     {% endif %}
 
-    {% if record.age_at_diagnosis is defined and record.age_at_diagnosis is not null %}
+    {% if record.age_at_diagnosis is defined and record.age_at_diagnosis is defined and record.age_at_diagnosis is not null %}
         {% if record.age_at_diagnosis == 'Date' %}
             <{{ castor.uri }}/{{ record.record_id }}#diagnosisage> <http://semanticscience.org/resource/SIO_000300> "{{ record.date_of_diagnosis }}" .
         {% else %}
@@ -59,7 +54,7 @@
     <{{ castor.uri }}/{{ record.record_id }}#person> <http://purl.obolibrary.org/obo/ERO_0002100> <{{ castor.uri }}/{{ record.record_id }}#diagnosis> .
 {% endif %}
 
-{% if record.age_at_onset is defined and  record.age_at_onset is not null %}
+{% if record.age_at_onset is defined and record.age_at_onset is not null %}
     <{{ castor.uri }}/{{ record.record_id }}#symptomage> a <http://purl.obolibrary.org/obo/NCIT_C124353> .
     {% if record.age_at_onset == 'Date' %}
         <{{ castor.uri }}/{{ record.record_id }}#symptomage> <http://semanticscience.org/resource/SIO_000300> "{{ record.date_of_onset }}" .

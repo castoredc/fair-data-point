@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Catalog;
+use App\Entity\FAIRDataPoint;
+use App\Entity\Iri;
+use App\Entity\RdfItem;
 use App\Model\ApiClient;
 use App\Service\CastorAuth;
+use EasyRdf_Graph;
 use EasyRdf_Namespace;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +34,7 @@ class RDFRendererController extends Controller
     private $studies = [
         'test' => '57051B03-59C1-23A3-3ADA-7AA791481606',
         'radboudumc' => '13AD6C43-0CA0-C51F-7EB5-32DCC237C87E'
+        //'demo' => 'A2FB2912-A347-1839-2940-EE686FC5A5D3'
     ];
 
     private $optionGroupFields = [
@@ -36,6 +42,16 @@ class RDFRendererController extends Controller
         'dropdown',
         'checkbox'
     ];
+
+    /** @var FAIRDataPoint */
+    private $fdp;
+
+    /** @var int */
+    private $accept;
+
+    const ACCEPT_HTTP = 1;
+    const ACCEPT_JSON = 2;
+    const ACCEPT_TURTLE = 3;
 
     /**
      * @var ApiClient
@@ -51,8 +67,89 @@ class RDFRendererController extends Controller
         $this->apiClient = new ApiClient();
         $this->apiClient->auth(getenv('CASTOR_OAUTH_CLIENT_ID'), getenv('CASTOR_OAUTH_CLIENT_SECRET'));
 
+        $this->detectAccept();
+        $this->populateVascaData();
+
         EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
     }
+
+    private function populateVascaData()
+    {
+        $this->fdp = new FAIRDataPoint(
+            new Iri(getenv('FDP_URL') . '/fdp'),
+            'Castor EDC FAIR Data Point',
+            '0.2',
+            'FAIR Data Point (FDP) of Castor EDC',
+            [
+                new Iri('https://www.castoredc.com')
+            ],
+            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
+            null,
+            null,
+            null,
+            null
+        );
+
+        $this->fdp->addCatalog(
+            'vasca',
+            'Registry of vascular anomalies',
+            '0.2',
+            'Databases of the ERN vascular anomalies',
+            [
+                new Iri('https://orcid.org/0000-0001-9217-278X'),
+                new Iri('https://www.radboudumc.nl/patientenzorg')
+            ],
+            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new iri('http://dbpedia.org/resource/Vascular_anomaly')
+        );
+
+        $this->fdp->getCatalog('vasca')->addDataset(
+            'test',
+            '57051B03-59C1-23A3-3ADA-7AA791481606',
+            'Registry of vascular anomalies - Test dataset',
+            '0.2',
+            'Test dataset of the ERN vascular anomalies',
+            [
+                new Iri('https://orcid.org/0000-0001-9217-278X'),
+                new Iri('https://www.radboudumc.nl/patientenzorg')
+            ],
+            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new Iri('http://www.wikidata.org/entity/Q7916449'),
+            null,
+            null,
+            null
+        );
+
+        $this->fdp->getCatalog('vasca')->getDataset('test')->addDistribution(
+            'Registry of vascular anomalies - Test distribution',
+            '0.2',
+            'Test distribution of the ERN vascular anomalies',
+            [
+                new Iri('https://orcid.org/0000-0001-9217-278X'),
+                new Iri('https://www.radboudumc.nl/patientenzorg')
+            ],
+            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
+
 
     private function checkRouteAccessWithOauth(Request $request, $routeName, $routeParameters = [])
     {
@@ -64,19 +161,35 @@ class RDFRendererController extends Controller
         return true;
     }
 
-    /**
-     * @Route("/test/{name}", name="test")
-     * @param Request $request
-     * @return string
-     */
-    /* public function authTestAction(Request $request, $name)
+    private function detectAccept()
     {
-        if (($result = $this->checkRouteAccessWithOauth($request, 'test', ['name' => $name])) !== true) {
-            return $result;
-        }
-        return new JsonResponse(['Hello ' . $name]);
-    } */
+        $types = explode(',', $_SERVER['HTTP_ACCEPT']);
 
+        $this->accept = self::ACCEPT_TURTLE;
+        if(in_array('text/html', $types)) $this->accept = self::ACCEPT_HTTP;
+        if(in_array('application/json', $types)) $this->accept = self::ACCEPT_JSON;
+        if(in_array('text/turtle', $types)) $this->accept = self::ACCEPT_TURTLE;
+        if(in_array('text/turtle;q=0.8', $types)) $this->accept = self::ACCEPT_TURTLE;
+    }
+
+    private function graphToObject(EasyRdf_Graph $graph)
+    {
+        $graphArray = $graph->toRdfPhp();
+        $graphArray = reset($graphArray);
+
+        $rdfItems = [];
+
+        foreach($graphArray as $iri => $children)
+        {
+            $short = EasyRdf_Namespace::shorten($iri);
+            $rdfItem = new RdfItem(new Iri($iri), $short);
+            $rdfItem->childrenFromData($children);
+
+            $rdfItems[] = $rdfItem->toArray();
+        }
+
+        return $rdfItems;
+    }
 
     /**
      * @Route("/fdp", name="fdp_render")
@@ -85,57 +198,26 @@ class RDFRendererController extends Controller
      */
     public function fdpAction(Request $request)
     {
-        $url =  getenv('FDP_URL') . '/fdp';
+        $graph = $this->fdp->toGraph();
 
-        $graph = new \EasyRdf_Graph();
+        if($this->accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($this->accept == self::ACCEPT_JSON) {
+            $rdfItems = $this->graphToObject($graph);
 
-        $graph->addResource($url, 'a', 'r3d:Repository');
+            $label = $graph->getLiteral($this->fdp->getIri()->getValue(), 'rdfs:label')->getValue();
 
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($url, 'dcterms:hasVersion', '0.1');
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
-
-        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
-
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
-
-        $graph->addResource($url, 'http://www.re3data.org/schema/3-0#dataCatalog', $url . '/vasca');
-
-        return new Response(
-            $graph->serialise('turtle'),
-            Response::HTTP_OK,
-            array('content-type' => 'text/turtle')
-        );
-    }
-
-    /**
-     * @Route("/fdp/{catalog}", name="catalog_render")
-     * @param Request $request
-     * @param $catalog
-     * @return Response
-     */
-    public function catalogAction(Request $request, $catalog)
-    {
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog;
-
-        $graph = new \EasyRdf_Graph();
-
-        $graph->addResource($url, 'a', 'dcat:Catalog');
-
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($url, 'dcterms:hasVersion', '0.1');
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
-
-        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
-
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
-
-        foreach($this->studies as $study) {
-            $graph->addResource($url, 'dcat:dataset', $url . '/' . $study);
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'graph' => $rdfItems,
+                    'label' => $label,
+                    'turtle' => $graph->serialise('turtle')
+                ]
+            );
         }
 
         return new Response(
@@ -146,33 +228,34 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/fdp/{catalog}/{study}", name="dataset_render")
+     * @Route("/fdp/{catalogSlug}", name="catalog_render")
      * @param Request $request
-     * @param $catalog
-     * @param $study
+     * @param $catalogSlug
      * @return Response
      */
-    public function datasetAction(Request $request, $catalog, $study)
+    public function catalogAction(Request $request, $catalogSlug)
     {
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study;
+        $catalog = $this->fdp->getCatalog($catalogSlug);
+        $graph = $catalog->toGraph();
 
-        $study = $this->apiClient->getStudy($study);
+        if($this->accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($this->accept == self::ACCEPT_JSON) {
+            $rdfItems = $this->graphToObject($graph);
+            $label = $graph->getLiteral($catalog->getIri()->getValue(), 'rdfs:label')->getValue();
 
-        $graph = new \EasyRdf_Graph();
-
-        $graph->addResource($url, 'a', 'dcat:Dataset');
-
-        $graph->addLiteral($url, 'dcterms:title', $study['name']);
-        $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
-
-        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
-
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
-        $graph->addResource($url, 'dcat:theme', 'http://www.wikidata.org/entity/Q7916449');
-        $graph->addResource($url, 'dcat:distribution', $url . '/distribution');
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'graph' => $rdfItems,
+                    'label' => $label,
+                    'turtle' => $graph->serialise('turtle')
+                ]
+            );
+        }
 
         return new Response(
             $graph->serialise('turtle'),
@@ -182,33 +265,78 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/fdp/{catalog}/{study}/distribution", name="distribution_render")
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}", name="dataset_render")
      * @param Request $request
-     * @param $catalog
-     * @param $study
+     * @param $catalogSlug
+     * @param $datasetSlug
      * @return Response
      */
-    public function distributionAction(Request $request, $catalog, $study)
+    public function datasetAction(Request $request, $catalogSlug, $datasetSlug)
     {
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study. '/distribution';
+        $catalog = $this->fdp->getCatalog($catalogSlug);
+        $dataset = $catalog->getDataset($datasetSlug);
 
-        
-        $study = $this->apiClient->getStudy($study);
+        $graph = $dataset->toGraph();
 
-        $graph = new \EasyRdf_Graph();
+        if($this->accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($this->accept == self::ACCEPT_JSON) {
+            $rdfItems = $this->graphToObject($graph);
+            $label = $graph->getLiteral($dataset->getIri()->getValue(), 'rdfs:label')->getValue();
 
-        $graph->addResource($url, 'a', 'dcat:Distribution');
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'graph' => $rdfItems,
+                    'label' => $label,
+                    'turtle' => $graph->serialise('turtle')
+                ]
+            );
+        }
 
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
 
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
+    /**
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/distribution", name="distribution_render")
+     * @param Request $request
+     * @param $catalogSlug
+     * @param $datasetSlug
+     * @return Response
+     */
+    public function distributionAction(Request $request, $catalogSlug, $datasetSlug)
+    {
+        $catalog = $this->fdp->getCatalog($catalogSlug);
+        $dataset = $catalog->getDataset($datasetSlug);
+        $distribution = $dataset->getDistribution();
 
-        $graph->addResource($url, 'dcat:downloadURL', $url . '/rdf?download=1');
-        $graph->addResource($url, 'dcat:accessURL', $url . '/rdf');
-        $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
+        $graph = $distribution->toGraph();
+
+        if($this->accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($this->accept == self::ACCEPT_JSON) {
+            $rdfItems = $this->graphToObject($graph);
+            $label = $graph->getLiteral($distribution->getIri()->getValue(), 'rdfs:label')->getValue();
+
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'graph' => $rdfItems,
+                    'label' => $label,
+                    'turtle' => $graph->serialise('turtle')
+                ]
+            );
+        }
 
         return new Response(
             $graph->serialise('turtle'),
@@ -251,14 +379,18 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/fdp/{catalog}/{study}/distribution/rdf", name="rdf_render")
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/distribution/rdf", name="rdf_render")
      * @param Request $request
-     * @param $catalog
-     * @param $study
+     * @param $catalogSlug
+     * @param $datasetSlug
      * @return Response
      */
-    public function rdfAction(Request $request, $catalog, $study)
+    public function rdfAction(Request $request, $catalogSlug, $datasetSlug)
     {
+        $catalog = $this->fdp->getCatalog($catalogSlug);
+        $dataset = $catalog->getDataset($datasetSlug);
+        $distribution = $dataset->getDistribution();
+
 //        // Uncomment lines below to enable authentication
 //        if (($result = $this->checkRouteAccessWithOauth(
 //            $request,
@@ -268,7 +400,8 @@ class RDFRendererController extends Controller
 //            return $result;
 //        }
 
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study . '/distribution/rdf';
+        $url = $distribution->getIri() . '/rdf';
+        $study = $dataset->getStudyId();
 
         $metadatas = $this->apiClient->getMetadata($study);
         $apiFields = $this->apiClient->getFields($study);
@@ -285,6 +418,7 @@ class RDFRendererController extends Controller
             'records' => []
         ];
 
+        $i = 0;
         foreach ($records as $record) {
             if ($record['archived']) {
                 continue;
@@ -292,10 +426,13 @@ class RDFRendererController extends Controller
 
             $data = $this->getRecord($this->apiClient, $study, $record['record_id'], $fields, $fieldVariables, $metadatas);
 
-            if($data['informed_consent'] == 'Yes')
+            if(isset($data['informed_consent']) && $data['informed_consent'] == 'Yes')
             {
                 $templateData['records'][] = $data;
+                $i++;
             }
+
+            if($i == 50) break;
         }
 
         $templateData['castor'] = [

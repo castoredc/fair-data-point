@@ -1,0 +1,23 @@
+@import '../../scss/colors.scss';
+
+.GraphElementPredicate {
+  font-weight: bold;
+}
+
+.GraphChild {
+  padding: 7px 0px;
+}
+
+.GraphElementLabel {
+
+  &.Loading {
+    opacity: 0.6;
+  }
+
+  .ExternalLink {
+    margin-left: 5px;
+    path {
+      fill: $blue400;
+    }
+  }
+}

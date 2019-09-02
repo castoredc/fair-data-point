@@ -1,0 +1,37 @@
+@import 'colors';
+
+html {
+  ::-moz-focus-inner {
+    border: 0;
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $bg;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.IconRight {
+  float: right;
+  display: block;
+  margin-top: 4px;
+}
+
+.IconOpen {
+  fill: $n100;
+}
+
+.IconHover {
+  display: none;
+}
+
+.HasHoverableIcon {
+  &:hover .IconHover {
+    display: block;
+  }
+}
