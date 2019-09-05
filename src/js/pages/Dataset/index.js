@@ -103,7 +103,7 @@ export default class Dataset extends Component {
                                     <MetadataItem label="License" value={this.state.dataset.license} />
                                     <MetadataItem label="Issued" value={this.state.dataset.issued.date} />
                                     <MetadataItem label="Modified" value={this.state.dataset.modified.date} />
-                                    <MetadataItem label="Homepage" value={this.state.dataset.homepage} />
+                                    <MetadataItem label="Landing page" value={this.state.dataset.landingpage} />
                                 </div>
 
                             </Col>

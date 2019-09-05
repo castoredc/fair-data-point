@@ -27,17 +27,6 @@ class RDFRendererController extends Controller
     const ACCEPT_JSON = 2;
     const ACCEPT_TURTLE = 3;
 
-    /**
-     * @var ApiClient
-     */
-    private $apiClient;
-
-    public function __construct(CastorAuth $castorAuth, CastorAuth\RouteParametersStorage $routeParametersStorage)
-    {
-        $this->apiClient = new ApiClient();
-        $this->apiClient->auth(getenv('CASTOR_OAUTH_CLIENT_ID'), getenv('CASTOR_OAUTH_CLIENT_SECRET'));
-    }
-
     private function detectAccept(Request $request)
     {
         if($request->get('format') != null)
