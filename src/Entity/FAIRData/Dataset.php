@@ -124,7 +124,7 @@ class Dataset
     private $catalogs;
 
     /**
-     * @ORM\OneToMany(targetEntity="Distribution", mappedBy="dataset",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Distribution", mappedBy="dataset",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Collection
@@ -467,6 +467,11 @@ class Dataset
         return $this->catalogs->first()->getAccessUrl() . '/' . $this->slug;
     }
 
+    public function getRelativeUrl()
+    {
+        return $this->catalogs->first()->getRelativeUrl() . '/' . $this->slug;
+    }
+
     public function toBasicArray()
     {
         $publishers = [];
@@ -485,6 +490,7 @@ class Dataset
 
         return [
             'access_url' => $this->getAccessUrl(),
+            'relative_url' => $this->getRelativeUrl(),
             'id' => $this->id,
             'slug' => $this->slug,
             'title' => $this->title->toArray(),
@@ -501,28 +507,62 @@ class Dataset
         ];
     }
 
+    public function toArray()
+    {
+        $distributions = [];
+        foreach($this->distributions as $distribution)
+        {
+            /** @var Distribution $distribution */
+            $distributions[] = $distribution->toBasicArray();
+        }
+
+        return array_merge($this->toBasicArray(), [
+            'distributions' => $distributions
+        ]);
+    }
+
     public function toGraph()
     {
         $graph = new EasyRdf_Graph();
 
         $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Dataset');
 
-        $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $this->title);
-        $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $this->title);
-
-        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
-        $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $this->description);
-
-        foreach($this->publishers as $publisher) {
-            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
+        foreach ($this->title->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getValue());
-        $graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
 
-        $graph->addResource($this->getAccessUrl(), 'dcat:distribution', $this->distribution->getIri()->getValue());
+        foreach ($this->description->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+        }
+
+//        foreach($this->publishers as $publisher) {
+//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
+//        }
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
+
+        //$graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
+
+        foreach($this->distributions as $distribution) {
+            $graph->addResource($this->getAccessUrl(), 'dcat:distribution', $distribution->getAccessUrl());
+        }
 
 
         return $graph;
+    }
+
+    public function hasCatalog(Catalog $find)
+    {
+        foreach($this->catalogs as $catalog)
+        {
+            /** @var Catalog $catalog */
+            if($catalog->getId() == $find->getId()) return true;
+        }
+        return false;
     }
 }

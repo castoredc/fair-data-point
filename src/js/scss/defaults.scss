@@ -38,15 +38,45 @@ ul {
 
 
 .Information {
-  margin: 15px 0;
-  background: $white;
-  box-shadow: 0 2px 20px 0 rgba(0,0,0,.2);
-  border-radius: 5px;
-  overflow: hidden;
+  margin-top: 20px;
+
+  .InformationHeader {
+    height: 45px;
+  }
+
+  .LinkTop.LinkFileType {
+    float: right;
+  }
+
+  .LinkTop {
+    border-radius: 15px;
+    padding: 7px 10px;
+    color: $n300;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      text-decoration: none;
+    }
+  }
+
+  .LinkBack {
+    float: left;
+
+    .Icon {
+      margin-right: 7px;
+      path {
+        fill: $n300;
+      }
+    }
+  }
 
   .InformationRow {
     overflow: hidden;
     margin: 0;
+    background: $white;
+    box-shadow: 0 2px 20px 0 rgba(0,0,0,.2);
+    border-radius: 5px;
+    overflow: hidden;
 
     > * {
       padding: 0;

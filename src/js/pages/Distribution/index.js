@@ -10,7 +10,7 @@ import ListItem from "../../components/ListItem";
 import Icon from "../../components/Icon";
 import {Link} from "react-router-dom";
 
-export default class Catalog extends Component {
+export default class Distribution extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +18,7 @@ export default class Catalog extends Component {
             isLoaded: false,
             hasError: false,
             errorMessage: '',
-            catalog: {
+            distribution: {
                 title: [],
                 description: [],
                 publishers: [],
@@ -27,18 +27,19 @@ export default class Catalog extends Component {
                 version: '',
                 issued: '',
                 modified: '',
-                homepage: '',
-                datasets: []
+                homepage: ''
             },
-            fdp: {
+            dataset: {
                 title: [],
                 description: [],
                 publishers: [],
                 language: '',
                 license: '',
                 version: '',
-                catalogs: []
-            }
+                issued: '',
+                modified: '',
+                homepage: ''
+            },
         };
     }
 
@@ -46,8 +47,8 @@ export default class Catalog extends Component {
         axios.get(window.location.href + '?format=json')
             .then((response) => {
                 this.setState({
-                    catalog: response.data.catalog,
-                    fdp: response.data.fdp,
+                    distribution: response.data.distribution,
+                    dataset: response.data.dataset,
                     isLoading: false,
                     isLoaded: true
                 });
@@ -75,9 +76,9 @@ export default class Catalog extends Component {
                 {this.state.isLoaded ?
                     <div className="Information">
                         <div className="InformationHeader">
-                            <Link to={this.state.fdp.relative_url} className="LinkTop LinkBack">
+                            <Link to={this.state.dataset.relative_url} className="LinkTop LinkBack">
                                 <Icon type="arrowLeft" />
-                                {localizedText(this.state.fdp.title, 'en')}
+                                {localizedText(this.state.dataset.title, 'en')}
                             </Link>
                             <a href={window.location.href + '?format=json'} className="LinkTop LinkFileType" target="_blank">
                                 JSON
@@ -87,32 +88,26 @@ export default class Catalog extends Component {
                             </a>
                         </div>
                         <Row className="InformationRow">
-                            <DocumentTitle title={localizedText(this.state.catalog.title, 'en')} />
+                            <DocumentTitle title={localizedText(this.state.distribution.title, 'en')} />
                             <Col md={4} className="Metadata">
                                 <div className="MetadataTop">
-                                    <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
+                                    <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
                                     <div className="Description">
-                                        {localizedText(this.state.catalog.description, 'en')}
+                                        {localizedText(this.state.distribution.description, 'en')}
                                     </div>
                                 </div>
                                 <div className="MetadataBottom">
-                                    <MetadataItem label="Version" value={this.state.catalog.version} />
-                                    <MetadataItem label="Language" value={this.state.catalog.language.name} />
-                                    <MetadataItem label="License" value={this.state.catalog.license} />
-                                    <MetadataItem label="Issued" value={this.state.catalog.issued.date} />
-                                    <MetadataItem label="Modified" value={this.state.catalog.modified.date} />
-                                    <MetadataItem label="Homepage" value={this.state.catalog.homepage} />
+                                    <MetadataItem label="Version" value={this.state.distribution.version} />
+                                    <MetadataItem label="Language" value={this.state.distribution.language.name} />
+                                    <MetadataItem label="License" value={this.state.distribution.license} />
+                                    <MetadataItem label="Issued" value={this.state.distribution.issued.date} />
+                                    <MetadataItem label="Modified" value={this.state.distribution.modified.date} />
+                                    <MetadataItem label="Homepage" value={this.state.distribution.homepage} />
                                 </div>
 
                             </Col>
                             <Col md={8} className="Children Catalogs">
-                                <h2>Datasets</h2>
-                                {this.state.catalog.datasets.length > 0 ? this.state.catalog.datasets.map((item, index) => {
-                                    return <ListItem key={index}
-                                                     link={item.relative_url}
-                                                     title={localizedText(item.title, 'en')}
-                                                     description={localizedText(item.description, 'en')} />}
-                                ) : <div className="NoResults">No datasets found.</div>}
+                                <h2>Distributions</h2>
                             </Col>
 
                         </Row>

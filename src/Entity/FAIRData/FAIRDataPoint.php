@@ -150,6 +150,11 @@ class FAIRDataPoint
         return $this->iri . '/fdp';
     }
 
+    public function getRelativeUrl()
+    {
+        return '/fdp';
+    }
+
     /**
      * @return LocalizedText
      */
@@ -267,7 +272,7 @@ class FAIRDataPoint
         $this->catalogs->add($catalog);
     }
 
-    public function toJson()
+    public function toBasicArray()
     {
         $publishers = [];
         foreach($this->publishers as $publisher)
@@ -276,15 +281,9 @@ class FAIRDataPoint
             $publishers[] = $publisher->toArray();
         }
 
-        $catalogs = [];
-        foreach($this->catalogs as $catalog)
-        {
-            /** @var Catalog $catalog */
-            $catalogs[] = $catalog->toBasicArray();
-        }
-
         return [
             'access_url' => $this->getAccessUrl(),
+            'relative_url' => $this->getRelativeUrl(),
             'iri' => $this->iri,
             'title' => $this->title->toArray(),
             'version' => $this->version,
@@ -292,8 +291,21 @@ class FAIRDataPoint
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
             'license' => $this->license,
-            'catalogs' => $catalogs
         ];
+    }
+
+    public function toArray()
+    {
+        $catalogs = [];
+        foreach($this->catalogs as $catalog)
+        {
+            /** @var Catalog $catalog */
+            $catalogs[] = $catalog->toBasicArray();
+        }
+
+        return array_merge($this->toBasicArray(), [
+            'catalogs' => $catalogs
+        ]);
     }
 
     public function toGraph()

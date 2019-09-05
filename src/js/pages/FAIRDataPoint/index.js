@@ -16,13 +16,15 @@ export default class FAIRDataPoint extends Component {
             isLoaded: false,
             hasError: false,
             errorMessage: '',
-            title: [],
-            description: [],
-            publishers: [],
-            language: '',
-            license: '',
-            version: '',
-            catalogs: []
+            fdp: {
+                title: [],
+                description: [],
+                publishers: [],
+                language: '',
+                license: '',
+                version: '',
+                catalogs: []
+            }
         };
     }
 
@@ -30,13 +32,7 @@ export default class FAIRDataPoint extends Component {
         axios.get(window.location.href + '?format=json')
             .then((response) => {
                 this.setState({
-                    title: response.data.fdp.title,
-                    description: response.data.fdp.description,
-                    publishers: response.data.fdp.publishers,
-                    language: response.data.fdp.language,
-                    license: response.data.fdp.license,
-                    version: response.data.fdp.version,
-                    catalogs: response.data.fdp.catalogs,
+                    fdp: response.data.fdp,
                     isLoading: false,
                     isLoaded: true
                 });
@@ -62,30 +58,35 @@ export default class FAIRDataPoint extends Component {
             <Container className="FAIRDataPoint">
                 {this.state.isLoaded ?
                     <div className="Information">
+                        <div className="InformationHeader">
+                            <a href={window.location.href + '?format=json'} className="LinkTop LinkFileType" target="_blank">
+                                JSON
+                            </a>
+                            <a href={window.location.href + '?format=ttl'} className="LinkTop LinkFileType" target="_blank">
+                                RDF
+                            </a>
+                        </div>
                         <Row className="InformationRow">
-                            <DocumentTitle title={localizedText(this.state.title, 'en')} />
-                            {/*<div className="RDFRenderHeader">*/}
-                            {/*    <Logo />*/}
-                            {/*</div>*/}
+                            <DocumentTitle title={localizedText(this.state.fdp.title, 'en')} />
                             <Col md={4} className="Metadata">
                                 <div className="MetadataTop">
-                                    <h1 className="Title">{localizedText(this.state.title, 'en')}</h1>
+                                    <h1 className="Title">{localizedText(this.state.fdp.title, 'en')}</h1>
                                     <div className="Description">
-                                        {localizedText(this.state.description, 'en')}
+                                        {localizedText(this.state.fdp.description, 'en')}
                                     </div>
                                 </div>
                                 <div className="MetadataBottom">
-                                    <MetadataItem label="Version" value={this.state.version} />
-                                    <MetadataItem label="Language" value={this.state.language.name} />
-                                    <MetadataItem label="License" value={this.state.license} />
+                                    <MetadataItem label="Version" value={this.state.fdp.version} />
+                                    <MetadataItem label="Language" value={this.state.fdp.language.name} />
+                                    <MetadataItem label="License" value={this.state.fdp.license} />
                                 </div>
 
                             </Col>
                             <Col md={8} className="Children Catalogs">
                                 <h2>Catalogs</h2>
-                                {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
+                                {this.state.fdp.catalogs.length > 0 ? this.state.fdp.catalogs.map((item, index) => {
                                     return <ListItem key={index}
-                                                     link={item.access_url}
+                                                     link={item.relative_url}
                                                      title={localizedText(item.title, 'en')}
                                                      description={localizedText(item.description, 'en')} />}
                                 ) : <div className="NoResults">No catalogs found.</div>}
