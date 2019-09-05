@@ -30,5 +30,11 @@ class Organization extends Contact
         $this->homepage = $homepage;
     }
 
+    public function toArray()
+    {
+        return array_merge(parent::toArray(), [
+            'homepage' => $this->homepage
+        ]);
+    }
 
 }

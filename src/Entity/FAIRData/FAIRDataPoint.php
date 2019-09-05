@@ -264,13 +264,20 @@ class FAIRDataPoint
 
     public function toJson()
     {
+        $publishers = [];
+        foreach($this->publishers as $publisher)
+        {
+            /** @var Contact $publisher */
+            $publishers[] = $publisher->toArray();
+        }
+
         return [
             'iri' => $this->iri,
             'title' => $this->title->toArray(),
             'version' => $this->version,
-            'description' => $this->description,
-            'publishers' => $this->publishers,
-            'language' => $this->language,
+            'description' => $this->description->toArray(),
+            'publishers' => $publishers,
+            'language' => $this->language->getCode(),
             'license' => $this->license,
             'catalogs' => $this->catalogs
         ];

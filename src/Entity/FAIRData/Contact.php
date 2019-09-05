@@ -113,4 +113,13 @@ abstract class Contact
     {
         $this->name = $name;
     }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'name' => $this->name
+        ];
+    }
 }
