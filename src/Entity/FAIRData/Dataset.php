@@ -497,7 +497,7 @@ class Dataset
             'version' => $this->version,
             'description' => $this->description->toArray(),
             'publishers' => $publishers,
-            'language' => $this->language->getCode(),
+            'language' => $this->language->toArray(),
             'license' => $this->license,
             'issued' => $this->issued,
             'modified' => $this->modified,
