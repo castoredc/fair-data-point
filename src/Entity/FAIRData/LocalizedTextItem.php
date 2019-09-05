@@ -116,4 +116,12 @@ class LocalizedTextItem
     {
         $this->language = $language;
     }
+
+    public function toArray()
+    {
+        return [
+            'text' => $this->text,
+            'language' => $this->language->getCode()
+        ];
+    }
 }

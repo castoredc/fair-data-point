@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Catalog;
-use App\Entity\FAIRDataPoint;
+use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Iri;
 use App\Entity\RdfItem;
 use App\Model\ApiClient;
@@ -21,34 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class RDFRendererController extends Controller
 {
-    private $metadataName = 'SNOMED';
-
-    /** @var CastorAuth */
-    private $authenticator;
-
-    /**
-     * @var CastorAuth\RouteParametersStorage
-     */
-    private $routeStorage;
-
-    private $studies = [
-        'test' => '57051B03-59C1-23A3-3ADA-7AA791481606',
-        'radboudumc' => '13AD6C43-0CA0-C51F-7EB5-32DCC237C87E'
-        //'demo' => 'A2FB2912-A347-1839-2940-EE686FC5A5D3'
-    ];
-
-    private $optionGroupFields = [
-        'radio',
-        'dropdown',
-        'checkbox'
-    ];
-
-    /** @var FAIRDataPoint */
-    private $fdp;
-
-    /** @var int */
-    private $accept;
-
     const ACCEPT_HTTP = 1;
     const ACCEPT_JSON = 2;
     const ACCEPT_TURTLE = 3;
@@ -60,116 +32,29 @@ class RDFRendererController extends Controller
 
     public function __construct(CastorAuth $castorAuth, CastorAuth\RouteParametersStorage $routeParametersStorage)
     {
-        $this->authenticator = $castorAuth;
-        $this->routeStorage = $routeParametersStorage;
-
-
         $this->apiClient = new ApiClient();
         $this->apiClient->auth(getenv('CASTOR_OAUTH_CLIENT_ID'), getenv('CASTOR_OAUTH_CLIENT_SECRET'));
-
-        $this->detectAccept();
-        $this->populateVascaData();
-
-        EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
     }
 
-    private function populateVascaData()
+    private function detectAccept(Request $request)
     {
-        $this->fdp = new FAIRDataPoint(
-            new Iri(getenv('FDP_URL') . '/fdp'),
-            'Castor EDC FAIR Data Point',
-            '0.2',
-            'FAIR Data Point (FDP) of Castor EDC',
-            [
-                new Iri('https://www.castoredc.com')
-            ],
-            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
-            null,
-            null,
-            null,
-            null
-        );
+        if($request->get('format') != null)
+        {
+            $format = $request->get('format');
 
-        $this->fdp->addCatalog(
-            'vasca',
-            'Registry of vascular anomalies',
-            '0.2',
-            'Databases of the ERN vascular anomalies',
-            [
-                new Iri('https://orcid.org/0000-0001-9217-278X'),
-                new Iri('https://www.radboudumc.nl/patientenzorg')
-            ],
-            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new iri('http://dbpedia.org/resource/Vascular_anomaly')
-        );
-
-        $this->fdp->getCatalog('vasca')->addDataset(
-            'test',
-            '57051B03-59C1-23A3-3ADA-7AA791481606',
-            'Registry of vascular anomalies - Test dataset',
-            '0.2',
-            'Test dataset of the ERN vascular anomalies',
-            [
-                new Iri('https://orcid.org/0000-0001-9217-278X'),
-                new Iri('https://www.radboudumc.nl/patientenzorg')
-            ],
-            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new Iri('http://www.wikidata.org/entity/Q7916449'),
-            null,
-            null,
-            null
-        );
-
-        $this->fdp->getCatalog('vasca')->getDataset('test')->addDistribution(
-            'Registry of vascular anomalies - Test distribution',
-            '0.2',
-            'Test distribution of the ERN vascular anomalies',
-            [
-                new Iri('https://orcid.org/0000-0001-9217-278X'),
-                new Iri('https://www.radboudumc.nl/patientenzorg')
-            ],
-            new Iri('http://id.loc.gov/vocabulary/iso639-1/en'),
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-    }
-
-
-    private function checkRouteAccessWithOauth(Request $request, $routeName, $routeParameters = [])
-    {
-        if (!$this->authenticator->isTokenValid($request->get('token'))) {
-            $this->routeStorage->setRouteParameters(new CastorAuth\RouteParameters($routeName, $routeParameters));
-            return $this->redirect($this->authenticator->getAuthorizationUrl());
+            if($format == 'html')  return self::ACCEPT_HTTP;
+            if($format == 'json')  return self::ACCEPT_JSON;
+            if($format == 'ttl') return self::ACCEPT_TURTLE;
         }
 
-        return true;
-    }
+        $types = $request->getAcceptableContentTypes();
 
-    private function detectAccept()
-    {
-        $types = explode(',', $_SERVER['HTTP_ACCEPT']);
+        if(in_array('text/html', $types)) return self::ACCEPT_HTTP;
+        if(in_array('application/json', $types)) return self::ACCEPT_JSON;
+        if(in_array('text/turtle', $types)) return self::ACCEPT_TURTLE;
+        if(in_array('text/turtle;q=0.8', $types)) return self::ACCEPT_TURTLE;
 
-        $this->accept = self::ACCEPT_TURTLE;
-        if(in_array('text/html', $types)) $this->accept = self::ACCEPT_HTTP;
-        if(in_array('application/json', $types)) $this->accept = self::ACCEPT_JSON;
-        if(in_array('text/turtle', $types)) $this->accept = self::ACCEPT_TURTLE;
-        if(in_array('text/turtle;q=0.8', $types)) $this->accept = self::ACCEPT_TURTLE;
+        return self::ACCEPT_TURTLE;
     }
 
     private function graphToObject(EasyRdf_Graph $graph)
@@ -198,27 +83,32 @@ class RDFRendererController extends Controller
      */
     public function fdpAction(Request $request)
     {
-        $graph = $this->fdp->toGraph();
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
-        if($this->accept == self::ACCEPT_HTTP) {
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        if($accept == self::ACCEPT_HTTP) {
             return $this->render(
                 'react.html.twig'
             );
         }
-        else if($this->accept == self::ACCEPT_JSON) {
-            $rdfItems = $this->graphToObject($graph);
-
-            $label = $graph->getLiteral($this->fdp->getIri()->getValue(), 'rdfs:label')->getValue();
-
+        else if($accept == self::ACCEPT_JSON) {
             return new JsonResponse(
                 [
                     'success' => true,
-                    'graph' => $rdfItems,
-                    'label' => $label,
-                    'turtle' => $graph->serialise('turtle')
+                    'fdp' => $fdp->toJson()
                 ]
             );
         }
+
+        $graph = $fdp->toGraph();
 
         return new Response(
             $graph->serialise('turtle'),

@@ -9,7 +9,10 @@
 namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
@@ -36,7 +39,7 @@ class FAIRDataPoint
     /* DC terms */
 
     /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
      *
      * @var LocalizedText
@@ -51,7 +54,7 @@ class FAIRDataPoint
     private $version;
 
     /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
      *
      * @var LocalizedText
@@ -59,15 +62,15 @@ class FAIRDataPoint
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedCatalogs",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedCatalogs",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinTable(name="fdp_publishers")
      *
-     * @var Contact[]
+     * @var Collection
      */
     private $publishers;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
      *
      * @var Language
@@ -75,7 +78,7 @@ class FAIRDataPoint
     private $language;
 
     /**
-     * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="License",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="license", referencedColumnName="id", nullable=true))
      *
      * @var License|null
@@ -83,8 +86,8 @@ class FAIRDataPoint
     private $license;
 
     /**
-     * @ORM\OneToMany(targetEntity="Catalog", mappedBy="fairDataPoint",cascade={"persist"})
-     * @var Catalog[]
+     * @ORM\OneToMany(targetEntity="Catalog", mappedBy="fairDataPoint",cascade={"persist"}, fetch = "EAGER")
+     * @var Collection
      */
     private $catalogs;
 
@@ -94,11 +97,11 @@ class FAIRDataPoint
      * @param LocalizedText $title
      * @param string $version
      * @param LocalizedText $description
-     * @param Contact[] $publishers
+     * @param ArrayCollection $publishers
      * @param Language $language
      * @param License $license
      */
-    public function __construct(Iri $iri, LocalizedText $title, string $version, LocalizedText $description, array $publishers, Language $language, ?License $license)
+    public function __construct(Iri $iri, LocalizedText $title, string $version, LocalizedText $description, ArrayCollection $publishers, Language $language, ?License $license)
     {
         $this->iri = $iri;
         $this->title = $title;
@@ -191,17 +194,17 @@ class FAIRDataPoint
     }
 
     /**
-     * @return Contact[]
+     * @return Collection
      */
-    public function getPublishers(): array
+    public function getPublishers(): Collection
     {
         return $this->publishers;
     }
 
     /**
-     * @param Contact[] $publishers
+     * @param Collection $publishers
      */
-    public function setPublishers(array $publishers): void
+    public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
@@ -239,50 +242,63 @@ class FAIRDataPoint
     }
 
     /**
-     * @return Catalog[]
+     * @return Collection
      */
-    public function getCatalogs(): array
+    public function getCatalogs(): Collection
     {
         return $this->catalogs;
     }
 
     /**
-     * @param Catalog[] $catalogs
+     * @param Collection $catalogs
      */
-    public function setCatalogs(array $catalogs): void
+    public function setCatalogs(Collection $catalogs): void
     {
         $this->catalogs = $catalogs;
     }
 
     public function addCatalog(Catalog $catalog)
     {
-        $this->catalogs[] = $catalog;
+        $this->catalogs->add($catalog);
     }
 
+    public function toJson()
+    {
+        return [
+            'iri' => $this->iri,
+            'title' => $this->title->toArray(),
+            'version' => $this->version,
+            'description' => $this->description,
+            'publishers' => $this->publishers,
+            'language' => $this->language,
+            'license' => $this->license,
+            'catalogs' => $this->catalogs
+        ];
+    }
 
-//    public function toGraph()
-//    {
-//        $graph = new EasyRdf_Graph();
-//
-//        $graph->addResource($this->iri->getValue(), 'a', 'r3d:Repository');
-//
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:title', $this->title);
-//        $graph->addLiteral($this->iri->getValue(), 'rdfs:label', $this->title);
-//
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:hasVersion', $this->version);
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:description', $this->description);
-//
-//        foreach($this->publishers as $publisher) {
-//            $graph->addResource($this->iri->getValue(), 'dcterms:publisher', $publisher->getValue());
-//        }
-//
-//        $graph->addResource($this->iri->getValue(), 'dcterms:language', $this->language->getValue());
-//
-//        foreach($this->catalogs as $catalog) {
-//            $graph->addResource($this->iri->getValue(), 'http://www.re3data.org/schema/3-0#dataCatalog', $catalog->getIri()->getValue());
-//        }
-//
-//        return $graph;
-//    }
+    public function toGraph()
+    {
+        $graph = new EasyRdf_Graph();
+
+        $graph->addResource($this->iri->getValue(), 'a', 'r3d:Repository');
+
+        $graph->addLiteral($this->iri->getValue(), 'dcterms:title', $this->title);
+        $graph->addLiteral($this->iri->getValue(), 'rdfs:label', $this->title);
+
+        $graph->addLiteral($this->iri->getValue(), 'dcterms:hasVersion', $this->version);
+        $graph->addLiteral($this->iri->getValue(), 'dcterms:description', $this->description);
+
+        foreach($this->publishers as $publisher) {
+            $graph->addResource($this->iri->getValue(), 'dcterms:publisher', $publisher->getValue());
+        }
+
+        $graph->addResource($this->iri->getValue(), 'dcterms:language', $this->language->getCode());
+
+        foreach($this->catalogs as $catalog) {
+            $graph->addResource($this->iri->getValue(), 'http://www.re3data.org/schema/3-0#dataCatalog', $catalog->getIri()->getValue());
+        }
+
+        return $graph;
+    }
 
 }
