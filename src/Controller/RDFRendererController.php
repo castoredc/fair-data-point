@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Iri;
 use App\Entity\RdfItem;
@@ -103,7 +105,7 @@ class RDFRendererController extends Controller
             return new JsonResponse(
                 [
                     'success' => true,
-                    'fdp' => $fdp->toJson()
+                    'fdp' => $fdp->toArray()
                 ]
             );
         }
@@ -140,6 +142,8 @@ class RDFRendererController extends Controller
         /** @var Catalog $catalog */
         $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
 
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
         if($accept == self::ACCEPT_HTTP) {
             return $this->render(
                 'react.html.twig'
@@ -149,7 +153,8 @@ class RDFRendererController extends Controller
             return new JsonResponse(
                 [
                     'success' => true,
-                    'catalog' => $catalog->toArray()
+                    'catalog' => $catalog->toArray(),
+                    'fdp' => $fdp->toBasicArray()
                 ]
             );
         }
@@ -171,29 +176,44 @@ class RDFRendererController extends Controller
      */
     public function datasetAction(Request $request, $catalogSlug, $datasetSlug)
     {
-        $catalog = $this->fdp->getCatalog($catalogSlug);
-        $dataset = $catalog->getDataset($datasetSlug);
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
-        $graph = $dataset->toGraph();
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
 
-        if($this->accept == self::ACCEPT_HTTP) {
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        if($accept == self::ACCEPT_HTTP) {
             return $this->render(
                 'react.html.twig'
             );
         }
-        else if($this->accept == self::ACCEPT_JSON) {
-            $rdfItems = $this->graphToObject($graph);
-            $label = $graph->getLiteral($dataset->getIri()->getValue(), 'rdfs:label')->getValue();
-
+        else if($accept == self::ACCEPT_JSON) {
             return new JsonResponse(
                 [
                     'success' => true,
-                    'graph' => $rdfItems,
-                    'label' => $label,
-                    'turtle' => $graph->serialise('turtle')
+                    'dataset' => $dataset->toArray(),
+                    'catalog' => $catalog->toBasicArray()
                 ]
             );
         }
+        $graph = $dataset->toGraph();
 
         return new Response(
             $graph->serialise('turtle'),
@@ -203,38 +223,58 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/fdp/{catalogSlug}/{datasetSlug}/distribution", name="distribution_render")
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/{distributionSlug}", name="distribution_render")
      * @param Request $request
      * @param $catalogSlug
      * @param $datasetSlug
      * @return Response
      */
-    public function distributionAction(Request $request, $catalogSlug, $datasetSlug)
+    public function distributionAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug)
     {
-        $catalog = $this->fdp->getCatalog($catalogSlug);
-        $dataset = $catalog->getDataset($datasetSlug);
-        $distribution = $dataset->getDistribution();
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
-        $graph = $distribution->toGraph();
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+        $distributionRepository = $doctrine->getRepository(Distribution::class);
 
-        if($this->accept == self::ACCEPT_HTTP) {
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        /** @var Distribution $distribution */
+        $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
+
+
+        if($accept == self::ACCEPT_HTTP) {
             return $this->render(
                 'react.html.twig'
             );
         }
-        else if($this->accept == self::ACCEPT_JSON) {
-            $rdfItems = $this->graphToObject($graph);
-            $label = $graph->getLiteral($distribution->getIri()->getValue(), 'rdfs:label')->getValue();
-
+        else if($accept == self::ACCEPT_JSON) {
             return new JsonResponse(
                 [
                     'success' => true,
-                    'graph' => $rdfItems,
-                    'label' => $label,
-                    'turtle' => $graph->serialise('turtle')
+                    'distribution' => $distribution->toBasicArray(),
+                    'dataset' => $dataset->toBasicArray()
                 ]
             );
         }
+
+        $graph = $distribution->toGraph();
 
         return new Response(
             $graph->serialise('turtle'),

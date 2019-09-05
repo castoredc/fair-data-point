@@ -381,6 +381,11 @@ class Catalog
         return $this->fairDataPoint->getAccessUrl() . '/' . $this->slug;
     }
 
+    public function getRelativeUrl()
+    {
+        return $this->fairDataPoint->getRelativeUrl() . '/' . $this->slug;
+    }
+
     public function toBasicArray()
     {
         $publishers = [];
@@ -392,6 +397,7 @@ class Catalog
 
         return [
             'access_url' => $this->getAccessUrl(),
+            'relative_url' => $this->getRelativeUrl(),
             'id' => $this->id,
             'slug' => $this->slug,
             'title' => $this->title->toArray(),

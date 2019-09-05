@@ -10,6 +10,7 @@ namespace App\Entity\FAIRData;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
@@ -314,6 +315,40 @@ class Distribution
         $this->dataset = $dataset;
     }
 
+    public function getAccessUrl()
+    {
+        return $this->dataset->getAccessUrl() . '/' . $this->slug;
+    }
+
+    public function getRelativeUrl()
+    {
+        return $this->dataset->getRelativeUrl() . '/' . $this->slug;
+    }
+
+    public function toBasicArray()
+    {
+        $publishers = [];
+        foreach($this->publishers as $publisher)
+        {
+            /** @var Contact $publisher */
+            $publishers[] = $publisher->toArray();
+        }
+        return [
+            'access_url' => $this->getAccessUrl(),
+            'relative_url' => $this->getRelativeUrl(),
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'title' => $this->title->toArray(),
+            'version' => $this->version,
+            'description' => $this->description->toArray(),
+            'publishers' => $publishers,
+            'language' => $this->language->getCode(),
+            'license' => $this->license,
+            'issued' => $this->issued,
+            'modified' => $this->modified,
+        ];
+    }
+
 //    /** @var string|null */
 //    private $format;
 //
@@ -328,28 +363,35 @@ class Distribution
     /** TODO FDP ontology */
 
 
-//    public function toGraph()
-//    {
-//        $graph = new EasyRdf_Graph();
-//
-//        $graph->addResource($this->iri->getValue(), 'a', 'dcat:Dataset');
-//
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:title', $this->title);
-//        $graph->addLiteral($this->iri->getValue(), 'rdfs:label', $this->title);
-//
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:hasVersion', $this->version);
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:description', $this->description);
-//
+    public function toGraph()
+    {
+        $graph = new EasyRdf_Graph();
+
+        $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Dataset');
+
+        foreach ($this->title->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
+        }
+
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
+
+        foreach ($this->description->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+        }
+
 //        foreach($this->publishers as $publisher) {
-//            $graph->addResource($this->iri->getValue(), 'dcterms:publisher', $publisher->getValue());
+//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
 //        }
-//
-//        $graph->addResource($this->iri->getValue(), 'dcterms:language', $this->language->getValue());
-//
-//        $graph->addResource($this->iri->getValue(), 'dcat:downloadURL', $this->iri->getValue() . '/rdf?download=1');
-//        $graph->addResource($this->iri->getValue(), 'dcat:accessURL', $this->iri->getValue() . '/rdf');
-//        $graph->addLiteral($this->iri->getValue(), 'dcat:mediaType', 'text/turtle');
-//
-//        return $graph;
-//    }
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
+
+        #$graph->addResource($this->getAccessUrl(), 'dcat:downloadURL', $this->getAccessUrl() . '/rdf?download=1');
+        #$graph->addResource($this->getAccessUrl(), 'dcat:accessURL', $this->getAccessUrl() . '/rdf');
+        #$graph->addLiteral($this->getAccessUrl(), 'dcat:mediaType', 'text/turtle');
+
+        return $graph;
+    }
 }
