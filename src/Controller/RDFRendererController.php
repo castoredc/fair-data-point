@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Catalog;
+use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Iri;
 use App\Entity\RdfItem;
@@ -125,27 +125,35 @@ class RDFRendererController extends Controller
      */
     public function catalogAction(Request $request, $catalogSlug)
     {
-        $catalog = $this->fdp->getCatalog($catalogSlug);
-        $graph = $catalog->toGraph();
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
-        if($this->accept == self::ACCEPT_HTTP) {
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+
+        if($accept == self::ACCEPT_HTTP) {
             return $this->render(
                 'react.html.twig'
             );
         }
-        else if($this->accept == self::ACCEPT_JSON) {
-            $rdfItems = $this->graphToObject($graph);
-            $label = $graph->getLiteral($catalog->getIri()->getValue(), 'rdfs:label')->getValue();
-
+        else if($accept == self::ACCEPT_JSON) {
             return new JsonResponse(
                 [
                     'success' => true,
-                    'graph' => $rdfItems,
-                    'label' => $label,
-                    'turtle' => $graph->serialise('turtle')
+                    'catalog' => $catalog->toArray()
                 ]
             );
         }
+        $graph = $catalog->toGraph();
 
         return new Response(
             $graph->serialise('turtle'),

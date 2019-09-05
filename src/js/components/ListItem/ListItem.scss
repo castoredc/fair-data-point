@@ -1,0 +1,26 @@
+@import '../../scss/colors';
+
+.ListItem {
+  color: $text;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  display: block;
+  padding: 15px;
+
+  span {
+    display: block;
+  }
+
+  .ListItemTitle {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: initial;
+    padding-bottom: 5px;
+  }
+  
+  &:hover {
+    color: $text;
+    background: $n20;
+    text-decoration: none;
+  }
+}

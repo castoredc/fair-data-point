@@ -145,6 +145,11 @@ class FAIRDataPoint
         $this->iri = $iri;
     }
 
+    public function getAccessUrl()
+    {
+        return $this->iri . '/fdp';
+    }
+
     /**
      * @return LocalizedText
      */
@@ -271,15 +276,23 @@ class FAIRDataPoint
             $publishers[] = $publisher->toArray();
         }
 
+        $catalogs = [];
+        foreach($this->catalogs as $catalog)
+        {
+            /** @var Catalog $catalog */
+            $catalogs[] = $catalog->toBasicArray();
+        }
+
         return [
+            'access_url' => $this->getAccessUrl(),
             'iri' => $this->iri,
             'title' => $this->title->toArray(),
             'version' => $this->version,
             'description' => $this->description->toArray(),
             'publishers' => $publishers,
-            'language' => $this->language->getCode(),
+            'language' => $this->language->toArray(),
             'license' => $this->license,
-            'catalogs' => $this->catalogs
+            'catalogs' => $catalogs
         ];
     }
 
@@ -287,22 +300,31 @@ class FAIRDataPoint
     {
         $graph = new EasyRdf_Graph();
 
-        $graph->addResource($this->iri->getValue(), 'a', 'r3d:Repository');
+        $graph->addResource($this->getAccessUrl(), 'a', 'r3d:Repository');
 
-        $graph->addLiteral($this->iri->getValue(), 'dcterms:title', $this->title);
-        $graph->addLiteral($this->iri->getValue(), 'rdfs:label', $this->title);
-
-        $graph->addLiteral($this->iri->getValue(), 'dcterms:hasVersion', $this->version);
-        $graph->addLiteral($this->iri->getValue(), 'dcterms:description', $this->description);
-
-        foreach($this->publishers as $publisher) {
-            $graph->addResource($this->iri->getValue(), 'dcterms:publisher', $publisher->getValue());
+        foreach ($this->title->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addResource($this->iri->getValue(), 'dcterms:language', $this->language->getCode());
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
+
+        foreach ($this->description->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+        }
+//
+//        foreach($this->publishers as $publisher) {
+//            /** @var Contact $publisher */
+//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->get());
+//        }
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
 
         foreach($this->catalogs as $catalog) {
-            $graph->addResource($this->iri->getValue(), 'http://www.re3data.org/schema/3-0#dataCatalog', $catalog->getIri()->getValue());
+            /** @var Catalog $catalog */
+            $graph->addResource($this->getAccessUrl(), 'http://www.re3data.org/schema/3-0#dataCatalog', $catalog->getAccessUrl());
         }
 
         return $graph;
