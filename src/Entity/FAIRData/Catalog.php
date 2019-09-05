@@ -12,6 +12,7 @@ use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
 use DateTime;
+use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
@@ -112,7 +113,7 @@ class Catalog
 //    private $references;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
      *
      * @var FAIRDataPoint
@@ -375,6 +376,50 @@ class Catalog
         $this->datasets[] = $dataset;
     }
 
+    public function getAccessUrl()
+    {
+        return $this->fairDataPoint->getAccessUrl() . '/' . $this->slug;
+    }
+
+    public function toBasicArray()
+    {
+        $publishers = [];
+        foreach($this->publishers as $publisher)
+        {
+            /** @var Contact $publisher */
+            $publishers[] = $publisher->toArray();
+        }
+
+        return [
+            'access_url' => $this->getAccessUrl(),
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'title' => $this->title->toArray(),
+            'version' => $this->version,
+            'description' => $this->description->toArray(),
+            'publishers' => $publishers,
+            'language' => $this->language->toArray(),
+            'license' => $this->license,
+            'issued' => $this->issued,
+            'modified' => $this->modified,
+            'homepage' => $this->homepage
+        ];
+    }
+
+
+    public function toArray()
+    {
+        $datasets = [];
+        foreach($this->datasets as $dataset)
+        {
+            /** @var Dataset $dataset */
+            $datasets[] = $dataset->toBasicArray();
+        }
+
+        return array_merge($this->toBasicArray(), [
+            'datasets' => $datasets
+        ]);
+    }
 //    /**
 //     * List of taxonomy URLs
 //     *
@@ -382,5 +427,35 @@ class Catalog
 //     */
 //    private $themeTaxonomy;
 
+    public function toGraph()
+    {
+        $graph = new EasyRdf_Graph();
 
+        $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Catalog');
+
+        foreach ($this->title->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
+        }
+
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
+
+        foreach ($this->description->getTexts() as $text) {
+            /** @var LocalizedTextItem $text */
+            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+        }
+
+//        foreach($this->publishers as $publisher) {
+//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
+//        }
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
+
+        foreach($this->datasets as $dataset) {
+            $graph->addResource($this->getAccessUrl(), 'dcat:dataset', $dataset->getAccessUrl());
+        }
+
+        return $graph;
+    }
 }

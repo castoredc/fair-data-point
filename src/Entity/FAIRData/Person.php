@@ -32,6 +32,13 @@ class Person extends Contact
         $this->orcid = $orcid;
     }
 
+    public function toArray()
+    {
+        return array_merge(parent::toArray(), [
+            'orcid' => $this->orcid
+        ]);
+    }
+
 
 
 }

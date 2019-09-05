@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Language
 {
+    const ISO_URL = "http://id.loc.gov/vocabulary/iso639-1/";
+
     /**
      * @ORM\Id
      * @ORM\Column(type="string")
@@ -39,5 +41,17 @@ class Language
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getAccessUrl()
+    {
+        return self::ISO_URL . $this->getCode();
+    }
+
+    public function toArray() {
+        return [
+            'code' => $this->code,
+            'name' => $this->name
+        ];
     }
 }

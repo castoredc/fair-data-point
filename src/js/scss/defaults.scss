@@ -35,3 +35,55 @@ ul {
     display: block;
   }
 }
+
+
+.Information {
+  margin: 15px 0;
+  background: $white;
+  box-shadow: 0 2px 20px 0 rgba(0,0,0,.2);
+  border-radius: 5px;
+  overflow: hidden;
+
+  .InformationRow {
+    overflow: hidden;
+    margin: 0;
+
+    > * {
+      padding: 0;
+    }
+
+    .Metadata {
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+
+      > * {
+        padding: 25px;
+      }
+
+      .MetadataTop {
+        background: $blue400;
+        color: $white;
+
+        .Title {
+          font-size: 24px;
+          font-weight: bold;
+        }
+      }
+
+      .MetadataBottom {
+        background: $n20;
+      }
+    }
+
+    .Children {
+      padding: 25px;
+
+      h2 {
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        color: $n500;
+      }
+    }
+  }
+}

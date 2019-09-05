@@ -12,7 +12,10 @@ namespace App\Entity\FAIRData;
 use App\Entity\Castor\Study;
 use App\Entity\Iri;
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
+
 //use EasyRdf_Graph;
 
 /**
@@ -66,7 +69,7 @@ class Dataset
      * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedDatasets",cascade={"persist"})
      * @ORM\JoinTable(name="datasets_publishers")
      *
-     * @var Contact[]
+     * @var Collection
      */
     private $publishers;
 
@@ -116,7 +119,7 @@ class Dataset
     /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="datasets",cascade={"persist"})
      *
-     * @var Catalog[]
+     * @var Collection
      */
     private $catalogs;
 
@@ -124,7 +127,7 @@ class Dataset
      * @ORM\OneToMany(targetEntity="Distribution", mappedBy="dataset",cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
-     * @var Distribution[]
+     * @var Collection
      */
     private $distributions;
 
@@ -139,7 +142,7 @@ class Dataset
      * @ORM\ManyToMany(targetEntity="Contact", inversedBy="contactDatasets",cascade={"persist"})
      * @ORM\JoinTable(name="datasets_contactpoints")
      *
-     * @var Contact[]
+     * @var Collection
      */
     private $contactPoint;
 
@@ -172,16 +175,16 @@ class Dataset
      * @param LocalizedText $title
      * @param string $version
      * @param LocalizedText $description
-     * @param Contact[] $publishers
+     * @param Collection $publishers
      * @param Language $language
      * @param License|null $license
      * @param DateTime $issued
      * @param DateTime $modified
-     * @param Contact[] $contactPoint
+     * @param Collection $contactPoint
      * @param LocalizedText $keyword
      * @param Iri|null $landingPage
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, array $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, array $contactPoint, ?LocalizedText $keyword, ?Iri $landingPage)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, Collection $contactPoint, ?LocalizedText $keyword, ?Iri $landingPage)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -278,17 +281,17 @@ class Dataset
     }
 
     /**
-     * @return Contact[]
+     * @return Collection
      */
-    public function getPublishers(): array
+    public function getPublishers(): Collection
     {
         return $this->publishers;
     }
 
     /**
-     * @param Contact[] $publishers
+     * @param Collection $publishers
      */
-    public function setPublishers(array $publishers): void
+    public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
@@ -358,57 +361,57 @@ class Dataset
     }
 
     /**
-     * @return Catalog[]
+     * @return Collection
      */
-    public function getCatalogs(): array
+    public function getCatalogs(): Collection
     {
         return $this->catalogs;
     }
 
     /**
-     * @param Catalog[] $catalogs
+     * @param Collection $catalogs
      */
-    public function setCatalogs(array $catalogs): void
+    public function setCatalogs(Collection $catalogs): void
     {
         $this->catalogs = $catalogs;
     }
 
     /**
-     * @return Distribution[]
+     * @return Collection
      */
-    public function getDistributions(): array
+    public function getDistributions(): Collection
     {
         return $this->distributions;
     }
 
     /**
-     * @param Distribution[] $distributions
+     * @param Collection $distributions
      */
-    public function setDistributions(array $distributions): void
+    public function setDistributions(Collection $distributions): void
     {
         $this->distributions = $distributions;
     }
 
     /**
-     * @return Contact[]
+     * @return Collection
      */
-    public function getContactPoint(): array
+    public function getContactPoint(): Collection
     {
         return $this->contactPoint;
     }
 
     /**
-     * @param Contact[] $contactPoint
+     * @param Collection $contactPoint
      */
-    public function setContactPoint(array $contactPoint): void
+    public function setContactPoint(Collection $contactPoint): void
     {
         $this->contactPoint = $contactPoint;
     }
 
     /**
-     * @return LocalizedText[]
+     * @return LocalizedText
      */
-    public function getKeyword(): array
+    public function getKeyword(): LocalizedText
     {
         return $this->keyword;
     }
@@ -459,28 +462,67 @@ class Dataset
         $this->distributions[] = $distribution;
     }
 
-//    public function toGraph()
-//    {
-//        $graph = new EasyRdf_Graph();
-//
-//        $graph->addResource($this->iri->getValue(), 'a', 'dcat:Dataset');
-//
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:title', $this->title);
-//        $graph->addLiteral($this->iri->getValue(), 'rdfs:label', $this->title);
-//
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:hasVersion', $this->version);
-//        $graph->addLiteral($this->iri->getValue(), 'dcterms:description', $this->description);
-//
-//        foreach($this->publishers as $publisher) {
-//            $graph->addResource($this->iri->getValue(), 'dcterms:publisher', $publisher->getValue());
-//        }
-//
-//        $graph->addResource($this->iri->getValue(), 'dcterms:language', $this->language->getValue());
-//        $graph->addResource($this->iri->getValue(), 'dcat:theme', $this->theme->getValue());
-//
-//        $graph->addResource($this->iri->getValue(), 'dcat:distribution', $this->distribution->getIri()->getValue());
-//
-//
-//        return $graph;
-//    }
+    public function getAccessUrl()
+    {
+        return $this->catalogs->first()->getAccessUrl() . '/' . $this->slug;
+    }
+
+    public function toBasicArray()
+    {
+        $publishers = [];
+        foreach($this->publishers as $publisher)
+        {
+            /** @var Contact $publisher */
+            $publishers[] = $publisher->toArray();
+        }
+
+        $contactPoints = [];
+        foreach($this->contactPoint as $contactPoint)
+        {
+            /** @var Contact $contactPoint */
+            $contactPoints[] = $contactPoint->toArray();
+        }
+
+        return [
+            'access_url' => $this->getAccessUrl(),
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'title' => $this->title->toArray(),
+            'version' => $this->version,
+            'description' => $this->description->toArray(),
+            'publishers' => $publishers,
+            'language' => $this->language->getCode(),
+            'license' => $this->license,
+            'issued' => $this->issued,
+            'modified' => $this->modified,
+            'contactPoints' => $contactPoints,
+//            'keyword' => $this->keyword->toArray(),
+            'landingpage' => $this->landingPage
+        ];
+    }
+
+    public function toGraph()
+    {
+        $graph = new EasyRdf_Graph();
+
+        $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Dataset');
+
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $this->title);
+        $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $this->title);
+
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
+        $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $this->description);
+
+        foreach($this->publishers as $publisher) {
+            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
+        }
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getValue());
+        $graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
+
+        $graph->addResource($this->getAccessUrl(), 'dcat:distribution', $this->distribution->getIri()->getValue());
+
+
+        return $graph;
+    }
 }
