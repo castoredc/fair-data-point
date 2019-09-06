@@ -9,6 +9,8 @@
 namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use DateTime;
@@ -65,7 +67,7 @@ class Catalog
      * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedCatalogs",cascade={"persist"})
      * @ORM\JoinTable(name="catalogs_publishers")
      *
-     * @var Contact[]
+     * @var Collection
      */
     private $publishers;
 
@@ -124,7 +126,7 @@ class Catalog
      * @ORM\ManyToMany(targetEntity="Dataset", inversedBy="catalogs",cascade={"persist"})
      * @ORM\JoinTable(name="catalogs_datasets")
      *
-     * @var Dataset[]
+     * @var Collection
      */
     private $datasets;
 
@@ -141,14 +143,14 @@ class Catalog
      * @param LocalizedText $title
      * @param string $version
      * @param LocalizedText $description
-     * @param Contact[] $publishers
+     * @param Collection $publishers
      * @param Language $language
      * @param License|null $license
      * @param DateTime $issued
      * @param DateTime $modified
      * @param Iri|null $homepage
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, array $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, ?Iri $homepage)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, ?Iri $homepage)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -159,7 +161,7 @@ class Catalog
         $this->license = $license;
         $this->issued = $issued;
         $this->modified = $modified;
-        $this->datasets = [];
+        $this->datasets = new ArrayCollection();
         $this->homepage = $homepage;
     }
 
@@ -244,17 +246,17 @@ class Catalog
     }
 
     /**
-     * @return Contact[]
+     * @return Collection
      */
-    public function getContacts(): array
+    public function getContacts(): Collection
     {
         return $this->publishers;
     }
 
     /**
-     * @param Contact[] $publishers
+     * @param Collection $publishers
      */
-    public function setContacts(array $publishers): void
+    public function setContacts(aCollectionrray $publishers): void
     {
         $this->publishers = $publishers;
     }

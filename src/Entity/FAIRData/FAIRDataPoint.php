@@ -110,7 +110,7 @@ class FAIRDataPoint
         $this->publishers = $publishers;
         $this->language = $language;
         $this->license = $license;
-        $this->catalogs = [];
+        $this->catalogs = new ArrayCollection();
     }
 
     /**

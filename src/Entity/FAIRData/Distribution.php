@@ -9,11 +9,13 @@
 namespace App\Entity\FAIRData;
 
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  */
 class Distribution
@@ -63,7 +65,7 @@ class Distribution
      * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedDistributions",cascade={"persist"})
      * @ORM\JoinTable(name="distributions_publishers")
      *
-     * @var Contact[]
+     * @var Collection
      */
     private $publishers;
 
@@ -120,13 +122,13 @@ class Distribution
      * @param LocalizedText $title
      * @param string $version
      * @param LocalizedText $description
-     * @param Contact[] $publishers
+     * @param Collection $publishers
      * @param Language $language
      * @param License $license
      * @param DateTime $issued
      * @param DateTime $modified
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, array $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -347,6 +349,11 @@ class Distribution
             'issued' => $this->issued,
             'modified' => $this->modified,
         ];
+    }
+
+    public function toArray()
+    {
+        return $this->toBasicArray();
     }
 
 //    /** @var string|null */
