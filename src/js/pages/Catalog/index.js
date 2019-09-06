@@ -9,6 +9,7 @@ import MetadataItem from "../../components/MetadataItem";
 import ListItem from "../../components/ListItem";
 import Icon from "../../components/Icon";
 import {Link} from "react-router-dom";
+import Contact from "../../components/MetadataItem/Contact";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -43,7 +44,7 @@ export default class Catalog extends Component {
     }
 
     componentDidMount() {
-        axios.get(window.location.href + '?format=json')
+        axios.get(window.location.href + '?format=json&ui=true')
             .then((response) => {
                 this.setState({
                     catalog: response.data.catalog,
@@ -90,10 +91,19 @@ export default class Catalog extends Component {
                             <DocumentTitle title={localizedText(this.state.catalog.title, 'en')} />
                             <Col md={4} className="Metadata">
                                 <div className="MetadataTop">
+                                    <div className="Type">Catalog</div>
                                     <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
                                     <div className="Description">
                                         {localizedText(this.state.catalog.description, 'en')}
                                     </div>
+                                    {this.state.catalog.publishers.length > 0 && <div className="Publishers">
+                                        {this.state.catalog.publishers.map((item, index) => {
+                                            return <Contact key={index}
+                                                            url={item.url}
+                                                            type={item.type}
+                                                            name={item.name} />}
+                                        )}
+                                    </div>}
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.catalog.version} />
@@ -105,8 +115,11 @@ export default class Catalog extends Component {
                                 </div>
 
                             </Col>
-                            <Col md={8} className="Children Catalogs">
+                            <Col md={8} className="Children Datasets">
                                 <h2>Datasets</h2>
+                                <div className="Description">
+                                    Datasets are published collections of data.
+                                </div>
                                 {this.state.catalog.datasets.length > 0 ? this.state.catalog.datasets.map((item, index) => {
                                     return <ListItem key={index}
                                                      link={item.relative_url}

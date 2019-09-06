@@ -35,10 +35,10 @@ class Person extends Contact
     public function toArray()
     {
         return array_merge(parent::toArray(), [
-            'orcid' => $this->orcid
+            'url' => $this->orcid,
+            'orcid' => $this->orcid,
+            'type' => 'person'
         ]);
     }
-
-
 
 }
