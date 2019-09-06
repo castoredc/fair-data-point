@@ -123,4 +123,16 @@ class Study
     {
         $this->slug = $slug;
     }
+
+    public static function fromData(array $data)
+    {
+        $study = new Study(
+            isset($data['study_id']) ? $data['study_id'] : null,
+            isset($data['name']) ? $data['name'] : null,
+            isset($data['main_contact']) ? $data['main_contact'] : null,
+            isset($data['slug']) ? $data['slug'] : null
+        );
+
+        return $study;
+    }
 }

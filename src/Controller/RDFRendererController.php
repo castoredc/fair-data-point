@@ -6,19 +6,22 @@ use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Contact;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\Distribution\RDFDistribution;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\FAIRData\Organization;
 use App\Entity\FAIRData\Person;
 use App\Entity\Iri;
 use App\Entity\RdfItem;
-use App\Model\ApiClient;
-use App\Service\CastorAuth;
+use App\Helper\RDFTwigRenderHelper;
+use App\Model\Castor\ApiClient;
 use EasyRdf_Graph;
 use EasyRdf_Namespace;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -114,7 +117,8 @@ class RDFRendererController extends Controller
     /**
      * @Route("/profile/{profileType}/{profileSlug}", name="catalog_render")
      * @param Request $request
-     * @param $catalogSlug
+     * @param $profileType
+     * @param $profileSlug
      * @return Response
      */
     public function profileAction(Request $request, $profileType, $profileSlug)
@@ -127,7 +131,6 @@ class RDFRendererController extends Controller
 
         /** @var Contact $contact */
         $contact = null;
-
         if($profileType == "person") $contact = $personRepository->findOneBy(["slug" => $profileSlug]);
         if($profileType == "organization") $contact = $organizationRepository->findOneBy(["slug" => $profileSlug]);
 
@@ -173,12 +176,10 @@ class RDFRendererController extends Controller
 
         /** @var FAIRDataPoint $fdp */
         $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
-
         if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
 
         /** @var Catalog $catalog */
         $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
-
         if(!$catalog) throw new NotFoundHttpException("Catalog not found");
 
         if($accept == self::ACCEPT_HTTP) {
@@ -224,17 +225,14 @@ class RDFRendererController extends Controller
 
         /** @var FAIRDataPoint $fdp */
         $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
-
         if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
 
         /** @var Catalog $catalog */
         $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
-
         if(!$catalog) throw new NotFoundHttpException("Catalog not found");
 
         /** @var Dataset $dataset */
         $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
-
         if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
 
         if($accept == self::ACCEPT_HTTP) {
@@ -266,6 +264,7 @@ class RDFRendererController extends Controller
      * @param Request $request
      * @param $catalogSlug
      * @param $datasetSlug
+     * @param $distributionSlug
      * @return Response
      */
     public function distributionAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug)
@@ -281,22 +280,19 @@ class RDFRendererController extends Controller
 
         /** @var FAIRDataPoint $fdp */
         $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
-
         if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
 
         /** @var Catalog $catalog */
         $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
-
         if(!$catalog) throw new NotFoundHttpException("Catalog not found");
 
         /** @var Dataset $dataset */
         $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
-
         if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
 
         /** @var Distribution $distribution */
         $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
-
+        if(!$distribution) throw new NotFoundHttpException("Distribution not found");
 
         if($accept == self::ACCEPT_HTTP) {
             return $this->render(
@@ -306,7 +302,7 @@ class RDFRendererController extends Controller
         else if($accept == self::ACCEPT_JSON) {
             $response = [
                 'success' => true,
-                'distribution' => $distribution->toBasicArray(),
+                'distribution' => $distribution->toArray(),
             ];
 
             if($request->get('ui') != null) $response['dataset'] = $dataset->toBasicArray();
@@ -324,188 +320,130 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @param ApiClient $apiClient
-     * @param $studyId
-     * @param $recordId
-     * @param $fields
-     * @param $fieldVariables
-     * @param $metadatas
-     * @return array
-     */
-    private function getRecord(ApiClient $apiClient, $studyId, $recordId, $fields, $fieldVariables, $metadatas)
-    {
-        $values = $this->apiClient->getRecordDataPoints($studyId, $recordId);
-        $fieldValues = [
-            'record_id' => $recordId
-        ];
-
-        foreach ($values as $value) {
-            $fieldId = $value['field_id'];
-            $fieldVariable = $fieldVariables[$value['field_id']];
-
-            if(in_array($fields[$fieldId]['field_type'], $this->optionGroupFields) && isset($metadatas[$fieldId]) && isset($metadatas[$fieldId][$value['field_value']]))
-            {
-                $fieldValues[$fieldVariable] = $metadatas[$fieldId][$value['field_value']][$this->metadataName];
-            }
-            else
-            {
-                $fieldValues[$fieldVariable] = $value['field_value'];
-            }
-        }
-
-        return $fieldValues;
-    }
-
-    /**
-     * @Route("/fdp/{catalogSlug}/{datasetSlug}/distribution/rdf", name="rdf_render")
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/{distributionSlug}/rdf", name="rdf_render")
      * @param Request $request
      * @param $catalogSlug
      * @param $datasetSlug
+     * @param $distributionSlug
      * @return Response
+     * @throws Exception
      */
-    public function rdfAction(Request $request, $catalogSlug, $datasetSlug)
+    public function rdfAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug)
     {
-        $catalog = $this->fdp->getCatalog($catalogSlug);
-        $dataset = $catalog->getDataset($datasetSlug);
-        $distribution = $dataset->getDistribution();
-
-//        // Uncomment lines below to enable authentication
-//        if (($result = $this->checkRouteAccessWithOauth(
-//            $request,
-//            'rdf_render',
-//            ['catalog' => $catalog, 'study' => $study]
-//            )) !== true) {
-//            return $result;
-//        }
-
-        $url = $distribution->getIri() . '/rdf';
-        $study = $dataset->getStudyId();
-
-        $metadatas = $this->apiClient->getMetadata($study);
-        $apiFields = $this->apiClient->getFields($study);
-        $records = $this->apiClient->getRecords($study);
-
-        $fields = [];
-        $fieldVariables = [];
-        foreach($apiFields as $field) {
-            $fieldVariables[$field['id']] = $field['field_variable_name'];
-            $fields[$field['id']] = $field;
-        }
-
-        $templateData = [
-            'records' => []
-        ];
-
-        $i = 0;
-        foreach ($records as $record) {
-            if ($record['archived']) {
-                continue;
-            }
-
-            $data = $this->getRecord($this->apiClient, $study, $record['record_id'], $fields, $fieldVariables, $metadatas);
-
-            if(isset($data['informed_consent']) && $data['informed_consent'] == 'Yes')
-            {
-                $templateData['records'][] = $data;
-                $i++;
-            }
-
-            if($i == 50) break;
-        }
-
-        $templateData['castor'] = [
-            'uri' => $url
-        ];
-
-        $content = $this->renderView('rdf-list.html.twig', $templateData);
-        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
-
-        if($request->query->has('download') && $request->query->get('download') == true)
+        if(!$this->getUser())
         {
-            $response = new Response($trimmedContent);
-            $disposition = $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $study . '_' . time() . '.ttl'
-            );
-            $response->headers->set('Content-Disposition', $disposition);
-
-            return $response;
+            return $this->redirect('/connect/castor');
         }
+
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
+
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+        $distributionRepository = $doctrine->getRepository(Distribution::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        $client = new ApiClient();
+        $client->setToken($this->getUser()->getToken());
+
+        /** @var RDFDistribution $distribution */
+        $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
+        if(!$distribution) throw new NotFoundHttpException("Distribution not found");
+        if(!$distribution instanceof RDFDistribution) throw new NotFoundHttpException("This distribution is not a RDF distribution");
+
+        try
+        {
+            $study = $client->getStudy($dataset->getStudy()->getId());
+        }
+        catch(UnauthorizedHttpException $e)
+        {
+            throw new UnauthorizedHttpException('', "You do not have permission to access this study");
+        }
+
+        $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
 
         return new Response(
-            $trimmedContent,
+            $helper->renderRecords(),
             Response::HTTP_OK,
             array('content-type' => 'text/turtle')
         );
     }
 
     /**
-     * @Route("/fdp/{catalog}/{study}/distribution/rdf/{record}", name="rdf_record_render")
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/{distributionSlug}/rdf/{recordId}", name="rdf_render_record")
      * @param Request $request
-     * @param $catalog
-     * @param $study
-     * @param $record
+     * @param $catalogSlug
+     * @param $datasetSlug
+     * @param $distributionSlug
+     * @param $recordId
      * @return Response
+     * @throws Exception
      */
-    public function rdfRecordAction(Request $request, $catalog, $study, $record)
+    public function rdfRecordAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug, $recordId)
     {
-//        // Uncomment lines below to enable authentication
-//        if (($result = $this->checkRouteAccessWithOauth(
-//            $request,
-//            'rdf_render',
-//            ['catalog' => $catalog, 'study' => $study]
-//            )) !== true) {
-//            return $result;
-//        }
-
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study . '/distribution/rdf';
-
-        $metadatas = $this->apiClient->getMetadata($study);
-        $apiFields = $this->apiClient->getFields($study);
-        $records = $this->apiClient->getRecords($study);
-
-        $fields = [];
-        $fieldVariables = [];
-        foreach($apiFields as $field) {
-            $fieldVariables[$field['id']] = $field['field_variable_name'];
-            $fields[$field['id']] = $field;
-        }
-
-        if(!isset($records[$record]))
+        if(!$this->getUser())
         {
-            throw new NotFoundHttpException('The record you are trying to open, does not exist.');
-        }
-        if ($records[$record]['archived']) {
-            throw new NotFoundHttpException('The record you are trying to open is archived.');
+            return $this->redirect('/connect/castor');
         }
 
-        $templateData['record'] = $this->getRecord($this->apiClient, $study, $record, $fields, $fieldVariables, $metadatas);
-        $templateData['castor'] = [
-            'uri' => $url
-        ];
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+        $distributionRepository = $doctrine->getRepository(Distribution::class);
 
-        $content = $this->renderView('rdf.html.twig', $templateData);
-        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
 
-        if($request->query->has('download') && $request->query->get('download') == true)
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        $client = new ApiClient();
+        $client->setToken($this->getUser()->getToken());
+
+        /** @var RDFDistribution $distribution */
+        $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
+        if(!$distribution) throw new NotFoundHttpException("Distribution not found");
+        if(!$distribution instanceof RDFDistribution) throw new NotFoundHttpException("This distribution is not a RDF distribution");
+
+        try
         {
-            $response = new Response($trimmedContent);
-            $disposition = $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $study . '_' . $record . '_' . time() . '.ttl'
-            );
-            $response->headers->set('Content-Disposition', $disposition);
-
-            return $response;
+            $study = $client->getStudy($dataset->getStudy()->getId());
         }
+        catch(UnauthorizedHttpException $e)
+        {
+            throw new UnauthorizedHttpException('', "You do not have permission to access this study");
+        }
+
+        $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
 
         return new Response(
-            $trimmedContent,
+            $helper->renderRecord($recordId),
             Response::HTTP_OK,
             array('content-type' => 'text/turtle')
         );
-
     }
     
 }

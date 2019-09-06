@@ -115,8 +115,7 @@ export default class Distribution extends Component {
                                 </div>
 
                             </Col>
-                            <Col md={8} className="Children Catalogs">
-                                <h2>Distributions</h2>
+                            <Col md={8} className="Children Access">
                             </Col>
 
                         </Row>
