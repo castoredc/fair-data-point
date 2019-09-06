@@ -7,6 +7,7 @@ import DocumentTitle from "../../components/DocumentTitle";
 import {localizedText} from "../../util";
 import MetadataItem from "../../components/MetadataItem";
 import ListItem from "../../components/ListItem";
+import Contact from "../../components/MetadataItem/Contact";
 
 export default class FAIRDataPoint extends Component {
     constructor(props) {
@@ -29,7 +30,7 @@ export default class FAIRDataPoint extends Component {
     }
 
     componentDidMount() {
-        axios.get(window.location.href + '?format=json')
+        axios.get(window.location.href + '?format=json&ui=true')
             .then((response) => {
                 this.setState({
                     fdp: response.data.fdp,
@@ -70,10 +71,19 @@ export default class FAIRDataPoint extends Component {
                             <DocumentTitle title={localizedText(this.state.fdp.title, 'en')} />
                             <Col md={4} className="Metadata">
                                 <div className="MetadataTop">
+                                    <div className="Type">FAIR Data Point</div>
                                     <h1 className="Title">{localizedText(this.state.fdp.title, 'en')}</h1>
                                     <div className="Description">
                                         {localizedText(this.state.fdp.description, 'en')}
                                     </div>
+                                    {this.state.fdp.publishers.length > 0 && <div className="Publishers">
+                                        {this.state.fdp.publishers.map((item, index) => {
+                                            return <Contact key={index}
+                                                            url={item.url}
+                                                            type={item.type}
+                                                            name={item.name} />}
+                                        )}
+                                    </div>}
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.fdp.version} />
@@ -84,6 +94,9 @@ export default class FAIRDataPoint extends Component {
                             </Col>
                             <Col md={8} className="Children Catalogs">
                                 <h2>Catalogs</h2>
+                                <div className="Description">
+                                    Catalogs are collections of datasets.
+                                </div>
                                 {this.state.fdp.catalogs.length > 0 ? this.state.fdp.catalogs.map((item, index) => {
                                     return <ListItem key={index}
                                                      link={item.relative_url}

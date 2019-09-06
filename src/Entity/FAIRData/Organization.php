@@ -33,7 +33,9 @@ class Organization extends Contact
     public function toArray()
     {
         return array_merge(parent::toArray(), [
-            'homepage' => $this->homepage
+            'url' => $this->homepage,
+            'homepage' => $this->homepage,
+            'type' => 'organization'
         ]);
     }
 

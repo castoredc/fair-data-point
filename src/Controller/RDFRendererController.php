@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Contact;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\FAIRDataPoint;
+use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Person;
 use App\Entity\Iri;
 use App\Entity\RdfItem;
 use App\Model\ApiClient;
@@ -109,6 +112,51 @@ class RDFRendererController extends Controller
     }
 
     /**
+     * @Route("/profile/{profileType}/{profileSlug}", name="catalog_render")
+     * @param Request $request
+     * @param $catalogSlug
+     * @return Response
+     */
+    public function profileAction(Request $request, $profileType, $profileSlug)
+    {
+        $accept = $this->detectAccept($request);
+
+        $doctrine = $this->getDoctrine();
+        $personRepository = $doctrine->getRepository(Person::class);
+        $organizationRepository = $doctrine->getRepository(Organization::class);
+
+        /** @var Contact $contact */
+        $contact = null;
+
+        if($profileType == "person") $contact = $personRepository->findOneBy(["slug" => $profileSlug]);
+        if($profileType == "organization") $contact = $organizationRepository->findOneBy(["slug" => $profileSlug]);
+
+        if(!$contact) throw new NotFoundHttpException("Profile not found");
+
+        if($accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($accept == self::ACCEPT_JSON) {
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'profile' => $contact->toArray()
+                ]
+            );
+        }
+
+        $graph = $contact->toGraph();
+
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
+
+    /**
      * @Route("/fdp/{catalogSlug}", name="catalog_render")
      * @param Request $request
      * @param $catalogSlug
@@ -139,13 +187,14 @@ class RDFRendererController extends Controller
             );
         }
         else if($accept == self::ACCEPT_JSON) {
-            return new JsonResponse(
-                [
-                    'success' => true,
-                    'catalog' => $catalog->toArray(),
-                    'fdp' => $fdp->toBasicArray()
-                ]
-            );
+            $response = [
+                'success' => true,
+                'catalog' => $catalog->toArray()
+            ];
+
+            if($request->get('ui') != null) $response['fdp'] = $fdp->toBasicArray();
+
+            return new JsonResponse($response);
         }
         $graph = $catalog->toGraph();
 
@@ -194,13 +243,14 @@ class RDFRendererController extends Controller
             );
         }
         else if($accept == self::ACCEPT_JSON) {
-            return new JsonResponse(
-                [
-                    'success' => true,
-                    'dataset' => $dataset->toArray(),
-                    'catalog' => $catalog->toBasicArray()
-                ]
-            );
+            $response = [
+                'success' => true,
+                'dataset' => $dataset->toArray(),
+            ];
+
+            if($request->get('ui') != null) $response['catalog'] = $catalog->toBasicArray();
+
+            return new JsonResponse($response);
         }
         $graph = $dataset->toGraph();
 
@@ -254,13 +304,14 @@ class RDFRendererController extends Controller
             );
         }
         else if($accept == self::ACCEPT_JSON) {
-            return new JsonResponse(
-                [
-                    'success' => true,
-                    'distribution' => $distribution->toBasicArray(),
-                    'dataset' => $dataset->toBasicArray()
-                ]
-            );
+            $response = [
+                'success' => true,
+                'distribution' => $distribution->toBasicArray(),
+            ];
+
+            if($request->get('ui') != null) $response['dataset'] = $dataset->toBasicArray();
+
+            return new JsonResponse($response);
         }
 
         $graph = $distribution->toGraph();

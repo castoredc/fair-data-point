@@ -9,6 +9,7 @@ import MetadataItem from "../../components/MetadataItem";
 import ListItem from "../../components/ListItem";
 import Icon from "../../components/Icon";
 import {Link} from "react-router-dom";
+import Contact from "../../components/MetadataItem/Contact";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class Distribution extends Component {
     }
 
     componentDidMount() {
-        axios.get(window.location.href + '?format=json')
+        axios.get(window.location.href + '?format=json&ui=true')
             .then((response) => {
                 this.setState({
                     distribution: response.data.distribution,
@@ -91,10 +92,19 @@ export default class Distribution extends Component {
                             <DocumentTitle title={localizedText(this.state.distribution.title, 'en')} />
                             <Col md={4} className="Metadata">
                                 <div className="MetadataTop">
+                                    <div className="Type">Distribution</div>
                                     <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
                                     <div className="Description">
                                         {localizedText(this.state.distribution.description, 'en')}
                                     </div>
+                                    {this.state.distribution.publishers.length > 0 && <div className="Publishers">
+                                        {this.state.distribution.publishers.map((item, index) => {
+                                            return <Contact key={index}
+                                                            url={item.url}
+                                                            type={item.type}
+                                                            name={item.name} />}
+                                        )}
+                                    </div>}
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.distribution.version} />
