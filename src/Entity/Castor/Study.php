@@ -36,7 +36,7 @@ class Study
     /**
      * @var string|null
      */
-    private $mainContact;
+    private $mainAgent;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -49,14 +49,14 @@ class Study
      * Study constructor.
      * @param string|null $id
      * @param string|null $name
-     * @param string|null $mainContact
+     * @param string|null $mainAgent
      * @param string|null $slug
      */
-    public function __construct(?string $id, ?string $name, ?string $mainContact, ?string $slug)
+    public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->mainContact = $mainContact;
+        $this->mainAgent = $mainAgent;
         $this->slug = $slug;
     }
 
@@ -95,17 +95,17 @@ class Study
     /**
      * @return string|null
      */
-    public function getMainContact(): ?string
+    public function getMainAgent(): ?string
     {
-        return $this->mainContact;
+        return $this->mainAgent;
     }
 
     /**
-     * @param string|null $mainContact
+     * @param string|null $mainAgent
      */
-    public function setMainContact(?string $mainContact): void
+    public function setMainAgent(?string $mainAgent): void
     {
-        $this->mainContact = $mainContact;
+        $this->mainAgent = $mainAgent;
     }
 
     /**

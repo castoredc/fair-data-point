@@ -5,14 +5,15 @@ namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
  */
-class Organization extends Contact
+class Organization extends Agent
 {
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="iri", nullable=true)
      *
      * @var Iri|null
      */
@@ -30,6 +31,11 @@ class Organization extends Contact
         $this->homepage = $homepage;
     }
 
+    public function getAccessUrl()
+    {
+        return $this->getFairDataPoint()->getIri() . '/agent/organization/' . $this->getSlug();
+    }
+
     public function toArray()
     {
         return array_merge(parent::toArray(), [
@@ -37,6 +43,21 @@ class Organization extends Contact
             'homepage' => $this->homepage,
             'type' => 'organization'
         ]);
+    }
+
+    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph)
+    {
+        $url = $this->getAccessUrl();
+        if($this->homepage != null) $url = $this->homepage->getValue();
+
+        $graph->addResource($url, 'a', 'foaf:Organization');
+        $graph->addLiteral($url, 'foaf:name', $this->getName());
+
+        if($subject != null && $predicate != null) {
+            $graph->addResource($subject, $predicate, $url);
+        }
+
+        return $graph;
     }
 
 }

@@ -6,14 +6,15 @@ namespace App\Entity\FAIRData;
 use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
  */
-class Person extends Contact
+class Person extends Agent
 {
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="iri")
      *
      * @var Iri|null
      */
@@ -32,6 +33,11 @@ class Person extends Contact
         $this->orcid = $orcid;
     }
 
+    public function getAccessUrl()
+    {
+        return $this->getFairDataPoint()->getIri() . '/agent/person/' . $this->getSlug();
+    }
+
     public function toArray()
     {
         return array_merge(parent::toArray(), [
@@ -39,6 +45,21 @@ class Person extends Contact
             'orcid' => $this->orcid,
             'type' => 'person'
         ]);
+    }
+
+    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph)
+    {
+        $url = $this->getAccessUrl();
+        if($this->orcid != null) $url = $this->orcid->getValue();
+
+        $graph->addResource($url, 'a', 'foaf:Person');
+        $graph->addLiteral($url, 'foaf:name', $this->getName());
+
+        if($subject != null && $predicate != null) {
+            $graph->addResource($subject, $predicate, $url);
+        }
+
+        return $graph;
     }
 
 }

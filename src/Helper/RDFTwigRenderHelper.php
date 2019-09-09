@@ -88,7 +88,8 @@ class RDFTwigRenderHelper
 
         $content = $this->twig->render($templateData);
 
-        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
+        $trimmedContent = trim(preg_replace('/\n\s*\n/', "\n", $content));
+        $trimmedContent = trim(preg_replace('/\t+/', '', $trimmedContent));
         return $trimmedContent;
     }
 
@@ -102,7 +103,7 @@ class RDFTwigRenderHelper
                 continue;
             }
 
-            $return = $return . "\n" . $this->renderRecord($record['record_id']);
+            $return = $return . $this->renderRecord($record['record_id']) . "\n\n";
         }
 
         return $return;
