@@ -62,7 +62,7 @@ class Distribution
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedDistributions",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedDistributions",cascade={"persist"})
      * @ORM\JoinTable(name="distributions_publishers")
      *
      * @var Collection
@@ -79,7 +79,7 @@ class Distribution
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
      * @var License|null
      */
@@ -222,7 +222,7 @@ class Distribution
     }
 
     /**
-     * @return Contact[]
+     * @return Agent[]
      */
     public function getPublishers(): array
     {
@@ -230,7 +230,7 @@ class Distribution
     }
 
     /**
-     * @param Contact[] $publishers
+     * @param Agent[] $publishers
      */
     public function setPublishers(array $publishers): void
     {
@@ -332,7 +332,7 @@ class Distribution
         $publishers = [];
         foreach($this->publishers as $publisher)
         {
-            /** @var Contact $publisher */
+            /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
         return [
@@ -345,7 +345,7 @@ class Distribution
             'description' => $this->description->toArray(),
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
-            'license' => $this->license,
+            'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
         ];
@@ -389,15 +389,14 @@ class Distribution
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-//        foreach($this->publishers as $publisher) {
-//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
-//        }
+        foreach($this->publishers as $publisher) {
+            /** @var Agent $agent */
+            $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
+        }
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
 
-        #$graph->addResource($this->getAccessUrl(), 'dcat:downloadURL', $this->getAccessUrl() . '/rdf?download=1');
-        #$graph->addResource($this->getAccessUrl(), 'dcat:accessURL', $this->getAccessUrl() . '/rdf');
-        #$graph->addLiteral($this->getAccessUrl(), 'dcat:mediaType', 'text/turtle');
+        $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
 
         return $graph;
     }

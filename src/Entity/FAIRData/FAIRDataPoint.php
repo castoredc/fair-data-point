@@ -30,7 +30,7 @@ class FAIRDataPoint
     private $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="iri")
      *
      * @var Iri
      */
@@ -62,7 +62,7 @@ class FAIRDataPoint
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedCatalogs",cascade={"persist"}, fetch = "EAGER")
+     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedCatalogs",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinTable(name="fdp_publishers")
      *
      * @var Collection
@@ -79,7 +79,7 @@ class FAIRDataPoint
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinColumn(name="license", referencedColumnName="id", nullable=true))
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true))
      *
      * @var License|null
      */
@@ -277,7 +277,7 @@ class FAIRDataPoint
         $publishers = [];
         foreach($this->publishers as $publisher)
         {
-            /** @var Contact $publisher */
+            /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
 
@@ -290,7 +290,7 @@ class FAIRDataPoint
             'description' => $this->description->toArray(),
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
-            'license' => $this->license,
+            'license' => $this->license->toArray(),
         ];
     }
 
@@ -326,13 +326,15 @@ class FAIRDataPoint
             /** @var LocalizedTextItem $text */
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
-//
-//        foreach($this->publishers as $publisher) {
-//            /** @var Contact $publisher */
-//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->get());
-//        }
+
+        foreach($this->publishers as $publisher) {
+            /** @var Agent $agent */
+            $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
+        }
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
 
         foreach($this->catalogs as $catalog) {
             /** @var Catalog $catalog */

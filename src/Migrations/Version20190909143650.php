@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190906125028 extends AbstractMigration
+final class Version20190909143650 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,8 @@ final class Version20190906125028 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE user (id VARCHAR(255) NOT NULL, full_name VARCHAR(255) NOT NULL, name_first VARCHAR(255) NOT NULL, name_middle VARCHAR(255) DEFAULT NULL, name_last VARCHAR(255) NOT NULL, email_address VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE fdp CHANGE iri iri VARCHAR(255) NOT NULL COMMENT \'(DC2Type:iri)\'');
+        $this->addSql('ALTER TABLE license CHANGE url url VARCHAR(255) NOT NULL COMMENT \'(DC2Type:iri)\'');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +31,7 @@ final class Version20190906125028 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE user');
+        $this->addSql('ALTER TABLE fdp CHANGE iri iri VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci');
+        $this->addSql('ALTER TABLE license CHANGE url url VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci');
     }
 }

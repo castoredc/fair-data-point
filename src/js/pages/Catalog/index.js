@@ -107,8 +107,8 @@ export default class Catalog extends Component {
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.catalog.version} />
-                                    <MetadataItem label="Language" value={this.state.catalog.language.name} />
-                                    <MetadataItem label="License" value={this.state.catalog.license} />
+                                    <MetadataItem label="Language" url={this.state.catalog.language.url} value={this.state.catalog.language.name} />
+                                    <MetadataItem label="License" url={this.state.catalog.license.url} value={this.state.catalog.license.name} />
                                     <MetadataItem label="Issued" value={this.state.catalog.issued.date} />
                                     <MetadataItem label="Modified" value={this.state.catalog.modified.date} />
                                     <MetadataItem label="Homepage" value={this.state.catalog.homepage} />

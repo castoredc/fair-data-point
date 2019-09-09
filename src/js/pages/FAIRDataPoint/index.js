@@ -87,8 +87,8 @@ export default class FAIRDataPoint extends Component {
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.fdp.version} />
-                                    <MetadataItem label="Language" value={this.state.fdp.language.name} />
-                                    <MetadataItem label="License" value={this.state.fdp.license} />
+                                    <MetadataItem label="Language" url={this.state.fdp.language.url} value={this.state.fdp.language.name} />
+                                    <MetadataItem label="License" url={this.state.fdp.license.url} value={this.state.fdp.license.name} />
                                 </div>
 
                             </Col>

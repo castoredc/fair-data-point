@@ -109,8 +109,8 @@ export default class Dataset extends Component {
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.dataset.version} />
-                                    <MetadataItem label="Language" value={this.state.dataset.language.name} />
-                                    <MetadataItem label="License" value={this.state.dataset.license} />
+                                    <MetadataItem label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />
+                                    <MetadataItem label="License" url={this.state.dataset.license.url} value={this.state.dataset.license.name} />
                                     <MetadataItem label="Issued" value={this.state.dataset.issued.date} />
                                     <MetadataItem label="Modified" value={this.state.dataset.modified.date} />
                                     <MetadataItem label="Landing page" value={this.state.dataset.landingpage} />

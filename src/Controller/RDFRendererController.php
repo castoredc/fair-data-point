@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Contact;
+use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\Distribution\RDFDistribution;
@@ -54,25 +54,6 @@ class RDFRendererController extends Controller
         return self::ACCEPT_TURTLE;
     }
 
-    private function graphToObject(EasyRdf_Graph $graph)
-    {
-        $graphArray = $graph->toRdfPhp();
-        $graphArray = reset($graphArray);
-
-        $rdfItems = [];
-
-        foreach($graphArray as $iri => $children)
-        {
-            $short = EasyRdf_Namespace::shorten($iri);
-            $rdfItem = new RdfItem(new Iri($iri), $short);
-            $rdfItem->childrenFromData($children);
-
-            $rdfItems[] = $rdfItem->toArray();
-        }
-
-        return $rdfItems;
-    }
-
     /**
      * @Route("/fdp", name="fdp_render")
      * @param Request $request
@@ -115,13 +96,13 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/profile/{profileType}/{profileSlug}", name="catalog_render")
+     * @Route("/agent/{agentType}/{agentSlug}", name="agent_render")
      * @param Request $request
-     * @param $profileType
-     * @param $profileSlug
+     * @param $agentType
+     * @param $agentSlug
      * @return Response
      */
-    public function profileAction(Request $request, $profileType, $profileSlug)
+    public function profileAction(Request $request, $agentType, $agentSlug)
     {
         $accept = $this->detectAccept($request);
 
@@ -129,12 +110,12 @@ class RDFRendererController extends Controller
         $personRepository = $doctrine->getRepository(Person::class);
         $organizationRepository = $doctrine->getRepository(Organization::class);
 
-        /** @var Contact $contact */
+        /** @var Agent $contact */
         $contact = null;
-        if($profileType == "person") $contact = $personRepository->findOneBy(["slug" => $profileSlug]);
-        if($profileType == "organization") $contact = $organizationRepository->findOneBy(["slug" => $profileSlug]);
+        if($agentType == "person") $contact = $personRepository->findOneBy(["slug" => $agentSlug]);
+        if($agentType == "organization") $contact = $organizationRepository->findOneBy(["slug" => $agentSlug]);
 
-        if(!$contact) throw new NotFoundHttpException("Profile not found");
+        if(!$contact) throw new NotFoundHttpException("Agent not found");
 
         if($accept == self::ACCEPT_HTTP) {
             return $this->render(
@@ -145,7 +126,7 @@ class RDFRendererController extends Controller
             return new JsonResponse(
                 [
                     'success' => true,
-                    'profile' => $contact->toArray()
+                    'agent' => $contact->toArray()
                 ]
             );
         }
@@ -375,6 +356,18 @@ class RDFRendererController extends Controller
 
         $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
 
+        if($request->query->has('download') && $request->query->get('download') == true)
+        {
+            $response = new Response( $helper->renderRecords());
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $study->getSlug() . '_' . time() . '.ttl'
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
+        }
+
         return new Response(
             $helper->renderRecords(),
             Response::HTTP_OK,
@@ -438,6 +431,18 @@ class RDFRendererController extends Controller
         }
 
         $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
+
+        if($request->query->has('download') && $request->query->get('download') == true)
+        {
+            $response = new Response($helper->renderRecord($recordId));
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $study->getSlug() . '_' . $recordId . '_' . time() . '.ttl'
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
+        }
 
         return new Response(
             $helper->renderRecord($recordId),

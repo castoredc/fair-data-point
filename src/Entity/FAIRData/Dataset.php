@@ -66,7 +66,7 @@ class Dataset
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedDatasets",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedDatasets",cascade={"persist"})
      * @ORM\JoinTable(name="datasets_publishers")
      *
      * @var Collection
@@ -83,7 +83,7 @@ class Dataset
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
      * @var License|null
      */
@@ -139,7 +139,7 @@ class Dataset
 //    private $theme;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="contactDatasets",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="contactDatasets",cascade={"persist"})
      * @ORM\JoinTable(name="datasets_contactpoints")
      *
      * @var Collection
@@ -395,7 +395,7 @@ class Dataset
     /**
      * @return Collection
      */
-    public function getContactPoint(): Collection
+    public function getAgentPoint(): Collection
     {
         return $this->contactPoint;
     }
@@ -403,7 +403,7 @@ class Dataset
     /**
      * @param Collection $contactPoint
      */
-    public function setContactPoint(Collection $contactPoint): void
+    public function setAgentPoint(Collection $contactPoint): void
     {
         $this->contactPoint = $contactPoint;
     }
@@ -477,14 +477,14 @@ class Dataset
         $publishers = [];
         foreach($this->publishers as $publisher)
         {
-            /** @var Contact $publisher */
+            /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
 
         $contactPoints = [];
         foreach($this->contactPoint as $contactPoint)
         {
-            /** @var Contact $contactPoint */
+            /** @var Agent $contactPoint */
             $contactPoints[] = $contactPoint->toArray();
         }
 
@@ -498,7 +498,7 @@ class Dataset
             'description' => $this->description->toArray(),
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
-            'license' => $this->license,
+            'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
             'contactPoints' => $contactPoints,
@@ -540,11 +540,19 @@ class Dataset
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-//        foreach($this->publishers as $publisher) {
-//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
-//        }
+        foreach($this->publishers as $publisher) {
+            /** @var Agent $agent */
+            $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
+        }
+
+        foreach($this->contactPoint as $contactPoint) {
+            /** @var Agent $agent */
+            $contactPoint->addToGraph($this->getAccessUrl(), 'dcat:contactPoint', $graph);
+        }
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
 
         //$graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
 

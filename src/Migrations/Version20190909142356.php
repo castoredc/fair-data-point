@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190906113903 extends AbstractMigration
+final class Version20190909142356 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,9 @@ final class Version20190906113903 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE distribution_rdf (id CHAR(36) NOT NULL COMMENT \'(DC2Type:guid)\', twig LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE distribution_rdf ADD CONSTRAINT FK_DDC596AFBF396750 FOREIGN KEY (id) REFERENCES distribution (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE distribution ADD dtype VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE agent ADD fdp CHAR(36) DEFAULT NULL COMMENT \'(DC2Type:guid)\'');
+        $this->addSql('ALTER TABLE agent ADD CONSTRAINT FK_268B9C9DE28FB11F FOREIGN KEY (fdp) REFERENCES fdp (id)');
+        $this->addSql('CREATE INDEX IDX_268B9C9DE28FB11F ON agent (fdp)');
     }
 
     public function down(Schema $schema) : void
@@ -32,7 +32,8 @@ final class Version20190906113903 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE distribution_rdf');
-        $this->addSql('ALTER TABLE distribution DROP dtype');
+        $this->addSql('ALTER TABLE agent DROP FOREIGN KEY FK_268B9C9DE28FB11F');
+        $this->addSql('DROP INDEX IDX_268B9C9DE28FB11F ON agent');
+        $this->addSql('ALTER TABLE agent DROP fdp');
     }
 }

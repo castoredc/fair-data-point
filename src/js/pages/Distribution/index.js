@@ -108,8 +108,8 @@ export default class Distribution extends Component {
                                 </div>
                                 <div className="MetadataBottom">
                                     <MetadataItem label="Version" value={this.state.distribution.version} />
-                                    <MetadataItem label="Language" value={this.state.distribution.language.name} />
-                                    <MetadataItem label="License" value={this.state.distribution.license} />
+                                    <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />
+                                    <MetadataItem label="License" url={this.state.distribution.license.url} value={this.state.distribution.license.name} />
                                     <MetadataItem label="Issued" value={this.state.distribution.issued.date} />
                                     <MetadataItem label="Modified" value={this.state.distribution.modified.date} />
                                 </div>

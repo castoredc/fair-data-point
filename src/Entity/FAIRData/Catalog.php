@@ -64,7 +64,7 @@ class Catalog
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Contact", inversedBy="publishedCatalogs",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedCatalogs",cascade={"persist"})
      * @ORM\JoinTable(name="catalogs_publishers")
      *
      * @var Collection
@@ -81,7 +81,7 @@ class Catalog
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
      * @var License|null
      */
@@ -248,7 +248,7 @@ class Catalog
     /**
      * @return Collection
      */
-    public function getContacts(): Collection
+    public function getAgents(): Collection
     {
         return $this->publishers;
     }
@@ -256,7 +256,7 @@ class Catalog
     /**
      * @param Collection $publishers
      */
-    public function setContacts(aCollectionrray $publishers): void
+    public function setAgents(aCollectionrray $publishers): void
     {
         $this->publishers = $publishers;
     }
@@ -393,7 +393,7 @@ class Catalog
         $publishers = [];
         foreach($this->publishers as $publisher)
         {
-            /** @var Contact $publisher */
+            /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
 
@@ -407,7 +407,7 @@ class Catalog
             'description' => $this->description->toArray(),
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
-            'license' => $this->license,
+            'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
             'homepage' => $this->homepage
@@ -454,15 +454,19 @@ class Catalog
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-//        foreach($this->publishers as $publisher) {
-//            $graph->addResource($this->getAccessUrl(), 'dcterms:publisher', $publisher->getValue());
-//        }
+        foreach($this->publishers as $publisher) {
+            /** @var Agent $agent */
+            $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
+        }
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
 
         foreach($this->datasets as $dataset) {
             $graph->addResource($this->getAccessUrl(), 'dcat:dataset', $dataset->getAccessUrl());
         }
+
+        $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
+
 
         return $graph;
     }

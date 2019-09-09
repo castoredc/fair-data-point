@@ -3,6 +3,7 @@
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,14 +13,6 @@ class License
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid")
-     * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="string")
      *
      * @var string
@@ -27,11 +20,11 @@ class License
     private $slug;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="iri")
      *
-     * @var string
+     * @var Iri
      */
-    private $short;
+    private $url;
 
     /**
      * @ORM\Column(type="string")
@@ -42,33 +35,15 @@ class License
 
     /**
      * License constructor.
-     * @param string $id
      * @param string $slug
-     * @param string $short
+     * @param Iri $url
      * @param string $name
      */
-    public function __construct(string $id, string $slug, string $short, string $name)
+    public function __construct(string $slug, Iri $url, string $name)
     {
-        $this->id = $id;
         $this->slug = $slug;
-        $this->short = $short;
+        $this->url = $url;
         $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId(string $id): void
-    {
-        $this->id = $id;
     }
 
     /**
@@ -88,19 +63,19 @@ class License
     }
 
     /**
-     * @return string
+     * @return Iri
      */
-    public function getShort(): string
+    public function getUrl(): Iri
     {
-        return $this->short;
+        return $this->url;
     }
 
     /**
-     * @param string $short
+     * @param Iri $url
      */
-    public function setShort(string $short): void
+    public function setUrl(Iri $url): void
     {
-        $this->short = $short;
+        $this->url = $url;
     }
 
     /**
@@ -117,5 +92,13 @@ class License
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function toArray() {
+        return [
+            'slug' => $this->slug,
+            'url' => $this->url,
+            'name' => $this->name
+        ];
     }
 }

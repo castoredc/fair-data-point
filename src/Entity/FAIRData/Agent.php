@@ -4,13 +4,14 @@
 namespace App\Entity\FAIRData;
 
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="contact", indexes={@ORM\Index(name="slug", columns={"slug"})})
+ * @ORM\Table(name="agent", indexes={@ORM\Index(name="slug", columns={"slug"})})
  */
-abstract class Contact
+abstract class Agent
 {
     /**
      * @ORM\Id
@@ -34,6 +35,14 @@ abstract class Contact
      * @var string
      */
     private $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
+     *
+     * @var FAIRDataPoint
+     */
+    private $fairDataPoint;
 
     /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="publishers",cascade={"persist"})
@@ -64,7 +73,7 @@ abstract class Contact
     private $contactDatasets;
 
     /**
-     * Contact constructor.
+     * Agent constructor.
      * @param string $slug
      * @param string $name
      */
@@ -114,6 +123,19 @@ abstract class Contact
         $this->name = $name;
     }
 
+    /**
+     * @return FAIRDataPoint
+     */
+    public function getFairDataPoint(): FAIRDataPoint
+    {
+        return $this->fairDataPoint;
+    }
+
+    public function getAccessUrl()
+    {
+        return $this->getFairDataPoint()->getIri() . '/agent/undefined/' . $this->slug;
+    }
+
     public function toArray()
     {
         return [
@@ -121,5 +143,22 @@ abstract class Contact
             'slug' => $this->slug,
             'name' => $this->name
         ];
+    }
+
+    public function toGraph()
+    {
+        return $this->addToGraph(null, null, new EasyRdf_Graph());
+    }
+
+    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph)
+    {
+        $graph->addResource($this->getAccessUrl(), 'a', 'foaf:Agent');
+        $graph->addLiteral($this->getAccessUrl(), 'foaf:name', $this->name);
+
+        if($subject != null && $predicate != null) {
+            $graph->addResource($subject, $predicate, $this->getAccessUrl());
+        }
+
+        return $graph;
     }
 }

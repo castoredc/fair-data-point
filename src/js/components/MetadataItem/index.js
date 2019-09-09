@@ -5,7 +5,7 @@ import {isURL} from "../../util";
 
 class MetadataItem extends Component {
     render() {
-        const { label, value, children } = this.props;
+        const { label, url, value, children } = this.props;
 
         if(children)
         {
@@ -19,6 +19,10 @@ class MetadataItem extends Component {
         if(isURL(value))
         {
             display = <a href={value} target="_blank">{value}</a>;
+        }
+        if(url)
+        {
+            display = <a href={url} target="_blank">{value}</a>;
         }
 
         return <div className="MetadataItem">
