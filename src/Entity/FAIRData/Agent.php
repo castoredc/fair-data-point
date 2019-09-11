@@ -15,7 +15,7 @@ abstract class Agent
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid")
+     * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
      *
      * @var string

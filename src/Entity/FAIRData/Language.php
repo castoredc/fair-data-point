@@ -14,7 +14,7 @@ class Language
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=190)
      *
      * @var string
      */
