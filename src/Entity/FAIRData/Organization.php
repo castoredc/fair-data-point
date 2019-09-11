@@ -39,8 +39,8 @@ class Organization extends Agent
     public function toArray()
     {
         return array_merge(parent::toArray(), [
-            'url' => $this->homepage,
-            'homepage' => $this->homepage,
+            'url' => $this->homepage->getValue(),
+            'homepage' => $this->homepage->getValue(),
             'type' => 'organization'
         ]);
     }

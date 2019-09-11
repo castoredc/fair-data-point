@@ -56,7 +56,9 @@ class RDFDistribution extends Distribution
     public function toArray()
     {
         return array_merge(parent::toArray(), [
-            'rdf_url' => $this->getRDFUrl()
+            'rdf_url' => $this->getRDFUrl(),
+            'download_url' => $this->getRDFUrl() . '/?download=1',
+            'access_url' => $this->getRDFUrl()
         ]);
     }
 

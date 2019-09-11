@@ -8,6 +8,7 @@ import {localizedText} from "../../util";
 import MetadataItem from "../../components/MetadataItem";
 import ListItem from "../../components/ListItem";
 import Contact from "../../components/MetadataItem/Contact";
+import Alert from "react-bootstrap/Alert";
 
 export default class FAIRDataPoint extends Component {
     constructor(props) {
@@ -59,12 +60,15 @@ export default class FAIRDataPoint extends Component {
             <Container className="FAIRDataPoint">
                 {this.state.isLoaded ?
                     <div className="Information">
+                        <Alert variant="warning">
+                            <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.
+                        </Alert>
                         <div className="InformationHeader">
                             <a href={window.location.href + '?format=json'} className="LinkTop LinkFileType" target="_blank">
                                 JSON
                             </a>
                             <a href={window.location.href + '?format=ttl'} className="LinkTop LinkFileType" target="_blank">
-                                RDF
+                                Turtle
                             </a>
                         </div>
                         <Row className="InformationRow">
