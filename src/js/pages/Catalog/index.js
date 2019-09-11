@@ -10,6 +10,7 @@ import ListItem from "../../components/ListItem";
 import Icon from "../../components/Icon";
 import {Link} from "react-router-dom";
 import Contact from "../../components/MetadataItem/Contact";
+import Alert from "react-bootstrap/Alert";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -75,6 +76,9 @@ export default class Catalog extends Component {
             <Container className="Catalog">
                 {this.state.isLoaded ?
                     <div className="Information">
+                        <Alert variant="warning">
+                            <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.
+                        </Alert>
                         <div className="InformationHeader">
                             <Link to={this.state.fdp.relative_url} className="LinkTop LinkBack">
                                 <Icon type="arrowLeft" />
@@ -84,7 +88,7 @@ export default class Catalog extends Component {
                                 JSON
                             </a>
                             <a href={window.location.href + '?format=ttl'} className="LinkTop LinkFileType" target="_blank">
-                                RDF
+                                Turtle
                             </a>
                         </div>
                         <Row className="InformationRow">

@@ -41,8 +41,8 @@ class Person extends Agent
     public function toArray()
     {
         return array_merge(parent::toArray(), [
-            'url' => $this->orcid,
-            'orcid' => $this->orcid,
+            'url' => $this->orcid->getValue(),
+            'orcid' => $this->orcid->getValue(),
             'type' => 'person'
         ]);
     }
