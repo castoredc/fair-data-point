@@ -97,7 +97,7 @@ class License
     public function toArray() {
         return [
             'slug' => $this->slug,
-            'url' => $this->url,
+            'url' => $this->url->getValue(),
             'name' => $this->name
         ];
     }
