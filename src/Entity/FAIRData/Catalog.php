@@ -256,7 +256,7 @@ class Catalog
     /**
      * @param Collection $publishers
      */
-    public function setAgents(aCollectionrray $publishers): void
+    public function setAgents(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
