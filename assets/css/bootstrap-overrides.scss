@@ -1,0 +1,285 @@
+$primary: $blue-1;
+
+$btn-padding-x: 12px;
+$btn-padding-y: 5px;
+$btn-line-height-sm: 24px;
+
+$btn-padding-x-sm: 10px;
+$btn-padding-y-sm: 3px;
+$btn-line-height-sm: 18px;
+
+$btn-padding-x-lg: 14px;
+$btn-padding-y-lg: 8px;
+$btn-line-height-lg: 30px;
+
+$btn-font-weight: $pf-bold;
+
+$dropdown-link-color: $grey-900;
+$dropdown-link-hover-color: $blue-1;
+$dropdown-link-active-color: $blue-0;
+$dropdown-link-hover-bg: $white;
+$dropdown-link-active-bg: $white;
+
+$navbar-dark-color: $white;
+$navbar-dark-hover-color: $white;
+
+.dropdown-item .icon svg {
+  fill: $grey-450;
+}
+
+.dropdown-item.hover .icon svg, .dropdown-item:hover .icon svg {
+  fill: $blue-1;
+}
+
+.dropdown-item.active .icon svg, .dropdown-item:active .icon svg {
+  fill: $blue-0;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:active, .navbar-dark .navbar-nav .nav-link.active {
+  background: rgba($white, $highlight-opacity);
+  border-radius: $rad-m;
+}
+
+.btn.btn-primary {
+  color: $white;
+  background-color: $blue-1;
+  border: 1px solid;
+  border-color: $blue-1;
+}
+
+.btn.btn-primary:hover {
+  color: $white;
+  background-color: $blue-2;
+  border: 1px solid;
+  border-color: $blue-2;
+}
+
+.btn.btn-primary:active {
+  color: $white;
+  background-color: $blue-0;
+  border: 1px solid;
+  border-color: $blue-0;
+}
+
+.btn.btn-primary.disabled {
+  color: $white;
+  background-color: $blue-1;
+  border: 1px solid;
+  border-color: $blue-1;
+  opacity: 0.15;
+}
+
+
+
+.btn.btn-primary.onblue {
+  color: $blue-1;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-primary.onblue:hover {
+  color: $blue-2;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-primary.onblue:active {
+  color: $blue-0;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-primary.onblue.disabled {
+  color: $blue-1;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $white;
+  opacity: 0.15;
+}
+
+.btn.btn-secondary {
+  color: $blue-1;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $blue-1;
+}
+
+.btn.btn-secondary:hover {
+  color: $blue-2;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $blue-2;
+}
+
+.btn.btn-secondary:active {
+  color: $blue-0;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $blue-0;
+}
+
+.btn.btn-secondary.disabled {
+  color: $blue-1;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $blue-1;
+  opacity: 0.15;
+}
+
+.btn.btn-secondary.onblue {
+  color: $white;
+  background-color: $blue-1;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-secondary.onblue:hover {
+  color: $white;
+  background-color: $blue-2;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-secondary.onblue:active {
+  color: $white;
+  background-color: $blue-0;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-secondary.onblue.disabled {
+  color: $white;
+  background-color: $blue-1;
+  border: 1px solid;
+  border-color: $white;
+  opacity: 0.15;
+}
+
+.btn.btn-tertiary {
+  color: $grey-850;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $grey-500;
+}
+
+.btn.btn-tertiary:hover {
+  color: $grey-950;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $grey-800;
+}
+
+.btn.btn-tertiary:active {
+  color: $black;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $grey-950;
+}
+
+.btn.btn-tertiary.disabled {
+  color: $grey-850;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $grey-500;
+  Opacity: 0.15;
+}
+
+.btn.btn-tertiary.onblue {
+  color: $white;
+  background-color: $blue-2;
+  border: 1px solid;
+  border-color: $blue-2;
+}
+
+.btn.btn-tertiary.onblue:hover {
+  color: $white;
+  background-color: $blue-3;
+  border: 1px solid;
+  border-color: $blue-3;
+}
+
+.btn.btn-tertiary.onblue:active {
+  color: $blue-1;
+  background-color: $white;
+  border: 1px solid;
+  border-color: $white;
+}
+
+.btn.btn-tertiary.onblue.disabled {
+  color: $white;
+  background-color: $blue-2;
+  border: 1px solid;
+  border-color: $blue-2;
+  opacity: 0.15;
+}
+
+.text-btn {
+  color: $grey-850;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.text-btn svg {
+  fill: $grey-450;
+}
+
+.text-btn:hover {
+  color: $blue-1;
+  text-decoration: none;
+}
+
+.text-btn:hover svg {
+  fill: $blue-1;
+}
+
+.text-btn:active, .text-btn.active {
+  color: $blue-0;
+}
+
+.text-btn:active svg, .text-btn.active svg {
+  fill: $blue-0;
+}
+
+.text-btn.disabled {
+  color: $grey-850;
+  opacity: 0.15;
+}
+
+.text-btn.disabled svg {
+  fill: $grey-450;
+  opacity: 0.15;
+}
+
+.text-btn .icon {
+  float: left;
+  margin-right: 8px;
+}
+
+.castor-icon {
+  position: relative;
+}
+
+.castor-icon.icon-m {
+  top: 3px;
+}
+
+.castor-icon.icon-text-right {
+  margin-right: 3px;
+}
+
+.icon-white svg {
+  fill: $white;
+}
+
+.icon-refresh-animate svg {
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

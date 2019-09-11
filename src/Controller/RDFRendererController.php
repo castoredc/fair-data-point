@@ -2,13 +2,26 @@
 
 namespace App\Controller;
 
-use App\Model\ApiClient;
-use App\Service\CastorAuth;
+use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\Distribution\RDFDistribution;
+use App\Entity\FAIRData\FAIRDataPoint;
+use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Person;
+use App\Entity\Iri;
+use App\Entity\RdfItem;
+use App\Helper\RDFTwigRenderHelper;
+use App\Model\Castor\ApiClient;
+use EasyRdf_Graph;
 use EasyRdf_Namespace;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -16,67 +29,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class RDFRendererController extends Controller
 {
-    private $metadataName = 'SNOMED';
+    const ACCEPT_HTTP = 1;
+    const ACCEPT_JSON = 2;
+    const ACCEPT_TURTLE = 3;
 
-    /** @var CastorAuth */
-    private $authenticator;
-
-    /**
-     * @var CastorAuth\RouteParametersStorage
-     */
-    private $routeStorage;
-
-    private $studies = [
-        'test' => '57051B03-59C1-23A3-3ADA-7AA791481606',
-        'radboudumc' => '13AD6C43-0CA0-C51F-7EB5-32DCC237C87E'
-    ];
-
-    private $optionGroupFields = [
-        'radio',
-        'dropdown',
-        'checkbox'
-    ];
-
-    /**
-     * @var ApiClient
-     */
-    private $apiClient;
-
-    public function __construct(CastorAuth $castorAuth, CastorAuth\RouteParametersStorage $routeParametersStorage)
+    private function detectAccept(Request $request)
     {
-        $this->authenticator = $castorAuth;
-        $this->routeStorage = $routeParametersStorage;
+        if($request->get('format') != null)
+        {
+            $format = $request->get('format');
 
-
-        $this->apiClient = new ApiClient();
-        $this->apiClient->auth(getenv('CASTOR_OAUTH_CLIENT_ID'), getenv('CASTOR_OAUTH_CLIENT_SECRET'));
-
-        EasyRdf_Namespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
-    }
-
-    private function checkRouteAccessWithOauth(Request $request, $routeName, $routeParameters = [])
-    {
-        if (!$this->authenticator->isTokenValid($request->get('token'))) {
-            $this->routeStorage->setRouteParameters(new CastorAuth\RouteParameters($routeName, $routeParameters));
-            return $this->redirect($this->authenticator->getAuthorizationUrl());
+            if($format == 'html')  return self::ACCEPT_HTTP;
+            if($format == 'json')  return self::ACCEPT_JSON;
+            if($format == 'ttl') return self::ACCEPT_TURTLE;
         }
 
-        return true;
+        $types = $request->getAcceptableContentTypes();
+
+        if(in_array('text/html', $types)) return self::ACCEPT_HTTP;
+        if(in_array('application/json', $types)) return self::ACCEPT_JSON;
+        if(in_array('text/turtle', $types)) return self::ACCEPT_TURTLE;
+        if(in_array('text/turtle;q=0.8', $types)) return self::ACCEPT_TURTLE;
+
+        return self::ACCEPT_TURTLE;
     }
-
-    /**
-     * @Route("/test/{name}", name="test")
-     * @param Request $request
-     * @return string
-     */
-    /* public function authTestAction(Request $request, $name)
-    {
-        if (($result = $this->checkRouteAccessWithOauth($request, 'test', ['name' => $name])) !== true) {
-            return $result;
-        }
-        return new JsonResponse(['Hello ' . $name]);
-    } */
-
 
     /**
      * @Route("/fdp", name="fdp_render")
@@ -85,23 +61,32 @@ class RDFRendererController extends Controller
      */
     public function fdpAction(Request $request)
     {
-        $url =  getenv('FDP_URL') . '/fdp';
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
-        $graph = new \EasyRdf_Graph();
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
 
-        $graph->addResource($url, 'a', 'r3d:Repository');
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
 
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($url, 'dcterms:hasVersion', '0.1');
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
 
-        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
+        if($accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($accept == self::ACCEPT_JSON) {
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'fdp' => $fdp->toArray()
+                ]
+            );
+        }
 
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
-
-        $graph->addResource($url, 'http://www.re3data.org/schema/3-0#dataCatalog', $url . '/vasca');
+        $graph = $fdp->toGraph();
 
         return new Response(
             $graph->serialise('turtle'),
@@ -111,206 +96,348 @@ class RDFRendererController extends Controller
     }
 
     /**
-     * @Route("/fdp/{catalog}", name="catalog_render")
+     * @Route("/agent/{agentType}/{agentSlug}", name="agent_render")
      * @param Request $request
-     * @param $catalog
+     * @param $agentType
+     * @param $agentSlug
      * @return Response
      */
-    public function catalogAction(Request $request, $catalog)
+    public function profileAction(Request $request, $agentType, $agentSlug)
     {
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog;
+        $accept = $this->detectAccept($request);
 
-        $graph = new \EasyRdf_Graph();
+        $doctrine = $this->getDoctrine();
+        $personRepository = $doctrine->getRepository(Person::class);
+        $organizationRepository = $doctrine->getRepository(Organization::class);
 
-        $graph->addResource($url, 'a', 'dcat:Catalog');
+        /** @var Agent $contact */
+        $contact = null;
+        if($agentType == "person") $contact = $personRepository->findOneBy(["slug" => $agentSlug]);
+        if($agentType == "organization") $contact = $organizationRepository->findOneBy(["slug" => $agentSlug]);
 
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($url, 'dcterms:hasVersion', '0.1');
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
+        if(!$contact) throw new NotFoundHttpException("Agent not found");
 
-        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
+        if($accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($accept == self::ACCEPT_JSON) {
+            return new JsonResponse(
+                [
+                    'success' => true,
+                    'agent' => $contact->toArray()
+                ]
+            );
+        }
 
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
+        $graph = $contact->toGraph();
 
-        foreach($this->studies as $study) {
-            $graph->addResource($url, 'dcat:dataset', $url . '/' . $study);
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
+
+    /**
+     * @Route("/fdp/{catalogSlug}", name="catalog_render")
+     * @param Request $request
+     * @param $catalogSlug
+     * @return Response
+     */
+    public function catalogAction(Request $request, $catalogSlug)
+    {
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
+
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        if($accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($accept == self::ACCEPT_JSON) {
+            $response = [
+                'success' => true,
+                'catalog' => $catalog->toArray()
+            ];
+
+            if($request->get('ui') != null) $response['fdp'] = $fdp->toBasicArray();
+
+            return new JsonResponse($response);
+        }
+        $graph = $catalog->toGraph();
+
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
+
+    /**
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}", name="dataset_render")
+     * @param Request $request
+     * @param $catalogSlug
+     * @param $datasetSlug
+     * @return Response
+     */
+    public function datasetAction(Request $request, $catalogSlug, $datasetSlug)
+    {
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
+
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        if($accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($accept == self::ACCEPT_JSON) {
+            $response = [
+                'success' => true,
+                'dataset' => $dataset->toArray(),
+            ];
+
+            if($request->get('ui') != null) $response['catalog'] = $catalog->toBasicArray();
+
+            return new JsonResponse($response);
+        }
+        $graph = $dataset->toGraph();
+
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
+
+    /**
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/{distributionSlug}", name="distribution_render")
+     * @param Request $request
+     * @param $catalogSlug
+     * @param $datasetSlug
+     * @param $distributionSlug
+     * @return Response
+     */
+    public function distributionAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug)
+    {
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
+
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+        $distributionRepository = $doctrine->getRepository(Distribution::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        /** @var Distribution $distribution */
+        $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
+        if(!$distribution) throw new NotFoundHttpException("Distribution not found");
+
+        if($accept == self::ACCEPT_HTTP) {
+            return $this->render(
+                'react.html.twig'
+            );
+        }
+        else if($accept == self::ACCEPT_JSON) {
+            $response = [
+                'success' => true,
+                'distribution' => $distribution->toArray(),
+            ];
+
+            if($request->get('ui') != null) $response['dataset'] = $dataset->toBasicArray();
+
+            return new JsonResponse($response);
+        }
+
+        $graph = $distribution->toGraph();
+
+        return new Response(
+            $graph->serialise('turtle'),
+            Response::HTTP_OK,
+            array('content-type' => 'text/turtle')
+        );
+    }
+
+    /**
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/{distributionSlug}/rdf", name="rdf_render")
+     * @param Request $request
+     * @param $catalogSlug
+     * @param $datasetSlug
+     * @param $distributionSlug
+     * @return Response
+     * @throws Exception
+     */
+    public function rdfAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug)
+    {
+        if(!$this->getUser())
+        {
+            return $this->redirect('/connect/castor');
+        }
+
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
+
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+        $distributionRepository = $doctrine->getRepository(Distribution::class);
+
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
+
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        $client = new ApiClient();
+        $client->setToken($this->getUser()->getToken());
+
+        /** @var RDFDistribution $distribution */
+        $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
+        if(!$distribution) throw new NotFoundHttpException("Distribution not found");
+        if(!$distribution instanceof RDFDistribution) throw new NotFoundHttpException("This distribution is not a RDF distribution");
+
+        try
+        {
+            $study = $client->getStudy($dataset->getStudy()->getId());
+        }
+        catch(UnauthorizedHttpException $e)
+        {
+            throw new UnauthorizedHttpException('', "You do not have permission to access this study");
+        }
+
+        $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
+
+        if($request->query->has('download') && $request->query->get('download') == true)
+        {
+            $response = new Response( $helper->renderRecords());
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $study->getSlug() . '_' . time() . '.ttl'
+            );
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
         }
 
         return new Response(
-            $graph->serialise('turtle'),
+            $helper->renderRecords(),
             Response::HTTP_OK,
             array('content-type' => 'text/turtle')
         );
     }
 
     /**
-     * @Route("/fdp/{catalog}/{study}", name="dataset_render")
+     * @Route("/fdp/{catalogSlug}/{datasetSlug}/{distributionSlug}/rdf/{recordId}", name="rdf_render_record")
      * @param Request $request
-     * @param $catalog
-     * @param $study
-     * @return Response
-     */
-    public function datasetAction(Request $request, $catalog, $study)
-    {
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study;
-
-        $study = $this->apiClient->getStudy($study);
-
-        $graph = new \EasyRdf_Graph();
-
-        $graph->addResource($url, 'a', 'dcat:Dataset');
-
-        $graph->addLiteral($url, 'dcterms:title', $study['name']);
-        $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
-
-        $graph->addResource($url, 'dcterms:publisher', 'https://orcid.org/0000-0001-9217-278X');
-        $graph->addResource($url, 'dcterms:publisher', 'https://www.radboudumc.nl/patientenzorg');
-
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
-        $graph->addResource($url, 'dcat:theme', 'http://www.wikidata.org/entity/Q7916449');
-        $graph->addResource($url, 'dcat:distribution', $url . '/distribution');
-
-        return new Response(
-            $graph->serialise('turtle'),
-            Response::HTTP_OK,
-            array('content-type' => 'text/turtle')
-        );
-    }
-
-    /**
-     * @Route("/fdp/{catalog}/{study}/distribution", name="distribution_render")
-     * @param Request $request
-     * @param $catalog
-     * @param $study
-     * @return Response
-     */
-    public function distributionAction(Request $request, $catalog, $study)
-    {
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study. '/distribution';
-
-        
-        $study = $this->apiClient->getStudy($study);
-
-        $graph = new \EasyRdf_Graph();
-
-        $graph->addResource($url, 'a', 'dcat:Distribution');
-
-        $graph->addLiteral($url, 'dcterms:title', 'Registry of vascular anomalies');
-        $graph->addLiteral($url, 'dcterms:hasVersion', $study['version']);
-        $graph->addLiteral($url, 'dcterms:description', 'Databases of the ERN vascular anomalies');
-
-        $graph->addResource($url, 'dcterms:language', 'http://id.loc.gov/vocabulary/iso639-1/en');
-        $graph->addResource($url, 'dcterms:license', 'TBD');
-
-        $graph->addResource($url, 'dcat:downloadURL', $url . '/rdf?download=1');
-        $graph->addResource($url, 'dcat:accessURL', $url . '/rdf');
-        $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
-
-        return new Response(
-            $graph->serialise('turtle'),
-            Response::HTTP_OK,
-            array('content-type' => 'text/turtle')
-        );
-    }
-
-    /**
-     * @param ApiClient $apiClient
-     * @param $studyId
+     * @param $catalogSlug
+     * @param $datasetSlug
+     * @param $distributionSlug
      * @param $recordId
-     * @param $fields
-     * @param $fieldVariables
-     * @param $metadatas
-     * @return array
-     */
-    private function getRecord(ApiClient $apiClient, $studyId, $recordId, $fields, $fieldVariables, $metadatas)
-    {
-        $values = $this->apiClient->getRecordDataPoints($studyId, $recordId);
-        $fieldValues = [
-            'record_id' => $recordId
-        ];
-
-        foreach ($values as $value) {
-            $fieldId = $value['field_id'];
-            $fieldVariable = $fieldVariables[$value['field_id']];
-
-            if(in_array($fields[$fieldId]['field_type'], $this->optionGroupFields) && isset($metadatas[$fieldId]) && isset($metadatas[$fieldId][$value['field_value']]))
-            {
-                $fieldValues[$fieldVariable] = $metadatas[$fieldId][$value['field_value']][$this->metadataName];
-            }
-            else
-            {
-                $fieldValues[$fieldVariable] = $value['field_value'];
-            }
-        }
-
-        return $fieldValues;
-    }
-
-    /**
-     * @Route("/fdp/{catalog}/{study}/distribution/rdf", name="rdf_render")
-     * @param Request $request
-     * @param $catalog
-     * @param $study
      * @return Response
+     * @throws Exception
      */
-    public function rdfAction(Request $request, $catalog, $study)
+    public function rdfRecordAction(Request $request, $catalogSlug, $datasetSlug, $distributionSlug, $recordId)
     {
-//        // Uncomment lines below to enable authentication
-//        if (($result = $this->checkRouteAccessWithOauth(
-//            $request,
-//            'rdf_render',
-//            ['catalog' => $catalog, 'study' => $study]
-//            )) !== true) {
-//            return $result;
-//        }
-
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study . '/distribution/rdf';
-
-        $metadatas = $this->apiClient->getMetadata($study);
-        $apiFields = $this->apiClient->getFields($study);
-        $records = $this->apiClient->getRecords($study);
-
-        $fields = [];
-        $fieldVariables = [];
-        foreach($apiFields as $field) {
-            $fieldVariables[$field['id']] = $field['field_variable_name'];
-            $fields[$field['id']] = $field;
+        if(!$this->getUser())
+        {
+            return $this->redirect('/connect/castor');
         }
 
-        $templateData = [
-            'records' => []
-        ];
+        $accept = $this->detectAccept($request);
+        $uri = $request->getSchemeAndHttpHost();
 
-        foreach ($records as $record) {
-            if ($record['archived']) {
-                continue;
-            }
+        $doctrine = $this->getDoctrine();
+        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
+        $catalogRepository = $doctrine->getRepository(Catalog::class);
+        $datasetRepository = $doctrine->getRepository(Dataset::class);
+        $distributionRepository = $doctrine->getRepository(Distribution::class);
 
-            $data = $this->getRecord($this->apiClient, $study, $record['record_id'], $fields, $fieldVariables, $metadatas);
+        /** @var FAIRDataPoint $fdp */
+        $fdp = $fairDataPointRepository->findOneBy(["iri" => $uri]);
+        if(!$fdp) throw new NotFoundHttpException("FAIR Data Point not found");
 
-            if($data['informed_consent'] == 'Yes')
-            {
-                $templateData['records'][] = $data;
-            }
+        /** @var Catalog $catalog */
+        $catalog = $catalogRepository->findOneBy(["slug" => $catalogSlug, "fairDataPoint" => $fdp]);
+        if(!$catalog) throw new NotFoundHttpException("Catalog not found");
+
+        /** @var Dataset $dataset */
+        $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
+        if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
+
+        $client = new ApiClient();
+        $client->setToken($this->getUser()->getToken());
+
+        /** @var RDFDistribution $distribution */
+        $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
+        if(!$distribution) throw new NotFoundHttpException("Distribution not found");
+        if(!$distribution instanceof RDFDistribution) throw new NotFoundHttpException("This distribution is not a RDF distribution");
+
+        try
+        {
+            $study = $client->getStudy($dataset->getStudy()->getId());
+        }
+        catch(UnauthorizedHttpException $e)
+        {
+            throw new UnauthorizedHttpException('', "You do not have permission to access this study");
         }
 
-        $templateData['castor'] = [
-            'uri' => $url
-        ];
-
-        $content = $this->renderView('rdf-list.html.twig', $templateData);
-        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
+        $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
 
         if($request->query->has('download') && $request->query->get('download') == true)
         {
-            $response = new Response($trimmedContent);
+            $response = new Response($helper->renderRecord($recordId));
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $study . '_' . time() . '.ttl'
+                $study->getSlug() . '_' . $recordId . '_' . time() . '.ttl'
             );
             $response->headers->set('Content-Disposition', $disposition);
 
@@ -318,79 +445,10 @@ class RDFRendererController extends Controller
         }
 
         return new Response(
-            $trimmedContent,
+            $helper->renderRecord($recordId),
             Response::HTTP_OK,
             array('content-type' => 'text/turtle')
         );
-    }
-
-    /**
-     * @Route("/fdp/{catalog}/{study}/distribution/rdf/{record}", name="rdf_record_render")
-     * @param Request $request
-     * @param $catalog
-     * @param $study
-     * @param $record
-     * @return Response
-     */
-    public function rdfRecordAction(Request $request, $catalog, $study, $record)
-    {
-//        // Uncomment lines below to enable authentication
-//        if (($result = $this->checkRouteAccessWithOauth(
-//            $request,
-//            'rdf_render',
-//            ['catalog' => $catalog, 'study' => $study]
-//            )) !== true) {
-//            return $result;
-//        }
-
-        $url = getenv('FDP_URL') . '/fdp/' . $catalog . '/' . $study . '/distribution/rdf';
-
-        $metadatas = $this->apiClient->getMetadata($study);
-        $apiFields = $this->apiClient->getFields($study);
-        $records = $this->apiClient->getRecords($study);
-
-        $fields = [];
-        $fieldVariables = [];
-        foreach($apiFields as $field) {
-            $fieldVariables[$field['id']] = $field['field_variable_name'];
-            $fields[$field['id']] = $field;
-        }
-
-        if(!isset($records[$record]))
-        {
-            throw new NotFoundHttpException('The record you are trying to open, does not exist.');
-        }
-        if ($records[$record]['archived']) {
-            throw new NotFoundHttpException('The record you are trying to open is archived.');
-        }
-
-        $templateData['record'] = $this->getRecord($this->apiClient, $study, $record, $fields, $fieldVariables, $metadatas);
-        $templateData['castor'] = [
-            'uri' => $url
-        ];
-
-
-        $content = $this->renderView('rdf.html.twig', $templateData);
-        $trimmedContent = trim(preg_replace('/^  |\G  /m', '', $content));
-
-        if($request->query->has('download') && $request->query->get('download') == true)
-        {
-            $response = new Response($trimmedContent);
-            $disposition = $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $study . '_' . $record . '_' . time() . '.ttl'
-            );
-            $response->headers->set('Content-Disposition', $disposition);
-
-            return $response;
-        }
-
-        return new Response(
-            $trimmedContent,
-            Response::HTTP_OK,
-            array('content-type' => 'text/turtle')
-        );
-
     }
     
 }

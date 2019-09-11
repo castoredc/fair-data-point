@@ -26,11 +26,18 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Service\CastorAuth:
+    guzzle_client.hwi_special:
+        class: Http\Adapter\Guzzle6\Client
+        factory:
+            - Http\Adapter\Guzzle6\Client
+            - createWithConfig
         arguments:
-            $clientId: '%env(CASTOR_OAUTH_CLIENT_ID)%'
-            $secret:  '%env(CASTOR_OAUTH_CLIENT_SECRET)%'
-            $redirectURL: '%env(CASTOR_OAUTH_REDIRECT_URL)%'
-            $authURL: '%env(CASTOR_API_URL)%'
-            $apiURL: '%env(CASTOR_API_URL)%'
-            $verifySSL: false
+            - timeout: 10
+            - verify_peer: false
+            - max_redirects: 10
+            - ignore_errors: false
+    guzzle_client.message_factory:
+        class: Http\Message\MessageFactory\GuzzleMessageFactory
+
+    castor.auth:
+        class: App\Security\CastorUserProvider

@@ -1,0 +1,39 @@
+{
+    "devDependencies": {
+        "@babel/core": "^7.5.5",
+        "@babel/plugin-proposal-class-properties": "^7.5.5",
+        "@babel/preset-env": "^7.5.5",
+        "@babel/preset-react": "^7.0.0",
+        "@symfony/webpack-encore": "^0.27.0",
+        "babel-loader": "^8.0.6",
+        "babel-plugin-inline-react-svg": "^1.1.0",
+        "core-js": "^3.0.0",
+        "file-loader": "^4.2.0",
+        "node-sass": "^4.12.0",
+        "react-svg-loader": "^3.0.3",
+        "sass-loader": "^7.0.1",
+        "webpack-notifier": "^1.6.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "axios": "^0.19.0",
+        "babel-polyfill": "^6.26.0",
+        "bootstrap": "^4.3.1",
+        "jquery": "^3.4.1",
+        "popper.js": "^1.15.0",
+        "prop-types": "^15.7.2",
+        "react": "^16.9.0",
+        "react-bootstrap": "^1.0.0-beta.12",
+        "react-dom": "^16.9.0",
+        "react-router-dom": "^5.0.1",
+        "yasgui-yasqe": "^2.11.22",
+        "react-select": "^3.0.4"
+    }
+}
