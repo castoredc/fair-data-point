@@ -1,0 +1,8 @@
+.App {
+&.Loading {
+     opacity: 0;
+ }
+&.Loaded {
+     opacity: 1;
+ }
+}
