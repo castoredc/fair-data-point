@@ -104,9 +104,9 @@ export default class Catalog extends Component {
                                         )}
                                     </div>}
                                     <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
-                                </div>
-                                <div className="Description">
-                                    {localizedText(this.state.catalog.description, 'en')}
+                                    <div className="Description">
+                                        {localizedText(this.state.catalog.description, 'en')}
+                                    </div>
                                 </div>
                             </Container>
                         </div>

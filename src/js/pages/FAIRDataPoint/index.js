@@ -85,9 +85,9 @@ export default class FAIRDataPoint extends Component {
                                         )}
                                     </div>}
                                     <h1 className="Title">FAIR Data Point</h1>
-                                </div>
-                                <div className="Description">
-                                    {localizedText(this.state.fdp.description, 'en')}
+                                    <div className="Description">
+                                        {localizedText(this.state.fdp.description, 'en')}
+                                    </div>
                                 </div>
                             </Container>
                         </Row>

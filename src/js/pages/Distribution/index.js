@@ -105,9 +105,9 @@ export default class Distribution extends Component {
                                         )}
                                     </div>}
                                     <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
-                                </div>
-                                <div className="Description">
-                                    {localizedText(this.state.distribution.description, 'en')}
+                                    <div className="Description">
+                                        {localizedText(this.state.distribution.description, 'en')}
+                                    </div>
                                 </div>
                             </Container>
                         </div>
