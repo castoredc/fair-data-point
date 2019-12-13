@@ -313,7 +313,7 @@ class RDFRendererController extends Controller
     {
         if(!$this->getUser())
         {
-            return $this->redirect('/connect/castor');
+            return $this->redirect('/connect/castor?target_path=' . $request->getRequestUri());
         }
 
         $accept = $this->detectAccept($request);
@@ -389,7 +389,7 @@ class RDFRendererController extends Controller
     {
         if(!$this->getUser())
         {
-            return $this->redirect('/connect/castor');
+            return $this->redirect('/connect/castor?target_path=' . $request->getRequestUri());
         }
 
         $accept = $this->detectAccept($request);

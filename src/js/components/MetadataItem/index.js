@@ -1,15 +1,15 @@
 import React, {Component} from 'react'
 
 import './MetadataItem.scss'
-import {isURL} from "../../util";
+import {classNames, isURL} from "../../util";
 
 class MetadataItem extends Component {
     render() {
-        const { label, url, value, children } = this.props;
+        const { label, url, value, children, className } = this.props;
 
         if(children)
         {
-            return <div className="MetadataItem">
+            return <div className={classNames('MetadataItem', className)}>
                 <div className="MetadataItemLabel">{label}</div>
                 <div className="MetadataItemValue">{children}</div>
             </div>;
@@ -25,7 +25,7 @@ class MetadataItem extends Component {
             display = <a href={url} target="_blank">{value}</a>;
         }
 
-        return <div className="MetadataItem">
+        return <div className={classNames('MetadataItem', className)}>
             <div className="MetadataItemLabel">{label}</div>
             <div className="MetadataItemValue">{display}</div>
         </div>;

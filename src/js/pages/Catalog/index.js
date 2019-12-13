@@ -19,6 +19,7 @@ export default class Catalog extends Component {
             isLoading: true,
             isLoaded: false,
             hasError: false,
+            showMetadata: false,
             errorMessage: '',
             catalog: {
                 title: [],
@@ -71,35 +72,29 @@ export default class Catalog extends Component {
             });
     }
 
+    toggleMetadata = (e) => {
+        var showMetadata = !this.state.showMetadata;
+        this.setState({
+            showMetadata: showMetadata
+        });
+
+        e.preventDefault();
+        return false;
+    };
+
     render() {
         return (
-            <Container className="Catalog">
+            <div className="Catalog TopLevelContainer">
                 {this.state.isLoaded ?
                     <div className="Information">
-                        <Alert variant="warning">
-                            <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.
-                        </Alert>
+                        <DocumentTitle title={localizedText(this.state.catalog.title, 'en')} />
                         <div className="InformationHeader">
-                            <Link to={this.state.fdp.relative_url} className="LinkTop LinkBack">
-                                <Icon type="arrowLeft" />
-                                {localizedText(this.state.fdp.title, 'en')}
-                            </Link>
-                            <a href={window.location.href + '?format=json'} className="LinkTop LinkFileType" target="_blank">
-                                JSON
-                            </a>
-                            <a href={window.location.href + '?format=ttl'} className="LinkTop LinkFileType" target="_blank">
-                                Turtle
-                            </a>
-                        </div>
-                        <Row className="InformationRow">
-                            <DocumentTitle title={localizedText(this.state.catalog.title, 'en')} />
-                            <Col md={4} className="Metadata">
-                                <div className="MetadataTop">
-                                    <div className="Type">Catalog</div>
-                                    <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.catalog.description, 'en')}
-                                    </div>
+                            <Container>
+                                {/*<Link to={this.state.fdp.relative_url} className="LinkTop LinkBack">*/}
+                                {/*    <Icon type="arrowLeft" />*/}
+                                {/*    {localizedText(this.state.fdp.title, 'en')}*/}
+                                {/*</Link>*/}
+                                <div className="InformationHeaderTop">
                                     {this.state.catalog.publishers.length > 0 && <div className="Publishers">
                                         {this.state.catalog.publishers.map((item, index) => {
                                             return <Contact key={index}
@@ -108,18 +103,39 @@ export default class Catalog extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
+                                    <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
+                                    <div className="Description">
+                                        {localizedText(this.state.catalog.description, 'en')}
+                                    </div>
                                 </div>
-                                <div className="MetadataBottom">
-                                    <MetadataItem label="Version" value={this.state.catalog.version} />
-                                    <MetadataItem label="Language" url={this.state.catalog.language.url} value={this.state.catalog.language.name} />
-                                    <MetadataItem label="License" url={this.state.catalog.license.url} value={this.state.catalog.license.name} />
-                                    <MetadataItem label="Issued" value={this.state.catalog.issued.date} />
-                                    <MetadataItem label="Modified" value={this.state.catalog.modified.date} />
-                                    <MetadataItem label="Homepage" value={this.state.catalog.homepage} />
-                                </div>
+                            </Container>
+                        </div>
 
-                            </Col>
-                            <Col md={8} className="Children Datasets">
+                        <div className="MetadataRow">
+                            <Container className="MetadataContainer">
+                                {this.state.showMetadata ? <div className="Metadata Shown">
+                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
+                                        Hide metadata <Icon type="arrowDown" className="Rotated" />
+                                    </a>
+
+                                    <Row>
+                                        <MetadataItem className="col-md-6" label="Version" value={this.state.catalog.version} />
+                                        <MetadataItem className="col-md-6" label="Language" url={this.state.catalog.language.url} value={this.state.catalog.language.name} />
+                                        <MetadataItem className="col-md-6" label="License" url={this.state.catalog.license.url} value={this.state.catalog.license.name} />
+                                        <MetadataItem className="col-md-6" label="Issued" value={this.state.catalog.issued.date} />
+                                        <MetadataItem className="col-md-6" label="Modified" value={this.state.catalog.modified.date} />
+                                        <MetadataItem className="col-md-6" label="Homepage" value={this.state.catalog.homepage} />
+                                    </Row>
+                                </div> : <div className="Metadata Hidden">
+                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
+                                        Show metadata <Icon type="arrowDown" />
+                                    </a>
+                                </div>}
+                            </Container>
+                        </div>
+
+                        <Row className="InformationRow">
+                            <Container className="Children Datasets">
                                 <h2>Datasets</h2>
                                 <div className="Description">
                                     Datasets are published collections of data.
@@ -130,13 +146,12 @@ export default class Catalog extends Component {
                                                      title={localizedText(item.title, 'en')}
                                                      description={localizedText(item.description, 'en')} />}
                                 ) : <div className="NoResults">No datasets found.</div>}
-                            </Col>
-
+                            </Container>
                         </Row>
                     </div>
                     : <LoadingScreen showLoading={true}/>
                 }
-            </Container>
+            </div>
         );
     }
 }

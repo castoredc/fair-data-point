@@ -19,6 +19,7 @@ export default class Dataset extends Component {
             isLoading: true,
             isLoaded: false,
             hasError: false,
+            showMetadata: false,
             errorMessage: '',
             dataset: {
                 title: [],
@@ -73,36 +74,30 @@ export default class Dataset extends Component {
             });
     }
 
+    toggleMetadata = (e) => {
+        var showMetadata = !this.state.showMetadata;
+        this.setState({
+            showMetadata: showMetadata
+        });
+
+        e.preventDefault();
+        return false;
+    };
+
     render() {
         return (
-            <Container className="Catalog">
+            <div className="Catalog TopLevelContainer">
                 {this.state.isLoaded ?
                     <div className="Information">
-                        <Alert variant="warning">
-                            <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.
-                        </Alert>
+                        <DocumentTitle title={localizedText(this.state.dataset.title, 'en')} />
                         <div className="InformationHeader">
-                            <Link to={this.state.catalog.relative_url} className="LinkTop LinkBack">
-                                <Icon type="arrowLeft" />
-                                {localizedText(this.state.catalog.title, 'en')}
-                            </Link>
-                            <a href={window.location.href + '?format=json'} className="LinkTop LinkFileType" target="_blank">
-                                JSON
-                            </a>
-                            <a href={window.location.href + '?format=ttl'} className="LinkTop LinkFileType" target="_blank">
-                                Turtle
-                            </a>
-                        </div>
-                        <Row className="InformationRow">
-                            <DocumentTitle title={localizedText(this.state.dataset.title, 'en')} />
-                            <Col md={4} className="Metadata">
-                                <div className="MetadataTop">
-                                    <div className="Type">Dataset</div>
-                                    <h1 className="Title">{localizedText(this.state.dataset.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.dataset.description, 'en')}
-                                    </div>
-                                    {this.state.dataset.publishers.length > 0 && <div className="Publishers">
+                            {/*<Link to={this.state.catalog.relative_url} className="LinkTop LinkBack">*/}
+                            {/*    <Icon type="arrowLeft" />*/}
+                            {/*    {localizedText(this.state.catalog.title, 'en')}*/}
+                            {/*</Link>*/}
+                            <Container>
+                                <div className="InformationHeaderTop">
+                                    {this.state.catalog.publishers.length > 0 && <div className="Publishers">
                                         {this.state.dataset.publishers.map((item, index) => {
                                             return <Contact key={index}
                                                             url={item.url}
@@ -110,26 +105,47 @@ export default class Dataset extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
+                                    <h1 className="Title">{localizedText(this.state.dataset.title, 'en')}</h1>
+                                    <div className="Description">
+                                        {localizedText(this.state.dataset.description, 'en')}
+                                    </div>
                                 </div>
-                                <div className="MetadataBottom">
-                                    <MetadataItem label="Version" value={this.state.dataset.version} />
-                                    <MetadataItem label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />
-                                    <MetadataItem label="License" url={this.state.dataset.license.url} value={this.state.dataset.license.name} />
-                                    <MetadataItem label="Issued" value={this.state.dataset.issued.date} />
-                                    <MetadataItem label="Modified" value={this.state.dataset.modified.date} />
-                                    <MetadataItem label="Landing page" value={this.state.dataset.landingpage} />
-                                    <MetadataItem label="Contact point(s)">
-                                        {this.state.dataset.contactPoints.map((item, index) => {
-                                            return <Contact key={index}
-                                                            url={item.url}
-                                                            type={item.type}
-                                                            name={item.name} />}
-                                        )}
-                                    </MetadataItem>
-                                </div>
+                            </Container>
+                        </div>
+                        <div className="MetadataRow">
+                            <Container className="MetadataContainer">
+                                {this.state.showMetadata ? <div className="Metadata Shown">
 
-                            </Col>
-                            <Col md={8} className="Children Distributions">
+                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
+                                        Hide metadata <Icon type="arrowDown" className="Rotated" />
+                                    </a>
+
+                                    <Row>
+                                        <MetadataItem className="col-md-6" label="Version" value={this.state.dataset.version} />
+                                        <MetadataItem className="col-md-6" label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />
+                                        <MetadataItem className="col-md-6" label="License" url={this.state.dataset.license.url} value={this.state.dataset.license.name} />
+                                        <MetadataItem className="col-md-6" label="Issued" value={this.state.dataset.issued.date} />
+                                        <MetadataItem className="col-md-6" label="Modified" value={this.state.dataset.modified.date} />
+                                        <MetadataItem className="col-md-6" label="Landing page" value={this.state.dataset.landingpage} />
+                                        <MetadataItem className="col-md-6" label="Contact point(s)">
+                                            {this.state.dataset.contactPoints.map((item, index) => {
+                                                return <Contact key={index}
+                                                                url={item.url}
+                                                                type={item.type}
+                                                                name={item.name} />}
+                                            )}
+                                        </MetadataItem>
+                                    </Row>
+
+                                </div> : <div className="Metadata Hidden">
+                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
+                                        Show metadata <Icon type="arrowDown" />
+                                    </a>
+                                </div>}
+                            </Container>
+                        </div>
+                        <Row className="InformationRow">
+                            <Container className="Children Distributions">
                                 <h2>Distributions</h2>
                                 <div className="Description">
                                     Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
@@ -140,13 +156,13 @@ export default class Dataset extends Component {
                                                      title={localizedText(item.title, 'en')}
                                                      description={localizedText(item.description, 'en')} />}
                                 ) : <div className="NoResults">No distributions found.</div>}
-                            </Col>
+                            </Container>
 
                         </Row>
                     </div>
                     : <LoadingScreen showLoading={true}/>
                 }
-            </Container>
+            </div>
         );
     }
 }
