@@ -19,6 +19,7 @@ export default class Distribution extends Component {
             isLoading: true,
             isLoaded: false,
             hasError: false,
+            showMetadata: false,
             errorMessage: '',
             distribution: {
                 title: [],
@@ -44,6 +45,16 @@ export default class Distribution extends Component {
             },
         };
     }
+
+    toggleMetadata = (e) => {
+        var showMetadata = !this.state.showMetadata;
+        this.setState({
+            showMetadata: showMetadata
+        });
+
+        e.preventDefault();
+        return false;
+    };
 
     componentDidMount() {
         axios.get(window.location.href + '?format=json&ui=true')
@@ -74,33 +85,17 @@ export default class Distribution extends Component {
 
     render() {
         return (
-            <Container className="Catalog">
+            <div className="Catalog TopLevelContainer">
                 {this.state.isLoaded ?
                     <div className="Information">
-                        <Alert variant="warning">
-                            <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.
-                        </Alert>
+                        <DocumentTitle title={localizedText(this.state.distribution.title, 'en')} />
                         <div className="InformationHeader">
-                            <Link to={this.state.dataset.relative_url} className="LinkTop LinkBack">
-                                <Icon type="arrowLeft" />
-                                {localizedText(this.state.dataset.title, 'en')}
-                            </Link>
-                            <a href={window.location.href + '?format=json'} className="LinkTop LinkFileType" target="_blank">
-                                JSON
-                            </a>
-                            <a href={window.location.href + '?format=ttl'} className="LinkTop LinkFileType" target="_blank">
-                                Turtle
-                            </a>
-                        </div>
-                        <Row className="InformationRow">
-                            <DocumentTitle title={localizedText(this.state.distribution.title, 'en')} />
-                            <Col md={4} className="Metadata">
-                                <div className="MetadataTop">
-                                    <div className="Type">Distribution</div>
-                                    <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.distribution.description, 'en')}
-                                    </div>
+                            {/*<Link to={this.state.dataset.relative_url} className="LinkTop LinkBack">*/}
+                            {/*    <Icon type="arrowLeft" />*/}
+                            {/*    {localizedText(this.state.dataset.title, 'en')}*/}
+                            {/*</Link>*/}
+                            <Container>
+                                <div className="InformationHeaderTop">
                                     {this.state.distribution.publishers.length > 0 && <div className="Publishers">
                                         {this.state.distribution.publishers.map((item, index) => {
                                             return <Contact key={index}
@@ -109,17 +104,38 @@ export default class Distribution extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
+                                    <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
                                 </div>
-                                <div className="MetadataBottom">
-                                    <MetadataItem label="Version" value={this.state.distribution.version} />
-                                    <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />
-                                    <MetadataItem label="License" url={this.state.distribution.license.url} value={this.state.distribution.license.name} />
-                                    <MetadataItem label="Issued" value={this.state.distribution.issued.date} />
-                                    <MetadataItem label="Modified" value={this.state.distribution.modified.date} />
+                                <div className="Description">
+                                    {localizedText(this.state.distribution.description, 'en')}
                                 </div>
+                            </Container>
+                        </div>
+                        <div className="MetadataRow">
+                            <Container className="MetadataContainer">
+                                {this.state.showMetadata ? <div className="Metadata Shown">
 
-                            </Col>
-                            <Col md={8} className="Children Access">
+                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
+                                        Hide metadata <Icon type="arrowDown" className="Rotated" />
+                                    </a>
+
+                                    <Row>
+                                        <MetadataItem className="col-md-6" label="Version" value={this.state.distribution.version} />
+                                        <MetadataItem className="col-md-6" label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />
+                                        <MetadataItem className="col-md-6" label="License" url={this.state.distribution.license.url} value={this.state.distribution.license.name} />
+                                        <MetadataItem className="col-md-6" label="Issued" value={this.state.distribution.issued.date} />
+                                        <MetadataItem className="col-md-6" label="Modified" value={this.state.distribution.modified.date} />
+                                    </Row>
+
+                                </div> : <div className="Metadata Hidden">
+                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
+                                        Show metadata <Icon type="arrowDown" />
+                                    </a>
+                                </div>}
+                            </Container>
+                        </div>
+                        <Row className="InformationRow">
+                            <Container className="Children Access">
                                 <ListItem link={this.state.distribution.access_url}
                                           title="Access the data"
                                           description="Get access to the distribution." />
@@ -127,15 +143,12 @@ export default class Distribution extends Component {
                                 <ListItem link={this.state.distribution.download_url}
                                           title="Download the data"
                                           description="Get a downloadable file for this distribution." />
-
-
-                            </Col>
-
+                            </Container>
                         </Row>
                     </div>
                     : <LoadingScreen showLoading={true}/>
                 }
-            </Container>
+            </div>
         );
     }
 }
