@@ -86,15 +86,15 @@ $large: 1260px;
   }
 
   @if $type == primary {
-    background-color: $blue400;
+    background-color: $blue-400;
     color: $white;
-    border: 1px solid $blue400;
+    border: 1px solid $blue-400;
     fill: $white;
 
     &:hover,
     &:focus {
-      background-color: $blue700;
-      border: 1px solid $blue700;
+      background-color: $blue-700;
+      border: 1px solid $blue-700;
     }
 
     &:active {
@@ -102,20 +102,20 @@ $large: 1260px;
     }
   } @else if $type == secondary {
     background-color: $white;
-    color: $blue400;
-    border: 1px solid $blue400;
-    fill: $blue400;
+    color: $blue-400;
+    border: 1px solid $blue-400;
+    fill: $blue-400;
 
     &:hover,
     &:focus {
-      background-color: $blue700;
-      border: 1px solid $blue700;
+      background-color: $blue-700;
+      border: 1px solid $blue-700;
       fill: $white;
       color: $white;
     }
 
     &:active {
-      background-color: $blue400;
+      background-color: $blue-400;
       opacity: 0.85;
       fill: $white;
       color: $white;
@@ -141,8 +141,8 @@ $large: 1260px;
   } @else if $type == inverted {
     background-color: transparent;
     border: 1px solid transparent;
-    color: $blue700;
-    fill: $blue700;
+    color: $blue-700;
+    fill: $blue-700;
 
     &:focus,
     &:hover {
@@ -151,7 +151,7 @@ $large: 1260px;
 
     &:active {
       text-decoration: underline;
-      color: $blue400;
+      color: $blue-400;
     }
   }
 }

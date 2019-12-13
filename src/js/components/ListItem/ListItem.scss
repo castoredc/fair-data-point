@@ -1,27 +1,33 @@
 @import '../../scss/colors';
 
 .ListItem {
-  color: $text;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
+  color: $neutral-90;
+  border-radius: 3px;
   display: block;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 16px;
+  margin-bottom: 10px;
+  border: solid 1px $neutral-40;
+  background: $generic-white;
 
   span {
     display: block;
   }
 
   .ListItemTitle {
-    font-weight: bold;
-    font-size: 18px;
+    font-weight: 600;
+    font-size: 16px;
     line-height: initial;
     padding-bottom: 5px;
+    color: $neutral-800;
   }
   
   &:hover {
-    color: $text;
-    background: $n20;
+    color: $neutral-90;
+    background: $neutral-20;
     text-decoration: none;
+
+    .ListItemTitle {
+      color: $neutral-800;
+    }
   }
 }

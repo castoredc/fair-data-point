@@ -47,7 +47,7 @@ class RDFTwigRenderHelper
      * @param ApiClient $client
      * @param Study $study
      * @param Environment $environment
-     * @param string $twig
+     * @param RDFDistribution $distribution
      */
     public function __construct(ApiClient $client, Study $study, Environment $environment, RDFDistribution $distribution)
     {

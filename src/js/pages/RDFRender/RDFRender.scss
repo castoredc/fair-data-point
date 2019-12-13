@@ -16,7 +16,7 @@
       width: auto;
 
       path {
-        fill: $blue400 !important;
+        fill: $blue-400 !important;
       }
     }
 
@@ -26,7 +26,7 @@
       text-decoration: none;
 
       &:hover {
-        color: $n500;
+        color: $neutral-500;
       }
     }
   }
@@ -35,7 +35,7 @@
     margin: 10px 0;
     padding: 20px;
     background: $white;
-    border: 1px solid $blue400;
+    border: 1px solid $blue-400;
     border-radius: 5px;
 
     h1 {

@@ -20,7 +20,7 @@ $rad-ml: 4px;
 $rad-l: 6px;
 $rad-circle: 50%;
 
-$primary: $blue400;
+$primary: $blue-700;
 $highlight-opacity: 0.15;
 
 $btn-padding-x: 12px;
@@ -35,43 +35,43 @@ $btn-padding-x-lg: 14px;
 $btn-padding-y-lg: 8px;
 $btn-line-height-lg: 30px;
 
-$dropdown-link-color: $n900;
-$dropdown-link-hover-color: $blue400;
-$dropdown-link-active-color: $blue700;
-$dropdown-link-hover-bg: $white;
-$dropdown-link-active-bg: $white;
+$dropdown-link-color: $neutral-900;
+$dropdown-link-hover-color: $blue-400;
+$dropdown-link-active-color: $blue-700;;
+$dropdown-link-hover-bg: $generic-white;
+$dropdown-link-active-bg: $generic-white;
 
-$navbar-dark-color: $white;
-$navbar-dark-hover-color: $white;
+$navbar-dark-color: $generic-white;
+$navbar-dark-hover-color: $generic-white;
 
 .dropdown-item .icon svg {
-  fill: $n400;
+  fill: $neutral-400;
 }
 
 .dropdown-item.hover .icon svg, .dropdown-item:hover .icon svg {
-  fill: $blue400;
+  fill: $blue-400;
 }
 
 .dropdown-item.active .icon svg, .dropdown-item:active .icon svg {
-  fill: $blue700;
+  fill: $blue-700;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:active, .navbar-dark .navbar-nav .nav-link.active {
-  background: rgba($white, $highlight-opacity);
+  background: rgba($generic-white, $highlight-opacity);
   border-radius: $rad-m;
 }
 
 .btn {
   &.btn-primary {
-    background-color: $blue400;
-    color: $white;
-    border: 1px solid $blue400;
-    fill: $white;
+    background-color: $blue-400;
+    color: $generic-white;
+    border: 1px solid $blue-400;
+    fill: $generic-white;
 
     &:hover,
     &:focus {
-      background-color: $blue700;
-      border: 1px solid $blue700;
+      background-color: $blue-700;
+      border: 1px solid $blue-700;
     }
 
     &:active {
@@ -79,24 +79,24 @@ $navbar-dark-hover-color: $white;
     }
   }
   &.btn-secondary {
-    background-color: $white;
-    color: $blue400;
-    border: 1px solid $blue400;
-    fill: $blue400;
+    background-color: $generic-white;
+    color: $blue-400;
+    border: 1px solid $blue-400;
+    fill: $blue-400;
 
     &:hover,
     &:focus {
-      background-color: $blue700;
-      border: 1px solid $blue700;
-      fill: $white;
-      color: $white;
+      background-color: $blue-700;
+      border: 1px solid $blue-700;
+      fill: $generic-white;
+      color: $generic-white;
     }
 
     &:active {
-      background-color: $blue400;
+      background-color: $blue-400;
       opacity: 0.85;
-      fill: $white;
-      color: $white;
+      fill: $generic-white;
+      color: $generic-white;
     }
   }
   &.disabled {
@@ -104,28 +104,28 @@ $navbar-dark-hover-color: $white;
   }
   &.btn-tertiary {
     background-color: #fff;
-    border: 1px solid $n70;
-    color: $n600;
-    fill: $n600;
+    border: 1px solid $neutral-70;
+    color: $neutral-600;
+    fill: $neutral-600;
 
     &:active {
-      color: $n900;
-      border: 1px solid $n600;
-      fill: $n900;
+      color: $neutral-900;
+      border: 1px solid $neutral-600;
+      fill: $neutral-900;
     }
 
     &:focus,
     &:hover {
-      color: $n600;
-      border: 1px solid $n600;
-      fill: $n600;
+      color: $neutral-600;
+      border: 1px solid $neutral-600;
+      fill: $neutral-600;
     }
   }
   &.btn-inverted {
     background-color: transparent;
     border: 1px solid transparent;
-    color: $blue700;
-    fill: $blue700;
+    color: $blue-700;
+    fill: $blue-700;
 
     &:focus,
     &:hover {
@@ -134,45 +134,45 @@ $navbar-dark-hover-color: $white;
 
     &:active {
       text-decoration: underline;
-      color: $blue400;
+      color: $blue-400;
     }
   }
 }
 
 .text-btn {
-  color: $n800;
+  color: $neutral-800;
   text-decoration: none;
   display: inline-block;
 }
 
 .text-btn svg {
-  fill: $n400;
+  fill: $neutral-400;
 }
 
 .text-btn:hover {
-  color: $blue400;
+  color: $blue-400;
   text-decoration: none;
 }
 
 .text-btn:hover svg {
-  fill: $blue400;
+  fill: $blue-400;
 }
 
 .text-btn:active, .text-btn.active {
-  color: $blue700;
+  color: $blue-700;
 }
 
 .text-btn:active svg, .text-btn.active svg {
-  fill: $blue400;
+  fill: $blue-400;
 }
 
 .text-btn.disabled {
-  color: $n800;
+  color: $neutral-800;
   opacity: 0.15;
 }
 
 .text-btn.disabled svg {
-  fill: $n400;
+  fill: $neutral-400;
   opacity: 0.15;
 }
 
@@ -194,7 +194,7 @@ $navbar-dark-hover-color: $white;
 }
 
 .icon-white svg {
-  fill: $white;
+  fill: $generic-white;
 }
 
 .icon-refresh-animate svg {
