@@ -106,9 +106,9 @@ export default class Dataset extends Component {
                                         )}
                                     </div>}
                                     <h1 className="Title">{localizedText(this.state.dataset.title, 'en')}</h1>
-                                </div>
-                                <div className="Description">
-                                    {localizedText(this.state.dataset.description, 'en')}
+                                    <div className="Description">
+                                        {localizedText(this.state.dataset.description, 'en')}
+                                    </div>
                                 </div>
                             </Container>
                         </div>

@@ -109,7 +109,7 @@ ul {
     margin: 0;
 
     .InformationHeaderTop {
-      margin-bottom: 24px;
+      overflow: auto;
 
       .Title {
         font-size: 21px;
@@ -119,22 +119,25 @@ ul {
         line-height: 1.33;
         letter-spacing: normal;
         color: $generic-white;
+        margin-bottom: 24px;
       }
 
 
       .Publishers {
         float: right;
-        margin-top: 5px;
 
         .Contact {
           padding: 6px 8px;
           background: $cobalt;
           border-radius: 3px;
           color: white;
-          margin-right: 5px;
+          margin-bottom: 5px;
+          display: block;
+          float: right;
+          clear: right;
 
           &:last-child {
-            margin-right: 0;
+            margin-bottom: 0;
           }
 
           .Icon {
