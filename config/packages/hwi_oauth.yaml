@@ -12,9 +12,6 @@ hwi_oauth:
             authorization_url:   "%env(CASTOR_API_URL)%/oauth/authorize"
             infos_url:           "%env(CASTOR_API_URL)%/api/user"
             user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
-            #            paths:
-            #                identifier: id
-            #                nickname:   username
-            #                realname:   fullname
             options:
                 csrf: true
+    target_path_parameter: "target_path"

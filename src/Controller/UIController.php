@@ -17,12 +17,9 @@ class UIController extends Controller
 {
     /**
      * @Route("/", name="homepage")
-     * @Route("/query", name="query")
      */
     public function index(Request $request)
     {
-        return $this->render(
-            'react.html.twig'
-        );
+        return $this->redirectToRoute('fdp_render');
     }
 }
