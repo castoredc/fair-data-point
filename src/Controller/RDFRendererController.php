@@ -33,6 +33,14 @@ class RDFRendererController extends Controller
     const ACCEPT_JSON = 2;
     const ACCEPT_TURTLE = 3;
 
+    /** @var ApiClient */
+    private $apiClient;
+
+    public function __construct(ApiClient $apiClient)
+    {
+        $this->apiClient = $apiClient;
+    }
+
     private function detectAccept(Request $request)
     {
         if($request->get('format') != null)
@@ -337,8 +345,7 @@ class RDFRendererController extends Controller
         $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
         if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
 
-        $client = new ApiClient();
-        $client->setToken($this->getUser()->getToken());
+        $this->apiClient->setToken($this->getUser()->getToken());
 
         /** @var RDFDistribution $distribution */
         $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
@@ -347,14 +354,14 @@ class RDFRendererController extends Controller
 
         try
         {
-            $study = $client->getStudy($dataset->getStudy()->getId());
+            $study = $this->apiClient->getStudy($dataset->getStudy()->getId());
         }
         catch(UnauthorizedHttpException $e)
         {
             throw new UnauthorizedHttpException('', "You do not have permission to access this study");
         }
 
-        $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
+        $helper = new RDFTwigRenderHelper($this->apiClient, $study, $this->get('twig'), $distribution);
 
         if($request->query->has('download') && $request->query->get('download') == true)
         {
@@ -413,8 +420,7 @@ class RDFRendererController extends Controller
         $dataset = $datasetRepository->findOneBy(["slug" => $datasetSlug]);
         if(!$dataset && !$dataset->hasCatalog($catalog)) throw new NotFoundHttpException("Dataset not found");
 
-        $client = new ApiClient();
-        $client->setToken($this->getUser()->getToken());
+        $this->apiClient->setToken($this->getUser()->getToken());
 
         /** @var RDFDistribution $distribution */
         $distribution = $distributionRepository->findOneBy(["slug" => $distributionSlug, "dataset" => $dataset]);
@@ -423,14 +429,14 @@ class RDFRendererController extends Controller
 
         try
         {
-            $study = $client->getStudy($dataset->getStudy()->getId());
+            $study = $this->apiClient->getStudy($dataset->getStudy()->getId());
         }
         catch(UnauthorizedHttpException $e)
         {
             throw new UnauthorizedHttpException('', "You do not have permission to access this study");
         }
 
-        $helper = new RDFTwigRenderHelper($client, $study, $this->get('twig'), $distribution);
+        $helper = new RDFTwigRenderHelper($this->apiClient, $study, $this->get('twig'), $distribution);
 
         if($request->query->has('download') && $request->query->get('download') == true)
         {
