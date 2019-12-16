@@ -24,6 +24,7 @@
         "php-http/httplug-bundle": "~1.13"
     },
     "require-dev": {
+        "castor/coding-standard": "^3.1",
         "symfony/dotenv": "^4.0"
     },
     "config": {
@@ -68,5 +69,11 @@
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
             "allow-contrib": false
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.ciwit.nl/"
+        }
+    ]
 }
