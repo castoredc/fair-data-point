@@ -178,8 +178,26 @@
     "php-http/stopwatch-plugin": {
         "version": "1.2.0"
     },
+    "phpstan/extension-installer": {
+        "version": "1.0.3"
+    },
     "phpstan/phpdoc-parser": {
         "version": "0.3.5"
+    },
+    "phpstan/phpstan": {
+        "version": "0.12.3"
+    },
+    "phpstan/phpstan-deprecation-rules": {
+        "version": "0.12.0"
+    },
+    "phpstan/phpstan-doctrine": {
+        "version": "0.12.3"
+    },
+    "phpstan/phpstan-strict-rules": {
+        "version": "0.12.0"
+    },
+    "phpstan/phpstan-symfony": {
+        "version": "0.12.1"
     },
     "psr/cache": {
         "version": "1.0.1"
