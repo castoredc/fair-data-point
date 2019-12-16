@@ -24,6 +24,15 @@
         "php-http/httplug-bundle": "~1.13"
     },
     "require-dev": {
+        "castor/coding-standard": "^3.1",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^0.12.3",
+        "phpstan/phpstan-deprecation-rules": "^0.12.0",
+        "phpstan/phpstan-doctrine": "^0.12.3",
+        "phpstan/phpstan-phpunit": "^0.12.1",
+        "phpstan/phpstan-strict-rules": "^0.12.0",
+        "phpstan/phpstan-symfony": "^0.12.1",
+        "phpunit/phpunit": "^8.5",
         "symfony/dotenv": "^4.0"
     },
     "config": {
@@ -68,5 +77,11 @@
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
             "allow-contrib": false
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.ciwit.nl/"
+        }
+    ]
 }
