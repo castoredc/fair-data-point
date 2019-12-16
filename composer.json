@@ -4,7 +4,7 @@
     "require": {
         "php": "^7.3",
         "ext-iconv": "*",
-        "cocur/slugify": "^3.2",
+        "cocur/slugify": "^4.0",
         "easyrdf/easyrdf": "^0.9.1",
         "guzzlehttp/guzzle": "~6.0",
         "league/oauth2-client": "^2.3",
