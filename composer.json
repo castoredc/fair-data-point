@@ -21,7 +21,8 @@
         "symfony/yaml": "^4.0",
         "hwi/oauth-bundle": "^0.6.3",
         "php-http/guzzle6-adapter": "~1.1.1",
-        "php-http/httplug-bundle": "~1.13"
+        "php-http/httplug-bundle": "~1.13",
+        "twig/twig": "^2.10"
     },
     "require-dev": {
         "castor/coding-standard": "^3.1",
@@ -33,6 +34,7 @@
         "phpstan/phpstan-strict-rules": "^0.12.0",
         "phpstan/phpstan-symfony": "^0.12.1",
         "phpunit/phpunit": "^8.5",
+        "roave/security-advisories": "dev-master",
         "symfony/dotenv": "^4.0"
     },
     "config": {
