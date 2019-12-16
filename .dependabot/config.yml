@@ -1,0 +1,7 @@
+version: 1
+update_configs:
+  - package_manager: "php:composer"
+    target_branch: "master"
+    directory: "/"
+    version_requirement_updates: "increase_versions"
+    update_schedule: "weekly"
