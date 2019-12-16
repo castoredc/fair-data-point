@@ -58,10 +58,10 @@ class ApiClient
     /**
      * ApiClient constructor.
      */
-    public function __construct()
+    public function __construct(string $castorEdcUrl)
     {
         $this->client = new Client();
-        $this->server = getenv("CASTOR_API_URL");
+        $this->server = $castorEdcUrl;
     }
 
     public function auth(string $clientId, string $secret)

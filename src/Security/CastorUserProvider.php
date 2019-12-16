@@ -22,9 +22,15 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
 
     protected $doctrine;
 
-    public function __construct (ManagerRegistry $doctrine)
+    /**
+     * @var ApiClient
+     */
+    private $apiClient;
+
+    public function __construct (ManagerRegistry $doctrine, ApiClient $apiClient)
     {
         $this->doctrine = $doctrine;
+        $this->apiClient = $apiClient;
     }
 
     /**
@@ -39,10 +45,9 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $castorApi = new ApiClient();
-        $castorApi->setToken($response->getAccessToken());
+        $this->apiClient->setToken($response->getAccessToken());
 
-        $castorUser = $castorApi->getUser();
+        $castorUser = $this->apiClient->getUser();
 
         $userRepository = $this->doctrine->getRepository(CastorUser::class);
         $dbUser = $userRepository->find($castorUser->getId());
