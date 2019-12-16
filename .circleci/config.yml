@@ -1,0 +1,92 @@
+version: 2.1
+
+jobs:
+  unit-tests:
+    docker:
+      - image: circleci/php:7.1
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.lock" }}
+      - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+      - run: composer install -n -a
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.lock" }}
+          paths:
+            - ./vendor
+
+      - run: vendor/bin/phpunit
+
+    orm-mapping:
+      docker:
+        - image: circleci/php:7.1
+      steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            keys:
+              - v1-dependencies-{{ checksum "composer.lock" }}
+        - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+        - run: composer install -n -a
+        - save_cache:
+            key: v1-dependencies-{{ checksum "composer.lock" }}
+            paths:
+              - ./vendor
+
+        - run: bin/console doctrine:schema:validate --skip-sync
+
+    phpcs:
+      docker:
+        - image: circleci/php:7.1
+      steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            keys:
+              - v1-dependencies-{{ checksum "composer.lock" }}
+        - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+        - run: composer install -n -a
+        - save_cache:
+            key: v1-dependencies-{{ checksum "composer.lock" }}
+            paths:
+              - ./vendor
+
+        - run: vendor/bin/phpcs
+
+    phpstan:
+      docker:
+        - image: circleci/php:7.1
+      steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            keys:
+              - v1-dependencies-{{ checksum "composer.lock" }}
+        - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+        - run: composer install -n -a
+        - save_cache:
+            key: v1-dependencies-{{ checksum "composer.lock" }}
+            paths:
+              - ./vendor
+
+        - run: vendor/bin/phpstan analyze
+
+workflows:
+  version: 2
+
+  build:
+    jobs:
+      - unit-tests:
+          context: org-global
+      - orm-mapping:
+          context: org-global
+      - phpcs:
+          context: org-global
+      - phpstan:
+          context: org-global
