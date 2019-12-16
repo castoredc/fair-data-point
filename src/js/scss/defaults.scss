@@ -96,6 +96,25 @@ ul {
       margin-bottom: 10px;
       border-bottom: 1px solid $neutral-40;
     }
+
+    .MetadataItem {
+      .MetadataItemLabel, .MetadataItemValue {
+        background: $neutral-20;
+        padding: 6px 10px;
+        border: 1px solid $neutral-40;
+      }
+
+      .MetadataItemLabel {
+        border-radius: 3px 3px 0 0;
+        border-bottom: none;
+      }
+
+      .MetadataItemValue {
+        border-radius: 0 0 3px 3px;
+        padding-top: 0;
+        border-top: none;
+      }
+    }
   }
 }
 
@@ -125,6 +144,7 @@ ul {
 
       .Publishers {
         float: right;
+        padding-left: 20px;
 
         .Contact {
           padding: 6px 8px;
