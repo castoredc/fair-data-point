@@ -1,4 +1,10 @@
 <?php
-require __DIR__.'/../config/bootstrap.php';
-$kernel = new \App\Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
-return new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+declare(strict_types=1);
+
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+require __DIR__ . '/../config/bootstrap.php';
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+
+return new Application($kernel);

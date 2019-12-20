@@ -1,32 +1,35 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Type;
 
 use App\Entity\Iri;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 
 class IriType extends Type
 {
-    const IRI = 'iri';
+    public const IRI = 'iri';
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    /** @inheritDoc */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    /** @inheritDoc */
+    public function convertToPHPValue($value, AbstractPlatform $platform): Iri
     {
         return new Iri($value);
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    /** @inheritDoc */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         return $value;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return self::IRI;
     }

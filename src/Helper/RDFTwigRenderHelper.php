@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Helper;
 
@@ -10,6 +10,9 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\SyntaxError;
 use Twig\TemplateWrapper;
+use function in_array;
+use function preg_replace;
+use function trim;
 
 class RDFTwigRenderHelper
 {
@@ -22,38 +25,30 @@ class RDFTwigRenderHelper
     /** @var TemplateWrapper */
     private $twig;
 
-    /** @var Environment */
-    private $environment;
-
     /** @var RDFDistribution */
     private $distribution;
 
+    /** @var array<mixed> */
     private $metadata;
 
+    /** @var array<mixed> */
     private $fields;
 
+    /** @var array<string> */
     private $variables;
 
-    const METADATA_NAME = 'SNOMED';
+    public const METADATA_NAME = 'SNOMED';
 
-    const OPTION_GROUP_FIELDS = [
+    public const OPTION_GROUP_FIELDS = [
         'radio',
         'dropdown',
-        'checkbox'
+        'checkbox',
     ];
 
-    /**
-     * RDFTwigRenderHelper constructor.
-     * @param ApiClient $client
-     * @param Study $study
-     * @param Environment $environment
-     * @param RDFDistribution $distribution
-     */
     public function __construct(ApiClient $client, Study $study, Environment $environment, RDFDistribution $distribution)
     {
         $this->client = $client;
         $this->study = $study;
-        $this->environment = $environment;
         $this->distribution = $distribution;
 
         try {
@@ -68,7 +63,7 @@ class RDFTwigRenderHelper
         $this->getData();
     }
 
-    private function getData()
+    private function getData(): void
     {
         $this->metadata = $this->client->getRawMetadata($this->study->getId());
         $apiFields = $this->client->getRawFields($this->study->getId());
@@ -79,21 +74,22 @@ class RDFTwigRenderHelper
         }
     }
 
-    public function renderRecord($recordId)
+    public function renderRecord(string $recordId): string
     {
         $templateData = [
             'distribution' => $this->distribution,
-            'record' => $this->getRecord($recordId)
+            'record' => $this->getRecord($recordId),
         ];
 
         $content = $this->twig->render($templateData);
 
         $trimmedContent = trim(preg_replace('/\n\s*\n/', "\n", $content));
         $trimmedContent = trim(preg_replace('/\t+/', '', $trimmedContent));
+
         return $trimmedContent;
     }
 
-    public function renderRecords()
+    public function renderRecords(): string
     {
         $records = $this->client->getRawRecords($this->study->getId());
         $return = '';
@@ -103,41 +99,35 @@ class RDFTwigRenderHelper
                 continue;
             }
 
-            $return = $return . $this->renderRecord($record['record_id']) . "\n\n";
+            $return .= $this->renderRecord($record['record_id']) . "\n\n";
         }
 
         return $return;
     }
 
-
     /**
-     * @param string $recordId
-     * @return array
+     * @return array<mixed>
      */
-    private function getRecord(string $recordId)
+    private function getRecord(string $recordId): array
     {
         $values = $this->client->getRawRecordDataPoints($this->study->getId(), $recordId);
 
         $return = [
             'record_id' => $recordId,
-            'data' => []
+            'data' => [],
         ];
 
         foreach ($values as $value) {
             $fieldId = $value['field_id'];
             $fieldVariable = $this->variables[$value['field_id']];
 
-            if(in_array($this->fields[$fieldId]['field_type'], self::OPTION_GROUP_FIELDS) && isset($this->metadata[$fieldId]) && isset($this->metadata[$fieldId][$value['field_value']]))
-            {
+            if (in_array($this->fields[$fieldId]['field_type'], self::OPTION_GROUP_FIELDS, true) && isset($this->metadata[$fieldId]) && isset($this->metadata[$fieldId][$value['field_value']])) {
                 $return['data'][$fieldVariable] = $this->metadata[$fieldId][$value['field_value']][self::METADATA_NAME];
-            }
-            else
-            {
+            } else {
                 $return['data'][$fieldVariable] = $value['field_value'];
             }
         }
 
         return $return;
     }
-
 }
