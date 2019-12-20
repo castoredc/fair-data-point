@@ -1,33 +1,26 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Model\Castor\ApiClient;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Exception;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * Created by PhpStorm.
- * User: Martijn
- * Date: 21/06/2018
- * Time: 11:00
- */
-
-class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface {
-
+class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
+{
+    /** @var ManagerRegistry */
     protected $doctrine;
 
-    /**
-     * @var ApiClient
-     */
+    /** @var ApiClient */
     private $apiClient;
 
-    public function __construct (ManagerRegistry $doctrine, ApiClient $apiClient)
+    public function __construct(ManagerRegistry $doctrine, ApiClient $apiClient)
     {
         $this->doctrine = $doctrine;
         $this->apiClient = $apiClient;
@@ -36,14 +29,10 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
     /**
      * Loads the user by a given UserResponseInterface object.
      *
-     * @param \HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface $response
-     *
-     * @return \Symfony\Component\Security\Core\User\UserInterface
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException if the user is not found
-     * @throws \Exception
+     * @throws UsernameNotFoundException if the user is not found
+     * @throws Exception
      */
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response)
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $this->apiClient->setToken($response->getAccessToken());
 
@@ -52,7 +41,7 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
         $userRepository = $this->doctrine->getRepository(CastorUser::class);
         $dbUser = $userRepository->find($castorUser->getId());
 
-        if ($dbUser) {
+        if ($dbUser !== null) {
             $dbUser->setToken($response->getAccessToken());
 
             return $dbUser;
@@ -78,10 +67,12 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
      * @return UserInterface
      *
      * @throws UsernameNotFoundException if the user is not found
+     *
+     * @inheritDoc
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): UserInterface
     {
-        // TODO: Implement loadUserByUsername() method.
+        throw new UsernameNotFoundException();
     }
 
     /**
@@ -91,12 +82,8 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
      * totally reloaded (e.g. from the database), or if the UserInterface
      * object can just be merged into some internal array of users / identity
      * map.
-     *
-     * @return UserInterface
-     *
-     * @throws UnsupportedUserException if the user is not supported
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         return $user;
     }
@@ -107,9 +94,11 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
      * @param string $class
      *
      * @return bool
+     *
+     * @inheritDoc
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
-        // TODO: Implement supportsClass() method.
+        return $class === CastorUser::class;
     }
 }

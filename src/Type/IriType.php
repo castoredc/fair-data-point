@@ -1,15 +1,15 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Type;
 
 use App\Entity\Iri;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 
 class IriType extends Type
 {
-    const IRI = 'iri';
+    public const IRI = 'iri';
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {

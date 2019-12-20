@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
@@ -23,7 +23,7 @@ class LocalizedTextItem
      * @ORM\ManyToOne(targetEntity="LocalizedText", inversedBy="texts",cascade={"persist"})
      * @ORM\JoinColumn(name="parent", referencedColumnName="id")
      *
-     * @var LocalizedText[]
+     * @var LocalizedText|null
      */
     private $parent;
 
@@ -38,90 +38,64 @@ class LocalizedTextItem
      * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
      *
-     * @var Language
+     * @var Language|null
      */
     private $language;
 
-    /**
-     * LocalizedTextItem constructor.
-     * @param string $text
-     * @param Language $language
-     */
     public function __construct(string $text, Language $language)
     {
         $this->text = $text;
         $this->language = $language;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
     public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return LocalizedText[]
-     */
-    public function getParent(): array
+    public function getParent(): LocalizedText
     {
         return $this->parent;
     }
 
-    /**
-     * @param LocalizedText[] $parent
-     */
-    public function setParent(array $parent): void
+    public function setParent(LocalizedText $parent): void
     {
         $this->parent = $parent;
     }
 
-    /**
-     * @return string
-     */
     public function getText(): string
     {
         return $this->text;
     }
 
-    /**
-     * @param string $text
-     */
     public function setText(string $text): void
     {
         $this->text = $text;
     }
 
-    /**
-     * @return Language
-     */
     public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    /**
-     * @param Language $language
-     */
     public function setLanguage(Language $language): void
     {
         $this->language = $language;
     }
 
-    public function toArray()
+    /**
+     * @return array<string>
+     */
+    public function toArray(): array
     {
         return [
             'text' => $this->text,
-            'language' => $this->language->getCode()
+            'language' => $this->language->getCode(),
         ];
     }
 }
