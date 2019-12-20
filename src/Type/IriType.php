@@ -11,22 +11,25 @@ class IriType extends Type
 {
     public const IRI = 'iri';
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    /** @inheritDoc */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    /** @inheritDoc */
+    public function convertToPHPValue($value, AbstractPlatform $platform): Iri
     {
         return new Iri($value);
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    /** @inheritDoc */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         return $value;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return self::IRI;
     }

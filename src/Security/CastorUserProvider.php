@@ -29,7 +29,7 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
     /**
      * Loads the user by a given UserResponseInterface object.
      *
-     * @throws UsernameNotFoundException if the user is not found
+     * @throws UsernameNotFoundException if the user is not found.
      * @throws Exception
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
@@ -64,9 +64,7 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
      *
      * @param string $username The username
      *
-     * @return UserInterface
-     *
-     * @throws UsernameNotFoundException if the user is not found
+     * @throws UsernameNotFoundException if the user is not found.
      *
      * @inheritDoc
      */

@@ -5,10 +5,10 @@ namespace App\Exception;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class FieldIdMissingException extends BadRequestHttpException
+class StudyIdMissing extends BadRequestHttpException
 {
     public function __construct()
     {
-        parent::__construct('Please provide a field ID');
+        parent::__construct('Please provide a study ID');
     }
 }

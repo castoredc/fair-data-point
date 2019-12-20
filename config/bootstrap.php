@@ -7,8 +7,10 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
-if (is_array($env = @include dirname(__DIR__) . '/.env.local.php') && ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? $env['APP_ENV']) === $env['APP_ENV']) {
-    foreach ($env as $k => $v) {
+$localEnv = @include dirname(__DIR__) . '/.env.local.php';
+$env = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? $localEnv['APP_ENV'];
+if (is_array($localEnv) && $env === $localEnv['APP_ENV']) {
+    foreach ($localEnv as $k => $v) {
         $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && strpos($k, 'HTTP_') !== 0 ? $_SERVER[$k] : $v);
     }
 } elseif (! class_exists(Dotenv::class)) {
