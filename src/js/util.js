@@ -31,7 +31,9 @@ export const preventDefault = e => {
 
 export const localizedText = (texts, language = 'en') => {
   for (const text of texts) {
-    if(text.language === language) return text.text;
+    if(text.language === language) {
+      return text.text;
+    }
   }
   return texts[0].text;
 };
