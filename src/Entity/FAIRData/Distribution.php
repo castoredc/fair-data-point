@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: martijn
- * Date: 20/05/2019
- * Time: 23:50
- */
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
@@ -42,7 +37,7 @@ class Distribution
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $title;
 
@@ -57,7 +52,7 @@ class Distribution
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $description;
 
@@ -65,7 +60,7 @@ class Distribution
      * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedDistributions",cascade={"persist"})
      * @ORM\JoinTable(name="distributions_publishers")
      *
-     * @var Collection
+     * @var Collection<string, Agent>
      */
     private $publishers;
 
@@ -73,7 +68,7 @@ class Distribution
      * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
      *
-     * @var Language
+     * @var Language|null
      */
     private $language;
 
@@ -99,34 +94,15 @@ class Distribution
      */
     private $modified;
 
-//    /**
-//     * The specification of the dataset metadata schema (for example ShEx)
-//     *
-//     * @var Iri|null
-//     */
-//    private $conformsTo;
-//
-//    /** @var Iri|null */
-//    private $rights;
-
     /**
      * @ORM\ManyToOne(targetEntity="Dataset", inversedBy="distributions",cascade={"persist"})
      *
-     * @var Distribution
+     * @var Dataset|null
      */
     private $dataset;
 
     /**
-     * Distribution constructor.
-     * @param string $slug
-     * @param LocalizedText $title
-     * @param string $version
-     * @param LocalizedText $description
-     * @param Collection $publishers
-     * @param Language $language
-     * @param License $license
-     * @param DateTime $issued
-     * @param DateTime $modified
+     * @param Collection<string, Agent> $publishers
      */
     public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified)
     {
@@ -141,200 +117,143 @@ class Distribution
         $this->modified = $modified;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
     public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getTitle(): LocalizedText
     {
         return $this->title;
     }
 
-    /**
-     * @param LocalizedText $title
-     */
     public function setTitle(LocalizedText $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
     public function setVersion(string $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getDescription(): LocalizedText
     {
         return $this->description;
     }
 
-    /**
-     * @param LocalizedText $description
-     */
     public function setDescription(LocalizedText $description): void
     {
         $this->description = $description;
     }
 
     /**
-     * @return Agent[]
+     * @return Collection<string, Agent>
      */
-    public function getPublishers(): array
+    public function getPublishers(): Collection
     {
         return $this->publishers;
     }
 
     /**
-     * @param Agent[] $publishers
+     * @param Collection<string, Agent> $publishers
      */
-    public function setPublishers(array $publishers): void
+    public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
 
-    /**
-     * @return Language
-     */
     public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    /**
-     * @param Language $language
-     */
     public function setLanguage(Language $language): void
     {
         $this->language = $language;
     }
 
-    /**
-     * @return License
-     */
     public function getLicense(): License
     {
         return $this->license;
     }
 
-    /**
-     * @param License $license
-     */
     public function setLicense(License $license): void
     {
         $this->license = $license;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getIssued(): DateTime
     {
         return $this->issued;
     }
 
-    /**
-     * @param DateTime $issued
-     */
     public function setIssued(DateTime $issued): void
     {
         $this->issued = $issued;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getModified(): DateTime
     {
         return $this->modified;
     }
 
-    /**
-     * @param DateTime $modified
-     */
     public function setModified(DateTime $modified): void
     {
         $this->modified = $modified;
     }
 
-    /**
-     * @return Distribution
-     */
-    public function getDataset(): Distribution
+    public function getDataset(): Dataset
     {
         return $this->dataset;
     }
 
-    /**
-     * @param Distribution $dataset
-     */
-    public function setDataset(Distribution $dataset): void
+    public function setDataset(Dataset $dataset): void
     {
         $this->dataset = $dataset;
     }
 
-    public function getAccessUrl()
+    public function getAccessUrl(): string
     {
         return $this->dataset->getAccessUrl() . '/' . $this->slug;
     }
 
-    public function getRelativeUrl()
+    public function getRelativeUrl(): string
     {
         return $this->dataset->getRelativeUrl() . '/' . $this->slug;
     }
 
-    public function toBasicArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toBasicArray(): array
     {
         $publishers = [];
-        foreach($this->publishers as $publisher)
-        {
+        foreach ($this->publishers as $publisher) {
             /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
+
         return [
             'access_url' => $this->getAccessUrl(),
             'relative_url' => $this->getRelativeUrl(),
@@ -351,26 +270,15 @@ class Distribution
         ];
     }
 
-    public function toArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
     {
         return $this->toBasicArray();
     }
 
-//    /** @var string|null */
-//    private $format;
-//
-//    /** @var double */
-//    private $byteSize;
-
-
-
-
-    /** TODO AccessRights */
-
-    /** TODO FDP ontology */
-
-
-    public function toGraph()
+    public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
 
@@ -389,8 +297,8 @@ class Distribution
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        foreach($this->publishers as $publisher) {
-            /** @var Agent $agent */
+        foreach ($this->publishers as $publisher) {
+            /** @var Agent $publisher */
             $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
         }
 

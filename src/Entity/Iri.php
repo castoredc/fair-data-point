@@ -1,24 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: martijn
- * Date: 20/05/2019
- * Time: 23:25
- */
+declare(strict_types=1);
 
 namespace App\Entity;
 
+use function basename;
 
 class Iri
 {
     /** @var string */
     private $value;
-
-    private static $prefixes = [
-        'http://id.loc.gov/vocabulary/iso639-1/' => 'lang',
-        'http://purl.org/dc/terms/' => 'dcterms',
-        'http://www.re3data.org/schema/3-0#' => 'r3d'
-    ];
 
     public function __construct(string $uri)
     {
