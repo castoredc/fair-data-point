@@ -14,7 +14,7 @@
     <file>config/</file>
     <file>public/</file>
     <file>src/</file>
-    <file>test/</file>
+    <file>tests/</file>
 
     <rule ref="Castor" />
 </ruleset>

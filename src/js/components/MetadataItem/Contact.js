@@ -8,7 +8,9 @@ class Contact extends Component {
         const { name, url, type } = this.props;
 
         let iconType = 'users';
-        if(type === 'organization') iconType = 'globe';
+        if(type === 'organization') {
+            iconType = 'globe';
+        }
 
         return <a href={url} className="Contact" target="_blank">
             <Icon type={iconType} />

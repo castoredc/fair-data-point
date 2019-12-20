@@ -1,13 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: martijn
- * Date: 20/05/2019
- * Time: 23:50
- */
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
-
 
 use App\Entity\Castor\Study;
 use App\Entity\Iri;
@@ -15,6 +9,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
+use function array_merge;
 
 //use EasyRdf_Graph;
 
@@ -46,7 +41,7 @@ class Dataset
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $title;
 
@@ -61,7 +56,7 @@ class Dataset
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $description;
 
@@ -69,7 +64,7 @@ class Dataset
      * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedDatasets",cascade={"persist"})
      * @ORM\JoinTable(name="datasets_publishers")
      *
-     * @var Collection
+     * @var Collection<string, Agent>
      */
     private $publishers;
 
@@ -77,7 +72,7 @@ class Dataset
      * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
      *
-     * @var Language
+     * @var Language|null
      */
     private $language;
 
@@ -103,23 +98,10 @@ class Dataset
      */
     private $modified;
 
-//    /**
-//     * The specification of the dataset metadata schema (for example ShEx)
-//     *
-//     * @var Iri|null
-//     */
-//    private $conformsTo;
-//
-//    /** @var Iri|null */
-//    private $rights;
-//
-//    /** @var Iri|null */
-//    private $references;
-
     /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="datasets",cascade={"persist"})
      *
-     * @var Collection
+     * @var Collection<string, Catalog>
      */
     private $catalogs;
 
@@ -127,22 +109,15 @@ class Dataset
      * @ORM\OneToMany(targetEntity="Distribution", mappedBy="dataset",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
-     * @var Collection
+     * @var Collection<string, Distribution>
      */
     private $distributions;
-
-//    /**
-//     * List of concepts that describe the dataset
-//     *
-//     * @var Iri
-//     */
-//    private $theme;
 
     /**
      * @ORM\ManyToMany(targetEntity="Agent", inversedBy="contactDatasets",cascade={"persist"})
      * @ORM\JoinTable(name="datasets_contactpoints")
      *
-     * @var Collection
+     * @var Collection<string, Agent>
      */
     private $contactPoint;
 
@@ -150,12 +125,12 @@ class Dataset
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $keyword;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="iri", nullable=true)
      *
      * @var Iri|null
      */
@@ -170,19 +145,8 @@ class Dataset
     private $study;
 
     /**
-     * Dataset constructor.
-     * @param string $slug
-     * @param LocalizedText $title
-     * @param string $version
-     * @param LocalizedText $description
-     * @param Collection $publishers
-     * @param Language $language
-     * @param License|null $license
-     * @param DateTime $issued
-     * @param DateTime $modified
-     * @param Collection $contactPoint
-     * @param LocalizedText $keyword
-     * @param Iri|null $landingPage
+     * @param Collection<string, Agent> $publishers
+     * @param Collection<string, Agent> $contactPoint
      */
     public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, Collection $contactPoint, ?LocalizedText $keyword, ?Iri $landingPage)
     {
@@ -200,88 +164,58 @@ class Dataset
         $this->landingPage = $landingPage;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
     public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getTitle(): LocalizedText
     {
         return $this->title;
     }
 
-    /**
-     * @param LocalizedText $title
-     */
     public function setTitle(LocalizedText $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
     public function setVersion(string $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getDescription(): LocalizedText
     {
         return $this->description;
     }
 
-    /**
-     * @param LocalizedText $description
-     */
     public function setDescription(LocalizedText $description): void
     {
         $this->description = $description;
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, Agent>
      */
     public function getPublishers(): Collection
     {
@@ -289,79 +223,55 @@ class Dataset
     }
 
     /**
-     * @param Collection $publishers
+     * @param Collection<string, Agent> $publishers
      */
     public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
 
-    /**
-     * @return Language
-     */
     public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    /**
-     * @param Language $language
-     */
     public function setLanguage(Language $language): void
     {
         $this->language = $language;
     }
 
-    /**
-     * @return License|null
-     */
     public function getLicense(): ?License
     {
         return $this->license;
     }
 
-    /**
-     * @param License|null $license
-     */
     public function setLicense(?License $license): void
     {
         $this->license = $license;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getIssued(): DateTime
     {
         return $this->issued;
     }
 
-    /**
-     * @param DateTime $issued
-     */
     public function setIssued(DateTime $issued): void
     {
         $this->issued = $issued;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getModified(): DateTime
     {
         return $this->modified;
     }
 
-    /**
-     * @param DateTime $modified
-     */
     public function setModified(DateTime $modified): void
     {
         $this->modified = $modified;
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, Catalog>
      */
     public function getCatalogs(): Collection
     {
@@ -369,7 +279,7 @@ class Dataset
     }
 
     /**
-     * @param Collection $catalogs
+     * @param Collection<string, Catalog> $catalogs
      */
     public function setCatalogs(Collection $catalogs): void
     {
@@ -377,7 +287,7 @@ class Dataset
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, Distribution>
      */
     public function getDistributions(): Collection
     {
@@ -385,7 +295,7 @@ class Dataset
     }
 
     /**
-     * @param Collection $distributions
+     * @param Collection<string, Distribution> $distributions
      */
     public function setDistributions(Collection $distributions): void
     {
@@ -393,97 +303,91 @@ class Dataset
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, Agent>
      */
-    public function getAgentPoint(): Collection
+    public function getContactPoint(): Collection
     {
         return $this->contactPoint;
     }
 
     /**
-     * @param Collection $contactPoint
+     * @param Collection<string, Agent> $contactPoint
      */
-    public function setAgentPoint(Collection $contactPoint): void
+    public function setContactPoint(Collection $contactPoint): void
     {
         $this->contactPoint = $contactPoint;
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getKeyword(): LocalizedText
     {
         return $this->keyword;
     }
 
-    /**
-     * @param LocalizedText[] $keyword
-     */
-    public function setKeyword(array $keyword): void
+    public function setKeyword(LocalizedText $keyword): void
     {
         $this->keyword = $keyword;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getLandingPage(): ?Iri
     {
         return $this->landingPage;
     }
 
-    /**
-     * @param Iri|null $landingPage
-     */
     public function setLandingPage(?Iri $landingPage): void
     {
         $this->landingPage = $landingPage;
     }
 
-    /**
-     * @return Study|null
-     */
     public function getStudy(): ?Study
     {
         return $this->study;
     }
 
-    /**
-     * @param Study|null $study
-     */
     public function setStudy(?Study $study): void
     {
         $this->study = $study;
     }
 
-
-    public function addDistribution(Distribution $distribution)
+    public function addDistribution(Distribution $distribution): void
     {
         $this->distributions[] = $distribution;
     }
 
-    public function getAccessUrl()
+    public function getAccessUrl(): string
     {
-        return $this->catalogs->first()->getAccessUrl() . '/' . $this->slug;
+        $first = $this->catalogs->first();
+
+        if ($first === false) {
+            return '';
+        }
+
+        return $first->getAccessUrl() . '/' . $this->slug;
     }
 
-    public function getRelativeUrl()
+    public function getRelativeUrl(): string
     {
-        return $this->catalogs->first()->getRelativeUrl() . '/' . $this->slug;
+        $first = $this->catalogs->first();
+
+        if ($first === false) {
+            return '';
+        }
+
+        return $first->getRelativeUrl() . '/' . $this->slug;
     }
 
-    public function toBasicArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toBasicArray(): array
     {
         $publishers = [];
-        foreach($this->publishers as $publisher)
-        {
+        foreach ($this->publishers as $publisher) {
             /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
 
         $contactPoints = [];
-        foreach($this->contactPoint as $contactPoint)
-        {
+        foreach ($this->contactPoint as $contactPoint) {
             /** @var Agent $contactPoint */
             $contactPoints[] = $contactPoint->toArray();
         }
@@ -503,25 +407,25 @@ class Dataset
             'modified' => $this->modified,
             'contactPoints' => $contactPoints,
 //            'keyword' => $this->keyword->toArray(),
-            'landingpage' => $this->landingPage
+            'landingpage' => $this->landingPage,
         ];
     }
 
-    public function toArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
     {
         $distributions = [];
-        foreach($this->distributions as $distribution)
-        {
+        foreach ($this->distributions as $distribution) {
             /** @var Distribution $distribution */
             $distributions[] = $distribution->toBasicArray();
         }
 
-        return array_merge($this->toBasicArray(), [
-            'distributions' => $distributions
-        ]);
+        return array_merge($this->toBasicArray(), ['distributions' => $distributions]);
     }
 
-    public function toGraph()
+    public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
 
@@ -540,13 +444,13 @@ class Dataset
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        foreach($this->publishers as $publisher) {
-            /** @var Agent $agent */
+        foreach ($this->publishers as $publisher) {
+            /** @var Agent $publisher */
             $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
         }
 
-        foreach($this->contactPoint as $contactPoint) {
-            /** @var Agent $agent */
+        foreach ($this->contactPoint as $contactPoint) {
+            /** @var Agent $contactPoint */
             $contactPoint->addToGraph($this->getAccessUrl(), 'dcat:contactPoint', $graph);
         }
 
@@ -556,21 +460,22 @@ class Dataset
 
         //$graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
 
-        foreach($this->distributions as $distribution) {
+        foreach ($this->distributions as $distribution) {
             $graph->addResource($this->getAccessUrl(), 'dcat:distribution', $distribution->getAccessUrl());
         }
-
 
         return $graph;
     }
 
-    public function hasCatalog(Catalog $find)
+    public function hasCatalog(Catalog $find): bool
     {
-        foreach($this->catalogs as $catalog)
-        {
+        foreach ($this->catalogs as $catalog) {
             /** @var Catalog $catalog */
-            if($catalog->getId() == $find->getId()) return true;
+            if ($catalog->getId() === $find->getId()) {
+                return true;
+            }
         }
+
         return false;
     }
 }

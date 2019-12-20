@@ -1,18 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Martijn
- * Date: 21/06/2018
- * Time: 15:46
- */
+declare(strict_types=1);
 
 namespace App\Exception;
 
-
-use Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class FieldIdMissingException extends BadRequestHttpException
+class FieldIdMissing extends BadRequestHttpException
 {
     public function __construct()
     {
