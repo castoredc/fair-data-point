@@ -136,7 +136,7 @@ class ApiClient
     }
 
     /**
-     * @return array<array>
+     * @return array<mixed>
      */
     public function getRawMetadata(string $studyId): array
     {
@@ -164,7 +164,7 @@ class ApiClient
     }
 
     /**
-     * @return array<array>
+     * @return array<mixed>
      */
     public function getRawFields(string $studyId): array
     {
@@ -190,7 +190,7 @@ class ApiClient
     }
 
     /**
-     * @return array<array>
+     * @return array<mixed>
      */
     public function getRawRecords(string $studyId): array
     {

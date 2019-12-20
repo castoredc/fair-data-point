@@ -75,7 +75,7 @@ class FAIRDataPoint
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true))
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
      * @var License|null
      */

@@ -5,6 +5,6 @@ namespace App\Exception;
 
 use Exception;
 
-class SessionTimeOutException extends Exception
+class SessionTimeOut extends Exception
 {
 }

@@ -25,9 +25,6 @@ class RDFTwigRenderHelper
     /** @var TemplateWrapper */
     private $twig;
 
-    /** @var Environment */
-    private $environment;
-
     /** @var RDFDistribution */
     private $distribution;
 
@@ -52,7 +49,6 @@ class RDFTwigRenderHelper
     {
         $this->client = $client;
         $this->study = $study;
-        $this->environment = $environment;
         $this->distribution = $distribution;
 
         try {

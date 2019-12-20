@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 class User
 {
     /** @var string|null */
@@ -26,9 +23,6 @@ class User
     /** @var string|null */
     private $emailAddress;
 
-    /** @var Collection<string, Study> */
-    private $studies;
-
     /** @var string|null */
     private $entityId;
 
@@ -45,7 +39,6 @@ class User
         $this->nameMiddle = $nameMiddle;
         $this->nameLast = $nameLast;
         $this->emailAddress = $emailAddress;
-        $this->studies = new ArrayCollection();
     }
 
     public function getId(): ?string

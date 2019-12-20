@@ -63,7 +63,7 @@ class LocalizedText
     }
 
     /**
-     * @return array<array>
+     * @return array<mixed>
      */
     public function toArray(): array
     {

@@ -115,6 +115,70 @@ abstract class Agent
     }
 
     /**
+     * @return Collection<string, Catalog>
+     */
+    public function getPublishedCatalogs(): Collection
+    {
+        return $this->publishedCatalogs;
+    }
+
+    /**
+     * @param Collection<string, Catalog> $publishedCatalogs
+     */
+    public function setPublishedCatalogs(Collection $publishedCatalogs): void
+    {
+        $this->publishedCatalogs = $publishedCatalogs;
+    }
+
+    /**
+     * @return Collection<string, Dataset>
+     */
+    public function getPublishedDatasets(): Collection
+    {
+        return $this->publishedDatasets;
+    }
+
+    /**
+     * @param Collection<string, Dataset> $publishedDatasets
+     */
+    public function setPublishedDatasets(Collection $publishedDatasets): void
+    {
+        $this->publishedDatasets = $publishedDatasets;
+    }
+
+    /**
+     * @return Collection<string, Distribution>
+     */
+    public function getPublishedDistributions(): Collection
+    {
+        return $this->publishedDistributions;
+    }
+
+    /**
+     * @param Collection<string, Distribution> $publishedDistributions
+     */
+    public function setPublishedDistributions(Collection $publishedDistributions): void
+    {
+        $this->publishedDistributions = $publishedDistributions;
+    }
+
+    /**
+     * @return Collection<string, Dataset>
+     */
+    public function getContactDatasets(): Collection
+    {
+        return $this->contactDatasets;
+    }
+
+    /**
+     * @param Collection<string, Dataset> $contactDatasets
+     */
+    public function setContactDatasets(Collection $contactDatasets): void
+    {
+        $this->contactDatasets = $contactDatasets;
+    }
+
+    /**
      * @return array<string>
      */
     public function toArray(): array
