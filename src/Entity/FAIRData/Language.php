@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Language
 {
-    const ISO_URL = "http://id.loc.gov/vocabulary/iso639-1/";
+    public const ISO_URL = 'http://id.loc.gov/vocabulary/iso639-1/';
 
     /**
      * @ORM\Id
@@ -27,31 +27,29 @@ class Language
      */
     private $name;
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function getAccessUrl()
+    public function getAccessUrl(): string
     {
         return self::ISO_URL . $this->getCode();
     }
 
-    public function toArray() {
+    /**
+     * @return array<string>
+     */
+    public function toArray(): array
+    {
         return [
             'code' => $this->code,
-            'name' => $this->name
+            'name' => $this->name,
         ];
     }
 }

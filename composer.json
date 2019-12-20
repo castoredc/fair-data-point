@@ -22,7 +22,8 @@
         "hwi/oauth-bundle": "^0.6.3",
         "php-http/guzzle6-adapter": "~1.1.1",
         "php-http/httplug-bundle": "~1.13",
-        "twig/twig": "^2.10"
+        "twig/twig": "^2.10",
+        "ext-json": "*"
     },
     "require-dev": {
         "castor/coding-standard": "^3.1",

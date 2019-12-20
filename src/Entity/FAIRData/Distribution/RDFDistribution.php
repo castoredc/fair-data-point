@@ -1,15 +1,18 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData\Distribution;
 
-
+use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use EasyRdf_Graph;
+use function array_merge;
 
 /**
  * @ORM\Entity
@@ -25,44 +28,44 @@ class RDFDistribution extends Distribution
      */
     private $twig;
 
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, array $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, string $twig)
+    /**
+     * @param Collection<string, Agent> $publishers
+     */
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, string $twig)
     {
         parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $issued, $modified);
 
         $this->twig = $twig;
     }
 
-    /**
-     * @return string
-     */
     public function getTwig(): string
     {
         return $this->twig;
     }
 
-    /**
-     * @param string $twig
-     */
     public function setTwig(string $twig): void
     {
         $this->twig = $twig;
     }
 
-    public function getRDFUrl()
+    public function getRDFUrl(): string
     {
         return parent::getAccessUrl() . '/rdf';
     }
 
-    public function toArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
     {
         return array_merge(parent::toArray(), [
             'rdf_url' => $this->getRDFUrl(),
             'download_url' => $this->getRDFUrl() . '/?download=1',
-            'access_url' => $this->getRDFUrl()
+            'access_url' => $this->getRDFUrl(),
         ]);
     }
 
-    public function toGraph()
+    public function toGraph(): EasyRdf_Graph
     {
         $graph = parent::toGraph();
 
@@ -72,5 +75,4 @@ class RDFDistribution extends Distribution
 
         return $graph;
     }
-
 }
