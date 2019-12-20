@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: martijn
- * Date: 16/05/2019
- * Time: 14:55
- */
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
@@ -13,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
+use function array_merge;
 
 /**
  * @ORM\Entity
@@ -42,7 +38,7 @@ class FAIRDataPoint
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $title;
 
@@ -57,7 +53,7 @@ class FAIRDataPoint
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
      *
-     * @var LocalizedText
+     * @var LocalizedText|null
      */
     private $description;
 
@@ -65,7 +61,7 @@ class FAIRDataPoint
      * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedCatalogs",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinTable(name="fdp_publishers")
      *
-     * @var Collection
+     * @var Collection<string, Agent>
      */
     private $publishers;
 
@@ -73,13 +69,13 @@ class FAIRDataPoint
      * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
      *
-     * @var Language
+     * @var Language|null
      */
     private $language;
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true))
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
      * @var License|null
      */
@@ -87,21 +83,15 @@ class FAIRDataPoint
 
     /**
      * @ORM\OneToMany(targetEntity="Catalog", mappedBy="fairDataPoint",cascade={"persist"}, fetch = "EAGER")
-     * @var Collection
+     *
+     * @var Collection<string, Catalog>
      */
     private $catalogs;
 
     /**
-     * FAIRDataPoint constructor.
-     * @param Iri $iri
-     * @param LocalizedText $title
-     * @param string $version
-     * @param LocalizedText $description
-     * @param ArrayCollection $publishers
-     * @param Language $language
-     * @param License $license
+     * @param Collection<string, Agent> $publishers
      */
-    public function __construct(Iri $iri, LocalizedText $title, string $version, LocalizedText $description, ArrayCollection $publishers, Language $language, ?License $license)
+    public function __construct(Iri $iri, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license)
     {
         $this->iri = $iri;
         $this->title = $title;
@@ -113,98 +103,68 @@ class FAIRDataPoint
         $this->catalogs = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
     public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return Iri
-     */
     public function getIri(): Iri
     {
         return $this->iri;
     }
 
-    /**
-     * @param Iri $iri
-     */
     public function setIri(Iri $iri): void
     {
         $this->iri = $iri;
     }
 
-    public function getAccessUrl()
+    public function getAccessUrl(): string
     {
         return $this->iri . '/fdp';
     }
 
-    public function getRelativeUrl()
+    public function getRelativeUrl(): string
     {
         return '/fdp';
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getTitle(): LocalizedText
     {
         return $this->title;
     }
 
-    /**
-     * @param LocalizedText $title
-     */
     public function setTitle(LocalizedText $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
     public function setVersion(string $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return LocalizedText
-     */
     public function getDescription(): LocalizedText
     {
         return $this->description;
     }
 
-    /**
-     * @param LocalizedText $description
-     */
     public function setDescription(LocalizedText $description): void
     {
         $this->description = $description;
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, Agent>
      */
     public function getPublishers(): Collection
     {
@@ -212,47 +172,35 @@ class FAIRDataPoint
     }
 
     /**
-     * @param Collection $publishers
+     * @param Collection<string, Agent> $publishers
      */
     public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
 
-    /**
-     * @return Language
-     */
     public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    /**
-     * @param Language $language
-     */
     public function setLanguage(Language $language): void
     {
         $this->language = $language;
     }
 
-    /**
-     * @return License
-     */
     public function getLicense(): License
     {
         return $this->license;
     }
 
-    /**
-     * @param License $license
-     */
     public function setLicense(License $license): void
     {
         $this->license = $license;
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, Catalog>
      */
     public function getCatalogs(): Collection
     {
@@ -260,23 +208,25 @@ class FAIRDataPoint
     }
 
     /**
-     * @param Collection $catalogs
+     * @param Collection<string, Catalog> $catalogs
      */
     public function setCatalogs(Collection $catalogs): void
     {
         $this->catalogs = $catalogs;
     }
 
-    public function addCatalog(Catalog $catalog)
+    public function addCatalog(Catalog $catalog): void
     {
         $this->catalogs->add($catalog);
     }
 
-    public function toBasicArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toBasicArray(): array
     {
         $publishers = [];
-        foreach($this->publishers as $publisher)
-        {
+        foreach ($this->publishers as $publisher) {
             /** @var Agent $publisher */
             $publishers[] = $publisher->toArray();
         }
@@ -294,21 +244,21 @@ class FAIRDataPoint
         ];
     }
 
-    public function toArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
     {
         $catalogs = [];
-        foreach($this->catalogs as $catalog)
-        {
+        foreach ($this->catalogs as $catalog) {
             /** @var Catalog $catalog */
             $catalogs[] = $catalog->toBasicArray();
         }
 
-        return array_merge($this->toBasicArray(), [
-            'catalogs' => $catalogs
-        ]);
+        return array_merge($this->toBasicArray(), ['catalogs' => $catalogs]);
     }
 
-    public function toGraph()
+    public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
 
@@ -327,8 +277,8 @@ class FAIRDataPoint
             $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        foreach($this->publishers as $publisher) {
-            /** @var Agent $agent */
+        foreach ($this->publishers as $publisher) {
+            /** @var Agent $publisher */
             $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
         }
 
@@ -336,12 +286,11 @@ class FAIRDataPoint
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
 
-        foreach($this->catalogs as $catalog) {
+        foreach ($this->catalogs as $catalog) {
             /** @var Catalog $catalog */
             $graph->addResource($this->getAccessUrl(), 'http://www.re3data.org/schema/3-0#dataCatalog', $catalog->getAccessUrl());
         }
 
         return $graph;
     }
-
 }

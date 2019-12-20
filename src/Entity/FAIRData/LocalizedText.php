@@ -1,9 +1,8 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,37 +24,30 @@ class LocalizedText
      * @ORM\OneToMany(targetEntity="LocalizedTextItem", mappedBy="parent", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="texts", referencedColumnName="id")
      *
-     * @var Collection
+     * @var Collection<string, LocalizedTextItem>
      */
     private $texts;
 
     /**
-     * LocalizedText constructor.
-     * @param ArrayCollection $texts
+     * @param Collection<string, LocalizedTextItem> $texts
      */
-    public function __construct(ArrayCollection $texts)
+    public function __construct(Collection $texts)
     {
         $this->texts = $texts;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
     public function setId(string $id): void
     {
         $this->id = $id;
     }
 
     /**
-     * @return Collection
+     * @return Collection<string, LocalizedTextItem>
      */
     public function getTexts(): Collection
     {
@@ -63,24 +55,25 @@ class LocalizedText
     }
 
     /**
-     * @param Collection $texts
+     * @param Collection<string, LocalizedTextItem> $texts
      */
     public function setTexts(Collection $texts): void
     {
         $this->texts = $texts;
     }
 
-    public function toArray()
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
     {
         $array = [];
 
-        foreach($this->texts as $text)
-        {
+        foreach ($this->texts as $text) {
             /** @var LocalizedTextItem $text */
             $array[] = $text->toArray();
         }
 
         return $array;
     }
-
 }
