@@ -1,23 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Martijn
- * Date: 21/06/2018
- * Time: 11:18
- */
+declare(strict_types=1);
 
 namespace App\Security;
 
-
 use App\Entity\Castor\User;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\ORM\Mapping as ORM;
+use function array_merge;
+use function strrchr;
+use function strtolower;
+use function substr;
 
 /**
- * Class CastorUser
- * @package App\Security
  * @ORM\Entity
  * @ORM\Table(name="user")
  */
@@ -27,21 +22,21 @@ class CastorUser implements UserInterface, EquatableInterface
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
      *
-     * @var string|null
+     * @var string
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @var string|null
+     * @var string
      */
     private $fullName;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @var string|null
+     * @var string
      */
     private $nameFirst;
 
@@ -55,42 +50,30 @@ class CastorUser implements UserInterface, EquatableInterface
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @var string|null
+     * @var string
      */
     private $nameLast;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @var string|null
+     * @var string
      */
     private $emailAddress;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $token;
 
-    const DOMAINS = [
-        //'castoredc.com' => ['ROLE_SEMANTIC_EXPERT']
+    public const DOMAINS = [
+        'castoredc.com' => ['ROLE_SEMANTIC_EXPERT'],
     ];
 
-    const EMAILS = [
-        'a.jacobsen@lumc.nl'  => ['ROLE_SEMANTIC_EXPERT'],
+    public const EMAILS = [
+        'a.jacobsen@lumc.nl' => ['ROLE_SEMANTIC_EXPERT'],
         'martijn@castoredc.com' => ['ROLE_SEMANTIC_EXPERT'],
-        'demo@castoredc.com' => ['ROLE_SEMANTIC_EXPERT']
+        'demo@castoredc.com' => ['ROLE_SEMANTIC_EXPERT'],
     ];
 
-    /**
-     * CastorUser constructor.
-     * @param null|string $id
-     * @param null|string $fullName
-     * @param null|string $nameFirst
-     * @param null|string $nameMiddle
-     * @param null|string $nameLast
-     * @param null|string $emailAddress
-     * @param string $token
-     */
     public function __construct(string $id, string $fullName, ?string $nameFirst, ?string $nameMiddle, ?string $nameLast, string $emailAddress, string $token)
     {
         $this->id = $id;
@@ -100,9 +83,7 @@ class CastorUser implements UserInterface, EquatableInterface
         $this->nameLast = $nameLast;
         $this->emailAddress = strtolower($emailAddress);
         $this->token = $token;
-        $this->accessTo = new ArrayCollection();
     }
-
 
     /**
      * The equality comparison should neither be done by referential equality
@@ -113,21 +94,14 @@ class CastorUser implements UserInterface, EquatableInterface
      *
      * Also implementation should consider that $user instance may implement
      * the extended user interface `AdvancedUserInterface`.
-     *
-     * @param UserInterface $user
-     * @return bool
      */
-    public function isEqualTo(UserInterface $user)
+    public function isEqualTo(UserInterface $user): bool
     {
-        if (!$user instanceof CastorUser) {
+        if (! $user instanceof CastorUser) {
             return false;
         }
 
-        if ($this->emailAddress !== $user->getUsername()) {
-            return false;
-        }
-
-        return true;
+        return $this->emailAddress === $user->getUsername();
     }
 
     /**
@@ -144,20 +118,22 @@ class CastorUser implements UserInterface, EquatableInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
+     * @return array<string> The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = ['ROLE_USER'];
-        $domain = substr(strrchr($this->emailAddress, "@"), 1);
-        if(isset($this->domains[$domain]))
-        {
+        $domain = strrchr($this->emailAddress, '@');
+        if ($domain !== false) {
+            $domain = substr($domain, 1);
+        }
+        if (isset($this::DOMAINS[$domain])) {
             $roles = array_merge($roles, $this::DOMAINS[$domain]);
         }
-        if(isset($this::EMAILS[$this->emailAddress]))
-        {
+        if (isset($this::EMAILS[$this->emailAddress])) {
             $roles = array_merge($roles, $this::EMAILS[$this->emailAddress]);
         }
+
         return $roles;
     }
 
@@ -169,9 +145,9 @@ class CastorUser implements UserInterface, EquatableInterface
      *
      * @return string The password
      */
-    public function getPassword()
+    public function getPassword(): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -181,7 +157,7 @@ class CastorUser implements UserInterface, EquatableInterface
      *
      * @return string|null The salt
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null;
     }
@@ -191,7 +167,7 @@ class CastorUser implements UserInterface, EquatableInterface
      *
      * @return string The username
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->emailAddress;
     }
@@ -202,108 +178,72 @@ class CastorUser implements UserInterface, EquatableInterface
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
     }
 
-    /**
-     * @return null|string
-     */
     public function getId(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * @param null|string $id
-     */
     public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return null|string
-     */
     public function getFullName(): ?string
     {
         return $this->fullName;
     }
 
-    /**
-     * @param null|string $fullName
-     */
     public function setFullName(?string $fullName): void
     {
         $this->fullName = $fullName;
     }
 
-    /**
-     * @return null|string
-     */
     public function getNameFirst(): ?string
     {
         return $this->nameFirst;
     }
 
-    /**
-     * @param null|string $nameFirst
-     */
     public function setNameFirst(?string $nameFirst): void
     {
         $this->nameFirst = $nameFirst;
     }
 
-    /**
-     * @return null|string
-     */
     public function getNameMiddle(): ?string
     {
         return $this->nameMiddle;
     }
 
-    /**
-     * @param null|string $nameMiddle
-     */
     public function setNameMiddle(?string $nameMiddle): void
     {
         $this->nameMiddle = $nameMiddle;
     }
 
-    /**
-     * @return null|string
-     */
     public function getNameLast(): ?string
     {
         return $this->nameLast;
     }
 
-    /**
-     * @param null|string $nameLast
-     */
     public function setNameLast(?string $nameLast): void
     {
         $this->nameLast = $nameLast;
     }
 
-    /**
-     * @return null|string
-     */
     public function getToken(): ?string
     {
         return $this->token;
     }
 
-    /**
-     * @param string|null $token
-     */
     public function setToken(?string $token): void
     {
         $this->token = $token;
     }
 
-    public static function fromData(User $user, string $token)
+    public static function fromData(User $user, string $token): CastorUser
     {
         return new CastorUser(
             $user->getId(),

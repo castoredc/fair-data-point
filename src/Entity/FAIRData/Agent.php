@@ -1,8 +1,9 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 
@@ -40,122 +41,102 @@ abstract class Agent
      * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
      *
-     * @var FAIRDataPoint
+     * @var FAIRDataPoint|null
      */
     private $fairDataPoint;
 
     /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="publishers",cascade={"persist"})
      *
-     * @var Catalog[]
+     * @var Collection<string, Catalog>
      */
     private $publishedCatalogs;
 
     /**
      * @ORM\ManyToMany(targetEntity="Dataset", mappedBy="publishers",cascade={"persist"})
      *
-     * @var Dataset[]
+     * @var Collection<string, Dataset>
      */
     private $publishedDatasets;
 
     /**
      * @ORM\ManyToMany(targetEntity="Distribution", mappedBy="publishers",cascade={"persist"})
      *
-     * @var Distribution[]
+     * @var Collection<string, Distribution>
      */
     private $publishedDistributions;
 
     /**
      * @ORM\ManyToMany(targetEntity="Dataset", mappedBy="contactPoint",cascade={"persist"})
      *
-     * @var Dataset[]
+     * @var Collection<string, Dataset>
      */
     private $contactDatasets;
 
-    /**
-     * Agent constructor.
-     * @param string $slug
-     * @param string $name
-     */
     public function __construct(string $slug, string $name)
     {
         $this->slug = $slug;
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return FAIRDataPoint
-     */
     public function getFairDataPoint(): FAIRDataPoint
     {
         return $this->fairDataPoint;
     }
 
-    public function getAccessUrl()
+    public function getAccessUrl(): string
     {
         return $this->getFairDataPoint()->getIri() . '/agent/undefined/' . $this->slug;
     }
 
-    public function toArray()
+    /**
+     * @return array<string>
+     */
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'name' => $this->name
+            'name' => $this->name,
         ];
     }
 
-    public function toGraph()
+    public function toGraph(): EasyRdf_Graph
     {
         return $this->addToGraph(null, null, new EasyRdf_Graph());
     }
 
-    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph)
+    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
     {
         $graph->addResource($this->getAccessUrl(), 'a', 'foaf:Agent');
         $graph->addLiteral($this->getAccessUrl(), 'foaf:name', $this->name);
 
-        if($subject != null && $predicate != null) {
+        if ($subject !== null && $predicate !== null) {
             $graph->addResource($subject, $predicate, $this->getAccessUrl());
         }
 

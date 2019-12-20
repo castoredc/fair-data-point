@@ -1,24 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: martijn
- * Date: 27/08/2019
- * Time: 14:51
- */
+declare(strict_types=1);
 
 namespace App\Controller;
 
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UIController extends Controller
+class UIController extends AbstractController
 {
     /**
+     * @return RedirectResponse
+     *
      * @Route("/", name="homepage")
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         return $this->redirectToRoute('fdp_render');
     }
