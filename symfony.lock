@@ -99,21 +99,20 @@
     "guzzlehttp/psr7": {
         "version": "1.4.2"
     },
-    "hwi/oauth-bundle": {
-        "version": "0.6",
+    "jdorn/sql-formatter": {
+        "version": "v1.2.17"
+    },
+    "knpuniversity/oauth2-client-bundle": {
+        "version": "1.20",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
-            "version": "0.6",
-            "ref": "20cacc9b2da49d96ea55c8a8dd31324c5be88bc9"
+            "version": "1.20",
+            "ref": "80acc9223a205cbf5d9828fd616c82a374d281dd"
         },
         "files": [
-            "./config/packages/hwi_oauth.yaml",
-            "./config/routes/hwi_oauth_routing.yaml"
+            "./config/packages/knpu_oauth2_client.yaml"
         ]
-    },
-    "jdorn/sql-formatter": {
-        "version": "v1.2.17"
     },
     "league/oauth2-client": {
         "version": "2.3.0"
@@ -388,9 +387,6 @@
             "ref": "cc1afd81841db36fbef982fe56b48ade6716fac4"
         }
     },
-    "symfony/form": {
-        "version": "v4.3.4"
-    },
     "symfony/framework-bundle": {
         "version": "3.3",
         "recipe": {
@@ -407,10 +403,7 @@
         "version": "v4.0.4"
     },
     "symfony/inflector": {
-        "version": "v4.3.4"
-    },
-    "symfony/intl": {
-        "version": "v4.3.4"
+        "version": "v4.4.2"
     },
     "symfony/lts": {
         "version": "4-dev"
@@ -436,9 +429,6 @@
     "symfony/polyfill-ctype": {
         "version": "v1.8.0"
     },
-    "symfony/polyfill-intl-icu": {
-        "version": "v1.12.0"
-    },
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"
     },
@@ -452,7 +442,7 @@
         "version": "v1.12.0"
     },
     "symfony/property-access": {
-        "version": "v4.3.4"
+        "version": "v4.4.2"
     },
     "symfony/routing": {
         "version": "4.0",
@@ -463,37 +453,25 @@
             "ref": "cda8b550123383d25827705d05a42acf6819fe4e"
         }
     },
+    "symfony/security": {
+        "version": "v4.4.2"
+    },
     "symfony/security-bundle": {
-        "version": "3.3",
+        "version": "4.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "3.3",
-            "ref": "e5a0228251d1dd2bca4c8ef918e14423c06db625"
+            "version": "4.4",
+            "ref": "30efd98dd3b4ead6e9ad4713b1efc43bbe94bf77"
         },
         "files": [
             "./config/packages/security.yaml"
         ]
     },
-    "symfony/security-core": {
-        "version": "v4.3.4"
-    },
-    "symfony/security-csrf": {
-        "version": "v4.3.4"
-    },
-    "symfony/security-guard": {
-        "version": "v4.3.4"
-    },
-    "symfony/security-http": {
-        "version": "v4.3.4"
-    },
     "symfony/service-contracts": {
         "version": "v1.1.6"
     },
     "symfony/stopwatch": {
-        "version": "v4.3.4"
-    },
-    "symfony/templating": {
         "version": "v4.3.4"
     },
     "symfony/translation-contracts": {
