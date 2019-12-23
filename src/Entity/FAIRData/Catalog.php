@@ -318,7 +318,7 @@ class Catalog
             'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
-            'homepage' => $this->homepage,
+            'homepage' => $this->homepage->getValue(),
         ];
     }
 
