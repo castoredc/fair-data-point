@@ -1,7 +1,6 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
         castor:
             id: App\Security\CastorUserProvider
     firewalls:
@@ -11,21 +10,13 @@ security:
         main:
             anonymous: ~
             provider: castor
-            oauth:
-                resource_owners:
-                    castor:          "/login/check-castor"
-                login_path:        /login
-                use_forward:       false
-                failure_path:      /login
-
-                oauth_user_provider:
-                    #                    service: hwi_oauth.user.provider
-                    service: castor.auth
-
             logout:
                 path:       /logout
                 target:     /
                 invalidate_session: true
+            guard:
+                authenticators:
+                    - App\Security\CastorAuthenticator
 
             # activate different ways to authenticate
 
