@@ -5,7 +5,7 @@ namespace App\Security;
 
 use App\Entity\Castor\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\EquatableInterface;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
 use function strrchr;
@@ -16,7 +16,7 @@ use function substr;
  * @ORM\Entity
  * @ORM\Table(name="user")
  */
-class CastorUser implements UserInterface, EquatableInterface
+class CastorUser implements UserInterface, ResourceOwnerInterface
 {
     /**
      * @ORM\Id
@@ -254,5 +254,22 @@ class CastorUser implements UserInterface, EquatableInterface
             $user->getEmailAddress(),
             $token
         );
+    }
+
+    /**
+     * Return all of the owner details available as an array.
+     *
+     * @return array<string>
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'fullName' => $this->fullName,
+            'nameFirst' => $this->nameFirst,
+            'nameMiddle' => $this->nameMiddle ,
+            'nameLast' => $this->nameLast,
+            'emailAddress' => $this->emailAddress,
+        ];
     }
 }
