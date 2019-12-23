@@ -1,0 +1,11 @@
+knpu_oauth2_client:
+    clients:
+        # configure your clients as described here: https://github.com/knpuniversity/oauth2-client-bundle#configuration
+        castor:
+            type: generic
+            provider_class: App\Security\CastorUserProvider
+            client_id:           "%env(CASTOR_API_CLIENT)%"
+            client_secret:       "%env(CASTOR_API_SECRET)%"
+            provider_options:
+                server: "%env(CASTOR_API_URL)%"
+            redirect_route: connect_castor_check

@@ -4,82 +4,100 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Model\Castor\ApiClient;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Exception;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
+use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
+class CastorUserProvider extends AbstractProvider implements UserProviderInterface
 {
-    /** @var ManagerRegistry */
-    protected $doctrine;
+    use BearerAuthorizationTrait;
 
-    /** @var ApiClient */
-    private $apiClient;
-
-    public function __construct(ManagerRegistry $doctrine, ApiClient $apiClient)
-    {
-        $this->doctrine = $doctrine;
-        $this->apiClient = $apiClient;
-    }
+    /** @var string */
+    protected $server;
 
     /**
-     * Loads the user by a given UserResponseInterface object.
-     *
-     * @throws UsernameNotFoundException if the user is not found.
-     * @throws Exception
+     * @param array<mixed> $options
+     * @param array<mixed> $collaborators
      */
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
+    public function __construct(array $options = [], array $collaborators = [])
     {
-        $this->apiClient->setToken($response->getAccessToken());
-
-        $castorUser = $this->apiClient->getUser();
-
-        $userRepository = $this->doctrine->getRepository(CastorUser::class);
-        $dbUser = $userRepository->find($castorUser->getId());
-
-        if ($dbUser !== null) {
-            $dbUser->setToken($response->getAccessToken());
-
-            return $dbUser;
+        parent::__construct($options, $collaborators);
+        if (! isset($options['server'])) {
+            return;
         }
 
-        $user = CastorUser::fromData($castorUser, $response->getAccessToken());
-
-        $entityManager = $this->doctrine->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return $user;
+        $this->server = $options['server'];
     }
 
     /**
-     * Loads the user for the given username.
+     * @inheritDoc
+     */
+    public function getBaseAuthorizationUrl(): string
+    {
+        return $this->server . '/oauth/authorize';
+    }
+
+    /**
+     * @param array<mixed> $params
+     */
+    public function getBaseAccessTokenUrl(array $params): string
+    {
+        return $this->server . '/oauth/token';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getResourceOwnerDetailsUrl(AccessToken $token): string
+    {
+        return $this->server . '/api/user';
+    }
+
+    /**
+     * @return array<string>
+     */
+    protected function getDefaultScopes(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param array<mixed>|string $data
+     */
+    protected function checkResponse(ResponseInterface $response, $data): void
+    {
+        // TODO: Implement checkResponse() method.
+    }
+
+    /**
+     * @param array<mixed> $response
      *
-     * This method must throw UsernameNotFoundException if the user is not
-     * found.
-     *
-     * @param string $username The username
-     *
-     * @throws UsernameNotFoundException if the user is not found.
-     *
+     * @throws Exception
+     */
+    protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
+    {
+        $apiClient = new ApiClient($this->server);
+        $apiClient->setToken($token->getToken());
+
+        return CastorUser::fromData($apiClient->getUser(), $token->getToken());
+    }
+
+    /**
      * @inheritDoc
      */
     public function loadUserByUsername($username): UserInterface
     {
-        throw new UsernameNotFoundException();
+        return new User(null, null);
     }
 
     /**
-     * Refreshes the user.
-     *
-     * It is up to the implementation to decide if the user data should be
-     * totally reloaded (e.g. from the database), or if the UserInterface
-     * object can just be merged into some internal array of users / identity
-     * map.
+     * @inheritDoc
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
@@ -87,16 +105,10 @@ class CastorUserProvider implements OAuthAwareUserProviderInterface, UserProvide
     }
 
     /**
-     * Whether this provider supports the given user class.
-     *
-     * @param string $class
-     *
-     * @return bool
-     *
      * @inheritDoc
      */
     public function supportsClass($class): bool
     {
-        return $class === CastorUser::class;
+        return true;
     }
 }
