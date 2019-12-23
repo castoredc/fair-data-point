@@ -29,13 +29,21 @@ class RDFDistribution extends Distribution
     private $twig;
 
     /**
+     * @ORM\Column(type="text")
+     *
+     * @var string
+     */
+    private $prefix;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, string $twig)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, string $twig, string $prefix)
     {
         parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $issued, $modified);
 
         $this->twig = $twig;
+        $this->prefix = $prefix;
     }
 
     public function getTwig(): string
@@ -46,6 +54,16 @@ class RDFDistribution extends Distribution
     public function setTwig(string $twig): void
     {
         $this->twig = $twig;
+    }
+
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    public function setPrefix(string $prefix): void
+    {
+        $this->prefix = $prefix;
     }
 
     public function getRDFUrl(): string

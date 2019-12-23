@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Environment;
 use function in_array;
 use function time;
 
@@ -400,10 +401,14 @@ class RDFRendererController extends AbstractController
             throw new UnauthorizedHttpException('', 'You do not have permission to access this study');
         }
 
-        $helper = new RDFTwigRenderHelper($this->apiClient, $study, $this->get('twig'), $distribution);
+        /** @var Environment $twigEnvironment */
+        $twigEnvironment = $this->get('twig');
+        $helper = new RDFTwigRenderHelper($this->apiClient, $study, $twigEnvironment, $distribution);
+
+        $turtle = $distribution->getPrefix() . "\n\n" . $helper->renderRecords();
 
         if ($request->query->has('download') && $request->query->get('download') === true) {
-            $response = new Response($helper->renderRecords());
+            $response = new Response($turtle);
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 $study->getSlug() . '_' . time() . '.ttl'
@@ -414,7 +419,7 @@ class RDFRendererController extends AbstractController
         }
 
         return new Response(
-            $helper->renderRecords(),
+            $turtle,
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
