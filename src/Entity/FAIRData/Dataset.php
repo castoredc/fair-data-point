@@ -407,7 +407,7 @@ class Dataset
             'modified' => $this->modified,
             'contactPoints' => $contactPoints,
 //            'keyword' => $this->keyword->toArray(),
-            'landingpage' => $this->landingPage,
+            'landingpage' => $this->landingPage->getValue(),
         ];
     }
 
