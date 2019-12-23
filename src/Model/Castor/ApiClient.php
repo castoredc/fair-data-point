@@ -3,8 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Entity\Castor\Data\StudyData;
+use App\Entity\Castor\Field;
+use App\Entity\Castor\Record;
+use App\Entity\Castor\RecordDataCollection;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -12,7 +17,6 @@ use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use function array_merge;
 use function json_decode;
 
 class ApiClient
@@ -99,9 +103,10 @@ class ApiClient
      */
     public function getStudy(string $studyId): Study
     {
-        $study = $this->request('/api/study/' . $studyId);
+        $study = Study::fromData($this->request('/api/study/' . $studyId));
+        $study->setFields($this->getFields($study));
 
-        return Study::fromData($study);
+        return $study;
     }
 
     /**
@@ -135,17 +140,15 @@ class ApiClient
         $this->token = $token;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function getRawMetadata(string $studyId): array
+    public function getFields(Study $study): ArrayCollection
     {
         $pages = 1;
-        $metadatas = [];
+        $fields = new ArrayCollection();
+
         for ($page = 1; $page <= $pages; $page++) {
             $response = $this->client->request(
                 'GET',
-                $this->server . '/api/study/' . $studyId . '/metadata?page=' . $page . '&page_size=' . $this->pageSize,
+                $this->server . '/api/study/' . $study->getId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize,
                 [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $this->token,
@@ -155,51 +158,25 @@ class ApiClient
             );
             $body = json_decode((string) $response->getBody(), true);
             $pages = $body['page_count'];
-            foreach ($body['_embedded']['metadatas'] as $metadata) {
-                $metadatas[$metadata['element_id']][$metadata['description']][$metadata['metadata_type']['name']] = $metadata['value'];
+
+            foreach ($body['_embedded']['fields'] as $rawField) {
+                $field = Field::fromData($rawField);
+                $fields->set($field->getId(), $field);
             }
-        }
-
-        return $metadatas;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function getRawFields(string $studyId): array
-    {
-        $pages = 1;
-        $fields = [];
-        for ($page = 1; $page <= $pages; $page++) {
-            $response = $this->client->request(
-                'GET',
-                $this->server . '/api/study/' . $studyId . '/field?page=' . $page . '&page_size=' . $this->pageSize,
-                [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->token,
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $body = json_decode((string) $response->getBody(), true);
-            $pages = $body['page_count'];
-            $fields = array_merge($fields, $body['_embedded']['fields']);
         }
 
         return $fields;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function getRawRecords(string $studyId): array
+    public function getRecords(Study $study, bool $extractArchived = false): ArrayCollection
     {
         $pages = 1;
-        $records = [];
+        $records = new ArrayCollection();
+
         for ($page = 1; $page <= $pages; $page++) {
             $response = $this->client->request(
                 'GET',
-                $this->server . '/api/study/' . $studyId . '/record?page=' . $page . '&page_size=' . $this->pageSize,
+                $this->server . '/api/study/' . $study->getId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize,
                 [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $this->token,
@@ -207,26 +184,24 @@ class ApiClient
                     ],
                 ]
             );
+
             $body = json_decode((string) $response->getBody(), true);
             $pages = $body['page_count'];
-            $records = array_merge($records, $body['_embedded']['records']);
-        }
-        $return = [];
-        foreach ($records as $record) {
-            $return[$record['record_id']] = $record;
+
+            foreach ($body['_embedded']['records'] as $rawRecord) {
+                $record = Record::fromData($rawRecord);
+                $records->set($record->getId(), $record);
+            }
         }
 
-        return $return;
+        return $records;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRawRecordDataPoints(string $studyId, string $recordId)
+    private function getRecordStudyData(Study $study, Record $record): StudyData
     {
         $response = $this->client->request(
             'GET',
-            $this->server . '/api/study/' . $studyId . '/record/' . $recordId . '/data-point-collection/study',
+            $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/study',
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->token,
@@ -234,8 +209,23 @@ class ApiClient
                 ],
             ]
         );
+
         $body = json_decode((string) $response->getBody(), true);
 
-        return $body['_embedded']['items'];
+        return StudyData::fromData($body['_embedded']['items'], $study, $record);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecordDataCollection(Study $study, Record $record)
+    {
+        $dataCollection = new RecordDataCollection($record);
+
+        $dataCollection->setStudyData($this->getRecordStudyData($study, $record));
+
+        $record->setData($dataCollection);
+
+        return $record;
     }
 }
