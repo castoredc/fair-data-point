@@ -88,10 +88,7 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
         return CastorUser::fromData($apiClient->getUser(), $token->getToken());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function loadUserByUsername($username): UserInterface
+    public function loadUserByUsername(string $username): UserInterface
     {
         return new User(null, null);
     }
@@ -107,7 +104,7 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     /**
      * @inheritDoc
      */
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
         return true;
     }

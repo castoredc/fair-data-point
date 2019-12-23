@@ -11,20 +11,17 @@
         "knpuniversity/oauth2-client-bundle": "^1.31",
         "league/oauth2-client": "^2.3",
         "ml/json-ld": "^1.1",
-        "php-http/guzzle6-adapter": "~1.1.1",
-        "php-http/httplug-bundle": "~1.13",
         "sensio/framework-extra-bundle": "^5.1",
-        "symfony/console": "^4.0",
-        "symfony/flex": "^1.0",
-        "symfony/framework-bundle": "^4.1",
-        "symfony/lts": "^4@dev",
+        "symfony/console": "^5.0",
+        "symfony/flex": "^1.3.1",
+        "symfony/framework-bundle": "^5.0",
         "symfony/maker-bundle": "^1.1",
         "symfony/orm-pack": "^1.0",
-        "symfony/security-bundle": "^4.1",
-        "symfony/twig-bundle": "^4.0",
+        "symfony/security-bundle": "^5.0",
+        "symfony/twig-bundle": "^5.0",
         "symfony/webpack-encore-bundle": "^1.6",
-        "symfony/yaml": "^4.0",
-        "twig/twig": "^2.10"
+        "symfony/yaml": "^5.0",
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "castor/coding-standard": "^3.1",
@@ -37,7 +34,7 @@
         "phpstan/phpstan-symfony": "^0.12.1",
         "phpunit/phpunit": "^8.5",
         "roave/security-advisories": "dev-master",
-        "symfony/dotenv": "^4.0"
+        "symfony/dotenv": "^5.0"
     },
     "config": {
         "preferred-install": {
@@ -79,7 +76,8 @@
     "extra": {
         "symfony": {
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
-            "allow-contrib": false
+            "allow-contrib": false,
+            "require": "5.0.*"
         }
     },
     "repositories": [
