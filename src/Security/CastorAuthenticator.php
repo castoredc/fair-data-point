@@ -82,10 +82,7 @@ class CastorAuthenticator extends SocialAuthenticator
             ->getClient('castor');
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
     {
         $url = $this->router->generate('homepage');
         $previous = $request->getSession()->get('previous');

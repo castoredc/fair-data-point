@@ -2,9 +2,6 @@
     "castor/coding-standard": {
         "version": "3.1.1"
     },
-    "clue/stream-filter": {
-        "version": "v1.4.1"
-    },
     "cocur/slugify": {
         "version": "v3.2"
     },
@@ -147,45 +144,6 @@
     "php": {
         "version": "7.3"
     },
-    "php-http/client-common": {
-        "version": "1.9.1"
-    },
-    "php-http/discovery": {
-        "version": "1.7.0"
-    },
-    "php-http/guzzle6-adapter": {
-        "version": "v1.1.1"
-    },
-    "php-http/httplug": {
-        "version": "v1.1.0"
-    },
-    "php-http/httplug-bundle": {
-        "version": "1.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.6",
-            "ref": "4655962c64e2de96c418caf576c57215711c7877"
-        },
-        "files": [
-            "./config/packages/httplug.yaml"
-        ]
-    },
-    "php-http/logger-plugin": {
-        "version": "1.1.0"
-    },
-    "php-http/message": {
-        "version": "1.8.0"
-    },
-    "php-http/message-factory": {
-        "version": "v1.0.2"
-    },
-    "php-http/promise": {
-        "version": "v1.0.0"
-    },
-    "php-http/stopwatch-plugin": {
-        "version": "1.2.0"
-    },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
     },
@@ -256,6 +214,9 @@
         "version": "1.0.1"
     },
     "psr/container": {
+        "version": "1.0.0"
+    },
+    "psr/event-dispatcher": {
         "version": "1.0.0"
     },
     "psr/http-message": {
@@ -351,9 +312,6 @@
             "ref": "c646e4b71af082e94b5014daca36ef6812bad076"
         }
     },
-    "symfony/debug": {
-        "version": "v4.0.4"
-    },
     "symfony/dependency-injection": {
         "version": "v4.0.4"
     },
@@ -405,9 +363,6 @@
     "symfony/inflector": {
         "version": "v4.4.2"
     },
-    "symfony/lts": {
-        "version": "4-dev"
-    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -418,9 +373,6 @@
         }
     },
     "symfony/mime": {
-        "version": "v4.3.4"
-    },
-    "symfony/options-resolver": {
         "version": "v4.3.4"
     },
     "symfony/orm-pack": {
@@ -453,9 +405,6 @@
             "ref": "cda8b550123383d25827705d05a42acf6819fe4e"
         }
     },
-    "symfony/security": {
-        "version": "v4.4.2"
-    },
     "symfony/security-bundle": {
         "version": "4.4",
         "recipe": {
@@ -467,6 +416,18 @@
         "files": [
             "./config/packages/security.yaml"
         ]
+    },
+    "symfony/security-core": {
+        "version": "v5.0.2"
+    },
+    "symfony/security-csrf": {
+        "version": "v5.0.2"
+    },
+    "symfony/security-guard": {
+        "version": "v5.0.2"
+    },
+    "symfony/security-http": {
+        "version": "v5.0.2"
     },
     "symfony/service-contracts": {
         "version": "v1.1.6"
