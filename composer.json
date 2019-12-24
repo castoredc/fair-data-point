@@ -7,7 +7,7 @@
         "ext-json": "*",
         "cocur/slugify": "^4.0",
         "easyrdf/easyrdf": "^0.9.1",
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "~6.5",
         "knpuniversity/oauth2-client-bundle": "^1.31",
         "league/oauth2-client": "^2.3",
         "ml/json-ld": "^1.1",
