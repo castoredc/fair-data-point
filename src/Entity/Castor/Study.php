@@ -37,9 +37,12 @@ class Study
      */
     private $slug;
 
-    /** @var ArrayCollection|null */
+    /** @var ArrayCollection<string, Field>|null */
     private $fields;
 
+    /**
+     * @param ArrayCollection<string, Field>|null $fields
+     */
     public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug, ?ArrayCollection $fields)
     {
         $this->id = $id;
@@ -89,11 +92,17 @@ class Study
         $this->slug = $slug;
     }
 
+    /**
+     * @return ArrayCollection<string, Field>|null
+     */
     public function getFields(): ?ArrayCollection
     {
         return $this->fields;
     }
 
+    /**
+     * @param ArrayCollection<string, Field>|null $fields
+     */
     public function setFields(?ArrayCollection $fields): void
     {
         $this->fields = $fields;

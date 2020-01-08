@@ -1,8 +1,7 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Entity\Castor\Instances;
-
 
 use App\Entity\Castor\Record;
 use DateTime;
@@ -19,9 +18,6 @@ class SurveyInstance extends Instance
         $this->surveyPackageInstance = $surveyPackageInstance;
     }
 
-    /**
-     * @return SurveyPackageInstance
-     */
     public function getSurveyPackageInstance(): SurveyPackageInstance
     {
         return $this->surveyPackageInstance;
@@ -29,9 +25,6 @@ class SurveyInstance extends Instance
 
     /**
      * @param array<mixed> $data
-     * @param Record $record
-     * @param SurveyPackageInstance $surveyPackageInstance
-     * @return SurveyInstance
      */
     public static function fromData(array $data, Record $record, SurveyPackageInstance $surveyPackageInstance): SurveyInstance
     {

@@ -3,11 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
-use App\Entity\Castor\Data\ReportData;
-use App\Entity\Castor\Data\StudyData;
-use App\Entity\Castor\Data\SurveyData;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 abstract class RecordData
 {
@@ -26,16 +22,6 @@ abstract class RecordData
     public function getFieldResultByVariableName(string $variableName): ?FieldResult
     {
         return $this->data->get($variableName);
-    }
-
-    /**
-     * @param array<mixed> $data
-     *
-     * @return StudyData|SurveyData|ReportData
-     */
-    public static function fromData(array $data, Study $study, Record $record)
-    {
-        return null;
     }
 
     public function getRecord(): Record

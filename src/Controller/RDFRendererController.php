@@ -483,10 +483,16 @@ class RDFRendererController extends AbstractController
             throw new UnauthorizedHttpException('', 'You do not have permission to access this study');
         }
 
+        try {
+            $record = $this->apiClient->getRecord($study, $recordId);
+        } catch (NotFoundHttpException $e) {
+            throw new NotFoundHttpException('Record not found');
+        }
+
         $helper = new RDFTwigRenderHelper($this->apiClient, $study, $this->get('twig'), $distribution);
 
         if ($request->query->has('download') && $request->query->get('download') === true) {
-            $response = new Response($helper->renderRecord($recordId));
+            $response = new Response($helper->renderRecord($record));
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 $study->getSlug() . '_' . $recordId . '_' . time() . '.ttl'
@@ -497,7 +503,7 @@ class RDFRendererController extends AbstractController
         }
 
         return new Response(
-            $helper->renderRecord($recordId),
+            $helper->renderRecord($record),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

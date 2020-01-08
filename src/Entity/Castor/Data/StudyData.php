@@ -7,13 +7,16 @@ use App\Entity\Castor\FieldResult;
 use App\Entity\Castor\Record;
 use App\Entity\Castor\RecordData;
 use App\Entity\Castor\Study;
-use Doctrine\Common\Collections\Collection;
 use Exception;
 
 class StudyData extends RecordData
 {
-    /** @inheritDoc
+    /**
+     * @param array<mixed> $data
+     *
      * @throws Exception
+     *
+     * @inheritDoc
      */
     public static function fromData(array $data, Study $study, Record $record): RecordData
     {
