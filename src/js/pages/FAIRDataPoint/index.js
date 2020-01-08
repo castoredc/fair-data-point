@@ -76,6 +76,10 @@ export default class FAIRDataPoint extends Component {
                         <Row className="InformationHeader">
                             <Container>
                                 <div className="InformationHeaderTop">
+                                    <h1 className="Title">FAIR Data Point</h1>
+                                    <div className="Description">
+                                        {localizedText(this.state.fdp.description, 'en')}
+                                    </div>
                                     {this.state.fdp.publishers.length > 0 && <div className="Publishers">
                                         {this.state.fdp.publishers.map((item, index) => {
                                             return <Contact key={index}
@@ -84,10 +88,6 @@ export default class FAIRDataPoint extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
-                                    <h1 className="Title">FAIR Data Point</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.fdp.description, 'en')}
-                                    </div>
                                 </div>
                             </Container>
                         </Row>
