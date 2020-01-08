@@ -6,20 +6,26 @@ namespace App\Entity\Castor;
 use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
 use App\Entity\Castor\Data\SurveyData;
+use App\Entity\Castor\Instances\Instance;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-abstract class RecordData
+class InstanceData extends RecordData
 {
     /** @var Record */
     protected $record;
 
+    /** @var Instance */
+    protected $instance;
+
     /** @var ArrayCollection<string, FieldResult> */
     private $data;
 
-    public function __construct(Record $record)
+    public function __construct(Record $record, Instance $instance)
     {
-        $this->record = $record;
+        parent::__construct($record);
+
+        $this->instance = $instance;
         $this->data = new ArrayCollection();
     }
 
@@ -41,6 +47,11 @@ abstract class RecordData
     public function getRecord(): Record
     {
         return $this->record;
+    }
+
+    public function getInstance(): Instance
+    {
+        return $this->instance;
     }
 
     public function addData(FieldResult $fieldResult): void

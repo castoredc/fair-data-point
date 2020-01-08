@@ -6,6 +6,7 @@ namespace App\Entity\Castor;
 use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
 use App\Entity\Castor\Data\SurveyData;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 class RecordDataCollection
 {
@@ -46,18 +47,30 @@ class RecordDataCollection
         return $this->reportData;
     }
 
-    public function setStudyData(StudyData $studyData): void
+    public function setStudyData(RecordData $studyData): void
     {
+        if(!is_a($studyData, StudyData::class))
+        {
+            throw new InvalidTypeException("Data should be of type StudyData");
+        }
         $this->studyData = $studyData;
     }
 
-    public function setSurveyData(SurveyData $surveyData): void
+    public function setSurveyData(InstanceDataCollection $surveyData): void
     {
+        if(!is_a($surveyData, SurveyData::class))
+        {
+            throw new InvalidTypeException("Data should be of type SurveyData");
+        }
         $this->surveyData = $surveyData;
     }
 
-    public function setReportData(ReportData $reportData): void
+    public function setReportData(InstanceDataCollection $reportData): void
     {
+        if(!is_a($reportData, ReportData::class))
+        {
+            throw new InvalidTypeException("Data should be of type ReportData");
+        }
         $this->reportData = $reportData;
     }
 }

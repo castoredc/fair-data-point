@@ -3,9 +3,15 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
+use App\Entity\Castor\Data\SurveyData;
 use App\Entity\Castor\Field;
+use App\Entity\Castor\InstanceDataCollection;
+use App\Entity\Castor\Instances\ReportInstance;
+use App\Entity\Castor\Instances\SurveyPackageInstance;
 use App\Entity\Castor\Record;
+use App\Entity\Castor\RecordData;
 use App\Entity\Castor\RecordDataCollection;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
@@ -110,26 +116,13 @@ class ApiClient
     }
 
     /**
-     * @return mixed
-     *
-     * @throws Exception
-     */
-    public function getRecordDataPoints(string $studyId, string $recordId)
-    {
-        $body = $this->request('/api/study/' . $studyId . '/record/' . $recordId . '/data-point-collection/study');
-
-        return $body['_embedded']['items'];
-    }
-
-    /**
      * @throws Exception
      */
     public function getUser(): User
     {
         $body = $this->request('/api/user');
-        $user = $body['_embedded']['user'][0];
 
-        return User::fromData($user);
+        return User::fromData($body['_embedded']['user'][0]);
     }
 
     /**
@@ -197,7 +190,7 @@ class ApiClient
         return $records;
     }
 
-    private function getRecordStudyData(Study $study, Record $record): StudyData
+    private function getRecordStudyData(Study $study, Record $record): RecordData
     {
         $response = $this->client->request(
             'GET',
@@ -215,6 +208,110 @@ class ApiClient
         return StudyData::fromData($body['_embedded']['items'], $study, $record);
     }
 
+    private function getRecordReportInstances(Study $study, Record $record): ArrayCollection
+    {
+        $reportInstances = new ArrayCollection();
+
+        try {
+            $response = $this->client->request(
+                'GET',
+                $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/report-instance',
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Accept' => 'application/json',
+                    ],
+                ]
+            );
+        } catch (GuzzleException $e) {
+            if ($e->getCode() == 404) {
+                return new ArrayCollection();
+            }
+        }
+
+        $body = json_decode((string)$response->getBody(), true);
+
+        foreach ($body['_embedded']['reportInstances'] as $rawReportInstance) {
+            $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
+            $reportInstances->set($reportInstance->getId(), $reportInstance);
+        }
+
+        return $reportInstances;
+    }
+
+    private function getRecordSurveyPackageInstances(Study $study, Record $record): ArrayCollection
+    {
+        $surveyPackageInstances = new ArrayCollection();
+
+        $response = $this->client->request(
+            'GET',
+            $this->server . '/api/study/' . $study->getId() . '/surveypackageinstance?record_id=' . $record->getId(),
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Accept' => 'application/json',
+                ],
+            ]
+        );
+
+        $body = json_decode((string)$response->getBody(), true);
+
+        foreach ($body['_embedded']['surveypackageinstance'] as $rawSurveyPackageInstance) {
+            $surveyPackageInstance = SurveyPackageInstance::fromData($rawSurveyPackageInstance, $record);
+            $surveyPackageInstances->set($surveyPackageInstance->getId(), $surveyPackageInstance);
+        }
+
+        return $surveyPackageInstances;
+    }
+
+    private function getRecordSurveyData(Study $study, Record $record): InstanceDataCollection
+    {
+        $surveyPackageInstances = $this->getRecordSurveyPackageInstances($study, $record);
+
+        $surveyData = new SurveyData($record);
+
+        foreach($surveyPackageInstances as $surveyPackageInstance) {
+            /** @var SurveyPackageInstance $surveyPackageInstance */
+            $response = $this->client->request(
+                'GET',
+                $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId(),
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->token,
+                        'Accept' => 'application/json',
+                    ],
+                ]
+            );
+
+            $body = json_decode((string)$response->getBody(), true);
+
+            $surveyData->addSurveyPackageData($body['_embedded']['SurveyDataPoints'], $study, $surveyPackageInstance);
+        }
+
+
+        return $surveyData;
+    }
+
+    private function getRecordReportData(Study $study, Record $record): InstanceDataCollection
+    {
+        $reportInstances = $this->getRecordReportInstances($study, $record);
+
+        $response = $this->client->request(
+            'GET',
+            $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/report-instance',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Accept' => 'application/json',
+                ],
+            ]
+        );
+
+        $body = json_decode((string) $response->getBody(), true);
+
+        return ReportData::fromData($body['_embedded']['items'], $study, $record, $reportInstances);
+    }
+
     /**
      * @return mixed
      */
@@ -223,8 +320,18 @@ class ApiClient
         $dataCollection = new RecordDataCollection($record);
 
         $dataCollection->setStudyData($this->getRecordStudyData($study, $record));
+        $dataCollection->setReportData($this->getRecordReportData($study, $record));
+        $dataCollection->setSurveyData($this->getRecordSurveyData($study, $record));
 
         $record->setData($dataCollection);
+
+        print_r($dataCollection->getSurvey()->getMostRecentInstance());
+
+        die();
+//
+//        print_r($dataCollection->getReport()->getFieldResultByVariableName('gene_genetic_diagnosis_codesystem'));
+//
+//        die();
 
         return $record;
     }
