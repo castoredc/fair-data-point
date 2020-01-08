@@ -18,8 +18,12 @@ class IriType extends Type
     }
 
     /** @inheritDoc */
-    public function convertToPHPValue($value, AbstractPlatform $platform): Iri
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Iri
     {
+        if ($value === null) {
+            return null;
+        }
+
         return new Iri($value);
     }
 

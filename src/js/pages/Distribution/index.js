@@ -41,7 +41,8 @@ export default class Distribution extends Component {
                 version: '',
                 issued: '',
                 modified: '',
-                homepage: ''
+                homepage: '',
+                logo: ''
             },
         };
     }
@@ -96,6 +97,13 @@ export default class Distribution extends Component {
                             {/*</Link>*/}
                             <Container>
                                 <div className="InformationHeaderTop">
+                                    {this.state.dataset.logo !== '' && <div className="Logo">
+                                        <img src={this.state.dataset.logo} alt={this.state.dataset.title + ' logo'} />
+                                    </div>}
+                                    <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
+                                    <div className="Description">
+                                        {localizedText(this.state.distribution.description, 'en')}
+                                    </div>
                                     {this.state.distribution.publishers.length > 0 && <div className="Publishers">
                                         {this.state.distribution.publishers.map((item, index) => {
                                             return <Contact key={index}
@@ -104,10 +112,6 @@ export default class Distribution extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
-                                    <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.distribution.description, 'en')}
-                                    </div>
                                 </div>
                             </Container>
                         </div>

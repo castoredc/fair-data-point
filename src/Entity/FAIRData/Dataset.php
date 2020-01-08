@@ -145,6 +145,13 @@ class Dataset
     private $study;
 
     /**
+     * @ORM\Column(type="iri", nullable=true)
+     *
+     * @var Iri|null
+     */
+    private $logo;
+
+    /**
      * @param Collection<string, Agent> $publishers
      * @param Collection<string, Agent> $contactPoint
      */
@@ -375,6 +382,11 @@ class Dataset
         return $first->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function getLogo(): ?Iri
+    {
+        return $this->logo;
+    }
+
     /**
      * @return array<mixed>
      */
@@ -407,7 +419,8 @@ class Dataset
             'modified' => $this->modified,
             'contactPoints' => $contactPoints,
 //            'keyword' => $this->keyword->toArray(),
-            'landingpage' => $this->landingPage->getValue(),
+            'landingpage' => $this->landingPage !== null ? $this->landingPage->getValue() : '',
+            'logo' => $this->logo !== null ? $this->logo->getValue() : '',
         ];
     }
 
