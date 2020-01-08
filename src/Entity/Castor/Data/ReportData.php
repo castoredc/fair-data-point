@@ -7,15 +7,17 @@ use App\Entity\Castor\FieldResult;
 use App\Entity\Castor\InstanceDataCollection;
 use App\Entity\Castor\Record;
 use App\Entity\Castor\Study;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 
 class ReportData extends InstanceDataCollection
 {
-    /** @inheritDoc
+    /**
      * @throws Exception
+     *
+     * @inheritDoc
      */
-    public static function fromData(array $data, Study $study, Record $record, ?Collection $instances): InstanceDataCollection
+    public static function fromData(array $data, Study $study, Record $record, ArrayCollection $instances): InstanceDataCollection
     {
         $reportData = new ReportData($record);
 
@@ -24,7 +26,7 @@ class ReportData extends InstanceDataCollection
             $field = $study->getFields()->get($rawInstanceResults['field_id']);
             $fieldResult = FieldResult::fromData($rawInstanceResults, $field, $record);
 
-            $reportData->addData($instance, $fieldResult);
+            $reportData->addInstanceData($instance, $fieldResult);
         }
 
         return $reportData;

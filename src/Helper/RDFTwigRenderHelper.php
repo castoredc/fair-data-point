@@ -12,7 +12,6 @@ use Twig\Error\LoaderError;
 use Twig\Error\SyntaxError;
 use Twig\TemplateWrapper;
 use function preg_replace;
-use function print_r;
 use function trim;
 
 class RDFTwigRenderHelper

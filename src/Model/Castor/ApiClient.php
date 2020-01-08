@@ -161,6 +161,24 @@ class ApiClient
         return $fields;
     }
 
+    public function getRecord(Study $study, string $recordId): Record
+    {
+        $response = $this->client->request(
+            'GET',
+            $this->server . '/api/study/' . $study->getId() . '/record/' . $recordId,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Accept' => 'application/json',
+                ],
+            ]
+        );
+
+        $body = json_decode((string) $response->getBody(), true);
+
+        return Record::fromData($body);
+    }
+
     public function getRecords(Study $study, bool $extractArchived = false): ArrayCollection
     {
         $pages = 1;
@@ -208,6 +226,9 @@ class ApiClient
         return StudyData::fromData($body['_embedded']['items'], $study, $record);
     }
 
+    /**
+     * @throws Exception
+     */
     private function getRecordReportInstances(Study $study, Record $record): ArrayCollection
     {
         $reportInstances = new ArrayCollection();
@@ -223,22 +244,25 @@ class ApiClient
                     ],
                 ]
             );
+
+            $body = json_decode((string) $response->getBody(), true);
+
+            foreach ($body['_embedded']['reportInstances'] as $rawReportInstance) {
+                $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
+                $reportInstances->set($reportInstance->getId(), $reportInstance);
+            }
         } catch (GuzzleException $e) {
-            if ($e->getCode() == 404) {
+            if ($e->getCode() === 404) {
                 return new ArrayCollection();
             }
-        }
-
-        $body = json_decode((string)$response->getBody(), true);
-
-        foreach ($body['_embedded']['reportInstances'] as $rawReportInstance) {
-            $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
-            $reportInstances->set($reportInstance->getId(), $reportInstance);
         }
 
         return $reportInstances;
     }
 
+    /**
+     * @throws Exception
+     */
     private function getRecordSurveyPackageInstances(Study $study, Record $record): ArrayCollection
     {
         $surveyPackageInstances = new ArrayCollection();
@@ -254,7 +278,7 @@ class ApiClient
             ]
         );
 
-        $body = json_decode((string)$response->getBody(), true);
+        $body = json_decode((string) $response->getBody(), true);
 
         foreach ($body['_embedded']['surveypackageinstance'] as $rawSurveyPackageInstance) {
             $surveyPackageInstance = SurveyPackageInstance::fromData($rawSurveyPackageInstance, $record);
@@ -270,7 +294,7 @@ class ApiClient
 
         $surveyData = new SurveyData($record);
 
-        foreach($surveyPackageInstances as $surveyPackageInstance) {
+        foreach ($surveyPackageInstances as $surveyPackageInstance) {
             /** @var SurveyPackageInstance $surveyPackageInstance */
             $response = $this->client->request(
                 'GET',
@@ -283,11 +307,10 @@ class ApiClient
                 ]
             );
 
-            $body = json_decode((string)$response->getBody(), true);
+            $body = json_decode((string) $response->getBody(), true);
 
             $surveyData->addSurveyPackageData($body['_embedded']['SurveyDataPoints'], $study, $surveyPackageInstance);
         }
-
 
         return $surveyData;
     }
@@ -312,10 +335,7 @@ class ApiClient
         return ReportData::fromData($body['_embedded']['items'], $study, $record, $reportInstances);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRecordDataCollection(Study $study, Record $record)
+    public function getRecordDataCollection(Study $study, Record $record): Record
     {
         $dataCollection = new RecordDataCollection($record);
 
@@ -324,14 +344,6 @@ class ApiClient
         $dataCollection->setSurveyData($this->getRecordSurveyData($study, $record));
 
         $record->setData($dataCollection);
-
-        print_r($dataCollection->getSurvey()->getMostRecentInstance());
-
-        die();
-//
-//        print_r($dataCollection->getReport()->getFieldResultByVariableName('gene_genetic_diagnosis_codesystem'));
-//
-//        die();
 
         return $record;
     }

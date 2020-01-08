@@ -23,9 +23,6 @@ class FieldResult
     /** @var Record */
     private $record;
 
-    /**
-     * @param string $fieldId
-     */
     public function __construct(Field $field, string $value, ?string $label, DateTime $updatedOn, Record $record)
     {
         $this->field = $field;

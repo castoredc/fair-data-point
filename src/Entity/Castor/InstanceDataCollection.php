@@ -3,42 +3,38 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
-use App\Entity\Castor\Data\ReportData;
-use App\Entity\Castor\Data\StudyData;
-use App\Entity\Castor\Data\SurveyData;
 use App\Entity\Castor\Instances\Instance;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
-abstract class InstanceDataCollection
+abstract class InstanceDataCollection extends RecordData
 {
-    /** @var Record */
-    protected $record;
-
     /** @var ArrayCollection<string, InstanceData> */
     private $data;
 
     public function __construct(Record $record)
     {
-        $this->record = $record;
+        parent::__construct($record);
+
         $this->data = new ArrayCollection();
     }
 
-    public function getMostRecentInstance(): Instance
+    public function getMostRecentInstance(): ?Instance
     {
-        /** @var Instance $return */
-        $return = $this->data->first()->getInstance();
+        if ($this->data->first() !== false) {
+            /** @var Instance $return */
+            $return = $this->data->first()->getInstance();
 
-        foreach($this->data as $instance)
-        {
-            /** @var InstanceData $instance */
-            if($instance->getInstance()->getCreatedOn() > $return->getCreatedOn())
-            {
+            foreach ($this->data as $instance) {
+                /** @var InstanceData $instance */
+                if ($instance->getInstance()->getCreatedOn() <= $return->getCreatedOn()) {
+                    continue;
+                }
+
                 $return = $instance->getInstance();
             }
         }
 
-        return $return;
+        return null;
     }
 
     public function getFieldResultByVariableName(string $variableName): ?FieldResult
@@ -50,23 +46,15 @@ abstract class InstanceDataCollection
 
     /**
      * @param array<mixed> $data
-     *
-     * @return StudyData|SurveyData|ReportData
      */
-    public static function fromData(array $data, Study $study, Record $record, ?Collection $instances)
+    public static function fromData(array $data, Study $study, Record $record, ArrayCollection $instances): ?InstanceDataCollection
     {
         return null;
     }
 
-    public function getRecord(): Record
+    public function addInstanceData(Instance $instance, FieldResult $fieldResult): void
     {
-        return $this->record;
-    }
-
-    public function addData(Instance $instance, FieldResult $fieldResult): void
-    {
-        if(!$this->data->containsKey($instance->getId()))
-        {
+        if (! $this->data->containsKey($instance->getId())) {
             $this->data->set($instance->getId(), new InstanceData($this->record, $instance));
         }
 
