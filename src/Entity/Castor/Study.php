@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,12 +37,19 @@ class Study
      */
     private $slug;
 
-    public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug)
+    /** @var ArrayCollection<string, Field>|null */
+    private $fields;
+
+    /**
+     * @param ArrayCollection<string, Field>|null $fields
+     */
+    public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug, ?ArrayCollection $fields)
     {
         $this->id = $id;
         $this->name = $name;
         $this->mainAgent = $mainAgent;
         $this->slug = $slug;
+        $this->fields = $fields;
     }
 
     public function getId(): ?string
@@ -85,6 +93,22 @@ class Study
     }
 
     /**
+     * @return ArrayCollection<string, Field>|null
+     */
+    public function getFields(): ?ArrayCollection
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @param ArrayCollection<string, Field>|null $fields
+     */
+    public function setFields(?ArrayCollection $fields): void
+    {
+        $this->fields = $fields;
+    }
+
+    /**
      * @param array<mixed> $data
      */
     public static function fromData(array $data): Study
@@ -93,7 +117,8 @@ class Study
             $data['study_id'] ?? null,
             $data['name'] ?? null,
             $data['main_contact'] ?? null,
-            $data['slug'] ?? null
+            $data['slug'] ?? null,
+            null
         );
     }
 }

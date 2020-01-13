@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Helper;
 
+use App\Entity\Castor\Record;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\RDFDistribution;
 use App\Model\Castor\ApiClient;
@@ -10,7 +11,6 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\SyntaxError;
 use Twig\TemplateWrapper;
-use function in_array;
 use function preg_replace;
 use function trim;
 
@@ -27,15 +27,6 @@ class RDFTwigRenderHelper
 
     /** @var RDFDistribution */
     private $distribution;
-
-    /** @var array<mixed> */
-    private $metadata;
-
-    /** @var array<mixed> */
-    private $fields;
-
-    /** @var array<string> */
-    private $variables;
 
     public const METADATA_NAME = 'SNOMED';
 
@@ -56,29 +47,15 @@ class RDFTwigRenderHelper
         } catch (LoaderError $e) {
         } catch (SyntaxError $e) {
         }
-
-        $this->fields = [];
-        $this->variables = [];
-
-        $this->getData();
     }
 
-    private function getData(): void
+    public function renderRecord(Record $record): string
     {
-        $this->metadata = $this->client->getRawMetadata($this->study->getId());
-        $apiFields = $this->client->getRawFields($this->study->getId());
+        $dataCollection = $this->client->getRecordDataCollection($this->study, $record);
 
-        foreach ($apiFields as $field) {
-            $this->variables[$field['id']] = $field['field_variable_name'];
-            $this->fields[$field['id']] = $field;
-        }
-    }
-
-    public function renderRecord(string $recordId): string
-    {
         $templateData = [
-            'distribution' => $this->distribution,
-            'record' => $this->getRecord($recordId),
+            'url' => $this->distribution->getRDFUrl(),
+            'record' => $record,
         ];
 
         $content = $this->twig->render($templateData);
@@ -91,41 +68,11 @@ class RDFTwigRenderHelper
 
     public function renderRecords(): string
     {
-        $records = $this->client->getRawRecords($this->study->getId());
+        $records = $this->client->getRecords($this->study);
         $return = '';
 
         foreach ($records as $record) {
-            if ($record['archived']) {
-                continue;
-            }
-
-            $return .= $this->renderRecord($record['record_id']) . "\n\n";
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getRecord(string $recordId): array
-    {
-        $values = $this->client->getRawRecordDataPoints($this->study->getId(), $recordId);
-
-        $return = [
-            'record_id' => $recordId,
-            'data' => [],
-        ];
-
-        foreach ($values as $value) {
-            $fieldId = $value['field_id'];
-            $fieldVariable = $this->variables[$value['field_id']];
-
-            if (in_array($this->fields[$fieldId]['field_type'], self::OPTION_GROUP_FIELDS, true) && isset($this->metadata[$fieldId]) && isset($this->metadata[$fieldId][$value['field_value']])) {
-                $return['data'][$fieldVariable] = $this->metadata[$fieldId][$value['field_value']][self::METADATA_NAME];
-            } else {
-                $return['data'][$fieldVariable] = $value['field_value'];
-            }
+            $return .= $this->renderRecord($record) . "\n\n";
         }
 
         return $return;
