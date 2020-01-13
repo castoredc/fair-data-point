@@ -5175,17 +5175,17 @@
     "packages-dev": [
         {
             "name": "castor/coding-standard",
-            "version": "3.1.1",
+            "version": "3.1.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:castoredc/coding-standard.git",
-                "reference": "e89e38c579c6744135da55ba800a9125de66bd9a"
+                "reference": "2780ee0c0f6ba6442020f04023d9eea7073826d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.ciwit.nl/dist/castor-coding-standard-e89e38c579c6744135da55ba800a9125de66bd9a-zip-c34cf4.zip",
-                "reference": "e89e38c579c6744135da55ba800a9125de66bd9a",
-                "shasum": "bf310692176787194b64a22b7f8b9fbb9995abf8"
+                "url": "https://packages.ciwit.nl/dist/castor-coding-standard-2780ee0c0f6ba6442020f04023d9eea7073826d3-zip-88bba7.zip",
+                "reference": "2780ee0c0f6ba6442020f04023d9eea7073826d3",
+                "shasum": "d533241e7a53ef4cbed6e83c1f29517519becbdb"
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
@@ -5206,10 +5206,10 @@
             },
             "description": "Castor's Coding Standard",
             "support": {
-                "source": "https://github.com/castoredc/coding-standard/tree/3.1.1",
+                "source": "https://github.com/castoredc/coding-standard/tree/3.1.3",
                 "issues": "https://github.com/castoredc/coding-standard/issues"
             },
-            "time": "2019-10-03T14:10:50+00:00"
+            "time": "2019-12-24T14:28:25+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
