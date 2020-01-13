@@ -31,7 +31,8 @@ export default class Dataset extends Component {
                 issued: '',
                 modified: '',
                 homepage: '',
-                distributions: []
+                distributions: [],
+                logo: ''
             },
             catalog: {
                 title: [],
@@ -42,7 +43,8 @@ export default class Dataset extends Component {
                 version: '',
                 issued: '',
                 modified: '',
-                homepage: ''
+                homepage: '',
+                logo: ''
             }
         };
     }
@@ -97,6 +99,13 @@ export default class Dataset extends Component {
                             {/*</Link>*/}
                             <Container>
                                 <div className="InformationHeaderTop">
+                                    {this.state.dataset.logo !== '' && <div className="Logo">
+                                        <img src={this.state.dataset.logo} alt={this.state.dataset.title + ' logo'} />
+                                    </div>}
+                                    <h1 className="Title">{localizedText(this.state.dataset.title, 'en')}</h1>
+                                    <div className="Description">
+                                        {localizedText(this.state.dataset.description, 'en')}
+                                    </div>
                                     {this.state.catalog.publishers.length > 0 && <div className="Publishers">
                                         {this.state.dataset.publishers.map((item, index) => {
                                             return <Contact key={index}
@@ -105,10 +114,6 @@ export default class Dataset extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
-                                    <h1 className="Title">{localizedText(this.state.dataset.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.dataset.description, 'en')}
-                                    </div>
                                 </div>
                             </Container>
                         </div>

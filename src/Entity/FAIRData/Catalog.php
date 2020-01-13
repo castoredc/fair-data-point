@@ -120,6 +120,13 @@ class Catalog
     private $homepage;
 
     /**
+     * @ORM\Column(type="iri", nullable=true)
+     *
+     * @var Iri|null
+     */
+    private $logo;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
     public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, ?Iri $homepage)
@@ -294,6 +301,11 @@ class Catalog
         return $this->fairDataPoint->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function getLogo(): ?Iri
+    {
+        return $this->logo;
+    }
+
     /**
      * @return array<mixed>
      */
@@ -318,7 +330,8 @@ class Catalog
             'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
-            'homepage' => $this->homepage->getValue(),
+            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : '',
+            'logo' => $this->logo !== null ? $this->logo->getValue() : '',
         ];
     }
 

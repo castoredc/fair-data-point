@@ -31,7 +31,8 @@ export default class Catalog extends Component {
                 issued: '',
                 modified: '',
                 homepage: '',
-                datasets: []
+                datasets: [],
+                logo: ''
             },
             fdp: {
                 title: [],
@@ -95,6 +96,13 @@ export default class Catalog extends Component {
                                 {/*    {localizedText(this.state.fdp.title, 'en')}*/}
                                 {/*</Link>*/}
                                 <div className="InformationHeaderTop">
+                                    {this.state.catalog.logo !== '' && <div className="Logo">
+                                        <img src={this.state.catalog.logo} alt={this.state.catalog.title + ' logo'} />
+                                    </div>}
+                                    <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
+                                    <div className="Description">
+                                        {localizedText(this.state.catalog.description, 'en')}
+                                    </div>
                                     {this.state.catalog.publishers.length > 0 && <div className="Publishers">
                                         {this.state.catalog.publishers.map((item, index) => {
                                             return <Contact key={index}
@@ -103,10 +111,6 @@ export default class Catalog extends Component {
                                                             name={item.name} />}
                                         )}
                                     </div>}
-                                    <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.catalog.description, 'en')}
-                                    </div>
                                 </div>
                             </Container>
                         </div>
