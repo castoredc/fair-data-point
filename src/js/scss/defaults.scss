@@ -130,6 +130,20 @@ ul {
     .InformationHeaderTop {
       overflow: auto;
 
+      .Logo {
+        float: right;
+        width: 167px;
+        height: 71px;
+        padding: 5px;
+        background: white;
+        border-radius: 3px;
+        margin: 0 0 30px 15px;
+
+        img {
+          width: 100%;
+        }
+      }
+
       .Title {
         font-size: 21px;
         font-weight: 600;
@@ -138,23 +152,21 @@ ul {
         line-height: 1.33;
         letter-spacing: normal;
         color: $generic-white;
-        margin-bottom: 24px;
+        margin-bottom: 18px;
       }
 
 
       .Publishers {
-        float: right;
-        padding-left: 20px;
+        margin-top: 20px;
 
         .Contact {
           padding: 6px 8px;
           background: $cobalt;
           border-radius: 3px;
           color: white;
-          margin-bottom: 5px;
+          margin-right: 5px;
           display: block;
-          float: right;
-          clear: right;
+          float: left;
 
           &:last-child {
             margin-bottom: 0;
