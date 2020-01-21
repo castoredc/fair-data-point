@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\FAIRData\Distribution\Distribution;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
@@ -60,7 +61,7 @@ abstract class Agent
     private $publishedDatasets;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Distribution", mappedBy="publishers",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Distribution\Distribution", mappedBy="publishers",cascade={"persist"})
      *
      * @var Collection<string, Distribution>
      */

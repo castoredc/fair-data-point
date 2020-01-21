@@ -1,8 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData;
+namespace App\Entity\FAIRData\Distribution;
 
+use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Language;
+use App\Entity\FAIRData\License;
+use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\LocalizedTextItem;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,7 +40,7 @@ class Distribution
     /* DC terms */
 
     /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
      *
      * @var LocalizedText|null
@@ -49,7 +55,7 @@ class Distribution
     private $version;
 
     /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
      *
      * @var LocalizedText|null
@@ -57,7 +63,7 @@ class Distribution
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedDistributions",cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", inversedBy="publishedDistributions",cascade={"persist"})
      * @ORM\JoinTable(name="distributions_publishers")
      *
      * @var Collection<string, Agent>
@@ -65,7 +71,7 @@ class Distribution
     private $publishers;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Language",cascade={"persist"})
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
      *
      * @var Language|null
@@ -73,7 +79,7 @@ class Distribution
     private $language;
 
     /**
-     * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
      * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
      * @var License|null
@@ -95,7 +101,7 @@ class Distribution
     private $modified;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dataset", inversedBy="distributions",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions",cascade={"persist"})
      *
      * @var Dataset|null
      */
