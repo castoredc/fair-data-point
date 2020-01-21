@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution;
+namespace App\Entity\FAIRData\Distribution\RDFDistribution;
 
 use App\Entity\FAIRData\Agent;
-use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
@@ -22,11 +22,13 @@ use function array_merge;
 class RDFDistribution extends Distribution
 {
     /**
-     * @ORM\Column(type="text")
+     * @ORM\OneToMany(targetEntity="RDFDistributionModule", mappedBy="distribution",cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="modules", referencedColumnName="id")
+     * @ORM\OrderBy({"order" = "ASC", "id" = "ASC"})
      *
-     * @var string
+     * @var Collection<string, RDFDistributionModule>
      */
-    private $twig;
+    private $modules;
 
     /**
      * @ORM\Column(type="text")
@@ -36,24 +38,31 @@ class RDFDistribution extends Distribution
     private $prefix;
 
     /**
-     * @param Collection<string, Agent> $publishers
+     * @param Collection<string, Agent>                 $publishers
+     * @param Collection<string, RDFDistributionModule> $modules
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, string $twig, string $prefix)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, Collection $modules, string $prefix)
     {
         parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $issued, $modified);
 
-        $this->twig = $twig;
+        $this->modules = $modules;
         $this->prefix = $prefix;
     }
 
-    public function getTwig(): string
+    /**
+     * @return Collection<string, RDFDistributionModule>
+     */
+    public function getModules(): Collection
     {
-        return $this->twig;
+        return $this->modules;
     }
 
-    public function setTwig(string $twig): void
+    /**
+     * @param Collection<string, RDFDistributionModule> $modules
+     */
+    public function setModules(Collection $modules): void
     {
-        $this->twig = $twig;
+        $this->modules = $modules;
     }
 
     public function getPrefix(): string
@@ -69,6 +78,19 @@ class RDFDistribution extends Distribution
     public function getRDFUrl(): string
     {
         return parent::getAccessUrl() . '/rdf';
+    }
+
+    public function getTwig(): string
+    {
+        $twig = '';
+
+        foreach ($this->modules as $module) {
+            /** @var RDFDistributionModule $module */
+            $twig .= '# ' . $module->getTitle() . "\n\n";
+            $twig .= $module->getTwig() . "\n\n";
+        }
+
+        return $twig;
     }
 
     /**
