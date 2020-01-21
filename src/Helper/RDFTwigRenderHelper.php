@@ -5,7 +5,7 @@ namespace App\Helper;
 
 use App\Entity\Castor\Record;
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Distribution\RDFDistribution;
+use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
 use App\Model\Castor\ApiClient;
 use Twig\Environment;
 use Twig\Error\LoaderError;
