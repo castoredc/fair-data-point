@@ -491,8 +491,10 @@ class RDFRendererController extends AbstractController
 
         $helper = new RDFTwigRenderHelper($this->apiClient, $study, $this->get('twig'), $distribution);
 
+        $turtle = $distribution->getPrefix() . "\n\n" . $helper->renderRecord($record);
+
         if ($request->query->has('download') && $request->query->get('download') === true) {
-            $response = new Response($helper->renderRecord($record));
+            $response = new Response($turtle);
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 $study->getSlug() . '_' . $recordId . '_' . time() . '.ttl'
@@ -503,7 +505,7 @@ class RDFRendererController extends AbstractController
         }
 
         return new Response(
-            $helper->renderRecord($record),
+            $turtle,
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
