@@ -159,7 +159,9 @@ export default class Dataset extends Component {
                                     return <ListItem key={index}
                                                      link={item.relative_url}
                                                      title={localizedText(item.title, 'en')}
-                                                     description={localizedText(item.description, 'en')} />}
+                                                     description={localizedText(item.description, 'en')}
+                                                     smallIcon={(item.accessRights === 2 || item.accessRights === 3) && 'lock'}
+                                    />}
                                 ) : <div className="NoResults">No distributions found.</div>}
                             </Container>
 

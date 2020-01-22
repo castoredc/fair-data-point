@@ -7,6 +7,7 @@
         "ext-json": "*",
         "cocur/slugify": "^4.0",
         "easyrdf/easyrdf": "^0.9.1",
+        "fresh/doctrine-enum-bundle": "^7.0",
         "guzzlehttp/guzzle": "~6.5",
         "knpuniversity/oauth2-client-bundle": "^1.32",
         "league/oauth2-client": "^2.3",
