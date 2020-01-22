@@ -41,9 +41,9 @@ class RDFDistribution extends Distribution
      * @param Collection<string, Agent>                 $publishers
      * @param Collection<string, RDFDistributionModule> $modules
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, Collection $modules, string $prefix)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, int $accessRights, Collection $modules, string $prefix)
     {
-        parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $issued, $modified);
+        parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $issued, $modified, $accessRights);
 
         $this->modules = $modules;
         $this->prefix = $prefix;
