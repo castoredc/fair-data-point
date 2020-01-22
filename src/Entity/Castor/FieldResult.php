@@ -17,13 +17,13 @@ class FieldResult
     /** @var string|null */
     private $label;
 
-    /** @var DateTime */
+    /** @var DateTime|null */
     private $updatedOn;
 
     /** @var Record */
     private $record;
 
-    public function __construct(Field $field, string $value, ?string $label, DateTime $updatedOn, Record $record)
+    public function __construct(Field $field, string $value, ?string $label, ?DateTime $updatedOn, Record $record)
     {
         $this->field = $field;
         $this->value = $value;
@@ -62,12 +62,12 @@ class FieldResult
         $this->label = $label;
     }
 
-    public function getUpdatedOn(): DateTime
+    public function getUpdatedOn(): ?DateTime
     {
         return $this->updatedOn;
     }
 
-    public function setUpdatedOn(DateTime $updatedOn): void
+    public function setUpdatedOn(?DateTime $updatedOn): void
     {
         $this->updatedOn = $updatedOn;
     }
@@ -105,7 +105,7 @@ class FieldResult
             $field,
             $data['field_value'],
             null,
-            new DateTime($data['updated_on']),
+            $data['updated_on'] !== null ? new DateTime($data['updated_on']) : null,
             $record
         );
     }
