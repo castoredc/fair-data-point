@@ -5,6 +5,7 @@ import arrowDown from './arrow-down.svg';
 import crossThick from './CrossThick.svg';
 import globe from './globe.svg'
 import newWindow from './NewWindow.svg'
+import lock from './lock.svg'
 
 export default {
     account,
@@ -13,5 +14,6 @@ export default {
     arrowDown,
     crossThick,
     globe,
-    newWindow
+    newWindow,
+    lock
 };

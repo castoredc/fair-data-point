@@ -8,9 +8,20 @@
   margin-bottom: 10px;
   border: solid 1px $neutral-40;
   background: $generic-white;
+  position: relative;
 
   span {
     display: block;
+  }
+
+  .ListItemIcon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+
+    path {
+      fill: $neutral-90;
+    }
   }
 
   .ListItemTitle {

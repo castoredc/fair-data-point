@@ -9,6 +9,7 @@ doctrine:
             collate: utf8mb4_unicode_ci
         types:
             iri:  App\Type\IriType
+            DistributionAccessType:  App\Type\DistributionAccessType
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
