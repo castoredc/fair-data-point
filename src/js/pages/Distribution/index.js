@@ -10,7 +10,7 @@ import ListItem from "../../components/ListItem";
 import Icon from "../../components/Icon";
 import {Link} from "react-router-dom";
 import Contact from "../../components/MetadataItem/Contact";
-import Alert from "react-bootstrap/Alert";
+import Alert from "../../components/Alert";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -30,7 +30,8 @@ export default class Distribution extends Component {
                 version: '',
                 issued: '',
                 modified: '',
-                homepage: ''
+                homepage: '',
+                accessRights: 0
             },
             dataset: {
                 title: [],
@@ -85,6 +86,13 @@ export default class Distribution extends Component {
     }
 
     render() {
+        let restricted = false;
+
+        if(this.state.distribution.accessRights === 2 || this.state.distribution.accessRights === 3)
+        {
+            restricted = true;
+        }
+
         return (
             <div className="Catalog TopLevelContainer">
                 {this.state.isLoaded ?
@@ -140,13 +148,20 @@ export default class Distribution extends Component {
                         </div>
                         <Row className="InformationRow">
                             <Container className="Children Access">
+                                {restricted && <Alert
+                                    variant="info"
+                                    icon="lock"
+                                    message="The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself."/>
+                                }
                                 <ListItem link={this.state.distribution.access_url}
                                           title="Access the data"
-                                          description="Get access to the distribution." />
+                                          description="Get access to the distribution."
+                                          smallIcon={restricted && 'lock'} />
 
                                 <ListItem link={this.state.distribution.download_url}
                                           title="Download the data"
-                                          description="Get a downloadable file for this distribution." />
+                                          description="Get a downloadable file for this distribution."
+                                          smallIcon={restricted && 'lock'} />
                             </Container>
                         </Row>
                     </div>

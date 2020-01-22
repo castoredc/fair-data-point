@@ -13,6 +13,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity
@@ -108,9 +109,17 @@ class Distribution
     private $dataset;
 
     /**
+     * @ORM\Column(name="access", type="DistributionAccessType", nullable=false)
+     *
+     * @DoctrineAssert\Enum(entity="App\Type\DistributionAccessType")
+     * @var int
+     */
+    private $accessRights;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, int $accessRights)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -121,6 +130,7 @@ class Distribution
         $this->license = $license;
         $this->issued = $issued;
         $this->modified = $modified;
+        $this->accessRights = $accessRights;
     }
 
     public function getId(): string
@@ -249,6 +259,16 @@ class Distribution
         return $this->dataset->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function setAccessRights(int $accessRights): void
+    {
+        $this->accessRights = $accessRights;
+    }
+
+    public function getAccessRights(): int
+    {
+        return $this->accessRights;
+    }
+
     /**
      * @return array<mixed>
      */
@@ -273,6 +293,7 @@ class Distribution
             'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
+            'accessRights' => $this->accessRights,
         ];
     }
 
