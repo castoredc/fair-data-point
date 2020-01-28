@@ -407,7 +407,7 @@ class RDFRendererController extends AbstractController
 
         $turtle = $distribution->getPrefix() . "\n\n" . $helper->renderRecords();
 
-        if ($request->query->has('download') && $request->query->get('download') === true) {
+        if ($request->query->getBoolean('download') === true) {
             $response = new Response($turtle);
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
@@ -493,7 +493,7 @@ class RDFRendererController extends AbstractController
 
         $turtle = $distribution->getPrefix() . "\n\n" . $helper->renderRecord($record);
 
-        if ($request->query->has('download') && $request->query->get('download') === true) {
+        if ($request->query->getBoolean('download') === true) {
             $response = new Response($turtle);
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
