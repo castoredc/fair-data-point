@@ -5,3 +5,5 @@ update_configs:
     directory: "/"
     version_requirement_updates: "increase_versions"
     update_schedule: "weekly"
+    default_reviewers:
+      - "martijnkersloot"
