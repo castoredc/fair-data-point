@@ -20,6 +20,10 @@ class Organization extends Agent
      */
     private $homepage;
 
+    private $country;
+
+    private $city;
+
     public function __construct(string $slug, string $name, ?Iri $homepage)
     {
         parent::__construct($slug, $name);

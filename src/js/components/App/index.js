@@ -6,6 +6,7 @@ import Logo from "../Logo";
 import '../../scss/index.scss'
 import './App.scss'
 import {Link} from "react-router-dom";
+import {ToastContainer} from "react-toastify";
 
 class App extends Component {
     constructor(props) {
@@ -26,11 +27,23 @@ class App extends Component {
                     {/*<Alert variant="warning" className="UnderDevelopment">*/}
                     {/*    <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.*/}
                     {/*</Alert>*/}
-                    <div className="LogoOverlay">
-                        <Link to="/fdp">
-                            <Logo />
-                        </Link>
-                    </div>
+                    {/*<div className="LogoOverlay">*/}
+                    {/*    <Link to="/fdp">*/}
+                    {/*        <Logo />*/}
+                    {/*    </Link>*/}
+                    {/*</div>*/}
+                    <ToastContainer
+                        position="top-center"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnVisibilityChange
+                        draggable={false}
+                        pauseOnHover
+                    />
+
                     <Routes />
                 </div>
             </div>

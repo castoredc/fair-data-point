@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Exception;
+
+use Exception;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+
+class ApiRequestParseException extends Exception
+{
+    /**
+     * @var ConstraintViolationListInterface|array
+     */
+    private $violations = [];
+
+    public function __construct(?ConstraintViolationListInterface $violations)
+    {
+        parent::__construct();
+
+        $this->violations = $violations ?? [];
+    }
+
+    public function toArray(): array
+    {
+        $fields = [];
+
+        foreach ($this->violations as $violation) {
+            /* @var ConstraintViolation $violation */
+            $fields[$violation->getPropertyPath()][] = $violation->getMessage();
+        }
+
+        return [
+            'error' => 'Failed to parse API request.',
+            'fields' => $fields,
+        ];
+    }
+}

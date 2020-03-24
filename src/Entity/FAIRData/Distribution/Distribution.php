@@ -64,9 +64,6 @@ class Distribution
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", inversedBy="publishedDistributions",cascade={"persist"})
-     * @ORM\JoinTable(name="distributions_publishers")
-     *
      * @var Collection<string, Agent>
      */
     private $publishers;

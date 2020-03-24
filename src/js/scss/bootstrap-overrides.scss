@@ -23,9 +23,10 @@ $rad-circle: 50%;
 $primary: $blue-700;
 $highlight-opacity: 0.15;
 
-$btn-padding-x: 12px;
+$btn-padding-x: 20px;
 $btn-padding-y: 5px;
 $btn-line-height-sm: 24px;
+$btn-font-size: 14px;
 
 $btn-padding-x-sm: 10px;
 $btn-padding-y-sm: 3px;
@@ -62,6 +63,12 @@ $navbar-dark-hover-color: $generic-white;
 }
 
 .btn {
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.57;
+
   &.btn-primary {
     background-color: $blue-400;
     color: $generic-white;

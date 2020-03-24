@@ -59,9 +59,6 @@ class Catalog
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedCatalogs",cascade={"persist"})
-     * @ORM\JoinTable(name="catalogs_publishers")
-     *
      * @var Collection<string, Agent>
      */
     private $publishers;

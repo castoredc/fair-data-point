@@ -62,9 +62,6 @@ class Dataset
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedDatasets",cascade={"persist"})
-     * @ORM\JoinTable(name="datasets_publishers")
-     *
      * @var Collection<string, Agent>
      */
     private $publishers;
@@ -115,9 +112,6 @@ class Dataset
     private $distributions;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="contactDatasets",cascade={"persist"})
-     * @ORM\JoinTable(name="datasets_contactpoints")
-     *
      * @var Collection<string, Agent>
      */
     private $contactPoint;

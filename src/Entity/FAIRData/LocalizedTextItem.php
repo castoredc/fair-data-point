@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="text_localized_item")
  */
 class LocalizedTextItem
 {
@@ -42,7 +43,7 @@ class LocalizedTextItem
      */
     private $language;
 
-    public function __construct(string $text, Language $language)
+    public function __construct(string $text, ?Language $language)
     {
         $this->text = $text;
         $this->language = $language;

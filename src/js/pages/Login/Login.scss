@@ -1,0 +1,34 @@
+@import '../../scss/colors';
+
+.Login {
+  background: $mid-blue;
+  height: 100vh;
+
+  .Skip {
+    height: 100px;
+  }
+
+  .LoginContainer {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #2d72da;
+    border-radius: 5px;
+    padding: 32px;
+    width: 500px;
+    margin: auto;
+
+    h1 {
+      font-weight: 700;
+      line-height: 1.33;
+      font-size: 21px;
+      color: $neutral-800;
+    }
+  }
+}
+
+@media (max-width: 1259px) {
+  .Login .LoginContainer {
+    width: 100%;
+    max-width: 500px;
+  }
+}

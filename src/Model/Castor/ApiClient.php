@@ -15,6 +15,8 @@ use App\Entity\Castor\RecordData;
 use App\Entity\Castor\RecordDataCollection;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
+use App\Exception\NoPermissionException;
+use App\Exception\SessionTimeOutException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use GuzzleHttp\Client;
@@ -89,11 +91,11 @@ class ApiClient
             $body = json_decode((string) $response->getBody(), true);
         } catch (RequestException $e) {
             if ($e->getCode() === 401) {
-                throw new UnauthorizedHttpException('', $e->getMessage());
+                throw new SessionTimeOutException();
             }
 
             if ($e->getCode() === 403) {
-                throw new UnauthorizedHttpException('', 'You do not have permission to access this');
+                throw new NoPermissionException();
             }
 
             throw new HttpException(500, $e->getMessage());
@@ -113,6 +115,22 @@ class ApiClient
         $study->setFields($this->getFields($study));
 
         return $study;
+    }
+
+    /**
+     * @returns Study[]
+     * @throws Exception
+     */
+    public function getStudies(): array
+    {
+        $return = [];
+        $studies = $this->request('/api/study');
+
+        foreach($studies['_embedded']['study'] as $study) {
+            $return[] = Study::fromData($study);
+        }
+
+        return $return;
     }
 
     /**

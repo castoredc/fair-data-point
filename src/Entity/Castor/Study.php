@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
+use App\Entity\Metadata\StudyMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  */
-class Study
+class Study implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -41,6 +43,13 @@ class Study
     private $fields;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study",cascade={"persist"}, fetch = "EAGER")
+     *
+     * @var StudyMetadata[]|ArrayCollection
+     */
+    private $metadata;
+
+    /**
      * @param ArrayCollection<string, Field>|null $fields
      */
     public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug, ?ArrayCollection $fields)
@@ -50,6 +59,7 @@ class Study
         $this->mainAgent = $mainAgent;
         $this->slug = $slug;
         $this->fields = $fields;
+        $this->metadata = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -109,6 +119,31 @@ class Study
     }
 
     /**
+     * @return StudyMetadata[]|ArrayCollection
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param StudyMetadata[]|ArrayCollection $metadata
+     */
+    public function setMetadata($metadata): void
+    {
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * @param StudyMetadata $metadata
+     */
+    public function addMetadata($metadata): void
+    {
+        $this->metadata[] = $metadata;
+    }
+
+
+    /**
      * @param array<mixed> $data
      */
     public static function fromData(array $data): Study
@@ -120,5 +155,14 @@ class Study
             $data['slug'] ?? null,
             null
         );
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug
+        ];
     }
 }

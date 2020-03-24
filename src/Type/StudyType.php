@@ -1,0 +1,38 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Type;
+
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
+use App\Entity\Enum\StudyType as Enum;
+
+class StudyType extends Type
+{
+    /** @inheritDoc */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    {
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
+    }
+
+    /** @inheritDoc */
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Enum
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return Enum::fromString($value);
+    }
+
+    /** @inheritDoc */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
+    {
+        return $value->toString();
+    }
+
+    public function getName(): string
+    {
+        return "StudyType";
+    }
+}

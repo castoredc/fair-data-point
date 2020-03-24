@@ -15,23 +15,65 @@ use function array_merge;
 class Person extends Agent
 {
     /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    private $middleName;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string|null
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string|null
+     */
+    private $phoneNumber;
+
+    /**
      * @ORM\Column(type="iri")
      *
      * @var Iri|null
      */
     private $orcid;
 
-    public function __construct(string $name, ?Iri $orcid)
+    public function __construct(string $firstName, ?string $middleName, string $lastName, string $email, string $phoneNumber, ?Iri $orcid)
     {
         $slugify = new Slugify();
 
-        parent::__construct($slugify->slugify($name), $name);
+        $fullName = !is_null($middleName) ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
+        parent::__construct($slugify->slugify($fullName), $fullName);
+
+        $this->firstName = $firstName;
+        $this->middleName = $middleName;
+        $this->lastName = $lastName;
+        $this->email = $email;
+        $this->phoneNumber = $phoneNumber;
         $this->orcid = $orcid;
     }
 
     public function getAccessUrl(): string
     {
-        return $this->getFairDataPoint()->getIri() . '/agent/person/' . $this->getSlug();
+        return '/agent/person/' . $this->getSlug();
     }
 
     /**

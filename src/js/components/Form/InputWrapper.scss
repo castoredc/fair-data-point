@@ -1,0 +1,42 @@
+@import '../../../scss/colors';
+
+.InputWrapper {
+  position: relative;
+  .Label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.43;
+
+    .InformationLabel {
+      color: $n300;
+      font-weight: normal;
+      font-style: italic;
+    }
+  }
+
+  .HelpText {
+    font-size: 14px;
+    line-height: 1.43;
+    color: $n300;
+    margin-top: 8px;
+  }
+
+  .LabelAction {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    button {
+      color: $blue400;
+      font-size: 14px;
+      background-color: transparent;
+      border: 1px solid transparent;
+      outline: none;
+      cursor: pointer;
+      padding: 0;
+      border-radius: 3px;
+    }
+  }
+}

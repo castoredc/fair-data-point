@@ -58,9 +58,6 @@ class FAIRDataPoint
     private $description;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedCatalogs",cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinTable(name="fdp_publishers")
-     *
      * @var Collection<string, Agent>
      */
     private $publishers;

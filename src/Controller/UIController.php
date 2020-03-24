@@ -22,6 +22,21 @@ class UIController extends AbstractController
     }
 
     /**
+     * @Route("/login", name="login")
+     * @Route("/my-studies", name="my_studies")
+     * @Route("/my-studies/study/add", name="add_study")
+     * @Route("/my-studies/study/{studyId}/metadata/details", name="study_metadata_details")
+     * @Route("/my-studies/study/{studyId}/metadata/organizations", name="study_metadata_organization")
+     * @Route("/my-studies/study/{studyId}/metadata/contacts", name="study_metadata_contact")
+     */
+    public function react(): Response
+    {
+        return $this->render(
+            'react.html.twig'
+        );
+    }
+
+    /**
      * @Route("/redirect-login", name="redirect_login")
      */
     public function loginRedirect(Request $request): Response
