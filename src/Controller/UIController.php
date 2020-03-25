@@ -26,8 +26,9 @@ class UIController extends AbstractController
      * @Route("/my-studies", name="my_studies")
      * @Route("/my-studies/study/add", name="add_study")
      * @Route("/my-studies/study/{studyId}/metadata/details", name="study_metadata_details")
-     * @Route("/my-studies/study/{studyId}/metadata/organizations", name="study_metadata_organization")
+     * @Route("/my-studies/study/{studyId}/metadata/centers", name="study_metadata_centers")
      * @Route("/my-studies/study/{studyId}/metadata/contacts", name="study_metadata_contact")
+     * @Route("/my-studies/study/{studyId}/metadata/finished", name="study_metadata_finished")
      */
     public function react(): Response
     {

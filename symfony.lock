@@ -381,6 +381,9 @@
     "symfony/inflector": {
         "version": "v4.4.2"
     },
+    "symfony/intl": {
+        "version": "v5.0.5"
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -410,6 +413,9 @@
     },
     "symfony/polyfill-ctype": {
         "version": "v1.8.0"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.14.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"

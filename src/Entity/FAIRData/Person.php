@@ -43,20 +43,20 @@ class Person extends Agent
     private $email;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
      * @var string|null
      */
     private $phoneNumber;
 
     /**
-     * @ORM\Column(type="iri")
+     * @ORM\Column(type="iri", nullable=true)
      *
      * @var Iri|null
      */
     private $orcid;
 
-    public function __construct(string $firstName, ?string $middleName, string $lastName, string $email, string $phoneNumber, ?Iri $orcid)
+    public function __construct(string $firstName, ?string $middleName, string $lastName, string $email, ?string $phoneNumber, ?Iri $orcid)
     {
         $slugify = new Slugify();
 
@@ -103,5 +103,101 @@ class Person extends Agent
         }
 
         return $graph;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMiddleName(): ?string
+    {
+        return $this->middleName;
+    }
+
+    /**
+     * @param string|null $middleName
+     */
+    public function setMiddleName(?string $middleName): void
+    {
+        $this->middleName = $middleName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     */
+    public function setEmail(?string $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string|null $phoneNumber
+     */
+    public function setPhoneNumber(?string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    /**
+     * @return Iri|null
+     */
+    public function getOrcid(): ?Iri
+    {
+        return $this->orcid;
+    }
+
+    /**
+     * @param Iri|null $orcid
+     */
+    public function setOrcid(?Iri $orcid): void
+    {
+        $this->orcid = $orcid;
     }
 }

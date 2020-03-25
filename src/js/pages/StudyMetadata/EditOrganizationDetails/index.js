@@ -3,6 +3,7 @@ import axios from "axios/index";
 
 import StudyDetailsForm from "../../../components/Form/StudyDetailsForm";
 import FullScreenSteppedForm from "../../../components/Form/FullScreenSteppedForm";
+import OrganizationsForm from "../../../components/Form/OrganizationsForm";
 
 export default class EditOrganizationDetails extends Component {
     render() {
@@ -18,8 +19,7 @@ export default class EditOrganizationDetails extends Component {
             heading="Organization Details"
             description="Using the fields below, please tell us about the organizations participating in your study."
         >
-            lalalala
-            {/*<StudyDetailsForm studyId={this.props.match.params.studyId} />*/}
+            <OrganizationsForm studyId={this.props.match.params.studyId} />
         </FullScreenSteppedForm>
     }
 }

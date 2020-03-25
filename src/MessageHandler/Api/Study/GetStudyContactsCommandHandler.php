@@ -1,0 +1,53 @@
+<?php
+
+namespace App\MessageHandler\Api\Study;
+
+use App\Api\Resource\CastorStudyMetadataApiResource;
+use App\Api\Resource\DatabaseStudyMetadataApiResource;
+use App\Api\Resource\DepartmentsApiResource;
+use App\Api\Resource\PersonsApiResource;
+use App\Entity\Castor\Study;
+use App\Entity\FAIRData\Department;
+use App\Entity\FAIRData\Person;
+use App\Exception\StudyAlreadyExistsException;
+use App\Message\Api\Study\AddCastorStudyCommand;
+use App\Message\Api\Study\CreateStudyMetadataCommand;
+use App\Message\Api\Study\GetStudyCentersCommand;
+use App\Message\Api\Study\GetStudyContactsCommand;
+use App\Message\Api\Study\GetStudyMetadataCommand;
+use App\Model\Castor\ApiClient;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+
+class GetStudyContactsCommandHandler implements MessageHandlerInterface
+{
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    public function __invoke(GetStudyContactsCommand $message)
+    {
+        /** @var Study|null $study */
+        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
+
+        $metadata = $study->getLatestMetadata();
+        $agents = $metadata->getContacts();
+
+        $persons = [];
+
+        foreach($agents as $agent)
+        {
+            if($agent instanceof Person)
+            {
+                $persons[] = $agent;
+            }
+        }
+
+        return new PersonsApiResource($persons);
+    }
+}

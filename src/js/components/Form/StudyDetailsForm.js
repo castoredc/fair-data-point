@@ -5,19 +5,17 @@ import Col from 'react-bootstrap/Col'
 import { ValidatorForm } from 'react-form-validator-core';
 
 import './Form.scss'
-import {generatePath, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
 import moment from "moment";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import LoadingSpinner from "../LoadingScreen/LoadingSpinner";
 import axios from "axios";
 import FormItem from "./FormItem";
 import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
 import FormHeading from "./FormHeading";
-import FullScreenSteppedForm from "./FullScreenSteppedForm";
-
+import LoadingScreen from "../LoadingScreen";
 
 export default class StudyDetailsForm extends Component {
     constructor(props) {
@@ -25,33 +23,74 @@ export default class StudyDetailsForm extends Component {
 
         this.state = {
             data: {
+                id: null,
                 briefName: '',
                 scientificName: '',
                 briefSummary: '',
-                summary: '',
                 studyType: '',
                 condition: '',
                 intervention: '',
                 estimatedEnrollment: '',
-                estimatedStartDate: '',
-                estimatedCompletionDate: ''
+                estimatedStudyStartDate: '',
+                estimatedStudyCompletionDate: ''
             },
-            forceValidation: false,
+            metadataSource: null,
             visitedFields: {},
-            changedFieldsSinceFormSubmission: {},
             validation: {},
-            study: null,
-            studies: {},
             isSaved: false,
-            submitDisabled: false
+            submitDisabled: false,
+            isLoading: false
         };
     }
+
+    getMetadata = () => {
+        this.setState({
+            isLoading: true,
+        });
+
+        axios.get('/api/study/' + this.props.studyId + '/metadata')
+            .then((response) => {
+                let metadata = response.data.metadata;
+
+                if(metadata.estimatedStudyStartDate !== '')
+                {
+                    let estimatedStudyStartDate = moment(metadata.estimatedStudyStartDate, 'YYYY-MM-DD');
+                    metadata.estimatedStudyStartDate = estimatedStudyStartDate.format("DD-MM-YYYY");
+                }
+
+                if(metadata.estimatedStudyCompletionDate !== '')
+                {
+                    let estimatedStudyCompletionDate = moment(metadata.estimatedStudyCompletionDate, 'YYYY-MM-DD');
+                    metadata.estimatedStudyCompletionDate = estimatedStudyCompletionDate.format("DD-MM-YYYY");
+                }
+
+                this.setState({
+                    data: metadata,
+                    metadataSource: response.data.source,
+                    isLoading: false
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                if(error.response && typeof error.response.data.error !== "undefined")
+                {
+                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                }
+            });
+    };
 
     componentDidMount() {
         ValidatorForm.addValidationRule('isDate', (value) => {
             var regex = /^([0-2][0-9]|(3)[0-1])(-)(((0)[0-9])|((1)[0-2]))(-)\d{4}$/i;
             return regex.test(value);
         });
+
+        this.getMetadata();
     }
 
     handleChange = (event, callback = (() => {})) => {
@@ -75,7 +114,7 @@ export default class StudyDetailsForm extends Component {
         this.handleChange({
             target: {
                 name: 'studyType',
-                value: event
+                value: event.value
             }
         });
     };
@@ -93,51 +132,46 @@ export default class StudyDetailsForm extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        window.onbeforeunload = null;
-
         this.setState({
-            submitDisabled: true
+            submitDisabled: true,
+            isLoading: true
         });
 
         if(this.form.isFormValid()) {
-            let estimatedStartDate = moment(this.state.data.estimatedStartDate, 'DD-MM-YYYY');
-            let estimatedCompletionDate = moment(this.state.data.estimatedCompletionDate, 'DD-MM-YYYY');
+            let estimatedStudyStartDate = moment(this.state.data.estimatedStudyStartDate, 'DD-MM-YYYY');
+            let estimatedStudyCompletionDate = moment(this.state.data.estimatedStudyCompletionDate, 'DD-MM-YYYY');
 
-            console.log(this.state.data.studyType);
+            let url = '/api/study/' + this.props.studyId + '/metadata/' + (this.state.metadataSource === 'database' ? this.state.data.id + '/update' : 'add');
 
-            axios.post('/api/studies/metadata/add', {
-                studyId: this.props.studyId,
-                briefName: this.state.data.briefName,
-                scientificName: this.state.data.scientificName,
-                briefSummary: this.state.data.briefSummary,
-                summary: this.state.data.summary,
-                type: this.state.data.studyType.value,
-                condition: this.state.data.condition,
-                intervention: this.state.data.intervention,
-                estimatedEnrollment: this.state.data.estimatedEnrollment,
-                estimatedStartDate: estimatedStartDate.format('YYYY-MM-DD'),
-                estimatedCompletionDate: estimatedCompletionDate.format('YYYY-MM-DD')
+            axios.post(url, {
+                briefName:                    this.state.data.briefName,
+                scientificName:               this.state.data.scientificName,
+                briefSummary:                 this.state.data.briefSummary,
+                type:                         this.state.data.studyType,
+                condition:                    this.state.data.condition,
+                intervention:                 this.state.data.intervention,
+                estimatedEnrollment:          this.state.data.estimatedEnrollment,
+                estimatedStudyStartDate:      estimatedStudyStartDate.format('YYYY-MM-DD'),
+                estimatedStudyCompletionDate: estimatedStudyCompletionDate.format('YYYY-MM-DD')
             })
                 .then((response) => {
                     this.setState({
-                        isSaved: true
+                        isSaved: true,
                     });
                 })
                 .catch((error) => {
-                    if (error.response && error.response.status === 400)
-                    {
+                    if (error.response && error.response.status === 400) {
                         this.setState({
                             validation: error.response.data.fields
                         });
-                    }
-                    else
-                    {
-                        toast.error(<ToastContent type="error" message="An error occurred" />, {
+                    } else {
+                        toast.error(<ToastContent type="error" message="An error occurred"/>, {
                             position: "top-center"
                         });
                     }
                     this.setState({
-                        submitDisabled: false
+                        submitDisabled: false,
+                        isLoading: false
                     });
                 });
         }
@@ -151,15 +185,9 @@ export default class StudyDetailsForm extends Component {
         const required = "This field is required";
         const invalid = "This value is invalid";
 
-        const studyTypes = [
-            { value: 'interventional', label: 'Interventional' },
-            { value: 'observational', label: 'Observational' },
-            { value: 'registry', label: 'Registry' }
-        ];
-
         if(this.state.isSaved)
         {
-            return <Redirect to={'/my-studies/study/' + studyId + '/metadata/organizations'} />;
+            return <Redirect push to={'/my-studies/study/' + studyId + '/metadata/centers'} />;
         }
 
         return (
@@ -168,6 +196,8 @@ export default class StudyDetailsForm extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
+                {this.state.isLoading && <LoadingScreen showLoading={true}/>}
+
                 <Col md={6}>
                     <FormHeading label="Overview" />
                     <FormItem label="Brief Name">
@@ -204,16 +234,6 @@ export default class StudyDetailsForm extends Component {
                             as="textarea" rows="5"
                         />
                     </FormItem>
-                    <FormItem label="Summary">
-                        <Input
-                            name="Summary"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.Summary}
-                            serverError={this.state.validation.Summary}
-                            as="textarea" rows="5"
-                        />
-                    </FormItem>
                     <FormItem label="Type">
                         <Dropdown
                             validators={['required']}
@@ -222,7 +242,7 @@ export default class StudyDetailsForm extends Component {
                             name="studyType"
                             onChange={this.handleStudyTypeChange}
                             onBlur={this.handleFieldVisit}
-                            value={this.state.data.studyType}
+                            value={studyTypes.filter(({value}) => value === this.state.data.studyType)}
                             serverError={this.state.validation.studyType}
                         />
                     </FormItem>
@@ -272,12 +292,12 @@ export default class StudyDetailsForm extends Component {
                                     placeholder="DD-MM-YYYY"
                                     validators={['required', 'isDate']}
                                     errorMessages={[required, invalid]}
-                                    name="estimatedStartDate"
+                                    name="estimatedStudyStartDate"
                                     onChange={this.handleChange}
                                     onBlur={this.handleFieldVisit}
-                                    value={this.state.data.estimatedStartDate}
+                                    value={this.state.data.estimatedStudyStartDate}
                                     mask={[/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                                    serverError={this.state.validation.estimatedEnrollment}
+                                    serverError={this.state.validation.estimatedStudyStartDate}
                                 />
                             </FormItem>
                         </Col>
@@ -287,12 +307,12 @@ export default class StudyDetailsForm extends Component {
                                     placeholder="DD-MM-YYYY"
                                     validators={['required', 'isDate']}
                                     errorMessages={[required, invalid]}
-                                    name="estimatedCompletionDate"
+                                    name="estimatedStudyCompletionDate"
                                     onChange={this.handleChange}
                                     onBlur={this.handleFieldVisit}
-                                    value={this.state.data.estimatedCompletionDate}
+                                    value={this.state.data.estimatedStudyCompletionDate}
                                     mask={[/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                                    serverError={this.state.validation.estimatedCompletionDate}
+                                    serverError={this.state.validation.estimatedStudyCompletionDate}
                                 />
                             </FormItem>
                         </Col>
@@ -302,12 +322,24 @@ export default class StudyDetailsForm extends Component {
                 </Col>
 
 
-                <div className="FullScreenSteppedFormButtons">
-                    <Button variant="secondary">Back</Button>
-                    <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
-                </div>
+                <Row className="FullScreenSteppedFormButtons">
+                    <Col md={6}>
+                        <LinkContainer to="/my-studies/study/add">
+                            <Button variant="secondary">Back</Button>
+                        </LinkContainer>
+                    </Col>
+                    <Col md={6}>
+                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
+                    </Col>
+                </Row>
 
             </ValidatorForm>
         );
     }
 }
+
+const studyTypes = [
+    { value: 'interventional', label: 'Interventional' },
+    { value: 'observational', label: 'Observational' },
+    { value: 'registry', label: 'Registry' }
+];

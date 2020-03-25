@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
+use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 use function array_merge;
@@ -20,14 +22,42 @@ class Organization extends Agent
      */
     private $homepage;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Country",cascade={"persist"})
+     * @ORM\JoinColumn(name="country", referencedColumnName="code")
+     *
+     * @var Country|null
+     */
     private $country;
 
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
     private $city;
 
-    public function __construct(string $slug, string $name, ?Iri $homepage)
+    /**
+     * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"}, fetch="EAGER")
+     *
+     * @var Department[]|ArrayCollection
+     */
+    private $departments;
+
+
+    public function __construct(?string $slug, string $name, ?Iri $homepage, Country $country, string $city)
     {
+        $slugify = new Slugify();
+
+        if($slug === null)
+        {
+            $slug = $slugify->slugify($name . ' ' . time());
+        }
         parent::__construct($slug, $name);
+
         $this->homepage = $homepage;
+        $this->country = $country;
+        $this->city = $city;
     }
 
     public function getAccessUrl(): string
@@ -62,5 +92,37 @@ class Organization extends Agent
         }
 
         return $graph;
+    }
+
+    /**
+     * @return Iri|null
+     */
+    public function getHomepage(): ?Iri
+    {
+        return $this->homepage;
+    }
+
+    /**
+     * @return Country|null
+     */
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @return Department[]|ArrayCollection
+     */
+    public function getDepartments()
+    {
+        return $this->departments;
     }
 }

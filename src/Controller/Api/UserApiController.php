@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Controller\Api;
+
+use App\Security\CastorUser;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class UserApiController extends ApiController
+{
+    /**
+     * @Route("/api/user", name="api_user")
+     */
+    public function user(): Response
+    {
+        /** @var CastorUser|null $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return new JsonResponse([], 401);
+        }
+
+        return new JsonResponse($user);
+    }
+}

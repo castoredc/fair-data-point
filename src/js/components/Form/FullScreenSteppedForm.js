@@ -29,7 +29,7 @@ export default class FullScreenSteppedForm extends Component {
 
         return <Container className="FullScreenSteppedFormContainer">
            <Row className="FullScreenSteppedFormTop">
-               <Col md={6}>
+               <Col lg={6}>
                     <div className="FullScreenSteppedFormBrand">
                         <div className="FullScreenSteppedFormBrandLogo">
                             <Logo />
@@ -39,7 +39,7 @@ export default class FullScreenSteppedForm extends Component {
                         </div>
                     </div>
                </Col>
-               <Col md={6}>
+               <Col lg={6}>
                    <div className="FullScreenSteppedFormBreadcrumbs">
                        {this.getBreadCrumbs()}
                    </div>

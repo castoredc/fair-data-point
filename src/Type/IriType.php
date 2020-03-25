@@ -30,7 +30,7 @@ class IriType extends Type
     /** @inheritDoc */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        return $value;
+        return (string) $value;
     }
 
     public function getName(): string

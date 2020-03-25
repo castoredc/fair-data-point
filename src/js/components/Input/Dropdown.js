@@ -8,7 +8,7 @@ import './Input.scss'
 class Dropdown extends ValidatorComponent {
 
     render() {
-        const { errorMessages, validators, requiredError, validatorListener, type, mask, ...rest } = this.props;
+        const { errorMessages, serverError, validators, requiredError, validatorListener, type, mask, ...rest } = this.props;
 
         return (
             <Form.Group className="Select" onClick={this.props.onClick}>
@@ -17,6 +17,11 @@ class Dropdown extends ValidatorComponent {
                     ref={(r) => { this.input = r; }}
                 />
                 {this.errorText()}
+                {serverError && serverError.map((errorText, index) => (
+                    <Form.Text key={index} className="InputError">
+                        {errorText}
+                    </Form.Text>
+                ))}
             </Form.Group>
         );
     }

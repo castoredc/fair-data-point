@@ -1,20 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios/index";
 
-import LoadingScreen from "../../../components/LoadingScreen";
-import DocumentTitle from "../../../components/DocumentTitle";
-import {localizedText} from "../../../util";
-import {Container, Row} from "react-bootstrap";
-import Contact from "../../../components/MetadataItem/Contact";
 import ListItem from "../../../components/ListItem";
 import Button from "react-bootstrap/Button";
-import StudyDetailsForm from "../../../components/Form/StudyDetailsForm";
-import {ValidatorForm} from "react-form-validator-core";
 import FullScreenSteppedForm from "../../../components/Form/FullScreenSteppedForm";
-import LoadingSpinner from "../../../components/LoadingScreen/LoadingSpinner";
-import Redirect from "react-router-dom/es/Redirect";
+import { Redirect } from "react-router-dom";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 export default class AddStudy extends Component {
 
@@ -25,7 +20,8 @@ export default class AddStudy extends Component {
             selectedStudy: null,
             studies: {},
             isLoading: true,
-            isSaved: false
+            isSaved: false,
+            submitDisabled: true
         };
     }
 
@@ -58,12 +54,17 @@ export default class AddStudy extends Component {
 
     handleStudySelect = (studyId) => {
         this.setState({
-            selectedStudy: studyId
+            selectedStudy: studyId,
+            submitDisabled: false
         })
     };
 
     handleNext = () => {
-        axios.post('/api/studies/add', {
+        this.setState({
+            submitDisabled: true
+        });
+
+        axios.post('/api/study/add', {
             studyId: this.state.selectedStudy
         })
         .then((response) => {
@@ -80,6 +81,9 @@ export default class AddStudy extends Component {
                 }
                 else if(error.response && typeof error.response.data.error !== "undefined")
                 {
+                    this.setState({
+                        submitDisabled: false
+                    });
                     toast.error(<ToastContent type="error" message={error.response.data.error} />);
                 }
             })
@@ -92,12 +96,12 @@ export default class AddStudy extends Component {
 
         if(this.state.isLoading)
         {
-            return <LoadingSpinner className="FormLoader" />;
+            return <LoadingScreen showLoading={true}/>;
         }
 
         if(this.state.isSaved)
         {
-            return <Redirect to={'/my-studies/study/' + this.state.selectedStudy + '/metadata/details'} />;
+            return <Redirect push to={'/my-studies/study/' + this.state.selectedStudy + '/metadata/details'} />;
         }
 
         return <FullScreenSteppedForm
@@ -106,7 +110,7 @@ export default class AddStudy extends Component {
             numberOfSteps={numberOfSteps}
             smallHeading="Step One"
             heading="Choose a Study"
-            description="Please choose an item from your list of studies that you’d like to include in our COVID-19 database. We only show Castor studies marked as ‘Real’ in their study settings."
+            description="Please choose an item from your list of studies that you’d like to include in our COVID-19 database."
         >
             {this.state.studies.length > 0 ? this.state.studies.map((study) => {
                     return <ListItem key={study.id}
@@ -119,9 +123,12 @@ export default class AddStudy extends Component {
                 }
             ) : <div className="NoResults">No studies found.</div>}
 
-            <div className="FullScreenSteppedFormButtons">
-                <Button disabled={this.state.selectedStudy === null} onClick={this.handleNext}>Next</Button>
-            </div>
+            <Row className="FullScreenSteppedFormButtons">
+                <Col md={6}>&nbsp;</Col>
+                <Col md={6}>
+                    <Button disabled={this.state.submitDisabled} onClick={this.handleNext}>Next</Button>
+                </Col>
+            </Row>
         </FullScreenSteppedForm>;
     }
 }

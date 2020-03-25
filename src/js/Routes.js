@@ -10,6 +10,9 @@ import Login from "./pages/Login";
 import SelectStudy from "./pages/StudyMetadata/SelectStudy";
 import EditStudyDetails from "./pages/StudyMetadata/EditStudyDetails";
 import EditOrganizationDetails from "./pages/StudyMetadata/EditOrganizationDetails";
+import axios from "axios";
+import EditContactDetails from "./pages/StudyMetadata/EditContactDetails";
+import Finished from "./pages/StudyMetadata/Finished";
 // import Query from "./pages/Query";
 
 const PrivateRoute = ({ component: Component, path, user, ...rest }) => (
@@ -22,6 +25,16 @@ const PrivateRoute = ({ component: Component, path, user, ...rest }) => (
             }} />
     )} />
 );
+
+axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (401 === error.response.status) {
+        window.location.href = '/login';
+    } else {
+        return Promise.reject(error);
+    }
+});
 
 export default ({user}) =>
     <Switch>
@@ -39,8 +52,9 @@ export default ({user}) =>
         <PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />
         <PrivateRoute path="/my-studies/study/add" exact user={user} component={SelectStudy} />
         <PrivateRoute path="/my-studies/study/:studyId/metadata/details" exact user={user} component={EditStudyDetails} />
-        <PrivateRoute path="/my-studies/study/:studyId/metadata/organizations" exact user={user} component={EditOrganizationDetails} />
-        {/*<PrivateRoute path="/my-studies/study/:studyId/metadata/contact" exact user={user} component={EditStudy} />*/}
+        <PrivateRoute path="/my-studies/study/:studyId/metadata/centers" exact user={user} component={EditOrganizationDetails} />
+        <PrivateRoute path="/my-studies/study/:studyId/metadata/contacts" exact user={user} component={EditContactDetails} />
+        <PrivateRoute path="/my-studies/study/:studyId/metadata/finished" exact user={user} component={Finished} />
 
         <Route component={NotFound} />
     </Switch>;

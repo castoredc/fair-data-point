@@ -6,6 +6,7 @@ use App\Entity\Castor\Study;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyPhase;
 use App\Entity\Enum\StudyType;
+use App\Entity\FAIRData\Agent;
 use App\Entity\Terminology\CodedText;
 use DateTime;
 use DateTimeImmutable;
@@ -135,14 +136,26 @@ class StudyMetadata
     private $eligibilityCriteria;
 
     // private $studyTeam;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\JoinTable(name="study_contacts")
+     *
+     * @var Agent[]|ArrayCollection
+     */
     private $contacts;
 
     private $trialIds;
 
     private $sponsors;
 
-    private $collaborators;
-
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\JoinTable(name="study_centers")
+     *
+     * @var Agent[]|ArrayCollection
+     */
+    private $centers;
 
     /**
      * @var DateTime $created
@@ -194,6 +207,8 @@ class StudyMetadata
         $this->estimatedEnrollment = $estimatedEnrollment;
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
+        $this->centers = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     /**
@@ -485,7 +500,7 @@ class StudyMetadata
     }
 
     /**
-     * @return mixed
+     * @return Agent[]|ArrayCollection
      */
     public function getContacts()
     {
@@ -493,11 +508,21 @@ class StudyMetadata
     }
 
     /**
-     * @param mixed $contacts
+     * @param Agent[]|ArrayCollection $contacts
      */
     public function setContacts($contacts): void
     {
         $this->contacts = $contacts;
+    }
+
+    /**
+     * @param Agent $contact
+     *
+     * @return void
+     */
+    public function addContact(Agent $contact): void
+    {
+        $this->contacts[] = $contact;
     }
 
     /**
@@ -533,19 +558,29 @@ class StudyMetadata
     }
 
     /**
-     * @return mixed
+     * @return Agent[]|ArrayCollection
      */
-    public function getCollaborators()
+    public function getCenters()
     {
-        return $this->collaborators;
+        return $this->centers;
     }
 
     /**
-     * @param mixed $collaborators
+     * @param Agent[]|ArrayCollection $centers
      */
-    public function setCollaborators($collaborators): void
+    public function setCenters($centers): void
     {
-        $this->collaborators = $collaborators;
+        $this->centers = $centers;
+    }
+
+    /**
+     * @param Agent $center
+     *
+     * @return void
+     */
+    public function addCenter(Agent $center): void
+    {
+        $this->centers[] = $center;
     }
 
     /**
@@ -555,6 +590,7 @@ class StudyMetadata
     {
         return $this->id;
     }
+
 
     /**
      * @ORM\PrePersist

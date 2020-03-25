@@ -127,6 +127,22 @@ class Study implements JsonSerializable
     }
 
     /**
+     * @return StudyMetadata
+     */
+    public function getLatestMetadata()
+    {
+        return $this->metadata->last();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMetadata()
+    {
+        return count($this->metadata) > 0;
+    }
+
+    /**
      * @param StudyMetadata[]|ArrayCollection $metadata
      */
     public function setMetadata($metadata): void

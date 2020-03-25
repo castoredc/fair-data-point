@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios/index";
-
 import StudyDetailsForm from "../../../components/Form/StudyDetailsForm";
 import FullScreenSteppedForm from "../../../components/Form/FullScreenSteppedForm";
 

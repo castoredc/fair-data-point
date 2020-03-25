@@ -52,6 +52,8 @@
 
     &.Active {
       border-color: $azul;
+      color: $azul;
+      font-weight: 900;
     }
   }
   .FullScreenSteppedFormBreadcrumbSeparator {
@@ -94,6 +96,52 @@
       padding: 50px 0;
       margin-top: 50px;
       border-top: 1px solid $neutral-30;
+
+      & > div:nth-child(2)
+      {
+        text-align: right;
+      }
+    }
+  }
+
+  .RepeatedBlock {
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid $neutral-30;
+
+    &:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .RemoveButton {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      font-weight: 600;
+      color: $neutral-300;
+
+      .Icon {
+        height: 12px;
+        width: 12px;
+        margin-left: 3px;
+        margin-top: -3px;
+
+        path {
+          fill: $neutral-300;
+        }
+      }
+
+      &:hover {
+        text-decoration: none;
+        color: $neutral-800;
+
+        .Icon path {
+          fill: $neutral-800;
+        }
+      }
     }
   }
 }
