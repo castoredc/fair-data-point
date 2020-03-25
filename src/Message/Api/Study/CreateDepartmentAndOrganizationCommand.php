@@ -1,61 +1,39 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
-use App\Entity\FAIRData\Country;
 use App\Entity\Iri;
 
 class CreateDepartmentAndOrganizationCommand
 {
-    /** @var string
-     */
+    /** @var string */
     private $studyId;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $organizationSlug;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $departmentSlug;
 
-    /** @var string
-     */
+    /** @var string */
     private $name;
 
-    /** @var Iri|null
-     */
+    /** @var Iri|null */
     private $homepage;
 
-    /** @var string
-     */
+    /** @var string */
     private $country;
 
-    /** @var string
-     */
+    /** @var string */
     private $city;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $department;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $additionalInformation;
 
-    /**
-     * CreateDepartmentAndOrganizationCommand constructor.
-     *
-     * @param string $studyId
-     * @param string|null $organizationSlug
-     * @param string|null $departmentSlug
-     * @param string $name
-     * @param Iri|null $homepage
-     * @param string $country
-     * @param string $city
-     * @param string|null $department
-     * @param string|null $additionalInformation
-     */
     public function __construct(
         string $studyId,
         ?string $organizationSlug,
@@ -78,73 +56,46 @@ class CreateDepartmentAndOrganizationCommand
         $this->additionalInformation = $additionalInformation;
     }
 
-    /**
-     * @return string
-     */
     public function getStudyId(): string
     {
         return $this->studyId;
     }
 
-    /**
-     * @return string|null
-     */
     public function getOrganizationSlug(): ?string
     {
         return $this->organizationSlug;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDepartmentSlug(): ?string
     {
         return $this->departmentSlug;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getHomepage(): ?Iri
     {
         return $this->homepage;
     }
 
-    /**
-     * @return string
-     */
     public function getCountry(): string
     {
         return $this->country;
     }
 
-    /**
-     * @return string
-     */
     public function getCity(): string
     {
         return $this->city;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDepartment(): ?string
     {
         return $this->department;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAdditionalInformation(): ?string
     {
         return $this->additionalInformation;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
@@ -8,72 +9,42 @@ use DateTimeImmutable;
 
 class CreateStudyMetadataCommand
 {
-    /** @var string
-     */
+    /** @var string */
     private $studyId;
 
-    /** @var string
-     */
+    /** @var string */
     private $briefName;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $scientificName;
 
-    /** @var string
-     */
+    /** @var string */
     private $briefSummary;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $summary;
 
-    /** @var StudyType
-     */
+    /** @var StudyType */
     private $type;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $condition;
 
-    /** @var string|null
-     */
+    /** @var string|null */
     private $intervention;
 
-    /** @var int
-     */
+    /** @var int */
     private $estimatedEnrollment;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
+    /** @var DateTimeImmutable|null */
     private $estimatedStudyStartDate;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
+    /** @var DateTimeImmutable|null */
     private $estimatedStudyCompletionDate;
 
-    /**
-     * @var CastorUser
-     */
+    /** @var CastorUser */
     private $user;
 
-    /**
-     * CreateStudyCommand constructor.
-     *
-     * @param string                 $studyId
-     * @param string                 $briefName
-     * @param string|null            $scientificName
-     * @param string                 $briefSummary
-     * @param string|null            $summary
-     * @param StudyType              $type
-     * @param string|null            $condition
-     * @param string|null            $intervention
-     * @param int                    $estimatedEnrollment
-     * @param DateTimeImmutable|null $estimatedStudyStartDate
-     * @param DateTimeImmutable|null $estimatedStudyCompletionDate
-     */
     public function __construct(
         string $studyId,
         string $briefName,
@@ -102,97 +73,61 @@ class CreateStudyMetadataCommand
         $this->user = $user;
     }
 
-    /**
-     * @return string
-     */
     public function getStudyId(): string
     {
         return $this->studyId;
     }
 
-    /**
-     * @return string
-     */
     public function getBriefName(): string
     {
         return $this->briefName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getScientificName(): ?string
     {
         return $this->scientificName;
     }
 
-    /**
-     * @return string
-     */
     public function getBriefSummary(): string
     {
         return $this->briefSummary;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSummary(): ?string
     {
         return $this->summary;
     }
 
-    /**
-     * @return StudyType
-     */
     public function getType(): StudyType
     {
         return $this->type;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCondition(): ?string
     {
         return $this->condition;
     }
 
-    /**
-     * @return string|null
-     */
     public function getIntervention(): ?string
     {
         return $this->intervention;
     }
 
-    /**
-     * @return int
-     */
     public function getEstimatedEnrollment(): int
     {
         return $this->estimatedEnrollment;
     }
 
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getEstimatedStudyStartDate(): ?DateTimeImmutable
     {
         return $this->estimatedStudyStartDate;
     }
 
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getEstimatedStudyCompletionDate(): ?DateTimeImmutable
     {
         return $this->estimatedStudyCompletionDate;
     }
 
-    /**
-     * @return CastorUser
-     */
     public function getUser(): CastorUser
     {
         return $this->user;

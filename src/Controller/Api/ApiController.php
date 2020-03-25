@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
@@ -9,15 +10,15 @@ use App\Model\Castor\ApiClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use function count;
+use function json_decode;
 
 abstract class ApiController extends AbstractController
 {
     /** @var ApiClient */
     protected $apiClient;
 
-    /**
-     * @var ValidatorInterface
-     */
+    /** @var ValidatorInterface */
     protected $validator;
 
     public function __construct(ApiClient $apiClient, ValidatorInterface $validator)
@@ -25,6 +26,7 @@ abstract class ApiController extends AbstractController
         $this->apiClient = $apiClient;
         $this->validator = $validator;
     }
+
     /**
      * @throws ApiRequestParseException
      */
@@ -49,8 +51,7 @@ abstract class ApiController extends AbstractController
         $groupedErrors = [];
         $return = [];
 
-        foreach(json_decode($request->getContent(), true) as $index => $item)
-        {
+        foreach (json_decode($request->getContent(), true) as $index => $item) {
             $object = new $requestObject($request, $index);
             $errors = $this->validator->validate($object);
 

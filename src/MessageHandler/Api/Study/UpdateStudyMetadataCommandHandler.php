@@ -1,11 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Castor\Study;
 use App\Entity\Metadata\StudyMetadata;
-use App\Entity\Terminology\CodedText;
-use App\Message\Api\Study\CreateStudyMetadataCommand;
 use App\Message\Api\Study\UpdateStudyMetadataCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +23,7 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
         $this->apiClient = $apiClient;
     }
 
-    public function __invoke(UpdateStudyMetadataCommand $message)
+    public function __invoke(UpdateStudyMetadataCommand $message): void
     {
         /** @var StudyMetadata $metadata */
         $metadata = $this->em->getRepository(StudyMetadata::class)->find($message->getMetadataId());

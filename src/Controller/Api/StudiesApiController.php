@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
@@ -19,9 +20,6 @@ class StudiesApiController extends ApiController
 {
     /**
      * @Route("/api/study", name="api_studies")
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function studies(MessageBusInterface $bus): Response
     {
@@ -33,10 +31,6 @@ class StudiesApiController extends ApiController
 
     /**
      * @Route("/api/study/add", methods={"POST"}, name="api_add_study")
-     * @param Request             $request
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function addCastorStudy(Request $request, MessageBusInterface $bus): Response
     {
@@ -50,7 +44,7 @@ class StudiesApiController extends ApiController
             return new JsonResponse([], 200);
         } catch (ApiRequestParseException $e) {
             return new JsonResponse($e->toArray(), 400);
-        } catch(HandlerFailedException $e) {
+        } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
             if ($e instanceof StudyAlreadyExistsException) {

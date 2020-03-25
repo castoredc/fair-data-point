@@ -1,12 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Metadata\StudyMetadata;
-use App\Entity\Terminology\CodedText;
 use App\Exception\StudyAlreadyExistsException;
 use App\Message\Api\Study\AddCastorStudyCommand;
-use App\Message\Api\Study\CreateStudyMetadataCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +24,7 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
         $this->apiClient = $apiClient;
     }
 
-    public function __invoke(AddCastorStudyCommand $message)
+    public function __invoke(AddCastorStudyCommand $message): void
     {
         $this->apiClient->setToken($message->getUser()->getToken());
 
@@ -35,8 +33,7 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
         try {
             $this->em->persist($study);
             $this->em->flush();
-        } catch(UniqueConstraintViolationException $e)
-        {
+        } catch (UniqueConstraintViolationException $e) {
             throw new StudyAlreadyExistsException();
         }
     }

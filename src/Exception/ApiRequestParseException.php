@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Exception;
 
@@ -8,9 +9,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ApiRequestParseException extends Exception
 {
-    /**
-     * @var ConstraintViolationListInterface|array
-     */
+    /** @var ConstraintViolationListInterface */
     private $violations = [];
 
     public function __construct(?ConstraintViolationListInterface $violations)
@@ -20,12 +19,15 @@ class ApiRequestParseException extends Exception
         $this->violations = $violations ?? [];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         $fields = [];
 
         foreach ($this->violations as $violation) {
-            /* @var ConstraintViolation $violation */
+            /** @var ConstraintViolation $violation */
             $fields[$violation->getPropertyPath()][] = $violation->getMessage();
         }
 

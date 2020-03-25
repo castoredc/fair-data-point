@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
@@ -22,7 +23,10 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
         $this->apiClient = $apiClient;
     }
 
-    public function __invoke(FindStudiesByUserCommand $message)
+    /**
+     * @return array<Study>
+     */
+    public function __invoke(FindStudiesByUserCommand $message): array
     {
         $this->apiClient->setToken($message->getUser()->getToken());
 
@@ -31,30 +35,33 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 
         $dbStudies = $this->em->getRepository(Study::class)->findBy(['id' => $castorStudyIds]);
 
-        if($message->getLoadFromCastor() && $message->getHideExistingStudies()) {
+        if ($message->getLoadFromCastor() && $message->getHideExistingStudies()) {
             $studies = [];
 
             foreach ($castorStudies as $castorStudy) {
                 $include = true;
                 foreach ($dbStudies as $study) {
-                    if ($castorStudy->getId() === $study->getId()) {
-                        $include = false;
+                    if ($castorStudy->getId() !== $study->getId()) {
+                        continue;
                     }
+
+                    $include = false;
                 }
 
-                if ($include) {
-                    $studies[] = $castorStudy;
+                if (! $include) {
+                    continue;
                 }
+
+                $studies[] = $castorStudy;
             }
 
             return $studies;
         }
-        else if($message->getLoadFromCastor() && !$message->getHideExistingStudies()) {
+        if ($message->getLoadFromCastor() && ! $message->getHideExistingStudies()) {
             return $castorStudies;
         }
-        else {
-            return $dbStudies;
-        }
+
+        return $dbStudies;
     }
 
     /**
@@ -62,13 +69,14 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
      *
      * @return array<string>
      */
-    private function getStudyIds(array $castorStudies)
+    private function getStudyIds(array $castorStudies): array
     {
         $castorStudyIds = [];
 
-        foreach($castorStudies as $castorStudy) {
+        foreach ($castorStudies as $castorStudy) {
             $castorStudyIds[] = $castorStudy->getId();
         }
+
         return $castorStudyIds;
     }
 }

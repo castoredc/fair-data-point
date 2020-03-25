@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
@@ -17,13 +18,12 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
     /** @var EntityManagerInterface */
     private $em;
 
-
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
-    public function __invoke(CreateDepartmentAndOrganizationCommand $message)
+    public function __invoke(CreateDepartmentAndOrganizationCommand $message): void
     {
         /** @var Study|null $study */
         $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
@@ -31,12 +31,10 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         /** @var Country|null $country */
         $country = $this->em->getRepository(Country::class)->find($message->getCountry());
 
-        if(!$study)
-        {
+        if ($study === null) {
             throw new StudyNotFoundException();
         }
-        if(!$country)
-        {
+        if ($country === null) {
             throw new CountryNotFoundException();
         }
 

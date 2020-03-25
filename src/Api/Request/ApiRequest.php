@@ -1,22 +1,22 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Request;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
+use function array_key_exists;
 
 abstract class ApiRequest
 {
-    /**
-     * @var array
-     */
+    /** @var array<mixed> */
     protected $data = [];
 
-    /**
-     * @var ParameterBag
-     */
+    /** @var ParameterBag<mixed> */
     protected $query;
 
+    /**
+     * @param array<mixed> $data
+     */
     public function __construct(array $data, ParameterBag $query)
     {
         $this->data = $data;
@@ -32,7 +32,7 @@ abstract class ApiRequest
      */
     protected function getFromData(string $key)
     {
-        if (!array_key_exists($key, $this->data)) {
+        if (! array_key_exists($key, $this->data)) {
             return null;
         }
 

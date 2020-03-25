@@ -61,9 +61,7 @@ class Dataset
      */
     private $description;
 
-    /**
-     * @var Collection<string, Agent>
-     */
+    /** @var Collection<string, Agent> */
     private $publishers;
 
     /**
@@ -111,9 +109,7 @@ class Dataset
      */
     private $distributions;
 
-    /**
-     * @var Collection<string, Agent>
-     */
+    /** @var Collection<string, Agent> */
     private $contactPoint;
 
     /**

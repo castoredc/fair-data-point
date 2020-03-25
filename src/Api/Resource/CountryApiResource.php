@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
@@ -9,11 +10,6 @@ class CountryApiResource implements ApiResource
     /** @var Country */
     private $country;
 
-    /**
-     * CountryApiResource constructor.
-     *
-     * @param Country $country
-     */
     public function __construct(Country $country)
     {
         $this->country = $country;
@@ -23,7 +19,7 @@ class CountryApiResource implements ApiResource
     {
         return [
             'value' => $this->country->getCode(),
-            'label' => $this->country->getName()
+            'label' => $this->country->getName(),
         ];
     }
 }

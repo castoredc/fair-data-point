@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity\Enum;
 
@@ -76,7 +77,7 @@ abstract class Enum
     public function isEqualTo(Enum $otherEnum): bool
     {
         /** @noinspection TypeUnsafeComparisonInspection,PhpNonStrictObjectEqualityInspection */
-        return $this == $otherEnum;
+        return $this === $otherEnum;
     }
 
     /**

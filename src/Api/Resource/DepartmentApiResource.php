@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
@@ -8,7 +9,6 @@ class DepartmentApiResource implements ApiResource
 {
     /** @var Department */
     private $department;
-
 
     public function __construct(Department $department)
     {
@@ -22,7 +22,7 @@ class DepartmentApiResource implements ApiResource
             'country' => $this->department->getOrganization()->getCountry()->getCode(),
             'city' => $this->department->getOrganization()->getCity(),
             'department' => $this->department->getName(),
-            'additionalInformation' => $this->department->getAdditionalInformation()
+            'additionalInformation' => $this->department->getAdditionalInformation(),
         ];
     }
 }

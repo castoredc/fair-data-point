@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
@@ -9,11 +10,6 @@ class CastorStudyMetadataApiResource implements ApiResource
     /** @var Study */
     private $study;
 
-    /**
-     * CastorStudyMetadataApiResource constructor.
-     *
-     * @param Study $study
-     */
     public function __construct(Study $study)
     {
         $this->study = $study;
@@ -34,8 +30,8 @@ class CastorStudyMetadataApiResource implements ApiResource
                 'intervention' => '',
                 'estimatedEnrollment' => '',
                 'estimatedStudyStartDate' => '',
-                'estimatedStudyCompletionDate' => ''
-            ]
+                'estimatedStudyCompletionDate' => '',
+            ],
         ];
     }
 }

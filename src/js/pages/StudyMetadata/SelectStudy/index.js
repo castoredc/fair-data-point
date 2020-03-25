@@ -26,7 +26,7 @@ export default class AddStudy extends Component {
     }
 
     getStudies = () => {
-        axios.get('/api/castor/studies?hide')
+        axios.get('/api/castor/studies')
             .then((response) => {
                 this.setState({
                     studies: response.data,

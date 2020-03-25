@@ -1,20 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
-use App\Entity\Castor\Study;
 use App\Entity\Metadata\StudyMetadata;
 
-class DatabaseStudyMetadataApiResource
+class DatabaseStudyMetadataApiResource implements ApiResource
 {
     /** @var StudyMetadata */
     private $studyMetadata;
 
-    /**
-     * CastorStudyMetadataApiResource constructor.
-     *
-     * @param StudyMetadata $studyMetadata
-     */
     public function __construct(StudyMetadata $studyMetadata)
     {
         $this->studyMetadata = $studyMetadata;
@@ -35,9 +30,9 @@ class DatabaseStudyMetadataApiResource
                 'condition' => $this->studyMetadata->getCondition()->getText(),
                 'intervention' => $this->studyMetadata->getIntervention()->getText(),
                 'estimatedEnrollment' => $this->studyMetadata->getEstimatedEnrollment(),
-                'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate()->format("Y-m-d"),
-                'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate()->format("Y-m-d")
-            ]
+                'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate()->format('Y-m-d'),
+                'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate()->format('Y-m-d'),
+            ],
         ];
     }
 }

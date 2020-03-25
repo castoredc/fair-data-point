@@ -7,10 +7,11 @@ use Exception;
 
 class StudyNotFoundException extends Exception
 {
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
-        return [
-            'error' => 'Study not found.'
-        ];
+        return ['error' => 'Study not found.'];
     }
 }

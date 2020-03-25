@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use function time;
 
 /**
  * @ORM\Entity
@@ -20,7 +21,7 @@ class Department extends Agent
     private $organization;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      *
      * @var string|null
      */
@@ -30,8 +31,7 @@ class Department extends Agent
     {
         $slugify = new Slugify();
 
-        if($slug === null)
-        {
+        if ($slug === null) {
             $slug = $slugify->slugify($organization->getName() . ' ' . $name . ' ' . time());
         }
         parent::__construct($slug, $name);
@@ -40,17 +40,11 @@ class Department extends Agent
         $this->additionalInformation = $additionalInformation;
     }
 
-    /**
-     * @return Organization
-     */
     public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAdditionalInformation(): ?string
     {
         return $this->additionalInformation;

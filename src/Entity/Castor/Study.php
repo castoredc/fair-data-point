@@ -7,6 +7,7 @@ use App\Entity\Metadata\StudyMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use function count;
 
 /**
  * @ORM\Entity
@@ -126,18 +127,12 @@ class Study implements JsonSerializable
         return $this->metadata;
     }
 
-    /**
-     * @return StudyMetadata
-     */
-    public function getLatestMetadata()
+    public function getLatestMetadata(): StudyMetadata
     {
         return $this->metadata->last();
     }
 
-    /**
-     * @return bool
-     */
-    public function hasMetadata()
+    public function hasMetadata(): bool
     {
         return count($this->metadata) > 0;
     }
@@ -150,14 +145,10 @@ class Study implements JsonSerializable
         $this->metadata = $metadata;
     }
 
-    /**
-     * @param StudyMetadata $metadata
-     */
-    public function addMetadata($metadata): void
+    public function addMetadata(StudyMetadata $metadata): void
     {
         $this->metadata[] = $metadata;
     }
-
 
     /**
      * @param array<mixed> $data
@@ -173,12 +164,12 @@ class Study implements JsonSerializable
         );
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug
+            'slug' => $this->slug,
         ];
     }
 }

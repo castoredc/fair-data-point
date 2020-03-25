@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Request;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use function json_decode;
 
 abstract class GroupedApiRequest extends ApiRequest
 {
@@ -11,11 +12,8 @@ abstract class GroupedApiRequest extends ApiRequest
     {
         $data = $request->getContent();
         $this->query = $request->query;
-
-        if (!empty($data)) {
-            $data = json_decode($data, true);
-            $data = (array) $data[$index];
-        }
+        $data = json_decode($data, true);
+        $data = (array) $data[$index];
 
         parent::__construct($data, $this->query);
     }

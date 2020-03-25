@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
@@ -10,8 +11,6 @@ class CountriesApiResource implements ApiResource
     private $countries;
 
     /**
-     * CountriesApiResource constructor.
-     *
      * @param Country[] $countries
      */
     public function __construct(array $countries)

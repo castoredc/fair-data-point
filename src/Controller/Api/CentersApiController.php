@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
@@ -19,11 +20,6 @@ class CentersApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/centers", methods={"GET"}, name="api_get_centers")
-     * @param string              $studyId
-     * @param Request             $request
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function getCenters(string $studyId, Request $request, MessageBusInterface $bus): Response
     {
@@ -31,19 +27,15 @@ class CentersApiController extends ApiController
             $envelope = $bus->dispatch(new GetStudyCentersCommand($studyId));
 
             $handledStamp = $envelope->last(HandledStamp::class);
-            
+
             return new JsonResponse($handledStamp->getResult()->toArray());
-        } catch(HandlerFailedException $e) {
+        } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
     }
 
     /**
      * @Route("/api/study/{studyId}/centers/add", methods={"POST"}, name="api_add_centers")
-     * @param Request             $request
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function addCenters(string $studyId, Request $request, MessageBusInterface $bus): Response
     {
@@ -54,7 +46,7 @@ class CentersApiController extends ApiController
             $envelope = $bus->dispatch(new ClearStudyCentersCommand($studyId));
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            if($handledStamp) {
+            if ($handledStamp) {
                 foreach ($parsed as $item) {
                     $envelope = $bus->dispatch(
                         new CreateDepartmentAndOrganizationCommand(
@@ -77,8 +69,7 @@ class CentersApiController extends ApiController
             }
         } catch (GroupedApiRequestParseException $e) {
             return new JsonResponse($e->toArray(), 400);
-        }
-        catch(HandlerFailedException $e) {
+        } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
     }

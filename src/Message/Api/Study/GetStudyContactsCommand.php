@@ -1,31 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
-use App\Entity\Enum\StudyType;
-use App\Security\CastorUser;
-use DateTimeImmutable;
-
 class GetStudyContactsCommand
 {
-    /** @var string
-     */
+    /** @var string */
     private $studyId;
 
-    /**
-     * CreateStudyCommand constructor.
-     *
-     * @param string     $studyId
-     */
     public function __construct(
         string $studyId
     ) {
         $this->studyId = $studyId;
     }
 
-    /**
-     * @return string
-     */
     public function getStudyId(): string
     {
         return $this->studyId;

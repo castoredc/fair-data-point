@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
@@ -30,7 +31,6 @@ class StudyMetadata
     private $id;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
      *
@@ -106,10 +106,10 @@ class StudyMetadata
     private $actualEnrollment;
 
     /** @var @TODO Add enrollment method */
-    private $enrollmentMethod;
+    // private $enrollmentMethod;
 
     /** @var @TODO Add data capture method */
-    private $dataCaptureMethod;
+    // private $dataCaptureMethod;
 
     /**
      * @ORM\Column(type="date_immutable", nullable=true)
@@ -145,9 +145,9 @@ class StudyMetadata
      */
     private $contacts;
 
-    private $trialIds;
-
-    private $sponsors;
+    // private $trialIds;
+    //
+    // private $sponsors;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -158,33 +158,19 @@ class StudyMetadata
     private $centers;
 
     /**
-     * @var DateTime $created
-     *
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime $created
      */
     protected $created;
 
     /**
-     * @var DateTime $updated
-     *
      * @ORM\Column(type="datetime", nullable = true)
+     *
+     * @var DateTime|null $updated
      */
     protected $updated;
 
-    /**
-     * StudyMetadata constructor.
-     *
-     * @param string                 $briefName
-     * @param string|null            $scientificName
-     * @param string|null            $briefSummary
-     * @param string|null            $summary
-     * @param StudyType              $type
-     * @param CodedText|null         $condition
-     * @param CodedText|null         $intervention
-     * @param int                    $estimatedEnrollment
-     * @param DateTimeImmutable|null $estimatedStudyStartDate
-     * @param DateTimeImmutable|null $estimatedStudyCompletionDate
-     */
     public function __construct(
         string $briefName,
         ?string $scientificName,
@@ -211,273 +197,151 @@ class StudyMetadata
         $this->contacts = new ArrayCollection();
     }
 
-    /**
-     * @return Study|null
-     */
     public function getStudy(): ?Study
     {
         return $this->study;
     }
 
-    /**
-     * @param Study|null $study
-     */
     public function setStudy(?Study $study): void
     {
         $this->study = $study;
     }
 
-    /**
-     * @return string
-     */
     public function getBriefName(): string
     {
         return $this->briefName;
     }
 
-    /**
-     * @param string $briefName
-     */
     public function setBriefName(string $briefName): void
     {
         $this->briefName = $briefName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getScientificName(): ?string
     {
         return $this->scientificName;
     }
 
-    /**
-     * @param string|null $scientificName
-     */
     public function setScientificName(?string $scientificName): void
     {
         $this->scientificName = $scientificName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getBriefSummary(): ?string
     {
         return $this->briefSummary;
     }
 
-    /**
-     * @param string|null $briefSummary
-     */
     public function setBriefSummary(?string $briefSummary): void
     {
         $this->briefSummary = $briefSummary;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSummary(): ?string
     {
         return $this->summary;
     }
 
-    /**
-     * @param string|null $summary
-     */
     public function setSummary(?string $summary): void
     {
         $this->summary = $summary;
     }
 
-    /**
-     * @return StudyType
-     */
     public function getType(): StudyType
     {
         return $this->type;
     }
 
-    /**
-     * @param StudyType $type
-     */
     public function setType(StudyType $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return StudyPhase
-     */
     public function getPhase(): StudyPhase
     {
         return $this->phase;
     }
 
-    /**
-     * @param StudyPhase $phase
-     */
     public function setPhase(StudyPhase $phase): void
     {
         $this->phase = $phase;
     }
 
-    /**
-     * @return CodedText|null
-     */
     public function getCondition(): ?CodedText
     {
         return $this->condition;
     }
 
-    /**
-     * @param CodedText|null $condition
-     */
     public function setCondition(?CodedText $condition): void
     {
         $this->condition = $condition;
     }
 
-    /**
-     * @return CodedText|null
-     */
     public function getIntervention(): ?CodedText
     {
         return $this->intervention;
     }
 
-    /**
-     * @param CodedText|null $intervention
-     */
     public function setIntervention(?CodedText $intervention): void
     {
         $this->intervention = $intervention;
     }
 
-    /**
-     * @return RecruitmentStatus
-     */
     public function getRecruitmentStatus(): RecruitmentStatus
     {
         return $this->recruitmentStatus;
     }
 
-    /**
-     * @param RecruitmentStatus $recruitmentStatus
-     */
     public function setRecruitmentStatus(RecruitmentStatus $recruitmentStatus): void
     {
         $this->recruitmentStatus = $recruitmentStatus;
     }
 
-    /**
-     * @return int
-     */
     public function getEstimatedEnrollment(): int
     {
         return $this->estimatedEnrollment;
     }
 
-    /**
-     * @param int $estimatedEnrollment
-     */
     public function setEstimatedEnrollment(int $estimatedEnrollment): void
     {
         $this->estimatedEnrollment = $estimatedEnrollment;
     }
 
-    /**
-     * @return int|null
-     */
     public function getActualEnrollment(): ?int
     {
         return $this->actualEnrollment;
     }
 
-    /**
-     * @param int|null $actualEnrollment
-     */
     public function setActualEnrollment(?int $actualEnrollment): void
     {
         $this->actualEnrollment = $actualEnrollment;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEnrollmentMethod()
-    {
-        return $this->enrollmentMethod;
-    }
-
-    /**
-     * @param mixed $enrollmentMethod
-     */
-    public function setEnrollmentMethod($enrollmentMethod): void
-    {
-        $this->enrollmentMethod = $enrollmentMethod;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDataCaptureMethod()
-    {
-        return $this->dataCaptureMethod;
-    }
-
-    /**
-     * @param mixed $dataCaptureMethod
-     */
-    public function setDataCaptureMethod($dataCaptureMethod): void
-    {
-        $this->dataCaptureMethod = $dataCaptureMethod;
-    }
-
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getEstimatedStudyStartDate(): ?DateTimeImmutable
     {
         return $this->estimatedStudyStartDate;
     }
 
-    /**
-     * @param DateTimeImmutable|null $estimatedStudyStartDate
-     */
     public function setEstimatedStudyStartDate(?DateTimeImmutable $estimatedStudyStartDate): void
     {
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
     }
 
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getEstimatedStudyCompletionDate(): ?DateTimeImmutable
     {
         return $this->estimatedStudyCompletionDate;
     }
 
-    /**
-     * @param DateTimeImmutable|null $estimatedStudyCompletionDate
-     */
     public function setEstimatedStudyCompletionDate(?DateTimeImmutable $estimatedStudyCompletionDate): void
     {
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
     }
 
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getStudyCompletionDate(): ?DateTimeImmutable
     {
         return $this->studyCompletionDate;
     }
 
-    /**
-     * @param DateTimeImmutable|null $studyCompletionDate
-     */
     public function setStudyCompletionDate(?DateTimeImmutable $studyCompletionDate): void
     {
         $this->studyCompletionDate = $studyCompletionDate;
@@ -515,11 +379,6 @@ class StudyMetadata
         $this->contacts = $contacts;
     }
 
-    /**
-     * @param Agent $contact
-     *
-     * @return void
-     */
     public function addContact(Agent $contact): void
     {
         $this->contacts[] = $contact;
@@ -573,38 +432,29 @@ class StudyMetadata
         $this->centers = $centers;
     }
 
-    /**
-     * @param Agent $center
-     *
-     * @return void
-     */
     public function addCenter(Agent $center): void
     {
         $this->centers[] = $center;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-
     /**
      * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
-        $this->created = new DateTime("now");
+        $this->created = new DateTime('now');
     }
 
     /**
      * @ORM\PreUpdate
      */
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
-        $this->updated = new DateTime("now");
+        $this->updated = new DateTime('now');
     }
 }

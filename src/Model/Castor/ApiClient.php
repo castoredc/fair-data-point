@@ -24,7 +24,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use function json_decode;
 
 class ApiClient
@@ -118,7 +117,8 @@ class ApiClient
     }
 
     /**
-     * @returns Study[]
+     * @return Study[]
+     *
      * @throws Exception
      */
     public function getStudies(): array
@@ -126,7 +126,7 @@ class ApiClient
         $return = [];
         $studies = $this->request('/api/study');
 
-        foreach($studies['_embedded']['study'] as $study) {
+        foreach ($studies['_embedded']['study'] as $study) {
             $return[] = Study::fromData($study);
         }
 

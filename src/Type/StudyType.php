@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Type;
 
+use App\Entity\Enum\StudyType as Enum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use App\Entity\Enum\StudyType as Enum;
 
 class StudyType extends Type
 {
@@ -33,6 +33,6 @@ class StudyType extends Type
 
     public function getName(): string
     {
-        return "StudyType";
+        return 'StudyType';
     }
 }

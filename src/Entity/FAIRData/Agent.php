@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\FAIRData\Distribution\Distribution;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 
@@ -79,6 +77,11 @@ abstract class Agent
             'slug' => $this->slug,
             'name' => $this->name,
         ];
+    }
+
+    public function getAccessUrl(): string
+    {
+        return '/agent/generic/' . $this->getSlug();
     }
 
     public function toGraph(): EasyRdf_Graph

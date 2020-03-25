@@ -1,15 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\StudyCenterApiRequest;
 use App\Api\Request\StudyContactApiRequest;
 use App\Exception\GroupedApiRequestParseException;
-use App\Message\Api\Study\ClearStudyCentersCommand;
 use App\Message\Api\Study\ClearStudyContactsCommand;
-use App\Message\Api\Study\CreateDepartmentAndOrganizationCommand;
 use App\Message\Api\Study\CreatePersonCommand;
-use App\Message\Api\Study\GetStudyCentersCommand;
 use App\Message\Api\Study\GetStudyContactsCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +20,6 @@ class ContactsApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/contacts", methods={"GET"}, name="api_get_contacts")
-     * @param string              $studyId
-     * @param Request             $request
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function getContacts(string $studyId, Request $request, MessageBusInterface $bus): Response
     {
@@ -35,19 +27,15 @@ class ContactsApiController extends ApiController
             $envelope = $bus->dispatch(new GetStudyContactsCommand($studyId));
 
             $handledStamp = $envelope->last(HandledStamp::class);
-            
+
             return new JsonResponse($handledStamp->getResult()->toArray());
-        } catch(HandlerFailedException $e) {
+        } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
     }
 
     /**
      * @Route("/api/study/{studyId}/contacts/add", methods={"POST"}, name="api_add_contacts")
-     * @param Request             $request
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function addContact(string $studyId, Request $request, MessageBusInterface $bus): Response
     {
@@ -58,7 +46,7 @@ class ContactsApiController extends ApiController
             $envelope = $bus->dispatch(new ClearStudyContactsCommand($studyId));
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            if($handledStamp) {
+            if ($handledStamp) {
                 foreach ($parsed as $item) {
                     $envelope = $bus->dispatch(
                         new CreatePersonCommand(

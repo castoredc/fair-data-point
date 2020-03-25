@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Request;
 
-use App\Entity\Enum\StudyType;
-use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CastorStudyApiRequest extends SingleApiRequest
 {
-    /** @var string
-     *
+    /**
+     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
@@ -20,9 +19,6 @@ class CastorStudyApiRequest extends SingleApiRequest
         $this->studyId = $this->getFromData('studyId');
     }
 
-    /**
-     * @return string
-     */
     public function getStudyId(): string
     {
         return $this->studyId;

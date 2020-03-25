@@ -8,6 +8,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 use function array_merge;
+use function is_null;
 
 /**
  * @ORM\Entity
@@ -38,7 +39,7 @@ class Person extends Agent
     /**
      * @ORM\Column(type="string")
      *
-     * @var string|null
+     * @var string
      */
     private $email;
 
@@ -60,7 +61,7 @@ class Person extends Agent
     {
         $slugify = new Slugify();
 
-        $fullName = !is_null($middleName) ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
+        $fullName = ! is_null($middleName) ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
         parent::__construct($slugify->slugify($fullName), $fullName);
 
         $this->firstName = $firstName;
@@ -105,97 +106,61 @@ class Person extends Agent
         return $graph;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @param string $firstName
-     */
     public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMiddleName(): ?string
     {
         return $this->middleName;
     }
 
-    /**
-     * @param string|null $middleName
-     */
     public function setMiddleName(?string $middleName): void
     {
         $this->middleName = $middleName;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @param string $lastName
-     */
     public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string|null $email
-     */
     public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    /**
-     * @param string|null $phoneNumber
-     */
     public function setPhoneNumber(?string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getOrcid(): ?Iri
     {
         return $this->orcid;
     }
 
-    /**
-     * @param Iri|null $orcid
-     */
     public function setOrcid(?Iri $orcid): void
     {
         $this->orcid = $orcid;

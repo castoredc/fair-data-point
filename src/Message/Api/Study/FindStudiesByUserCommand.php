@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
@@ -22,25 +23,16 @@ class FindStudiesByUserCommand
         $this->hideExistingStudies = $hideExistingStudies;
     }
 
-    /**
-     * @return CastorUser
-     */
     public function getUser(): CastorUser
     {
         return $this->user;
     }
 
-    /**
-     * @return bool
-     */
     public function getLoadFromCastor(): bool
     {
         return $this->loadFromCastor;
     }
 
-    /**
-     * @return bool
-     */
     public function getHideExistingStudies(): bool
     {
         return $this->hideExistingStudies;

@@ -7,10 +7,11 @@ use Exception;
 
 class SessionTimeOutException extends Exception
 {
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
-        return [
-            'error' => 'Your session timed out, please log in again'
-        ];
+        return ['error' => 'Your session timed out, please log in again'];
     }
 }

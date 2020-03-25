@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Request;
 
 class GetStudyMetadataApiRequest extends SingleApiRequest
 {
-    /** @var string
-     *
+    /**
+     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
@@ -16,9 +17,6 @@ class GetStudyMetadataApiRequest extends SingleApiRequest
         $this->studyId = $this->getFromData('studyId');
     }
 
-    /**
-     * @return string
-     */
     public function getStudyId(): string
     {
         return $this->studyId;

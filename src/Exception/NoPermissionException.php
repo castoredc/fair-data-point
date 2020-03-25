@@ -7,10 +7,11 @@ use Exception;
 
 class NoPermissionException extends Exception
 {
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
-        return [
-            'error' => 'You do not have permission to access this study.'
-        ];
+        return ['error' => 'You do not have permission to access this study.'];
     }
 }

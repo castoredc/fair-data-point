@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
@@ -13,9 +14,6 @@ class CountriesApiController extends ApiController
 {
     /**
      * @Route("/api/countries", name="api_countries")
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function countries(MessageBusInterface $bus): Response
     {

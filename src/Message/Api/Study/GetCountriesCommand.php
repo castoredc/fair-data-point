@@ -1,12 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
-use App\Entity\Enum\StudyType;
-use App\Security\CastorUser;
-use DateTimeImmutable;
-
 class GetCountriesCommand
 {
-
 }

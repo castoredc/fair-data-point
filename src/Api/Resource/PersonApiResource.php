@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
-use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Person;
 
 class PersonApiResource implements ApiResource
 {
     /** @var Person */
     private $person;
-
 
     public function __construct(Person $person)
     {
@@ -23,7 +22,7 @@ class PersonApiResource implements ApiResource
             'middleName' => $this->person->getMiddleName(),
             'lastName' => $this->person->getLastName(),
             'email' => $this->person->getEmail(),
-            'orcid' => $this->person->getOrcid()->getValue()
+            'orcid' => $this->person->getOrcid()->getValue(),
         ];
     }
 }

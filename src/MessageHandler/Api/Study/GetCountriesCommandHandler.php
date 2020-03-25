@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
 use App\Api\Resource\CountriesApiResource;
 use App\Entity\FAIRData\Country;
 use App\Message\Api\Study\GetCountriesCommand;
-use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -19,7 +19,7 @@ class GetCountriesCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    public function __invoke(GetCountriesCommand $message)
+    public function __invoke(GetCountriesCommand $message): CountriesApiResource
     {
         $countries = $this->em->getRepository(Country::class)->findAll();
 

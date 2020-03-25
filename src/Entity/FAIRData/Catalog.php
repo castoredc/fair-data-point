@@ -58,9 +58,7 @@ class Catalog
      */
     private $description;
 
-    /**
-     * @var Collection<string, Agent>
-     */
+    /** @var Collection<string, Agent> */
     private $publishers;
 
     /**

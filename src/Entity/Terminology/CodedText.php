@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity\Terminology;
 
-use App\Entity\FAIRData\LocalizedTextItem;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,35 +31,21 @@ class CodedText
     /** @var OntologyConcept[]|ArrayCollection */
     private $concepts;
 
-    /**
-     * CodedText constructor.
-     *
-     * @param string $text
-     */
     public function __construct(string $text)
     {
         $this->text = $text;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getText(): string
     {
         return $this->text;
     }
 
-    /**
-     * @param string $text
-     */
     public function setText(string $text): void
     {
         $this->text = $text;

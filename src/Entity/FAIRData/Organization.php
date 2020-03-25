@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 use function array_merge;
+use function time;
 
 /**
  * @ORM\Entity
@@ -44,13 +45,11 @@ class Organization extends Agent
      */
     private $departments;
 
-
     public function __construct(?string $slug, string $name, ?Iri $homepage, Country $country, string $city)
     {
         $slugify = new Slugify();
 
-        if($slug === null)
-        {
+        if ($slug === null) {
             $slug = $slugify->slugify($name . ' ' . time());
         }
         parent::__construct($slug, $name);
@@ -62,7 +61,7 @@ class Organization extends Agent
 
     public function getAccessUrl(): string
     {
-        return $this->getFairDataPoint()->getIri() . '/agent/organization/' . $this->getSlug();
+        return '/agent/organization/' . $this->getSlug();
     }
 
     /**
@@ -94,25 +93,16 @@ class Organization extends Agent
         return $graph;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getHomepage(): ?Iri
     {
         return $this->homepage;
     }
 
-    /**
-     * @return Country|null
-     */
     public function getCountry(): ?Country
     {
         return $this->country;
     }
 
-    /**
-     * @return string
-     */
     public function getCity(): string
     {
         return $this->city;

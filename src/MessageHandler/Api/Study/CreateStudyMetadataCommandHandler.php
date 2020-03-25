@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
@@ -24,7 +25,7 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
         $this->apiClient = $apiClient;
     }
 
-    public function __invoke(CreateStudyMetadataCommand $message)
+    public function __invoke(CreateStudyMetadataCommand $message): void
     {
         $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
 
