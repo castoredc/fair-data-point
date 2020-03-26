@@ -10,6 +10,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import LoadingScreen from "../../../components/LoadingScreen";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
+import {localizedText} from "../../../util";
 
 export default class AddStudy extends Component {
     constructor(props) {
@@ -99,11 +100,11 @@ export default class AddStudy extends Component {
         }
 
         return <CatalogSteppedForm
-            catalog={this.props.match.params.catalog}
+            catalog={this.props.catalog}
             currentStep={1}
             smallHeading="Step One"
             heading="Choose a Study"
-            description="Please choose an item from your list of studies that you’d like to include in our COVID-19 database."
+            description={'Please choose an item from your list of studies that you’d like to include in the ' + localizedText(this.props.catalog.title, 'en') + '.'}
         >
             {this.state.studies.length > 0 ? this.state.studies.map((study) => {
                     return <ListItem key={study.id}
@@ -117,8 +118,8 @@ export default class AddStudy extends Component {
             ) : <div className="NoResults">No studies found.</div>}
 
             <Row className="FullScreenSteppedFormButtons">
-                <Col md={6}>&nbsp;</Col>
-                <Col md={6}>
+                <Col>&nbsp;</Col>
+                <Col>
                     <Button disabled={this.state.submitDisabled} onClick={this.handleNext}>Next</Button>
                 </Col>
             </Row>

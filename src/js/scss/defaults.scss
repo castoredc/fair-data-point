@@ -17,34 +17,6 @@ ul {
   list-style-type: none;
 }
 
-.LogoOverlay {
-  position: absolute;
-  top: 46px;
-  left: 46px;
-
-  .Logo {
-    width: 90px;
-    height: 24px;
-
-    path {
-      fill: $generic-white;
-    }
-  }
-}
-
-@media (max-width: 960px) {
-  .LogoOverlay {
-    position: initial;
-    background: $cobalt;
-    padding: 15px 0;
-
-    .Logo {
-      margin: auto;
-      display: block;
-    }
-  }
-}
-
 .IconRight {
   float: right;
   display: block;
@@ -119,14 +91,25 @@ ul {
   }
 }
 
-.Information {
-  padding-bottom: 80px;
-  
-  .InformationHeader {
-    background: $mid-blue;
-    color: white;
+.Header {
+  background: $mid-blue;
+  color: white;
+
+  .MainHeader {
     padding: 40px 0;
-    margin: 0;
+  }
+
+  .Logo {
+    width: 90px;
+    height: 24px;
+
+    path {
+      fill: $generic-white;
+    }
+  }
+
+  .InformationHeader {
+    padding-bottom: 40px;
 
     .InformationHeaderTop {
       overflow: auto;
@@ -177,6 +160,7 @@ ul {
             path {
               fill: $generic-white;
             }
+
             margin-right: 5px;
           }
 
@@ -188,6 +172,10 @@ ul {
       }
     }
   }
+}
+
+.Information {
+  padding-bottom: 80px;
 
   .LinkTop.LinkFileType {
     float: right;
@@ -275,6 +263,20 @@ ul {
   padding: 20px 0;
 }
 
-.TopLevelContainer .container {
-  max-width: 600px;
+.TopLevelContainer.Embedded .container {
+    max-width: none;
+  //max-width: 600px;
+}
+
+@media (max-width: 960px) {
+  .Header .MainHeader {
+    background: $cobalt;
+    padding: 15px 0;
+    margin-bottom: 40px;
+
+    .Logo {
+      margin: auto;
+      display: block;
+    }
+  }
 }

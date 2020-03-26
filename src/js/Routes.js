@@ -13,18 +13,8 @@ import EditOrganizationDetails from "./pages/StudyMetadata/EditOrganizationDetai
 import axios from "axios";
 import EditContactDetails from "./pages/StudyMetadata/EditContactDetails";
 import Finished from "./pages/StudyMetadata/Finished";
-// import Query from "./pages/Query";
-
-const PrivateRoute = ({ component: Component, path, user, ...rest }) => (
-    <Route {...rest} render={(props) => (
-        user !== null
-            ? <Component {...props} />
-            : <Redirect to={{
-                pathname: '/login',
-                search:   '?path=' + encodeURI(path)
-            }} />
-    )} />
-);
+import PrivateRoute from './components/PrivateRoute';
+import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -50,12 +40,12 @@ export default ({user}) =>
         <Route path="/fdp/:catalogSlug/:datasetSlug/:distributionSlug" exact component={Distribution} />
 
         /* My studies */
-        <PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />
-        <PrivateRoute path="/my-studies/:catalog/study/add" exact user={user} component={SelectStudy} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/details" exact user={user} component={EditStudyDetails} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/centers" exact user={user} component={EditOrganizationDetails} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/contacts" exact user={user} component={EditContactDetails} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={Finished} />
+        {/*<PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />*/}
+        <PrivateRoute path="/my-studies/:catalog/study/add" exact user={user} component={StudyMetadataWrapper} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/details" exact user={user} component={StudyMetadataWrapper} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/centers" exact user={user} component={StudyMetadataWrapper} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/contacts" exact user={user} component={StudyMetadataWrapper} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={StudyMetadataWrapper} />
 
         <Route component={NotFound} />
     </Switch>;

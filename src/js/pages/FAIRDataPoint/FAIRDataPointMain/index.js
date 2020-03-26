@@ -10,6 +10,8 @@ import ListItem from "../../../components/ListItem";
 import Contact from "../../../components/MetadataItem/Contact";
 import Alert from "react-bootstrap/Alert";
 import Icon from "../../../components/Icon";
+import FAIRDataInformation from "../../../components/FAIRDataInformation";
+import queryString from "query-string";
 
 export default class FAIRDataPointMain extends Component {
     constructor(props) {
@@ -68,68 +70,62 @@ export default class FAIRDataPointMain extends Component {
     };
 
     render() {
-        return (
-            <div className="FAIRDataPoint TopLevelContainer">
-                {this.state.isLoaded ?
-                    <div className="Information">
-                        <DocumentTitle title={localizedText(this.state.fdp.title, 'en')} />
-                        <Row className="InformationHeader">
-                            <Container>
-                                <div className="InformationHeaderTop">
-                                    <h1 className="Title">FAIR Data Point</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.fdp.description, 'en')}
-                                    </div>
-                                    {this.state.fdp.publishers.length > 0 && <div className="Publishers">
-                                        {this.state.fdp.publishers.map((item, index) => {
-                                            return <Contact key={index}
-                                                            url={item.url}
-                                                            type={item.type}
-                                                            name={item.name} />}
-                                        )}
-                                    </div>}
-                                </div>
-                            </Container>
-                        </Row>
-                        <div className="MetadataRow">
-                            <Container className="MetadataContainer">
-                                {this.state.showMetadata ? <div className="Metadata Shown">
+        const params = queryString.parse(this.props.location.search);
+        const embedded = (typeof params.embed !== 'undefined');
 
-                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-                                        Hide metadata <Icon type="arrowDown" className="Rotated" />
-                                    </a>
+        if(this.state.isLoading)
+        {
+            return <LoadingScreen showLoading={true}/>;
+        }
 
-                                    <Row>
-                                        <MetadataItem className="col-md-6" label="Version" value={this.state.fdp.version} />
-                                        <MetadataItem className="col-md-6" label="Language" url={this.state.fdp.language.url} value={this.state.fdp.language.name} />
-                                        <MetadataItem className="col-md-6" label="License" url={this.state.fdp.license.url} value={this.state.fdp.license.name} />
-                                    </Row>
-
-                                </div> : <div className="Metadata Hidden">
-                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-                                        Show metadata <Icon type="arrowDown" />
-                                    </a>
-                                </div>}
-                            </Container>
-                        </div>
-                        <Row className="InformationRow">
-                            <Container className="Children Catalogs">
-                                <h2>Catalogs</h2>
-                                <div className="Description">
-                                    Catalogs are collections of datasets.
-                                </div>
-                                {this.state.fdp.catalogs.length > 0 ? this.state.fdp.catalogs.map((item, index) => {
-                                    return <ListItem key={index}
-                                                     link={item.relative_url}
-                                                     title={localizedText(item.title, 'en')}
-                                                     description={localizedText(item.description, 'en')} />}
-                                ) : <div className="NoResults">No catalogs found.</div>}
-                            </Container>
-                        </Row>
-                    </div>
-                    : <LoadingScreen showLoading={true}/>
-                }
+        return <FAIRDataInformation
+            embedded={embedded}
+            className="FAIRDataPoint"
+            title={localizedText(this.state.fdp.title, 'en')}
+            description={localizedText(this.state.fdp.description, 'en')}
+        >
+            <h2>Catalogs</h2>
+            <div className="Description">
+                Catalogs are collections of datasets.
             </div>
-        );
+            {this.state.fdp.catalogs.length > 0 ? this.state.fdp.catalogs.map((item, index) => {
+                return <ListItem key={index}
+                                 newWindow={embedded}
+                                 link={item.relative_url}
+                                 title={localizedText(item.title, 'en')}
+                                 description={localizedText(item.description, 'en')} />}
+            ) : <div className="NoResults">No catalogs found.</div>}
+        </FAIRDataInformation>;
+
+        // {this.state.fdp.publishers.length > 0 && <div className="Publishers">
+        //     {this.state.fdp.publishers.map((item, index) => {
+        //         return <Contact key={index}
+        //                         url={item.url}
+        //                         type={item.type}
+        //                         name={item.name} />}
+        //     )}
+        // </div>}
+
+        {/*<div className="MetadataRow">*/}
+        {/*    <Container className="MetadataContainer">*/}
+        {/*        {this.state.showMetadata ? <div className="Metadata Shown">*/}
+
+        {/*            <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>*/}
+        {/*                Hide metadata <Icon type="arrowDown" className="Rotated" />*/}
+        {/*            </a>*/}
+
+        {/*            <Row>*/}
+        {/*                <MetadataItem className="col-md-6" label="Version" value={this.state.fdp.version} />*/}
+        {/*                <MetadataItem className="col-md-6" label="Language" url={this.state.fdp.language.url} value={this.state.fdp.language.name} />*/}
+        {/*                <MetadataItem className="col-md-6" label="License" url={this.state.fdp.license.url} value={this.state.fdp.license.name} />*/}
+        {/*            </Row>*/}
+
+        {/*        </div> : <div className="Metadata Hidden">*/}
+        {/*            <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>*/}
+        {/*                Show metadata <Icon type="arrowDown" />*/}
+        {/*            </a>*/}
+        {/*        </div>}*/}
+        {/*    </Container>*/}
+        {/*</div>*/}
     }
 }

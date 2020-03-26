@@ -177,13 +177,17 @@ export default class ContactsForm extends Component {
                 });
             })
             .catch((error) => {
-                toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                    position: "top-center"
-                });
                 this.setState({
                     submitDisabled: false,
                     isLoading: false
                 });
+
+                if(error.response && typeof error.response.data.error !== "undefined")
+                {
+                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                }
             });
     };
 
@@ -318,12 +322,12 @@ export default class ContactsForm extends Component {
                 </Row>
 
                 <Row className="FullScreenSteppedFormButtons">
-                    <Col md={6}>
+                    <Col>
                         <LinkContainer to={'/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/centers'}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>
-                    <Col md={6}>
+                    <Col>
                         <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Finish</Button>
                     </Col>
                 </Row>

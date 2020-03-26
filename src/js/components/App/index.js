@@ -52,14 +52,6 @@ class App extends Component {
         return (
             <div>
                 <div className={this.state.isLoading ? 'App Loading' : 'App Loaded'}>
-                    {/*<Alert variant="warning" className="UnderDevelopment">*/}
-                    {/*    <strong>Notice</strong> Please be aware that this FAIR Data Point (FDP) is still under development and that the (meta)data in this FDP may be dummy data.*/}
-                    {/*</Alert>*/}
-                    {/*<div className="LogoOverlay">*/}
-                    {/*    <Link to="/fdp">*/}
-                    {/*        <Logo />*/}
-                    {/*    </Link>*/}
-                    {/*</div>*/}
                     <ToastContainer
                         position="top-center"
                         autoClose={5000}

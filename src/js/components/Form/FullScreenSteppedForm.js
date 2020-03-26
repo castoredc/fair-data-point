@@ -25,7 +25,7 @@ export default class FullScreenSteppedForm extends Component {
     };
 
     render() {
-        const {brandText, smallHeading, heading, description, children} = this.props;
+        const {brandText, currentStep, smallHeading, heading, description, children} = this.props;
 
         return <Container className="FullScreenSteppedFormContainer">
             <DocumentTitle title={brandText + ' | ' + heading}/>
@@ -41,14 +41,14 @@ export default class FullScreenSteppedForm extends Component {
                     </div>
                 </Col>
                 <Col lg={6}>
-                    <div className="FullScreenSteppedFormBreadcrumbs">
+                    {currentStep && <div className="FullScreenSteppedFormBreadcrumbs">
                         {this.getBreadCrumbs()}
-                    </div>
+                    </div>}
                 </Col>
             </Row>
             <div className="FullScreenSteppedForm">
                 <div className="FullScreenSteppedFormHeader">
-                    <div className="FullScreenSteppedFormStepNumber">{smallHeading}</div>
+                    {smallHeading && <div className="FullScreenSteppedFormStepNumber">{smallHeading}</div>}
                     <h1 className="FullScreenSteppedFormStepName">{heading}</h1>
                     <div className="FullScreenSteppedFormStepDescription">{description}</div>
                 </div>

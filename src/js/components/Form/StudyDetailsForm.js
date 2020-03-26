@@ -323,12 +323,12 @@ export default class StudyDetailsForm extends Component {
 
 
                 <Row className="FullScreenSteppedFormButtons">
-                    <Col md={6}>
+                    <Col>
                         <LinkContainer to={'/my-studies/' + catalog + '/study/add'}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>
-                    <Col md={6}>
+                    <Col>
                         <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
                     </Col>
                 </Row>

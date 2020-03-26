@@ -5,7 +5,7 @@ import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 export default class EditOrganizationDetails extends Component {
     render() {
         return <CatalogSteppedForm
-            catalog={this.props.match.params.catalog}
+            catalog={this.props.catalog}
             currentStep={3}
             smallHeading="Step Three"
             heading="Organization Details"

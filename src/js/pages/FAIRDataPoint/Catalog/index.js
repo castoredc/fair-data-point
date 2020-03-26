@@ -11,6 +11,8 @@ import Icon from "../../../components/Icon";
 import {Link} from "react-router-dom";
 import Contact from "../../../components/MetadataItem/Contact";
 import Alert from "react-bootstrap/Alert";
+import FAIRDataInformation from "../../../components/FAIRDataInformation";
+import queryString from "query-string";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -84,78 +86,77 @@ export default class Catalog extends Component {
     };
 
     render() {
-        return (
-            <div className="Catalog TopLevelContainer">
-                {this.state.isLoaded ?
-                    <div className="Information">
-                        <DocumentTitle title={localizedText(this.state.catalog.title, 'en')} />
-                        <div className="InformationHeader">
-                            <Container>
-                                {/*<Link to={this.state.fdp.relative_url} className="LinkTop LinkBack">*/}
-                                {/*    <Icon type="arrowLeft" />*/}
-                                {/*    {localizedText(this.state.fdp.title, 'en')}*/}
-                                {/*</Link>*/}
-                                <div className="InformationHeaderTop">
-                                    {this.state.catalog.logo !== '' && <div className="Logo">
-                                        <img src={this.state.catalog.logo} alt={this.state.catalog.title + ' logo'} />
-                                    </div>}
-                                    <h1 className="Title">{localizedText(this.state.catalog.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.catalog.description, 'en')}
-                                    </div>
-                                    {this.state.catalog.publishers.length > 0 && <div className="Publishers">
-                                        {this.state.catalog.publishers.map((item, index) => {
-                                            return <Contact key={index}
-                                                            url={item.url}
-                                                            type={item.type}
-                                                            name={item.name} />}
-                                        )}
-                                    </div>}
-                                </div>
-                            </Container>
-                        </div>
+        const params = queryString.parse(this.props.location.search);
+        const embedded = (typeof params.embed !== 'undefined');
 
-                        <div className="MetadataRow">
-                            <Container className="MetadataContainer">
-                                {this.state.showMetadata ? <div className="Metadata Shown">
-                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-                                        Hide metadata <Icon type="arrowDown" className="Rotated" />
-                                    </a>
+        if(this.state.isLoading)
+        {
+            return <LoadingScreen showLoading={true}/>;
+        }
 
-                                    <Row>
-                                        <MetadataItem className="col-md-6" label="Version" value={this.state.catalog.version} />
-                                        <MetadataItem className="col-md-6" label="Language" url={this.state.catalog.language.url} value={this.state.catalog.language.name} />
-                                        <MetadataItem className="col-md-6" label="License" url={this.state.catalog.license.url} value={this.state.catalog.license.name} />
-                                        <MetadataItem className="col-md-6" label="Issued" value={this.state.catalog.issued.date} />
-                                        <MetadataItem className="col-md-6" label="Modified" value={this.state.catalog.modified.date} />
-                                        <MetadataItem className="col-md-6" label="Homepage" value={this.state.catalog.homepage} />
-                                    </Row>
-                                </div> : <div className="Metadata Hidden">
-                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-                                        Show metadata <Icon type="arrowDown" />
-                                    </a>
-                                </div>}
-                            </Container>
-                        </div>
-
-                        <Row className="InformationRow">
-                            <Container className="Children Datasets">
-                                <h2>Datasets</h2>
-                                <div className="Description">
-                                    Datasets are published collections of data.
-                                </div>
-                                {this.state.catalog.datasets.length > 0 ? this.state.catalog.datasets.map((item, index) => {
-                                    return <ListItem key={index}
-                                                     link={item.relative_url}
-                                                     title={localizedText(item.title, 'en')}
-                                                     description={localizedText(item.description, 'en')} />}
-                                ) : <div className="NoResults">No datasets found.</div>}
-                            </Container>
-                        </Row>
-                    </div>
-                    : <LoadingScreen showLoading={true}/>
-                }
+        return <FAIRDataInformation
+            embedded={embedded}
+            className="Catalog"
+            title={localizedText(this.state.catalog.title, 'en')}
+            description={localizedText(this.state.catalog.description, 'en')}
+            logo={this.state.catalog.logo}
+            >
+            <h2>Datasets</h2>
+            <div className="Description">
+                Datasets are published collections of data.
             </div>
-        );
+            {this.state.catalog.datasets.length > 0 ? this.state.catalog.datasets.map((item, index) => {
+                    return <ListItem key={index}
+                                     newWindow={embedded}
+                                     link={item.relative_url}
+                                     title={localizedText(item.title, 'en')}
+                                     description={localizedText(item.description, 'en')}/>
+                }
+            ) : <div className="NoResults">No datasets found.</div>}
+        </FAIRDataInformation>;
+
+
+
+        {/*<div className="MetadataRow">*/}
+        {/*    <Container className="MetadataContainer">*/}
+        {/*        {this.state.showMetadata ? <div className="Metadata Shown">*/}
+        {/*            <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>*/}
+        {/*                Hide metadata <Icon type="arrowDown" className="Rotated"/>*/}
+        {/*            </a>*/}
+
+        {/*            <Row>*/}
+        {/*                <MetadataItem className="col-md-6" label="Version"*/}
+        {/*                              value={this.state.catalog.version}/>*/}
+        {/*                <MetadataItem className="col-md-6" label="Language"*/}
+        {/*                              url={this.state.catalog.language.url}*/}
+        {/*                              value={this.state.catalog.language.name}/>*/}
+        {/*                <MetadataItem className="col-md-6" label="License"*/}
+        {/*                              url={this.state.catalog.license.url}*/}
+        {/*                              value={this.state.catalog.license.name}/>*/}
+        {/*                <MetadataItem className="col-md-6" label="Issued"*/}
+        {/*                              value={this.state.catalog.issued.date}/>*/}
+        {/*                <MetadataItem className="col-md-6" label="Modified"*/}
+        {/*                              value={this.state.catalog.modified.date}/>*/}
+        {/*                <MetadataItem className="col-md-6" label="Homepage"*/}
+        {/*                              value={this.state.catalog.homepage}/>*/}
+        {/*            </Row>*/}
+        {/*        </div> : <div className="Metadata Hidden">*/}
+        {/*            <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>*/}
+        {/*                Show metadata <Icon type="arrowDown"/>*/}
+        {/*            </a>*/}
+        {/*        </div>}*/}
+        {/*    </Container>*/}
+        {/*</div>*/}
+
+
+        {/*{this.state.catalog.publishers.length > 0 && <div className="Publishers">*/}
+        {/*    {this.state.catalog.publishers.map((item, index) => {*/}
+        {/*            return <Contact key={index}*/}
+        {/*                            url={item.url}*/}
+        {/*                            type={item.type}*/}
+        {/*                            name={item.name}/>*/}
+        {/*        }*/}
+        {/*    )}*/}
+        {/*</div>}*/}
     }
 }

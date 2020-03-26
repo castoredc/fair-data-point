@@ -6,7 +6,7 @@ import {classNames, isURL} from "../../util";
 
 class ListItem extends Component {
     render() {
-        const { title, description, link, leftIcon, smallIcon, selectable = false, active = false, onClick = () => {}}  = this.props;
+        const { title, description, link, leftIcon, smallIcon, newWindow = false, selectable = false, active = false, onClick = () => {}}  = this.props;
 
         if(selectable)
         {
@@ -17,7 +17,7 @@ class ListItem extends Component {
             </a>;
         }
 
-        if(isURL(link))
+        if(isURL(link) || newWindow)
         {
             return <a href={link} target="_blank" className="ListItem">
                 {smallIcon && <span className="ListItemSmallIcon"><Icon type={smallIcon} /></span>}

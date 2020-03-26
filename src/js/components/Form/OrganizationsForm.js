@@ -320,12 +320,12 @@ export default class OrganizationsForm extends Component {
                 </Row>
 
                 <Row className="FullScreenSteppedFormButtons">
-                    <Col md={6}>
+                    <Col>
                         <LinkContainer to={'/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/details'}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>
-                    <Col md={6}>
+                    <Col>
                         <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
                     </Col>
                 </Row>

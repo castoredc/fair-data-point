@@ -1,13 +1,10 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios/index";
 
 import LoadingScreen from "../../../components/LoadingScreen";
 import DocumentTitle from "../../../components/DocumentTitle";
-import {localizedText} from "../../../util";
 import {Container, Row} from "react-bootstrap";
-import Contact from "../../../components/MetadataItem/Contact";
 import ListItem from "../../../components/ListItem";
-import Button from "react-bootstrap/Button";
 
 export default class MyStudies extends Component {
     constructor(props) {
