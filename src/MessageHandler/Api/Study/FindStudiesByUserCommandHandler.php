@@ -31,7 +31,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
         $this->apiClient->setToken($message->getUser()->getToken());
 
         $castorStudies = $this->apiClient->getStudies();
-        $castorStudyIds = $this->getStudyIds($castorStudies);
+        $castorStudyIds = $this->apiClient->getStudyIds($castorStudies);
 
         $dbStudies = $this->em->getRepository(Study::class)->findBy(['id' => $castorStudyIds]);
 
@@ -62,21 +62,5 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
         }
 
         return $dbStudies;
-    }
-
-    /**
-     * @param array<Study> $castorStudies
-     *
-     * @return array<string>
-     */
-    private function getStudyIds(array $castorStudies): array
-    {
-        $castorStudyIds = [];
-
-        foreach ($castorStudies as $castorStudy) {
-            $castorStudyIds[] = $castorStudy->getId();
-        }
-
-        return $castorStudyIds;
     }
 }

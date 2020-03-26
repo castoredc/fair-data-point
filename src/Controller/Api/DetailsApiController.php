@@ -27,6 +27,8 @@ class DetailsApiController extends ApiController
      */
     public function getMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('view', $study);
+
         try {
             $envelope = $bus->dispatch(new GetStudyMetadataCommand(
                 $study,
@@ -47,6 +49,8 @@ class DetailsApiController extends ApiController
      */
     public function addMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('edit', $study);
+
         try {
             /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
@@ -84,6 +88,8 @@ class DetailsApiController extends ApiController
      */
     public function updateMetadata(StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('edit', $studyMetadata->getStudy());
+
         try {
             /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);

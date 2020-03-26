@@ -134,6 +134,28 @@ class ApiClient
     }
 
     /**
+     * @param array|null $studies
+     *
+     * @return array<string>
+     * @throws Exception
+     */
+    public function getStudyIds(array $studies = null): array
+    {
+        if($studies === null)
+        {
+            $studies = $this->getStudies();
+        }
+
+        $ids = [];
+
+        foreach ($studies as $study) {
+            $ids[] = $study->getId();
+        }
+
+        return $ids;
+    }
+
+    /**
      * @throws Exception
      */
     public function getUser(): User

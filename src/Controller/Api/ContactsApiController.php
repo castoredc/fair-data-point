@@ -31,6 +31,8 @@ class ContactsApiController extends ApiController
      */
     public function getContacts(Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('view', $study);
+
         try {
             $envelope = $bus->dispatch(new GetStudyContactsCommand($study));
 
@@ -48,6 +50,8 @@ class ContactsApiController extends ApiController
      */
     public function addContact(Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('edit', $study);
+
         try {
             /** @var StudyContactApiRequest[] $parsed */
             $parsed = $this->parseGroupedRequest(StudyContactApiRequest::class, $request);

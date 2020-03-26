@@ -68,6 +68,9 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
 
+    /** @var string[] */
+    private $studies;
+
     public function __construct(string $id, string $fullName, ?string $nameFirst, ?string $nameMiddle, ?string $nameLast, string $emailAddress, string $token)
     {
         $this->id = $id;
@@ -77,6 +80,7 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         $this->nameLast = $nameLast;
         $this->emailAddress = strtolower($emailAddress);
         $this->token = $token;
+        $this->studies = [];
     }
 
     /**
@@ -241,6 +245,22 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     public function getEmailAddress(): string
     {
         return $this->emailAddress;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getStudies(): array
+    {
+        return $this->studies;
+    }
+
+    /**
+     * @param string[] $studies
+     */
+    public function setStudies(array $studies): void
+    {
+        $this->studies = $studies;
     }
 
     public static function fromData(User $user, string $token): CastorUser

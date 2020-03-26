@@ -70,6 +70,8 @@ class UIController extends AbstractController
      */
     public function studyMetadata(Catalog $catalog, Study $study): Response
     {
+        $this->denyAccessUnlessGranted('edit', $study);
+
         return $this->render(
             'react.html.twig'
         );

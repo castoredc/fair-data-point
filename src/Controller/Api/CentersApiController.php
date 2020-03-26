@@ -26,6 +26,8 @@ class CentersApiController extends ApiController
      */
     public function getCenters(Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('view', $study);
+
         try {
             $envelope = $bus->dispatch(new GetStudyCentersCommand($study));
 
@@ -43,6 +45,8 @@ class CentersApiController extends ApiController
      */
     public function addCenters(Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('edit', $study);
+
         try {
             /** @var StudyCenterApiRequest[] $parsed */
             $parsed = $this->parseGroupedRequest(StudyCenterApiRequest::class, $request);

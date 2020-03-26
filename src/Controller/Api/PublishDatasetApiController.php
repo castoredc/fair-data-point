@@ -32,6 +32,8 @@ class PublishDatasetApiController extends ApiController
      */
     public function publishStudyMetadata(Catalog $catalog, Study $study, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('edit', $study);
+
         try {
             $envelope = $bus->dispatch(new PublishStudyInCatalogCommand($study, $catalog));
             $handledStamp = $envelope->last(HandledStamp::class);
