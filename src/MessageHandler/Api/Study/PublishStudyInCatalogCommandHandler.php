@@ -7,6 +7,7 @@ use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
+use App\Exception\CatalogNotExceptingSubmissionsException;
 use App\Exception\CatalogNotFoundException;
 use App\Exception\StudyAlreadyHasDatasetException;
 use App\Exception\StudyNotFoundException;
@@ -50,6 +51,11 @@ class PublishStudyInCatalogCommandHandler implements MessageHandlerInterface
         if($study->getDataset())
         {
             throw new StudyAlreadyHasDatasetException();
+        }
+
+        if(!$catalog->isAcceptSubmissions())
+        {
+            throw new CatalogNotExceptingSubmissionsException();
         }
 
         $slugify = new Slugify();

@@ -11,6 +11,7 @@ use App\Exception\SessionTimeOutException;
 use App\Exception\StudyAlreadyExistsException;
 use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Message\Api\Study\FindStudiesByUserCommand;
+use App\Message\Api\Study\GetCatalogBrandCommand;
 use App\Message\Api\Study\GetCatalogCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,25 @@ class CatalogApiController extends ApiController
     {
         try {
             $envelope = $bus->dispatch(new GetCatalogCommand($catalog));
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            return new JsonResponse($handledStamp->getResult()->toArray());
+        }
+        catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof CatalogNotFoundException) {
+                return new JsonResponse($e->toArray(), 404);
+            }
+        }
+    }
+    /**
+     * @Route("/api/brand/{catalog}", name="api_catalog_brand")
+     */
+    public function brand(string $catalog, MessageBusInterface $bus): Response
+    {
+        try {
+            $envelope = $bus->dispatch(new GetCatalogBrandCommand($catalog));
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse($handledStamp->getResult()->toArray());

@@ -23,6 +23,7 @@ class UIController extends AbstractController
 
     /**
      * @Route("/login", name="login")
+     * @Route("/login/{catalog}", name="login_catalog")
      * @Route("/my-studies", name="my_studies")
      * @Route("/my-studies/{catalog}/study/add", name="add_study")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/details", name="study_metadata_details")

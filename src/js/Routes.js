@@ -40,6 +40,7 @@ export default ({user}) =>
     <Switch>
         <Redirect exact from="/" to="/fdp" />
         <Route path="/login" exact component={Login} />
+        <Route path="/login/:catalogSlug" exact component={Login} />
 
         /* FAIR Data Point */
         <Route path="/fdp" exact component={FAIRDataPointMain} />

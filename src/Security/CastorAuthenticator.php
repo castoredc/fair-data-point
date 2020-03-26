@@ -110,8 +110,15 @@ class CastorAuthenticator extends SocialAuthenticator
      */
     public function start(Request $request, ?AuthenticationException $authException = null)
     {
+        $url = '/login';
+
+        if($request->attributes->has('catalog'))
+        {
+            $url = $url . '/' . $request->attributes->get('catalog');
+        }
+
         return new RedirectResponse(
-            '/login?path=' . urlencode($request->getRequestUri()), // might be the site, where users choose their oauth provider
+            $url . '?path=' . urlencode($request->getRequestUri()), // might be the site, where users choose their oauth provider
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

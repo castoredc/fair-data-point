@@ -1,27 +1,46 @@
 @import '../../scss/colors';
 
 .Login {
-  background: $mid-blue;
-  height: 100vh;
-
-  .Skip {
-    height: 100px;
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateY(-50%) translateX(-50%);
+  transform: translateY(-50%) translateX(-50%);
 
   .LoginContainer {
-    position: relative;
-    background-color: #fff;
-    border: 1px solid #2d72da;
-    border-radius: 5px;
-    padding: 32px;
     width: 500px;
     margin: auto;
 
+    .LoginLogo, .LoginButton, h1 {
+      text-align: center;
+    }
+
+    .LoginLogo {
+      .Logo {
+        height: 32px;
+        width: auto;
+
+        path {
+          fill: $azul;
+        }
+      }
+      margin-bottom: 64px;
+    }
+
     h1 {
-      font-weight: 700;
-      line-height: 1.33;
-      font-size: 21px;
+      font-size: 32px;
+      line-height: 1.5;
       color: $neutral-800;
+      margin-bottom: 32px;
+    }
+
+    .LoginText {
+      padding: 16px 24px;
+      background: $blue-30;
+      color: $neutral-800;
+      font-weight: 600;
+      line-height: 1.57;
+      margin-bottom: 32px;
     }
   }
 }
