@@ -53,7 +53,7 @@ class Study implements JsonSerializable
 
     /**
      * One Customer has One Cart.
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study")
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="study")
      *
      * @var Dataset|null
      */
