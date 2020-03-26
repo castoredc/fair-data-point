@@ -12,7 +12,6 @@ import Col from "react-bootstrap/Col";
 import LoadingScreen from "../../../components/LoadingScreen";
 
 export default class AddStudy extends Component {
-
     constructor(props) {
         super(props);
 
@@ -34,7 +33,6 @@ export default class AddStudy extends Component {
                 });
             })
             .catch((error) => {
-
                 this.setState({
                     isLoading: false,
                 });

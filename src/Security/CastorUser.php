@@ -235,6 +235,14 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         $this->token = $token;
     }
 
+    /**
+     * @return string
+     */
+    public function getEmailAddress(): string
+    {
+        return $this->emailAddress;
+    }
+
     public static function fromData(User $user, string $token): CastorUser
     {
         return new CastorUser(

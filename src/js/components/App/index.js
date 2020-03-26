@@ -6,18 +6,46 @@ import Logo from "../Logo";
 import '../../scss/index.scss'
 import './App.scss'
 import {Link} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
+import axios from "axios";
+import ToastContent from "../ToastContent";
+import LoadingScreen from "../LoadingScreen";
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true
+            isLoading: true,
+            user: null
         };
     }
 
+    getUser = () => {
+        axios.get('/api/user')
+            .then((response) => {
+                let user = null;
+
+                if(Object.keys(response.data).length !== 0)
+                {
+                    user = response.data;
+                }
+
+                this.setState({
+                    user: user,
+                    isLoading: false
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                toast.error(<ToastContent type="error" message="An error occurred" />);
+            });
+    };
+
     componentDidMount() {
-        this.setState({isLoading: false});
+        this.getUser();
     }
 
     render() {
@@ -43,8 +71,7 @@ class App extends Component {
                         draggable={false}
                         pauseOnHover
                     />
-
-                    <Routes />
+                    {this.state.isLoading ? <LoadingScreen showLoading={true}/> : <Routes user={this.state.user} />}
                 </div>
             </div>
         );

@@ -30,7 +30,7 @@ axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     if (401 === error.response.status) {
-        window.location.href = '/login';
+        window.location.href = '/login?path' + encodeURIComponent(window.location.pathname);
     } else {
         return Promise.reject(error);
     }

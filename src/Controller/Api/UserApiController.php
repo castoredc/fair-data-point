@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Api\Resource\UserApiResource;
 use App\Security\CastorUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,9 +20,9 @@ class UserApiController extends ApiController
         $user = $this->getUser();
 
         if ($user === null) {
-            return new JsonResponse([], 401);
+            return new JsonResponse(null);
         }
 
-        return new JsonResponse($user);
+        return new JsonResponse($user->toArray());
     }
 }
