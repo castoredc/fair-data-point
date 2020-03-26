@@ -28,17 +28,12 @@ class GetStudyMetadataCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetStudyMetadataCommand $message): ApiResource
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
-        if ($study->hasMetadata()) {
-            $metadata = $study->getMetadata()->last();
-
-            return new DatabaseStudyMetadataApiResource($metadata);
+        if ($message->getStudy()->hasMetadata()) {
+            return new DatabaseStudyMetadataApiResource($message->getStudy()->getLatestMetadata());
         }
 
         $this->apiClient->setToken($message->getUser()->getToken());
-        $study = $this->apiClient->getStudy($message->getStudyId());
+        $study = $this->apiClient->getStudy($message->getStudy()->getId());
 
         return new CastorStudyMetadataApiResource($study);
     }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\StudyContactApiRequest;
+use App\Entity\Castor\Study;
 use App\Exception\GroupedApiRequestParseException;
 use App\Message\Api\Study\ClearStudyContactsCommand;
 use App\Message\Api\Study\CreatePersonCommand;
 use App\Message\Api\Study\GetStudyContactsCommand;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,11 +22,17 @@ class ContactsApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/contacts", methods={"GET"}, name="api_get_contacts")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
+     * @param Study               $studyId
+     * @param Request             $request
+     * @param MessageBusInterface $bus
+     *
+     * @return Response
      */
-    public function getContacts(string $studyId, Request $request, MessageBusInterface $bus): Response
+    public function getContacts(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         try {
-            $envelope = $bus->dispatch(new GetStudyContactsCommand($studyId));
+            $envelope = $bus->dispatch(new GetStudyContactsCommand($study));
 
             $handledStamp = $envelope->last(HandledStamp::class);
 
@@ -36,21 +44,22 @@ class ContactsApiController extends ApiController
 
     /**
      * @Route("/api/study/{studyId}/contacts/add", methods={"POST"}, name="api_add_contacts")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function addContact(string $studyId, Request $request, MessageBusInterface $bus): Response
+    public function addContact(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         try {
             /** @var StudyContactApiRequest[] $parsed */
             $parsed = $this->parseGroupedRequest(StudyContactApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new ClearStudyContactsCommand($studyId));
+            $envelope = $bus->dispatch(new ClearStudyContactsCommand($study));
             $handledStamp = $envelope->last(HandledStamp::class);
 
             if ($handledStamp) {
                 foreach ($parsed as $item) {
                     $envelope = $bus->dispatch(
                         new CreatePersonCommand(
-                            $studyId,
+                            $study,
                             $item->getFirstName(),
                             $item->getMiddleName(),
                             $item->getLastName(),

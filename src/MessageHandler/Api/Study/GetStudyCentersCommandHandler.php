@@ -22,13 +22,7 @@ class GetStudyCentersCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetStudyCentersCommand $message): DepartmentsApiResource
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
-        $metadata = $study->getLatestMetadata();
-
-        // dump($metadata);
-
+        $metadata = $message->getStudy()->getLatestMetadata();
         $agents = $metadata->getCenters();
 
         $centers = [];

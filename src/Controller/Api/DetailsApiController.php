@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\StudyMetadataApiRequest;
+use App\Entity\Castor\Study;
+use App\Entity\Metadata\StudyMetadata;
 use App\Exception\ApiRequestParseException;
 use App\Message\Api\Study\CreateStudyMetadataCommand;
 use App\Message\Api\Study\GetStudyMetadataCommand;
 use App\Message\Api\Study\UpdateStudyMetadataCommand;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +23,13 @@ class DetailsApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/metadata", methods={"GET"}, name="api_get_metadata")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function getMetadata(string $studyId, Request $request, MessageBusInterface $bus): Response
+    public function getMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         try {
             $envelope = $bus->dispatch(new GetStudyMetadataCommand(
-                $studyId,
+                $study,
                 $this->getUser()
             ));
 
@@ -39,8 +43,9 @@ class DetailsApiController extends ApiController
 
     /**
      * @Route("/api/study/{studyId}/metadata/add", methods={"POST"}, name="api_add_metadata")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function addMetadata(string $studyId, Request $request, MessageBusInterface $bus): Response
+    public function addMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         try {
             /** @var StudyMetadataApiRequest $parsed */
@@ -48,7 +53,7 @@ class DetailsApiController extends ApiController
 
             $envelope = $bus->dispatch(
                 new CreateStudyMetadataCommand(
-                    $studyId,
+                    $study,
                     $parsed->getBriefName(),
                     $parsed->getScientificName(),
                     $parsed->getBriefSummary(),
@@ -75,8 +80,9 @@ class DetailsApiController extends ApiController
 
     /**
      * @Route("/api/study/{studyId}/metadata/{metadataId}/update", methods={"POST"}, name="api_update_metadata")
+     * @ParamConverter("studyMetadata", options={"mapping": {"metadataId": "id", "studyId": "study"}})
      */
-    public function updateMetadata(string $studyId, string $metadataId, Request $request, MessageBusInterface $bus): Response
+    public function updateMetadata(StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response
     {
         try {
             /** @var StudyMetadataApiRequest $parsed */
@@ -84,7 +90,7 @@ class DetailsApiController extends ApiController
 
             $envelope = $bus->dispatch(
                 new UpdateStudyMetadataCommand(
-                    $metadataId,
+                    $studyMetadata,
                     $parsed->getBriefName(),
                     $parsed->getScientificName(),
                     $parsed->getBriefSummary(),

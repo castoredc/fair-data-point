@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\StudyCenterApiRequest;
+use App\Entity\Castor\Study;
 use App\Exception\GroupedApiRequestParseException;
 use App\Message\Api\Study\ClearStudyCentersCommand;
 use App\Message\Api\Study\CreateDepartmentAndOrganizationCommand;
 use App\Message\Api\Study\GetStudyCentersCommand;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,11 +22,12 @@ class CentersApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/centers", methods={"GET"}, name="api_get_centers")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function getCenters(string $studyId, Request $request, MessageBusInterface $bus): Response
+    public function getCenters(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         try {
-            $envelope = $bus->dispatch(new GetStudyCentersCommand($studyId));
+            $envelope = $bus->dispatch(new GetStudyCentersCommand($study));
 
             $handledStamp = $envelope->last(HandledStamp::class);
 
@@ -36,21 +39,22 @@ class CentersApiController extends ApiController
 
     /**
      * @Route("/api/study/{studyId}/centers/add", methods={"POST"}, name="api_add_centers")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function addCenters(string $studyId, Request $request, MessageBusInterface $bus): Response
+    public function addCenters(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         try {
             /** @var StudyCenterApiRequest[] $parsed */
             $parsed = $this->parseGroupedRequest(StudyCenterApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new ClearStudyCentersCommand($studyId));
+            $envelope = $bus->dispatch(new ClearStudyCentersCommand($study));
             $handledStamp = $envelope->last(HandledStamp::class);
 
             if ($handledStamp) {
                 foreach ($parsed as $item) {
                     $envelope = $bus->dispatch(
                         new CreateDepartmentAndOrganizationCommand(
-                            $studyId,
+                            $study,
                             null,
                             null,
                             $item->getName(),

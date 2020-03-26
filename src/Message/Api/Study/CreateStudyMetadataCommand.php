@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Castor\Study;
 use App\Entity\Enum\StudyType;
 use App\Security\CastorUser;
 use DateTimeImmutable;
 
 class CreateStudyMetadataCommand
 {
-    /** @var string */
-    private $studyId;
+    /** @var Study */
+    private $study;
 
     /** @var string */
     private $briefName;
@@ -46,7 +47,7 @@ class CreateStudyMetadataCommand
     private $user;
 
     public function __construct(
-        string $studyId,
+        Study $study,
         string $briefName,
         ?string $scientificName,
         string $briefSummary,
@@ -59,7 +60,7 @@ class CreateStudyMetadataCommand
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         CastorUser $user
     ) {
-        $this->studyId = $studyId;
+        $this->study = $study;
         $this->briefName = $briefName;
         $this->scientificName = $scientificName;
         $this->briefSummary = $briefSummary;
@@ -73,9 +74,9 @@ class CreateStudyMetadataCommand
         $this->user = $user;
     }
 
-    public function getStudyId(): string
+    public function getStudy(): Study
     {
-        return $this->studyId;
+        return $this->study;
     }
 
     public function getBriefName(): string

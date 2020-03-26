@@ -25,21 +25,18 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
 
     public function __invoke(UpdateStudyMetadataCommand $message): void
     {
-        /** @var StudyMetadata $metadata */
-        $metadata = $this->em->getRepository(StudyMetadata::class)->find($message->getMetadataId());
+        $message->getMetadata()->setBriefName($message->getBriefName());
+        $message->getMetadata()->setScientificName($message->getScientificName());
+        $message->getMetadata()->setBriefSummary($message->getBriefSummary());
+        $message->getMetadata()->setSummary($message->getSummary());
+        $message->getMetadata()->setType($message->getType());
+        $message->getMetadata()->getCondition()->setText($message->getCondition());
+        $message->getMetadata()->getIntervention()->setText($message->getIntervention());
+        $message->getMetadata()->setEstimatedEnrollment($message->getEstimatedEnrollment());
+        $message->getMetadata()->setEstimatedStudyStartDate($message->getEstimatedStudyStartDate());
+        $message->getMetadata()->setEstimatedStudyCompletionDate($message->getEstimatedStudyCompletionDate());
 
-        $metadata->setBriefName($message->getBriefName());
-        $metadata->setScientificName($message->getScientificName());
-        $metadata->setBriefSummary($message->getBriefSummary());
-        $metadata->setSummary($message->getSummary());
-        $metadata->setType($message->getType());
-        $metadata->getCondition()->setText($message->getCondition());
-        $metadata->getIntervention()->setText($message->getIntervention());
-        $metadata->setEstimatedEnrollment($message->getEstimatedEnrollment());
-        $metadata->setEstimatedStudyStartDate($message->getEstimatedStudyStartDate());
-        $metadata->setEstimatedStudyCompletionDate($message->getEstimatedStudyCompletionDate());
-
-        $this->em->persist($metadata);
+        $this->em->persist($message->getMetadata());
 
         $this->em->flush();
     }

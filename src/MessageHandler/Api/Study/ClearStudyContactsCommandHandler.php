@@ -21,14 +21,7 @@ class ClearStudyContactsCommandHandler implements MessageHandlerInterface
 
     public function __invoke(ClearStudyContactsCommand $message): void
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
-        if ($study === null) {
-            throw new StudyNotFoundException();
-        }
-
-        $metadata = $study->getLatestMetadata();
+        $metadata = $message->getStudy()->getLatestMetadata();
         $metadata->setContacts([]);
 
         $this->em->persist($metadata);

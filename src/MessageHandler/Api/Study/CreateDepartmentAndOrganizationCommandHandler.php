@@ -25,15 +25,9 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
 
     public function __invoke(CreateDepartmentAndOrganizationCommand $message): void
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
         /** @var Country|null $country */
         $country = $this->em->getRepository(Country::class)->find($message->getCountry());
 
-        if ($study === null) {
-            throw new StudyNotFoundException();
-        }
         if ($country === null) {
             throw new CountryNotFoundException();
         }
@@ -55,10 +49,10 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
             $message->getAdditionalInformation()
         );
 
-        $study->getLatestMetadata()->addCenter($department);
+        $message->getStudy()->getLatestMetadata()->addCenter($department);
 
         $this->em->persist($department);
-        $this->em->persist($study);
+        $this->em->persist($message->getStudy());
 
         $this->em->flush();
     }

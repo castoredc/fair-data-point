@@ -22,10 +22,7 @@ class GetStudyContactsCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetStudyContactsCommand $message): PersonsApiResource
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
-        $metadata = $study->getLatestMetadata();
+        $metadata = $message->getStudy()->getLatestMetadata();
         $agents = $metadata->getContacts();
 
         $persons = [];

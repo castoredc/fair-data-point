@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace App\Message\Api\Study;
 
 use App\Entity\Enum\StudyType;
+use App\Entity\Metadata\StudyMetadata;
 use App\Security\CastorUser;
 use DateTimeImmutable;
 
 class UpdateStudyMetadataCommand
 {
-    /** @var string */
-    private $metadataId;
+    /** @var StudyMetadata */
+    private $metadata;
 
     /** @var string */
     private $briefName;
@@ -46,7 +47,7 @@ class UpdateStudyMetadataCommand
     private $user;
 
     public function __construct(
-        string $metadataId,
+        StudyMetadata $metadata,
         string $briefName,
         ?string $scientificName,
         string $briefSummary,
@@ -59,7 +60,7 @@ class UpdateStudyMetadataCommand
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         CastorUser $user
     ) {
-        $this->metadataId = $metadataId;
+        $this->metadata = $metadata;
         $this->briefName = $briefName;
         $this->scientificName = $scientificName;
         $this->briefSummary = $briefSummary;
@@ -73,9 +74,9 @@ class UpdateStudyMetadataCommand
         $this->user = $user;
     }
 
-    public function getMetadataId(): string
+    public function getMetadata(): StudyMetadata
     {
-        return $this->metadataId;
+        return $this->metadata;
     }
 
     public function getBriefName(): string

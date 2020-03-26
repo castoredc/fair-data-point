@@ -3,27 +3,28 @@ declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Castor\Study;
 use App\Security\CastorUser;
 
 class GetStudyMetadataCommand
 {
-    /** @var string */
-    private $studyId;
+    /** @var Study */
+    private $study;
 
     /** @var CastorUser */
     private $user;
 
     public function __construct(
-        string $studyId,
+        Study $study,
         CastorUser $user
     ) {
-        $this->studyId = $studyId;
+        $this->study = $study;
         $this->user = $user;
     }
 
-    public function getStudyId(): string
+    public function getStudy(): Study
     {
-        return $this->studyId;
+        return $this->study;
     }
 
     public function getUser(): CastorUser

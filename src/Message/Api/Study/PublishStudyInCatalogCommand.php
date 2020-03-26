@@ -2,38 +2,41 @@
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Castor\Study;
+use App\Entity\FAIRData\Catalog;
+
 class PublishStudyInCatalogCommand
 {
-    /** @var string */
-    private $studyId;
+    /** @var Study */
+    private $study;
 
-    /** @var string */
+    /** @var Catalog */
     private $catalog;
 
     /**
      * PublishDataSetInCatalogCommand constructor.
      *
-     * @param string $studyId
+     * @param Study  $study
      * @param string $catalog
      */
-    public function __construct(string $studyId, string $catalog)
+    public function __construct(Study $study, Catalog $catalog)
     {
-        $this->studyId = $studyId;
+        $this->study = $study;
         $this->catalog = $catalog;
     }
 
     /**
      * @return string
      */
-    public function getStudyId(): string
+    public function getStudy(): Study
     {
-        return $this->studyId;
+        return $this->study;
     }
 
     /**
-     * @return string
+     * @return Catalog
      */
-    public function getCatalog(): string
+    public function getCatalog(): Catalog
     {
         return $this->catalog;
     }

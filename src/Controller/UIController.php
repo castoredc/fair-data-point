@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Castor\Study;
+use App\Entity\FAIRData\Catalog;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,15 +26,49 @@ class UIController extends AbstractController
 
     /**
      * @Route("/login", name="login")
-     * @Route("/login/{catalog}", name="login_catalog")
      * @Route("/my-studies", name="my_studies")
+     */
+    public function react(): Response
+    {
+        return $this->render(
+            'react.html.twig'
+        );
+    }
+
+    /**
+     * @Route("/login/{catalog}", name="login_catalog")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function catalogLogin(Catalog $catalog): Response
+    {
+        return $this->render(
+            'react.html.twig'
+        );
+    }
+
+    /**
      * @Route("/my-studies/{catalog}/study/add", name="add_study")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function addStudy(Catalog $catalog): Response
+    {
+        return $this->render(
+            'react.html.twig'
+        );
+    }
+
+    /**
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/details", name="study_metadata_details")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/centers", name="study_metadata_centers")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/contacts", name="study_metadata_contact")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/finished", name="study_metadata_finished")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
+     * @param Catalog $catalog
+     *
+     * @return Response
      */
-    public function react(): Response
+    public function studyMetadata(Catalog $catalog, Study $study): Response
     {
         return $this->render(
             'react.html.twig'

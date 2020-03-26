@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\CastorStudyApiRequest;
+use App\Api\Resource\CatalogApiResource;
+use App\Api\Resource\CatalogBrandApiResource;
+use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseException;
 use App\Exception\CatalogNotFoundException;
 use App\Exception\NoPermissionException;
@@ -13,6 +16,7 @@ use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Message\Api\Study\FindStudiesByUserCommand;
 use App\Message\Api\Study\GetCatalogBrandCommand;
 use App\Message\Api\Study\GetCatalogCommand;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,40 +29,27 @@ class CatalogApiController extends ApiController
 {
     /**
      * @Route("/api/catalog/{catalog}", name="api_catalogs")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @param Catalog             $catalog
+     * @param MessageBusInterface $bus
+     *
+     * @return Response
      */
-    public function studies(string $catalog, MessageBusInterface $bus): Response
+    public function studies(Catalog $catalog, MessageBusInterface $bus): Response
     {
-        try {
-            $envelope = $bus->dispatch(new GetCatalogCommand($catalog));
-            $handledStamp = $envelope->last(HandledStamp::class);
-
-            return new JsonResponse($handledStamp->getResult()->toArray());
-        }
-        catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            if ($e instanceof CatalogNotFoundException) {
-                return new JsonResponse($e->toArray(), 404);
-            }
-        }
+        return new JsonResponse((new CatalogApiResource($catalog))->toArray());
     }
+
     /**
      * @Route("/api/brand/{catalog}", name="api_catalog_brand")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @param Catalog             $catalog
+     * @param MessageBusInterface $bus
+     *
+     * @return Response
      */
-    public function brand(string $catalog, MessageBusInterface $bus): Response
+    public function brand(Catalog $catalog, MessageBusInterface $bus): Response
     {
-        try {
-            $envelope = $bus->dispatch(new GetCatalogBrandCommand($catalog));
-            $handledStamp = $envelope->last(HandledStamp::class);
-
-            return new JsonResponse($handledStamp->getResult()->toArray());
-        }
-        catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            if ($e instanceof CatalogNotFoundException) {
-                return new JsonResponse($e->toArray(), 404);
-            }
-        }
+        return new JsonResponse((new CatalogBrandApiResource($catalog))->toArray());
     }
 }

@@ -3,19 +3,21 @@ declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Castor\Study;
+
 class GetStudyContactsCommand
 {
-    /** @var string */
-    private $studyId;
+    /** @var Study */
+    private $study;
 
     public function __construct(
-        string $studyId
+        Study $study
     ) {
-        $this->studyId = $studyId;
+        $this->study = $study;
     }
 
-    public function getStudyId(): string
+    public function getStudy(): Study
     {
-        return $this->studyId;
+        return $this->study;
     }
 }

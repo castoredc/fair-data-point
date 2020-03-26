@@ -29,46 +29,30 @@ class PublishStudyInCatalogCommandHandler implements MessageHandlerInterface
 
     public function __invoke(PublishStudyInCatalogCommand $message): void
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
-        /** @var Catalog|null $catalog */
-        $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $message->getCatalog()]);
-
-        /** @var Language|null $catalog */
+        /** @var Language|null $language */
         $language = $this->em->getRepository(Language::class)->find('en');
 
-        if($study === null)
-        {
-            throw new StudyNotFoundException();
-        }
-
-        if($catalog === null)
-        {
-            throw new CatalogNotFoundException();
-        }
-
-        if($study->getDataset())
+        if($message->getStudy()->getDataset())
         {
             throw new StudyAlreadyHasDatasetException();
         }
 
-        if(!$catalog->isAcceptSubmissions())
+        if(!$message->getCatalog()->isAcceptSubmissions())
         {
             throw new CatalogNotExceptingSubmissionsException();
         }
 
         $slugify = new Slugify();
-        $slug = $slugify->slugify($study->getLatestMetadata()->getBriefName() . ' ' . uniqid());
+        $slug = $slugify->slugify($message->getStudy()->getLatestMetadata()->getBriefName() . ' ' . uniqid());
 
         $dataset = new Dataset($slug, new ArrayCollection(), $language, null, null, null);
-        $dataset->setStudy($study);
+        $dataset->setStudy($message->getStudy());
 
         $this->em->persist($dataset);
-        $this->em->persist($study);
+        $this->em->persist($message->getStudy());
 
-        $catalog->addDataset($dataset);
-        $this->em->persist($catalog);
+        $message->getCatalog()->addDataset($dataset);
+        $this->em->persist($message->getCatalog());
 
         $this->em->flush();
     }

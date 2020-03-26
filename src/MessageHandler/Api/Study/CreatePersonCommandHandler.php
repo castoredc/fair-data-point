@@ -23,13 +23,6 @@ class CreatePersonCommandHandler implements MessageHandlerInterface
 
     public function __invoke(CreatePersonCommand $message): void
     {
-        /** @var Study|null $study */
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
-        if ($study === null) {
-            throw new StudyNotFoundException();
-        }
-
         $contact = new Person(
             $message->getFirstName(),
             $message->getMiddleName(),
@@ -39,10 +32,10 @@ class CreatePersonCommandHandler implements MessageHandlerInterface
             new Iri($message->getOrcid())
         );
 
-        $study->getLatestMetadata()->addContact($contact);
+        $message->getStudy()->getLatestMetadata()->addContact($contact);
 
         $this->em->persist($contact);
-        $this->em->persist($study);
+        $this->em->persist($message->getStudy());
 
         $this->em->flush();
     }

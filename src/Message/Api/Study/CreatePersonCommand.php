@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Castor\Study;
+
 class CreatePersonCommand
 {
-    /** @var string */
-    private $studyId;
+    /** @var Study */
+    private $study;
 
     /** @var string */
     private $firstName;
@@ -23,9 +25,9 @@ class CreatePersonCommand
     /** @var string|null */
     private $orcid;
 
-    public function __construct(string $studyId, string $firstName, ?string $middleName, string $lastName, string $email, ?string $orcid)
+    public function __construct(Study $study, string $firstName, ?string $middleName, string $lastName, string $email, ?string $orcid)
     {
-        $this->studyId = $studyId;
+        $this->study = $study;
         $this->firstName = $firstName;
         $this->middleName = $middleName;
         $this->lastName = $lastName;
@@ -33,9 +35,9 @@ class CreatePersonCommand
         $this->orcid = $orcid;
     }
 
-    public function getStudyId(): string
+    public function getStudy(): Study
     {
-        return $this->studyId;
+        return $this->study;
     }
 
     public function getFirstName(): string

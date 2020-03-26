@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Castor\Study;
 use App\Entity\Iri;
 
 class CreateDepartmentAndOrganizationCommand
 {
-    /** @var string */
-    private $studyId;
+    /** @var Study */
+    private $study;
 
     /** @var string|null */
     private $organizationSlug;
@@ -35,7 +36,7 @@ class CreateDepartmentAndOrganizationCommand
     private $additionalInformation;
 
     public function __construct(
-        string $studyId,
+        Study $study,
         ?string $organizationSlug,
         ?string $departmentSlug,
         string $name,
@@ -45,7 +46,7 @@ class CreateDepartmentAndOrganizationCommand
         ?string $department,
         ?string $additionalInformation
     ) {
-        $this->studyId = $studyId;
+        $this->study = $study;
         $this->organizationSlug = $organizationSlug;
         $this->departmentSlug = $departmentSlug;
         $this->name = $name;
@@ -56,9 +57,9 @@ class CreateDepartmentAndOrganizationCommand
         $this->additionalInformation = $additionalInformation;
     }
 
-    public function getStudyId(): string
+    public function getStudy(): Study
     {
-        return $this->studyId;
+        return $this->study;
     }
 
     public function getOrganizationSlug(): ?string

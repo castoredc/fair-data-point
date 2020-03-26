@@ -27,8 +27,6 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
 
     public function __invoke(CreateStudyMetadataCommand $message): void
     {
-        $study = $this->em->getRepository(Study::class)->find($message->getStudyId());
-
         $metadata = new StudyMetadata(
             $message->getBriefName(),
             $message->getScientificName(),
@@ -42,11 +40,11 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
             $message->getEstimatedStudyCompletionDate()
         );
 
-        $metadata->setStudy($study);
-        $study->addMetadata($metadata);
+        $metadata->setStudy($message->getStudy());
+        $message->getStudy()->addMetadata($metadata);
 
         $this->em->persist($metadata);
-        $this->em->persist($study);
+        $this->em->persist($message->getStudy());
         $this->em->flush();
     }
 }
