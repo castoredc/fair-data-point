@@ -169,6 +169,24 @@ export default class ContactsForm extends Component {
         });
     };
 
+    createDataset = () => {
+        axios.post('/api/catalog/' + this.props.catalog + '/study/' + this.props.studyId + '/publish', this.state.contacts)
+            .then((response) => {
+                this.setState({
+                    isSaved: true
+                });
+            })
+            .catch((error) => {
+                toast.error(<ToastContent type="error" message="An error occurred"/>, {
+                    position: "top-center"
+                });
+                this.setState({
+                    submitDisabled: false,
+                    isLoading: false
+                });
+            });
+    };
+
     handleSubmit = (event) => {
         event.preventDefault();
 
@@ -182,9 +200,7 @@ export default class ContactsForm extends Component {
         if(this.form.isFormValid()) {
             axios.post('/api/study/' + this.props.studyId + '/contacts/add', this.state.contacts)
                 .then((response) => {
-                    this.setState({
-                        isSaved: true
-                    });
+                   this.createDataset();
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -207,14 +223,14 @@ export default class ContactsForm extends Component {
     };
 
     render() {
-        const { studyId } = this.props;
+        const { catalog, studyId } = this.props;
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/study/' + studyId + '/metadata/finished'} />;
+            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/finished'} />;
         }
 
         return (
@@ -303,7 +319,7 @@ export default class ContactsForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col md={6}>
-                        <LinkContainer to={'/my-studies/study/' + this.props.studyId + '/metadata/centers'}>
+                        <LinkContainer to={'/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/centers'}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>

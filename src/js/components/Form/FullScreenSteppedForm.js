@@ -1,50 +1,51 @@
 import React, {Component} from 'react'
-import { Link } from "react-router-dom";
 import './FullScreenSteppedForm.scss'
-import {classNames, isURL} from "../../util";
+import {classNames} from "../../util";
 import Container from "react-bootstrap/Container";
 import Logo from './../Logo';
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import DocumentTitle from "../DocumentTitle";
 
 export default class FullScreenSteppedForm extends Component {
     getBreadCrumbs = () => {
         let elements = [];
         for (let step = 0; step < this.props.numberOfSteps; step++) {
             let stepNumber = step + 1;
-            elements.push(<div key={'step-' + step} className={classNames('FullScreenSteppedFormBreadcrumb', stepNumber === this.props.currentStep && 'Active')}>
+            elements.push(<div key={'step-' + step}
+                               className={classNames('FullScreenSteppedFormBreadcrumb', stepNumber === this.props.currentStep && 'Active')}>
                 {stepNumber}
             </div>);
 
-            if(stepNumber !== this.props.numberOfSteps)
-            {
-                elements.push(<div key={'sep-' + step} className="FullScreenSteppedFormBreadcrumbSeparator" />);
+            if (stepNumber !== this.props.numberOfSteps) {
+                elements.push(<div key={'sep-' + step} className="FullScreenSteppedFormBreadcrumbSeparator"/>);
             }
         }
         return elements;
     };
 
     render() {
-        const { brandText, smallHeading, heading, description, children } = this.props;
+        const {brandText, smallHeading, heading, description, children} = this.props;
 
         return <Container className="FullScreenSteppedFormContainer">
-           <Row className="FullScreenSteppedFormTop">
-               <Col lg={6}>
+            <DocumentTitle title={brandText + ' | ' + heading}/>
+            <Row className="FullScreenSteppedFormTop">
+                <Col lg={6}>
                     <div className="FullScreenSteppedFormBrand">
                         <div className="FullScreenSteppedFormBrandLogo">
-                            <Logo />
+                            <Logo/>
                         </div>
                         <div className="FullScreenSteppedFormBrandText">
                             {brandText}
                         </div>
                     </div>
-               </Col>
-               <Col lg={6}>
-                   <div className="FullScreenSteppedFormBreadcrumbs">
-                       {this.getBreadCrumbs()}
-                   </div>
-               </Col>
-           </Row>
+                </Col>
+                <Col lg={6}>
+                    <div className="FullScreenSteppedFormBreadcrumbs">
+                        {this.getBreadCrumbs()}
+                    </div>
+                </Col>
+            </Row>
             <div className="FullScreenSteppedForm">
                 <div className="FullScreenSteppedFormHeader">
                     <div className="FullScreenSteppedFormStepNumber">{smallHeading}</div>

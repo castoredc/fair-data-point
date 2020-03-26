@@ -7,6 +7,7 @@ use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\Iri;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
@@ -36,31 +37,6 @@ class Dataset
      */
     private $slug;
 
-    /* DC terms */
-
-    /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="title", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $title;
-
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $version;
-
-    /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="description", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $description;
-
     /** @var Collection<string, Agent> */
     private $publishers;
 
@@ -81,20 +57,6 @@ class Dataset
     private $license;
 
     /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime
-     */
-    private $issued;
-
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime
-     */
-    private $modified;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="datasets",cascade={"persist"})
      *
      * @var Collection<string, Catalog>
@@ -108,9 +70,6 @@ class Dataset
      * @var Collection<string, Distribution>
      */
     private $distributions;
-
-    /** @var Collection<string, Agent> */
-    private $contactPoint;
 
     /**
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
@@ -136,28 +95,19 @@ class Dataset
     private $study;
 
     /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $logo;
-
-    /**
+     * @param string                    $slug
      * @param Collection<string, Agent> $publishers
-     * @param Collection<string, Agent> $contactPoint
+     * @param Language                  $language
+     * @param License|null              $license
+     * @param LocalizedText|null        $keyword
+     * @param Iri|null                  $landingPage
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, Collection $contactPoint, ?LocalizedText $keyword, ?Iri $landingPage)
+    public function __construct(string $slug, Collection $publishers, Language $language, ?License $license, ?LocalizedText $keyword, ?Iri $landingPage)
     {
         $this->slug = $slug;
-        $this->title = $title;
-        $this->version = $version;
-        $this->description = $description;
         $this->publishers = $publishers;
         $this->language = $language;
         $this->license = $license;
-        $this->issued = $issued;
-        $this->modified = $modified;
-        $this->contactPoint = $contactPoint;
         $this->keyword = $keyword;
         $this->landingPage = $landingPage;
     }
@@ -180,36 +130,6 @@ class Dataset
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-    }
-
-    public function getTitle(): LocalizedText
-    {
-        return $this->title;
-    }
-
-    public function setTitle(LocalizedText $title): void
-    {
-        $this->title = $title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function setVersion(string $version): void
-    {
-        $this->version = $version;
-    }
-
-    public function getDescription(): LocalizedText
-    {
-        return $this->description;
-    }
-
-    public function setDescription(LocalizedText $description): void
-    {
-        $this->description = $description;
     }
 
     /**
@@ -248,26 +168,6 @@ class Dataset
         $this->license = $license;
     }
 
-    public function getIssued(): DateTime
-    {
-        return $this->issued;
-    }
-
-    public function setIssued(DateTime $issued): void
-    {
-        $this->issued = $issued;
-    }
-
-    public function getModified(): DateTime
-    {
-        return $this->modified;
-    }
-
-    public function setModified(DateTime $modified): void
-    {
-        $this->modified = $modified;
-    }
-
     /**
      * @return Collection<string, Catalog>
      */
@@ -298,22 +198,6 @@ class Dataset
     public function setDistributions(Collection $distributions): void
     {
         $this->distributions = $distributions;
-    }
-
-    /**
-     * @return Collection<string, Agent>
-     */
-    public function getContactPoint(): Collection
-    {
-        return $this->contactPoint;
-    }
-
-    /**
-     * @param Collection<string, Agent> $contactPoint
-     */
-    public function setContactPoint(Collection $contactPoint): void
-    {
-        $this->contactPoint = $contactPoint;
     }
 
     public function getKeyword(): LocalizedText
@@ -373,45 +257,45 @@ class Dataset
         return $first->getRelativeUrl() . '/' . $this->slug;
     }
 
-    public function getLogo(): ?Iri
-    {
-        return $this->logo;
-    }
-
     /**
      * @return array<mixed>
      */
     public function toBasicArray(): array
     {
         $publishers = [];
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publishers[] = $publisher->toArray();
-        }
+        // foreach ($this->publishers as $publisher) {
+        //     /** @var Agent $publisher */
+        //     $publishers[] = $publisher->toArray();
+        // }
+
+        $metadata = $this->study->getLatestMetadata();
 
         $contactPoints = [];
-        foreach ($this->contactPoint as $contactPoint) {
+        foreach ($metadata->getContacts() as $contactPoint) {
             /** @var Agent $contactPoint */
             $contactPoints[] = $contactPoint->toArray();
         }
+
+        $title = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefName(), $this->language)]));
+        $description = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefSummary(), $this->language)]));
 
         return [
             'access_url' => $this->getAccessUrl(),
             'relative_url' => $this->getRelativeUrl(),
             'id' => $this->id,
             'slug' => $this->slug,
-            'title' => $this->title->toArray(),
-            'version' => $this->version,
-            'description' => $this->description->toArray(),
+            'title' => $title->toArray(),
+            'version' => $this->study->getLatestMetadataVersion(),
+            'description' => $description->toArray(),
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
-            'license' => $this->license->toArray(),
-            'issued' => $this->issued,
-            'modified' => $this->modified,
+            'license' => $this->license !== null ? $this->license->toArray() : null,
+            'issued' => $metadata->getCreated(),
+            'modified' => $metadata->getUpdated(),
             'contactPoints' => $contactPoints,
 //            'keyword' => $this->keyword->toArray(),
             'landingpage' => $this->landingPage !== null ? $this->landingPage->getValue() : '',
-            'logo' => $this->logo !== null ? $this->logo->getValue() : '',
+            'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : '',
         ];
     }
 
@@ -435,28 +319,28 @@ class Dataset
 
         $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Dataset');
 
-        foreach ($this->title->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
-            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
-        }
+        // foreach ($this->title->getTexts() as $text) {
+        //     /** @var LocalizedTextItem $text */
+        //     $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+        //     $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
+        // }
 
-        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
+        // $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
 
-        foreach ($this->description->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
-        }
+        // foreach ($this->description->getTexts() as $text) {
+        //     /** @var LocalizedTextItem $text */
+        //     $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+        // }
 
         foreach ($this->publishers as $publisher) {
             /** @var Agent $publisher */
             $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
         }
 
-        foreach ($this->contactPoint as $contactPoint) {
-            /** @var Agent $contactPoint */
-            $contactPoint->addToGraph($this->getAccessUrl(), 'dcat:contactPoint', $graph);
-        }
+        // foreach ($this->contactPoint as $contactPoint) {
+        //     /** @var Agent $contactPoint */
+        //     $contactPoint->addToGraph($this->getAccessUrl(), 'dcat:contactPoint', $graph);
+        // }
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
 

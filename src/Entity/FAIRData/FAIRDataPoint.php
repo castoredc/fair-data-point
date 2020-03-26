@@ -221,10 +221,10 @@ class FAIRDataPoint
     public function toBasicArray(): array
     {
         $publishers = [];
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publishers[] = $publisher->toArray();
-        }
+        // foreach ($this->publishers as $publisher) {
+        //     /** @var Agent $publisher */
+        //     $publishers[] = $publisher->toArray();
+        // }
 
         return [
             'access_url' => $this->getAccessUrl(),

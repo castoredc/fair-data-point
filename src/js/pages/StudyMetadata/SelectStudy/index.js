@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios/index";
 
 import ListItem from "../../../components/ListItem";
 import Button from "react-bootstrap/Button";
-import FullScreenSteppedForm from "../../../components/Form/FullScreenSteppedForm";
-import { Redirect } from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import LoadingScreen from "../../../components/LoadingScreen";
+import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 
 export default class AddStudy extends Component {
     constructor(props) {
@@ -88,10 +88,6 @@ export default class AddStudy extends Component {
     };
 
     render() {
-        const numberOfSteps = 4;
-
-        const brandText = "COVID-19 Study Database";
-
         if(this.state.isLoading)
         {
             return <LoadingScreen showLoading={true}/>;
@@ -99,13 +95,12 @@ export default class AddStudy extends Component {
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/study/' + this.state.selectedStudy + '/metadata/details'} />;
+            return <Redirect push to={'/my-studies/' + this.props.match.params.catalog + '/study/' + this.state.selectedStudy + '/metadata/details'} />;
         }
 
-        return <FullScreenSteppedForm
-            brandText={brandText}
+        return <CatalogSteppedForm
+            catalog={this.props.match.params.catalog}
             currentStep={1}
-            numberOfSteps={numberOfSteps}
             smallHeading="Step One"
             heading="Choose a Study"
             description="Please choose an item from your list of studies that you’d like to include in our COVID-19 database."
@@ -127,6 +122,6 @@ export default class AddStudy extends Component {
                     <Button disabled={this.state.submitDisabled} onClick={this.handleNext}>Next</Button>
                 </Col>
             </Row>
-        </FullScreenSteppedForm>;
+        </CatalogSteppedForm>;
     }
 }

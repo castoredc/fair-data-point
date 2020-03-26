@@ -8,6 +8,7 @@ use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyPhase;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent;
+use App\Entity\Iri;
 use App\Entity\Terminology\CodedText;
 use DateTime;
 use DateTimeImmutable;
@@ -156,6 +157,13 @@ class StudyMetadata
      * @var Agent[]|ArrayCollection
      */
     private $centers;
+
+    /**
+     * @ORM\Column(type="iri", nullable=true)
+     *
+     * @var Iri|null
+     */
+    private $logo = null;
 
     /**
      * @ORM\Column(type="datetime")
@@ -440,6 +448,38 @@ class StudyMetadata
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * @return Iri|null
+     */
+    public function getLogo(): ?Iri
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @param Iri|null $logo
+     */
+    public function setLogo(?Iri $logo): void
+    {
+        $this->logo = $logo;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getUpdated(): ?DateTime
+    {
+        return $this->updated;
     }
 
     /**

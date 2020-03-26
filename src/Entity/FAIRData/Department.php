@@ -32,7 +32,7 @@ class Department extends Agent
         $slugify = new Slugify();
 
         if ($slug === null) {
-            $slug = $slugify->slugify($organization->getName() . ' ' . $name . ' ' . time());
+            $slug = $slugify->slugify($organization->getName() . ' ' . $name . ' ' . uniqid());
         }
         parent::__construct($slug, $name);
 

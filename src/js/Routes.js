@@ -50,11 +50,11 @@ export default ({user}) =>
 
         /* My studies */
         <PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />
-        <PrivateRoute path="/my-studies/study/add" exact user={user} component={SelectStudy} />
-        <PrivateRoute path="/my-studies/study/:studyId/metadata/details" exact user={user} component={EditStudyDetails} />
-        <PrivateRoute path="/my-studies/study/:studyId/metadata/centers" exact user={user} component={EditOrganizationDetails} />
-        <PrivateRoute path="/my-studies/study/:studyId/metadata/contacts" exact user={user} component={EditContactDetails} />
-        <PrivateRoute path="/my-studies/study/:studyId/metadata/finished" exact user={user} component={Finished} />
+        <PrivateRoute path="/my-studies/:catalog/study/add" exact user={user} component={SelectStudy} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/details" exact user={user} component={EditStudyDetails} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/centers" exact user={user} component={EditOrganizationDetails} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/contacts" exact user={user} component={EditContactDetails} />
+        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={Finished} />
 
         <Route component={NotFound} />
     </Switch>;

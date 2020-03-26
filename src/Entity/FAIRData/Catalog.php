@@ -122,6 +122,13 @@ class Catalog
     private $logo;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $acceptSubmissions = false;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
     public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, ?Iri $homepage)
@@ -302,15 +309,23 @@ class Catalog
     }
 
     /**
+     * @return bool
+     */
+    public function isAcceptSubmissions(): bool
+    {
+        return $this->acceptSubmissions;
+    }
+
+    /**
      * @return array<mixed>
      */
     public function toBasicArray(): array
     {
         $publishers = [];
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publishers[] = $publisher->toArray();
-        }
+        // foreach ($this->publishers as $publisher) {
+        //     /** @var Agent $publisher */
+        //     $publishers[] = $publisher->toArray();
+        // }
 
         return [
             'access_url' => $this->getAccessUrl(),
@@ -327,6 +342,7 @@ class Catalog
             'modified' => $this->modified,
             'homepage' => $this->homepage !== null ? $this->homepage->getValue() : '',
             'logo' => $this->logo !== null ? $this->logo->getValue() : '',
+            'acceptSubmissions' => $this->acceptSubmissions
         ];
     }
 

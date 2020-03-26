@@ -68,12 +68,6 @@ export default class MyStudies extends Component {
                                 </Row>
                                 <Row className="InformationRow">
                                     <Container className="Children Studies">
-                                        <div className="ButtonBar Right Light">
-                                            <Button href="/my-studies/study/add" variant="secondary">
-                                                Add study
-                                                {/*<Icon type="add" />*/}
-                                            </Button>
-                                        </div>
                                         {this.state.studies.length > 0 ? this.state.studies.map((study) => {
                                                 return <ListItem key={study.id}
                                                                  link={'/my-studies/study/' + study.id}

@@ -50,7 +50,7 @@ class Organization extends Agent
         $slugify = new Slugify();
 
         if ($slug === null) {
-            $slug = $slugify->slugify($name . ' ' . time());
+            $slug = $slugify->slugify($name . ' ' . uniqid());
         }
         parent::__construct($slug, $name);
 

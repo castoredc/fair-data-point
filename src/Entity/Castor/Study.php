@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
+use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -49,6 +50,14 @@ class Study implements JsonSerializable
      * @var StudyMetadata[]|ArrayCollection
      */
     private $metadata;
+
+    /**
+     * One Customer has One Cart.
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study")
+     *
+     * @var Dataset|null
+     */
+    private $dataset;
 
     /**
      * @param ArrayCollection<string, Field>|null $fields
@@ -132,6 +141,11 @@ class Study implements JsonSerializable
         return $this->metadata->last();
     }
 
+    public function getLatestMetadataVersion(): int
+    {
+        return $this->metadata->count();
+    }
+
     public function hasMetadata(): bool
     {
         return count($this->metadata) > 0;
@@ -148,6 +162,22 @@ class Study implements JsonSerializable
     public function addMetadata(StudyMetadata $metadata): void
     {
         $this->metadata[] = $metadata;
+    }
+
+    /**
+     * @return Dataset|null
+     */
+    public function getDataset(): ?Dataset
+    {
+        return $this->dataset;
+    }
+
+    /**
+     * @param Dataset|null $dataset
+     */
+    public function setDataset(?Dataset $dataset): void
+    {
+        $this->dataset = $dataset;
     }
 
     /**
