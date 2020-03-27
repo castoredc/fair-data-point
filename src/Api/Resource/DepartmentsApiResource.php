@@ -10,11 +10,17 @@ class DepartmentsApiResource implements ApiResource
     /** @var Department[] */
     private $departments;
 
+    /**
+     * @param Department[] $departments
+     */
     public function __construct(array $departments)
     {
         $this->departments = $departments;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         $data = [];

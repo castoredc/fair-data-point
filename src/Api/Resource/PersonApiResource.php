@@ -15,6 +15,9 @@ class PersonApiResource implements ApiResource
         $this->person = $person;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Exception\StudyAlreadyExistsException;
+use App\Exception\StudyAlreadyExists;
 use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -34,7 +34,7 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
             $this->em->persist($study);
             $this->em->flush();
         } catch (UniqueConstraintViolationException $e) {
-            throw new StudyAlreadyExistsException();
+            throw new StudyAlreadyExists();
         }
     }
 }

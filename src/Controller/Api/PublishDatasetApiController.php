@@ -3,20 +3,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\CastorStudyApiRequest;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
-use App\Exception\ApiRequestParseException;
-use App\Exception\CatalogNotFoundException;
-use App\Exception\StudyAlreadyExistsException;
-use App\Exception\StudyAlreadyHasDatasetException;
-use App\Exception\StudyNotFoundException;
-use App\Message\Api\Study\AddCastorStudyCommand;
-use App\Message\Api\Study\FindStudiesByUserCommand;
+use App\Exception\CatalogNotFound;
+use App\Exception\StudyAlreadyHasDataset;
+use App\Exception\StudyNotFound;
 use App\Message\Api\Study\PublishStudyInCatalogCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -39,14 +33,13 @@ class PublishDatasetApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([]);
-        }
-        catch (HandlerFailedException $e) {
+        } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            if ($e instanceof CatalogNotFoundException || $e instanceof StudyNotFoundException) {
+            if ($e instanceof CatalogNotFound || $e instanceof StudyNotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
-            if ($e instanceof StudyAlreadyHasDatasetException) {
+            if ($e instanceof StudyAlreadyHasDataset) {
                 return new JsonResponse($e->toArray(), 400);
             }
         }

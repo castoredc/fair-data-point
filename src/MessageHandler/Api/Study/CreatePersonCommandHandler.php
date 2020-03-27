@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Person;
 use App\Entity\Iri;
-use App\Exception\StudyNotFoundException;
 use App\Message\Api\Study\CreatePersonCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

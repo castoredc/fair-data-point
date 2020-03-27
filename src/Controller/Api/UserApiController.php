@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Resource\UserApiResource;
 use App\Security\CastorUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

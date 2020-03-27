@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -12,22 +11,22 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200326140842 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE study ADD dataset_id CHAR(36) DEFAULT NULL COMMENT \'(DC2Type:guid)\'');
         $this->addSql('ALTER TABLE study ADD CONSTRAINT FK_E67F9749D47C2D1B FOREIGN KEY (dataset_id) REFERENCES dataset (id)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_E67F9749D47C2D1B ON study (dataset_id)');;
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_E67F9749D47C2D1B ON study (dataset_id)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');

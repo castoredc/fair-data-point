@@ -7,12 +7,15 @@ use Exception;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class ApiRequestParseException extends Exception
+class GroupedApiRequestParseError extends Exception
 {
-    /** @var ConstraintViolationListInterface */
+    /** @var ConstraintViolationListInterface[] */
     private $violations = [];
 
-    public function __construct(?ConstraintViolationListInterface $violations)
+    /**
+     * @param array<ConstraintViolationListInterface> $violations
+     */
+    public function __construct(array $violations)
     {
         parent::__construct();
 
@@ -26,9 +29,11 @@ class ApiRequestParseException extends Exception
     {
         $fields = [];
 
-        foreach ($this->violations as $violation) {
-            /** @var ConstraintViolation $violation */
-            $fields[$violation->getPropertyPath()][] = $violation->getMessage();
+        foreach ($this->violations as $index => $violationInstance) {
+            foreach ($violationInstance as $violation) {
+                /** @var ConstraintViolation $violation */
+                $fields[$index][$violation->getPropertyPath()][] = $violation->getMessage();
+            }
         }
 
         return [

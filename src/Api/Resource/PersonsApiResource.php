@@ -10,11 +10,17 @@ class PersonsApiResource implements ApiResource
     /** @var Person[] */
     private $persons;
 
+    /**
+     * @param Person[] $persons
+     */
     public function __construct(array $persons)
     {
         $this->persons = $persons;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         $data = [];

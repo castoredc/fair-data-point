@@ -5,13 +5,13 @@ namespace App\Exception;
 
 use Exception;
 
-class NoPermissionException extends Exception
+class StudyAlreadyHasDataset extends Exception
 {
     /**
      * @return array<mixed>
      */
     public function toArray(): array
     {
-        return ['error' => 'You do not have permission to access this study.'];
+        return ['error' => 'This study already has a dataset assigned.'];
     }
 }

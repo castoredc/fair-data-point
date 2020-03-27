@@ -454,33 +454,21 @@ class StudyMetadata
         return $this->id;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getLogo(): ?Iri
     {
         return $this->logo;
     }
 
-    /**
-     * @param Iri|null $logo
-     */
     public function setLogo(?Iri $logo): void
     {
         $this->logo = $logo;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getUpdated(): ?DateTime
     {
         return $this->updated;

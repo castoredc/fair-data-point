@@ -5,13 +5,13 @@ namespace App\Exception;
 
 use Exception;
 
-class StudyAlreadyHasDatasetException extends Exception
+class CatalogNotExceptingSubmissions extends Exception
 {
     /**
      * @return array<mixed>
      */
     public function toArray(): array
     {
-        return ['error' => 'This study already has a dataset assigned.'];
+        return ['error' => 'This catalog is not accepting submissions.'];
     }
 }

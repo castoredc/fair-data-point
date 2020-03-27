@@ -5,13 +5,13 @@ namespace App\Exception;
 
 use Exception;
 
-class StudyNotFoundException extends Exception
+class NoAccessPermissionToStudy extends Exception
 {
     /**
      * @return array<mixed>
      */
     public function toArray(): array
     {
-        return ['error' => 'Study not found.'];
+        return ['error' => 'You do not have permission to access this study.'];
     }
 }

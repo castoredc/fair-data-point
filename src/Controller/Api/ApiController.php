@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\SingleApiRequest;
-use App\Exception\ApiRequestParseException;
-use App\Exception\GroupedApiRequestParseException;
+use App\Exception\ApiRequestParseError;
+use App\Exception\GroupedApiRequestParseError;
 use App\Model\Castor\ApiClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ abstract class ApiController extends AbstractController
     }
 
     /**
-     * @throws ApiRequestParseException
+     * @throws ApiRequestParseError
      */
     protected function parseRequest(string $requestObject, Request $request, bool $multiple = false): SingleApiRequest
     {
@@ -37,14 +37,16 @@ abstract class ApiController extends AbstractController
         $errors = $this->validator->validate($request);
 
         if ($errors->count() > 0) {
-            throw new ApiRequestParseException($errors);
+            throw new ApiRequestParseError($errors);
         }
 
         return $request;
     }
 
     /**
-     * @throws GroupedApiRequestParseException
+     * @return array<object>
+     *
+     * @throws GroupedApiRequestParseError
      */
     protected function parseGroupedRequest(string $requestObject, Request $request): array
     {
@@ -63,7 +65,7 @@ abstract class ApiController extends AbstractController
         }
 
         if (count($groupedErrors) > 0) {
-            throw new GroupedApiRequestParseException($groupedErrors);
+            throw new GroupedApiRequestParseError($groupedErrors);
         }
 
         return $return;

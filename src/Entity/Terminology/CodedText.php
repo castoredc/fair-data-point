@@ -34,6 +34,7 @@ class CodedText
     public function __construct(string $text)
     {
         $this->text = $text;
+        $this->concepts = new ArrayCollection();
     }
 
     public function getId(): string
@@ -52,12 +53,20 @@ class CodedText
     }
 
     /**
+     * @return OntologyConcept[]|ArrayCollection
+     */
+    public function getConcepts()
+    {
+        return $this->concepts;
+    }
+
+    /**
      * @return array<string>
      */
     public function toArray(): array
     {
         return [
-            'text' => $this->text
+            'text' => $this->text,
         ];
     }
 }

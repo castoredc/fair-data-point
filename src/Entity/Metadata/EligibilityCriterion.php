@@ -13,4 +13,30 @@ class EligibilityCriterion
 
     /** @var CodedText */
     private $criterion;
+
+    public function __construct(EligibilityCriterionType $type, CodedText $criterion)
+    {
+        $this->type = $type;
+        $this->criterion = $criterion;
+    }
+
+    public function getType(): EligibilityCriterionType
+    {
+        return $this->type;
+    }
+
+    public function setType(EligibilityCriterionType $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function getCriterion(): CodedText
+    {
+        return $this->criterion;
+    }
+
+    public function setCriterion(CodedText $criterion): void
+    {
+        $this->criterion = $criterion;
+    }
 }

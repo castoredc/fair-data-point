@@ -15,6 +15,9 @@ class DatabaseStudyMetadataApiResource implements ApiResource
         $this->studyMetadata = $studyMetadata;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [

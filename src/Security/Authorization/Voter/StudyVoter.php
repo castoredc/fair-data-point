@@ -1,20 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\Castor\Study;
-use App\Model\Castor\ApiClient;
 use App\Security\CastorUser;
-use Exception;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
+use function in_array;
 
 class StudyVoter extends Voter
 {
-    const VIEW = 'view';
-    const EDIT = 'edit';
+    public const VIEW = 'view';
+    public const EDIT = 'edit';
 
     /** @var Security */
     private $security;
@@ -24,31 +23,22 @@ class StudyVoter extends Voter
         $this->security = $security;
     }
 
+    /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::VIEW, self::EDIT])) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT])) {
             return false;
         }
 
-        if (!$subject instanceof Study) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof Study;
     }
 
-    /**
-     * @param                $attribute
-     * @param                $subject
-     * @param TokenInterface $token
-     *
-     * @return bool
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    /** @inheritDoc */
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
-        if (!$user instanceof CastorUser) {
+        if (! $user instanceof CastorUser) {
             return false;
         }
 
@@ -68,18 +58,16 @@ class StudyVoter extends Voter
         }
     }
 
-
-    private function canView(Study $study, CastorUser $user)
+    private function canView(Study $study, CastorUser $user): bool
     {
-        if($this->canEdit($study, $user))
-        {
+        if ($this->canEdit($study, $user)) {
             return true;
         }
 
-        return (! is_null($study->getDataset()));
+        return $study->getDataset() !== null;
     }
 
-    private function canEdit(Study $study, CastorUser $user)
+    private function canEdit(Study $study, CastorUser $user): bool
     {
         return in_array($study->getId(), $user->getStudies());
     }

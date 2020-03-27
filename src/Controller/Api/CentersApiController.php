@@ -5,7 +5,7 @@ namespace App\Controller\Api;
 
 use App\Api\Request\StudyCenterApiRequest;
 use App\Entity\Castor\Study;
-use App\Exception\GroupedApiRequestParseException;
+use App\Exception\GroupedApiRequestParseError;
 use App\Message\Api\Study\ClearStudyCentersCommand;
 use App\Message\Api\Study\CreateDepartmentAndOrganizationCommand;
 use App\Message\Api\Study\GetStudyCentersCommand;
@@ -75,7 +75,7 @@ class CentersApiController extends ApiController
 
                 return new JsonResponse([], 200);
             }
-        } catch (GroupedApiRequestParseException $e) {
+        } catch (GroupedApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);

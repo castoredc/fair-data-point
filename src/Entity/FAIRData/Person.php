@@ -8,7 +8,6 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 use function array_merge;
-use function is_null;
 
 /**
  * @ORM\Entity
@@ -61,7 +60,7 @@ class Person extends Agent
     {
         $slugify = new Slugify();
 
-        $fullName = ! is_null($middleName) ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
+        $fullName = $middleName !== null ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
         parent::__construct($slugify->slugify($fullName), $fullName);
 
         $this->firstName = $firstName;
@@ -86,7 +85,7 @@ class Person extends Agent
             'url' => $this->orcid->getValue(),
             'orcid' => $this->orcid->getValue(),
             'type' => 'person',
-            'email' => $this->email
+            'email' => $this->email,
         ]);
     }
 

@@ -5,7 +5,7 @@ namespace App\Exception;
 
 use Exception;
 
-class CatalogNotFoundException extends Exception
+class CatalogNotFound extends Exception
 {
     /**
      * @return array<mixed>

@@ -3,19 +3,16 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
-use App\Exception\CatalogNotExceptingSubmissionsException;
-use App\Exception\CatalogNotFoundException;
-use App\Exception\StudyAlreadyHasDatasetException;
-use App\Exception\StudyNotFoundException;
+use App\Exception\CatalogNotExceptingSubmissions;
+use App\Exception\StudyAlreadyHasDataset;
 use App\Message\Api\Study\PublishStudyInCatalogCommand;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function uniqid;
 
 class PublishStudyInCatalogCommandHandler implements MessageHandlerInterface
 {
@@ -32,14 +29,12 @@ class PublishStudyInCatalogCommandHandler implements MessageHandlerInterface
         /** @var Language|null $language */
         $language = $this->em->getRepository(Language::class)->find('en');
 
-        if($message->getStudy()->getDataset())
-        {
-            throw new StudyAlreadyHasDatasetException();
+        if ($message->getStudy()->getDataset()) {
+            throw new StudyAlreadyHasDataset();
         }
 
-        if(!$message->getCatalog()->isAcceptSubmissions())
-        {
-            throw new CatalogNotExceptingSubmissionsException();
+        if (! $message->getCatalog()->isAcceptSubmissions()) {
+            throw new CatalogNotExceptingSubmissions();
         }
 
         $slugify = new Slugify();

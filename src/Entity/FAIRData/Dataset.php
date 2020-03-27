@@ -6,7 +6,6 @@ namespace App\Entity\FAIRData;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\Iri;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -95,12 +94,7 @@ class Dataset
     private $study;
 
     /**
-     * @param string                    $slug
      * @param Collection<string, Agent> $publishers
-     * @param Language                  $language
-     * @param License|null              $license
-     * @param LocalizedText|null        $keyword
-     * @param Iri|null                  $landingPage
      */
     public function __construct(string $slug, Collection $publishers, Language $language, ?License $license, ?LocalizedText $keyword, ?Iri $landingPage)
     {
@@ -286,15 +280,13 @@ class Dataset
 
         $shortDescription = null;
 
-        if(!is_null($metadata->getBriefSummary()))
-        {
+        if ($metadata->getBriefSummary() !== null) {
             $shortDescription = (new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefSummary(), $this->language)])))->toArray();
         }
 
         $description = null;
 
-        if(!is_null($metadata->getSummary()))
-        {
+        if ($metadata->getSummary() !== null) {
             $description = (new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getSummary(), $this->language)])))->toArray();
         }
 
@@ -317,11 +309,11 @@ class Dataset
 //            'keyword' => $this->keyword->toArray(),
             'landingpage' => $this->landingPage !== null ? $this->landingPage->getValue() : null,
             'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
-            'recruitmentStatus' => ($metadata->getRecruitmentStatus() !== null) ? $metadata->getRecruitmentStatus()->toString() : null,
+            'recruitmentStatus' => $metadata->getRecruitmentStatus() !== null ? $metadata->getRecruitmentStatus()->toString() : null,
             'estimatedEnrollment' => $metadata->getEstimatedEnrollment(),
-            'studyType' => ($metadata->getType() !== null) ? $metadata->getType()->toString() : '',
-            'condition' => ($metadata->getCondition() !== null) ? $metadata->getCondition()->toArray() : null,
-            'intervention' => ($metadata->getIntervention() !== null) ? $metadata->getIntervention()->toArray() : null,
+            'studyType' => $metadata->getType() !== null ? $metadata->getType()->toString() : '',
+            'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
+            'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
         ];
     }
 

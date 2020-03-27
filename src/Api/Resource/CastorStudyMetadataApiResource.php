@@ -15,6 +15,9 @@ class CastorStudyMetadataApiResource implements ApiResource
         $this->study = $study;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [

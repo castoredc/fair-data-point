@@ -6,7 +6,7 @@ namespace App\Controller\Api;
 use App\Api\Request\StudyMetadataApiRequest;
 use App\Entity\Castor\Study;
 use App\Entity\Metadata\StudyMetadata;
-use App\Exception\ApiRequestParseException;
+use App\Exception\ApiRequestParseError;
 use App\Message\Api\Study\CreateStudyMetadataCommand;
 use App\Message\Api\Study\GetStudyMetadataCommand;
 use App\Message\Api\Study\UpdateStudyMetadataCommand;
@@ -75,7 +75,7 @@ class DetailsApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([], 200);
-        } catch (ApiRequestParseException $e) {
+        } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
@@ -114,7 +114,7 @@ class DetailsApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([], 200);
-        } catch (ApiRequestParseException $e) {
+        } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);

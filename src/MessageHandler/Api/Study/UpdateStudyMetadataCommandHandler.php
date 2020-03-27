@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Metadata\StudyMetadata;
 use App\Message\Api\Study\UpdateStudyMetadataCommand;
-use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -14,13 +12,9 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
     /** @var EntityManagerInterface */
     private $em;
 
-    /** @var ApiClient */
-    private $apiClient;
-
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->apiClient = $apiClient;
     }
 
     public function __invoke(UpdateStudyMetadataCommand $message): void

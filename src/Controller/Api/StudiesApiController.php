@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\CastorStudyApiRequest;
-use App\Exception\ApiRequestParseException;
-use App\Exception\StudyAlreadyExistsException;
+use App\Exception\ApiRequestParseError;
+use App\Exception\StudyAlreadyExists;
 use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Message\Api\Study\FindStudiesByUserCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,12 +42,12 @@ class StudiesApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([], 200);
-        } catch (ApiRequestParseException $e) {
+        } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            if ($e instanceof StudyAlreadyExistsException) {
+            if ($e instanceof StudyAlreadyExists) {
                 return new JsonResponse($e->toArray(), 409);
             }
         }

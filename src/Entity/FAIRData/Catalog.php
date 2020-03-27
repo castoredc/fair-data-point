@@ -308,9 +308,6 @@ class Catalog
         return $this->logo;
     }
 
-    /**
-     * @return bool
-     */
     public function isAcceptSubmissions(): bool
     {
         return $this->acceptSubmissions;
@@ -342,7 +339,7 @@ class Catalog
             'modified' => $this->modified,
             'homepage' => $this->homepage !== null ? $this->homepage->getValue() : '',
             'logo' => $this->logo !== null ? $this->logo->getValue() : '',
-            'acceptSubmissions' => $this->acceptSubmissions
+            'acceptSubmissions' => $this->acceptSubmissions,
         ];
     }
 

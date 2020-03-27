@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Country;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Organization;
-use App\Exception\CountryNotFoundException;
-use App\Exception\StudyNotFoundException;
+use App\Exception\CountryNotFound;
 use App\Message\Api\Study\CreateDepartmentAndOrganizationCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -29,7 +27,7 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         $country = $this->em->getRepository(Country::class)->find($message->getCountry());
 
         if ($country === null) {
-            throw new CountryNotFoundException();
+            throw new CountryNotFound();
         }
 
         $organization = new Organization(

@@ -5,7 +5,7 @@ namespace App\Controller\Api;
 
 use App\Api\Request\StudyContactApiRequest;
 use App\Entity\Castor\Study;
-use App\Exception\GroupedApiRequestParseException;
+use App\Exception\GroupedApiRequestParseError;
 use App\Message\Api\Study\ClearStudyContactsCommand;
 use App\Message\Api\Study\CreatePersonCommand;
 use App\Message\Api\Study\GetStudyContactsCommand;
@@ -21,13 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactsApiController extends ApiController
 {
     /**
+     * @param Study $studyId
+     *
      * @Route("/api/study/{studyId}/contacts", methods={"GET"}, name="api_get_contacts")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     * @param Study               $studyId
-     * @param Request             $request
-     * @param MessageBusInterface $bus
-     *
-     * @return Response
      */
     public function getContacts(Study $study, Request $request, MessageBusInterface $bus): Response
     {
@@ -77,7 +74,7 @@ class ContactsApiController extends ApiController
 
                 return new JsonResponse([], 200);
             }
-        } catch (GroupedApiRequestParseException $e) {
+        } catch (GroupedApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         }
         // catch(HandlerFailedException $e) {

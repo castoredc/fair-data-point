@@ -15,6 +15,9 @@ class CatalogApiResource implements ApiResource
         $this->catalog = $catalog;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return $this->catalog->toBasicArray();

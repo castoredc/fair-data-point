@@ -5,7 +5,7 @@ namespace App\Exception;
 
 use Exception;
 
-class CountryNotFoundException extends Exception
+class CountryNotFound extends Exception
 {
     /**
      * @return array<mixed>

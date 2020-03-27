@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Exception\NoPermissionException;
-use App\Exception\SessionTimeOutException;
+use App\Exception\NoAccessPermissionToStudy;
+use App\Exception\SessionTimedOut;
 use App\Message\Api\Study\FindStudiesByUserCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
-use function is_null;
 
 class CastorStudiesApiController extends ApiController
 {
@@ -23,17 +22,17 @@ class CastorStudiesApiController extends ApiController
     public function castorStudies(Request $request, MessageBusInterface $bus): Response
     {
         try {
-            $envelope = $bus->dispatch(new FindStudiesByUserCommand($this->getUser(), true, ! is_null($request->get('hide'))));
+            $envelope = $bus->dispatch(new FindStudiesByUserCommand($this->getUser(), true, ! $request->get('hide') !== null));
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse($handledStamp->getResult());
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            if ($e instanceof SessionTimeOutException) {
+            if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
-            if ($e instanceof NoPermissionException) {
+            if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }
         }

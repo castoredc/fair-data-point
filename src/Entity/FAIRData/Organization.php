@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 use function array_merge;
-use function time;
+use function uniqid;
 
 /**
  * @ORM\Entity
@@ -74,7 +74,7 @@ class Organization extends Agent
             'homepage' => $this->homepage->getValue(),
             'type' => 'organization',
             'city' => $this->city,
-            'country' => $this->country->getName()
+            'country' => $this->country->getName(),
         ]);
     }
 

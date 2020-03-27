@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
@@ -14,9 +15,6 @@ class PublishStudyInCatalogCommand
     private $catalog;
 
     /**
-     * PublishDataSetInCatalogCommand constructor.
-     *
-     * @param Study  $study
      * @param string $catalog
      */
     public function __construct(Study $study, Catalog $catalog)
@@ -33,9 +31,6 @@ class PublishStudyInCatalogCommand
         return $this->study;
     }
 
-    /**
-     * @return Catalog
-     */
     public function getCatalog(): Catalog
     {
         return $this->catalog;

@@ -18,6 +18,9 @@ class CountriesApiResource implements ApiResource
         $this->countries = $countries;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         $data = [];

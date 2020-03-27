@@ -5,13 +5,13 @@ namespace App\Exception;
 
 use Exception;
 
-class SessionTimeOutException extends Exception
+class StudyAlreadyExists extends Exception
 {
     /**
      * @return array<mixed>
      */
     public function toArray(): array
     {
-        return ['error' => 'Your session timed out, please log in again'];
+        return ['error' => 'This study is already imported.'];
     }
 }

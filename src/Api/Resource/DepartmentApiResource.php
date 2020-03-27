@@ -15,6 +15,9 @@ class DepartmentApiResource implements ApiResource
         $this->department = $department;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
-use App\Entity\Castor\Study;
-use App\Exception\StudyNotFoundException;
 use App\Message\Api\Study\ClearStudyCentersCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

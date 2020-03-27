@@ -53,6 +53,7 @@ class Study implements JsonSerializable
 
     /**
      * One Customer has One Cart.
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="study")
      *
      * @var Dataset|null
@@ -164,17 +165,11 @@ class Study implements JsonSerializable
         $this->metadata[] = $metadata;
     }
 
-    /**
-     * @return Dataset|null
-     */
     public function getDataset(): ?Dataset
     {
         return $this->dataset;
     }
 
-    /**
-     * @param Dataset|null $dataset
-     */
     public function setDataset(?Dataset $dataset): void
     {
         $this->dataset = $dataset;
@@ -194,6 +189,9 @@ class Study implements JsonSerializable
         );
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

@@ -15,10 +15,13 @@ class CatalogBrandApiResource implements ApiResource
         $this->catalog = $catalog;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [
-            'name' => $this->catalog->getTitle()->toArray()
+            'name' => $this->catalog->getTitle()->toArray(),
         ];
     }
 }

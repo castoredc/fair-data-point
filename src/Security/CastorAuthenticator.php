@@ -5,7 +5,6 @@ namespace App\Security;
 
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
@@ -122,9 +121,8 @@ class CastorAuthenticator extends SocialAuthenticator
     {
         $url = '/login';
 
-        if($request->attributes->has('catalog'))
-        {
-            $url = $url . '/' . $request->attributes->get('catalog');
+        if ($request->attributes->has('catalog')) {
+            $url .= '/' . $request->attributes->get('catalog');
         }
 
         return new RedirectResponse(

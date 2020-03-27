@@ -64,9 +64,6 @@ class UIController extends AbstractController
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/finished", name="study_metadata_finished")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     * @param Catalog $catalog
-     *
-     * @return Response
      */
     public function studyMetadata(Catalog $catalog, Study $study): Response
     {
