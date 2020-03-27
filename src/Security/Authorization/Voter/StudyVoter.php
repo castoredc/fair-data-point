@@ -26,7 +26,7 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::EDIT])) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT], true)) {
             return false;
         }
 
@@ -34,7 +34,7 @@ class StudyVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
@@ -56,6 +56,8 @@ class StudyVoter extends Voter
             case self::EDIT:
                 return $this->canEdit($study, $user);
         }
+
+        return false;
     }
 
     private function canView(Study $study, CastorUser $user): bool
@@ -69,6 +71,6 @@ class StudyVoter extends Voter
 
     private function canEdit(Study $study, CastorUser $user): bool
     {
-        return in_array($study->getId(), $user->getStudies());
+        return in_array($study->getId(), $user->getStudies(), true);
     }
 }

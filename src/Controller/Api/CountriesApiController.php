@@ -18,6 +18,8 @@ class CountriesApiController extends ApiController
     public function countries(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetCountriesCommand());
+
+        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
 
         return new JsonResponse($handledStamp->getResult()->toArray());

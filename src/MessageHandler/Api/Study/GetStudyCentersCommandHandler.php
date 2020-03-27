@@ -13,16 +13,20 @@ class GetStudyCentersCommandHandler implements MessageHandlerInterface
     public function __invoke(GetStudyCentersCommand $message): DepartmentsApiResource
     {
         $metadata = $message->getStudy()->getLatestMetadata();
-        $agents = $metadata->getCenters();
-
         $centers = [];
 
-        foreach ($agents as $agent) {
-            if (! ($agent instanceof Department)) {
-                continue;
-            }
+        if ($metadata !== null) {
+            $agents = $metadata->getCenters();
 
-            $centers[] = $agent;
+            $centers = [];
+
+            foreach ($agents as $agent) {
+                if (! ($agent instanceof Department)) {
+                    continue;
+                }
+
+                $centers[] = $agent;
+            }
         }
 
         return new DepartmentsApiResource($centers);

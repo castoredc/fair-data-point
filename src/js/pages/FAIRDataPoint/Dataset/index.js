@@ -152,7 +152,7 @@ export default class Dataset extends Component {
                 </div>}
                 </Col>
                 <Col md={4}>
-                    {this.state.dataset.logo !== '' && <div className="InformationLogo">
+                    {this.state.dataset.logo && <div className="InformationLogo">
                         <img src={this.state.dataset.logo} alt={'Logo'}/>
                     </div>}
                     {this.state.dataset.studyType && <MetadataItem label="Type" value={StudyType[this.state.dataset.studyType]} />}

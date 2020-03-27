@@ -43,6 +43,9 @@ abstract class Enum
         $this->value = $value;
     }
 
+    /**
+     * @param array<mixed>  $arguments
+     */
     public static function __callStatic(string $methodName, array $arguments): self
     {
         foreach (self::getConstants() as $option => $value) {
@@ -59,6 +62,9 @@ abstract class Enum
         return Inflector::camelize($option);
     }
 
+    /**
+     * @param array<mixed> $arguments
+     */
     public function __call(string $methodName, array $arguments): bool
     {
         foreach (self::getConstants() as $option => $value) {
@@ -106,6 +112,9 @@ abstract class Enum
         return $this->value;
     }
 
+    /**
+     * @return array<string>
+     */
     private static function getConstants(): array
     {
         return (new ReflectionClass(static::class))->getConstants();

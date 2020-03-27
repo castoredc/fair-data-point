@@ -26,7 +26,7 @@ class StudyListItem extends Component {
             tags.push(intervention.text);
         }
 
-        return <Link to={link} className="StudyListItem" target={newWindow && '_blank'}>
+        return <Link to={link} className="StudyListItem" target={newWindow ? '_blank' : null}>
             <span className="StudyListItemHeader">
                 <span className="StudyListItemName">{name}</span>
                 {badgeText && <span className="StudyListItemBadge">{badgeText}</span>}

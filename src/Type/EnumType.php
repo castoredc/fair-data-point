@@ -36,7 +36,7 @@ abstract class EnumType extends Type
             throw new InvalidArgumentException("Invalid '" . static::class . "' value given.");
         }
 
-        return (string) $value;
+        return $value;
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

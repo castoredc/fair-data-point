@@ -337,8 +337,8 @@ class Catalog
             'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
-            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : '',
-            'logo' => $this->logo !== null ? $this->logo->getValue() : '',
+            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : null,
+            'logo' => $this->logo !== null ? $this->logo->getValue() : null,
             'acceptSubmissions' => $this->acceptSubmissions,
         ];
     }

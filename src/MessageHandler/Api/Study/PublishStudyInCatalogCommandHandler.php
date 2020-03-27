@@ -29,7 +29,7 @@ class PublishStudyInCatalogCommandHandler implements MessageHandlerInterface
         /** @var Language|null $language */
         $language = $this->em->getRepository(Language::class)->find('en');
 
-        if ($message->getStudy()->getDataset()) {
+        if ($message->getStudy()->getDataset() !== null) {
             throw new StudyAlreadyHasDataset();
         }
 

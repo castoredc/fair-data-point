@@ -30,11 +30,11 @@ class DatabaseStudyMetadataApiResource implements ApiResource
                 'briefSummary' => $this->studyMetadata->getBriefSummary(),
                 'summary' => $this->studyMetadata->getSummary(),
                 'studyType' => $this->studyMetadata->getType()->toString(),
-                'condition' => $this->studyMetadata->getCondition()->getText(),
-                'intervention' => $this->studyMetadata->getIntervention()->getText(),
+                'condition' => $this->studyMetadata->getCondition() !== null ? $this->studyMetadata->getCondition()->getText() : null,
+                'intervention' => $this->studyMetadata->getIntervention() !== null ? $this->studyMetadata->getIntervention()->getText() : null,
                 'estimatedEnrollment' => $this->studyMetadata->getEstimatedEnrollment(),
-                'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate()->format('Y-m-d'),
-                'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate()->format('Y-m-d'),
+                'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate() !== null ? $this->studyMetadata->getEstimatedStudyStartDate()->format('Y-m-d') : null,
+                'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate() !== null ? $this->studyMetadata->getEstimatedStudyCompletionDate()->format('Y-m-d') : null,
             ],
         ];
     }

@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Api\Study\FindStudiesByUserCommand;
+use App\Security\CastorUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +22,13 @@ class CastorStudiesApiController extends ApiController
      */
     public function castorStudies(Request $request, MessageBusInterface $bus): Response
     {
+        /** @var CastorUser $user */
+        $user = $this->getUser();
+
         try {
-            $envelope = $bus->dispatch(new FindStudiesByUserCommand($this->getUser(), true, ! $request->get('hide') !== null));
+            $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, true, $request->get('hide') !== null));
+
+            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse($handledStamp->getResult());
@@ -36,5 +42,7 @@ class CastorStudiesApiController extends ApiController
                 return new JsonResponse($e->toArray(), 403);
             }
         }
+
+        return new JsonResponse([], 500);
     }
 }

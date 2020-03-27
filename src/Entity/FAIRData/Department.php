@@ -17,7 +17,7 @@ class Department extends Agent
      * @ORM\ManyToOne(targetEntity="Organization",cascade={"persist"}, inversedBy="departments")
      * @ORM\JoinColumn(name="organization", referencedColumnName="id")
      *
-     * @var Organization
+     * @var Organization|null
      */
     private $organization;
 
@@ -41,7 +41,7 @@ class Department extends Agent
         $this->additionalInformation = $additionalInformation;
     }
 
-    public function getOrganization(): Organization
+    public function getOrganization(): ?Organization
     {
         return $this->organization;
     }
@@ -52,7 +52,7 @@ class Department extends Agent
     }
 
     /**
-     * @return array<string>
+     * @return array<mixed>
      */
     public function toArray(): array
     {

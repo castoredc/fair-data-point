@@ -8,6 +8,7 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\StudyAlreadyExists;
 use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Message\Api\Study\FindStudiesByUserCommand;
+use App\Security\CastorUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,11 @@ class StudiesApiController extends ApiController
      */
     public function studies(MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new FindStudiesByUserCommand($this->getUser(), false));
+        /** @var CastorUser $user */
+        $user = $this->getUser();
+        $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
+
+        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
 
         return new JsonResponse($handledStamp->getResult());
@@ -34,12 +39,13 @@ class StudiesApiController extends ApiController
      */
     public function addCastorStudy(Request $request, MessageBusInterface $bus): Response
     {
+        /** @var CastorUser $user */
+        $user = $this->getUser();
+
         try {
             /** @var CastorStudyApiRequest $parsed */
             $parsed = $this->parseRequest(CastorStudyApiRequest::class, $request);
-
-            $envelope = $bus->dispatch(new AddCastorStudyCommand($parsed->getStudyId(), $this->getUser()));
-            $handledStamp = $envelope->last(HandledStamp::class);
+            $bus->dispatch(new AddCastorStudyCommand($parsed->getStudyId(), $user));
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
@@ -51,5 +57,7 @@ class StudiesApiController extends ApiController
                 return new JsonResponse($e->toArray(), 409);
             }
         }
+
+        return new JsonResponse([], 500);
     }
 }

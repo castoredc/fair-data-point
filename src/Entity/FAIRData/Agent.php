@@ -68,7 +68,7 @@ abstract class Agent
     }
 
     /**
-     * @return array<string>
+     * @return array<mixed>
      */
     public function toArray(): array
     {

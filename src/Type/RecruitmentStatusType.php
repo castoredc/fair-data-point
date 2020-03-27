@@ -18,7 +18,7 @@ class RecruitmentStatusType extends Type
     /** @inheritDoc */
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Enum
     {
-        if ($value === null) {
+        if ($value === null || $value === '') {
             return null;
         }
 
@@ -28,6 +28,10 @@ class RecruitmentStatusType extends Type
     /** @inheritDoc */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
+        if ($value === null || $value === '') {
+            return '';
+        }
+
         return $value->toString();
     }
 

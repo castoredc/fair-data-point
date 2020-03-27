@@ -311,7 +311,7 @@ class Dataset
             'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
             'recruitmentStatus' => $metadata->getRecruitmentStatus() !== null ? $metadata->getRecruitmentStatus()->toString() : null,
             'estimatedEnrollment' => $metadata->getEstimatedEnrollment(),
-            'studyType' => $metadata->getType() !== null ? $metadata->getType()->toString() : '',
+            'studyType' => $metadata->getType()->toString(),
             'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
             'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
         ];

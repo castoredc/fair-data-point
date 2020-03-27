@@ -137,9 +137,9 @@ class Study implements JsonSerializable
         return $this->metadata;
     }
 
-    public function getLatestMetadata(): StudyMetadata
+    public function getLatestMetadata(): ?StudyMetadata
     {
-        return $this->metadata->last();
+        return $this->metadata->isEmpty() ? null : $this->metadata->last();
     }
 
     public function getLatestMetadataVersion(): int

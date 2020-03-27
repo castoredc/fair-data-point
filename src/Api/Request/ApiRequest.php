@@ -15,7 +15,12 @@ abstract class ApiRequest
     protected $query;
 
     /**
+     * phpcs:disable
+     *
      * @param array<mixed> $data
+     * @param ParameterBag<mixed> $query
+     *
+     * phpcs:enable
      */
     public function __construct(array $data, ParameterBag $query)
     {

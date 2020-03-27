@@ -10,6 +10,7 @@ use App\Exception\ApiRequestParseError;
 use App\Message\Api\Study\CreateStudyMetadataCommand;
 use App\Message\Api\Study\GetStudyMetadataCommand;
 use App\Message\Api\Study\UpdateStudyMetadataCommand;
+use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,12 +30,16 @@ class DetailsApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $study);
 
+        /** @var CastorUser $user */
+        $user = $this->getUser();
+
         try {
             $envelope = $bus->dispatch(new GetStudyMetadataCommand(
                 $study,
-                $this->getUser()
+                $user
             ));
 
+            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse($handledStamp->getResult()->toArray());
@@ -50,6 +55,9 @@ class DetailsApiController extends ApiController
     public function addMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
+
+        /** @var CastorUser $user */
+        $user = $this->getUser();
 
         try {
             /** @var StudyMetadataApiRequest $parsed */
@@ -68,7 +76,7 @@ class DetailsApiController extends ApiController
                     $parsed->getEstimatedEnrollment(),
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
-                    $this->getUser()
+                    $user
                 )
             );
 
@@ -90,6 +98,9 @@ class DetailsApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $studyMetadata->getStudy());
 
+        /** @var CastorUser $user */
+        $user = $this->getUser();
+
         try {
             /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
@@ -107,11 +118,9 @@ class DetailsApiController extends ApiController
                     $parsed->getEstimatedEnrollment(),
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
-                    $this->getUser()
+                    $user
                 )
             );
-
-            $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {

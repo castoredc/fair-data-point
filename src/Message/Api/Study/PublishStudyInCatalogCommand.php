@@ -14,18 +14,12 @@ class PublishStudyInCatalogCommand
     /** @var Catalog */
     private $catalog;
 
-    /**
-     * @param string $catalog
-     */
     public function __construct(Study $study, Catalog $catalog)
     {
         $this->study = $study;
         $this->catalog = $catalog;
     }
 
-    /**
-     * @return string
-     */
     public function getStudy(): Study
     {
         return $this->study;

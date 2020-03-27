@@ -397,38 +397,6 @@ class StudyMetadata
     }
 
     /**
-     * @return mixed
-     */
-    public function getTrialIds()
-    {
-        return $this->trialIds;
-    }
-
-    /**
-     * @param mixed $trialIds
-     */
-    public function setTrialIds($trialIds): void
-    {
-        $this->trialIds = $trialIds;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSponsors()
-    {
-        return $this->sponsors;
-    }
-
-    /**
-     * @param mixed $sponsors
-     */
-    public function setSponsors($sponsors): void
-    {
-        $this->sponsors = $sponsors;
-    }
-
-    /**
      * @return Agent[]|ArrayCollection
      */
     public function getCenters()

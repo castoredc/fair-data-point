@@ -43,5 +43,7 @@ class PublishDatasetApiController extends ApiController
                 return new JsonResponse($e->toArray(), 400);
             }
         }
+
+        return new JsonResponse([], 500);
     }
 }

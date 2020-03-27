@@ -127,7 +127,7 @@ export default class Distribution extends Component {
                               smallIcon={restricted && 'lock'} />
                 </Col>
                 <Col md={4}>
-                    {this.state.dataset.logo !== '' && <div className="InformationLogo">
+                    {this.state.dataset.logo && <div className="InformationLogo">
                         <img src={this.state.dataset.logo} alt={'Logo'}/>
                     </div>}
                     {/*{this.state.distribution.language && <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />}*/}

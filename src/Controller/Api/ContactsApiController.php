@@ -21,8 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactsApiController extends ApiController
 {
     /**
-     * @param Study $studyId
-     *
      * @Route("/api/study/{studyId}/contacts", methods={"GET"}, name="api_get_contacts")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
@@ -33,6 +31,7 @@ class ContactsApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new GetStudyContactsCommand($study));
 
+            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse($handledStamp->getResult()->toArray());
@@ -53,32 +52,24 @@ class ContactsApiController extends ApiController
             /** @var StudyContactApiRequest[] $parsed */
             $parsed = $this->parseGroupedRequest(StudyContactApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new ClearStudyContactsCommand($study));
-            $handledStamp = $envelope->last(HandledStamp::class);
+            $bus->dispatch(new ClearStudyContactsCommand($study));
 
-            if ($handledStamp) {
-                foreach ($parsed as $item) {
-                    $envelope = $bus->dispatch(
-                        new CreatePersonCommand(
-                            $study,
-                            $item->getFirstName(),
-                            $item->getMiddleName(),
-                            $item->getLastName(),
-                            $item->getEmail(),
-                            $item->getOrcid()
-                        )
-                    );
-
-                    $handledStamp = $envelope->last(HandledStamp::class);
-                }
-
-                return new JsonResponse([], 200);
+            foreach ($parsed as $item) {
+                $bus->dispatch(
+                    new CreatePersonCommand(
+                        $study,
+                        $item->getFirstName(),
+                        $item->getMiddleName(),
+                        $item->getLastName(),
+                        $item->getEmail(),
+                        $item->getOrcid()
+                    )
+                );
             }
+
+            return new JsonResponse([], 200);
         } catch (GroupedApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         }
-        // catch(HandlerFailedException $e) {
-        //     return new JsonResponse([], 500);
-        // }
     }
 }

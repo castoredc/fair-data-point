@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Api\Study;
 
 use App\Message\Api\Study\ClearStudyContactsCommand;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -20,7 +21,7 @@ class ClearStudyContactsCommandHandler implements MessageHandlerInterface
     public function __invoke(ClearStudyContactsCommand $message): void
     {
         $metadata = $message->getStudy()->getLatestMetadata();
-        $metadata->setContacts([]);
+        $metadata->setContacts(new ArrayCollection());
 
         $this->em->persist($metadata);
         $this->em->flush();

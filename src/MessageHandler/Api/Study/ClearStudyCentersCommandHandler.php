@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Api\Study;
 
 use App\Message\Api\Study\ClearStudyCentersCommand;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -20,7 +21,11 @@ class ClearStudyCentersCommandHandler implements MessageHandlerInterface
     public function __invoke(ClearStudyCentersCommand $message): void
     {
         $metadata = $message->getStudy()->getLatestMetadata();
-        $metadata->setCenters([]);
+        if ($metadata === null) {
+            return;
+        }
+
+        $metadata->setCenters(new ArrayCollection());
 
         $this->em->persist($metadata);
         $this->em->flush();

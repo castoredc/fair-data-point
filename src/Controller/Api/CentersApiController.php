@@ -31,6 +31,7 @@ class CentersApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new GetStudyCentersCommand($study));
 
+            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse($handledStamp->getResult()->toArray());
@@ -51,30 +52,25 @@ class CentersApiController extends ApiController
             /** @var StudyCenterApiRequest[] $parsed */
             $parsed = $this->parseGroupedRequest(StudyCenterApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new ClearStudyCentersCommand($study));
-            $handledStamp = $envelope->last(HandledStamp::class);
+            $bus->dispatch(new ClearStudyCentersCommand($study));
 
-            if ($handledStamp) {
-                foreach ($parsed as $item) {
-                    $envelope = $bus->dispatch(
-                        new CreateDepartmentAndOrganizationCommand(
-                            $study,
-                            null,
-                            null,
-                            $item->getName(),
-                            null,
-                            $item->getCountry(),
-                            $item->getCity(),
-                            $item->getDepartment(),
-                            $item->getAdditionalInformation()
-                        )
-                    );
-
-                    $handledStamp = $envelope->last(HandledStamp::class);
-                }
-
-                return new JsonResponse([], 200);
+            foreach ($parsed as $item) {
+                $bus->dispatch(
+                    new CreateDepartmentAndOrganizationCommand(
+                        $study,
+                        null,
+                        null,
+                        $item->getName(),
+                        null,
+                        $item->getCountry(),
+                        $item->getCity(),
+                        $item->getDepartment(),
+                        $item->getAdditionalInformation()
+                    )
+                );
             }
+
+            return new JsonResponse([], 200);
         } catch (GroupedApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

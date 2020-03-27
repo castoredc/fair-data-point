@@ -55,13 +55,13 @@ class StudyMetadataApiRequest extends SingleApiRequest
     private $estimatedEnrollment;
 
     /**
-     * @var DateTimeImmutable|null
+     * @var string|null
      * @Assert\Date()
      */
     private $estimatedStudyStartDate;
 
     /**
-     * @var DateTimeImmutable|null
+     * @var string|null
      * @Assert\Date()
      */
     private $estimatedStudyCompletionDate;
