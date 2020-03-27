@@ -6,6 +6,10 @@ parameters:
 		- public
 		- src
 		- tests
+	ignoreErrors:
+		-
+			message: '#Unsafe usage of new static().#'
+			path: %currentWorkingDirectory%/src/Entity/Enum/*
 	symfony:
 		container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
 		console_application_loader: tests/console-application.php
