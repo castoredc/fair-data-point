@@ -107,16 +107,15 @@ export default class Distribution extends Component {
             embedded={embedded}
             className="Dataset"
             title={localizedText(this.state.distribution.title, 'en')}
-            logo={this.state.dataset.logo}
             version={this.state.distribution.version}
             issued={this.state.distribution.issued}
             modified={this.state.distribution.modified}
             license={this.state.distribution.license}
         >
             <Row>
-                {this.state.distribution.description && <div className="InformationDescription">{localizedText(this.state.distribution.description, 'en', true)}</div>}
-
                 <Col md={8}>
+                    {this.state.distribution.description && <div className="InformationDescription">{localizedText(this.state.distribution.description, 'en', true)}</div>}
+
                     {restricted && <Alert
                         variant="info"
                         icon="lock"
@@ -133,7 +132,10 @@ export default class Distribution extends Component {
                               smallIcon={restricted && 'lock'} />
                 </Col>
                 <Col md={4}>
-                    {this.state.distribution.language && <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />}
+                    {this.state.dataset.logo !== '' && <div className="InformationLogo">
+                        <img src={this.state.dataset.logo} alt={'Logo'}/>
+                    </div>}
+                    {/*{this.state.distribution.language && <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />}*/}
                 </Col>
             </Row>
         </FAIRDataInformation>;

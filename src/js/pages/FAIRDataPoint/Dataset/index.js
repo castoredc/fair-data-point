@@ -123,7 +123,6 @@ export default class Dataset extends Component {
             embedded={embedded}
             className="Dataset"
             title={localizedText(this.state.dataset.title, 'en')}
-            logo={this.state.dataset.logo}
             version={this.state.dataset.version}
             issued={this.state.dataset.issued}
             modified={this.state.dataset.modified}
@@ -153,6 +152,9 @@ export default class Dataset extends Component {
                 </div>}
                 </Col>
                 <Col md={4}>
+                    {this.state.dataset.logo !== '' && <div className="InformationLogo">
+                        <img src={this.state.dataset.logo} alt={'Logo'}/>
+                    </div>}
                     {this.state.dataset.studyType && <MetadataItem label="Type" value={StudyType[this.state.dataset.studyType]} />}
                     {this.state.dataset.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={this.state.dataset.estimatedEnrollment} />}
                     {this.state.dataset.organizations.length > 0 && <Organizations organizations={this.state.dataset.organizations} />}

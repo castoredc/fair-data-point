@@ -24,9 +24,6 @@ export default class FAIRDataInformation extends Component {
                 <Container>
                     <div className="InformationHeader">
                         <div className="InformationHeaderTop">
-                            {logo !== '' && <div className="Logo">
-                                <img src={logo} alt={title + ' logo'}/>
-                            </div>}
                             <h1 className="Title">
                                 {title}
                                 {badge && <span className="InformationBadge">{badge}</span>}
@@ -42,16 +39,16 @@ export default class FAIRDataInformation extends Component {
                     </Container>
                 </Row>
             </div>
-            {!embedded && <div className="Footer">
-                <Container>
-                    <Row>
-                        <Col sm={6} md={3}>{version && <MetadataItem label="Version" value={version} />}</Col>
-                        <Col sm={6} md={3}>{issued && <MetadataItem label="Issued" value={issued} type="date" />}</Col>
-                        <Col sm={6} md={3}>{modified && <MetadataItem label="Modified" value={modified} type="date" />}</Col>
-                        <Col sm={6} md={3}>{license && <MetadataItem label="License" url={license.url} value={license.name} />}</Col>
-                    </Row>
-                </Container>
-            </div>}
+            {/*{!embedded && <div className="Footer">*/}
+            {/*    <Container>*/}
+            {/*        <Row>*/}
+            {/*            <Col sm={6} md={3}>{version && <MetadataItem label="Version" value={version} />}</Col>*/}
+            {/*            <Col sm={6} md={3}>{issued && <MetadataItem label="Issued" value={issued} type="date" />}</Col>*/}
+            {/*            <Col sm={6} md={3}>{modified && <MetadataItem label="Modified" value={modified} type="date" />}</Col>*/}
+            {/*            <Col sm={6} md={3}>{license && <MetadataItem label="License" url={license.url} value={license.name} />}</Col>*/}
+            {/*        </Row>*/}
+            {/*    </Container>*/}
+            {/*</div>}*/}
         </div>;
     }
 }

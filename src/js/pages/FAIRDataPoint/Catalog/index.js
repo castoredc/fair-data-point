@@ -91,15 +91,14 @@ export default class Catalog extends Component {
             embedded={embedded}
             className="Catalog"
             title={localizedText(this.state.catalog.title, 'en')}
-            logo={this.state.catalog.logo}
             version={this.state.catalog.version}
             issued={this.state.catalog.issued}
             modified={this.state.catalog.modified}
             license={this.state.catalog.license}
         >
             <Row>
-                <Col md={8}>
-                    {this.state.catalog.description && <div
+                <Col>
+                    {(this.state.catalog.description && !embedded) && <div
                         className="InformationDescription">{localizedText(this.state.catalog.description, 'en', true)}</div>}
 
                     {/*<h2>Datasets</h2>*/}
@@ -120,12 +119,12 @@ export default class Catalog extends Component {
                         },
                     ) : <div className="NoResults">No datasets found.</div>}
                 </Col>
-                <Col md={4}>
-                    {this.state.catalog.language && <MetadataItem label="Language" url={this.state.catalog.language.url}
-                                                                  value={this.state.catalog.language.name}/>}
-                    {this.state.catalog.homepage &&
-                    <MetadataItem label="Homepage" value={this.state.catalog.homepage}/>}
-                </Col>
+                {/*<Col md={4}>*/}
+                {/*    {this.state.catalog.language && <MetadataItem label="Language" url={this.state.catalog.language.url}*/}
+                {/*                                                  value={this.state.catalog.language.name}/>}*/}
+                {/*    {this.state.catalog.homepage &&*/}
+                {/*    <MetadataItem label="Homepage" value={this.state.catalog.homepage}/>}*/}
+                {/*</Col>*/}
             </Row>
         </FAIRDataInformation>;
 
