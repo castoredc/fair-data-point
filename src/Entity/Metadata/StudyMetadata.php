@@ -103,7 +103,7 @@ class StudyMetadata
     /**
      * @ORM\Column(type="integer", nullable=true)
      *
-     * @var int
+     * @var int|null
      */
     private $estimatedEnrollment;
 
@@ -309,12 +309,12 @@ class StudyMetadata
         $this->recruitmentStatus = $recruitmentStatus;
     }
 
-    public function getEstimatedEnrollment(): int
+    public function getEstimatedEnrollment(): ?int
     {
         return $this->estimatedEnrollment;
     }
 
-    public function setEstimatedEnrollment(int $estimatedEnrollment): void
+    public function setEstimatedEnrollment(?int $estimatedEnrollment): void
     {
         $this->estimatedEnrollment = $estimatedEnrollment;
     }
