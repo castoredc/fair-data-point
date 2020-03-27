@@ -73,6 +73,8 @@ class Organization extends Agent
             'url' => $this->homepage->getValue(),
             'homepage' => $this->homepage->getValue(),
             'type' => 'organization',
+            'city' => $this->city,
+            'country' => $this->country->getName()
         ]);
     }
 

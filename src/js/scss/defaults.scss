@@ -175,7 +175,8 @@ ul {
 }
 
 .Information {
-  padding-bottom: 80px;
+  min-height: calc(100vh - 350px);
+  padding-bottom: 40px;
 
   .LinkTop.LinkFileType {
     float: right;
@@ -207,37 +208,23 @@ ul {
     overflow: hidden;
     margin: 0;
 
-    .Metadata {
-      //box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    .Children {
+      padding-top: 40px;
+      padding-bottom: 25px;
 
-      > * {
-        padding: 25px;
-      }
+      & > .row {
+        margin: 0 -50px;
 
-      .MetadataTop {
-        background: $blue-400;
-        color: $white;
-
-        .Type {
-          font-weight: bold;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          border-radius: 4px;
-          display: inline-block;
-          padding: 3px 8px;
-          background: $blue-700;
-          margin-bottom: 10px;
+        & > div {
+          padding: 0 50px;
         }
       }
 
-      .MetadataBottom {
-        background: $neutral-20;
+      .InformationDescription {
+        font-size: 16px;
+        line-height: 1.5;
+        color: $neutral-300;
       }
-    }
-
-    .Children {
-      padding-top: 25px;
-      padding-bottom: 25px;
 
       h2 {
         font-size: 16px;
@@ -256,11 +243,10 @@ ul {
 }
 
 .Footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 80px;
-  padding: 20px 0;
+  .container {
+    border-top: 1px solid $neutral-30;
+    padding-top: 40px;
+  }
 }
 
 .TopLevelContainer.Embedded .container {

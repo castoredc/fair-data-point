@@ -1,18 +1,17 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios/index";
 
-import {Container, Row, Col, Button} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
-import DocumentTitle from "../../../components/DocumentTitle";
 import {localizedText} from "../../../util";
 import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
-import Icon from "../../../components/Icon";
-import {Link} from "react-router-dom";
-import Contact from "../../../components/MetadataItem/Contact";
-import Alert from "react-bootstrap/Alert";
 import queryString from "query-string";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
+import {RecruitmentStatus, StudyType} from "../../../components/MetadataItem/EnumMappings";
+import Tags from "../../../components/Tags";
+import Contacts from "../../../components/MetadataItem/Contacts";
+import Organizations from "../../../components/MetadataItem/Organizations";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -97,28 +96,71 @@ export default class Dataset extends Component {
             return <LoadingScreen showLoading={true}/>;
         }
 
+        let description = null;
+        let tags = [];
+        let badge = (this.state.dataset.recruitmentStatus ? RecruitmentStatus[this.state.dataset.recruitmentStatus] : null);
+
+        if(this.state.dataset.description !== null)
+        {
+            description = this.state.dataset.description;
+        }
+        else if(this.state.dataset.shortDescription !== null)
+        {
+            description = this.state.dataset.shortDescription;
+        }
+
+        if(this.state.dataset.condition !== null)
+        {
+            tags.push(this.state.dataset.condition.text);
+        }
+        if(this.state.dataset.intervention !== null)
+        {
+            tags.push(this.state.dataset.intervention.text);
+        }
+
+
         return <FAIRDataInformation
             embedded={embedded}
             className="Dataset"
             title={localizedText(this.state.dataset.title, 'en')}
-            description={localizedText(this.state.dataset.description, 'en')}
             logo={this.state.dataset.logo}
+            version={this.state.dataset.version}
+            issued={this.state.dataset.issued}
+            modified={this.state.dataset.modified}
+            license={this.state.dataset.license}
+            badge={badge}
         >
-            {this.state.dataset.distributions.length > 0 && <div>
-                <h2>Distributions</h2>
-                <div className="Description">
-                    Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
-                </div>
-                {this.state.dataset.distributions.map((item, index) => {
-                    return <ListItem key={index}
-                                     newWindow={embedded}
-                                     link={item.relative_url}
-                                     title={localizedText(item.title, 'en')}
-                                     description={localizedText(item.description, 'en')}
-                                     smallIcon={(item.accessRights === 2 || item.accessRights === 3) && 'lock'}
-                    />}
-                )}
-            </div>}
+            <Row>
+                <Col md={8}>
+                    {tags.length > 0 && <div className="StudyTags"><Tags tags={tags} /></div>}
+                    {this.state.dataset.contactPoints.length > 0 && <Contacts contacts={this.state.dataset.contactPoints} />}
+                    {description && <div className="InformationDescription">{localizedText(description, 'en', true)}</div>}
+
+                    {this.state.dataset.distributions.length > 0 && <div>
+                    <h2>Distributions</h2>
+                    <div className="Description">
+                        Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
+                    </div>
+                    {this.state.dataset.distributions.map((item, index) => {
+                        return <ListItem key={index}
+                                         newWindow={embedded}
+                                         link={item.relative_url}
+                                         title={localizedText(item.title, 'en')}
+                                         description={localizedText(item.description, 'en')}
+                                         smallIcon={(item.accessRights === 2 || item.accessRights === 3) && 'lock'}
+                        />}
+                    )}
+                </div>}
+                </Col>
+                <Col md={4}>
+                    {this.state.dataset.studyType && <MetadataItem label="Type" value={StudyType[this.state.dataset.studyType]} />}
+                    {this.state.dataset.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={this.state.dataset.estimatedEnrollment} />}
+                    {this.state.dataset.organizations.length > 0 && <Organizations organizations={this.state.dataset.organizations} />}
+
+                    {/*{this.state.dataset.language && <MetadataItem label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />}*/}
+                    {this.state.dataset.landingpage && <MetadataItem label="Landing page" value={this.state.dataset.landingpage} />}
+                </Col>
+            </Row>
         </FAIRDataInformation>;
 
         // {this.state.catalog.publishers.length > 0 && <div className="Publishers">
@@ -129,38 +171,5 @@ export default class Dataset extends Component {
         //                         name={item.name} />}
         //     )}
         // </div>}
-
-    //         <div className="MetadataRow">
-    //         <Container className="MetadataContainer">
-    //         {this.state.showMetadata ? <div className="Metadata Shown">
-    //
-    //                 <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-    //                     Hide metadata <Icon type="arrowDown" className="Rotated" />
-    //                 </a>
-    //
-    //                 <Row>
-    //                     <MetadataItem className="col-md-6" label="Version" value={this.state.dataset.version} />
-    //                     <MetadataItem className="col-md-6" label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />
-    //                     <MetadataItem className="col-md-6" label="License" url={this.state.dataset.license.url} value={this.state.dataset.license.name} />
-    //                     <MetadataItem className="col-md-6" label="Issued" value={this.state.dataset.issued.date} />
-    //                     <MetadataItem className="col-md-6" label="Modified" value={this.state.dataset.modified.date} />
-    //                     <MetadataItem className="col-md-6" label="Landing page" value={this.state.dataset.landingpage} />
-    //                     <MetadataItem className="col-md-6" label="Contact point(s)">
-    //                         {this.state.dataset.contactPoints.map((item, index) => {
-    //                             return <Contact key={index}
-    //                                             url={item.url}
-    //                                             type={item.type}
-    //                                             name={item.name} />}
-    //                         )}
-    //                     </MetadataItem>
-    //                 </Row>
-    //
-    //             </div> : <div className="Metadata Hidden">
-    //                 <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-    //                     Show metadata <Icon type="arrowDown" />
-    //                 </a>
-    //             </div>}
-    // </Container>
-    // </div>
     }
 }

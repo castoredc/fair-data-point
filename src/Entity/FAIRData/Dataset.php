@@ -276,8 +276,27 @@ class Dataset
             $contactPoints[] = $contactPoint->toArray();
         }
 
+        $organizations = [];
+        foreach ($metadata->getCenters() as $organization) {
+            /** @var Organization $center */
+            $organizations[] = $organization->toArray();
+        }
+
         $title = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefName(), $this->language)]));
-        $description = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefSummary(), $this->language)]));
+
+        $shortDescription = null;
+
+        if(!is_null($metadata->getBriefSummary()))
+        {
+            $shortDescription = (new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefSummary(), $this->language)])))->toArray();
+        }
+
+        $description = null;
+
+        if(!is_null($metadata->getSummary()))
+        {
+            $description = (new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getSummary(), $this->language)])))->toArray();
+        }
 
         return [
             'access_url' => $this->getAccessUrl(),
@@ -286,16 +305,23 @@ class Dataset
             'slug' => $this->slug,
             'title' => $title->toArray(),
             'version' => $this->study->getLatestMetadataVersion(),
-            'description' => $description->toArray(),
+            'shortDescription' => $shortDescription,
+            'description' => $description,
             'publishers' => $publishers,
             'language' => $this->language->toArray(),
             'license' => $this->license !== null ? $this->license->toArray() : null,
             'issued' => $metadata->getCreated(),
             'modified' => $metadata->getUpdated(),
             'contactPoints' => $contactPoints,
+            'organizations' => $organizations,
 //            'keyword' => $this->keyword->toArray(),
-            'landingpage' => $this->landingPage !== null ? $this->landingPage->getValue() : '',
-            'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : '',
+            'landingpage' => $this->landingPage !== null ? $this->landingPage->getValue() : null,
+            'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
+            'recruitmentStatus' => ($metadata->getRecruitmentStatus() !== null) ? $metadata->getRecruitmentStatus()->toString() : null,
+            'estimatedEnrollment' => $metadata->getEstimatedEnrollment(),
+            'studyType' => ($metadata->getType() !== null) ? $metadata->getType()->toString() : '',
+            'condition' => ($metadata->getCondition() !== null) ? $metadata->getCondition()->toArray() : null,
+            'intervention' => ($metadata->getIntervention() !== null) ? $metadata->getIntervention()->toArray() : null,
         ];
     }
 

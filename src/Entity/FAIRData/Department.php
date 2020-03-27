@@ -49,4 +49,15 @@ class Department extends Agent
     {
         return $this->additionalInformation;
     }
+
+    /**
+     * @return array<string>
+     */
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'type' => 'department',
+            'center' => $this->organization->toArray()
+        ]);
+    }
 }

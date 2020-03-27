@@ -1,0 +1,13 @@
+@import '../../scss/colors';
+
+.InformationBadge {
+    border-radius: 5px;
+    margin: 0 0 0 10px;
+    border: 2px solid #ffffff;
+    color: white;
+    padding: 5px 10px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    display: inline-block;
+}

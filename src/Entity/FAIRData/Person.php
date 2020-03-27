@@ -86,6 +86,7 @@ class Person extends Agent
             'url' => $this->orcid->getValue(),
             'orcid' => $this->orcid->getValue(),
             'type' => 'person',
+            'email' => $this->email
         ]);
     }
 

@@ -7,7 +7,7 @@ import DocumentTitle from "../../../components/DocumentTitle";
 import {localizedText} from "../../../util";
 import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
-import Contact from "../../../components/MetadataItem/Contact";
+import Contact from "../../../components/MetadataItem/Contacts";
 import Alert from "react-bootstrap/Alert";
 import Icon from "../../../components/Icon";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
@@ -82,7 +82,8 @@ export default class FAIRDataPointMain extends Component {
             embedded={embedded}
             className="FAIRDataPoint"
             title={localizedText(this.state.fdp.title, 'en')}
-            description={localizedText(this.state.fdp.description, 'en')}
+            version={this.state.fdp.version}
+            license={this.state.fdp.license}
         >
             <h2>Catalogs</h2>
             <div className="Description">
@@ -105,27 +106,5 @@ export default class FAIRDataPointMain extends Component {
         //                         name={item.name} />}
         //     )}
         // </div>}
-
-        {/*<div className="MetadataRow">*/}
-        {/*    <Container className="MetadataContainer">*/}
-        {/*        {this.state.showMetadata ? <div className="Metadata Shown">*/}
-
-        {/*            <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>*/}
-        {/*                Hide metadata <Icon type="arrowDown" className="Rotated" />*/}
-        {/*            </a>*/}
-
-        {/*            <Row>*/}
-        {/*                <MetadataItem className="col-md-6" label="Version" value={this.state.fdp.version} />*/}
-        {/*                <MetadataItem className="col-md-6" label="Language" url={this.state.fdp.language.url} value={this.state.fdp.language.name} />*/}
-        {/*                <MetadataItem className="col-md-6" label="License" url={this.state.fdp.license.url} value={this.state.fdp.license.name} />*/}
-        {/*            </Row>*/}
-
-        {/*        </div> : <div className="Metadata Hidden">*/}
-        {/*            <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>*/}
-        {/*                Show metadata <Icon type="arrowDown" />*/}
-        {/*            </a>*/}
-        {/*        </div>}*/}
-        {/*    </Container>*/}
-        {/*</div>*/}
     }
 }

@@ -9,8 +9,10 @@ import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
 import Icon from "../../../components/Icon";
 import {Link} from "react-router-dom";
-import Contact from "../../../components/MetadataItem/Contact";
+import Contact from "../../../components/MetadataItem/Contacts";
 import Alert from "../../../components/Alert";
+import queryString from "query-string";
+import FAIRDataInformation from "../../../components/FAIRDataInformation";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -93,81 +95,56 @@ export default class Distribution extends Component {
             restricted = true;
         }
 
-        return (
-            <div className="Catalog TopLevelContainer">
-                {this.state.isLoaded ?
-                    <div className="Information">
-                        <DocumentTitle title={localizedText(this.state.distribution.title, 'en')} />
-                        <div className="InformationHeader">
-                            {/*<Link to={this.state.dataset.relative_url} className="LinkTop LinkBack">*/}
-                            {/*    <Icon type="arrowLeft" />*/}
-                            {/*    {localizedText(this.state.dataset.title, 'en')}*/}
-                            {/*</Link>*/}
-                            <Container>
-                                <div className="InformationHeaderTop">
-                                    {this.state.dataset.logo !== '' && <div className="Logo">
-                                        <img src={this.state.dataset.logo} alt={this.state.dataset.title + ' logo'} />
-                                    </div>}
-                                    <h1 className="Title">{localizedText(this.state.distribution.title, 'en')}</h1>
-                                    <div className="Description">
-                                        {localizedText(this.state.distribution.description, 'en')}
-                                    </div>
-                                    {this.state.distribution.publishers.length > 0 && <div className="Publishers">
-                                        {this.state.distribution.publishers.map((item, index) => {
-                                            return <Contact key={index}
-                                                            url={item.url}
-                                                            type={item.type}
-                                                            name={item.name} />}
-                                        )}
-                                    </div>}
-                                </div>
-                            </Container>
-                        </div>
-                        <div className="MetadataRow">
-                            <Container className="MetadataContainer">
-                                {this.state.showMetadata ? <div className="Metadata Shown">
+        const params = queryString.parse(this.props.location.search);
+        const embedded = (typeof params.embed !== 'undefined');
 
-                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-                                        Hide metadata <Icon type="arrowDown" className="Rotated" />
-                                    </a>
+        if(this.state.isLoading)
+        {
+            return <LoadingScreen showLoading={true}/>;
+        }
 
-                                    <Row>
-                                        <MetadataItem className="col-md-6" label="Version" value={this.state.distribution.version} />
-                                        <MetadataItem className="col-md-6" label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />
-                                        <MetadataItem className="col-md-6" label="License" url={this.state.distribution.license.url} value={this.state.distribution.license.name} />
-                                        <MetadataItem className="col-md-6" label="Issued" value={this.state.distribution.issued.date} />
-                                        <MetadataItem className="col-md-6" label="Modified" value={this.state.distribution.modified.date} />
-                                    </Row>
+        return <FAIRDataInformation
+            embedded={embedded}
+            className="Dataset"
+            title={localizedText(this.state.distribution.title, 'en')}
+            logo={this.state.dataset.logo}
+            version={this.state.distribution.version}
+            issued={this.state.distribution.issued}
+            modified={this.state.distribution.modified}
+            license={this.state.distribution.license}
+        >
+            <Row>
+                {this.state.distribution.description && <div className="InformationDescription">{localizedText(this.state.distribution.description, 'en', true)}</div>}
 
-                                </div> : <div className="Metadata Hidden">
-                                    <a href="#" className="MetadataButton" onClick={this.toggleMetadata}>
-                                        Show metadata <Icon type="arrowDown" />
-                                    </a>
-                                </div>}
-                            </Container>
-                        </div>
-                        <Row className="InformationRow">
-                            <Container className="Children Access">
-                                {restricted && <Alert
-                                    variant="info"
-                                    icon="lock"
-                                    message="The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself."/>
-                                }
-                                <ListItem link={this.state.distribution.access_url}
-                                          title="Access the data"
-                                          description="Get access to the distribution."
-                                          smallIcon={restricted && 'lock'} />
+                <Col md={8}>
+                    {restricted && <Alert
+                        variant="info"
+                        icon="lock"
+                        message="The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself."/>
+                    }
+                    <ListItem link={this.state.distribution.access_url}
+                              title="Access the data"
+                              description="Get access to the distribution."
+                              smallIcon={restricted && 'lock'} />
 
-                                <ListItem link={this.state.distribution.download_url}
-                                          title="Download the data"
-                                          description="Get a downloadable file for this distribution."
-                                          smallIcon={restricted && 'lock'} />
-                            </Container>
-                        </Row>
-                    </div>
-                    : <LoadingScreen showLoading={true}/>
-                }
-            </div>
-        );
+                    <ListItem link={this.state.distribution.download_url}
+                              title="Download the data"
+                              description="Get a downloadable file for this distribution."
+                              smallIcon={restricted && 'lock'} />
+                </Col>
+                <Col md={4}>
+                    {this.state.distribution.language && <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />}
+                </Col>
+            </Row>
+        </FAIRDataInformation>;
+
+        {/*{this.state.distribution.publishers.length > 0 && <div className="Publishers">*/}
+        {/*    {this.state.distribution.publishers.map((item, index) => {*/}
+        {/*        return <Contact key={index}*/}
+        {/*                        url={item.url}*/}
+        {/*                        type={item.type}*/}
+        {/*                        name={item.name} />}*/}
+        {/*    )}*/}
+        {/*</div>}*/}
     }
 }
