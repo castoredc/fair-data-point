@@ -93,11 +93,15 @@ class StudyMetadata
      */
     private $intervention;
 
-    /** @var RecruitmentStatus */
+    /**
+     * @ORM\Column(type="RecruitmentStatusType", name="recruitment_status", nullable=true)
+     *
+     * @var RecruitmentStatus|null
+     */
     private $recruitmentStatus;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      *
      * @var int
      */
@@ -295,12 +299,12 @@ class StudyMetadata
         $this->intervention = $intervention;
     }
 
-    public function getRecruitmentStatus(): RecruitmentStatus
+    public function getRecruitmentStatus(): ?RecruitmentStatus
     {
         return $this->recruitmentStatus;
     }
 
-    public function setRecruitmentStatus(RecruitmentStatus $recruitmentStatus): void
+    public function setRecruitmentStatus(?RecruitmentStatus $recruitmentStatus): void
     {
         $this->recruitmentStatus = $recruitmentStatus;
     }

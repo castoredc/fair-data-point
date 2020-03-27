@@ -1,0 +1,38 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Type;
+
+use App\Entity\Enum\RecruitmentStatus as Enum;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
+
+class RecruitmentStatusType extends Type
+{
+    /** @inheritDoc */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    {
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
+    }
+
+    /** @inheritDoc */
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Enum
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return Enum::fromString($value);
+    }
+
+    /** @inheritDoc */
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
+    {
+        return $value->toString();
+    }
+
+    public function getName(): string
+    {
+        return 'RecruitmentStatusType';
+    }
+}

@@ -50,4 +50,14 @@ class CodedText
     {
         $this->text = $text;
     }
+
+    /**
+     * @return array<string>
+     */
+    public function toArray(): array
+    {
+        return [
+            'text' => $this->text
+        ];
+    }
 }

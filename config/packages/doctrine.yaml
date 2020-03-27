@@ -11,6 +11,7 @@ doctrine:
             iri:  App\Type\IriType
             StudyType:  App\Type\StudyType
             DistributionAccessType:  App\Type\DistributionAccessType
+            RecruitmentStatusType:  App\Type\RecruitmentStatusType
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
