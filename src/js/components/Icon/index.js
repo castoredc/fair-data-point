@@ -1,5 +1,5 @@
 import React from 'react';
-import { classNames } from '../../util';
+import {classNames} from '../../util';
 import icons from './icons';
 import './Icon.scss';
 

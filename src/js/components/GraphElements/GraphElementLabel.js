@@ -35,7 +35,7 @@ class GraphElementLabel extends Component {
 
         if(asLink)
         {
-            return <a className={classNames('GraphElementLabel', this.state.isLoading && 'Loading')} href={iri} target={external ? '_blank' : ''}>
+            return <a className={classNames('GraphElementLabel', this.state.isLoading && 'Loading')} href={iri} target={external ? '_blank' : null}>
                 {this.state.label !== '' ? this.state.label : short }
                 {external && <span className="ExternalLink"><Icon type="newWindow" height={10} width={10}/></span>}
             </a>

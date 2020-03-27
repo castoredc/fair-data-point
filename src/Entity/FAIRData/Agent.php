@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\FAIRData\Distribution\Distribution;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 
@@ -38,42 +36,6 @@ abstract class Agent
      */
     private $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
-     *
-     * @var FAIRDataPoint|null
-     */
-    private $fairDataPoint;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="publishers",cascade={"persist"})
-     *
-     * @var Collection<string, Catalog>
-     */
-    private $publishedCatalogs;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Dataset", mappedBy="publishers",cascade={"persist"})
-     *
-     * @var Collection<string, Dataset>
-     */
-    private $publishedDatasets;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Distribution\Distribution", mappedBy="publishers",cascade={"persist"})
-     *
-     * @var Collection<string, Distribution>
-     */
-    private $publishedDistributions;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Dataset", mappedBy="contactPoint",cascade={"persist"})
-     *
-     * @var Collection<string, Dataset>
-     */
-    private $contactDatasets;
-
     public function __construct(string $slug, string $name)
     {
         $this->slug = $slug;
@@ -105,82 +67,8 @@ abstract class Agent
         $this->name = $name;
     }
 
-    public function getFairDataPoint(): FAIRDataPoint
-    {
-        return $this->fairDataPoint;
-    }
-
-    public function getAccessUrl(): string
-    {
-        return $this->getFairDataPoint()->getIri() . '/agent/undefined/' . $this->slug;
-    }
-
     /**
-     * @return Collection<string, Catalog>
-     */
-    public function getPublishedCatalogs(): Collection
-    {
-        return $this->publishedCatalogs;
-    }
-
-    /**
-     * @param Collection<string, Catalog> $publishedCatalogs
-     */
-    public function setPublishedCatalogs(Collection $publishedCatalogs): void
-    {
-        $this->publishedCatalogs = $publishedCatalogs;
-    }
-
-    /**
-     * @return Collection<string, Dataset>
-     */
-    public function getPublishedDatasets(): Collection
-    {
-        return $this->publishedDatasets;
-    }
-
-    /**
-     * @param Collection<string, Dataset> $publishedDatasets
-     */
-    public function setPublishedDatasets(Collection $publishedDatasets): void
-    {
-        $this->publishedDatasets = $publishedDatasets;
-    }
-
-    /**
-     * @return Collection<string, Distribution>
-     */
-    public function getPublishedDistributions(): Collection
-    {
-        return $this->publishedDistributions;
-    }
-
-    /**
-     * @param Collection<string, Distribution> $publishedDistributions
-     */
-    public function setPublishedDistributions(Collection $publishedDistributions): void
-    {
-        $this->publishedDistributions = $publishedDistributions;
-    }
-
-    /**
-     * @return Collection<string, Dataset>
-     */
-    public function getContactDatasets(): Collection
-    {
-        return $this->contactDatasets;
-    }
-
-    /**
-     * @param Collection<string, Dataset> $contactDatasets
-     */
-    public function setContactDatasets(Collection $contactDatasets): void
-    {
-        $this->contactDatasets = $contactDatasets;
-    }
-
-    /**
-     * @return array<string>
+     * @return array<mixed>
      */
     public function toArray(): array
     {
@@ -189,6 +77,11 @@ abstract class Agent
             'slug' => $this->slug,
             'name' => $this->name,
         ];
+    }
+
+    public function getAccessUrl(): string
+    {
+        return '/agent/generic/' . $this->getSlug();
     }
 
     public function toGraph(): EasyRdf_Graph

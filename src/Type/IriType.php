@@ -20,7 +20,7 @@ class IriType extends Type
     /** @inheritDoc */
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Iri
     {
-        if ($value === null) {
+        if ($value === null || $value === '') {
             return null;
         }
 
@@ -30,7 +30,11 @@ class IriType extends Type
     /** @inheritDoc */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        return $value;
+        if ($value === null || $value === '') {
+            return '';
+        }
+
+        return (string) $value;
     }
 
     public function getName(): string

@@ -1,11 +1,42 @@
+@import '../../scss/colors';
+
 .MetadataItem {
   .MetadataItemLabel {
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.43;
+    color: $neutral-600;
+    margin-bottom: 4px;
   }
   .MetadataItemValue {
+    font-size: 16px;
+    line-height: 1.5;
+    color: $neutral-300;
+
     .Icon {
       margin-right: 5px;
     }
   }
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+}
+
+.Footer .MetadataItem {
+  .MetadataItemLabel {
+    font-size: 12px;
+    color: $neutral-70;
+  }
+
+  .MetadataItemValue, .MetadataItemValue a {
+    font-size: 14px;
+    color: $neutral-50;
+  }
+
+}
+
+.Contacts {
+  margin-bottom: 24px;
+
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.5;
 }

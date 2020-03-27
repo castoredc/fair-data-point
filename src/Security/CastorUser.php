@@ -65,14 +65,11 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     private $token;
 
     public const DOMAINS = [
-        'castoredc.com' => ['ROLE_SEMANTIC_EXPERT'],
+        'castoredc.com' => ['ROLE_ADMIN'],
     ];
 
-    public const EMAILS = [
-        'a.jacobsen@lumc.nl' => ['ROLE_SEMANTIC_EXPERT'],
-        'martijn@castoredc.com' => ['ROLE_SEMANTIC_EXPERT'],
-        'demo@castoredc.com' => ['ROLE_SEMANTIC_EXPERT'],
-    ];
+    /** @var string[] */
+    private $studies;
 
     public function __construct(string $id, string $fullName, ?string $nameFirst, ?string $nameMiddle, ?string $nameLast, string $emailAddress, string $token)
     {
@@ -83,6 +80,7 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         $this->nameLast = $nameLast;
         $this->emailAddress = strtolower($emailAddress);
         $this->token = $token;
+        $this->studies = [];
     }
 
     /**
@@ -124,14 +122,12 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     {
         $roles = ['ROLE_USER'];
         $domain = strrchr($this->emailAddress, '@');
+
         if ($domain !== false) {
             $domain = substr($domain, 1);
         }
         if (isset($this::DOMAINS[$domain])) {
             $roles = array_merge($roles, $this::DOMAINS[$domain]);
-        }
-        if (isset($this::EMAILS[$this->emailAddress])) {
-            $roles = array_merge($roles, $this::EMAILS[$this->emailAddress]);
         }
 
         return $roles;
@@ -241,6 +237,27 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     public function setToken(?string $token): void
     {
         $this->token = $token;
+    }
+
+    public function getEmailAddress(): string
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getStudies(): array
+    {
+        return $this->studies;
+    }
+
+    /**
+     * @param string[] $studies
+     */
+    public function setStudies(array $studies): void
+    {
+        $this->studies = $studies;
     }
 
     public static function fromData(User $user, string $token): CastorUser

@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
+use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
 use function array_merge;
+use function uniqid;
 
 /**
  * @ORM\Entity
@@ -20,15 +23,45 @@ class Organization extends Agent
      */
     private $homepage;
 
-    public function __construct(string $slug, string $name, ?Iri $homepage)
+    /**
+     * @ORM\ManyToOne(targetEntity="Country",cascade={"persist"})
+     * @ORM\JoinColumn(name="country", referencedColumnName="code")
+     *
+     * @var Country|null
+     */
+    private $country;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $city;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"}, fetch="EAGER")
+     *
+     * @var Department[]|ArrayCollection
+     */
+    private $departments;
+
+    public function __construct(?string $slug, string $name, ?Iri $homepage, Country $country, string $city)
     {
+        $slugify = new Slugify();
+
+        if ($slug === null) {
+            $slug = $slugify->slugify($name . ' ' . uniqid());
+        }
         parent::__construct($slug, $name);
+
         $this->homepage = $homepage;
+        $this->country = $country;
+        $this->city = $city;
     }
 
     public function getAccessUrl(): string
     {
-        return $this->getFairDataPoint()->getIri() . '/agent/organization/' . $this->getSlug();
+        return '/agent/organization/' . $this->getSlug();
     }
 
     /**
@@ -37,9 +70,11 @@ class Organization extends Agent
     public function toArray(): array
     {
         return array_merge(parent::toArray(), [
-            'url' => $this->homepage->getValue(),
-            'homepage' => $this->homepage->getValue(),
+            'url' => $this->homepage !== null ? $this->homepage->getValue() : null,
+            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : null,
             'type' => 'organization',
+            'city' => $this->city,
+            'country' => $this->country->getName(),
         ]);
     }
 
@@ -58,5 +93,28 @@ class Organization extends Agent
         }
 
         return $graph;
+    }
+
+    public function getHomepage(): ?Iri
+    {
+        return $this->homepage;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @return Department[]|ArrayCollection
+     */
+    public function getDepartments()
+    {
+        return $this->departments;
     }
 }

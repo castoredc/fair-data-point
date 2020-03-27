@@ -63,12 +63,7 @@ class Distribution
      */
     private $description;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", inversedBy="publishedDistributions",cascade={"persist"})
-     * @ORM\JoinTable(name="distributions_publishers")
-     *
-     * @var Collection<string, Agent>
-     */
+    /** @var Collection<string, Agent> */
     private $publishers;
 
     /**
@@ -275,10 +270,10 @@ class Distribution
     public function toBasicArray(): array
     {
         $publishers = [];
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publishers[] = $publisher->toArray();
-        }
+        // foreach ($this->publishers as $publisher) {
+        //     /** @var Agent $publisher */
+        //     $publishers[] = $publisher->toArray();
+        // }
 
         return [
             'access_url' => $this->getAccessUrl(),

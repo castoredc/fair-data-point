@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="text_localized")
  */
 class LocalizedText
 {
@@ -24,12 +25,12 @@ class LocalizedText
      * @ORM\OneToMany(targetEntity="LocalizedTextItem", mappedBy="parent", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="texts", referencedColumnName="id")
      *
-     * @var Collection<string, LocalizedTextItem>
+     * @var Collection<mixed, LocalizedTextItem>
      */
     private $texts;
 
     /**
-     * @param Collection<string, LocalizedTextItem> $texts
+     * @param Collection<mixed, LocalizedTextItem> $texts
      */
     public function __construct(Collection $texts)
     {

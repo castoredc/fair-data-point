@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use function strtr;
+use function urlencode;
 
 class CastorAuthenticator extends SocialAuthenticator
 {
@@ -27,8 +29,12 @@ class CastorAuthenticator extends SocialAuthenticator
     /** @var RouterInterface */
     private $router;
 
-    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router)
+    /** @var ApiClient */
+    private $apiClient;
+
+    public function __construct(ApiClient $apiClient, ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router)
     {
+        $this->apiClient = $apiClient;
         $this->clientRegistry = $clientRegistry;
         $this->em = $em;
         $this->router = $router;
@@ -70,6 +76,10 @@ class CastorAuthenticator extends SocialAuthenticator
             $user->setToken($castorUser->getToken());
         }
 
+        $this->apiClient->setToken($user->getToken());
+
+        $user->setStudies($this->apiClient->getStudyIds());
+
         $this->em->persist($user);
         $this->em->flush();
 
@@ -109,8 +119,14 @@ class CastorAuthenticator extends SocialAuthenticator
      */
     public function start(Request $request, ?AuthenticationException $authException = null)
     {
+        $url = '/login';
+
+        if ($request->attributes->has('catalog')) {
+            $url .= '/' . $request->attributes->get('catalog');
+        }
+
         return new RedirectResponse(
-            '/connect/', // might be the site, where users choose their oauth provider
+            $url . '?path=' . urlencode($request->getRequestUri()), // might be the site, where users choose their oauth provider
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

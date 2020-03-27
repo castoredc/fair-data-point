@@ -14,13 +14,24 @@
     display: block;
   }
 
-  .ListItemIcon {
+  .ListItemSmallIcon {
     position: absolute;
     top: 16px;
     right: 16px;
 
     path {
       fill: $neutral-90;
+    }
+  }
+
+  .ListItemLeftIcon {
+    display: inline-block;
+    float: left;
+    margin-right: 9px;
+    margin-top: -1px;
+
+    path {
+      fill: $neutral-800;
     }
   }
 
@@ -39,6 +50,28 @@
 
     .ListItemTitle {
       color: $neutral-800;
+    }
+  }
+
+  &.Selectable {
+    border-color: $generic-white;
+    font-size: 14px;
+    font-weight: normal;
+
+    .ListItemTitle {
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    &:hover, &.Active {
+      border-color: $blue-400;
+      color: $blue-400;
+      background: $generic-white;
+      box-shadow: 0 1px 3px 0 $shadow;
+
+      .ListItemTitle {
+        color: $blue-400;
+      }
     }
   }
 }

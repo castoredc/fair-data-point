@@ -18,3 +18,11 @@
   border: 0;
   color: $generic-white;
 }
+
+.ButtonBar {
+  margin-bottom: 10px;
+
+  &.Right {
+    text-align: right;
+  }
+}

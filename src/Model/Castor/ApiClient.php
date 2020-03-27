@@ -15,6 +15,8 @@ use App\Entity\Castor\RecordData;
 use App\Entity\Castor\RecordDataCollection;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
+use App\Exception\NoAccessPermissionToStudy;
+use App\Exception\SessionTimedOut;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use GuzzleHttp\Client;
@@ -22,7 +24,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use function json_decode;
 
 class ApiClient
@@ -89,11 +90,11 @@ class ApiClient
             $body = json_decode((string) $response->getBody(), true);
         } catch (RequestException $e) {
             if ($e->getCode() === 401) {
-                throw new UnauthorizedHttpException('', $e->getMessage());
+                throw new SessionTimedOut();
             }
 
             if ($e->getCode() === 403) {
-                throw new UnauthorizedHttpException('', 'You do not have permission to access this');
+                throw new NoAccessPermissionToStudy();
             }
 
             throw new HttpException(500, $e->getMessage());
@@ -113,6 +114,45 @@ class ApiClient
         $study->setFields($this->getFields($study));
 
         return $study;
+    }
+
+    /**
+     * @return Study[]
+     *
+     * @throws Exception
+     */
+    public function getStudies(): array
+    {
+        $return = [];
+        $studies = $this->request('/api/study');
+
+        foreach ($studies['_embedded']['study'] as $study) {
+            $return[] = Study::fromData($study);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Study[]|null $studies
+     *
+     * @return array<string>
+     *
+     * @throws Exception
+     */
+    public function getStudyIds(?array $studies = null): array
+    {
+        if ($studies === null) {
+            $studies = $this->getStudies();
+        }
+
+        $ids = [];
+
+        foreach ($studies as $study) {
+            $ids[] = $study->getId();
+        }
+
+        return $ids;
     }
 
     /**

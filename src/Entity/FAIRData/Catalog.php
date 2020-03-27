@@ -58,12 +58,7 @@ class Catalog
      */
     private $description;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Agent", inversedBy="publishedCatalogs",cascade={"persist"})
-     * @ORM\JoinTable(name="catalogs_publishers")
-     *
-     * @var Collection<string, Agent>
-     */
+    /** @var Collection<string, Agent> */
     private $publishers;
 
     /**
@@ -125,6 +120,13 @@ class Catalog
      * @var Iri|null
      */
     private $logo;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $acceptSubmissions = false;
 
     /**
      * @param Collection<string, Agent> $publishers
@@ -306,16 +308,21 @@ class Catalog
         return $this->logo;
     }
 
+    public function isAcceptSubmissions(): bool
+    {
+        return $this->acceptSubmissions;
+    }
+
     /**
      * @return array<mixed>
      */
     public function toBasicArray(): array
     {
         $publishers = [];
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publishers[] = $publisher->toArray();
-        }
+        // foreach ($this->publishers as $publisher) {
+        //     /** @var Agent $publisher */
+        //     $publishers[] = $publisher->toArray();
+        // }
 
         return [
             'access_url' => $this->getAccessUrl(),
@@ -330,8 +337,9 @@ class Catalog
             'license' => $this->license->toArray(),
             'issued' => $this->issued,
             'modified' => $this->modified,
-            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : '',
-            'logo' => $this->logo !== null ? $this->logo->getValue() : '',
+            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : null,
+            'logo' => $this->logo !== null ? $this->logo->getValue() : null,
+            'acceptSubmissions' => $this->acceptSubmissions,
         ];
     }
 
