@@ -1,5 +1,5 @@
 import React from 'react';
-import { ValidatorComponent } from 'react-form-validator-core';
+import {ValidatorComponent} from 'react-form-validator-core';
 import Form from 'react-bootstrap/Form'
 import Select from 'react-select'
 

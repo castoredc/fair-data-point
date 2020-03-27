@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {classNames} from "../../util";
 import DocumentTitle from "../DocumentTitle";
-import {Col, Container, Row} from "react-bootstrap";
+import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Logo from '../Logo';
-import MetadataItem from "../MetadataItem";
 import './FAIRDataInformation.scss';
 
 export default class FAIRDataInformation extends Component {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import {shallow} from 'enzyme';
 import LoadingScreen from '../LoadingScreen';
 import renderer from 'react-test-renderer';
-import { expectSnapshotMatch } from '../../../test/util';
+import {expectSnapshotMatch} from '../../../test/util';
 
 const INITIAL_MESSAGE = 'Your action is pending...';
 

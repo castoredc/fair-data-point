@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 
 import Routes from "../../Routes";
-import Logo from "../Logo";
 
 import '../../scss/index.scss'
 import './App.scss'
-import {Link} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 import axios from "axios";
 import ToastContent from "../ToastContent";

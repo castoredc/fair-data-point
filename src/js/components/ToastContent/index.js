@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './ToastContent.scss'
-
 // import ErrorIcon from '@material-ui/icons/Error';
 // import WarningIcon from '@material-ui/icons/Warning';
 // import InfoIcon from '@material-ui/icons/Info';

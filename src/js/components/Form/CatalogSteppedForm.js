@@ -1,11 +1,7 @@
 import React, {Component} from 'react'
 import './FullScreenSteppedForm.scss'
 import {localizedText} from "../../util";
-import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "../ToastContent";
 import FullScreenSteppedForm from "./FullScreenSteppedForm";
-import LoadingScreen from "../LoadingScreen";
 
 export default class CatalogSteppedForm extends Component {
     render() {

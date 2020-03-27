@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme'; //todo is shallow enough?
+import {shallow} from 'enzyme'; //todo is shallow enough?
 import DocumentTitle from './';
 
 describe('DocumentTitle', () => {

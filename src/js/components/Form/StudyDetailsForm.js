@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { ValidatorForm } from 'react-form-validator-core';
+import {ValidatorForm} from 'react-form-validator-core';
 
 import './Form.scss'
 import {Redirect} from "react-router-dom";

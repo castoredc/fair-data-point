@@ -1,15 +1,10 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios/index";
 
-import {Container, Row, Col, Button} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
-import DocumentTitle from "../../../components/DocumentTitle";
 import {localizedText} from "../../../util";
-import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
-import Icon from "../../../components/Icon";
-import {Link} from "react-router-dom";
-import Contact from "../../../components/MetadataItem/Contacts";
 import Alert from "../../../components/Alert";
 import queryString from "query-string";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";

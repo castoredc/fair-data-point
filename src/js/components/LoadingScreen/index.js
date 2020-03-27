@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import EventListener from '../EventListener';
-import { preventDefault } from '../../util';
+import {preventDefault} from '../../util';
 import './LoadingScreen.scss';
 
 const MINIMUM_DURATION = 2500;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { classNames } from '../../../util';
+import {classNames} from '../../../util';
 import {ValidatorComponent} from "react-form-validator-core";
 import Form from 'react-bootstrap/Form'
 
