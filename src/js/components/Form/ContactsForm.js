@@ -135,7 +135,7 @@ export default class ContactsForm extends Component {
 
     componentDidMount() {
         ValidatorForm.addValidationRule('isOrcid', (value) => {
-            if(value === '')
+            if(value === '' || value === null)
             {
                 return true;
             }
@@ -169,28 +169,6 @@ export default class ContactsForm extends Component {
         });
     };
 
-    createDataset = () => {
-        axios.post('/api/catalog/' + this.props.catalog + '/study/' + this.props.studyId + '/publish', this.state.contacts)
-            .then((response) => {
-                this.setState({
-                    isSaved: true
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    submitDisabled: false,
-                    isLoading: false
-                });
-
-                if(error.response && typeof error.response.data.error !== "undefined")
-                {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
-                }
-            });
-    };
-
     handleSubmit = (event) => {
         event.preventDefault();
 
@@ -204,7 +182,9 @@ export default class ContactsForm extends Component {
         if(this.form.isFormValid()) {
             axios.post('/api/study/' + this.props.studyId + '/contacts/add', this.state.contacts)
                 .then((response) => {
-                   this.createDataset();
+                    this.setState({
+                        isSaved: true
+                    });
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -234,7 +214,7 @@ export default class ContactsForm extends Component {
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/finished'} />;
+            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/consent'} />;
         }
 
         return (
@@ -328,7 +308,7 @@ export default class ContactsForm extends Component {
                         </LinkContainer>
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Finish</Button>
+                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
                     </Col>
                 </Row>
 

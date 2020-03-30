@@ -12,7 +12,7 @@ export default class CatalogSteppedForm extends Component {
             smallHeading={smallHeading}
             heading={heading}
             description={description}
-            numberOfSteps={4}
+            numberOfSteps={5}
             currentStep={currentStep}
             >
             {children}

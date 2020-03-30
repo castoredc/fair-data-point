@@ -110,6 +110,20 @@ class StudyMetadata
     /** @var int|null */
     private $actualEnrollment;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    private $consentPublish;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    private $consentSocialMedia;
+
     /** @var @TODO Add enrollment method */
     // private $enrollmentMethod;
 
@@ -440,6 +454,26 @@ class StudyMetadata
     public function getUpdated(): ?DateTime
     {
         return $this->updated;
+    }
+
+    public function hasConsentPublish(): ?bool
+    {
+        return $this->consentPublish;
+    }
+
+    public function setConsentPublish(bool $consentPublish): void
+    {
+        $this->consentPublish = $consentPublish;
+    }
+
+    public function hasConsentSocialMedia(): ?bool
+    {
+        return $this->consentSocialMedia;
+    }
+
+    public function setConsentSocialMedia(bool $consentSocialMedia): void
+    {
+        $this->consentSocialMedia = $consentSocialMedia;
     }
 
     /**

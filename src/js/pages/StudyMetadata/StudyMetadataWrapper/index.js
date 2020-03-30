@@ -9,6 +9,7 @@ import EditContactDetails from "../EditContactDetails";
 import Finished from "../Finished";
 import {Route, Switch} from "react-router-dom";
 import LoadingScreen from "../../../components/LoadingScreen";
+import EditConsentDetails from "../EditConsentDetails";
 
 export default class StudyMetadataWrapper extends Component {
     constructor(props) {
@@ -61,6 +62,8 @@ export default class StudyMetadataWrapper extends Component {
                    render={(props) => <EditOrganizationDetails {...props} catalog={this.state.catalog}/>}/>
             <Route path="/my-studies/:catalog/study/:studyId/metadata/contacts" exact
                    render={(props) => <EditContactDetails {...props} catalog={this.state.catalog}/>}/>
+            <Route path="/my-studies/:catalog/study/:studyId/metadata/consent" exact
+                   render={(props) => <EditConsentDetails {...props} catalog={this.state.catalog}/>}/>
             <Route path="/my-studies/:catalog/study/:studyId/metadata/finished" exact
                    render={(props) => <Finished {...props} catalog={this.state.catalog}/>}/>
         </Switch>;
