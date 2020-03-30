@@ -28,7 +28,7 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
 
     public function __invoke(AddCastorStudyCommand $message): void
     {
-        if (! in_array($message->getStudyId(), $message->getUser()->getStudies()), true) {
+        if (! in_array($message->getStudyId(), $message->getUser()->getStudies(), true)) {
             throw new NoAccessPermissionToStudy();
         }
 
