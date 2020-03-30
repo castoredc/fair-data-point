@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
+use function in_array;
 use function strrchr;
 use function strtolower;
 use function substr;
@@ -276,7 +277,7 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     /**
      * Return all of the owner details available as an array.
      *
-     * @return array<string>
+     * @return array<mixed>
      */
     public function toArray(): array
     {
@@ -284,9 +285,10 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
             'id' => $this->id,
             'fullName' => $this->fullName,
             'nameFirst' => $this->nameFirst,
-            'nameMiddle' => $this->nameMiddle ,
+            'nameMiddle' => $this->nameMiddle,
             'nameLast' => $this->nameLast,
             'emailAddress' => $this->emailAddress,
+            'isAdmin' => in_array('ROLE_ADMIN', $this->getRoles(), true),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 
 use App\Api\Request\CastorStudyApiRequest;
 use App\Exception\ApiRequestParseError;
+use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
 use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Message\Api\Study\FindStudiesByUserCommand;
@@ -55,6 +56,9 @@ class StudiesApiController extends ApiController
 
             if ($e instanceof StudyAlreadyExists) {
                 return new JsonResponse($e->toArray(), 409);
+            }
+            if ($e instanceof NoAccessPermissionToStudy) {
+                return new JsonResponse($e->toArray(), 403);
             }
         }
 

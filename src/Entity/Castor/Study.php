@@ -61,6 +61,13 @@ class Study implements JsonSerializable
     private $dataset;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $enteredManually = false;
+
+    /**
      * @param ArrayCollection<string, Field>|null $fields
      */
     public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug, ?ArrayCollection $fields)
@@ -173,6 +180,16 @@ class Study implements JsonSerializable
     public function setDataset(?Dataset $dataset): void
     {
         $this->dataset = $dataset;
+    }
+
+    public function isEnteredManually(): bool
+    {
+        return $this->enteredManually;
+    }
+
+    public function setEnteredManually(bool $enteredManually): void
+    {
+        $this->enteredManually = $enteredManually;
     }
 
     /**
