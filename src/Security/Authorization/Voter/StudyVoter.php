@@ -42,7 +42,7 @@ class StudyVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
@@ -66,7 +66,7 @@ class StudyVoter extends Voter
             return true;
         }
 
-        return $study->getDataset() !== null;
+        return $study->getLatestMetadata()->hasConsentPublish();
     }
 
     private function canEdit(Study $study, CastorUser $user): bool

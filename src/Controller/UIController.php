@@ -61,6 +61,7 @@ class UIController extends AbstractController
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/details", name="study_metadata_details")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/centers", name="study_metadata_centers")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/contacts", name="study_metadata_contact")
+     * @Route("/my-studies/{catalog}/study/{studyId}/metadata/consent", name="study_metadata_consent")
      * @Route("/my-studies/{catalog}/study/{studyId}/metadata/finished", name="study_metadata_finished")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})

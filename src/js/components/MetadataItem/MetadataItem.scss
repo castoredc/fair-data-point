@@ -33,10 +33,11 @@
 
 }
 
-.Contacts {
-  margin-bottom: 24px;
-
-  font-size: 16px;
-  font-style: italic;
-  line-height: 1.5;
+.InformationRow {
+  .Contacts {
+    margin-bottom: 24px;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.5;
+  }
 }

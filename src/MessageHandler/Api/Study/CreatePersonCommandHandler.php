@@ -27,7 +27,7 @@ class CreatePersonCommandHandler implements MessageHandlerInterface
             $message->getLastName(),
             $message->getEmail(),
             null,
-            new Iri($message->getOrcid())
+            $message->getOrcid() !== null ? new Iri($message->getOrcid()) : null
         );
 
         $message->getStudy()->getLatestMetadata()->addContact($contact);

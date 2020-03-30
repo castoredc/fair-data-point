@@ -1,0 +1,31 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Api\Resource;
+
+use App\Entity\Metadata\StudyMetadata;
+
+class ConsentApiResource implements ApiResource
+{
+    /** @var StudyMetadata */
+    private $studyMetadata;
+
+    public function __construct(StudyMetadata $studyMetadata)
+    {
+        $this->studyMetadata = $studyMetadata;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'studyId' => $this->studyMetadata->getStudy()->getId(),
+            'consent' => [
+                'publish' => $this->studyMetadata->hasConsentPublish(),
+                'socialMedia' => $this->studyMetadata->hasConsentSocialMedia(),
+            ],
+        ];
+    }
+}

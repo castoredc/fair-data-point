@@ -25,7 +25,7 @@ class PersonApiResource implements ApiResource
             'middleName' => $this->person->getMiddleName(),
             'lastName' => $this->person->getLastName(),
             'email' => $this->person->getEmail(),
-            'orcid' => $this->person->getOrcid()->getValue(),
+            'orcid' => $this->person->getOrcid() !== null ? $this->person->getOrcid()->getValue() : null,
         ];
     }
 }
