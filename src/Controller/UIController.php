@@ -108,5 +108,4 @@ class UIController extends AbstractController
             'react.html.twig'
         );
     }
-
 }
