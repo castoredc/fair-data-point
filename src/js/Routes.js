@@ -5,16 +5,13 @@ import FAIRDataPointMain from "./pages/FAIRDataPoint/FAIRDataPointMain";
 import Catalog from "./pages/FAIRDataPoint/Catalog";
 import Dataset from "./pages/FAIRDataPoint/Dataset";
 import Distribution from "./pages/FAIRDataPoint/Distribution";
-import MyStudies from "./pages/StudyMetadata/MyStudies";
 import Login from "./pages/Login";
-import SelectStudy from "./pages/StudyMetadata/SelectStudy";
-import EditStudyDetails from "./pages/StudyMetadata/EditStudyDetails";
-import EditOrganizationDetails from "./pages/StudyMetadata/EditOrganizationDetails";
 import axios from "axios";
-import EditContactDetails from "./pages/StudyMetadata/EditContactDetails";
-import Finished from "./pages/StudyMetadata/Finished";
-import PrivateRoute from './components/PrivateRoute';
 import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
+import Catalogs from "./pages/Admin/Catalogs";
+import {PrivateRoute, ProtectedRoute} from "./components/Route";
+import SingleCatalog from "./pages/Admin/SingleCatalog";
+import AddStudy from "./pages/Admin/AddStudy";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -48,5 +45,9 @@ export default ({user}) =>
         <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/consent" exact user={user} component={StudyMetadataWrapper} />
         <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={StudyMetadataWrapper} />
 
+        /* Admin */
+        <ProtectedRoute path="/admin" exact user={user} component={Catalogs} />
+        <ProtectedRoute path="/admin/:catalog" exact user={user} component={SingleCatalog} />
+        <ProtectedRoute path="/admin/:catalog/study/add" exact user={user} component={AddStudy} />
         <Route component={NotFound} />
     </Switch>;

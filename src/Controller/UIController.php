@@ -82,4 +82,30 @@ class UIController extends AbstractController
     {
         return $this->redirectToRoute('fdp_render');
     }
+
+    /**
+     * @Route("/admin", name="admin")
+     */
+    public function admin(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig'
+        );
+    }
+
+    /**
+     * @Route("/admin/{catalog}", name="admin_catalog")
+     * @Route("/admin/{catalog}/study/add", name="admin_study_add")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function adminCatalog(Catalog $catalog): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig'
+        );
+    }
 }

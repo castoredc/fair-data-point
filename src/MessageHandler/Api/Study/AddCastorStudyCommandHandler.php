@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Api\Study;
 
+use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
 use App\Message\Api\Study\AddCastorStudyCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function in_array;
 
 class AddCastorStudyCommandHandler implements MessageHandlerInterface
 {
@@ -26,6 +28,10 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
 
     public function __invoke(AddCastorStudyCommand $message): void
     {
+        if (! in_array($message->getStudyId(), $message->getUser()->getStudies(), true)) {
+            throw new NoAccessPermissionToStudy();
+        }
+
         $this->apiClient->setToken($message->getUser()->getToken());
 
         $study = $this->apiClient->getStudy($message->getStudyId());

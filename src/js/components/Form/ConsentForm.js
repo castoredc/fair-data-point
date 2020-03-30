@@ -211,9 +211,3 @@ export default class ConsentForm extends Component {
         );
     }
 }
-
-const studyTypes = [
-    { value: 'interventional', label: 'Interventional' },
-    { value: 'observational', label: 'Observational' },
-    { value: 'registry', label: 'Registry' }
-];
