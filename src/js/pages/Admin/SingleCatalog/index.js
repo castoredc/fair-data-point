@@ -111,7 +111,7 @@ export default class SingleCatalog extends Component {
                     </div>
                     {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
                             return <ListItem    key={index}
-                                                link={'/admin/' + this.props.match.params.catalog + '/study/' + item.slug}
+                                                link={'/fdp/' + this.props.match.params.catalog + '/' + item.slug}
                                                 title={localizedText(item.title, 'en')}
                                                 description={localizedText(item.shortDescription, 'en')} />
                         },
