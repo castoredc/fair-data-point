@@ -94,6 +94,13 @@ class Dataset
     private $study;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $isPublished = false;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
     public function __construct(string $slug, Collection $publishers, Language $language, ?License $license, ?LocalizedText $keyword, ?Iri $landingPage)
@@ -251,6 +258,16 @@ class Dataset
         return $first->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function isPublished(): bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): void
+    {
+        $this->isPublished = $isPublished;
+    }
+
     /**
      * @return array<mixed>
      */
@@ -315,6 +332,7 @@ class Dataset
             'studyType' => $metadata->getType()->toString(),
             'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
             'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
+            'published' => $this->isPublished
         ];
     }
 
