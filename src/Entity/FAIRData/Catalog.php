@@ -398,7 +398,7 @@ class Catalog
 
         $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
 
-        foreach ($this->datasets as $dataset) {
+        foreach ($this->getDatasets(false) as $dataset) {
             $graph->addResource($this->getAccessUrl(), 'dcat:dataset', $dataset->getAccessUrl());
         }
 
