@@ -36,6 +36,8 @@ class CatalogApiController extends ApiController
      */
     public function studies(Catalog $catalog, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('view', $catalog);
+
         return new JsonResponse((new CatalogApiResource($catalog))->toArray());
     }
 
@@ -45,6 +47,8 @@ class CatalogApiController extends ApiController
      */
     public function datasets(Catalog $catalog, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('view', $catalog);
+
         return new JsonResponse((new DatasetsApiResource($catalog->getDatasets()->toArray()))->toArray());
     }
 
@@ -54,6 +58,8 @@ class CatalogApiController extends ApiController
      */
     public function brand(Catalog $catalog, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('view', $catalog);
+
         return new JsonResponse((new CatalogBrandApiResource($catalog))->toArray());
     }
 }

@@ -45,6 +45,7 @@ class ConsentApiController extends ApiController
      */
     public function changeConsent(Catalog $catalog, Study $study, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('add', $catalog);
         $this->denyAccessUnlessGranted('edit', $study);
 
         try {
