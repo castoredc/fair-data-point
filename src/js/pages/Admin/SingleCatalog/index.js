@@ -117,6 +117,7 @@ export default class SingleCatalog extends Component {
                                                           id={item.studyId}
                                                           catalog={this.props.match.params.catalog}
                                                           name={localizedText(item.title, 'en')}
+                                                          published={item.published}
                                                           slug={item.slug}
                             />
                         },

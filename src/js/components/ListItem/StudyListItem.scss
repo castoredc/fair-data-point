@@ -68,6 +68,10 @@
     &:hover {
       text-decoration: none;
     }
+
+    &:not([href]):hover {
+      color: $neutral-800;
+    }
   }
   .AdminStudyListItemButtons {
     text-align: right;

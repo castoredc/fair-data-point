@@ -63,7 +63,7 @@ export default class AddStudy extends Component {
             submitDisabled: true
         });
 
-        axios.post('/api/study/add', {
+        axios.post('/api/catalog/' + this.props.match.params.catalog + '/study/add', {
             studyId: this.state.selectedStudy
         })
         .then((response) => {
