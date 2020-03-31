@@ -265,9 +265,22 @@ class Catalog
     /**
      * @return Collection<string, Dataset>
      */
-    public function getDatasets(): Collection
+    public function getDatasets(bool $includeUnpublishedDatasets): Collection
     {
-        return $this->datasets;
+        if ($includeUnpublishedDatasets) {
+            return $this->datasets;
+        }
+
+        $datasets = new ArrayCollection();
+
+        foreach ($this->datasets as $dataset) {
+            /** @var Dataset $dataset */
+            if($dataset->isPublished()) {
+                $datasets->set($dataset->getId(), $dataset);
+            }
+        }
+
+        return $datasets;
     }
 
     /**
@@ -349,7 +362,7 @@ class Catalog
     public function toArray(): array
     {
         $datasets = [];
-        foreach ($this->datasets as $dataset) {
+        foreach ($this->getDatasets(false) as $dataset) {
             /** @var Dataset $dataset */
             $datasets[] = $dataset->toBasicArray();
         }

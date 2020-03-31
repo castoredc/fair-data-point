@@ -248,7 +248,7 @@ class RDFRendererController extends AbstractController
 
         /** @var Dataset|null $dataset */
         $dataset = $datasetRepository->findOneBy(['slug' => $datasetSlug]);
-        if ($dataset === null || ! $dataset->hasCatalog($catalog)) {
+        if ($dataset === null || ! $dataset->hasCatalog($catalog) || ! $dataset->isPublished()) {
             throw new NotFoundHttpException('Dataset not found');
         }
 
@@ -307,7 +307,7 @@ class RDFRendererController extends AbstractController
 
         /** @var Dataset|null $dataset */
         $dataset = $datasetRepository->findOneBy(['slug' => $datasetSlug]);
-        if ($dataset === null || ! $dataset->hasCatalog($catalog)) {
+        if ($dataset === null || ! $dataset->hasCatalog($catalog) || ! $dataset->isPublished()) {
             throw new NotFoundHttpException('Dataset not found');
         }
 
@@ -381,7 +381,7 @@ class RDFRendererController extends AbstractController
 
         /** @var Dataset|null $dataset */
         $dataset = $datasetRepository->findOneBy(['slug' => $datasetSlug]);
-        if ($dataset === null || ! $dataset->hasCatalog($catalog)) {
+        if ($dataset === null || ! $dataset->hasCatalog($catalog) || ! $dataset->isPublished()) {
             throw new NotFoundHttpException('Dataset not found');
         }
 
@@ -462,7 +462,7 @@ class RDFRendererController extends AbstractController
 
         /** @var Dataset|null $dataset */
         $dataset = $datasetRepository->findOneBy(['slug' => $datasetSlug]);
-        if ($dataset === null || ! $dataset->hasCatalog($catalog)) {
+        if ($dataset === null || ! $dataset->hasCatalog($catalog) || ! $dataset->isPublished()) {
             throw new NotFoundHttpException('Dataset not found');
         }
 
