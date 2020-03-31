@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Request;
 
+use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,6 +67,18 @@ class StudyMetadataApiRequest extends SingleApiRequest
      */
     private $estimatedStudyCompletionDate;
 
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $summary;
+
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $recruitmentStatus;
+
     protected function parse(): void
     {
         $this->briefName = $this->getFromData('briefName');
@@ -77,6 +90,8 @@ class StudyMetadataApiRequest extends SingleApiRequest
         $this->estimatedEnrollment = (int) $this->getFromData('estimatedEnrollment');
         $this->estimatedStudyStartDate = $this->getFromData('estimatedStudyStartDate');
         $this->estimatedStudyCompletionDate = $this->getFromData('estimatedStudyCompletionDate');
+        $this->summary = $this->getFromData('summary');
+        $this->recruitmentStatus = $this->getFromData('recruitmentStatus');
     }
 
     public function getBriefName(): string
@@ -130,5 +145,15 @@ class StudyMetadataApiRequest extends SingleApiRequest
         }
 
         return new DateTimeImmutable($this->estimatedStudyCompletionDate);
+    }
+
+    public function getSummary(): ?string
+    {
+        return $this->summary;
+    }
+
+    public function getRecruitmentStatus(): ?RecruitmentStatus
+    {
+        return $this->recruitmentStatus !== null ? RecruitmentStatus::fromString($this->recruitmentStatus) : null;
     }
 }

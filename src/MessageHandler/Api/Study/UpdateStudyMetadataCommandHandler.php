@@ -29,6 +29,7 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
         $message->getMetadata()->setEstimatedEnrollment($message->getEstimatedEnrollment());
         $message->getMetadata()->setEstimatedStudyStartDate($message->getEstimatedStudyStartDate());
         $message->getMetadata()->setEstimatedStudyCompletionDate($message->getEstimatedStudyCompletionDate());
+        $message->getMetadata()->setRecruitmentStatus($message->getRecruitmentStatus());
 
         $this->em->persist($message->getMetadata());
 

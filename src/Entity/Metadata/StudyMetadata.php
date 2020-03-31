@@ -207,7 +207,8 @@ class StudyMetadata
         ?CodedText $intervention,
         int $estimatedEnrollment,
         ?DateTimeImmutable $estimatedStudyStartDate,
-        ?DateTimeImmutable $estimatedStudyCompletionDate
+        ?DateTimeImmutable $estimatedStudyCompletionDate,
+        ?RecruitmentStatus $recruitmentStatus
     ) {
         $this->briefName = $briefName;
         $this->scientificName = $scientificName;
@@ -219,6 +220,7 @@ class StudyMetadata
         $this->estimatedEnrollment = $estimatedEnrollment;
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
+        $this->recruitmentStatus = $recruitmentStatus;
         $this->centers = new ArrayCollection();
         $this->contacts = new ArrayCollection();
     }

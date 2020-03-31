@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Message\Api\Study;
 
 use App\Entity\Castor\Study;
+use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use App\Security\CastorUser;
 use DateTimeImmutable;
@@ -46,6 +47,9 @@ class CreateStudyMetadataCommand
     /** @var CastorUser */
     private $user;
 
+    /** @var RecruitmentStatus|null */
+    private $recruitmentStatus;
+
     public function __construct(
         Study $study,
         string $briefName,
@@ -58,6 +62,7 @@ class CreateStudyMetadataCommand
         int $estimatedEnrollment,
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
+        ?RecruitmentStatus $recruitmentStatus,
         CastorUser $user
     ) {
         $this->study = $study;
@@ -71,6 +76,7 @@ class CreateStudyMetadataCommand
         $this->estimatedEnrollment = $estimatedEnrollment;
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
+        $this->recruitmentStatus = $recruitmentStatus;
         $this->user = $user;
     }
 
@@ -127,6 +133,11 @@ class CreateStudyMetadataCommand
     public function getEstimatedStudyCompletionDate(): ?DateTimeImmutable
     {
         return $this->estimatedStudyCompletionDate;
+    }
+
+    public function getRecruitmentStatus(): ?RecruitmentStatus
+    {
+        return $this->recruitmentStatus;
     }
 
     public function getUser(): CastorUser
