@@ -12,6 +12,8 @@ import ListItem from "../../../components/ListItem";
 import {LinkContainer} from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
 import AdminPage from "../../../components/AdminPage";
+import AdminStudyListItem from "../../../components/ListItem/AdminStudyListItem";
+import Container from "react-bootstrap/Container";
 
 export default class SingleCatalog extends Component {
     constructor(props) {
@@ -109,13 +111,17 @@ export default class SingleCatalog extends Component {
                             <Button variant="primary">Add study</Button>
                         </LinkContainer>
                     </div>
+                    <Container>
                     {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
-                            return <ListItem    key={index}
-                                                link={'/fdp/' + this.props.match.params.catalog + '/' + item.slug}
-                                                title={localizedText(item.title, 'en')}
-                                                description={localizedText(item.shortDescription, 'en')} />
+                            return <AdminStudyListItem    key={index}
+                                                          id={item.studyId}
+                                                          catalog={this.props.match.params.catalog}
+                                                          name={localizedText(item.title, 'en')}
+                                                          slug={item.slug}
+                            />
                         },
-                    ) : <div className="NoResults">No datasets found.</div>}
+                    ) : <div className="NoResults">No studies found.</div>}
+                    </Container>
                 </Col>
             </Row>
         </AdminPage>;

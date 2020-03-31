@@ -64,83 +64,79 @@
   }
 }
 
-.FullScreenSteppedForm {
-  .FullScreenSteppedFormHeader {
-    margin: 50px 0;
-    border-bottom: 1px solid $neutral-30;
-    padding-bottom: 50px;
+.FullScreenSteppedFormHeader {
+  margin: 50px 0;
+  border-bottom: 1px solid $neutral-30;
+  padding-bottom: 50px;
 
-    .FullScreenSteppedFormStepNumber {
-      color: $neutral-300;
-      font-size: 16px;
-      font-weight: 600;
+  .FullScreenSteppedFormStepNumber {
+    color: $neutral-300;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .FullScreenSteppedFormStepName {
+    font-size: 32px;
+  }
+
+  .FullScreenSteppedFormStepDescription {
+    font-size: 16px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.31;
+    letter-spacing: normal;
+    color: $neutral-800;
+  }
+}
+
+.FullScreenSteppedFormButtons {
+  padding: 50px 0;
+  margin-top: 50px;
+  border-top: 1px solid $neutral-30;
+
+  & > div:nth-child(2)
+  {
+    text-align: right;
+  }
+}
+
+.RepeatedBlock {
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid $neutral-30;
+
+  &:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+
+  .RemoveButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    font-weight: 600;
+    color: $neutral-300;
+
+    .Icon {
+      height: 12px;
+      width: 12px;
+      margin-left: 3px;
+      margin-top: -3px;
+
+      path {
+        fill: $neutral-300;
+      }
     }
 
-    .FullScreenSteppedFormStepName {
-      font-size: 32px;
-    }
-
-    .FullScreenSteppedFormStepDescription {
-      font-size: 16px;
-      font-weight: 600;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.31;
-      letter-spacing: normal;
+    &:hover {
+      text-decoration: none;
       color: $neutral-800;
-    }
-  }
 
-  .FullScreenSteppedFormWrapper {
-    .FullScreenSteppedFormButtons {
-      padding: 50px 0;
-      margin-top: 50px;
-      border-top: 1px solid $neutral-30;
-
-      & > div:nth-child(2)
-      {
-        text-align: right;
-      }
-    }
-  }
-
-  .RepeatedBlock {
-    padding-bottom: 30px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid $neutral-30;
-
-    &:last-child {
-      padding-bottom: 0;
-      margin-bottom: 0;
-      border-bottom: none;
-    }
-
-    .RemoveButton {
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      font-weight: 600;
-      color: $neutral-300;
-
-      .Icon {
-        height: 12px;
-        width: 12px;
-        margin-left: 3px;
-        margin-top: -3px;
-
-        path {
-          fill: $neutral-300;
-        }
-      }
-
-      &:hover {
-        text-decoration: none;
-        color: $neutral-800;
-
-        .Icon path {
-          fill: $neutral-800;
-        }
+      .Icon path {
+        fill: $neutral-800;
       }
     }
   }

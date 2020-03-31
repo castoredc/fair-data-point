@@ -54,3 +54,45 @@
     padding-top: 24px;
   }
 }
+
+.AdminStudyListItem {
+  padding: 0 16px;
+
+  .AdminStudyListItemTitle a {
+    display: block;
+    padding: 20px 0;
+    font-weight: 600;
+    font-size: 16px;
+    color: $neutral-800;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .AdminStudyListItemButtons {
+    text-align: right;
+
+    .btn {
+      font-weight: 700;
+      color: $neutral-700;
+      padding: 20px 20px;
+
+      .Icon {
+        margin-right: 5px;
+      }
+
+      .Icon path {
+        fill: $neutral-700;
+      }
+
+      &:hover {
+        text-decoration: none;
+        color: $neutral-300;
+
+        .Icon path {
+          fill: $neutral-300;
+        }
+      }
+    }
+  }
+}

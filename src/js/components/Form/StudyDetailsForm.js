@@ -180,14 +180,17 @@ export default class StudyDetailsForm extends Component {
     };
 
     render() {
-        const { catalog, studyId } = this.props;
+        const { catalog, studyId, action, admin } = this.props;
+
+        const backUrl = admin ? '/admin/' + catalog : '/my-studies/' + catalog + '/study/add';
+        const nextUrl = admin ? '/admin/' + catalog + '/study/' + studyId + '/metadata/' + action + '/centers' : '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers'} />;
+            return <Redirect push to={nextUrl} />;
         }
 
         return (
@@ -324,7 +327,7 @@ export default class StudyDetailsForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={'/my-studies/' + catalog + '/study/add'}>
+                        <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>

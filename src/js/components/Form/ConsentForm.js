@@ -138,13 +138,16 @@ export default class ConsentForm extends Component {
     };
 
     render() {
-        const { catalog, studyId } = this.props;
+        const { catalog, studyId, action, admin} = this.props;
+
+        const backUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/contacts' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/contacts';
+        const nextUrl = admin ? '/admin/' + catalog : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/finished';
 
         const required = "This field is required";
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/finished'} />;
+            return <Redirect push to={nextUrl} />;
         }
 
         return (
@@ -198,7 +201,7 @@ export default class ConsentForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={'/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/contacts'}>
+                        <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>

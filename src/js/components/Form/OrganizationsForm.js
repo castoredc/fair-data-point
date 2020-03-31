@@ -226,14 +226,17 @@ export default class OrganizationsForm extends Component {
     };
 
     render() {
-        const { catalog, studyId } = this.props;
+        const { catalog, studyId, action, admin } = this.props;
+
+        const backUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/details' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/details';
+        const nextUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/contacts' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/contacts';
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/contacts'} />;
+            return <Redirect push to={nextUrl} />;
         }
 
         return (
@@ -321,7 +324,7 @@ export default class OrganizationsForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={'/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/details'}>
+                        <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>

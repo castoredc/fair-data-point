@@ -294,6 +294,7 @@ class Dataset
             'access_url' => $this->getAccessUrl(),
             'relative_url' => $this->getRelativeUrl(),
             'id' => $this->id,
+            'studyId' => $this->study->getId(),
             'slug' => $this->slug,
             'title' => $title->toArray(),
             'version' => $this->study->getLatestMetadataVersion(),
