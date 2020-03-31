@@ -7,6 +7,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
 use App\Exception\CatalogNotExceptingSubmissions;
 use App\Exception\StudyAlreadyHasDataset;
+use App\Exception\StudyAlreadyHasSameDataset;
 use App\Message\Api\Study\PublishStudyInCatalogCommand;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +31,10 @@ class PublishStudyInCatalogCommandHandler implements MessageHandlerInterface
         $language = $this->em->getRepository(Language::class)->find('en');
 
         if ($message->getStudy()->getDataset() !== null) {
+            if ($message->getStudy()->getDataset()->hasCatalog($message->getCatalog())) {
+                throw new StudyAlreadyHasSameDataset();
+            }
+
             throw new StudyAlreadyHasDataset();
         }
 

@@ -10,6 +10,7 @@ use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Exception\CatalogNotFound;
 use App\Exception\StudyAlreadyHasDataset;
+use App\Exception\StudyAlreadyHasSameDataset;
 use App\Exception\StudyNotFound;
 use App\Message\Api\Study\PublishStudyInCatalogCommand;
 use App\Message\Api\Study\UpdateConsentCommand;
@@ -75,6 +76,9 @@ class ConsentApiController extends ApiController
             }
             if ($e instanceof StudyAlreadyHasDataset) {
                 return new JsonResponse($e->toArray(), 400);
+            }
+            if ($e instanceof StudyAlreadyHasSameDataset) {
+                return new JsonResponse([], 200);
             }
 
             return new JsonResponse([], 500);
