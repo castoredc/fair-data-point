@@ -6,7 +6,7 @@ namespace App\Message\Api\Study;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 
-class PublishStudyInCatalogCommand
+class AddStudyToCatalogCommand
 {
     /** @var Study */
     private $study;

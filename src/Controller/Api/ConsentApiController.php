@@ -12,7 +12,7 @@ use App\Exception\CatalogNotFound;
 use App\Exception\StudyAlreadyHasDataset;
 use App\Exception\StudyAlreadyHasSameDataset;
 use App\Exception\StudyNotFound;
-use App\Message\Api\Study\PublishStudyInCatalogCommand;
+use App\Message\Api\Study\PublishStudyCommand;
 use App\Message\Api\Study\UpdateConsentCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,7 +62,7 @@ class ConsentApiController extends ApiController
             );
 
             if ($parsed->getPublish()) {
-                $bus->dispatch(new PublishStudyInCatalogCommand($study, $catalog));
+                $bus->dispatch(new PublishStudyCommand($study));
             }
 
             return new JsonResponse([], 200);

@@ -69,10 +69,10 @@ export default class CastorStudyForm extends Component {
         });
 
         if(this.form.isFormValid()) {
-            axios.post('/api/study/add/manual', {
+            axios.post('/api/catalog/' + this.props.catalog + '/study/add/manual', {
                 studyId:                    this.state.data.studyId,
-                studyName:               this.state.data.studyName,
-                studySlug:                 this.state.data.studySlug
+                studyName:                  this.state.data.studyName,
+                studySlug:                  this.state.data.studySlug
             })
                 .then((response) => {
                     this.setState({

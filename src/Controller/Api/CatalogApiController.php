@@ -49,7 +49,7 @@ class CatalogApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
-        return new JsonResponse((new DatasetsApiResource($catalog->getDatasets()->toArray()))->toArray());
+        return new JsonResponse((new DatasetsApiResource($catalog->getDatasets($this->isGranted('edit', $catalog))->toArray()))->toArray());
     }
 
     /**
