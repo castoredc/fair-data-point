@@ -8,6 +8,8 @@ import globe from './globe.svg'
 import newWindow from './NewWindow.svg'
 import lock from './lock.svg'
 import study from './study.svg'
+import view from './view.svg'
+import edit from './edit.svg'
 
 export default {
     add,
@@ -19,5 +21,7 @@ export default {
     globe,
     newWindow,
     lock,
-    study
+    study,
+    view,
+    edit
 };

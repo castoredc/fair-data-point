@@ -63,24 +63,23 @@ class DetailsApiController extends ApiController
             /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(
+            $bus->dispatch(
                 new CreateStudyMetadataCommand(
                     $study,
                     $parsed->getBriefName(),
                     $parsed->getScientificName(),
                     $parsed->getBriefSummary(),
-                    null,
+                    $this->isGranted('ROLE_ADMIN') ? $parsed->getSummary() : null,
                     $parsed->getType(),
                     $parsed->getCondition(),
                     $parsed->getIntervention(),
                     $parsed->getEstimatedEnrollment(),
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
+                    $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
                     $user
                 )
             );
-
-            $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
@@ -105,19 +104,20 @@ class DetailsApiController extends ApiController
             /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(
+            $bus->dispatch(
                 new UpdateStudyMetadataCommand(
                     $studyMetadata,
                     $parsed->getBriefName(),
                     $parsed->getScientificName(),
                     $parsed->getBriefSummary(),
-                    null,
+                    $this->isGranted('ROLE_ADMIN') ? $parsed->getSummary() : null,
                     $parsed->getType(),
                     $parsed->getCondition(),
                     $parsed->getIntervention(),
                     $parsed->getEstimatedEnrollment(),
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
+                    $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
                     $user
                 )
             );

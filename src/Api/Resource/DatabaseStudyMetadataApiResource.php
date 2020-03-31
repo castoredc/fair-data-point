@@ -35,6 +35,7 @@ class DatabaseStudyMetadataApiResource implements ApiResource
                 'estimatedEnrollment' => $this->studyMetadata->getEstimatedEnrollment(),
                 'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate() !== null ? $this->studyMetadata->getEstimatedStudyStartDate()->format('Y-m-d') : null,
                 'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate() !== null ? $this->studyMetadata->getEstimatedStudyCompletionDate()->format('Y-m-d') : null,
+                'recruitmentStatus' => $this->studyMetadata->getRecruitmentStatus() !== null ? $this->studyMetadata->getRecruitmentStatus()->toString() : null,
             ],
         ];
     }

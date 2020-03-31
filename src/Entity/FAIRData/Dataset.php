@@ -86,7 +86,7 @@ class Dataset
     private $landingPage;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Castor\Study",cascade={"persist"}, mappedBy="dataset")
+     * @ORM\OneToOne(targetEntity="App\Entity\Castor\Study",cascade={"persist"}, inversedBy="dataset")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=true)
      *
      * @var Study|null
@@ -294,6 +294,7 @@ class Dataset
             'access_url' => $this->getAccessUrl(),
             'relative_url' => $this->getRelativeUrl(),
             'id' => $this->id,
+            'studyId' => $this->study->getId(),
             'slug' => $this->slug,
             'title' => $title->toArray(),
             'version' => $this->study->getLatestMetadataVersion(),

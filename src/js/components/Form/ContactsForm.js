@@ -207,14 +207,17 @@ export default class ContactsForm extends Component {
     };
 
     render() {
-        const { catalog, studyId } = this.props;
+        const { catalog, studyId, action, admin} = this.props;
+
+        const backUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/centers' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/centers';
+        const nextUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/consent' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/consent';
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/' + catalog + '/study/' + studyId + '/metadata/consent'} />;
+            return <Redirect push to={nextUrl} />;
         }
 
         return (
@@ -303,7 +306,7 @@ export default class ContactsForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={'/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/centers'}>
+                        <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
                         </LinkContainer>
                     </Col>

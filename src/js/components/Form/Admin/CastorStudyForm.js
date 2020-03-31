@@ -106,7 +106,7 @@ export default class CastorStudyForm extends Component {
 
         if(this.state.isSaved)
         {
-            return <Redirect push to={'/my-studies/' + catalog + '/study/' + this.state.data.studyId + '/metadata/details'} />;
+            return <Redirect push to={'/admin/' + catalog + '/study/' + this.state.data.studyId + '/metadata/add/details'} />;
         }
 
         return (
