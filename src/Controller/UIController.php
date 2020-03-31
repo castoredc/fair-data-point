@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UIController extends AbstractController
@@ -41,6 +42,10 @@ class UIController extends AbstractController
      */
     public function catalogLogin(Catalog $catalog): Response
     {
+        if (! $catalog->isAcceptSubmissions()) {
+            throw new NotFoundHttpException();
+        }
+
         return $this->render(
             'react.html.twig'
         );
@@ -52,6 +57,8 @@ class UIController extends AbstractController
      */
     public function addStudy(Catalog $catalog): Response
     {
+        $this->denyAccessUnlessGranted('add', $catalog);
+
         return $this->render(
             'react.html.twig'
         );

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\FAIRData\Catalog;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -121,8 +122,13 @@ class CastorAuthenticator extends SocialAuthenticator
     {
         $url = '/login';
 
-        if ($request->attributes->has('catalog')) {
-            $url .= '/' . $request->attributes->get('catalog');
+        if ($request->attributes->has('catalog') && $request->attributes->get('catalog') instanceof Catalog) {
+            /** @var Catalog $catalog */
+            $catalog = $request->attributes->get('catalog');
+
+            if ($catalog->isAcceptSubmissions()) {
+                $url .= '/' . $catalog->getSlug();
+            }
         }
 
         return new RedirectResponse(
