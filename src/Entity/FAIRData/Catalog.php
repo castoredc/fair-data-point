@@ -275,9 +275,11 @@ class Catalog
 
         foreach ($this->datasets as $dataset) {
             /** @var Dataset $dataset */
-            if($dataset->isPublished()) {
-                $datasets->set($dataset->getId(), $dataset);
+            if (! $dataset->isPublished()) {
+                continue;
             }
+
+            $datasets->set($dataset->getId(), $dataset);
         }
 
         return $datasets;

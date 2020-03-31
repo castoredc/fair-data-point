@@ -332,7 +332,7 @@ class Dataset
             'studyType' => $metadata->getType()->toString(),
             'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
             'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
-            'published' => $this->isPublished
+            'published' => $this->isPublished,
         ];
     }
 
