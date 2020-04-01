@@ -8,7 +8,7 @@ import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
 import queryString from "query-string";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
-import {RecruitmentStatus, StudyType} from "../../../components/MetadataItem/EnumMappings";
+import {RecruitmentStatus, StudyType, MethodType} from "../../../components/MetadataItem/EnumMappings";
 import Tags from "../../../components/Tags";
 import Contacts from "../../../components/MetadataItem/Contacts";
 import Organizations from "../../../components/MetadataItem/Organizations";
@@ -158,6 +158,7 @@ export default class Dataset extends Component {
                         <img src={this.state.dataset.logo} alt={'Logo'}/>
                     </div>}
                     {this.state.dataset.studyType && <MetadataItem label="Type" value={StudyType[this.state.dataset.studyType]} />}
+                    {this.state.dataset.methodType && <MetadataItem label="Method" value={MethodType[this.state.dataset.methodType]} />}
                     {this.state.dataset.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={this.state.dataset.estimatedEnrollment} />}
                     {this.state.dataset.organizations.length > 0 && <Organizations organizations={this.state.dataset.organizations} />}
 
