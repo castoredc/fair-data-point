@@ -74,8 +74,11 @@ export default class Login extends Component {
                         <h1>{localizedText(this.state.catalog.name, 'en')}</h1>
 
                         <div className="LoginText">
-                            To enter your study in the {localizedText(this.state.catalog.name, 'en')} you must be a registered Castor user.
-                            Please log in with your Castor EDC account and allow the application to access your information.
+                            <p>To enter your study in the {localizedText(this.state.catalog.name, 'en')} you must be a registered Castor user.
+                                Please log in with your Castor EDC account and allow the application to access your information.</p>
+                            {this.state.catalog.accessingData === false && <p>
+                                The application only accesses high-level information from your study and will not download nor upload any data to your study.
+                            </p>}
                         </div>
                     </div> : <div>
                         <h1>FAIR Data Point</h1>

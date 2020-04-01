@@ -22,6 +22,7 @@ class CatalogBrandApiResource implements ApiResource
     {
         return [
             'name' => $this->catalog->getTitle()->toArray(),
+            'accessingData' => $this->catalog->isSubmissionAccessingData(),
         ];
     }
 }

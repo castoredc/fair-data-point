@@ -42,7 +42,7 @@ class UIController extends AbstractController
      */
     public function catalogLogin(Catalog $catalog): Response
     {
-        if (! $catalog->isAcceptSubmissions()) {
+        if (! $catalog->isAcceptingSubmissions()) {
             throw new NotFoundHttpException();
         }
 

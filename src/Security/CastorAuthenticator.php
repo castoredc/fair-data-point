@@ -126,7 +126,7 @@ class CastorAuthenticator extends SocialAuthenticator
             /** @var Catalog $catalog */
             $catalog = $request->attributes->get('catalog');
 
-            if ($catalog->isAcceptSubmissions()) {
+            if ($catalog->isAcceptingSubmissions()) {
                 $url .= '/' . $catalog->getSlug();
             }
         }
