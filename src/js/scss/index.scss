@@ -4,6 +4,7 @@
 
 @import './bootstrap-overrides';
 @import '~bootstrap/scss/bootstrap';
+@import url('https://unpkg.com/leaflet@1.6.0/dist/leaflet.css');
 
 @import './fonts';
 @import './defaults';

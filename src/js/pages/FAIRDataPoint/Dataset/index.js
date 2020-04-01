@@ -12,6 +12,7 @@ import {RecruitmentStatus, StudyType} from "../../../components/MetadataItem/Enu
 import Tags from "../../../components/Tags";
 import Contacts from "../../../components/MetadataItem/Contacts";
 import Organizations from "../../../components/MetadataItem/Organizations";
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -33,7 +34,8 @@ export default class Dataset extends Component {
                 modified: '',
                 homepage: '',
                 distributions: [],
-                logo: ''
+                logo: '',
+                coordinates: null
             },
             catalog: {
                 title: [],

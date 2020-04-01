@@ -64,3 +64,41 @@ export const isURL = (str) => {
         '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
     return !!pattern.test(str);
 };
+
+export const getCenterFromDegrees = (data) => {
+    if (!(data.length > 0)){
+        return false;
+    }
+
+    let num_coords = data.length;
+
+    let X = 0.0;
+    let Y = 0.0;
+    let Z = 0.0;
+
+    for(let i = 0; i < data.length; i++){
+        let lat = data[i][0] * Math.PI / 180;
+        let lon = data[i][1] * Math.PI / 180;
+
+        let a = Math.cos(lat) * Math.cos(lon);
+        let b = Math.cos(lat) * Math.sin(lon);
+        let c = Math.sin(lat);
+
+        X += a;
+        Y += b;
+        Z += c;
+    }
+
+    X /= num_coords;
+    Y /= num_coords;
+    Z /= num_coords;
+
+    let centerLon = Math.atan2(Y, X);
+    let centerHyp = Math.sqrt(X * X + Y * Y);
+    let centerLat = Math.atan2(Z, centerHyp);
+
+    let newX = (centerLat * 180 / Math.PI);
+    let newY = (centerLon * 180 / Math.PI);
+
+    return [newX, newY];
+};

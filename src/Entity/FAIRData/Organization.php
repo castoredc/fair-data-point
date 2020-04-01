@@ -45,6 +45,20 @@ class Organization extends Agent
      */
     private $departments;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
+     *
+     * @var string|null
+     */
+    private $coordinatesLatitude;
+
+    /**
+     * @ORM\Column(type="decimal", precision=11, scale=8, nullable=true)
+     *
+     * @var string|null
+     */
+    private $coordinatesLongitude;
+
     public function __construct(?string $slug, string $name, ?Iri $homepage, Country $country, string $city)
     {
         $slugify = new Slugify();
@@ -69,12 +83,21 @@ class Organization extends Agent
      */
     public function toArray(): array
     {
+        $coordinates = null;
+
+        if ($this->coordinatesLatitude !== null && $this->coordinatesLongitude !== null) {
+            $coordinates = [];
+            $coordinates['lat'] = $this->coordinatesLatitude;
+            $coordinates['long'] = $this->coordinatesLongitude;
+        }
+
         return array_merge(parent::toArray(), [
             'url' => $this->homepage !== null ? $this->homepage->getValue() : null,
             'homepage' => $this->homepage !== null ? $this->homepage->getValue() : null,
             'type' => 'organization',
             'city' => $this->city,
             'country' => $this->country->getName(),
+            'coordinates' => $coordinates,
         ]);
     }
 
@@ -116,5 +139,15 @@ class Organization extends Agent
     public function getDepartments()
     {
         return $this->departments;
+    }
+
+    public function getCoordinatesLatitude(): ?string
+    {
+        return $this->coordinatesLatitude;
+    }
+
+    public function getCoordinatesLongitude(): ?string
+    {
+        return $this->coordinatesLongitude;
     }
 }
