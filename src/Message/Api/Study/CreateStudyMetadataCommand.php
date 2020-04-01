@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Message\Api\Study;
 
 use App\Entity\Castor\Study;
+use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use App\Security\CastorUser;
@@ -44,11 +45,14 @@ class CreateStudyMetadataCommand
     /** @var DateTimeImmutable|null */
     private $estimatedStudyCompletionDate;
 
-    /** @var CastorUser */
-    private $user;
-
     /** @var RecruitmentStatus|null */
     private $recruitmentStatus;
+
+    /** @var MethodType|null */
+    private $methodType;
+
+    /** @var CastorUser */
+    private $user;
 
     public function __construct(
         Study $study,
@@ -63,6 +67,7 @@ class CreateStudyMetadataCommand
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         ?RecruitmentStatus $recruitmentStatus,
+        ?MethodType $methodType,
         CastorUser $user
     ) {
         $this->study = $study;
@@ -77,6 +82,7 @@ class CreateStudyMetadataCommand
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
         $this->recruitmentStatus = $recruitmentStatus;
+        $this->methodType = $methodType;
         $this->user = $user;
     }
 
@@ -138,6 +144,11 @@ class CreateStudyMetadataCommand
     public function getRecruitmentStatus(): ?RecruitmentStatus
     {
         return $this->recruitmentStatus;
+    }
+
+    public function getMethodType(): ?MethodType
+    {
+        return $this->methodType;
     }
 
     public function getUser(): CastorUser

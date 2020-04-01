@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Metadata;
 
 use App\Entity\Castor\Study;
+use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
-use App\Entity\Enum\StudyPhase;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent;
 use App\Entity\Iri;
@@ -74,8 +74,12 @@ class StudyMetadata
      */
     private $type;
 
-    /** @var StudyPhase */
-    private $phase;
+    /**
+     * @ORM\Column(type="MethodType", name="method_type")
+     *
+     * @var MethodType
+     */
+    private $methodType;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText",cascade={"persist"})
@@ -107,9 +111,6 @@ class StudyMetadata
      */
     private $estimatedEnrollment;
 
-    /** @var int|null */
-    private $actualEnrollment;
-
     /**
      * @ORM\Column(type="boolean", nullable=true)
      *
@@ -123,12 +124,6 @@ class StudyMetadata
      * @var bool|null
      */
     private $consentSocialMedia;
-
-    /** @var @TODO Add enrollment method */
-    // private $enrollmentMethod;
-
-    /** @var @TODO Add data capture method */
-    // private $dataCaptureMethod;
 
     /**
      * @ORM\Column(type="date_immutable", nullable=true)
@@ -151,11 +146,6 @@ class StudyMetadata
      */
     private $studyCompletionDate;
 
-    /** @var EligibilityCriterion[]|ArrayCollection */
-    private $eligibilityCriteria;
-
-    // private $studyTeam;
-
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_contacts")
@@ -163,10 +153,6 @@ class StudyMetadata
      * @var Agent[]|ArrayCollection
      */
     private $contacts;
-
-    // private $trialIds;
-    //
-    // private $sponsors;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -208,7 +194,8 @@ class StudyMetadata
         int $estimatedEnrollment,
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
-        ?RecruitmentStatus $recruitmentStatus
+        ?RecruitmentStatus $recruitmentStatus,
+        MethodType $methodType
     ) {
         $this->briefName = $briefName;
         $this->scientificName = $scientificName;
@@ -221,6 +208,7 @@ class StudyMetadata
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
         $this->recruitmentStatus = $recruitmentStatus;
+        $this->methodType = $methodType;
         $this->centers = new ArrayCollection();
         $this->contacts = new ArrayCollection();
     }
@@ -285,16 +273,6 @@ class StudyMetadata
         $this->type = $type;
     }
 
-    public function getPhase(): StudyPhase
-    {
-        return $this->phase;
-    }
-
-    public function setPhase(StudyPhase $phase): void
-    {
-        $this->phase = $phase;
-    }
-
     public function getCondition(): ?CodedText
     {
         return $this->condition;
@@ -335,16 +313,6 @@ class StudyMetadata
         $this->estimatedEnrollment = $estimatedEnrollment;
     }
 
-    public function getActualEnrollment(): ?int
-    {
-        return $this->actualEnrollment;
-    }
-
-    public function setActualEnrollment(?int $actualEnrollment): void
-    {
-        $this->actualEnrollment = $actualEnrollment;
-    }
-
     public function getEstimatedStudyStartDate(): ?DateTimeImmutable
     {
         return $this->estimatedStudyStartDate;
@@ -373,22 +341,6 @@ class StudyMetadata
     public function setStudyCompletionDate(?DateTimeImmutable $studyCompletionDate): void
     {
         $this->studyCompletionDate = $studyCompletionDate;
-    }
-
-    /**
-     * @return EligibilityCriterion[]|ArrayCollection
-     */
-    public function getEligibilityCriteria()
-    {
-        return $this->eligibilityCriteria;
-    }
-
-    /**
-     * @param EligibilityCriterion[]|ArrayCollection $eligibilityCriteria
-     */
-    public function setEligibilityCriteria($eligibilityCriteria): void
-    {
-        $this->eligibilityCriteria = $eligibilityCriteria;
     }
 
     /**
@@ -476,6 +428,16 @@ class StudyMetadata
     public function setConsentSocialMedia(bool $consentSocialMedia): void
     {
         $this->consentSocialMedia = $consentSocialMedia;
+    }
+
+    public function getMethodType(): ?MethodType
+    {
+        return $this->methodType;
+    }
+
+    public function setMethodType(?MethodType $methodType): void
+    {
+        $this->methodType = $methodType;
     }
 
     /**

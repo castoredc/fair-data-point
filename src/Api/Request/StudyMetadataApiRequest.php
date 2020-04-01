@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Request;
 
+use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use DateTimeImmutable;
@@ -79,6 +80,12 @@ class StudyMetadataApiRequest extends SingleApiRequest
      */
     private $recruitmentStatus;
 
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $methodType;
+
     protected function parse(): void
     {
         $this->briefName = $this->getFromData('briefName');
@@ -92,6 +99,7 @@ class StudyMetadataApiRequest extends SingleApiRequest
         $this->estimatedStudyCompletionDate = $this->getFromData('estimatedStudyCompletionDate');
         $this->summary = $this->getFromData('summary');
         $this->recruitmentStatus = $this->getFromData('recruitmentStatus');
+        $this->methodType = $this->getFromData('methodType');
     }
 
     public function getBriefName(): string
@@ -155,5 +163,10 @@ class StudyMetadataApiRequest extends SingleApiRequest
     public function getRecruitmentStatus(): ?RecruitmentStatus
     {
         return $this->recruitmentStatus !== null ? RecruitmentStatus::fromString($this->recruitmentStatus) : null;
+    }
+
+    public function getMethodType(): ?MethodType
+    {
+        return $this->methodType !== null ? MethodType::fromString($this->methodType) : null;
     }
 }

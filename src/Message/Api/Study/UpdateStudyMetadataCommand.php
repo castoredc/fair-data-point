@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Api\Study;
 
+use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use App\Entity\Metadata\StudyMetadata;
@@ -47,6 +48,9 @@ class UpdateStudyMetadataCommand
     /** @var RecruitmentStatus|null */
     private $recruitmentStatus;
 
+    /** @var MethodType|null */
+    private $methodType;
+
     /** @var CastorUser */
     private $user;
 
@@ -63,6 +67,7 @@ class UpdateStudyMetadataCommand
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         ?RecruitmentStatus $recruitmentStatus,
+        ?MethodType $methodType,
         CastorUser $user
     ) {
         $this->metadata = $metadata;
@@ -77,6 +82,7 @@ class UpdateStudyMetadataCommand
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
         $this->recruitmentStatus = $recruitmentStatus;
+        $this->methodType = $methodType;
         $this->user = $user;
     }
 
@@ -138,6 +144,11 @@ class UpdateStudyMetadataCommand
     public function getRecruitmentStatus(): ?RecruitmentStatus
     {
         return $this->recruitmentStatus;
+    }
+
+    public function getMethodType(): ?MethodType
+    {
+        return $this->methodType;
     }
 
     public function getUser(): CastorUser
