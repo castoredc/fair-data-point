@@ -33,9 +33,9 @@ export default ({user}) =>
         /* FAIR Data Point */
         <Route path="/fdp" exact component={FAIRDataPointMain} />
         {/*<Route path="/query" exact component={Query} />*/}
-        <Route path="/fdp/:catalogSlug" exact component={Catalog} />
-        <Route path="/fdp/:catalogSlug/:datasetSlug" exact component={Dataset} />
         <Route path="/fdp/:catalogSlug/:datasetSlug/:distributionSlug" exact component={Distribution} />
+        <Route path="/fdp/:catalog" exact component={Catalog} />
+        <Route path="/fdp/:catalog/:dataset" exact component={Dataset} />
 
         /* My studies */
         {/*<PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />*/}

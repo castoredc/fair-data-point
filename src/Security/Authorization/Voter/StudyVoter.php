@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use function in_array;
+use Twig\Token;
 
 class StudyVoter extends Voter
 {
@@ -36,12 +37,6 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
-
-        if (! $user instanceof CastorUser) {
-            return false;
-        }
-
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
@@ -52,25 +47,29 @@ class StudyVoter extends Voter
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($study, $user);
+                return $this->canView($study, $token);
             case self::EDIT:
-                return $this->canEdit($study, $user);
+                return $this->canEdit($study, $token);
         }
 
         return false;
     }
 
-    private function canView(Study $study, CastorUser $user): bool
+    private function canView(Study $study, TokenInterface $token): bool
     {
-        if ($this->canEdit($study, $user)) {
+        if ($this->canEdit($study, $token)) {
             return true;
         }
 
-        return $study->getLatestMetadata()->hasConsentPublish();
+        return $study->getDataset()->isPublished();
     }
 
-    private function canEdit(Study $study, CastorUser $user): bool
+    private function canEdit(Study $study, TokenInterface $token): bool
     {
+        $user = $token->getUser();
+        if (! $user instanceof CastorUser) {
+            return false;
+        }
         return in_array($study->getId(), $user->getStudies(), true);
     }
 }
