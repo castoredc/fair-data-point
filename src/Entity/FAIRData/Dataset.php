@@ -359,6 +359,7 @@ class Dataset
             'recruitmentStatus' => $metadata->getRecruitmentStatus() !== null ? $metadata->getRecruitmentStatus()->toString() : null,
             'estimatedEnrollment' => $metadata->getEstimatedEnrollment(),
             'studyType' => $metadata->getType()->toString(),
+            'methodType' => $metadata->getMethodType() !== null ? $metadata->getMethodType()->toString() : null,
             'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
             'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
             'published' => $this->isPublished,

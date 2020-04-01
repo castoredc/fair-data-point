@@ -32,7 +32,8 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
             $message->getEstimatedEnrollment(),
             $message->getEstimatedStudyStartDate(),
             $message->getEstimatedStudyCompletionDate(),
-            $message->getRecruitmentStatus()
+            $message->getRecruitmentStatus(),
+            $message->getMethodType()
         );
 
         $metadata->setStudy($message->getStudy());

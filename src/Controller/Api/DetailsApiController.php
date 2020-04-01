@@ -77,6 +77,7 @@ class DetailsApiController extends ApiController
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
+                    $parsed->getMethodType(),
                     $user
                 )
             );
@@ -85,6 +86,7 @@ class DetailsApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            // dump($e);
             return new JsonResponse([], 500);
         }
     }
@@ -118,6 +120,7 @@ class DetailsApiController extends ApiController
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
+                    $parsed->getMethodType(),
                     $user
                 )
             );

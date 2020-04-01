@@ -11,6 +11,12 @@ export const RecruitmentStatus = {
 
 export const StudyType = {
     'interventional': 'Interventional',
-    'observational': 'Observational',
-    'registry': 'Registry'
+    'observational': 'Observational'
+};
+
+export const MethodType = {
+    'survey': 'Survey',
+    'registry': 'Registry',
+    'rct': 'RCT',
+    'other': 'Other'
 };

@@ -34,7 +34,8 @@ export default class StudyDetailsForm extends Component {
                 estimatedStudyStartDate: '',
                 estimatedStudyCompletionDate: '',
                 summary: '',
-                recruitmentStatus: ''
+                recruitmentStatus: '',
+                methodType: ''
             },
             metadataSource: null,
             visitedFields: {},
@@ -112,20 +113,10 @@ export default class StudyDetailsForm extends Component {
         }, callback);
     };
 
-    handleStudyTypeChange = (event) => {
+    handleSelectChange = (name, event) => {
         this.handleChange({
             target: {
-                name: 'studyType',
-                value: event.value
-            }
-        });
-    };
-
-
-    handleRecruitmentStatusChange = (event) => {
-        this.handleChange({
-            target: {
-                name: 'recruitmentStatus',
+                name: name,
                 value: event.value
             }
         });
@@ -166,7 +157,8 @@ export default class StudyDetailsForm extends Component {
                 estimatedStudyStartDate:      estimatedStudyStartDate.format('YYYY-MM-DD'),
                 estimatedStudyCompletionDate: estimatedStudyCompletionDate.format('YYYY-MM-DD'),
                 summary:                      this.state.data.summary,
-                recruitmentStatus:            this.state.data.recruitmentStatus
+                recruitmentStatus:            this.state.data.recruitmentStatus,
+                methodType:                   this.state.data.methodType,
             })
                 .then((response) => {
                     this.setState({
@@ -258,10 +250,22 @@ export default class StudyDetailsForm extends Component {
                                 errorMessages={[required]}
                                 options={studyTypes}
                                 name="studyType"
-                                onChange={this.handleStudyTypeChange}
+                                onChange={(e) => {this.handleSelectChange('studyType', e)}}
                                 onBlur={this.handleFieldVisit}
                                 value={studyTypes.filter(({value}) => value === this.state.data.studyType)}
                                 serverError={this.state.validation.studyType}
+                            />
+                        </FormItem>
+                        <FormItem label="Method">
+                            <Dropdown
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={methodTypes}
+                                name="methodType"
+                                onChange={(e) => {this.handleSelectChange('methodType', e)}}
+                                onBlur={this.handleFieldVisit}
+                                value={methodTypes.filter(({value}) => value === this.state.data.methodType)}
+                                serverError={this.state.validation.methodType}
                             />
                         </FormItem>
                         <FormItem label="Condition">
@@ -339,7 +343,7 @@ export default class StudyDetailsForm extends Component {
                                 <Dropdown
                                     options={recruitmentStatus}
                                     name="recruitmentStatus"
-                                    onChange={this.handleRecruitmentStatusChange}
+                                    onChange={(e) => {this.handleSelectChange('recruitmentStatus', e)}}
                                     onBlur={this.handleFieldVisit}
                                     value={recruitmentStatus.filter(({value}) => value === this.state.data.recruitmentStatus)}
                                     serverError={this.state.validation.recruitmentStatus}
@@ -379,7 +383,13 @@ export default class StudyDetailsForm extends Component {
 const studyTypes = [
     { value: 'interventional', label: 'Interventional' },
     { value: 'observational', label: 'Observational' },
-    { value: 'registry', label: 'Registry' }
+];
+
+const methodTypes = [
+    { value: 'survey', label: 'Survey' },
+    { value: 'registry', label: 'Registry' },
+    { value: 'rct', label: 'RCT' },
+    { value: 'other', label: 'Other' },
 ];
 
 export const recruitmentStatus = [

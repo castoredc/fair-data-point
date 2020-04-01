@@ -12,6 +12,7 @@ doctrine:
             StudyType:  App\Type\StudyType
             DistributionAccessType:  App\Type\DistributionAccessType
             RecruitmentStatusType:  App\Type\RecruitmentStatusType
+            MethodType:  App\Type\MethodType
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
