@@ -20,7 +20,7 @@ class AddStudyToCatalogCommandHandler implements MessageHandlerInterface
 
     public function __invoke(AddStudyToCatalogCommand $message): void
     {
-        if (! $message->getCatalog()->isAcceptSubmissions()) {
+        if (! $message->getCatalog()->isAcceptingSubmissions()) {
             throw new CatalogNotExceptingSubmissions();
         }
 

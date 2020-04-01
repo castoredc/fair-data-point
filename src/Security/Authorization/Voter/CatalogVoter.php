@@ -63,6 +63,6 @@ class CatalogVoter extends Voter
             return false;
         }
 
-        return $catalog->isAcceptSubmissions();
+        return $catalog->isAcceptingSubmissions();
     }
 }
