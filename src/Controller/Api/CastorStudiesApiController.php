@@ -22,6 +22,8 @@ class CastorStudiesApiController extends ApiController
      */
     public function castorStudies(Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         /** @var CastorUser $user */
         $user = $this->getUser();
 

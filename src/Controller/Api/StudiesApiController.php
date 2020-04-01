@@ -29,6 +29,8 @@ class StudiesApiController extends ApiController
      */
     public function studies(MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         /** @var CastorUser $user */
         $user = $this->getUser();
         $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
@@ -45,6 +47,8 @@ class StudiesApiController extends ApiController
      */
     public function addCastorStudy(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
+        $this->denyAccessUnlessGranted('add', $catalog);
+
         /** @var CastorUser $user */
         $user = $this->getUser();
 
@@ -71,19 +75,7 @@ class StudiesApiController extends ApiController
                 return new JsonResponse($e->toArray(), 403);
             }
 
-            return new JsonResponse([
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'handler' => true,
-            ], 500);
-        } catch (Throwable $e) {
-            return new JsonResponse([
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'handler' => false,
-            ], 500);
+            return new JsonResponse([], 500);
         }
     }
 }
