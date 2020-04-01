@@ -19,7 +19,7 @@ class DistributionController extends FAIRDataController
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function dataset(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request): Response
+    public function distribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 

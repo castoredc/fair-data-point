@@ -15,6 +15,7 @@ class StudyVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
+    public const ACCESS_DATA = 'access_data';
 
     /** @var Security */
     private $security;
@@ -27,7 +28,7 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::EDIT], true)) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA], true)) {
             return false;
         }
 
@@ -37,10 +38,6 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-
         // you know $subject is a Post object, thanks to `supports()`
         /** @var Study $study */
         $study = $subject;
@@ -50,6 +47,8 @@ class StudyVoter extends Voter
                 return $this->canView($study, $token);
             case self::EDIT:
                 return $this->canEdit($study, $token);
+            case self::ACCESS_DATA:
+                return $this->canAccessData($study, $token);
         }
 
         return false;
@@ -70,6 +69,19 @@ class StudyVoter extends Voter
         if (! $user instanceof CastorUser) {
             return false;
         }
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        return $this->canAccessData($study, $token);
+    }
+
+    private function canAccessData(Study $study, TokenInterface $token): bool
+    {
+        $user = $token->getUser();
+        if (! $user instanceof CastorUser) {
+            return false;
+        }
+
         return in_array($study->getId(), $user->getStudies(), true);
     }
 }

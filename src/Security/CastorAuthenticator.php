@@ -95,7 +95,7 @@ class CastorAuthenticator extends SocialAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
     {
-        $url = $this->router->generate('homepage');
+        $url = $this->router->generate('fdp');
         $previous = $request->getSession()->get('previous');
 
         if ($previous !== null) {
