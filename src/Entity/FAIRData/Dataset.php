@@ -281,8 +281,7 @@ class Dataset
 
         $metadata = $this->study->getLatestMetadata();
 
-        if($metadata === null)
-        {
+        if ($metadata === null) {
             return [
                 'access_url' => $this->getAccessUrl(),
                 'relative_url' => $this->getRelativeUrl(),
