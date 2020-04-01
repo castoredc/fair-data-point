@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\StudyMetadataApiRequest;
+use App\Api\Request\Metadata\StudyMetadataApiRequest;
 use App\Entity\Castor\Study;
 use App\Entity\Metadata\StudyMetadata;
 use App\Exception\ApiRequestParseError;
-use App\Message\Api\Study\CreateStudyMetadataCommand;
-use App\Message\Api\Study\GetStudyMetadataCommand;
-use App\Message\Api\Study\UpdateStudyMetadataCommand;
+use App\Message\Metadata\CreateStudyMetadataCommand;
+use App\Message\Metadata\GetStudyMetadataCommand;
+use App\Message\Metadata\UpdateStudyMetadataCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

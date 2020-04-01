@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Resource\CatalogApiResource;
-use App\Api\Resource\CatalogBrandApiResource;
-use App\Api\Resource\DatasetsApiResource;
+use App\Api\Resource\Catalog\CatalogApiResource;
+use App\Api\Resource\Catalog\CatalogBrandApiResource;
+use App\Api\Resource\Dataset\DatasetsApiResource;
 use App\Entity\FAIRData\Catalog;
-use App\Message\Api\Study\GetCatalogsCommand;
+use App\Message\Catalog\GetCatalogsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

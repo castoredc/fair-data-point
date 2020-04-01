@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\CastorStudyApiRequest;
+use App\Api\Request\Study\CastorStudyApiRequest;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
-use App\Message\Api\Study\AddCastorStudyCommand;
-use App\Message\Api\Study\AddStudyToCatalogCommand;
-use App\Message\Api\Study\FindStudiesByUserCommand;
+use App\Message\Study\AddCastorStudyCommand;
+use App\Message\Study\AddStudyToCatalogCommand;
+use App\Message\Study\FindStudiesByUserCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
