@@ -34,6 +34,7 @@ class CastorStudyMetadataApiResource implements ApiResource
                 'estimatedEnrollment' => '',
                 'estimatedStudyStartDate' => '',
                 'estimatedStudyCompletionDate' => '',
+                'methodType' => '',
             ],
         ];
     }
