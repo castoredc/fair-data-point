@@ -281,6 +281,36 @@ class Dataset
 
         $metadata = $this->study->getLatestMetadata();
 
+        if($metadata === null)
+        {
+            return [
+                'access_url' => $this->getAccessUrl(),
+                'relative_url' => $this->getRelativeUrl(),
+                'id' => $this->id,
+                'studyId' => $this->study->getId(),
+                'slug' => $this->slug,
+                'title' => $this->study->getName(),
+                'version' => null,
+                'shortDescription' => null,
+                'description' => null,
+                'publishers' => [],
+                'language' => $this->language->toArray(),
+                'license' => $this->license !== null ? $this->license->toArray() : null,
+                'issued' => null,
+                'modified' => null,
+                'contactPoints' => [],
+                'organizations' => [],
+                'landingpage' => null,
+                'logo' => null,
+                'recruitmentStatus' => null,
+                'estimatedEnrollment' => null,
+                'studyType' => '',
+                'condition' => null,
+                'intervention' => null,
+                'published' => $this->isPublished,
+            ];
+        }
+
         $contactPoints = [];
         foreach ($metadata->getContacts() as $contactPoint) {
             /** @var Agent $contactPoint */
