@@ -35,7 +35,9 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
             $message->getName(),
             $message->getHomepage(),
             $country,
-            $message->getCity()
+            $message->getCity(),
+            $message->getCoordinatesLatitude(),
+            $message->getCoordinatesLongitude()
         );
 
         $this->em->persist($organization);

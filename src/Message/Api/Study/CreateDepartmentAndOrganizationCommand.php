@@ -35,6 +35,12 @@ class CreateDepartmentAndOrganizationCommand
     /** @var string|null */
     private $additionalInformation;
 
+    /** @var string|null */
+    private $coordinatesLatitude;
+
+    /** @var string|null */
+    private $coordinatesLongitude;
+
     public function __construct(
         Study $study,
         ?string $organizationSlug,
@@ -44,7 +50,9 @@ class CreateDepartmentAndOrganizationCommand
         string $country,
         string $city,
         ?string $department,
-        ?string $additionalInformation
+        ?string $additionalInformation,
+        ?string $coordinatesLatitude,
+        ?string $coordinatesLongitude
     ) {
         $this->study = $study;
         $this->organizationSlug = $organizationSlug;
@@ -55,6 +63,8 @@ class CreateDepartmentAndOrganizationCommand
         $this->city = $city;
         $this->department = $department;
         $this->additionalInformation = $additionalInformation;
+        $this->coordinatesLatitude = $coordinatesLatitude;
+        $this->coordinatesLongitude = $coordinatesLongitude;
     }
 
     public function getStudy(): Study
@@ -100,5 +110,15 @@ class CreateDepartmentAndOrganizationCommand
     public function getAdditionalInformation(): ?string
     {
         return $this->additionalInformation;
+    }
+    
+    public function getCoordinatesLatitude(): ?string
+    {
+        return $this->coordinatesLatitude;
+    }
+
+    public function getCoordinatesLongitude(): ?string
+    {
+        return $this->coordinatesLongitude;
     }
 }

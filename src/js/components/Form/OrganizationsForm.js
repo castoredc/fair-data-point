@@ -28,7 +28,9 @@ export default class OrganizationsForm extends Component {
                     country: '',
                     city: '',
                     department: '',
-                    additionalInformation: ''
+                    additionalInformation: '',
+                    coordinatesLatitude: '',
+                    coordinatesLongitude: ''
                 }
             ],
             countries: [],
@@ -312,6 +314,28 @@ export default class OrganizationsForm extends Component {
                                     as="textarea" rows="5"
                                 />
                             </FormItem>
+                            {admin && <div>
+                                <FormItem label="Coordinates">
+                                    <Col md={6}>
+                                        <Input
+                                            name="coordinatesLatitude"
+                                            onChange={(e) => {this.handleChange(index, e)}}
+                                            onBlur={this.handleFieldVisit}
+                                            value={organization.coordinatesLatitude}
+                                            serverError={this.state.validation[index].coordinatesLatitude}
+                                        />
+                                    </Col>
+                                    <Col md={6}>
+                                        <Input
+                                            name="coordinatesLongitude"
+                                            onChange={(e) => {this.handleChange(index, e)}}
+                                            onBlur={this.handleFieldVisit}
+                                            value={organization.coordinatesLongitude}
+                                            serverError={this.state.validation[index].coordinatesLongitude}
+                                        />
+                                    </Col>
+                                </FormItem>
+                            </div>}
                         </Col>
                     </Row>;
                 })}
