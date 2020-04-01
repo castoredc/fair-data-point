@@ -323,7 +323,7 @@ class Catalog
         return $this->logo;
     }
 
-    public function isAcceptSubmissions(): bool
+    public function isAcceptingSubmissions(): bool
     {
         return $this->acceptSubmissions;
     }
