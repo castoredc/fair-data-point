@@ -48,14 +48,14 @@ class Organization extends Agent
     /**
      * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
      *
-     * @var float|null
+     * @var string|null
      */
     private $coordinatesLatitude;
 
     /**
      * @ORM\Column(type="decimal", precision=11, scale=8, nullable=true)
      *
-     * @var float|null
+     * @var string|null
      */
     private $coordinatesLongitude;
 
@@ -85,10 +85,9 @@ class Organization extends Agent
     {
         $coordinates = null;
 
-        if($this->coordinatesLatitude !== null && $this->coordinatesLongitude !== null)
-        {
+        if ($this->coordinatesLatitude !== null && $this->coordinatesLongitude !== null) {
             $coordinates = [];
-            $coordinates['lat']  = $this->coordinatesLatitude;
+            $coordinates['lat'] = $this->coordinatesLatitude;
             $coordinates['long'] = $this->coordinatesLongitude;
         }
 
@@ -142,12 +141,12 @@ class Organization extends Agent
         return $this->departments;
     }
 
-    public function getCoordinatesLatitude(): ?float
+    public function getCoordinatesLatitude(): ?string
     {
         return $this->coordinatesLatitude;
     }
 
-    public function getCoordinatesLongitude(): ?float
+    public function getCoordinatesLongitude(): ?string
     {
         return $this->coordinatesLongitude;
     }
