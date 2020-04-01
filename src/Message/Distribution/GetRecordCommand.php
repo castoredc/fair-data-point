@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
@@ -15,7 +16,7 @@ class GetRecordCommand
 
     /** @var CastorUser */
     private $user;
-    
+
     public function __construct(Study $study, string $recordId, CastorUser $user)
     {
         $this->study = $study;

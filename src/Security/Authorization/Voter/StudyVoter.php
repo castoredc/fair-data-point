@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use function in_array;
-use Twig\Token;
 
 class StudyVoter extends Voter
 {
@@ -72,6 +71,7 @@ class StudyVoter extends Voter
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
+
         return $this->canAccessData($study, $token);
     }
 

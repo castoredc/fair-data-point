@@ -21,8 +21,7 @@ class DatasetController extends FAIRDataController
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
-        if(! $dataset->hasCatalog($catalog))
-        {
+        if (! $dataset->hasCatalog($catalog)) {
             throw $this->createNotFoundException();
         }
 

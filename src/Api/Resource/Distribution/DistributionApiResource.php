@@ -25,8 +25,7 @@ class DistributionApiResource implements ApiResource
         $accessUrl = null;
         $downloadUrl = null;
 
-        if($this->distribution instanceof RDFDistribution)
-        {
+        if ($this->distribution instanceof RDFDistribution) {
             $accessUrl = $this->distribution->getRDFUrl();
             $downloadUrl = $this->distribution->getRDFUrl() . '/?download=1';
         }
@@ -45,7 +44,7 @@ class DistributionApiResource implements ApiResource
             'issued' => $this->distribution->getIssued(),
             'modified' => $this->distribution->getModified(),
             'accessRights' => $this->distribution->getAccessRights(),
-            'download_url' => $downloadUrl
+            'download_url' => $downloadUrl,
         ];
     }
 }

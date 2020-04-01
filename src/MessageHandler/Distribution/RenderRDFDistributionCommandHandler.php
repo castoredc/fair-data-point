@@ -15,6 +15,8 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\TemplateWrapper;
+use function preg_replace;
+use function trim;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 {
@@ -53,8 +55,6 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         return $return;
     }
 
-    /**
-     */
     private function renderRecord(TemplateWrapper $template, RDFDistribution $distribution, Study $study, Record $record): string
     {
         $record = $this->apiClient->getRecordDataCollection($study, $record);

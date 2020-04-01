@@ -23,8 +23,7 @@ class DistributionController extends FAIRDataController
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
-        if(! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution))
-        {
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 

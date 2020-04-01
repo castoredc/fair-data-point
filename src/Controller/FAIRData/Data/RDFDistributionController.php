@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\FAIRData\Data;
 
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function time;
 
 class RDFDistributionController extends FAIRDataController
 {
@@ -32,8 +34,7 @@ class RDFDistributionController extends FAIRDataController
     {
         $this->denyAccessUnlessGranted('access_data', $dataset->getStudy());
 
-        if(! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution)
-        {
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution) {
             throw $this->createNotFoundException();
         }
 
@@ -46,6 +47,7 @@ class RDFDistributionController extends FAIRDataController
         /** @var Record[] $records */
         $records = $handledStamp->getResult();
 
+        /** @var HandledStamp $handledStamp */
         $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $distribution, $user))->last(HandledStamp::class);
         $turtle = $handledStamp->getResult();
 
@@ -66,6 +68,7 @@ class RDFDistributionController extends FAIRDataController
             ['content-type' => 'text/turtle']
         );
     }
+
     /**
      * @Route("/fdp/{catalog}/{dataset}/{distribution}/rdf/{record}", name="distribution_rdf_record")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
@@ -76,8 +79,7 @@ class RDFDistributionController extends FAIRDataController
     {
         $this->denyAccessUnlessGranted('access_data', $dataset->getStudy());
 
-        if(! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution)
-        {
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution) {
             throw $this->createNotFoundException();
         }
 
@@ -87,9 +89,10 @@ class RDFDistributionController extends FAIRDataController
         /** @var HandledStamp $handledStamp */
         $handledStamp = $bus->dispatch(new GetRecordCommand($dataset->getStudy(), $record, $user))->last(HandledStamp::class);
 
-        /** @var Record[] $records */
+        /** @var Record[] $record */
         $record = $handledStamp->getResult();
 
+        /** @var HandledStamp $handledStamp */
         $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($record, $distribution, $user))->last(HandledStamp::class);
         $turtle = $handledStamp->getResult();
 

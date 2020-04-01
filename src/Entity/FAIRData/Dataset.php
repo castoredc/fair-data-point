@@ -6,11 +6,9 @@ namespace App\Entity\FAIRData;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\Iri;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
-use function array_merge;
 
 //use EasyRdf_Graph;
 

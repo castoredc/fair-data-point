@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
@@ -17,6 +18,9 @@ class RenderRDFDistributionCommand
     /** @var CastorUser */
     private $user;
 
+    /**
+     * @param Record[] $records
+     */
     public function __construct(array $records, RDFDistribution $distribution, CastorUser $user)
     {
         $this->records = $records;
