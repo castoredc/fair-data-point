@@ -17,11 +17,11 @@ class StudyListItem extends Component {
 
         let tags = [];
 
-        if(condition !== null)
+        if(condition !== null && condition.text !== '')
         {
             tags.push(condition.text);
         }
-        if(intervention !== null)
+        if(intervention !== null && intervention.text !== '')
         {
             tags.push(intervention.text);
         }

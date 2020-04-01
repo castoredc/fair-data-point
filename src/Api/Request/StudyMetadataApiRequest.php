@@ -116,12 +116,12 @@ class StudyMetadataApiRequest extends SingleApiRequest
 
     public function getCondition(): ?string
     {
-        return $this->condition;
+        return $this->condition !== '' ? $this->condition : null;
     }
 
     public function getIntervention(): ?string
     {
-        return $this->intervention;
+        return $this->intervention !== '' ? $this->intervention : null;
     }
 
     public function getEstimatedEnrollment(): int
