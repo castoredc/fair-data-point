@@ -264,42 +264,6 @@ class Distribution
         return $this->accessRights;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function toBasicArray(): array
-    {
-        $publishers = [];
-        // foreach ($this->publishers as $publisher) {
-        //     /** @var Agent $publisher */
-        //     $publishers[] = $publisher->toArray();
-        // }
-
-        return [
-            'access_url' => $this->getAccessUrl(),
-            'relative_url' => $this->getRelativeUrl(),
-            'id' => $this->id,
-            'slug' => $this->slug,
-            'title' => $this->title->toArray(),
-            'version' => $this->version,
-            'description' => $this->description->toArray(),
-            'publishers' => $publishers,
-            'language' => $this->language->toArray(),
-            'license' => $this->license->toArray(),
-            'issued' => $this->issued,
-            'modified' => $this->modified,
-            'accessRights' => $this->accessRights,
-        ];
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        return $this->toBasicArray();
-    }
-
     public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();

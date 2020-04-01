@@ -6,11 +6,9 @@ namespace App\Entity\FAIRData;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\Iri;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
-use function array_merge;
 
 //use EasyRdf_Graph;
 
@@ -268,118 +266,6 @@ class Dataset
         $this->isPublished = $isPublished;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function toBasicArray(): array
-    {
-        $publishers = [];
-        // foreach ($this->publishers as $publisher) {
-        //     /** @var Agent $publisher */
-        //     $publishers[] = $publisher->toArray();
-        // }
-
-        $metadata = $this->study->getLatestMetadata();
-
-        if ($metadata === null) {
-            return [
-                'access_url' => $this->getAccessUrl(),
-                'relative_url' => $this->getRelativeUrl(),
-                'id' => $this->id,
-                'studyId' => $this->study->getId(),
-                'slug' => $this->slug,
-                'title' => $this->study->getName(),
-                'version' => null,
-                'shortDescription' => null,
-                'description' => null,
-                'publishers' => [],
-                'language' => $this->language->toArray(),
-                'license' => $this->license !== null ? $this->license->toArray() : null,
-                'issued' => null,
-                'modified' => null,
-                'contactPoints' => [],
-                'organizations' => [],
-                'landingpage' => null,
-                'logo' => null,
-                'recruitmentStatus' => null,
-                'estimatedEnrollment' => null,
-                'studyType' => '',
-                'condition' => null,
-                'intervention' => null,
-                'published' => $this->isPublished,
-            ];
-        }
-
-        $contactPoints = [];
-        foreach ($metadata->getContacts() as $contactPoint) {
-            /** @var Agent $contactPoint */
-            $contactPoints[] = $contactPoint->toArray();
-        }
-
-        $organizations = [];
-        foreach ($metadata->getCenters() as $organization) {
-            /** @var Organization $center */
-            $organizations[] = $organization->toArray();
-        }
-
-        $title = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefName(), $this->language)]));
-
-        $shortDescription = null;
-
-        if ($metadata->getBriefSummary() !== null) {
-            $shortDescription = (new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefSummary(), $this->language)])))->toArray();
-        }
-
-        $description = null;
-
-        if ($metadata->getSummary() !== null) {
-            $description = (new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getSummary(), $this->language)])))->toArray();
-        }
-
-        return [
-            'access_url' => $this->getAccessUrl(),
-            'relative_url' => $this->getRelativeUrl(),
-            'id' => $this->id,
-            'studyId' => $this->study->getId(),
-            'slug' => $this->slug,
-            'title' => $title->toArray(),
-            'version' => $this->study->getLatestMetadataVersion(),
-            'shortDescription' => $shortDescription,
-            'description' => $description,
-            'publishers' => $publishers,
-            'language' => $this->language->toArray(),
-            'license' => $this->license !== null ? $this->license->toArray() : null,
-            'issued' => $metadata->getCreated(),
-            'modified' => $metadata->getUpdated(),
-            'contactPoints' => $contactPoints,
-            'organizations' => $organizations,
-//            'keyword' => $this->keyword->toArray(),
-            'landingpage' => $this->landingPage !== null ? $this->landingPage->getValue() : null,
-            'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
-            'recruitmentStatus' => $metadata->getRecruitmentStatus() !== null ? $metadata->getRecruitmentStatus()->toString() : null,
-            'estimatedEnrollment' => $metadata->getEstimatedEnrollment(),
-            'studyType' => $metadata->getType()->toString(),
-            'methodType' => $metadata->getMethodType() !== null ? $metadata->getMethodType()->toString() : null,
-            'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
-            'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
-            'published' => $this->isPublished,
-        ];
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        $distributions = [];
-        foreach ($this->distributions as $distribution) {
-            /** @var Distribution $distribution */
-            $distributions[] = $distribution->toBasicArray();
-        }
-
-        return array_merge($this->toBasicArray(), ['distributions' => $distributions]);
-    }
-
     public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
@@ -422,15 +308,13 @@ class Dataset
         return $graph;
     }
 
-    public function hasCatalog(Catalog $find): bool
+    public function hasCatalog(Catalog $catalog): bool
     {
-        foreach ($this->catalogs as $catalog) {
-            /** @var Catalog $catalog */
-            if ($catalog->getId() === $find->getId()) {
-                return true;
-            }
-        }
+        return $this->catalogs->contains($catalog);
+    }
 
-        return false;
+    public function hasDistribution(Distribution $distribution): bool
+    {
+        return $this->distributions->contains($distribution);
     }
 }

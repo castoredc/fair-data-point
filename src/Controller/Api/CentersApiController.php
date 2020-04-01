@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\StudyCenterApiRequest;
+use App\Api\Request\Study\Provenance\StudyCenterApiRequest;
 use App\Entity\Castor\Study;
 use App\Exception\GroupedApiRequestParseError;
-use App\Message\Api\Study\ClearStudyCentersCommand;
-use App\Message\Api\Study\CreateDepartmentAndOrganizationCommand;
-use App\Message\Api\Study\GetStudyCentersCommand;
+use App\Message\Agent\CreateDepartmentAndOrganizationCommand;
+use App\Message\Study\Provenance\ClearStudyCentersCommand;
+use App\Message\Study\Provenance\GetStudyCentersCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\StudyContactApiRequest;
+use App\Api\Request\Study\Provenance\StudyContactApiRequest;
 use App\Entity\Castor\Study;
 use App\Exception\GroupedApiRequestParseError;
-use App\Message\Api\Study\ClearStudyContactsCommand;
-use App\Message\Api\Study\CreatePersonCommand;
-use App\Message\Api\Study\GetStudyContactsCommand;
+use App\Message\Agent\CreatePersonCommand;
+use App\Message\Study\Provenance\ClearStudyContactsCommand;
+use App\Message\Study\Provenance\GetStudyContactsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

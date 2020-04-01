@@ -8,92 +8,74 @@ import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
 import queryString from "query-string";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
-import {RecruitmentStatus, StudyType, MethodType} from "../../../components/MetadataItem/EnumMappings";
+import {MethodType, RecruitmentStatus, StudyType} from "../../../components/MetadataItem/EnumMappings";
 import Tags from "../../../components/Tags";
 import Contacts from "../../../components/MetadataItem/Contacts";
 import Organizations from "../../../components/MetadataItem/Organizations";
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import {toast} from "react-toastify";
+import ToastContent from "../../../components/ToastContent";
 
 export default class Dataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            isLoaded: false,
-            hasError: false,
-            showMetadata: false,
-            errorMessage: '',
-            dataset: {
-                title: [],
-                description: [],
-                publishers: [],
-                language: '',
-                license: '',
-                version: '',
-                issued: '',
-                modified: '',
-                homepage: '',
-                distributions: [],
-                logo: '',
-                coordinates: null
-            },
-            catalog: {
-                title: [],
-                description: [],
-                publishers: [],
-                language: '',
-                license: '',
-                version: '',
-                issued: '',
-                modified: '',
-                homepage: '',
-                logo: ''
-            }
+            isLoadingDataset:       true,
+            hasLoadedDataset:       false,
+            isLoadingDistributions: true,
+            hasLoadedDistributions: false,
+            dataset:                null,
+            distributions:          []
         };
     }
 
     componentDidMount() {
-        axios.get(window.location.href + '?format=json&ui=true')
+        this.getDataset();
+        this.getDistributions();
+    }
+
+    getDataset = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
             .then((response) => {
                 this.setState({
-                    dataset: response.data.dataset,
-                    catalog: response.data.catalog,
-                    isLoading: false,
-                    isLoaded: true
+                    dataset: response.data,
+                    isLoadingDataset: false,
+                    hasLoadedDataset: true
                 });
             })
             .catch((error) => {
-                console.log(error);
-                if(error.response && typeof error.response.data.message !== "undefined")
-                {
-                    this.setState({
-                        isLoading: false,
-                        hasError: true,
-                        errorMessage: error.response.data.message
-                    });
-                } else {
-                    this.setState({
-                        isLoading: false
-                    });
-                }
+                this.setState({
+                    isLoadingDataset: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                toast.error(<ToastContent type="error" message={message} />);
             });
-    }
+    };
 
-    toggleMetadata = (e) => {
-        var showMetadata = !this.state.showMetadata;
-        this.setState({
-            showMetadata: showMetadata
-        });
+    getDistributions = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution')
+            .then((response) => {
+                this.setState({
+                    distributions: response.data,
+                    isLoadingDistributions: false,
+                    hasLoadedDistributions: true
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingDistributions: false
+                });
 
-        e.preventDefault();
-        return false;
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distributions';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
     };
 
     render() {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if(this.state.isLoading)
+        if(this.state.isLoadingDataset || this.state.isLoadingDistributions)
         {
             return <LoadingScreen showLoading={true}/>;
         }
@@ -137,12 +119,12 @@ export default class Dataset extends Component {
                     {this.state.dataset.contactPoints.length > 0 && <Contacts contacts={this.state.dataset.contactPoints} />}
                     {description && <div className="InformationDescription">{localizedText(description, 'en', true)}</div>}
 
-                    {this.state.dataset.distributions.length > 0 && <div>
+                    {this.state.distributions.length > 0 && <div>
                     <h2>Distributions</h2>
                     <div className="Description">
                         Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
                     </div>
-                    {this.state.dataset.distributions.map((item, index) => {
+                    {this.state.distributions.map((item, index) => {
                         return <ListItem key={index}
                                          newWindow={embedded}
                                          link={item.relative_url}
@@ -163,7 +145,7 @@ export default class Dataset extends Component {
                     {this.state.dataset.organizations.length > 0 && <Organizations organizations={this.state.dataset.organizations} />}
 
                     {/*{this.state.dataset.language && <MetadataItem label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />}*/}
-                    {this.state.dataset.landingpage && <MetadataItem label="Landing page" value={this.state.dataset.landingpage} />}
+                    {this.state.dataset.landingPage && <MetadataItem label="Landing page" value={this.state.dataset.landingPage} />}
                 </Col>
             </Row>
         </FAIRDataInformation>;

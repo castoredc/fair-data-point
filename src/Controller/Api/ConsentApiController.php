@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\ConsentApiRequest;
-use App\Api\Resource\ConsentApiResource;
+use App\Api\Request\Metadata\ConsentApiRequest;
+use App\Api\Resource\Metadata\ConsentApiResource;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
@@ -12,8 +12,8 @@ use App\Exception\CatalogNotFound;
 use App\Exception\StudyAlreadyHasDataset;
 use App\Exception\StudyAlreadyHasSameDataset;
 use App\Exception\StudyNotFound;
-use App\Message\Api\Study\PublishStudyCommand;
-use App\Message\Api\Study\UpdateConsentCommand;
+use App\Message\Metadata\UpdateConsentCommand;
+use App\Message\Study\PublishStudyCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

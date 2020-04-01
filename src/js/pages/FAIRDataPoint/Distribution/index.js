@@ -8,81 +8,71 @@ import ListItem from "../../../components/ListItem";
 import Alert from "../../../components/Alert";
 import queryString from "query-string";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
+import {toast} from "react-toastify";
+import ToastContent from "../../../components/ToastContent";
 
 export default class Distribution extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            isLoaded: false,
-            hasError: false,
-            showMetadata: false,
-            errorMessage: '',
-            distribution: {
-                title: [],
-                description: [],
-                publishers: [],
-                language: '',
-                license: '',
-                version: '',
-                issued: '',
-                modified: '',
-                homepage: '',
-                accessRights: 0
-            },
-            dataset: {
-                title: [],
-                description: [],
-                publishers: [],
-                language: '',
-                license: '',
-                version: '',
-                issued: '',
-                modified: '',
-                homepage: '',
-                logo: ''
-            },
+            isLoadingDataset:       true,
+            hasLoadedDataset:       false,
+            isLoadingDistribution:  true,
+            hasLoadedDistribution:  false,
+            dataset:                null,
+            distribution:           null
         };
     }
 
-    toggleMetadata = (e) => {
-        var showMetadata = !this.state.showMetadata;
-        this.setState({
-            showMetadata: showMetadata
-        });
-
-        e.preventDefault();
-        return false;
-    };
-
     componentDidMount() {
-        axios.get(window.location.href + '?format=json&ui=true')
+        this.getDataset();
+        this.getDistribution();
+    }
+
+    getDataset = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
             .then((response) => {
                 this.setState({
-                    distribution: response.data.distribution,
-                    dataset: response.data.dataset,
-                    isLoading: false,
-                    isLoaded: true
+                    dataset: response.data,
+                    isLoadingDataset: false,
+                    hasLoadedDataset: true
                 });
             })
             .catch((error) => {
-                console.log(error);
-                if(error.response && typeof error.response.data.message !== "undefined")
-                {
-                    this.setState({
-                        isLoading: false,
-                        hasError: true,
-                        errorMessage: error.response.data.message
-                    });
-                } else {
-                    this.setState({
-                        isLoading: false
-                    });
-                }
+                this.setState({
+                    isLoadingDataset: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                toast.error(<ToastContent type="error" message={message} />);
             });
-    }
+    };
+
+    getDistribution = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
+            .then((response) => {
+                this.setState({
+                    distribution: response.data,
+                    isLoadingDistribution: false,
+                    hasLoadedDistribution: true
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingDistribution: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distribution';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
+    };
 
     render() {
+        if(this.state.isLoadingDataset || this.state.isLoadingDistribution)
+        {
+            return <LoadingScreen showLoading={true}/>;
+        }
+
         let restricted = false;
 
         if(this.state.distribution.accessRights === 2 || this.state.distribution.accessRights === 3)
@@ -92,11 +82,6 @@ export default class Distribution extends Component {
 
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
-
-        if(this.state.isLoading)
-        {
-            return <LoadingScreen showLoading={true}/>;
-        }
 
         return <FAIRDataInformation
             embedded={embedded}

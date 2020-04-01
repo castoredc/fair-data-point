@@ -14,6 +14,7 @@ class StudyVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
+    public const ACCESS_DATA = 'access_data';
 
     /** @var Security */
     private $security;
@@ -26,7 +27,7 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::EDIT], true)) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA], true)) {
             return false;
         }
 
@@ -36,41 +37,51 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
-
-        if (! $user instanceof CastorUser) {
-            return false;
-        }
-
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-
         // you know $subject is a Post object, thanks to `supports()`
         /** @var Study $study */
         $study = $subject;
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($study, $user);
+                return $this->canView($study, $token);
             case self::EDIT:
-                return $this->canEdit($study, $user);
+                return $this->canEdit($study, $token);
+            case self::ACCESS_DATA:
+                return $this->canAccessData($study, $token);
         }
 
         return false;
     }
 
-    private function canView(Study $study, CastorUser $user): bool
+    private function canView(Study $study, TokenInterface $token): bool
     {
-        if ($this->canEdit($study, $user)) {
+        if ($this->canEdit($study, $token)) {
             return true;
         }
 
-        return $study->getLatestMetadata()->hasConsentPublish();
+        return $study->getDataset()->isPublished();
     }
 
-    private function canEdit(Study $study, CastorUser $user): bool
+    private function canEdit(Study $study, TokenInterface $token): bool
     {
+        $user = $token->getUser();
+        if (! $user instanceof CastorUser) {
+            return false;
+        }
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return $this->canAccessData($study, $token);
+    }
+
+    private function canAccessData(Study $study, TokenInterface $token): bool
+    {
+        $user = $token->getUser();
+        if (! $user instanceof CastorUser) {
+            return false;
+        }
+
         return in_array($study->getId(), $user->getStudies(), true);
     }
 }
