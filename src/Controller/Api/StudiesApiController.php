@@ -20,6 +20,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 class StudiesApiController extends ApiController
 {
@@ -69,8 +70,20 @@ class StudiesApiController extends ApiController
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }
-        }
 
-        return new JsonResponse([], 500);
+            return new JsonResponse([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'handler' => true,
+            ], 500);
+        } catch (Throwable $e) {
+            return new JsonResponse([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'handler' => false,
+            ], 500);
+        }
     }
 }
