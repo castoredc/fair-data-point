@@ -59,7 +59,7 @@ class Organization extends Agent
      */
     private $coordinatesLongitude;
 
-    public function __construct(?string $slug, string $name, ?Iri $homepage, Country $country, string $city)
+    public function __construct(?string $slug, string $name, ?Iri $homepage, Country $country, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
     {
         $slugify = new Slugify();
 
@@ -71,6 +71,8 @@ class Organization extends Agent
         $this->homepage = $homepage;
         $this->country = $country;
         $this->city = $city;
+        $this->coordinatesLatitude = $coordinatesLatitude;
+        $this->coordinatesLongitude = $coordinatesLongitude;
     }
 
     public function getAccessUrl(): string

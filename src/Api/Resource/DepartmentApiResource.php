@@ -26,6 +26,8 @@ class DepartmentApiResource implements ApiResource
             'city' => $this->department->getOrganization()->getCity(),
             'department' => $this->department->getName(),
             'additionalInformation' => $this->department->getAdditionalInformation(),
+            'coordinatesLatitude' => $this->department->getOrganization()->getCoordinatesLatitude(),
+            'coordinatesLongitude' => $this->department->getOrganization()->getCoordinatesLongitude(),
         ];
     }
 }

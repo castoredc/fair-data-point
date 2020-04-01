@@ -65,7 +65,9 @@ class CentersApiController extends ApiController
                         $item->getCountry(),
                         $item->getCity(),
                         $item->getDepartment(),
-                        $item->getAdditionalInformation()
+                        $item->getAdditionalInformation(),
+                        $this->isGranted('ROLE_ADMIN') ? $item->getCoordinatesLatitude() : null,
+                        $this->isGranted('ROLE_ADMIN') ? $item->getCoordinatesLongitude() : null,
                     )
                 );
             }

@@ -39,6 +39,18 @@ class StudyCenterApiRequest extends GroupedApiRequest
      */
     private $additionalInformation;
 
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $coordinatesLatitude;
+
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $coordinatesLongitude;
+
     protected function parse(): void
     {
         $this->name = $this->getFromData('name');
@@ -46,6 +58,8 @@ class StudyCenterApiRequest extends GroupedApiRequest
         $this->city = $this->getFromData('city');
         $this->department = $this->getFromData('department');
         $this->additionalInformation = $this->getFromData('additionalInformation');
+        $this->coordinatesLatitude = $this->getFromData('coordinatesLatitude');
+        $this->coordinatesLongitude = $this->getFromData('coordinatesLongitude');
     }
 
     public function getName(): string
@@ -71,5 +85,15 @@ class StudyCenterApiRequest extends GroupedApiRequest
     public function getAdditionalInformation(): ?string
     {
         return $this->additionalInformation;
+    }
+
+    public function getCoordinatesLatitude(): ?string
+    {
+        return $this->coordinatesLatitude !== '' ? $this->coordinatesLatitude : null;
+    }
+
+    public function getCoordinatesLongitude(): ?string
+    {
+        return $this->coordinatesLongitude !== '' ? $this->coordinatesLongitude : null;
     }
 }
