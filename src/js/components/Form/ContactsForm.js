@@ -140,7 +140,7 @@ export default class ContactsForm extends Component {
                 return true;
             }
 
-            var regex = /^\d{4}(-)\d{4}(-)\d{4}(-)\d{4}$/i;
+            const regex = /^\d{4}(-)\d{4}(-)\d{4}(-)\d{3}[\dX]$/i;
             return regex.test(value);
         });
 
@@ -287,7 +287,7 @@ export default class ContactsForm extends Component {
                                     onChange={(e) => {this.handleChange(index, e)}}
                                     onBlur={this.handleFieldVisit}
                                     value={contact.orcid}
-                                    mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                                    mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /[\dX]/]}
                                     serverError={this.state.validation[index].orcid}
                                 />
                             </FormItem>
