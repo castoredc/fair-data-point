@@ -129,6 +129,13 @@ class Catalog
     private $acceptSubmissions = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $submissionAccessesData = false;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
     public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, ?Iri $homepage)
@@ -326,6 +333,11 @@ class Catalog
     public function isAcceptingSubmissions(): bool
     {
         return $this->acceptSubmissions;
+    }
+
+    public function isSubmissionAccessingData(): bool
+    {
+        return $this->submissionAccessesData;
     }
 
     /**
