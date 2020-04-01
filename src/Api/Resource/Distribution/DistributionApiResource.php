@@ -5,6 +5,7 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
 
 class DistributionApiResource implements ApiResource
 {
@@ -21,8 +22,17 @@ class DistributionApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $accessUrl = null;
+        $downloadUrl = null;
+
+        if($this->distribution instanceof RDFDistribution)
+        {
+            $accessUrl = $this->distribution->getRDFUrl();
+            $downloadUrl = $this->distribution->getRDFUrl() . '/?download=1';
+        }
+
         return [
-            'access_url' => $this->distribution->getAccessUrl(),
+            'access_url' => $accessUrl,
             'relative_url' => $this->distribution->getRelativeUrl(),
             'id' => $this->distribution->getId(),
             'slug' => $this->distribution->getSlug(),
@@ -35,6 +45,7 @@ class DistributionApiResource implements ApiResource
             'issued' => $this->distribution->getIssued(),
             'modified' => $this->distribution->getModified(),
             'accessRights' => $this->distribution->getAccessRights(),
+            'download_url' => $downloadUrl
         ];
     }
 }

@@ -93,18 +93,6 @@ class RDFDistribution extends Distribution
         return $twig;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        return array_merge(parent::toArray(), [
-            'rdf_url' => $this->getRDFUrl(),
-            'download_url' => $this->getRDFUrl() . '/?download=1',
-            'access_url' => $this->getRDFUrl(),
-        ]);
-    }
-
     public function toGraph(): EasyRdf_Graph
     {
         $graph = parent::toGraph();

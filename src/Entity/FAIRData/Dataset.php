@@ -310,15 +310,13 @@ class Dataset
         return $graph;
     }
 
-    public function hasCatalog(Catalog $find): bool
+    public function hasCatalog(Catalog $catalog): bool
     {
-        foreach ($this->catalogs as $catalog) {
-            /** @var Catalog $catalog */
-            if ($catalog->getId() === $find->getId()) {
-                return true;
-            }
-        }
+        return $this->catalogs->contains($catalog);
+    }
 
-        return false;
+    public function hasDistribution(Distribution $distribution): bool
+    {
+        return $this->distributions->contains($distribution);
     }
 }

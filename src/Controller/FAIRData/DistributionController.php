@@ -5,23 +5,25 @@ namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution\Distribution;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DatasetController extends FAIRDataController
+class DistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}/{dataset}", name="dataset")
+     * @Route("/fdp/{catalog}/{dataset}/{distribution}", name="distribution")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function dataset(Catalog $catalog, Dataset $dataset, Request $request): Response
+    public function dataset(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
-        if(! $dataset->hasCatalog($catalog))
+        if(! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution))
         {
             throw $this->createNotFoundException();
         }
@@ -33,7 +35,7 @@ class DatasetController extends FAIRDataController
         }
 
         return new Response(
-            $dataset->toGraph()->serialise('turtle'),
+            $distribution->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
