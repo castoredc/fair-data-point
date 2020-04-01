@@ -111,7 +111,7 @@ class CreateDepartmentAndOrganizationCommand
     {
         return $this->additionalInformation;
     }
-    
+
     public function getCoordinatesLatitude(): ?string
     {
         return $this->coordinatesLatitude;
