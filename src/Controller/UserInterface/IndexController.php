@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
@@ -13,10 +14,10 @@ class IndexController extends AbstractController
     /**
      * @return RedirectResponse
      *
-     * @Route("/", name="homepage")
+     * @Route("/", name="redirect_homepage")
      */
-    public function index(Request $request): Response
+    public function redirectToIndex(Request $request): Response
     {
-        return $this->redirectToRoute('fdp_render');
+        return $this->redirectToRoute('fdp');
     }
 }

@@ -1,79 +1,74 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import axios from "axios/index";
-
-import {Container, Row, Col, Button} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
-import DocumentTitle from "../../../components/DocumentTitle";
 import {localizedText} from "../../../util";
-import MetadataItem from "../../../components/MetadataItem";
 import ListItem from "../../../components/ListItem";
-import Contact from "../../../components/MetadataItem/Contacts";
-import Alert from "react-bootstrap/Alert";
-import Icon from "../../../components/Icon";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
 import queryString from "query-string";
+import {toast} from "react-toastify";
+import ToastContent from "../../../components/ToastContent";
 
 export default class FAIRDataPointMain extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            isLoaded: false,
-            hasError: false,
-            showMetadata: false,
-            errorMessage: '',
-            fdp: {
-                title: [],
-                description: [],
-                publishers: [],
-                language: '',
-                license: '',
-                version: '',
-                catalogs: []
-            }
+            isLoadingFDP: true,
+            isLoadingCatalogs: true,
+            hasLoadedFDP: false,
+            hasLoadedCatalogs: false,
+            fdp: null,
+            catalogs: []
         };
     }
 
     componentDidMount() {
-        axios.get(window.location.href + '?format=json&ui=true')
+        this.getFDP();
+        this.getCatalogs();
+    }
+
+    getFDP = () => {
+        axios.get('/api/fdp')
             .then((response) => {
                 this.setState({
-                    fdp: response.data.fdp,
-                    isLoading: false,
-                    isLoaded: true
+                    fdp: response.data,
+                    isLoadingFDP: false,
+                    hasLoadedFDP: true
                 });
             })
             .catch((error) => {
-                if(error.response && typeof error.response.data.message !== "undefined")
-                {
-                    this.setState({
-                        isLoading: false,
-                        hasError: true,
-                        errorMessage: error.response.data.message
-                    });
-                } else {
-                    this.setState({
-                        isLoading: false
-                    });
-                }
+                this.setState({
+                    isLoadingFDP: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the FAIR Data Point information';
+                toast.error(<ToastContent type="error" message={message} />);
             });
-    }
+    };
 
-    toggleMetadata = (e) => {
-        var showMetadata = !this.state.showMetadata;
-        this.setState({
-            showMetadata: showMetadata
-        });
+    getCatalogs = () => {
+        axios.get('/api/catalog')
+            .then((response) => {
+                this.setState({
+                    catalogs: response.data,
+                    isLoadingCatalogs: false,
+                    hasLoadedCatalogs: true
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingCatalogs: false
+                });
 
-        e.preventDefault();
-        return false;
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalogs';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
     };
 
     render() {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if(this.state.isLoading)
+        if(this.state.isLoadingFDP || this.state.isLoadingCatalogs)
         {
             return <LoadingScreen showLoading={true}/>;
         }
@@ -89,7 +84,7 @@ export default class FAIRDataPointMain extends Component {
             <div className="Description">
                 Catalogs are collections of datasets.
             </div>
-            {this.state.fdp.catalogs.length > 0 ? this.state.fdp.catalogs.map((item, index) => {
+            {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
                 return <ListItem key={index}
                                  newWindow={embedded}
                                  link={item.relative_url}

@@ -81,48 +81,6 @@ class RDFRendererController extends AbstractController
     }
 
     /**
-     * @Route("/fdp", name="fdp_render")
-     */
-    public function fdpAction(Request $request): Response
-    {
-        $accept = $this->detectAccept($request);
-        $uri = $request->getSchemeAndHttpHost();
-
-        $doctrine = $this->getDoctrine();
-        $fairDataPointRepository = $doctrine->getRepository(FAIRDataPoint::class);
-
-        /** @var FAIRDataPoint|null $fdp */
-        $fdp = $fairDataPointRepository->findOneBy(['iri' => $uri]);
-
-        if ($fdp === null) {
-            throw new NotFoundHttpException('FAIR Data Point not found');
-        }
-
-        if ($accept === self::ACCEPT_HTTP) {
-            return $this->render(
-                'react.html.twig'
-            );
-        }
-
-        if ($accept === self::ACCEPT_JSON) {
-            return new JsonResponse(
-                [
-                    'success' => true,
-                    'fdp' => $fdp->toArray(),
-                ]
-            );
-        }
-
-        $graph = $fdp->toGraph();
-
-        return new Response(
-            $graph->serialise('turtle'),
-            Response::HTTP_OK,
-            ['content-type' => 'text/turtle']
-        );
-    }
-
-    /**
      * @Route("/agent/{agentType}/{agentSlug}", name="agent_render")
      */
     public function profileAction(Request $request, string $agentType, string $agentSlug): Response

@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
-use function array_merge;
 
 /**
  * @ORM\Entity
@@ -213,44 +212,6 @@ class FAIRDataPoint
     public function addCatalog(Catalog $catalog): void
     {
         $this->catalogs->add($catalog);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function toBasicArray(): array
-    {
-        $publishers = [];
-        // foreach ($this->publishers as $publisher) {
-        //     /** @var Agent $publisher */
-        //     $publishers[] = $publisher->toArray();
-        // }
-
-        return [
-            'access_url' => $this->getAccessUrl(),
-            'relative_url' => $this->getRelativeUrl(),
-            'iri' => $this->iri,
-            'title' => $this->title->toArray(),
-            'version' => $this->version,
-            'description' => $this->description->toArray(),
-            'publishers' => $publishers,
-            'language' => $this->language->toArray(),
-            'license' => $this->license->toArray(),
-        ];
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        $catalogs = [];
-        foreach ($this->catalogs as $catalog) {
-            /** @var Catalog $catalog */
-            $catalogs[] = $catalog->toBasicArray();
-        }
-
-        return array_merge($this->toBasicArray(), ['catalogs' => $catalogs]);
     }
 
     public function toGraph(): EasyRdf_Graph
