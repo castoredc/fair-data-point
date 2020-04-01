@@ -102,7 +102,7 @@ export default class Dataset extends Component {
         let tags = [];
         let badge = (this.state.dataset.recruitmentStatus ? RecruitmentStatus[this.state.dataset.recruitmentStatus] : null);
 
-        if(this.state.dataset.description !== null)
+        if(this.state.dataset.description !== null && this.state.dataset.description.text !== '')
         {
             description = this.state.dataset.description;
         }

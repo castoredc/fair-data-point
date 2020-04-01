@@ -149,7 +149,7 @@ class StudyMetadataApiRequest extends SingleApiRequest
 
     public function getSummary(): ?string
     {
-        return $this->summary;
+        return $this->summary !== '' ? $this->summary : null;
     }
 
     public function getRecruitmentStatus(): ?RecruitmentStatus
