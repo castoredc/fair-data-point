@@ -4,86 +4,73 @@ import axios from "axios/index";
 import {Col, Row} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
 import {localizedText} from "../../../util";
-import MetadataItem from "../../../components/MetadataItem";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
 import queryString from "query-string";
 import StudyListItem from "../../../components/ListItem/StudyListItem";
+import {toast} from "react-toastify";
+import ToastContent from "../../../components/ToastContent";
 
 export default class Catalog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading:    true,
-            isLoaded:     false,
-            hasError:     false,
-            showMetadata: false,
-            errorMessage: '',
-            catalog:      {
-                title:       [],
-                description: [],
-                publishers:  [],
-                language:    '',
-                license:     '',
-                version:     '',
-                issued:      '',
-                modified:    '',
-                homepage:    '',
-                datasets:    [],
-                logo:        '',
-            },
-            fdp:          {
-                title:       [],
-                description: [],
-                publishers:  [],
-                language:    '',
-                license:     '',
-                version:     '',
-                catalogs:    [],
-            },
+            isLoadingCatalog:   true,
+            hasLoadedCatalog:   false,
+            isLoadingDatasets:  true,
+            hasLoadedDatasets:  false,
+            catalog:            null,
+            datasets:           []
         };
     }
 
     componentDidMount() {
-        axios.get(window.location.href + '?format=json&ui=true')
+        this.getCatalog();
+        this.getDatasets();
+    }
+
+    getCatalog = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog)
             .then((response) => {
                 this.setState({
-                    catalog:   response.data.catalog,
-                    fdp:       response.data.fdp,
-                    isLoading: false,
-                    isLoaded:  true,
+                    catalog: response.data,
+                    isLoadingCatalog: false,
+                    hasLoadedCatalog: true
                 });
             })
             .catch((error) => {
-                console.log(error);
-                if (error.response && typeof error.response.data.message !== "undefined") {
-                    this.setState({
-                        isLoading:    false,
-                        hasError:     true,
-                        errorMessage: error.response.data.message,
-                    });
-                } else {
-                    this.setState({
-                        isLoading: false,
-                    });
-                }
+                this.setState({
+                    isLoadingCatalog: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalog information';
+                toast.error(<ToastContent type="error" message={message} />);
             });
-    }
+    };
 
-    toggleMetadata = (e) => {
-        var showMetadata = !this.state.showMetadata;
-        this.setState({
-            showMetadata: showMetadata,
-        });
+    getDatasets = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset')
+            .then((response) => {
+                this.setState({
+                    datasets: response.data,
+                    isLoadingDatasets: false,
+                    hasLoadedDatasets: true
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingDatasets: false
+                });
 
-        e.preventDefault();
-        return false;
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the datasets';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
     };
 
     render() {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if (this.state.isLoading) {
+        if (this.state.isLoadingCatalog || this.state.isLoadingDatasets) {
             return <LoadingScreen showLoading={true}/>;
         }
 
@@ -105,7 +92,7 @@ export default class Catalog extends Component {
                     {/*<div className="Description">*/}
                     {/*    Datasets are published collections of data.*/}
                     {/*</div>*/}
-                    {this.state.catalog.datasets.length > 0 ? this.state.catalog.datasets.map((item, index) => {
+                    {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
                             return <StudyListItem key={index}
                                                   newWindow={embedded}
                                                   link={item.relative_url}

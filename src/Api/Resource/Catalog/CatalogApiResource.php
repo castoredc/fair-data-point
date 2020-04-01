@@ -21,6 +21,22 @@ class CatalogApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return $this->catalog->toBasicArray();
+        return [
+            'access_url' => $this->catalog->getAccessUrl(),
+            'relative_url' => $this->catalog->getRelativeUrl(),
+            'id' => $this->catalog->getId(),
+            'slug' => $this->catalog->getSlug(),
+            'title' => $this->catalog->getTitle()->toArray(),
+            'version' => $this->catalog->getVersion(),
+            'description' => $this->catalog->getDescription()->toArray(),
+            'publishers' => [],
+            'language' => $this->catalog->getLanguage()->toArray(),
+            'license' => $this->catalog->getLicense()->toArray(),
+            'issued' => $this->catalog->getIssued(),
+            'modified' => $this->catalog->getModified(),
+            'homepage' => $this->catalog->getHomepage() !== null ? $this->catalog->getHomepage()->getValue() : null,
+            'logo' => $this->catalog->getLogo() !== null ? $this->catalog->getLogo()->getValue() : null,
+            'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
+        ];
     }
 }

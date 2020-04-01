@@ -340,50 +340,6 @@ class Catalog
         return $this->submissionAccessesData;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function toBasicArray(): array
-    {
-        $publishers = [];
-        // foreach ($this->publishers as $publisher) {
-        //     /** @var Agent $publisher */
-        //     $publishers[] = $publisher->toArray();
-        // }
-
-        return [
-            'access_url' => $this->getAccessUrl(),
-            'relative_url' => $this->getRelativeUrl(),
-            'id' => $this->id,
-            'slug' => $this->slug,
-            'title' => $this->title->toArray(),
-            'version' => $this->version,
-            'description' => $this->description->toArray(),
-            'publishers' => $publishers,
-            'language' => $this->language->toArray(),
-            'license' => $this->license->toArray(),
-            'issued' => $this->issued,
-            'modified' => $this->modified,
-            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : null,
-            'logo' => $this->logo !== null ? $this->logo->getValue() : null,
-            'acceptSubmissions' => $this->acceptSubmissions,
-        ];
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        $datasets = [];
-        foreach ($this->getDatasets(false) as $dataset) {
-            /** @var Dataset $dataset */
-            $datasets[] = $dataset->toBasicArray();
-        }
-
-        return array_merge($this->toBasicArray(), ['datasets' => $datasets]);
-    }
-
     public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
