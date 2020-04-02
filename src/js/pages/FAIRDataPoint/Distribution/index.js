@@ -93,7 +93,7 @@ export default class Distribution extends Component {
             license={this.state.distribution.license}
         >
             <Row>
-                <Col md={8}>
+                <Col md={8} className="InformationCol">
                     {this.state.distribution.description && <div className="InformationDescription">{localizedText(this.state.distribution.description, 'en', true)}</div>}
 
                     {restricted && <Alert

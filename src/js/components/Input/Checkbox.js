@@ -1,5 +1,5 @@
 import React from 'react';
-import {classNames} from '../../../util';
+import {classNames} from '../../util';
 import {ValidatorComponent} from "react-form-validator-core";
 import Form from 'react-bootstrap/Form'
 
@@ -21,7 +21,7 @@ class Checkbox extends ValidatorComponent {
         } = this.props;
 
         return (
-            <Form.Group className="CheckboxGroup">
+            <Form.Group className="CheckboxFormGroup">
                 <label className={classNames('Checkbox', invalid && 'error')}>
                     <input
                         type="checkbox"
@@ -57,7 +57,7 @@ class Checkbox extends ValidatorComponent {
 
 export const CheckboxGroup = ({ label, checkboxes }) => {
   return (
-    <div className="CheckboxGroup">
+    <div className="CheckboxesGroup">
       {checkboxes.map((checkbox, index) => (
         <Checkbox key={index} {...checkbox} />
       ))}

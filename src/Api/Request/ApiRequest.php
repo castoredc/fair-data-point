@@ -22,9 +22,9 @@ abstract class ApiRequest
      *
      * phpcs:enable
      */
-    public function __construct(array $data, ParameterBag $query)
+    public function __construct(?array $data, ParameterBag $query)
     {
-        $this->data = $data;
+        $this->data = $data ?? [];
         $this->query = $query;
 
         $this->parse();

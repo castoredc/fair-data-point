@@ -1,0 +1,21 @@
+@import '../../scss/const';
+@import '../../scss/colors';
+
+.Filters {
+  .Sticky {
+    padding-top: 30px;
+  }
+
+  .FilterBlock {
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-family: 'Lato', sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.33;
+    color: $neutral-800;
+    margin-bottom: 16px;
+  }
+}

@@ -10,11 +10,11 @@ $checkboxTop: (($labelLineHeight * $labelFontSize) - $checkboxDimensions) / 2;
   padding-left: $checkboxDimensions + 8px;
   font-size: 16px;
   line-height: $labelLineHeight;
-  color: $gray;
+  color: $generic-black;
   display: block;
 
   &.error .icon {
-    border-color: $error;
+    border-color: $red-700;
   }
 
   input {
@@ -31,15 +31,15 @@ $checkboxTop: (($labelLineHeight * $labelFontSize) - $checkboxDimensions) / 2;
       width: $checkboxDimensions;
       position: absolute;
       top: $checkboxTop;
-      border: 1px solid $gray;
+      border: 1px solid $neutral-50;
       border-radius: 3px;
       box-sizing: border-box;
       left: 0;
     }
 
     &:checked + .icon {
-      background: $primary;
-      border-color: $primary;
+      background: $azul;
+      border-color: $azul;
     }
 
     &:checked + .icon:after {
@@ -57,13 +57,17 @@ $checkboxTop: (($labelLineHeight * $labelFontSize) - $checkboxDimensions) / 2;
 
     &:active + .icon,
     &:focus + .icon {
-      border-color: $primary;
+      border-color: $azul;
     }
   }
 }
 
-.CheckboxGroup {
+.CheckboxesGroup {
   label {
     margin-bottom: 8px;
+  }
+
+  .CheckboxFormGroup.form-group {
+    margin-bottom: 0;
   }
 }
