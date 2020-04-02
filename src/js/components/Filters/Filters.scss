@@ -45,8 +45,8 @@
 
   &.Overlay {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -10px;
+    right: 15px;
     z-index: 1000;
     background: $generic-white;
     padding: 15px!important;
@@ -60,7 +60,7 @@
   .Filters {
     width: 90%!important;
     position: absolute!important;
-    top: 0;
+    top: -10px;
     right: 15px;
     z-index: 1000;
     background: $generic-white;
