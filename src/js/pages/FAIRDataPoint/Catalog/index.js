@@ -28,9 +28,10 @@ export default class Catalog extends Component {
             hasLoadedMap:       false,
             catalog:            null,
             showDatasets:       false,
+            showMap:            false,
             datasets:           [],
             map:                [],
-            showMap:            false
+            displayList:        true
         };
     }
 
@@ -93,7 +94,8 @@ export default class Catalog extends Component {
                 this.setState({
                     map: response.data,
                     isLoadingMap: false,
-                    hasLoadedMap: true
+                    hasLoadedMap: true,
+                    showMap: (filters === false && response.data.length > 0 || filters !== false)
                 });
             })
             .catch((error) => {
@@ -111,9 +113,9 @@ export default class Catalog extends Component {
         this.getMap(filters);
     };
 
-    changeView = (showMap) => {
+    changeView = (displayList) => {
         this.setState({
-            showMap: showMap
+            displayList: displayList
         });
     };
 
@@ -152,17 +154,17 @@ export default class Catalog extends Component {
                         <h2>Studies</h2>
                     </Col>
                     <Col md={3} className="DatasetHeaderButtons">
-                        <ButtonGroup>
-                            <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.showMap}>List</Button>
-                            <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.showMap}>Map</Button>
-                        </ButtonGroup>
+                        {this.state.showMap && <ButtonGroup>
+                            <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
+                            <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
+                        </ButtonGroup>}
                     </Col>
                 </Row>
             <StickyContainer>
                 <Row>
                     <Col md={8} className="InformationCol">
-                        {(this.state.isLoadingDatasets && !this.state.showMap || this.state.isLoadingMap && this.state.showMap) && <InlineLoader overlay={true} />}
-                        {!this.state.showMap ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
+                        {(this.state.isLoadingDatasets && this.state.displayList || this.state.isLoadingMap && ! this.state.displayList) && <InlineLoader overlay={true} />}
+                        {this.state.displayList ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
                             {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
                                 return <StudyListItem key={index}
                                                       newWindow={embedded}

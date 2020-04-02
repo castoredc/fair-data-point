@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import MetadataItem from "../MetadataItem";
 import {AttributionControl, Map, Marker, Popup, TileLayer} from "react-leaflet";
 import {getCenterFromDegrees, localizedText} from "../../util";
 
@@ -18,11 +17,6 @@ export default class DatasetMap extends Component {
             <Map
                 center={getCenterFromDegrees(coordinates)}
                 zoom={2}
-                // dragging={false}
-                // doubleClickZoom={false}
-                // keyboard={false}
-                // scrollWheelZoom={false}
-                // zoomControl={false}
                 attributionControl={false}
             >
                 <TileLayer
