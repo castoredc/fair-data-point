@@ -129,7 +129,7 @@ export default class Filters extends Component {
     };
 
     render() {
-        const { style, className, fullWidth } = this.props;
+        const { style, className, overlay, hidden } = this.props;
 
         if(this.state.isLoadingFilters || this.state.isLoadingCountries)
         {
@@ -169,47 +169,11 @@ export default class Filters extends Component {
             }
         });
 
-        if(fullWidth)
-        {
-            return <div className={classNames('FilterForm', className)}>
-                <ValidatorForm
-                    ref={node => (this.form = node)}
-                    onSubmit={() => {}}
-                >
-                    <Row>
-                        <Col md={3}><h2>Search studies</h2></Col>
-                        {showFilters && <Col md={9}><h2>Filter</h2></Col>}
-                    </Row>
-                    <Row>
-                        <Col md={3}>
-                            <Input
-                                name="search"
-                                onChange={this.handleChange}
-                                value={this.state.data.search}
-                                placeholder="Search ..."
-                            />
-                        </Col>
-                        {showStudyType && <Col md={3}>
-                            <FormItem label="Type">
-                                <CheckboxGroup checkboxes={studyTypes} />
-                            </FormItem>
-                        </Col>}
-                        {showMethodType && <Col md={3}>
-                            <FormItem label="Method">
-                                <CheckboxGroup checkboxes={methodTypes} />
-                            </FormItem>
-                        </Col>}
-                        {showCountry && <Col md={3}>
-                            <FormItem label="Country">
-                                <CheckboxGroup checkboxes={countries} />
-                            </FormItem>
-                        </Col>}
-                    </Row>
-                </ValidatorForm>
-            </div>;
+        if(hidden) {
+            return null;
         }
 
-        return <div className={classNames('FilterForm', className)} style={style}>
+        return <div className={classNames('FilterForm', overlay && 'Overlay', className)} style={style}>
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={() => {}}

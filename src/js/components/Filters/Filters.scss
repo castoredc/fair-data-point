@@ -2,12 +2,25 @@
 @import '../../scss/colors';
 
 .Filters {
-  .FilterForm {
+  &.Hidden {
+    display: none;
+  }
+  .ToggleFilters {
+    height: 100%;
+    display: block;
+    border: 1px solid gray;
+  }
+
+  .Sticky {
     padding-top: 30px;
   }
 
   .FilterBlock {
     margin-bottom: 40px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   h2 {
@@ -28,19 +41,15 @@
       position: inherit!important;
       width: 100%!important;
     }
-
-    .FormItem {
-      margin: 0;
-    }
   }
 
   &.Overlay {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 999;
+    z-index: 1000;
     background: $generic-white;
-    padding: 15px;
+    padding: 15px!important;
     box-shadow: 0 1px 3px 0 $shadow;
     border: solid 1px $neutral-40;
     border-radius: 5px;
@@ -49,6 +58,24 @@
 
 @media (max-width: 767px) {
   .Filters {
-    display: none;
+    width: 90%!important;
+    position: absolute!important;
+    top: 0;
+    right: 15px;
+    z-index: 1000;
+    background: $generic-white;
+    padding: 15px!important;
+    box-shadow: 0 1px 3px 0 $shadow;
+    border: solid 1px $neutral-40;
+    border-radius: 5px;
+
+    & > div > div:first-child {
+      display: none;
+    }
+
+    .Sticky {
+      position: inherit!important;
+      width: 100%!important;
+    }
   }
 }

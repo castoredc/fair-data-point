@@ -15,6 +15,8 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import DatasetMap from "../../../components/DatasetMap";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import Icon from "../../../components/Icon";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -31,11 +33,13 @@ export default class Catalog extends Component {
             showMap:            false,
             datasets:           [],
             map:                [],
-            displayList:        true
+            displayList:        true,
+            displayFilter:      true
         };
     }
 
     componentDidMount() {
+        this.setState({ displayFilter: (window.innerWidth > 767) });
         this.getCatalog();
         this.getDatasets(false);
         this.getMap(false);
@@ -115,7 +119,14 @@ export default class Catalog extends Component {
 
     changeView = (displayList) => {
         this.setState({
-            displayList: displayList
+            displayList: displayList,
+            displayFilter: displayList
+        });
+    };
+
+    toggleFilter = () => {
+        this.setState({
+            displayFilter: ! this.state.displayFilter
         });
     };
 
@@ -123,7 +134,8 @@ export default class Catalog extends Component {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
         const listWidth = this.state.displayList ? 8 : 12;
-        const filterWidth = this.state.displayList ? 4 : 12;
+        const headerWidth = this.state.displayList ? 5 : 4;
+        const buttonWidth = this.state.displayList ? 3 : 8;
 
         if (this.state.isLoadingCatalog) {
             return <LoadingScreen showLoading={true}/>;
@@ -152,14 +164,19 @@ export default class Catalog extends Component {
             </Row>}
             {this.state.showDatasets && <div>
                 <Row className="DatasetsHeader">
-                    <Col md={8}>
+                    <Col xs={headerWidth}>
                         <h2>Studies</h2>
                     </Col>
-                    <Col md={4} className="DatasetHeaderButtons">
+                    <Col xs={buttonWidth} className="DatasetHeaderButtons">
                         {this.state.showMap && <ButtonGroup>
                             <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
                             <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
                         </ButtonGroup>}
+                        <ButtonGroup className={classNames('FilterButton', this.state.displayList && 'Hidden')}>
+                            <Button variant="outline-primary" onClick={this.toggleFilter} active={this.state.displayFilter}>
+                                <Icon type="filters" /> Filters
+                            </Button>
+                        </ButtonGroup>
                     </Col>
                 </Row>
             <StickyContainer>
@@ -183,14 +200,17 @@ export default class Catalog extends Component {
                             <DatasetMap datasets={this.state.map} />
                         </div>}
                     </Col>
-                    <Col md={filterWidth} className={classNames('Filters', !this.state.displayList && 'StickyDisabled')}>
+                    <Col md={4}
+                         className={classNames('Filters',
+                             !this.state.displayList && 'StickyDisabled',
+                             ! this.state.displayFilter && 'Hidden',
+                             (! this.state.displayList && this.state.displayFilter) && 'Overlay')}>
                         <Sticky>
                             {({style, isSticky}) => (
                                   <Filters className={classNames(isSticky && 'Sticky')}
                                            style={style}
                                            catalog={this.props.match.params.catalog}
                                            onFilter={(filter) => this.handleFilter(filter)}
-                                           fullWidth={!this.state.displayList}
                                   />
                             )}
                         </Sticky>
