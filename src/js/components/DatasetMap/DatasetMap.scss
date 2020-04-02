@@ -25,7 +25,6 @@
       font-weight: 600;
       font-size: 18px;
       line-height: 1.5;
-      float: left;
     }
   }
 
@@ -34,5 +33,11 @@
     font-size: 14px;
     line-height: 1.5;
     color: $neutral-300;
+  }
+}
+
+@media (max-width: 767px) {
+  .DatasetMap {
+    height: 500px;
   }
 }

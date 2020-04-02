@@ -164,7 +164,7 @@ export default class Catalog extends Component {
             </Row>}
             {this.state.showDatasets && <div>
                 <Row className="DatasetsHeader">
-                    <Col sm={headerWidth}>
+                    <Col sm={headerWidth} className="DatasetsHeaderTitle">
                         <h2>Studies</h2>
                     </Col>
                     <Col sm={buttonWidth} className="DatasetHeaderButtons">
