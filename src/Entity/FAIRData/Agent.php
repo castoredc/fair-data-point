@@ -67,18 +67,6 @@ abstract class Agent
         $this->name = $name;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'slug' => $this->slug,
-            'name' => $this->name,
-        ];
-    }
-
     public function getAccessUrl(): string
     {
         return '/agent/generic/' . $this->getSlug();

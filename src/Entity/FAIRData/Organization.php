@@ -8,7 +8,6 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
-use function array_merge;
 use function uniqid;
 
 /**
@@ -80,29 +79,6 @@ class Organization extends Agent
         return '/agent/organization/' . $this->getSlug();
     }
 
-    /**
-     * @return array<string>
-     */
-    public function toArray(): array
-    {
-        $coordinates = null;
-
-        if ($this->coordinatesLatitude !== null && $this->coordinatesLongitude !== null) {
-            $coordinates = [];
-            $coordinates['lat'] = $this->coordinatesLatitude;
-            $coordinates['long'] = $this->coordinatesLongitude;
-        }
-
-        return array_merge(parent::toArray(), [
-            'url' => $this->homepage !== null ? $this->homepage->getValue() : null,
-            'homepage' => $this->homepage !== null ? $this->homepage->getValue() : null,
-            'type' => 'organization',
-            'city' => $this->city,
-            'country' => $this->country->getName(),
-            'coordinates' => $coordinates,
-        ]);
-    }
-
     public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
     {
         $url = $this->getAccessUrl();
@@ -151,5 +127,10 @@ class Organization extends Agent
     public function getCoordinatesLongitude(): ?string
     {
         return $this->coordinatesLongitude;
+    }
+
+    public function hasCoordinates(): bool
+    {
+        return $this->coordinatesLatitude !== null && $this->coordinatesLongitude !== null;
     }
 }

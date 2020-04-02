@@ -213,3 +213,19 @@
         }
     }
 }
+
+.DatasetHeader {
+    margin-bottom: 16px;
+
+    h2 {
+        font-family: 'Lato', sans-serif;
+        font-size: 21px;
+        font-weight: 600;
+        line-height: 1.33;
+        color: $neutral-800;
+    }
+
+    .DatasetHeaderButtons {
+        text-align: right;
+    }
+}

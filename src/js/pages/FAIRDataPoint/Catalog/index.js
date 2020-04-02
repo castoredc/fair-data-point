@@ -12,6 +12,9 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import Filters from "../../../components/Filters";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
+import DatasetMap from "../../../components/DatasetMap";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -21,15 +24,21 @@ export default class Catalog extends Component {
             hasLoadedCatalog:   false,
             isLoadingDatasets:  true,
             hasLoadedDatasets:  false,
+            isLoadingMap:       true,
+            hasLoadedMap:       false,
             catalog:            null,
             showDatasets:       false,
-            datasets:           []
+            showMap:            false,
+            datasets:           [],
+            map:                [],
+            displayList:        true
         };
     }
 
     componentDidMount() {
         this.getCatalog();
         this.getDatasets(false);
+        this.getMap(false);
     }
 
     getCatalog = () => {
@@ -75,6 +84,41 @@ export default class Catalog extends Component {
             });
     };
 
+    getMap = (filters) => {
+        this.setState({
+            isLoadingMap: true
+        });
+
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/map', { params: filters })
+            .then((response) => {
+                this.setState({
+                    map: response.data,
+                    isLoadingMap: false,
+                    hasLoadedMap: true,
+                    showMap: (filters === false && response.data.length > 0 || filters !== false)
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingMap: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the map';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
+    };
+
+    handleFilter = (filters) => {
+        this.getDatasets(filters);
+        this.getMap(filters);
+    };
+
+    changeView = (displayList) => {
+        this.setState({
+            displayList: displayList
+        });
+    };
+
     render() {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
@@ -104,12 +148,23 @@ export default class Catalog extends Component {
                     <InlineLoader />
                 </Col>
             </Row>}
-            {this.state.showDatasets &&
+            {this.state.showDatasets && <div>
+                <Row className="DatasetHeader">
+                    <Col md={5}>
+                        <h2>Studies</h2>
+                    </Col>
+                    <Col md={3} className="DatasetHeaderButtons">
+                        {this.state.showMap && <ButtonGroup>
+                            <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
+                            <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
+                        </ButtonGroup>}
+                    </Col>
+                </Row>
             <StickyContainer>
                 <Row>
                     <Col md={8} className="InformationCol">
-                        {this.state.isLoadingDatasets && <InlineLoader overlay={true} />}
-                        <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
+                        {(this.state.isLoadingDatasets && this.state.displayList || this.state.isLoadingMap && ! this.state.displayList) && <InlineLoader overlay={true} />}
+                        {this.state.displayList ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
                             {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
                                 return <StudyListItem key={index}
                                                       newWindow={embedded}
@@ -122,17 +177,20 @@ export default class Catalog extends Component {
                                                       condition={item.condition}
                                 />
                             }) : <div className="NoResults">No studies found.</div>}
-                        </div>
+                        </div> : <div className={classNames('Map', this.state.isLoadingMap && 'Loading')}>
+                            <DatasetMap datasets={this.state.map} />
+                        </div>}
                     </Col>
                     <Col md={4} className="Filters">
                         <Sticky>
                             {({style, isSticky}) => (
-                                  <Filters className={classNames(isSticky && 'Sticky')} style={style} catalog={this.props.match.params.catalog} onFilter={(filter) => this.getDatasets(filter)} />
+                                  <Filters className={classNames(isSticky && 'Sticky')} style={style} catalog={this.props.match.params.catalog} onFilter={(filter) => this.handleFilter(filter)} />
                             )}
                         </Sticky>
                     </Col>
                 </Row>
-            </StickyContainer>}
+            </StickyContainer>
+            </div>}
         </FAIRDataInformation>;
     }
 }

@@ -7,7 +7,6 @@ use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use EasyRdf_Graph;
-use function array_merge;
 
 /**
  * @ORM\Entity
@@ -74,19 +73,6 @@ class Person extends Agent
     public function getAccessUrl(): string
     {
         return '/agent/person/' . $this->getSlug();
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function toArray(): array
-    {
-        return array_merge(parent::toArray(), [
-            'url' => $this->orcid !== null ? $this->orcid->getValue() : null,
-            'orcid' => $this->orcid !== null ? $this->orcid->getValue() : null,
-            'type' => 'person',
-            'email' => $this->email,
-        ]);
     }
 
     public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph

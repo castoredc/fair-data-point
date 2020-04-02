@@ -5,7 +5,6 @@ namespace App\Entity\FAIRData;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
-use function array_merge;
 use function uniqid;
 
 /**
@@ -49,16 +48,5 @@ class Department extends Agent
     public function getAdditionalInformation(): ?string
     {
         return $this->additionalInformation;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function toArray(): array
-    {
-        return array_merge(parent::toArray(), [
-            'type' => 'department',
-            'center' => $this->organization->toArray(),
-        ]);
     }
 }
