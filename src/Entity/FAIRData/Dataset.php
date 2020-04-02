@@ -13,7 +13,7 @@ use EasyRdf_Graph;
 //use EasyRdf_Graph;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\DatasetRepository")
  * @ORM\Table(name="dataset", indexes={@ORM\Index(name="slug", columns={"slug"})})
  */
 class Dataset
