@@ -19,3 +19,9 @@
     margin-bottom: 16px;
   }
 }
+
+@media (max-width: 767px) {
+  .Filters {
+    display: none;
+  }
+}
