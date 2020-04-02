@@ -97,6 +97,22 @@ abstract class Enum
         return new static($someString);
     }
 
+    /**
+     * @param array<string> $someStrings
+     * @return array<static>
+     */
+    public static function fromArray(array $someStrings): array
+    {
+        $return = [];
+
+        foreach($someStrings as $someString)
+        {
+            $return[] = static::fromString($someString);
+        }
+
+        return $return;
+    }
+
     public static function canBeConstructedFromString(string $string): bool
     {
         return in_array($string, static::getConstants(), true);
