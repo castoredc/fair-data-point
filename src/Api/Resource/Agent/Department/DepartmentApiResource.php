@@ -21,14 +21,22 @@ class DepartmentApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $coordinates = null;
+
+        if ($this->department->getOrganization()->hasCoordinates()) {
+            $coordinates = [
+                'lat' => $this->department->getOrganization()->getCoordinatesLatitude(),
+                'long' => $this->department->getOrganization()->getCoordinatesLongitude(),
+            ];
+        }
+
         return [
             'name' => $this->department->getOrganization()->getName(),
             'country' => $this->department->getOrganization()->getCountry()->getCode(),
             'city' => $this->department->getOrganization()->getCity(),
             'department' => $this->department->getName(),
             'additionalInformation' => $this->department->getAdditionalInformation(),
-            'coordinatesLatitude' => $this->department->getOrganization()->getCoordinatesLatitude(),
-            'coordinatesLongitude' => $this->department->getOrganization()->getCoordinatesLongitude(),
+            'coordinates' => $coordinates,
         ];
     }
 }

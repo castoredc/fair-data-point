@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Dataset;
 
+use App\Api\Resource\Agent\Department\DepartmentApiResource;
+use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Person;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class DatasetApiResource implements ApiResource
@@ -35,14 +37,17 @@ class DatasetApiResource implements ApiResource
 
         $contactPoints = [];
         foreach ($metadata->getContacts() as $contactPoint) {
-            /** @var Agent $contactPoint */
-            $contactPoints[] = $contactPoint->toArray();
+            if (! $contactPoint instanceof Person) {
+                continue;
+            }
+
+            $contactPoints[] = (new PersonApiResource($contactPoint))->toArray();
         }
 
         $organizations = [];
-        foreach ($metadata->getCenters() as $organization) {
-            /** @var Organization $center */
-            $organizations[] = $organization->toArray();
+        foreach ($metadata->getDepartments() as $department) {
+            /** @var Department $department */
+            $organizations[] = (new DepartmentApiResource($department))->toArray();
         }
 
         $title = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefName(), $this->dataset->getLanguage())]));

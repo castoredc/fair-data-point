@@ -5,33 +5,16 @@ import MetadataItem from "./index";
 import {AttributionControl, Map, Marker, TileLayer} from "react-leaflet";
 import {getCenterFromDegrees} from "../../util";
 
-const Organization = ({name, url, type, email, center}) => {
-    if(email)
-    {
-        url = 'mailto:' + email;
-    }
-
-    if(type === "department")
-    {
-        return <div className="Organization Department">
-            <div className="Center">
-                {center.name}
-            </div>
-            <div className="Department">
-                {name}
-            </div>
-            <div className="Location">
-                {center.city}, {center.country}
-            </div>
-        </div>;
-    }
-
+const Organization = ({name, department, country, city}) => {
     return <div className="Organization">
         <div className="Center">
             {name}
         </div>
+        {department && <div className="Department">
+            {department}
+        </div>}
         <div className="Location">
-            {center.city}, {center.country}
+            {city}, {country}
         </div>
     </div>;
 };
@@ -43,14 +26,14 @@ class Organizations extends Component {
         const label = 'Organization' + (organizations.length > 1 ? 's' : '');
 
         const coordinates = organizations.filter((organization) => {
-            return ! (organization.center === null || organization.center.coordinates === null);
+            return ! (organization.coordinates === null);
         }).map((organization)  => {
-            return [organization.center.coordinates.lat, organization.center.coordinates.long];
+            return [organization.coordinates.lat, organization.coordinates.long];
         });
 
         return <MetadataItem label={label} className="Organizations">
             {organizations.map((organization, index) => {
-                return <Organization key={index} name={organization.name} url={organization.url} type={organization.type} center={organization.center} />
+                return <Organization key={index} {...organization} />
             })}
 
             {coordinates.length > 0 && <div className="Map">

@@ -8,6 +8,8 @@ use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Department;
+use App\Entity\FAIRData\Organization;
 use App\Entity\Iri;
 use App\Entity\Terminology\CodedText;
 use DateTime;
@@ -370,6 +372,44 @@ class StudyMetadata
     public function getCenters()
     {
         return $this->centers;
+    }
+
+    /**
+     * @return Department[]
+     */
+    public function getDepartments(): array
+    {
+        $departments = [];
+
+        foreach ($this->centers as $center) {
+            if (! $center instanceof Department) {
+                continue;
+            }
+            $departments[] = $center;
+        }
+
+        return $departments;
+    }
+
+    /**
+     * @return Organization[]
+     */
+    public function getOrganizations(): array
+    {
+        $organizations = [];
+
+        foreach ($this->centers as $center) {
+            if (! $center instanceof Organization) {
+                continue;
+            }
+            $organizations[] = $center;
+        }
+
+        foreach ($this->getDepartments() as $department) {
+            $organizations[] = $department->getOrganization();
+        }
+
+        return $organizations;
     }
 
     /**
