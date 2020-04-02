@@ -11,6 +11,8 @@ import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import {CheckboxGroup} from "../Input/Checkbox";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {classNames} from "../../util";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export default class Filters extends Component {
     constructor(props) {
@@ -127,12 +129,18 @@ export default class Filters extends Component {
     };
 
     render() {
-        const { style, className } = this.props;
+        const { style, className, fullWidth } = this.props;
 
         if(this.state.isLoadingFilters || this.state.isLoadingCountries)
         {
             return <InlineLoader />;
         }
+
+        const showStudyType = this.state.filters.studyType.length > 0;
+        const showMethodType = this.state.filters.methodType.length > 0;
+        const showCountry = this.state.filters.country.length > 0;
+
+        const showFilters = (this.state.filters.studyType.length + this.state.filters.methodType.length + this.state.filters.country.length) > 0;
 
         const studyTypes = this.state.filters.studyType.map((studyType) => {
             return {
@@ -161,7 +169,47 @@ export default class Filters extends Component {
             }
         });
 
-        return <div className={classNames('Filters' && className)} style={style}>
+        if(fullWidth)
+        {
+            return <div className={classNames('FilterForm', className)}>
+                <ValidatorForm
+                    ref={node => (this.form = node)}
+                    onSubmit={() => {}}
+                >
+                    <Row>
+                        <Col md={3}><h2>Search studies</h2></Col>
+                        {showFilters && <Col md={9}><h2>Filter</h2></Col>}
+                    </Row>
+                    <Row>
+                        <Col md={3}>
+                            <Input
+                                name="search"
+                                onChange={this.handleChange}
+                                value={this.state.data.search}
+                                placeholder="Search ..."
+                            />
+                        </Col>
+                        {showStudyType && <Col md={3}>
+                            <FormItem label="Type">
+                                <CheckboxGroup checkboxes={studyTypes} />
+                            </FormItem>
+                        </Col>}
+                        {showMethodType && <Col md={3}>
+                            <FormItem label="Method">
+                                <CheckboxGroup checkboxes={methodTypes} />
+                            </FormItem>
+                        </Col>}
+                        {showCountry && <Col md={3}>
+                            <FormItem label="Country">
+                                <CheckboxGroup checkboxes={countries} />
+                            </FormItem>
+                        </Col>}
+                    </Row>
+                </ValidatorForm>
+            </div>;
+        }
+
+        return <div className={classNames('FilterForm', className)} style={style}>
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={() => {}}
@@ -176,18 +224,18 @@ export default class Filters extends Component {
                         placeholder="Search ..."
                     />
                 </div>
-                {(this.state.filters.studyType.length + this.state.filters.methodType.length + this.state.filters.country.length) > 0 && <div className="FilterBlock">
+                {showFilters > 0 && <div className="FilterBlock">
                     <h2>Filter</h2>
 
-                    {this.state.filters.studyType.length > 0 && <FormItem label="Type">
+                    {showStudyType && <FormItem label="Type">
                         <CheckboxGroup checkboxes={studyTypes} />
                     </FormItem>}
 
-                    {this.state.filters.methodType.length > 0 && <FormItem label="Method">
+                    {showMethodType && <FormItem label="Method">
                         <CheckboxGroup checkboxes={methodTypes} />
                     </FormItem>}
 
-                    {this.state.filters.country.length > 0 && <FormItem label="Country">
+                    {showCountry && <FormItem label="Country">
                         <CheckboxGroup checkboxes={countries} />
                     </FormItem>}
                 </div>}

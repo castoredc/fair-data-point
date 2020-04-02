@@ -214,7 +214,7 @@
     }
 }
 
-.DatasetHeader {
+.DatasetsHeader {
     margin-bottom: 16px;
 
     h2 {
@@ -228,4 +228,8 @@
     .DatasetHeaderButtons {
         text-align: right;
     }
+}
+
+.Datasets {
+    position: relative;
 }

@@ -122,6 +122,8 @@ export default class Catalog extends Component {
     render() {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
+        const listWidth = this.state.displayList ? 8 : 12;
+        const filterWidth = this.state.displayList ? 4 : 12;
 
         if (this.state.isLoadingCatalog) {
             return <LoadingScreen showLoading={true}/>;
@@ -149,11 +151,11 @@ export default class Catalog extends Component {
                 </Col>
             </Row>}
             {this.state.showDatasets && <div>
-                <Row className="DatasetHeader">
-                    <Col md={5}>
+                <Row className="DatasetsHeader">
+                    <Col md={8}>
                         <h2>Studies</h2>
                     </Col>
-                    <Col md={3} className="DatasetHeaderButtons">
+                    <Col md={4} className="DatasetHeaderButtons">
                         {this.state.showMap && <ButtonGroup>
                             <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
                             <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
@@ -161,8 +163,8 @@ export default class Catalog extends Component {
                     </Col>
                 </Row>
             <StickyContainer>
-                <Row>
-                    <Col md={8} className="InformationCol">
+                <Row className="Datasets">
+                    <Col md={listWidth} className="InformationCol">
                         {(this.state.isLoadingDatasets && this.state.displayList || this.state.isLoadingMap && ! this.state.displayList) && <InlineLoader overlay={true} />}
                         {this.state.displayList ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
                             {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
@@ -181,10 +183,15 @@ export default class Catalog extends Component {
                             <DatasetMap datasets={this.state.map} />
                         </div>}
                     </Col>
-                    <Col md={4} className="Filters">
+                    <Col md={filterWidth} className={classNames('Filters', !this.state.displayList && 'StickyDisabled')}>
                         <Sticky>
                             {({style, isSticky}) => (
-                                  <Filters className={classNames(isSticky && 'Sticky')} style={style} catalog={this.props.match.params.catalog} onFilter={(filter) => this.handleFilter(filter)} />
+                                  <Filters className={classNames(isSticky && 'Sticky')}
+                                           style={style}
+                                           catalog={this.props.match.params.catalog}
+                                           onFilter={(filter) => this.handleFilter(filter)}
+                                           fullWidth={!this.state.displayList}
+                                  />
                             )}
                         </Sticky>
                     </Col>

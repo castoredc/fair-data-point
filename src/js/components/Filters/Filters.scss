@@ -2,7 +2,7 @@
 @import '../../scss/colors';
 
 .Filters {
-  .Sticky {
+  .FilterForm {
     padding-top: 30px;
   }
 
@@ -17,6 +17,33 @@
     line-height: 1.33;
     color: $neutral-800;
     margin-bottom: 16px;
+  }
+
+  &.StickyDisabled {
+    & > div > div:first-child {
+      display: none;
+    }
+
+    .Sticky {
+      position: inherit!important;
+      width: 100%!important;
+    }
+
+    .FormItem {
+      margin: 0;
+    }
+  }
+
+  &.Overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 999;
+    background: $generic-white;
+    padding: 15px;
+    box-shadow: 0 1px 3px 0 $shadow;
+    border: solid 1px $neutral-40;
+    border-radius: 5px;
   }
 }
 
