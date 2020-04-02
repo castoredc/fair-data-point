@@ -8,6 +8,7 @@ use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Catalog\CatalogBrandApiResource;
 use App\Api\Resource\Dataset\DatasetsApiResource;
 use App\Api\Resource\Dataset\DatasetsFilterApiResource;
+use App\Api\Resource\Dataset\DatasetsMapApiResource;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Message\Catalog\GetCatalogsCommand;
@@ -76,6 +77,31 @@ class CatalogApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse((new DatasetsApiResource($handledStamp->getResult()))->toArray());
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/api/catalog/{catalog}/map", name="api_catalog_datasets_map")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function datasetsMap(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('view', $catalog);
+
+        try {
+            /** @var DatasetApiRequest $parsed */
+            $parsed = $this->parseRequest(DatasetApiRequest::class, $request);
+
+            $envelope = $bus->dispatch(new GetDatasetsCommand($catalog, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
+
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            return new JsonResponse((new DatasetsMapApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
