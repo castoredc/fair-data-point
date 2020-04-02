@@ -10,6 +10,7 @@ import lock from './lock.svg'
 import study from './study.svg'
 import view from './view.svg'
 import edit from './edit.svg'
+import filters from './filters.svg'
 
 export default {
     add,
@@ -23,5 +24,6 @@ export default {
     lock,
     study,
     view,
-    edit
+    edit,
+    filters
 };
