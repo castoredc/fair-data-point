@@ -33,7 +33,8 @@ class DatasetRepository extends EntityRepository
             ->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
             ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
             ->setParameter('catalog_id', $catalog->getId())
-            ->where('metadata2.id IS NULL');
+            ->where('metadata2.id IS NULL')
+            ->andWhere('dataset.isPublished = 1');
 
         if ($search !== null) {
             $qb->andWhere($qb->expr()->orX(
