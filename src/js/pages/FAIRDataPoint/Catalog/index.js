@@ -120,7 +120,7 @@ export default class Catalog extends Component {
     changeView = (displayList) => {
         this.setState({
             displayList: displayList,
-            displayFilter: displayList
+            displayFilter: displayList && (window.innerWidth > 767)
         });
     };
 
@@ -164,10 +164,10 @@ export default class Catalog extends Component {
             </Row>}
             {this.state.showDatasets && <div>
                 <Row className="DatasetsHeader">
-                    <Col xs={headerWidth}>
+                    <Col sm={headerWidth}>
                         <h2>Studies</h2>
                     </Col>
-                    <Col xs={buttonWidth} className="DatasetHeaderButtons">
+                    <Col sm={buttonWidth} className="DatasetHeaderButtons">
                         {this.state.showMap && <ButtonGroup>
                             <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
                             <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
