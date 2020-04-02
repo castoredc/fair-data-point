@@ -7,6 +7,7 @@ import FAIRDataInformation from "../../../components/FAIRDataInformation";
 import queryString from "query-string";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
+import {Col, Row} from "react-bootstrap";
 
 export default class FAIRDataPointMain extends Component {
     constructor(props) {
@@ -80,17 +81,21 @@ export default class FAIRDataPointMain extends Component {
             version={this.state.fdp.version}
             license={this.state.fdp.license}
         >
-            <h2>Catalogs</h2>
-            <div className="Description">
-                Catalogs are collections of datasets.
-            </div>
-            {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
-                return <ListItem key={index}
-                                 newWindow={embedded}
-                                 link={item.relative_url}
-                                 title={localizedText(item.title, 'en')}
-                                 description={localizedText(item.description, 'en')} />}
-            ) : <div className="NoResults">No catalogs found.</div>}
+            <Row>
+                <Col className="InformationCol">
+                    <h2>Catalogs</h2>
+                    <div className="Description">
+                        Catalogs are collections of datasets.
+                    </div>
+                    {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
+                        return <ListItem key={index}
+                                         newWindow={embedded}
+                                         link={item.relative_url}
+                                         title={localizedText(item.title, 'en')}
+                                         description={localizedText(item.description, 'en')} />}
+                    ) : <div className="NoResults">No catalogs found.</div>}
+                </Col>
+            </Row>
         </FAIRDataInformation>;
 
         // {this.state.fdp.publishers.length > 0 && <div className="Publishers">

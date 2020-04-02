@@ -114,7 +114,7 @@ export default class Dataset extends Component {
             badge={badge}
         >
             <Row>
-                <Col md={8}>
+                <Col md={8} className="InformationCol">
                     {tags.length > 0 && <div className="StudyTags"><Tags tags={tags} /></div>}
                     {this.state.dataset.contactPoints.length > 0 && <Contacts contacts={this.state.dataset.contactPoints} />}
                     {description && <div className="InformationDescription">{localizedText(description, 'en', true)}</div>}

@@ -3,12 +3,15 @@ import axios from "axios/index";
 
 import {Col, Row} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
-import {localizedText} from "../../../util";
+import {classNames, localizedText} from "../../../util";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
 import queryString from "query-string";
+import {Sticky, StickyContainer} from 'react-sticky';
 import StudyListItem from "../../../components/ListItem/StudyListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
+import Filters from "../../../components/Filters";
+import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -19,13 +22,14 @@ export default class Catalog extends Component {
             isLoadingDatasets:  true,
             hasLoadedDatasets:  false,
             catalog:            null,
+            showDatasets:       false,
             datasets:           []
         };
     }
 
     componentDidMount() {
         this.getCatalog();
-        this.getDatasets();
+        this.getDatasets(false);
     }
 
     getCatalog = () => {
@@ -47,13 +51,18 @@ export default class Catalog extends Component {
             });
     };
 
-    getDatasets = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset')
+    getDatasets = (filters) => {
+        this.setState({
+            isLoadingDatasets: true
+        });
+
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset', { params: filters })
             .then((response) => {
                 this.setState({
                     datasets: response.data,
                     isLoadingDatasets: false,
-                    hasLoadedDatasets: true
+                    hasLoadedDatasets: true,
+                    showDatasets: (filters === false && response.data.length > 0 || filters !== false)
                 });
             })
             .catch((error) => {
@@ -70,7 +79,7 @@ export default class Catalog extends Component {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if (this.state.isLoadingCatalog || this.state.isLoadingDatasets) {
+        if (this.state.isLoadingCatalog) {
             return <LoadingScreen showLoading={true}/>;
         }
 
@@ -83,55 +92,47 @@ export default class Catalog extends Component {
             modified={this.state.catalog.modified}
             license={this.state.catalog.license}
         >
-            <Row>
-                <Col>
-                    {(this.state.catalog.description && !embedded) && <div
-                        className="InformationDescription">{localizedText(this.state.catalog.description, 'en', true)}</div>}
-
-                    {/*<h2>Datasets</h2>*/}
-                    {/*<div className="Description">*/}
-                    {/*    Datasets are published collections of data.*/}
-                    {/*</div>*/}
-                    {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
-                            return <StudyListItem key={index}
-                                                  newWindow={embedded}
-                                                  link={item.relative_url}
-                                                  logo={item.logo}
-                                                  name={localizedText(item.title, 'en')}
-                                                  description={localizedText(item.shortDescription, 'en')}
-                                                  recruitmentStatus={item.recruitmentStatus}
-                                                  intervention={item.intervention}
-                                                  condition={item.condition}
-                            />
-                        },
-                    ) : <div className="NoResults">No datasets found.</div>}
+            {(this.state.catalog.description && !embedded) && <Row>
+                <Col md={12} className="InformationCol">
+                    <div className={classNames('InformationDescription', (this.state.showDatasets && 'HasChildren'))}>
+                        {localizedText(this.state.catalog.description, 'en', true)}
+                    </div>
                 </Col>
-                {/*<Col md={4}>*/}
-                {/*    {this.state.catalog.language && <MetadataItem label="Language" url={this.state.catalog.language.url}*/}
-                {/*                                                  value={this.state.catalog.language.name}/>}*/}
-                {/*    {this.state.catalog.homepage &&*/}
-                {/*    <MetadataItem label="Homepage" value={this.state.catalog.homepage}/>}*/}
-                {/*</Col>*/}
-            </Row>
+            </Row>}
+            {!this.state.showDatasets && (this.state.isLoadingDatasets) && <Row>
+                <Col md={12}>
+                    <InlineLoader />
+                </Col>
+            </Row>}
+            {this.state.showDatasets &&
+            <StickyContainer>
+                <Row>
+                    <Col md={8} className="InformationCol">
+                        {this.state.isLoadingDatasets && <InlineLoader overlay={true} />}
+                        <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
+                            {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
+                                return <StudyListItem key={index}
+                                                      newWindow={embedded}
+                                                      link={item.relative_url}
+                                                      logo={item.logo}
+                                                      name={localizedText(item.title, 'en')}
+                                                      description={localizedText(item.shortDescription, 'en')}
+                                                      recruitmentStatus={item.recruitmentStatus}
+                                                      intervention={item.intervention}
+                                                      condition={item.condition}
+                                />
+                            }) : <div className="NoResults">No studies found.</div>}
+                        </div>
+                    </Col>
+                    <Col md={4} className="Filters">
+                        <Sticky>
+                            {({style, isSticky}) => (
+                                  <Filters className={classNames(isSticky && 'Sticky')} style={style} catalog={this.props.match.params.catalog} onFilter={(filter) => this.getDatasets(filter)} />
+                            )}
+                        </Sticky>
+                    </Col>
+                </Row>
+            </StickyContainer>}
         </FAIRDataInformation>;
-
-        {/*{this.state.catalog.publishers.length > 0 && <div className="Publishers">*/
-        }
-        {/*    {this.state.catalog.publishers.map((item, index) => {*/
-        }
-        {/*            return <Contact key={index}*/
-        }
-        {/*                            url={item.url}*/
-        }
-        {/*                            type={item.type}*/
-        }
-        {/*                            name={item.name}/>*/
-        }
-        {/*        }*/
-        }
-        {/*    )}*/
-        }
-        {/*</div>}*/
-        }
     }
 }

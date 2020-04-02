@@ -131,23 +131,42 @@
                     }
                 }
 
-                .InformationDescription {
-                    font-size: 16px;
-                    line-height: 1.5;
-                    color: $neutral-300;
+                .InformationCol {
+                    .InformationDescription {
+                        font-size: 16px;
+                        line-height: 1.5;
+                        color: $neutral-300;
+
+                        &.HasChildren {
+                            margin-bottom: 35px;
+                            padding-bottom: 20px;
+                            border-bottom: 1px solid $neutral-30;
+                        }
+                    }
+
+                    h2 {
+                        font-size: 16px;
+                        line-height: 24px;
+                        font-weight: 600;
+                        margin-bottom: 5px;
+                        color: $neutral-800;
+                    }
+
+                    .Description {
+                        margin-bottom: 15px;
+                        color: $neutral-90;
+                    }
                 }
 
-                h2 {
-                    font-size: 16px;
-                    line-height: 24px;
-                    font-weight: 600;
-                    margin-bottom: 5px;
-                    color: $neutral-800;
+                .Loading {
+                    opacity: 0.5;
                 }
 
-                .Description {
-                    margin-bottom: 15px;
-                    color: $neutral-90;
+                .NoResults {
+                    text-align: center;
+                    padding: 50px 0;
+                    color: $neutral-80;
+                    font-size: 16px;
                 }
             }
         }

@@ -9,7 +9,7 @@
 .FormItem {
   .FormLabel {
     font-weight: bold;
-    padding: 0 5px;
+    //padding: 0 5px;
   }
 
   margin: 10px 0;
@@ -21,6 +21,12 @@
   .Select {
     width: 100%;
   }
+
+  .form-row {
+    margin: 0;
+  }
+
+
 }
 
 .FormHeading {
