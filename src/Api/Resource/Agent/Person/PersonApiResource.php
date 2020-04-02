@@ -22,6 +22,7 @@ class PersonApiResource implements ApiResource
     public function toArray(): array
     {
         return [
+            'name' => $this->person->getName(),
             'firstName' => $this->person->getFirstName(),
             'middleName' => $this->person->getMiddleName(),
             'lastName' => $this->person->getLastName(),
