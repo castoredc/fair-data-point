@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Graph\Resource\Agent\Person;
+
+use App\Entity\FAIRData\Person;
+use App\Graph\Resource\Agent\AgentGraphResource;
+use EasyRdf_Graph;
+
+class PersonGraphResource extends AgentGraphResource
+{
+    /** @var Person */
+    private $person;
+
+    public function __construct(Person $person)
+    {
+        $this->person = $person;
+
+        parent::__construct($person);
+    }
+
+    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
+    {
+        $url = $this->person->getAccessUrl();
+        if ($this->person->getOrcid() !== null) {
+            $url = $this->person->getOrcid()->getValue();
+        }
+
+        $graph->addResource($url, 'a', 'foaf:Person');
+        $graph->addLiteral($url, 'foaf:name', $this->person->getName());
+
+        if ($subject !== null && $predicate !== null) {
+            $graph->addResource($subject, $predicate, $url);
+        }
+
+        return $graph;
+    }
+}

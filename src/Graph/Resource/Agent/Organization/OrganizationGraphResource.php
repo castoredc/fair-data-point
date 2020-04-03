@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Graph\Resource\Agent\Organization;
+
+use App\Entity\FAIRData\Organization;
+use App\Graph\Resource\Agent\AgentGraphResource;
+use EasyRdf_Graph;
+
+class OrganizationGraphResource extends AgentGraphResource
+{
+    /** @var Organization */
+    private $organization;
+
+    public function __construct(Organization $organization)
+    {
+        $this->organization = $organization;
+
+        parent::__construct($organization);
+    }
+
+    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
+    {
+        $url = $this->organization->getAccessUrl();
+        if ($this->organization->getHomepage() !== null) {
+            $url = $this->organization->getHomepage()->getValue();
+        }
+
+        $graph->addResource($url, 'a', 'foaf:Organization');
+        $graph->addLiteral($url, 'foaf:name', $this->organization->getName());
+
+        if ($subject !== null && $predicate !== null) {
+            $graph->addResource($subject, $predicate, $url);
+        }
+
+        return $graph;
+    }
+}
