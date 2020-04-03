@@ -21,7 +21,6 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Security\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Throwable;

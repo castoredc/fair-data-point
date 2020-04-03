@@ -40,9 +40,9 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
             return '';
         }
 
-        $base   = $options['server'] . $this->getBaseAuthorizationUrl();
+        $base = $options['server'] . $this->getBaseAuthorizationUrl();
         $params = $this->getAuthorizationParameters($options);
-        $query  = $this->getAuthorizationQuery($params);
+        $query = $this->getAuthorizationQuery($params);
 
         return $this->appendQuery($base, $query);
     }
@@ -52,10 +52,10 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
      *
      * @param  mixed $grant
      * @param  array $options
+     *
      * @throws IdentityProviderException
-     * @return AccessTokenInterface
      */
-    public function getAccessTokenWithServer(string $server, $grant, array $options = [])
+    public function getAccessTokenWithServer(string $server, $grant, array $options = []): AccessTokenInterface
     {
         $this->server = $server;
 

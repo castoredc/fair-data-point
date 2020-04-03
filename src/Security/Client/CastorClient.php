@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Security\Client;
 
@@ -6,17 +7,20 @@ use App\Security\CastorUserProvider;
 use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
 use KnpU\OAuth2ClientBundle\Exception\InvalidStateException;
 use KnpU\OAuth2ClientBundle\Exception\MissingAuthorizationCodeException;
-use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Token\AccessTokenInterface;
+use LogicException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CastorClient extends OAuth2Client
 {
-    const OAUTH2_SESSION_STATE_KEY = 'knpu.oauth2_client_state';
-    const SESSION_SERVER_KEY = 'castor.server';
+    public const OAUTH2_SESSION_STATE_KEY = 'knpu.oauth2_client_state';
+    public const SESSION_SERVER_KEY = 'castor.server';
 
     /** @var CastorUserProvider */
     private $provider;
@@ -24,9 +28,6 @@ class CastorClient extends OAuth2Client
     /** @var RequestStack */
     private $requestStack;
 
-    /**
-     * OAuth2Client constructor.
-     */
     public function __construct(CastorUserProvider $provider, RequestStack $requestStack)
     {
         parent::__construct($provider, $requestStack);
@@ -41,12 +42,10 @@ class CastorClient extends OAuth2Client
      *
      * @param array $scopes  The scopes you want (leave empty to use default)
      * @param array $options Extra options to pass to the "Provider" class
-     *
-     * @return RedirectResponse
      */
-    public function redirect(array $scopes = [], array $options = [])
+    public function redirect(array $scopes = [], array $options = []): RedirectResponse
     {
-        if (!empty($scopes)) {
+        if (! empty($scopes)) {
             $options['scope'] = $scopes;
         }
 
@@ -63,7 +62,7 @@ class CastorClient extends OAuth2Client
     /**
      * Call this after the user is redirected back to get the access token.
      *
-     * @return AccessToken|\League\OAuth2\Client\Token\AccessTokenInterface
+     * @return AccessToken|AccessTokenInterface
      *
      * @throws InvalidStateException
      * @throws MissingAuthorizationCodeException
@@ -74,27 +73,23 @@ class CastorClient extends OAuth2Client
         $expectedState = $this->getSession()->get(self::OAUTH2_SESSION_STATE_KEY);
         $server = $this->getSession()->get(self::SESSION_SERVER_KEY);
         $actualState = $this->getCurrentRequest()->query->get('state');
-        if (!$actualState || ($actualState !== $expectedState)) {
+        if (! $actualState || ($actualState !== $expectedState)) {
             throw new InvalidStateException('Invalid state');
         }
 
         $code = $this->getCurrentRequest()->get('code');
 
-        if (!$code) {
+        if (! $code) {
             throw new MissingAuthorizationCodeException('No "code" parameter was found (usually this is a query parameter)!');
         }
 
-        return $this->provider->getAccessTokenWithServer($server, 'authorization_code', [
-            'code' => $code
-        ]);
+        return $this->provider->getAccessTokenWithServer($server, 'authorization_code', ['code' => $code]);
     }
 
     /**
      * Returns the "User" information (called a resource owner).
-     *
-     * @return \League\OAuth2\Client\Provider\ResourceOwnerInterface
      */
-    public function fetchUserFromToken(AccessToken $accessToken)
+    public function fetchUserFromToken(AccessToken $accessToken): ResourceOwnerInterface
     {
         return $this->provider->getResourceOwner($accessToken);
     }
@@ -104,10 +99,8 @@ class CastorClient extends OAuth2Client
      *
      * Only use this if you don't need the access token, but only
      * need the user.
-     *
-     * @return \League\OAuth2\Client\Provider\ResourceOwnerInterface
      */
-    public function fetchUser()
+    public function fetchUser(): ResourceOwnerInterface
     {
         /** @var AccessToken $token */
         $token = $this->getAccessToken();
@@ -117,32 +110,24 @@ class CastorClient extends OAuth2Client
 
     /**
      * Returns the underlying OAuth2 provider.
-     *
-     * @return CastorUserProvider
      */
-    public function getOAuth2Provider()
+    public function getOAuth2Provider(): CastorUserProvider
     {
         return $this->provider;
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    private function getCurrentRequest()
+    private function getCurrentRequest(): Request
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request) {
-            throw new \LogicException('There is no "current request", and it is needed to perform this action');
+        if (! $request) {
+            throw new LogicException('There is no "current request", and it is needed to perform this action');
         }
 
         return $request;
     }
 
-    /**
-     * @return SessionInterface
-     */
-    private function getSession()
+    private function getSession(): SessionInterface
     {
         return $this->getCurrentRequest()->getSession();
     }
