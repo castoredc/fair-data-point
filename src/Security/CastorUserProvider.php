@@ -50,7 +50,7 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     /**
      * Requests an access token using a specified grant and option set.
      *
-     * @param  mixed $grant
+     * @param  mixed        $grant
      * @param  array<mixed> $options
      *
      * @throws IdentityProviderException
