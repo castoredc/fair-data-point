@@ -266,6 +266,12 @@
 }
 
 @media (max-width: 767px) {
+    .DatasetsHeaderTitle {
+        display: none;
+    }
+    .DatasetHeaderButtons {
+        width: 100%!important;
+    }
     .FilterButton.Hidden {
         display: inline-block;
     }
