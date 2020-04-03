@@ -7,7 +7,6 @@ use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 use function uniqid;
 
 /**
@@ -77,23 +76,6 @@ class Organization extends Agent
     public function getAccessUrl(): string
     {
         return '/agent/organization/' . $this->getSlug();
-    }
-
-    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
-    {
-        $url = $this->getAccessUrl();
-        if ($this->homepage !== null) {
-            $url = $this->homepage->getValue();
-        }
-
-        $graph->addResource($url, 'a', 'foaf:Organization');
-        $graph->addLiteral($url, 'foaf:name', $this->getName());
-
-        if ($subject !== null && $predicate !== null) {
-            $graph->addResource($subject, $predicate, $url);
-        }
-
-        return $graph;
     }
 
     public function getHomepage(): ?Iri

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\Catalog;
+use App\Graph\Resource\Catalog\CatalogGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ class CatalogController extends FAIRDataController
         }
 
         return new Response(
-            $catalog->toGraph()->serialise('turtle'),
+            (new CatalogGraphResource($catalog))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

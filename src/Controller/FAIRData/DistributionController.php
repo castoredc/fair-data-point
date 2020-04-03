@@ -6,6 +6,7 @@ namespace App\Controller\FAIRData;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution\Distribution;
+use App\Graph\Resource\Distribution\DistributionGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ class DistributionController extends FAIRDataController
         }
 
         return new Response(
-            $distribution->toGraph()->serialise('turtle'),
+            (new DistributionGraphResource($distribution))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

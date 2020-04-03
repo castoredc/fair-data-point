@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\FAIRDataPoint;
+use App\Graph\Resource\FAIRDataPoint\FAIRDataPointGraphResource;
 use App\Message\FAIRDataPoint\GetFAIRDataPointCommand;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,7 @@ class FAIRDataPointController extends FAIRDataController
         $fdp = $handledStamp->getResult();
 
         return new Response(
-            $fdp->toGraph()->serialise('turtle'),
+            (new FAIRDataPointGraphResource($fdp))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

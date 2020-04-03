@@ -8,7 +8,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
@@ -337,40 +336,5 @@ class Catalog
     public function isSubmissionAccessingData(): bool
     {
         return $this->submissionAccessesData;
-    }
-
-    public function toGraph(): EasyRdf_Graph
-    {
-        $graph = new EasyRdf_Graph();
-
-        $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Catalog');
-
-        foreach ($this->title->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
-            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
-        }
-
-        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
-
-        foreach ($this->description->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
-        }
-
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
-        }
-
-        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
-
-        foreach ($this->getDatasets(false) as $dataset) {
-            $graph->addResource($this->getAccessUrl(), 'dcat:dataset', $dataset->getAccessUrl());
-        }
-
-        $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
-
-        return $graph;
     }
 }

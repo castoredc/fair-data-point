@@ -6,7 +6,6 @@ namespace App\Entity\FAIRData;
 use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
@@ -73,23 +72,6 @@ class Person extends Agent
     public function getAccessUrl(): string
     {
         return '/agent/person/' . $this->getSlug();
-    }
-
-    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
-    {
-        $url = $this->getAccessUrl();
-        if ($this->orcid !== null) {
-            $url = $this->orcid->getValue();
-        }
-
-        $graph->addResource($url, 'a', 'foaf:Person');
-        $graph->addLiteral($url, 'foaf:name', $this->getName());
-
-        if ($subject !== null && $predicate !== null) {
-            $graph->addResource($subject, $predicate, $url);
-        }
-
-        return $graph;
     }
 
     public function getFirstName(): string

@@ -11,7 +11,6 @@ use App\Entity\FAIRData\LocalizedText;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
@@ -90,16 +89,5 @@ class RDFDistribution extends Distribution
         }
 
         return $twig;
-    }
-
-    public function toGraph(): EasyRdf_Graph
-    {
-        $graph = parent::toGraph();
-
-        $graph->addResource($this->getAccessUrl(), 'dcat:downloadURL', $this->getRDFUrl() . '/?download=1');
-        $graph->addResource($this->getAccessUrl(), 'dcat:accessURL', $this->getRDFUrl());
-        $graph->addLiteral($this->getAccessUrl(), 'dcat:mediaType', 'text/turtle');
-
-        return $graph;
     }
 }
