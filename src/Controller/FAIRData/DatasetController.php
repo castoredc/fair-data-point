@@ -5,6 +5,7 @@ namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
+use App\Graph\Resource\Dataset\DatasetGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,7 @@ class DatasetController extends FAIRDataController
         }
 
         return new Response(
-            $dataset->toGraph()->serialise('turtle'),
+            (new DatasetGraphResource($dataset))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
