@@ -41,7 +41,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
     public function __invoke(RenderRDFDistributionCommand $message): string
     {
         $template = $this->twig->createTemplate($message->getDistribution()->getTwig());
-        $this->apiClient->setToken($message->getUser()->getToken());
+        $this->apiClient->setUser($message->getUser());
         $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
 
         $return = '';

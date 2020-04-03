@@ -38,7 +38,7 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermissionToStudy();
         }
 
-        $this->apiClient->setToken($message->getUser()->getToken());
+        $this->apiClient->setUser($message->getUser());
         $study = $this->apiClient->getStudy($message->getStudyId());
 
         /** @var Language|null $language */
