@@ -263,35 +263,4 @@ class Distribution
     {
         return $this->accessRights;
     }
-
-    public function toGraph(): EasyRdf_Graph
-    {
-        $graph = new EasyRdf_Graph();
-
-        $graph->addResource($this->getAccessUrl(), 'a', 'dcat:Dataset');
-
-        foreach ($this->title->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
-            $graph->addLiteral($this->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
-        }
-
-        $graph->addLiteral($this->getAccessUrl(), 'dcterms:hasVersion', $this->version);
-
-        foreach ($this->description->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
-        }
-
-        foreach ($this->publishers as $publisher) {
-            /** @var Agent $publisher */
-            $publisher->addToGraph($this->getAccessUrl(), 'dcterms:publisher', $graph);
-        }
-
-        $graph->addResource($this->getAccessUrl(), 'dcterms:language', $this->language->getAccessUrl());
-
-        $graph->addResource($this->getAccessUrl(), 'dcterms:license', $this->license->getUrl()->getValue());
-
-        return $graph;
-    }
 }

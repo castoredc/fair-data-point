@@ -79,23 +79,6 @@ class Organization extends Agent
         return '/agent/organization/' . $this->getSlug();
     }
 
-    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
-    {
-        $url = $this->getAccessUrl();
-        if ($this->homepage !== null) {
-            $url = $this->homepage->getValue();
-        }
-
-        $graph->addResource($url, 'a', 'foaf:Organization');
-        $graph->addLiteral($url, 'foaf:name', $this->getName());
-
-        if ($subject !== null && $predicate !== null) {
-            $graph->addResource($subject, $predicate, $url);
-        }
-
-        return $graph;
-    }
-
     public function getHomepage(): ?Iri
     {
         return $this->homepage;

@@ -71,21 +71,4 @@ abstract class Agent
     {
         return '/agent/generic/' . $this->getSlug();
     }
-
-    public function toGraph(): EasyRdf_Graph
-    {
-        return $this->addToGraph(null, null, new EasyRdf_Graph());
-    }
-
-    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
-    {
-        $graph->addResource($this->getAccessUrl(), 'a', 'foaf:Agent');
-        $graph->addLiteral($this->getAccessUrl(), 'foaf:name', $this->name);
-
-        if ($subject !== null && $predicate !== null) {
-            $graph->addResource($subject, $predicate, $this->getAccessUrl());
-        }
-
-        return $graph;
-    }
 }
