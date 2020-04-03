@@ -6,7 +6,6 @@ namespace App\Entity\FAIRData;
 use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 
 /**
  * @ORM\Entity

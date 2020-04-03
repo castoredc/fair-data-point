@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Graph\Resource\Catalog;
 
-use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\GraphResource;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Graph\Resource\Distribution;
 
@@ -54,8 +55,7 @@ class DistributionGraphResource implements GraphResource
 
         $graph->addResource($this->distribution->getAccessUrl(), 'dcterms:license', $this->distribution->getLicense()->getUrl()->getValue());
 
-        if($this->distribution instanceof RDFDistribution)
-        {
+        if ($this->distribution instanceof RDFDistribution) {
             $graph->addResource($this->distribution->getAccessUrl(), 'dcat:downloadURL', $this->distribution->getRDFUrl() . '/?download=1');
             $graph->addResource($this->distribution->getAccessUrl(), 'dcat:accessURL', $this->distribution->getRDFUrl());
             $graph->addLiteral($this->distribution->getAccessUrl(), 'dcat:mediaType', 'text/turtle');

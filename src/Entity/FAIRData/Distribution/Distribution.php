@@ -8,11 +8,9 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
-use App\Entity\FAIRData\LocalizedTextItem;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**

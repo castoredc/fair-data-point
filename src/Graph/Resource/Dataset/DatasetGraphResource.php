@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Graph\Resource\Dataset;
 
-use App\Api\Resource\Agent\Department\DepartmentApiResource;
-use App\Api\Resource\Agent\Person\PersonApiResource;
-use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Person;
@@ -58,7 +56,7 @@ class DatasetGraphResource implements GraphResource
 
         $graph->addResource($this->dataset->getAccessUrl(), 'dcterms:language', $this->dataset->getLanguage()->getAccessUrl());
 
-        if($this->dataset->getLicense() !== null) {
+        if ($this->dataset->getLicense() !== null) {
             $graph->addResource($this->dataset->getAccessUrl(), 'dcterms:license', $this->dataset->getLicense()->getUrl()->getValue());
         }
 

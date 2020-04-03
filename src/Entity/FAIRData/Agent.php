@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 
 /**
  * @ORM\Entity

@@ -7,7 +7,6 @@ use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 use function uniqid;
 
 /**

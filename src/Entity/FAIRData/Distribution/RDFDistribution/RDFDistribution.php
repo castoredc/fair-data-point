@@ -11,7 +11,6 @@ use App\Entity\FAIRData\LocalizedText;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use EasyRdf_Graph;
 
 /**
  * @ORM\Entity
