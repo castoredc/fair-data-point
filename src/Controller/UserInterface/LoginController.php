@@ -43,6 +43,6 @@ class LoginController extends AbstractController
      */
     public function loginRedirect(Request $request): Response
     {
-        return $this->redirectToRoute('fdp_render');
+        return $this->redirectToRoute('fdp');
     }
 }

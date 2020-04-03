@@ -123,11 +123,17 @@ class CastorAuthenticator extends SocialAuthenticator
     {
         $url = '/login';
 
-        if ($request->attributes->has('catalog') && $request->attributes->get('catalog') instanceof Catalog) {
-            /** @var Catalog $catalog */
-            $catalog = $request->attributes->get('catalog');
+        if ($request->attributes->has('catalog')) {
+            $catalog = null;
 
-            if ($catalog->isAcceptingSubmissions()) {
+            if ($request->attributes->get('catalog') instanceof Catalog) {
+                /** @var Catalog $catalog */
+                $catalog = $request->attributes->get('catalog');
+            } else {
+                $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $request->attributes->get('catalog')]);
+            }
+
+            if ($catalog !== null && $catalog->isAcceptingSubmissions()) {
                 $url .= '/' . $catalog->getSlug();
             }
         }
