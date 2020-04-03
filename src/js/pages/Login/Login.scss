@@ -65,3 +65,14 @@
     max-width: 500px;
   }
 }
+
+@media (max-width: 767px) {
+  .Login {
+    position: initial;
+    top: initial;
+    left: initial;
+    -ms-transform: initial;
+    transform: initial;
+    margin: 40px;
+  }
+}
