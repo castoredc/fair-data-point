@@ -19,7 +19,9 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Security\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Throwable;
@@ -33,16 +35,16 @@ class ApiClient
     /** @var Client */
     private $client;
 
-    /** @var string */
-    private $server = '';
+    /** @var ?string */
+    private $server;
 
     /** @var int */
     private $pageSize = 1000;
 
-    public function __construct(string $castorEdcUrl)
+    public function __construct(string $server = '')
     {
         $this->client = new Client();
-        $this->server = $castorEdcUrl;
+        $this->server = $server;
     }
 
     /**
@@ -189,6 +191,12 @@ class ApiClient
     public function setToken($token): void
     {
         $this->token = $token;
+    }
+
+    public function setUser(CastorUser $user): void
+    {
+        $this->token = $user->getToken();
+        $this->server = $user->getServer();
     }
 
     /**

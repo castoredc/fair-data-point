@@ -75,9 +75,10 @@ class CastorAuthenticator extends SocialAuthenticator
             $user = $castorUser;
         } else {
             $user->setToken($castorUser->getToken());
+            $user->setServer($castorUser->getServer());
         }
 
-        $this->apiClient->setToken($user->getToken());
+        $this->apiClient->setUser($user);
 
         $user->setStudies($this->apiClient->getStudyIds());
 

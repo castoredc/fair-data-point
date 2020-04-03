@@ -6,8 +6,10 @@ namespace App\Security;
 use App\Model\Castor\ApiClient;
 use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Security\Core\User\User;
@@ -22,25 +24,42 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     protected $server;
 
     /**
-     * @param array<mixed> $options
-     * @param array<mixed> $collaborators
+     * @inheritDoc
      */
-    public function __construct(array $options = [], array $collaborators = [])
+    public function getBaseAuthorizationUrl(): string
     {
-        parent::__construct($options, $collaborators);
-        if (! isset($options['server'])) {
-            return;
-        }
-
-        $this->server = $options['server'];
+        return '/oauth/authorize';
     }
 
     /**
      * @inheritDoc
      */
-    public function getBaseAuthorizationUrl(): string
+    public function getAuthorizationUrl(array $options = []): string
     {
-        return $this->server . '/oauth/authorize';
+        if (! isset($options['server'])) {
+            return '';
+        }
+
+        $base   = $options['server'] . $this->getBaseAuthorizationUrl();
+        $params = $this->getAuthorizationParameters($options);
+        $query  = $this->getAuthorizationQuery($params);
+
+        return $this->appendQuery($base, $query);
+    }
+
+    /**
+     * Requests an access token using a specified grant and option set.
+     *
+     * @param  mixed $grant
+     * @param  array $options
+     * @throws IdentityProviderException
+     * @return AccessTokenInterface
+     */
+    public function getAccessTokenWithServer(string $server, $grant, array $options = [])
+    {
+        $this->server = $server;
+
+        return parent::getAccessToken($grant, $options);
     }
 
     /**
@@ -85,7 +104,7 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
         $apiClient = new ApiClient($this->server);
         $apiClient->setToken($token->getToken());
 
-        return CastorUser::fromData($apiClient->getUser(), $token->getToken());
+        return CastorUser::fromData($apiClient->getUser(), $token->getToken(), $this->server);
     }
 
     public function loadUserByUsername(string $username): UserInterface
