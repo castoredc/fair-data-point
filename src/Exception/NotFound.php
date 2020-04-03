@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-class NoAccessPermissionToStudy extends NoAccessPermission
+use Exception;
+
+class NotFound extends Exception
 {
     /**
      * @return array<mixed>
      */
     public function toArray(): array
     {
-        return ['error' => 'You do not have permission to access this study.'];
+        return ['error' => 'The data you are trying to access cannot be found.'];
     }
 }

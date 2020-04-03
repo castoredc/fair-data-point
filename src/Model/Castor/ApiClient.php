@@ -15,15 +15,14 @@ use App\Entity\Castor\RecordData;
 use App\Entity\Castor\RecordDataCollection;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
-use App\Exception\NoAccessPermissionToStudy;
+use App\Exception\ErrorFetchingCastorData;
+use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use Doctrine\Common\Collections\ArrayCollection;
-use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 use function json_decode;
 
 class ApiClient
@@ -46,6 +45,9 @@ class ApiClient
         $this->server = $castorEdcUrl;
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     */
     public function auth(string $clientId, string $secret): void
     {
         try {
@@ -60,8 +62,8 @@ class ApiClient
                     ],
                 ]
             );
-        } catch (GuzzleException $e) {
-            throw new AccessDeniedHttpException($e->getMessage());
+        } catch (Throwable $e) {
+            throw new ErrorFetchingCastorData($e->getMessage());
         }
 
         $data = json_decode((string) $response->getBody(), true);
@@ -71,7 +73,10 @@ class ApiClient
     /**
      * @return mixed
      *
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     private function request(string $uri)
     {
@@ -89,24 +94,28 @@ class ApiClient
 
             $body = json_decode((string) $response->getBody(), true);
         } catch (RequestException $e) {
-            if ($e->getCode() === 401) {
-                throw new SessionTimedOut();
+            switch ($e->getCode()) {
+                case 401:
+                    throw new SessionTimedOut();
+                case 403:
+                    throw new NoAccessPermission();
+                case 404:
+                    throw new NotFound();
+                default:
+                    throw new ErrorFetchingCastorData($e->getMessage());
             }
-
-            if ($e->getCode() === 403) {
-                throw new NoAccessPermissionToStudy();
-            }
-
-            throw new HttpException(500, $e->getMessage());
-        } catch (GuzzleException $e) {
-            throw new HttpException(500, $e->getMessage());
+        } catch (Throwable $e) {
+            throw new ErrorFetchingCastorData($e->getMessage());
         }
 
         return $body;
     }
 
     /**
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     public function getStudy(string $studyId): Study
     {
@@ -119,7 +128,10 @@ class ApiClient
     /**
      * @return Study[]
      *
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     public function getStudies(): array
     {
@@ -138,7 +150,10 @@ class ApiClient
      *
      * @return array<string>
      *
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     public function getStudyIds(?array $studies = null): array
     {
@@ -156,7 +171,10 @@ class ApiClient
     }
 
     /**
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     public function getUser(): User
     {
@@ -173,23 +191,19 @@ class ApiClient
         $this->token = $token;
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     public function getFields(Study $study): ArrayCollection
     {
         $pages = 1;
         $fields = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $response = $this->client->request(
-                'GET',
-                $this->server . '/api/study/' . $study->getId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize,
-                [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->token,
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $body = json_decode((string) $response->getBody(), true);
+            $body = $this->request('/api/study/' . $study->getId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fields'] as $rawField) {
@@ -201,42 +215,32 @@ class ApiClient
         return $fields;
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     public function getRecord(Study $study, string $recordId): Record
     {
-        $response = $this->client->request(
-            'GET',
-            $this->server . '/api/study/' . $study->getId() . '/record/' . $recordId,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Accept' => 'application/json',
-                ],
-            ]
-        );
-
-        $body = json_decode((string) $response->getBody(), true);
+        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $recordId);
 
         return Record::fromData($body);
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     public function getRecords(Study $study, bool $extractArchived = false): ArrayCollection
     {
         $pages = 1;
         $records = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $response = $this->client->request(
-                'GET',
-                $this->server . '/api/study/' . $study->getId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize,
-                [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->token,
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-
-            $body = json_decode((string) $response->getBody(), true);
+            $body = $this->request('/api/study/' . $study->getId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['records'] as $rawRecord) {
@@ -248,77 +252,54 @@ class ApiClient
         return $records;
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     private function getRecordStudyData(Study $study, Record $record): RecordData
     {
-        $response = $this->client->request(
-            'GET',
-            $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/study',
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Accept' => 'application/json',
-                ],
-            ]
-        );
-
-        $body = json_decode((string) $response->getBody(), true);
+        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/study');
 
         return StudyData::fromData($body['_embedded']['items'], $study, $record);
     }
 
     /**
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     private function getRecordReportInstances(Study $study, Record $record): ArrayCollection
     {
         $reportInstances = new ArrayCollection();
 
         try {
-            $response = $this->client->request(
-                'GET',
-                $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/report-instance',
-                [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->token,
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-
-            $body = json_decode((string) $response->getBody(), true);
+            $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/report-instance');
 
             foreach ($body['_embedded']['reportInstances'] as $rawReportInstance) {
                 $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
                 $reportInstances->set($reportInstance->getId(), $reportInstance);
             }
-        } catch (GuzzleException $e) {
-            if ($e->getCode() === 404) {
-                return new ArrayCollection();
-            }
+        } catch (NotFound $e) {
+            return new ArrayCollection();
         }
 
         return $reportInstances;
     }
 
     /**
-     * @throws Exception
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
      */
     private function getRecordSurveyPackageInstances(Study $study, Record $record): ArrayCollection
     {
         $surveyPackageInstances = new ArrayCollection();
 
-        $response = $this->client->request(
-            'GET',
-            $this->server . '/api/study/' . $study->getId() . '/surveypackageinstance?record_id=' . $record->getId(),
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Accept' => 'application/json',
-                ],
-            ]
-        );
-
-        $body = json_decode((string) $response->getBody(), true);
+        $body = $this->request('/api/study/' . $study->getId() . '/surveypackageinstance?record_id=' . $record->getId());
 
         foreach ($body['_embedded']['surveypackageinstance'] as $rawSurveyPackageInstance) {
             $surveyPackageInstance = SurveyPackageInstance::fromData($rawSurveyPackageInstance, $record);
@@ -328,53 +309,46 @@ class ApiClient
         return $surveyPackageInstances;
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     private function getRecordSurveyData(Study $study, Record $record): InstanceDataCollection
     {
         $surveyPackageInstances = $this->getRecordSurveyPackageInstances($study, $record);
-
         $surveyData = new SurveyData($record);
 
         foreach ($surveyPackageInstances as $surveyPackageInstance) {
             /** @var SurveyPackageInstance $surveyPackageInstance */
-            $response = $this->client->request(
-                'GET',
-                $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId(),
-                [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->token,
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-
-            $body = json_decode((string) $response->getBody(), true);
-
+            $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId());
             $surveyData->addSurveyPackageData($body['_embedded']['SurveyDataPoints'], $study, $surveyPackageInstance);
         }
 
         return $surveyData;
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     private function getRecordReportData(Study $study, Record $record): InstanceDataCollection
     {
         $reportInstances = $this->getRecordReportInstances($study, $record);
-
-        $response = $this->client->request(
-            'GET',
-            $this->server . '/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/report-instance',
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->token,
-                    'Accept' => 'application/json',
-                ],
-            ]
-        );
-
-        $body = json_decode((string) $response->getBody(), true);
+        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/report-instance');
 
         return ReportData::fromData($body['_embedded']['items'], $study, $record, $reportInstances);
     }
 
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
     public function getRecordDataCollection(Study $study, Record $record): Record
     {
         $dataCollection = new RecordDataCollection($record);
