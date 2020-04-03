@@ -40,12 +40,12 @@ class CastorClient extends OAuth2Client
      * Creates a RedirectResponse that will send the user to the
      * OAuth2 server (e.g. send them to Facebook).
      *
-     * @param array $scopes  The scopes you want (leave empty to use default)
-     * @param array $options Extra options to pass to the "Provider" class
+     * @param array<mixed> $scopes  The scopes you want (leave empty to use default)
+     * @param array<mixed> $options Extra options to pass to the "Provider" class
      */
     public function redirect(array $scopes = [], array $options = []): RedirectResponse
     {
-        if (! empty($scopes)) {
+        if (count($scopes) !== 0) {
             $options['scope'] = $scopes;
         }
 
@@ -60,26 +60,20 @@ class CastorClient extends OAuth2Client
     }
 
     /**
-     * Call this after the user is redirected back to get the access token.
-     *
-     * @return AccessToken|AccessTokenInterface
-     *
-     * @throws InvalidStateException
-     * @throws MissingAuthorizationCodeException
-     * @throws IdentityProviderException         If token cannot be fetched
+     * @inheritDoc
      */
     public function getAccessToken()
     {
         $expectedState = $this->getSession()->get(self::OAUTH2_SESSION_STATE_KEY);
         $server = $this->getSession()->get(self::SESSION_SERVER_KEY);
         $actualState = $this->getCurrentRequest()->query->get('state');
-        if (! $actualState || ($actualState !== $expectedState)) {
+        if ($actualState === null || ($actualState !== $expectedState)) {
             throw new InvalidStateException('Invalid state');
         }
 
         $code = $this->getCurrentRequest()->get('code');
 
-        if (! $code) {
+        if ($code === null) {
             throw new MissingAuthorizationCodeException('No "code" parameter was found (usually this is a query parameter)!');
         }
 
@@ -120,7 +114,7 @@ class CastorClient extends OAuth2Client
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (! $request) {
+        if ($request === null) {
             throw new LogicException('There is no "current request", and it is needed to perform this action');
         }
 

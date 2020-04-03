@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\Security;
 
@@ -25,7 +26,7 @@ class CastorServerApiResource implements ApiResource
             'url' => $this->server->getUrl()->getValue(),
             'name' => $this->server->getName(),
             'flag' => $this->server->getFlag(),
-            'default' => $this->server->isDefault()
+            'default' => $this->server->isDefault(),
         ];
     }
 }

@@ -1,10 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\Security;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Castor\CastorServer;
-use App\Entity\FAIRData\Department;
 
 class CastorServersApiResource implements ApiResource
 {

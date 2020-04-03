@@ -32,7 +32,7 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     }
 
     /**
-     * @inheritDoc
+     * @param array<mixed> $options
      */
     public function getAuthorizationUrl(array $options = []): string
     {
@@ -51,7 +51,7 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
      * Requests an access token using a specified grant and option set.
      *
      * @param  mixed $grant
-     * @param  array $options
+     * @param  array<mixed> $options
      *
      * @throws IdentityProviderException
      */

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Security;
 
@@ -22,8 +23,6 @@ class GetCastorServersCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetCastorServersCommand $message): array
     {
-        $servers = $this->em->getRepository(CastorServer::class)->findAll();
-
-        return $servers;
+        return $this->em->getRepository(CastorServer::class)->findAll();
     }
 }
