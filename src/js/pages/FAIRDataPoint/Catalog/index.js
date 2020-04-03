@@ -141,6 +141,10 @@ export default class Catalog extends Component {
             return <LoadingScreen showLoading={true}/>;
         }
 
+        if (embedded && 'parentIFrame' in window){
+            parentIFrame.size();
+        }
+
         return <FAIRDataInformation
             embedded={embedded}
             className="Catalog"
