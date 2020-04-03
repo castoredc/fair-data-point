@@ -28,7 +28,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(FindStudiesByUserCommand $message): array
     {
-        $this->apiClient->setToken($message->getUser()->getToken());
+        $this->apiClient->setUser($message->getUser());
 
         $castorStudies = $this->apiClient->getStudies();
         $castorStudyIds = $this->apiClient->getStudyIds($castorStudies);

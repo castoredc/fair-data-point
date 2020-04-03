@@ -31,7 +31,7 @@ class GetStudyMetadataCommandHandler implements MessageHandlerInterface
             return new ManualCastorStudyMetadataApiResource($message->getStudy());
         }
 
-        $this->apiClient->setToken($message->getUser()->getToken());
+        $this->apiClient->setUser($message->getUser());
         $study = $this->apiClient->getStudy($message->getStudy()->getId());
 
         return new CastorStudyMetadataApiResource($study);

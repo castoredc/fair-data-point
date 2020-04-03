@@ -10,16 +10,51 @@ import ToastContent from "../../components/ToastContent";
 import LoadingScreen from "../../components/LoadingScreen";
 import {localizedText} from "../../util";
 import Logo from "../../components/Logo";
+import ListItem from "../../components/ListItem";
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            servers: [],
             catalog: null,
-            isLoading: true
+            isLoading: true,
+            selectedServer: null
         };
     }
+
+    componentDidMount() {
+        if(typeof this.props.match.params.catalogSlug !== 'undefined') {
+            this.getCatalog(this.props.match.params.catalogSlug);
+        }
+
+        this.getServers();
+    }
+
+    getServers = () => {
+        axios.get('/api/servers')
+            .then((response) => {
+                const params = queryString.parse(this.props.location.search);
+                const defaultServer = response.data.filter((server) => server.default)[0].id;
+                const serverIds = response.data.map((server) => server.id);
+                const urlParamServer = (typeof params.server !== 'undefined') ? parseInt(params.server) : null;
+                const selectedServer = (urlParamServer !== null && serverIds.includes(urlParamServer)) ? urlParamServer : defaultServer;
+
+                this.setState({
+                    servers:   response.data,
+                    isLoading: false,
+                    selectedServer: selectedServer
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                this.setState({
+                    isLoading: false,
+                });
+                toast.error(<ToastContent type="error" message="An error occurred"/>);
+            });
+    };
 
     getCatalog = (catalog) => {
         axios.get('/api/brand/' + catalog)
@@ -37,21 +72,16 @@ export default class Login extends Component {
             });
     };
 
-    componentDidMount() {
-        if(typeof this.props.match.params.catalogSlug !== 'undefined') {
-            this.getCatalog(this.props.match.params.catalogSlug);
-        }
-        else
-        {
-            this.setState({
-                isLoading: false,
-            });
-        }
-    }
+    handleServerSelect = (serverId) => {
+        this.setState({
+            selectedServer: serverId,
+            submitDisabled: false
+        })
+    };
 
     render() {
         const params = queryString.parse(this.props.location.search);
-        const loginUrl = '/connect/castor' + (typeof params.path !== 'undefined' ? '?target_path=' + params.path : '');
+        const loginUrl = '/connect/castor/' + this.state.selectedServer + (typeof params.path !== 'undefined' ? '?target_path=' + params.path : '');
 
         if(this.state.isLoading)
         {
@@ -89,8 +119,28 @@ export default class Login extends Component {
                         </div>
                     </div>}
 
+                    <div className="Servers">
+                        <div className="ServerText">
+                            My study is located on a Castor server in
+                        </div>
+                        <div className="ServersList">
+                            {this.state.servers.map((server) => {
+                                return <ListItem key={server.id}
+                                                 title={server.name}
+                                                 selectable={true}
+                                                 active={this.state.selectedServer === server.id}
+                                                 onClick={() => {this.handleServerSelect(server.id)}}
+                                                 leftIcon={'flag' + server.flag.toUpperCase()}
+                                                 className="ServerListItem"
+                                                 fill={false}
+                                />
+                            })}
+                        </div>
+                    </div>
+
+
                     <div className="LoginButton">
-                        <Button href={loginUrl}>Proceed</Button>
+                        <Button href={loginUrl} disabled={this.state.selectedServer === null}>Proceed</Button>
                     </div>
                 </div>
             </div>

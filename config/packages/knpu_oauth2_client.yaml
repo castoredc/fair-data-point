@@ -4,8 +4,7 @@ knpu_oauth2_client:
         castor:
             type: generic
             provider_class: App\Security\CastorUserProvider
-            client_id:           "%env(CASTOR_API_CLIENT)%"
-            client_secret:       "%env(CASTOR_API_SECRET)%"
-            provider_options:
-                server: "%env(CASTOR_API_URL)%"
+            client_class: App\Security\Client\CastorClient
+            client_id: "%env(CASTOR_API_CLIENT)%"
+            client_secret: "%env(CASTOR_API_SECRET)%"
             redirect_route: connect_castor_check

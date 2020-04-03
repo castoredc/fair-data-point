@@ -43,11 +43,36 @@
       margin-bottom: 32px;
     }
   }
+
+  .Servers {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid $neutral-30;
+
+    .ServerText {
+      font-weight: 600;
+    }
+
+    .ServersList {
+      padding-top: 20px;
+    }
+  }
 }
 
 @media (max-width: 1259px) {
   .Login .LoginContainer {
     width: 100%;
     max-width: 500px;
+  }
+}
+
+@media (max-width: 767px) {
+  .Login {
+    position: initial;
+    top: initial;
+    left: initial;
+    -ms-transform: initial;
+    transform: initial;
+    margin: 40px;
   }
 }

@@ -30,7 +30,7 @@
     margin-right: 9px;
     margin-top: -1px;
 
-    path {
+    &.Fill path {
       fill: $neutral-800;
     }
   }

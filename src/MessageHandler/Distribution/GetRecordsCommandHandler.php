@@ -23,7 +23,7 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetRecordsCommand $message): array
     {
-        $this->apiClient->setToken($message->getUser()->getToken());
+        $this->apiClient->setUser($message->getUser());
 
         return $this->apiClient->getRecords($message->getStudy())->toArray();
     }

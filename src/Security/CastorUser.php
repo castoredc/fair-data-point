@@ -65,6 +65,9 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     /** @var string|null */
     private $token;
 
+    /** @var string|null */
+    private $server;
+
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
@@ -72,7 +75,7 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
     /** @var string[] */
     private $studies;
 
-    public function __construct(string $id, string $fullName, ?string $nameFirst, ?string $nameMiddle, ?string $nameLast, string $emailAddress, string $token)
+    public function __construct(string $id, string $fullName, ?string $nameFirst, ?string $nameMiddle, ?string $nameLast, string $emailAddress, string $token, string $server)
     {
         $this->id = $id;
         $this->fullName = $fullName;
@@ -81,6 +84,7 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         $this->nameLast = $nameLast;
         $this->emailAddress = strtolower($emailAddress);
         $this->token = $token;
+        $this->server = $server;
         $this->studies = [];
     }
 
@@ -240,6 +244,16 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         $this->token = $token;
     }
 
+    public function getServer(): ?string
+    {
+        return $this->server;
+    }
+
+    public function setServer(?string $server): void
+    {
+        $this->server = $server;
+    }
+
     public function getEmailAddress(): string
     {
         return $this->emailAddress;
@@ -261,7 +275,7 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
         $this->studies = $studies;
     }
 
-    public static function fromData(User $user, string $token): CastorUser
+    public static function fromData(User $user, string $token, string $server): CastorUser
     {
         return new CastorUser(
             $user->getId(),
@@ -270,7 +284,8 @@ class CastorUser implements UserInterface, ResourceOwnerInterface
             $user->getNameMiddle(),
             $user->getNameLast(),
             $user->getEmailAddress(),
-            $token
+            $token,
+            $server
         );
     }
 
