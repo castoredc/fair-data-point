@@ -6,12 +6,12 @@ import {classNames, isURL} from "../../util";
 
 class ListItem extends Component {
     render() {
-        const { title, description, link, leftIcon, smallIcon, newWindow = false, selectable = false, active = false, onClick = () => {}}  = this.props;
+        const { title, description, link, leftIcon, smallIcon, fill = true, newWindow = false, selectable = false, active = false, className, onClick = () => {}}  = this.props;
 
         if(selectable)
         {
-            return <a href="#" className={classNames("ListItem", "Selectable", active && 'Active')} onClick={onClick}>
-                {leftIcon && <span className="ListItemLeftIcon"><Icon type={leftIcon} /></span>}
+            return <a href="#" className={classNames("ListItem", "Selectable", active && 'Active', className)} onClick={onClick}>
+                {leftIcon && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><Icon type={leftIcon} /></span>}
                 <span className="ListItemTitle">{title}</span>
                 <span className="ListItemDescription">{description}</span>
             </a>;

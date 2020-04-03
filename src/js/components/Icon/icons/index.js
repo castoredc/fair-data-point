@@ -11,6 +11,9 @@ import study from './study.svg'
 import view from './view.svg'
 import edit from './edit.svg'
 import filters from './filters.svg'
+import flagNL from './flag-nl.svg'
+import flagUK from './flag-uk.svg'
+import flagUS from './flag-us.svg'
 
 export default {
     add,
@@ -25,5 +28,8 @@ export default {
     study,
     view,
     edit,
-    filters
+    filters,
+    flagNL,
+    flagUK,
+    flagUS
 };
