@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Study;
 
+use App\Entity\Castor\CastorServer;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
@@ -10,6 +11,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
 use App\Message\Study\AddCastorStudyCommand;
 use App\Model\Castor\ApiClient;
+use App\Repository\CastorServerRepository;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -40,6 +42,11 @@ class AddCastorStudyCommandHandler implements MessageHandlerInterface
 
         $this->apiClient->setUser($message->getUser());
         $study = $this->apiClient->getStudy($message->getStudyId());
+
+        /** @var CastorServerRepository $serverRepository */
+        $serverRepository = $this->em->getRepository(CastorServer::class);
+        $server = $serverRepository->findServerByUrl($message->getUser()->getServer());
+        $study->setServer($server);
 
         /** @var Language|null $language */
         $language = $this->em->getRepository(Language::class)->find('en');

@@ -52,8 +52,6 @@ class Study implements JsonSerializable
     private $metadata;
 
     /**
-     * One Customer has One Cart.
-     *
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study")
      *
      * @var Dataset|null
@@ -67,6 +65,13 @@ class Study implements JsonSerializable
      */
     private $enteredManually = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="CastorServer")
+     * @ORM\JoinColumn(name="server", referencedColumnName="id")
+     *
+     * @var CastorServer|null
+     */
+    private $server;
     /**
      * @param ArrayCollection<string, Field>|null $fields
      */
@@ -190,6 +195,16 @@ class Study implements JsonSerializable
     public function setEnteredManually(bool $enteredManually): void
     {
         $this->enteredManually = $enteredManually;
+    }
+
+    public function getServer(): ?CastorServer
+    {
+        return $this->server;
+    }
+
+    public function setServer(?CastorServer $server): void
+    {
+        $this->server = $server;
     }
 
     /**
