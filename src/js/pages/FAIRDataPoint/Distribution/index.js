@@ -91,6 +91,7 @@ export default class Distribution extends Component {
             issued={this.state.distribution.issued}
             modified={this.state.distribution.modified}
             license={this.state.distribution.license}
+            back={{link: this.state.dataset.relative_url, text: localizedText(this.state.dataset.title, 'en')}}
         >
             <Row>
                 <Col md={8} className="InformationCol">

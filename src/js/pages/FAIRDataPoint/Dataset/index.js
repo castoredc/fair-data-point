@@ -19,19 +19,42 @@ export default class Dataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoadingCatalog:       true,
+            hasLoadedCatalog:       false,
             isLoadingDataset:       true,
             hasLoadedDataset:       false,
             isLoadingDistributions: true,
             hasLoadedDistributions: false,
+            catalog:                null,
             dataset:                null,
             distributions:          []
         };
     }
 
     componentDidMount() {
+        this.getCatalog();
         this.getDataset();
         this.getDistributions();
     }
+
+    getCatalog = () => {
+        axios.get('/api/catalog/' + this.props.match.params.catalog)
+            .then((response) => {
+                this.setState({
+                    catalog: response.data,
+                    isLoadingCatalog: false,
+                    hasLoadedCatalog: true
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingCatalog: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalog';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
+    };
 
     getDataset = () => {
         axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
@@ -75,7 +98,7 @@ export default class Dataset extends Component {
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if(this.state.isLoadingDataset || this.state.isLoadingDistributions)
+        if(this.state.isLoadingCatalog || this.state.isLoadingDataset || this.state.isLoadingDistributions)
         {
             return <LoadingScreen showLoading={true}/>;
         }
@@ -112,6 +135,7 @@ export default class Dataset extends Component {
             modified={this.state.dataset.modified}
             license={this.state.dataset.license}
             badge={badge}
+            back={{link: this.state.catalog.relative_url, text: localizedText(this.state.catalog.title, 'en')}}
         >
             <Row>
                 <Col md={8} className="InformationCol">
