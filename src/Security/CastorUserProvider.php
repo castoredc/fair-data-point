@@ -127,9 +127,10 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     }
 
     /**
-     * @inheritDoc
      * @throws UserNotFound
      * @throws UserNotACastorUser
+     *
+     * @inheritDoc
      */
     public function refreshUser(UserInterface $user): UserInterface
     {

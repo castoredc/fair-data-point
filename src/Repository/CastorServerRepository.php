@@ -12,6 +12,7 @@ class CastorServerRepository extends EntityRepository
     {
         /** @var CastorServer|null $server */
         $server = $this->findOneBy(['url' => $url]);
+
         return $server;
     }
 }
