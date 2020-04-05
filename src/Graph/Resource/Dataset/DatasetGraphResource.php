@@ -25,20 +25,21 @@ class DatasetGraphResource implements GraphResource
     {
         $graph = new EasyRdf_Graph();
         $study = $this->dataset->getStudy();
+        $url = $this->dataset->getAccessUrl();
+        $baseUrl = $this->dataset->getBaseUrl();
         $metadata = $study->getLatestMetadata();
 
         if ($metadata === null) {
             return $graph;
         }
 
-        $graph->addResource($this->dataset->getAccessUrl(), 'a', 'dcat:Dataset');
-        $graph->addLiteral($this->dataset->getAccessUrl(), 'dcterms:title', $metadata->getBriefName(), $this->dataset->getLanguage()->getCode());
-        $graph->addLiteral($this->dataset->getAccessUrl(), 'rdfs:label', $metadata->getBriefName(), $this->dataset->getLanguage()->getCode());
-
-        $graph->addLiteral($this->dataset->getAccessUrl(), 'dcterms:hasVersion', $study->getLatestMetadataVersion());
+        $graph->addResource($url, 'a', 'dcat:Dataset');
+        $graph->addLiteral($url, 'dcterms:title', $metadata->getBriefName(), $this->dataset->getLanguage()->getCode());
+        $graph->addLiteral($url, 'rdfs:label', $metadata->getBriefName(), $this->dataset->getLanguage()->getCode());
+        $graph->addLiteral($url, 'dcterms:hasVersion', $study->getLatestMetadataVersion());
 
         if ($metadata->getBriefSummary() !== null) {
-            $graph->addLiteral($this->dataset->getAccessUrl(), 'dcterms:description', $metadata->getBriefSummary(), $this->dataset->getLanguage()->getCode());
+            $graph->addLiteral($url, 'dcterms:description', $metadata->getBriefSummary(), $this->dataset->getLanguage()->getCode());
         }
 
         foreach ($metadata->getContacts() as $contactPoint) {
@@ -46,24 +47,24 @@ class DatasetGraphResource implements GraphResource
                 continue;
             }
 
-            $graph = (new PersonGraphResource($contactPoint))->addToGraph($this->dataset->getAccessUrl(), 'dcat:contactPoint', $graph);
+            $graph = (new PersonGraphResource($contactPoint))->addToGraph($baseUrl, $url, 'dcat:contactPoint', $graph);
         }
 
         foreach ($metadata->getDepartments() as $department) {
             /** @var Department $department */
-            $graph = (new DepartmentGraphResource($department))->addToGraph($this->dataset->getAccessUrl(), 'dcterms:publisher', $graph);
+            $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
         }
 
-        $graph->addResource($this->dataset->getAccessUrl(), 'dcterms:language', $this->dataset->getLanguage()->getAccessUrl());
+        $graph->addResource($url, 'dcterms:language', $this->dataset->getLanguage()->getAccessUrl());
 
         if ($this->dataset->getLicense() !== null) {
-            $graph->addResource($this->dataset->getAccessUrl(), 'dcterms:license', $this->dataset->getLicense()->getUrl()->getValue());
+            $graph->addResource($url, 'dcterms:license', $this->dataset->getLicense()->getUrl()->getValue());
         }
 
         //$graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
 
         foreach ($this->dataset->getDistributions() as $distribution) {
-            $graph->addResource($this->dataset->getAccessUrl(), 'dcat:distribution', $distribution->getAccessUrl());
+            $graph->addResource($url, 'dcat:distribution', $distribution->getAccessUrl());
         }
 
         return $graph;

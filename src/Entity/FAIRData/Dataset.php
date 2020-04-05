@@ -255,6 +255,17 @@ class Dataset
         return $first->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function getBaseUrl(): string
+    {
+        $first = $this->catalogs->first();
+
+        if ($first === false) {
+            return '';
+        }
+
+        return $first->getBaseUrl();
+    }
+
     public function isPublished(): bool
     {
         return $this->isPublished;

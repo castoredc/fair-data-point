@@ -323,6 +323,11 @@ class Catalog
         return $this->fairDataPoint->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function getBaseUrl(): string
+    {
+        return $this->fairDataPoint->getIri()->getValue();
+    }
+
     public function getLogo(): ?Iri
     {
         return $this->logo;
