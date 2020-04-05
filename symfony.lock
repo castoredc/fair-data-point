@@ -2,6 +2,9 @@
     "beberlei/assert": {
         "version": "v3.2.7"
     },
+    "behat/transliterator": {
+        "version": "v1.3.0"
+    },
     "castor/coding-standard": {
         "version": "3.1.1"
     },
@@ -101,6 +104,9 @@
         "files": [
             "./src/DBAL/Types/.gitignore"
         ]
+    },
+    "gedmo/doctrine-extensions": {
+        "version": "v2.4.39"
     },
     "guzzlehttp/guzzle": {
         "version": "6.3.0"
@@ -307,6 +313,18 @@
         },
         "files": [
             "./phpcs.xml.dist"
+        ]
+    },
+    "stof/doctrine-extensions-bundle": {
+        "version": "1.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.2",
+            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
+        },
+        "files": [
+            "./config/packages/stof_doctrine_extensions.yaml"
         ]
     },
     "symfony/asset": {
