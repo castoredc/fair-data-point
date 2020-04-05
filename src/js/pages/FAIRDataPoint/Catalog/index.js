@@ -22,12 +22,15 @@ export default class Catalog extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoadingFDP:       true,
+            hasLoadedFDP:       false,
             isLoadingCatalog:   true,
             hasLoadedCatalog:   false,
             isLoadingDatasets:  true,
             hasLoadedDatasets:  false,
             isLoadingMap:       true,
             hasLoadedMap:       false,
+            fdp:                null,
             catalog:            null,
             showDatasets:       false,
             showMap:            false,
@@ -40,10 +43,30 @@ export default class Catalog extends Component {
 
     componentDidMount() {
         this.setState({ displayFilter: (window.innerWidth > 767) });
+        this.getFDP();
         this.getCatalog();
         this.getDatasets(false);
         this.getMap(false);
     }
+
+    getFDP = () => {
+        axios.get('/api/fdp')
+            .then((response) => {
+                this.setState({
+                    fdp: response.data,
+                    isLoadingFDP: false,
+                    hasLoadedFDP: true
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingFDP: false
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the FAIR Data Point information';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
+    };
 
     getCatalog = () => {
         axios.get('/api/catalog/' + this.props.match.params.catalog)
@@ -137,7 +160,7 @@ export default class Catalog extends Component {
         const headerWidth = this.state.displayList ? 5 : 4;
         const buttonWidth = this.state.displayList ? 3 : 8;
 
-        if (this.state.isLoadingCatalog) {
+        if (this.state.isLoadingFDP || this.state.isLoadingCatalog) {
             return <LoadingScreen showLoading={true}/>;
         }
 
@@ -153,6 +176,7 @@ export default class Catalog extends Component {
             issued={this.state.catalog.issued}
             modified={this.state.catalog.modified}
             license={this.state.catalog.license}
+            back={{link: this.state.fdp.relative_url, text: localizedText(this.state.fdp.title, 'en')}}
         >
             {(this.state.catalog.description && !embedded) && <Row>
                 <Col md={12} className="InformationCol">

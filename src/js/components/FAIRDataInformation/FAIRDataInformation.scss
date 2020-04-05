@@ -2,7 +2,7 @@
 
 .TopLevelContainer {
     .Header {
-        background: $mid-blue;
+        background: $azul;
         color: white;
 
         .MainHeader {
@@ -210,6 +210,32 @@
 
         img {
             max-width: 100%;
+        }
+    }
+
+    .InformationBack {
+        margin-bottom: 10px;
+        display: inline-block;
+        color: $generic-white;
+        font-size: 13px;
+
+        .Icon {
+            width: 14px;
+            height: 14px;
+            margin: 0 3px 3px 0;
+
+            path {
+                fill: $generic-white;
+            }
+        }
+
+        &:hover {
+            color: $neutral-30;
+            text-decoration: none;
+
+            .Icon path {
+                fill: $neutral-30;
+            }
         }
     }
 }

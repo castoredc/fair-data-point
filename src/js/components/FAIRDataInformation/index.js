@@ -4,11 +4,12 @@ import DocumentTitle from "../DocumentTitle";
 import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Logo from '../Logo';
+import Icon from '../Icon';
 import './FAIRDataInformation.scss';
 
 export default class FAIRDataInformation extends Component {
     render() {
-        const {embedded, className, title, badge, logo = '', license, version, issued, modified, children} = this.props;
+        const {embedded, className, title, badge, back, license, version, issued, modified, children} = this.props;
         return <div className={classNames(className, 'TopLevelContainer', embedded && 'Embedded')}>
             <DocumentTitle title={title}/>
 
@@ -23,6 +24,9 @@ export default class FAIRDataInformation extends Component {
                 <Container>
                     <div className="InformationHeader">
                         <div className="InformationHeaderTop">
+                            {back && <Link to={back.link} className="InformationBack">
+                                <Icon type="arrowLeft" /> {back.text}
+                            </Link>}
                             <h1 className="Title">
                                 {title}
                                 {badge && <span className="InformationBadge">{badge}</span>}
