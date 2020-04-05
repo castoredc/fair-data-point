@@ -44,8 +44,7 @@ class DatasetsFilterApiResource implements ApiResource
         foreach ($this->datasets as $dataset) {
             $metadata = $dataset->getStudy()->getLatestMetadata();
 
-            if($metadata === null)
-            {
+            if($metadata === null) {
                 continue;
             }
 
