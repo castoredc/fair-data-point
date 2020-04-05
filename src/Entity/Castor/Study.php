@@ -95,7 +95,7 @@ class Study implements JsonSerializable
      * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      *
-     * @var CastorUser $createdBy
+     * @var CastorUser|null $createdBy
      * @Gedmo\Blameable(on="create")
      */
     private $createdBy;
@@ -104,7 +104,7 @@ class Study implements JsonSerializable
      * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
      *
-     * @var CastorUser $updatedBy
+     * @var CastorUser|null $updatedBy
      * @Gedmo\Blameable(on="update")
      */
     private $updatedBy;
@@ -260,12 +260,12 @@ class Study implements JsonSerializable
         $this->updated = new DateTime('now');
     }
 
-    public function getCreatedBy(): CastorUser
+    public function getCreatedBy(): ?CastorUser
     {
         return $this->createdBy;
     }
 
-    public function getUpdatedBy(): CastorUser
+    public function getUpdatedBy(): ?CastorUser
     {
         return $this->updatedBy;
     }

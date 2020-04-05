@@ -30,6 +30,10 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     /** @var EntityManagerInterface|null */
     private $em;
 
+    /**
+     * @param array<mixed> $options
+     * @param array<mixed> $collaborators
+     */
     public function __construct(array $options = [], array $collaborators = [], ?EntityManagerInterface $em = null)
     {
         parent::__construct($options, $collaborators);
