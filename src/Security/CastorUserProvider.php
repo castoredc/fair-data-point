@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Exception\UserNotACastorUser;
+use App\Exception\UserNotFound;
 use App\Model\Castor\ApiClient;
+use App\Repository\CastorUserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -22,6 +26,20 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
 
     /** @var string */
     protected $server;
+
+    /** @var EntityManagerInterface|null */
+    private $em;
+
+    /**
+     * @param array<mixed> $options
+     * @param array<mixed> $collaborators
+     */
+    public function __construct(array $options = [], array $collaborators = [], ?EntityManagerInterface $em = null)
+    {
+        parent::__construct($options, $collaborators);
+
+        $this->em = $em;
+    }
 
     /**
      * @inheritDoc
@@ -113,11 +131,25 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     }
 
     /**
+     * @throws UserNotFound
+     * @throws UserNotACastorUser
+     *
      * @inheritDoc
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
-        return $user;
+        if (! $user instanceof CastorUser) {
+            throw new UserNotACastorUser();
+        }
+
+        /** @var CastorUserRepository $userRepository */
+        $userRepository = $this->em->getRepository(CastorUser::class);
+        $dbUser = $userRepository->findUserByEmail($user->getEmailAddress());
+        $dbUser->setToken($user->getToken());
+        $dbUser->setServer($user->getServer());
+        $dbUser->setStudies($user->getStudies());
+
+        return $dbUser;
     }
 
     /**

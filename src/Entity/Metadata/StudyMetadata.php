@@ -12,10 +12,12 @@ use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Organization;
 use App\Entity\Iri;
 use App\Entity\Terminology\CodedText;
+use App\Security\CastorUser;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -184,6 +186,24 @@ class StudyMetadata
      * @var DateTime|null $updated
      */
     protected $updated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $createdBy
+     * @Gedmo\Blameable(on="create")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $updatedBy
+     * @Gedmo\Blameable(on="update")
+     */
+    private $updatedBy;
 
     public function __construct(
         string $briefName,
@@ -494,5 +514,15 @@ class StudyMetadata
     public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
+    }
+
+    public function getCreatedBy(): ?CastorUser
+    {
+        return $this->createdBy;
+    }
+
+    public function getUpdatedBy(): ?CastorUser
+    {
+        return $this->updatedBy;
     }
 }

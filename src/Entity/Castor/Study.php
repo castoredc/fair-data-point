@@ -5,14 +5,18 @@ namespace App\Entity\Castor;
 
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
+use App\Security\CastorUser;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
 use function count;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class Study implements JsonSerializable
 {
@@ -52,8 +56,6 @@ class Study implements JsonSerializable
     private $metadata;
 
     /**
-     * One Customer has One Cart.
-     *
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study")
      *
      * @var Dataset|null
@@ -66,6 +68,46 @@ class Study implements JsonSerializable
      * @var bool
      */
     private $enteredManually = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CastorServer")
+     * @ORM\JoinColumn(name="server", referencedColumnName="id")
+     *
+     * @var CastorServer|null
+     */
+    private $server;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var DateTime $created
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable = true)
+     *
+     * @var DateTime|null $updated
+     */
+    protected $updated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $createdBy
+     * @Gedmo\Blameable(on="create")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $updatedBy
+     * @Gedmo\Blameable(on="update")
+     */
+    private $updatedBy;
 
     /**
      * @param ArrayCollection<string, Field>|null $fields
@@ -190,6 +232,42 @@ class Study implements JsonSerializable
     public function setEnteredManually(bool $enteredManually): void
     {
         $this->enteredManually = $enteredManually;
+    }
+
+    public function getServer(): ?CastorServer
+    {
+        return $this->server;
+    }
+
+    public function setServer(?CastorServer $server): void
+    {
+        $this->server = $server;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersist(): void
+    {
+        $this->created = new DateTime('now');
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate(): void
+    {
+        $this->updated = new DateTime('now');
+    }
+
+    public function getCreatedBy(): ?CastorUser
+    {
+        return $this->createdBy;
+    }
+
+    public function getUpdatedBy(): ?CastorUser
+    {
+        return $this->updatedBy;
     }
 
     /**

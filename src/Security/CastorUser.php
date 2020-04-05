@@ -14,7 +14,7 @@ use function strtolower;
 use function substr;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CastorUserRepository")
  * @ORM\Table(name="user")
  */
 class CastorUser implements UserInterface, ResourceOwnerInterface
