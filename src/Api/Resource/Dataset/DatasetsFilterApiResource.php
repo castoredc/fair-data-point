@@ -44,6 +44,10 @@ class DatasetsFilterApiResource implements ApiResource
         foreach ($this->datasets as $dataset) {
             $metadata = $dataset->getStudy()->getLatestMetadata();
 
+            if ($metadata === null) {
+                continue;
+            }
+
             foreach ($metadata->getCenters() as $center) {
                 if (! ($center instanceof Department)) {
                     continue;
