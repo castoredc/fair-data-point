@@ -252,6 +252,11 @@ class Distribution
         return $this->dataset->getRelativeUrl() . '/' . $this->slug;
     }
 
+    public function getBaseUrl(): string
+    {
+        return $this->dataset->getBaseUrl();
+    }
+
     public function setAccessRights(int $accessRights): void
     {
         $this->accessRights = $accessRights;

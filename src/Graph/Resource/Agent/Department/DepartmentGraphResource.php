@@ -20,8 +20,8 @@ class DepartmentGraphResource extends AgentGraphResource
         parent::__construct($department);
     }
 
-    public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
+    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
     {
-        return (new OrganizationGraphResource($this->department->getOrganization()))->addToGraph($subject, $predicate, $graph);
+        return (new OrganizationGraphResource($this->department->getOrganization()))->addToGraph($baseUrl, $subject, $predicate, $graph);
     }
 }

@@ -21,34 +21,30 @@ class CatalogGraphResource implements GraphResource
     public function toGraph(): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
+        $url = $this->catalog->getAccessUrl();
 
-        $graph->addResource($this->catalog->getAccessUrl(), 'a', 'dcat:Catalog');
+        $graph->addResource($url, 'a', 'dcat:Catalog');
 
         foreach ($this->catalog->getTitle()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->catalog->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
-            $graph->addLiteral($this->catalog->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($url, 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($url, 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addLiteral($this->catalog->getAccessUrl(), 'dcterms:hasVersion', $this->catalog->getVersion());
+        $graph->addLiteral($url, 'dcterms:hasVersion', $this->catalog->getVersion());
 
         foreach ($this->catalog->getDescription()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->catalog->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($url, 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        // foreach ($this->catalog->getPublishers() as $publisher) {
-        //     /** @var Agent $publisher */
-        //     $publisher->addToGraph($this->catalog->getAccessUrl(), 'dcterms:publisher', $graph);
-        // }
-
-        $graph->addResource($this->catalog->getAccessUrl(), 'dcterms:language', $this->catalog->getLanguage()->getAccessUrl());
+        $graph->addResource($url, 'dcterms:language', $this->catalog->getLanguage()->getAccessUrl());
 
         foreach ($this->catalog->getDatasets(false) as $dataset) {
-            $graph->addResource($this->catalog->getAccessUrl(), 'dcat:dataset', $dataset->getAccessUrl());
+            $graph->addResource($url, 'dcat:dataset', $dataset->getAccessUrl());
         }
 
-        $graph->addResource($this->catalog->getAccessUrl(), 'dcterms:license', $this->catalog->getLicense()->getUrl()->getValue());
+        $graph->addResource($url, 'dcterms:license', $this->catalog->getLicense()->getUrl()->getValue());
 
         return $graph;
     }
