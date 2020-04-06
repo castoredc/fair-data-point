@@ -36,7 +36,7 @@ class RDFDistributionController extends FAIRDataController
      */
     public function rdfDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('access_data', $dataset->getStudy());
+        $this->denyAccessUnlessGranted('access_data', $distribution);
 
         if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution) {
             throw $this->createNotFoundException();
@@ -94,7 +94,7 @@ class RDFDistributionController extends FAIRDataController
      */
     public function rdfRecordDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, string $record, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('access_data', $dataset->getStudy());
+        $this->denyAccessUnlessGranted('access_data', $distribution);
 
         if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution) {
             throw $this->createNotFoundException();
