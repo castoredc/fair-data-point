@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData\Distribution\RDFDistribution;
 
-use App\Entity\FAIRData\Agent;
+use App\Entity\Castor\Field;
 use App\Entity\FAIRData\Distribution\Distribution;
-use App\Entity\FAIRData\Language;
-use App\Entity\FAIRData\License;
-use App\Entity\FAIRData\LocalizedText;
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +30,9 @@ class CSVDistribution extends Distribution
      */
     private $includeAll = false;
 
+    /**
+     * @return Collection<string, CSVDistributionElement>
+     */
     public function getElements(): Collection
     {
         return $this->elements;
@@ -42,5 +41,29 @@ class CSVDistribution extends Distribution
     public function isIncludeAll(): bool
     {
         return $this->includeAll;
+    }
+
+    public function isFieldIncluded(Field $field): bool
+    {
+        if ($this->includeAll === true) {
+            return true;
+        }
+
+        foreach ($this->elements as $element) {
+            if ($element instanceof CSVDistributionElementFieldId && $element->getFieldId() === $field->getId()) {
+                return true;
+            }
+
+            if ($element instanceof CSVDistributionElementVariableName && $element->getVariableName() === $field->getVariableName()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getAccessUrl(): string
+    {
+        return parent::getAccessUrl() . '/csv';
     }
 }

@@ -5,6 +5,7 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution\RDFDistribution\CSVDistribution;
 use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
 
 class DistributionApiResource implements ApiResource
@@ -28,6 +29,10 @@ class DistributionApiResource implements ApiResource
         if ($this->distribution instanceof RDFDistribution) {
             $accessUrl = $this->distribution->getRDFUrl();
             $downloadUrl = $this->distribution->getRDFUrl() . '/?download=1';
+        }
+
+        if ($this->distribution instanceof CSVDistribution) {
+            $downloadUrl = $this->distribution->getAccessUrl();
         }
 
         return [
