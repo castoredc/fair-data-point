@@ -41,4 +41,9 @@ class IriType extends Type
     {
         return self::IRI;
     }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 }

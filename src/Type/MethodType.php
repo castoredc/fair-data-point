@@ -39,4 +39,9 @@ class MethodType extends Type
     {
         return 'MethodType';
     }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 }
