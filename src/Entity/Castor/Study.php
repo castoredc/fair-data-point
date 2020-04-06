@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
+use App\Entity\Castor\Form\Field;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
 use App\Security\CastorUser;

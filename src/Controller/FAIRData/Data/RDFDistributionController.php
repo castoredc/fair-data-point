@@ -53,7 +53,7 @@ class RDFDistributionController extends FAIRDataController
             $records = $handledStamp->getResult();
 
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $distribution, $user))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $distribution, $catalog, $user))->last(HandledStamp::class);
             $turtle = $handledStamp->getResult();
 
             if ($request->query->getBoolean('download') === true) {

@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Entity\Castor\Data\InstanceDataCollection;
+use App\Entity\Castor\Data\RecordData;
+use App\Entity\Castor\Data\RecordDataCollection;
 use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
 use App\Entity\Castor\Data\SurveyData;
-use App\Entity\Castor\Field;
-use App\Entity\Castor\InstanceDataCollection;
+use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Instances\ReportInstance;
 use App\Entity\Castor\Instances\SurveyPackageInstance;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\RecordData;
-use App\Entity\Castor\RecordDataCollection;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
 use App\Exception\ErrorFetchingCastorData;

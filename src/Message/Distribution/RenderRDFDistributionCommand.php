@@ -29,6 +29,7 @@ class RenderRDFDistributionCommand
     {
         $this->records = $records;
         $this->distribution = $distribution;
+        $this->catalog = $catalog;
         $this->user = $user;
     }
 

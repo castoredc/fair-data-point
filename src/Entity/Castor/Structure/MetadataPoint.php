@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Entity\Castor\Structure;
 
 class MetadataPoint
 {

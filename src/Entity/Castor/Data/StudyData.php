@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Data;
 
-use App\Entity\Castor\FieldResult;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\RecordData;
 use App\Entity\Castor\Study;
 use Exception;
 

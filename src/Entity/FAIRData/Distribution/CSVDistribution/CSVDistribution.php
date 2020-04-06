@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution\RDFDistribution;
+namespace App\Entity\FAIRData\Distribution\CSVDistribution;
 
-use App\Entity\Castor\Field;
+use App\Entity\Castor\Form\Field;
 use App\Entity\FAIRData\Distribution\Distribution;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

@@ -5,7 +5,7 @@ namespace App\Message\Distribution;
 
 use App\Entity\Castor\Record;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Distribution\RDFDistribution\CSVDistribution;
+use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
 use App\Security\CastorUser;
 
 class RenderCSVDistributionCommand

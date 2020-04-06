@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\Castor\Field;
+use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
 use App\Entity\Castor\Study;
 use App\Exception\ErrorFetchingCastorData;
@@ -111,6 +111,11 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
     private function generateCsv(array $columns, array $data, string $delimiter = ',', string $enclosure = '"'): string
     {
         $handle = fopen('php://temp', 'r+');
+
+        if ($handle === false) {
+            return '';
+        }
+
         $contents = null;
 
         if (count($data) === 0) {
