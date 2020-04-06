@@ -12,15 +12,19 @@ class Field
     private $type;
 
     /** @var string|null */
+    private $label;
+
+    /** @var string|null */
     private $variableName;
 
     /** @var array<MetadataPoint> */
     private $metadata;
 
-    public function __construct(string $id, string $type, ?string $variableName)
+    public function __construct(string $id, string $type, ?string $label, ?string $variableName)
     {
         $this->id = $id;
         $this->type = $type;
+        $this->label = $label;
         $this->variableName = $variableName;
     }
 
@@ -32,6 +36,11 @@ class Field
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
     }
 
     public function getVariableName(): ?string
@@ -63,7 +72,8 @@ class Field
         $field = new Field(
             $data['field_id'],
             $data['field_type'],
-            $data['field_variable_name']
+            $data['field_label'] ?? null,
+            $data['field_variable_name'] ?? null,
         );
 
         $metadata = [];
