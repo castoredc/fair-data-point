@@ -19,10 +19,12 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Security\ApiUser;
 use App\Security\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use PHPUnit\Framework\MockObject\Api;
 use Throwable;
 use function json_decode;
 
@@ -196,6 +198,12 @@ class ApiClient
     {
         $this->token = $user->getToken();
         $this->server = $user->getServer();
+    }
+
+    public function useApiUser(ApiUser $user): void
+    {
+        $this->server = $user->getServer()->getUrl()->getValue();
+        $this->auth($user->getClientId(), $user->getClientSecret());
     }
 
     /**

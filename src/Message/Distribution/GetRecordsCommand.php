@@ -4,28 +4,39 @@ declare(strict_types=1);
 namespace App\Message\Distribution;
 
 use App\Entity\Castor\Study;
+use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Distribution\Distribution;
 use App\Security\CastorUser;
 
 class GetRecordsCommand
 {
-    /** @var Study */
-    private $study;
+    /** @var Distribution */
+    private $distribution;
 
-    /** @var CastorUser */
+    /** @var Catalog */
+    private $catalog;
+
+    /** @var CastorUser|null */
     private $user;
 
-    public function __construct(Study $study, CastorUser $user)
+    public function __construct(Distribution $distribution, Catalog $catalog, ?CastorUser $user)
     {
-        $this->study = $study;
+        $this->distribution = $distribution;
+        $this->catalog = $catalog;
         $this->user = $user;
     }
 
-    public function getStudy(): Study
+    public function getDistribution(): Distribution
     {
-        return $this->study;
+        return $this->distribution;
     }
 
-    public function getUser(): CastorUser
+    public function getCatalog(): Catalog
+    {
+        return $this->catalog;
+    }
+
+    public function getUser(): ?CastorUser
     {
         return $this->user;
     }

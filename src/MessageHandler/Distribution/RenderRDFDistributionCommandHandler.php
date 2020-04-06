@@ -8,6 +8,7 @@ use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
+use App\Type\DistributionAccessType;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Twig\Environment;
@@ -40,8 +41,14 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(RenderRDFDistributionCommand $message): string
     {
+        if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
+            $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
+        }
+        else {
+            $this->apiClient->setUser($message->getUser());
+        }
+        
         $template = $this->twig->createTemplate($message->getDistribution()->getTwig());
-        $this->apiClient->setUser($message->getUser());
         $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
 
         $return = '';
