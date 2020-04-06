@@ -13,7 +13,6 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordsCommand;
 use App\Message\Distribution\RenderCSVDistributionCommand;
-use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

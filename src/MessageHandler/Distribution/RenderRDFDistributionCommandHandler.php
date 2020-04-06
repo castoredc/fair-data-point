@@ -43,11 +43,10 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
     {
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
-        }
-        else {
+        } else {
             $this->apiClient->setUser($message->getUser());
         }
-        
+
         $template = $this->twig->createTemplate($message->getDistribution()->getTwig());
         $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
 

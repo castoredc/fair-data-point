@@ -55,8 +55,7 @@ class DistributionVoter extends Voter
 
     private function canAccessData(Distribution $distribution, TokenInterface $token): bool
     {
-        if ($distribution->getAccessRights() === DistributionAccessType::PUBLIC)
-        {
+        if ($distribution->getAccessRights() === DistributionAccessType::PUBLIC) {
             return true;
         }
 

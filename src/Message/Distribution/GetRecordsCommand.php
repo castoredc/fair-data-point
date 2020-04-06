@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Security\CastorUser;

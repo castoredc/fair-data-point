@@ -24,9 +24,8 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
     }
 
     /**
-     * @param GetRecordsCommand $message
-     *
      * @return Record[]
+     *
      * @throws ErrorFetchingCastorData
      * @throws NoAccessPermission
      * @throws NotFound
@@ -38,8 +37,7 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
 
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
-        }
-        else {
+        } else {
             $this->apiClient->setUser($message->getUser());
         }
 

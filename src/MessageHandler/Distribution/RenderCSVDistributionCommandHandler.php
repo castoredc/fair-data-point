@@ -16,6 +16,13 @@ use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function count;
+use function fclose;
+use function feof;
+use function fopen;
+use function fputcsv;
+use function fread;
+use function rewind;
 
 class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
 {
@@ -34,8 +41,7 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
     {
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
-        }
-        else {
+        } else {
             $this->apiClient->setUser($message->getUser());
         }
 
@@ -59,10 +65,11 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
         foreach ($message->getRecords() as $record) {
             $recordData = $this->renderRecord($fields, $columns, $study, $record);
 
-            if (count($recordData) > 0)
-            {
-                $data[] = $recordData;
+            if (count($recordData) <= 0) {
+                continue;
             }
+
+            $data[] = $recordData;
         }
 
         return $this->generateCsv($columns, $data);
@@ -98,16 +105,15 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
     }
 
     /**
-     * @param string[] $columns
-     * @param array<mixed>  $data
+     * @param string[]     $columns
+     * @param array<mixed> $data
      */
     private function generateCsv(array $columns, array $data, string $delimiter = ',', string $enclosure = '"'): string
     {
         $handle = fopen('php://temp', 'r+');
         $contents = null;
 
-        if (count($data) === 0)
-        {
+        if (count($data) === 0) {
             return '';
         }
 
@@ -119,7 +125,7 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
 
         rewind($handle);
 
-        while (!feof($handle)) {
+        while (! feof($handle)) {
             $contents .= fread($handle, 8192);
         }
 
