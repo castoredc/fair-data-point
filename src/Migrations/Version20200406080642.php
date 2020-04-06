@@ -22,7 +22,7 @@ final class Version20200406080642 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('DROP INDEX slug ON catalog');
-        $this->addSql('ALTER TABLE catalog DROP user_api, CHANGE homepage homepage VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:iri)\', CHANGE logo logo VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:iri)\'');
+        $this->addSql('ALTER TABLE catalog CHANGE homepage homepage VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:iri)\', CHANGE logo logo VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:iri)\'');
         $this->addSql('CREATE INDEX slug ON catalog (slug)');
         $this->addSql('DROP INDEX slug ON study');
         $this->addSql('ALTER TABLE study CHANGE created created DATETIME NOT NULL');
@@ -53,7 +53,7 @@ final class Version20200406080642 extends AbstractMigration
         $this->addSql('CREATE INDEX slug ON agent (slug(191))');
         $this->addSql('ALTER TABLE castor_server CHANGE url url VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`');
         $this->addSql('DROP INDEX slug ON catalog');
-        $this->addSql('ALTER TABLE catalog ADD user_api VARCHAR(190) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE homepage homepage VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE logo logo VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`');
+        $this->addSql('ALTER TABLE catalog CHANGE homepage homepage VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`, CHANGE logo logo VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`');
         $this->addSql('CREATE INDEX slug ON catalog (slug(191))');
         $this->addSql('DROP INDEX slug ON dataset');
         $this->addSql('ALTER TABLE dataset CHANGE landing_page landing_page VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`');
