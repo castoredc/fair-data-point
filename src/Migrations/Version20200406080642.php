@@ -21,7 +21,6 @@ final class Version20200406080642 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP INDEX slug ON catalog');
         $this->addSql('ALTER TABLE catalog CHANGE homepage homepage VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:iri)\', CHANGE logo logo VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:iri)\'');
         $this->addSql('CREATE INDEX slug ON catalog (slug)');
         $this->addSql('DROP INDEX slug ON study');
