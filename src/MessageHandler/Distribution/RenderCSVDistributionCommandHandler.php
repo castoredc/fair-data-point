@@ -46,13 +46,14 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
         }
 
         $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
-        $slugify = new Slugify();
+        $studyFields = $this->apiClient->getPhasesAndSteps($study, true)->getFields();
+        $slugify = new Slugify(['separator' => '_']);
 
         $data = [];
         $fields = [];
         $columns = [];
 
-        foreach ($study->getFields() as $field) {
+        foreach ($studyFields as $field) {
             /** @var Field $field */
             if (! $message->getDistribution()->isFieldIncluded($field)) {
                 continue;

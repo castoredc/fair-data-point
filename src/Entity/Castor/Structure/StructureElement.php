@@ -37,6 +37,11 @@ abstract class StructureElement
         $this->steps[] = $step;
     }
 
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
     /**
      * @return Step[]
      */

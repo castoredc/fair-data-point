@@ -43,7 +43,6 @@ class StructureCollection
     public function order(): void
     {
         $this->phases->order();
-        $this->phases->orderSteps();
         $this->reports->order();
         $this->surveys->order();
     }

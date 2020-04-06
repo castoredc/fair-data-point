@@ -5,6 +5,7 @@ namespace App\Entity\Castor\Form;
 
 use App\Entity\Castor\Structure\MetadataPoint;
 use App\Entity\Castor\Structure\Step\Step;
+use function boolval;
 
 class Field
 {
@@ -248,8 +249,8 @@ class Field
             $data['field_label'] ?? null,
             $data['field_number'] ?? null,
             $data['field_variable_name'] ?? null,
-            $data['field_required'] ?? null,
-            $data['field_hidden'] ?? null,
+            boolval($data['field_required']) ?? null,
+            boolval($data['field_hidden']) ?? null,
             $data['field_info'] ?? null,
             $data['field_units'] ?? null,
             $data['parent_id'] ?? null,

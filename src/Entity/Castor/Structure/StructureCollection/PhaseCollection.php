@@ -8,14 +8,6 @@ use function uasort;
 
 class PhaseCollection extends StructureElementCollection
 {
-    public function orderSteps(): void
-    {
-        foreach ($this->elements as $phase) {
-            /** @var Phase $phase */
-            $phase->orderSteps();
-        }
-    }
-
     public function order(): void
     {
         uasort($this->elements, static function (Phase $a, Phase $b) {
@@ -26,8 +18,10 @@ class PhaseCollection extends StructureElementCollection
             return $a->getPosition() < $b->getPosition() ? -1 : 1;
         });
 
-        foreach ($this->elements as $element) {
-            $element->orderFieldsInSteps();
+        foreach ($this->elements as $phase) {
+            /** @var Phase $phase */
+            $phase->orderSteps();
+            $phase->orderFieldsInSteps();
         }
     }
 }
