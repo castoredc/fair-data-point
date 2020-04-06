@@ -40,7 +40,7 @@ class StudyType extends Type
         return 'StudyType';
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }
