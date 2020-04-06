@@ -39,4 +39,9 @@ class RecruitmentStatusType extends Type
     {
         return 'RecruitmentStatusType';
     }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
+    {
+        return true;
+    }
 }
