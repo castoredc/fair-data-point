@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -12,12 +11,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200406084224 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
@@ -28,7 +27,7 @@ final class Version20200406084224 extends AbstractMigration
         $this->addSql('ALTER TABLE distribution_csv_elements ADD CONSTRAINT FK_BF23FC986EB6DDB5 FOREIGN KEY (distribution_id) REFERENCES distribution_csv (id)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');

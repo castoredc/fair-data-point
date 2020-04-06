@@ -17,9 +17,6 @@ class CSVDistributionElementVariableName extends CSVDistributionElement
      */
     private $variableName;
 
-    /**
-     * @return string
-     */
     public function getVariableName(): string
     {
         return $this->variableName;
