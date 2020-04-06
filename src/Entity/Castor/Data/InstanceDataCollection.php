@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Entity\Castor\Data;
 
 use App\Entity\Castor\Instances\Instance;
+use App\Entity\Castor\Record;
+use App\Entity\Castor\Study;
 use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class InstanceDataCollection extends RecordData

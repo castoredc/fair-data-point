@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Entity\Castor\Data;
 
-use App\Entity\Castor\Data\ReportData;
-use App\Entity\Castor\Data\StudyData;
-use App\Entity\Castor\Data\SurveyData;
+use App\Entity\Castor\Record;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use function is_a;
 

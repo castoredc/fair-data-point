@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
+use App\Security\ApiUser;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -132,6 +133,14 @@ class Catalog
      * @var bool
      */
     private $submissionAccessesData = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\ApiUser")
+     * @ORM\JoinColumn(name="user_api", referencedColumnName="id")
+     *
+     * @var ApiUser|null
+     */
+    private $apiUser;
 
     /**
      * @param Collection<string, Agent> $publishers
@@ -341,5 +350,10 @@ class Catalog
     public function isSubmissionAccessingData(): bool
     {
         return $this->submissionAccessesData;
+    }
+
+    public function getApiUser(): ?ApiUser
+    {
+        return $this->apiUser;
     }
 }

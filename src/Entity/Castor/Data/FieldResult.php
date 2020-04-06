@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Entity\Castor\Data;
 
+use App\Entity\Castor\Form\Field;
+use App\Entity\Castor\Record;
+use App\Entity\Castor\Structure\MetadataPoint;
 use DateTime;
 use Exception;
 

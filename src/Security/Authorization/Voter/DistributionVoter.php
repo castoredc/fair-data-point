@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
-use App\Entity\Castor\Study;
+use App\Entity\FAIRData\Distribution\Distribution;
 use App\Security\CastorUser;
+use App\Type\DistributionAccessType;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use function in_array;
 
-class StudyVoter extends Voter
+class DistributionVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
@@ -31,45 +32,39 @@ class StudyVoter extends Voter
             return false;
         }
 
-        return $subject instanceof Study;
+        return $subject instanceof Distribution;
     }
 
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        // you know $subject is a Post object, thanks to `supports()`
-        /** @var Study $study */
-        $study = $subject;
+        /** @var Distribution $distribution */
+        $distribution = $subject;
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($study, $token);
+                return $this->security->isGranted(self::VIEW, $distribution->getDataset());
             case self::EDIT:
-                return $this->canEdit($study, $token);
+                return $this->security->isGranted(self::EDIT, $distribution->getDataset());
+            case self::ACCESS_DATA:
+                return $this->canAccessData($distribution, $token);
         }
 
         return false;
     }
 
-    private function canView(Study $study, TokenInterface $token): bool
+    private function canAccessData(Distribution $distribution, TokenInterface $token): bool
     {
-        if ($this->canEdit($study, $token)) {
+        if ($distribution->getAccessRights() === DistributionAccessType::PUBLIC) {
             return true;
         }
 
-        return $study->getDataset()->isPublished();
-    }
-
-    private function canEdit(Study $study, TokenInterface $token): bool
-    {
         $user = $token->getUser();
+
         if (! $user instanceof CastorUser) {
             return false;
         }
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
 
-        return in_array($study->getId(), $user->getStudies(), true);
+        return in_array($distribution->getDataset()->getStudy()->getId(), $user->getStudies(), true);
     }
 }

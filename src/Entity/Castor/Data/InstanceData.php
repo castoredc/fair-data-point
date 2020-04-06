@@ -1,21 +1,28 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Entity\Castor\Data;
 
+use App\Entity\Castor\Instances\Instance;
+use App\Entity\Castor\Record;
 use Doctrine\Common\Collections\ArrayCollection;
 
-abstract class RecordData
+class InstanceData extends RecordData
 {
     /** @var Record */
     protected $record;
 
+    /** @var Instance */
+    protected $instance;
+
     /** @var ArrayCollection<string, FieldResult> */
     private $data;
 
-    public function __construct(Record $record)
+    public function __construct(Record $record, Instance $instance)
     {
-        $this->record = $record;
+        parent::__construct($record);
+
+        $this->instance = $instance;
         $this->data = new ArrayCollection();
     }
 
@@ -27,6 +34,11 @@ abstract class RecordData
     public function getRecord(): Record
     {
         return $this->record;
+    }
+
+    public function getInstance(): Instance
+    {
+        return $this->instance;
     }
 
     public function addData(FieldResult $fieldResult): void

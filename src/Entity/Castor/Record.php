@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor;
 
+use App\Entity\Castor\Data\RecordDataCollection;
+
 class Record
 {
     /** @var string */

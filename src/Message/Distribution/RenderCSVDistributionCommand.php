@@ -3,13 +3,17 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
+use App\Entity\Castor\Record;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
 use App\Security\CastorUser;
 
-class GetRecordsCommand
+class RenderCSVDistributionCommand
 {
-    /** @var Distribution */
+    /** @var Record[] */
+    private $records;
+
+    /** @var CSVDistribution */
     private $distribution;
 
     /** @var Catalog */
@@ -18,14 +22,26 @@ class GetRecordsCommand
     /** @var CastorUser|null */
     private $user;
 
-    public function __construct(Distribution $distribution, Catalog $catalog, ?CastorUser $user)
+    /**
+     * @param Record[] $records
+     */
+    public function __construct(array $records, CSVDistribution $distribution, Catalog $catalog, ?CastorUser $user)
     {
+        $this->records = $records;
         $this->distribution = $distribution;
         $this->catalog = $catalog;
         $this->user = $user;
     }
 
-    public function getDistribution(): Distribution
+    /**
+     * @return Record[]
+     */
+    public function getRecords(): array
+    {
+        return $this->records;
+    }
+
+    public function getDistribution(): CSVDistribution
     {
         return $this->distribution;
     }
