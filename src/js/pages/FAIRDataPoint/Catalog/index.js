@@ -192,10 +192,10 @@ export default class Catalog extends Component {
             </Row>}
             {this.state.showDatasets && <div>
                 <Row className="DatasetsHeader">
-                    <Col sm={headerWidth} className="DatasetsHeaderTitle">
+                    <Col md={headerWidth} className="DatasetsHeaderTitle">
                         <h2>Studies</h2>
                     </Col>
-                    <Col sm={buttonWidth} className="DatasetHeaderButtons">
+                    <Col md={buttonWidth} className="DatasetHeaderButtons">
                         {this.state.showMap && <ButtonGroup>
                             <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
                             <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
