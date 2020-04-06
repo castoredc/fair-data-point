@@ -116,20 +116,11 @@
         }
 
         .InformationRow {
-            overflow: hidden;
             margin: 0;
 
             .Children {
                 padding-top: 40px;
                 padding-bottom: 25px;
-
-                & > .row {
-                    margin: 0 -50px;
-
-                    & > div {
-                        padding: 0 50px;
-                    }
-                }
 
                 .InformationCol {
                     .InformationDescription {
