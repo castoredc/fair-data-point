@@ -19,12 +19,6 @@ class FAIRDataPointController extends FAIRDataController
      */
     public function index(Request $request, MessageBusInterface $bus): Response
     {
-        if ($this->acceptsHttp($request)) {
-            return $this->render(
-                'react.html.twig'
-            );
-        }
-
         $envelope = $bus->dispatch(new GetFAIRDataPointCommand());
 
         /** @var HandledStamp $handledStamp */
@@ -32,6 +26,16 @@ class FAIRDataPointController extends FAIRDataController
 
         /** @var FAIRDataPoint $fdp */
         $fdp = $handledStamp->getResult();
+
+        if ($this->acceptsHttp($request)) {
+            return $this->render(
+                'react.html.twig',
+                [
+                    'title' => $fdp->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $fdp->getDescription()->getTextByLanguageString('en')->getText(),
+                ],
+            );
+        }
 
         return new Response(
             (new FAIRDataPointGraphResource($fdp))->toGraph()->serialise('turtle'),

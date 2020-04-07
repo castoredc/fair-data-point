@@ -19,7 +19,8 @@ class LoginController extends AbstractController
     public function react(): Response
     {
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => 'FAIR Data Point | Log in']
         );
     }
 
@@ -34,7 +35,8 @@ class LoginController extends AbstractController
         }
 
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Log in']
         );
     }
 

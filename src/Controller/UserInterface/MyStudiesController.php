@@ -21,7 +21,8 @@ class MyStudiesController extends AbstractController
         $this->denyAccessUnlessGranted('add', $catalog);
 
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Add study']
         );
     }
 
@@ -39,7 +40,8 @@ class MyStudiesController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $study);
 
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Add metadata']
         );
     }
 }

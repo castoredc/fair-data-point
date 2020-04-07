@@ -87,9 +87,11 @@ export default class Login extends Component {
             return <LoadingScreen showLoading={true}/>;
         }
 
+        const brand = this.state.catalog !== null ? localizedText(this.state.catalog.name, 'en') : 'FAIR Data Point';
+
         return (
             <div className="Login TopLevelContainer">
-                <DocumentTitle title="Log in" />
+                <DocumentTitle title={brand + ' | Log in'} />
 
                 <div className="Skip"/>
 
@@ -100,17 +102,17 @@ export default class Login extends Component {
                     </div>
 
                     {this.state.catalog !== null ? <div className="LoginBrand">
-                        <h1>{localizedText(this.state.catalog.name, 'en')}</h1>
+                        <h1>{brand}</h1>
 
                         <div className="LoginText">
-                            <p>To enter your study in the {localizedText(this.state.catalog.name, 'en')} you must be a registered Castor user.
+                            <p>To enter your study in the {brand} you must be a registered Castor user.
                                 Please log in with your Castor EDC account and allow the application to access your information.</p>
                             {this.state.catalog.accessingData === false && <p>
                                 The application only accesses high-level information from your study and will not download nor upload any data to your study.
                             </p>}
                         </div>
                     </div> : <div>
-                        <h1>FAIR Data Point</h1>
+                        <h1>{brand}</h1>
 
                         <div className="LoginText">
                             You need to be a registered Castor user in order to access this page.
