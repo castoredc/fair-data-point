@@ -45,7 +45,6 @@ export default class AddStudy extends Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response && typeof error.response.data.message !== "undefined") {
                     this.setState({
                         isLoading:    false,
@@ -74,7 +73,6 @@ export default class AddStudy extends Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response && typeof error.response.data.message !== "undefined") {
                     this.setState({
                         isLoading:    false,

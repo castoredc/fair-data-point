@@ -8,6 +8,7 @@ use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudyType;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use function boolval;
 
 class DatasetApiRequest extends SingleApiRequest
 {
@@ -47,6 +48,12 @@ class DatasetApiRequest extends SingleApiRequest
      */
     private $page;
 
+    /**
+     * @var bool
+     * @Assert\Type("boolean")
+     */
+    private $admin;
+
     protected function parse(): void
     {
         $this->search = $this->getFromQuery('search');
@@ -55,6 +62,7 @@ class DatasetApiRequest extends SingleApiRequest
         $this->country = $this->getFromQuery('country');
         $this->perPage = (int) $this->getFromQuery('perPage');
         $this->page = (int) $this->getFromQuery('page');
+        $this->admin = boolval($this->getFromQuery('admin'));
     }
 
     public function getSearch(): ?string
@@ -88,5 +96,10 @@ class DatasetApiRequest extends SingleApiRequest
     public function getPage(): int
     {
         return $this->page;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->admin;
     }
 }
