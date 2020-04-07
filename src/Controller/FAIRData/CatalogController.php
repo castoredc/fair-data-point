@@ -22,7 +22,11 @@ class CatalogController extends FAIRDataController
 
         if ($this->acceptsHttp($request)) {
             return $this->render(
-                'react.html.twig'
+                'react.html.twig',
+                [
+                    'title' => $catalog->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $catalog->getDescription()->getTextByLanguageString('en')->getText()
+                ],
             );
         }
 

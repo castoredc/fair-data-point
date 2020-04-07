@@ -20,7 +20,8 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => 'Admin | Catalogs']
         );
     }
 
@@ -34,7 +35,8 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => 'Admin | ' . $catalog->getTitle()->getTextByLanguageString('en')->getText()]
         );
     }
 
@@ -56,7 +58,8 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render(
-            'react.html.twig'
+            'react.html.twig',
+            ['title' => 'Admin']
         );
     }
 }

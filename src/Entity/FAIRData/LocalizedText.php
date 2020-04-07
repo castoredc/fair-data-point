@@ -77,4 +77,17 @@ class LocalizedText
 
         return $array;
     }
+
+    public function getTextByLanguageString(string $language): ?LocalizedTextItem
+    {
+        foreach ($this->texts as $text) {
+            /** @var LocalizedTextItem $text */
+            if($text->getLanguage()->getCode() === $language)
+            {
+                return $text;
+            }
+        }
+
+        return null;
+    }
 }

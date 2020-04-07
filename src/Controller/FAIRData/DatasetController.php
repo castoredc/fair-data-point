@@ -27,8 +27,13 @@ class DatasetController extends FAIRDataController
         }
 
         if ($this->acceptsHttp($request)) {
+            $metadata = $dataset->getStudy()->getLatestMetadata();
             return $this->render(
-                'react.html.twig'
+                'react.html.twig',
+                [
+                    'title' => $metadata->getBriefName(),
+                    'description' => $metadata->getBriefSummary()
+                ],
             );
         }
 
