@@ -25,7 +25,7 @@ class DatasetRepository extends EntityRepository
      *
      * @return mixed
      */
-    public function findDatasets(Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?int $perPage, ?int $page)
+    public function findDatasets(Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?int $perPage, ?int $page, bool $admin)
     {
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
 
@@ -37,8 +37,11 @@ class DatasetRepository extends EntityRepository
                    ->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
                    ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
                    ->setParameter('catalog_id', $catalog->getId())
-                   ->where('metadata2.id IS NULL')
-                   ->andWhere('dataset.isPublished = 1');
+                   ->where('metadata2.id IS NULL');
+
+        if (! $admin) {
+            $qb->andWhere('dataset.isPublished = 1');
+        }
 
         if ($search !== null) {
             $qb->andWhere($qb->expr()->orX(

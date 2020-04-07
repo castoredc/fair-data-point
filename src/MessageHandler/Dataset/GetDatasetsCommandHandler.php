@@ -25,6 +25,6 @@ class GetDatasetsCommandHandler implements MessageHandlerInterface
         /** @var DatasetRepository $datasetRepository */
         $datasetRepository = $this->em->getRepository(Dataset::class);
 
-        return $datasetRepository->findDatasets($message->getCatalog(), $message->getSearch(), $message->getStudyType(), $message->getMethodType(), $message->getCountry(), null, null);
+        return $datasetRepository->findDatasets($message->getCatalog(), $message->getSearch(), $message->getStudyType(), $message->getMethodType(), $message->getCountry(), null, null, false);
     }
 }

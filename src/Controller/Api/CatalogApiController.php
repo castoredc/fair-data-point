@@ -11,6 +11,7 @@ use App\Api\Resource\Dataset\DatasetsMapApiResource;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Message\Catalog\GetCatalogsCommand;
+use App\Message\Dataset\GetAdminPaginatedDatasetsCommand;
 use App\Message\Dataset\GetDatasetsCommand;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -71,8 +72,8 @@ class CatalogApiController extends ApiController
             /** @var DatasetApiRequest $parsed */
             $parsed = $this->parseRequest(DatasetApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(
-                new GetPaginatedDatasetsCommand(
+            if ($parsed->isAdmin() && $this->isGranted('ROLE_ADMIN')) {
+                $command = new GetAdminPaginatedDatasetsCommand(
                     $catalog,
                     $parsed->getSearch(),
                     $parsed->getStudyType(),
@@ -80,8 +81,20 @@ class CatalogApiController extends ApiController
                     $parsed->getCountry(),
                     $parsed->getPerPage(),
                     $parsed->getPage()
-                )
-            );
+                );
+            } else {
+                $command = new GetPaginatedDatasetsCommand(
+                    $catalog,
+                    $parsed->getSearch(),
+                    $parsed->getStudyType(),
+                    $parsed->getMethodType(),
+                    $parsed->getCountry(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                );
+            }
+
+            $envelope = $bus->dispatch($command);
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
