@@ -3,7 +3,7 @@ import axios from "axios/index";
 
 import {Col, Row} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
-import {localizedText} from "../../../util";
+import {classNames, localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
 import AdminPage from "../../../components/AdminPage";
@@ -14,6 +14,8 @@ import ToastContent from "../../../components/ToastContent";
 import Pagination from "react-bootstrap/Pagination";
 import Filters from "../../../components/Filters";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Icon from "../../../components/Icon";
 
 export default class SingleCatalog extends Component {
     constructor(props) {
@@ -26,9 +28,10 @@ export default class SingleCatalog extends Component {
             catalog:           null,
             datasets:          [],
             filters:           {},
-            perPage:           10,
+            perPage:           25,
             pages:             null,
             page:              null,
+            displayFilter:     false,
         };
 
         this.datasetsRef = React.createRef();
@@ -79,6 +82,7 @@ export default class SingleCatalog extends Component {
         }
 
         newFilters['perPage'] = perPage;
+        newFilters['admin'] = true;
 
         this.setState({
             isLoadingDatasets: true,
@@ -142,6 +146,12 @@ export default class SingleCatalog extends Component {
         return items;
     };
 
+    toggleFilter = () => {
+        this.setState({
+            displayFilter: ! this.state.displayFilter
+        });
+    };
+
     render() {
         const {pages} = this.state;
 
@@ -163,42 +173,56 @@ export default class SingleCatalog extends Component {
                         <LinkContainer to={'/admin/' + this.props.match.params.catalog + '/study/add'}>
                             <Button variant="primary">Add study</Button>
                         </LinkContainer>
-                    </div>
-                    <Container ref={this.datasetsRef}>
-                        <Row>
-                            <Col md={8}>
-                                {this.state.isLoadingDatasets ? <Row>
-                                    <Col md={12}>
-                                        <InlineLoader/>
-                                    </Col>
-                                </Row> : <div>
-                                    {this.state.datasets.length > 0 ? <Container>
-                                        {this.state.datasets.map((item, index) => {
-                                                return <AdminStudyListItem key={index}
-                                                                           id={item.studyId}
-                                                                           catalog={this.props.match.params.catalog}
-                                                                           name={localizedText(item.title, 'en')}
-                                                                           published={item.published}
-                                                                           slug={item.slug}
-                                                />
-                                            },
-                                        )}
 
-                                        {pages > 1 && <div className="Pagination">
-                                            <Pagination>
-                                                {this.getPagination()}
-                                            </Pagination>
-                                        </div>}
-                                        </Container> : <div className="NoResults">No studies found.</div>}
-                                </div>}
-                            </Col>
-                            <Col md={4} className="Filters">
-                                <Filters catalog={this.props.match.params.catalog}
-                                         onFilter={(filter) => this.handleFilter(filter)}
-                                />
-                            </Col>
-                        </Row>
-                    </Container>
+                        <ButtonGroup className={classNames('FilterButton', this.state.displayList && 'Hidden')}>
+                            <Button variant="outline-primary" onClick={this.toggleFilter} active={this.state.displayFilter}>
+                                <Icon type="filters" /> Filters
+                            </Button>
+                        </ButtonGroup>
+                    </div>
+                </Col>
+            </Row>
+            <Row className="Datasets" ref={this.datasetsRef}>
+                <Col md={12}>
+                    {this.state.isLoadingDatasets ? <Row>
+                        <Col md={12}>
+                            <InlineLoader/>
+                        </Col>
+                    </Row> : <div>
+                        {this.state.datasets.length > 0 ? <Container>
+                            <Row className="ListItem AdminStudyListItem AdminStudyListItemHeader">
+                                <Col md={6}>Name</Col>
+                                <Col md={1}><small>Consent</small> Social</Col>
+                                <Col md={1}><small>Consent</small> Publish</Col>
+                                <Col md={1}>Published</Col>
+                                <Col md={3} />
+                            </Row>
+
+                            {this.state.datasets.map((item, index) => {
+                                    return <AdminStudyListItem key={index}
+                                                               id={item.studyId}
+                                                               catalog={this.props.match.params.catalog}
+                                                               name={localizedText(item.title, 'en')}
+                                                               published={item.published}
+                                                               slug={item.slug}
+                                                               consent={item.consent}
+                                    />
+                                },
+                            )}
+
+                            {pages > 1 && <div className="Pagination">
+                                <Pagination>
+                                    {this.getPagination()}
+                                </Pagination>
+                            </div>}
+                            </Container> : <div className="NoResults">No studies found.</div>}
+                    </div>}
+                </Col>
+                <Col md={4} className={classNames('Filters Overlay',
+                                                        ! this.state.displayFilter && 'Hidden')}>
+                    <Filters catalog={this.props.match.params.catalog}
+                             onFilter={(filter) => this.handleFilter(filter)}
+                    />
                 </Col>
             </Row>
         </AdminPage>;

@@ -56,11 +56,41 @@
 }
 
 .AdminStudyListItem {
-  padding: 0 16px;
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+  border-top: 0;
+
+  & > div {
+    border-right: solid 1px $neutral-40;
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  &.AdminStudyListItemHeader {
+    background: $neutral-30;
+    border-top: solid 1px $neutral-40;
+    color: $neutral-800;
+    font-weight: 600;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .AdminStudyListItemTitle a, .AttributeCheckmark a {
+    display: block;
+    padding: 12px 0;
+  }
+
+  .AttributeCheckmark {
+    text-align: center;
+  }
 
   .AdminStudyListItemTitle a {
-    display: block;
-    padding: 20px 0;
     font-weight: 600;
     font-size: 16px;
     color: $neutral-800;
@@ -79,7 +109,7 @@
     .btn {
       font-weight: 700;
       color: $neutral-700;
-      padding: 20px 20px;
+      padding: 12px 20px;
 
       .Icon {
         margin-right: 5px;

@@ -14,6 +14,7 @@ import filters from './filters.svg'
 import flagNL from './flag-nl.svg'
 import flagUK from './flag-uk.svg'
 import flagUS from './flag-us.svg'
+import checkmark from './checkmark.svg';
 
 export default {
     add,
@@ -31,5 +32,6 @@ export default {
     filters,
     flagNL,
     flagUK,
-    flagUS
+    flagUS,
+    checkmark
 };
