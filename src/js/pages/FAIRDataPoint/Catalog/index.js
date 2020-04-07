@@ -14,8 +14,8 @@ import Filters from "../../../components/Filters";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
+import Pagination from 'react-bootstrap/Pagination'
 import DatasetMap from "../../../components/DatasetMap";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Icon from "../../../components/Icon";
 
 export default class Catalog extends Component {
@@ -37,7 +37,11 @@ export default class Catalog extends Component {
             datasets:           [],
             map:                [],
             displayList:        true,
-            displayFilter:      true
+            displayFilter:      true,
+            filters:            {},
+            perPage:            10,
+            pages:              null,
+            page:               null
         };
     }
 
@@ -88,17 +92,31 @@ export default class Catalog extends Component {
     };
 
     getDatasets = (filters) => {
+        const { perPage } = this.state;
+
+        let newFilters = filters;
+
+        if(newFilters === false)
+        {
+            newFilters = {page: 1};
+        }
+
+        newFilters['perPage'] = perPage;
+
         this.setState({
             isLoadingDatasets: true
         });
 
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset', { params: filters })
+        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset', { params: newFilters })
             .then((response) => {
                 this.setState({
-                    datasets: response.data,
+                    datasets: response.data.datasets,
+                    perPage: response.data.perPage,
+                    pages: response.data.pages,
+                    page: response.data.page,
                     isLoadingDatasets: false,
                     hasLoadedDatasets: true,
-                    showDatasets: (filters === false && response.data.length > 0 || filters !== false)
+                    showDatasets: (filters === false && response.data.datasets.length > 0 || filters !== false)
                 });
             })
             .catch((error) => {
@@ -136,8 +154,23 @@ export default class Catalog extends Component {
     };
 
     handleFilter = (filters) => {
-        this.getDatasets(filters);
+        this.setState({ filters: filters });
+
+        let newFilters = filters;
+        newFilters['page'] = 1;
+
+        this.getDatasets(newFilters);
         this.getMap(filters);
+    };
+
+    changePage = (page) => {
+        const { filters } = this.state;
+        this.setState({ page: page });
+
+        let newFilters = filters;
+        newFilters['page'] = page;
+
+        this.getDatasets(newFilters);
     };
 
     changeView = (displayList) => {
@@ -153,7 +186,25 @@ export default class Catalog extends Component {
         });
     };
 
+    getPagination = () => {
+        const { page, pages } = this.state;
+
+        let items = [];
+
+        for (let number = 1; number <= pages; number++) {
+            items.push(
+                <Pagination.Item key={number} active={number === page} onClick={() => {this.changePage(number)}}>
+                    {number}
+                </Pagination.Item>,
+            );
+        }
+
+        return items;
+    };
+
     render() {
+        const { pages } = this.state;
+
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
         const listWidth = this.state.displayList ? 8 : 12;
@@ -207,44 +258,52 @@ export default class Catalog extends Component {
                         </ButtonGroup>
                     </Col>
                 </Row>
-            <StickyContainer>
-                <Row className="Datasets">
-                    <Col md={listWidth} className="InformationCol">
-                        {(this.state.isLoadingDatasets && this.state.displayList || this.state.isLoadingMap && ! this.state.displayList) && <InlineLoader overlay={true} />}
-                        {this.state.displayList ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
-                            {this.state.datasets.length > 0 ? this.state.datasets.map((item, index) => {
-                                return <StudyListItem key={index}
-                                                      newWindow={embedded}
-                                                      link={item.relative_url}
-                                                      logo={item.logo}
-                                                      name={localizedText(item.title, 'en')}
-                                                      description={localizedText(item.shortDescription, 'en')}
-                                                      recruitmentStatus={item.recruitmentStatus}
-                                                      intervention={item.intervention}
-                                                      condition={item.condition}
-                                />
-                            }) : <div className="NoResults">No studies found.</div>}
-                        </div> : <div className={classNames('Map', this.state.isLoadingMap && 'Loading')}>
-                            <DatasetMap datasets={this.state.map} />
-                        </div>}
-                    </Col>
-                    <Col md={4}
-                         className={classNames('Filters',
-                             !this.state.displayList && 'StickyDisabled',
-                             ! this.state.displayFilter && 'Hidden',
-                             (! this.state.displayList && this.state.displayFilter) && 'Overlay')}>
-                        <Sticky>
-                            {({style, isSticky}) => (
-                                  <Filters className={classNames(isSticky && 'Sticky')}
-                                           style={style}
-                                           catalog={this.props.match.params.catalog}
-                                           onFilter={(filter) => this.handleFilter(filter)}
-                                  />
-                            )}
-                        </Sticky>
-                    </Col>
-                </Row>
-            </StickyContainer>
+                <StickyContainer>
+                    <Row className="Datasets">
+                        <Col md={listWidth} className="InformationCol">
+                            {(this.state.isLoadingDatasets && this.state.displayList || this.state.isLoadingMap && ! this.state.displayList) && <InlineLoader overlay={true} />}
+                            {this.state.displayList ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
+                                {this.state.datasets.length > 0 ? <div>
+                                    {this.state.datasets.map((item, index) => {
+                                        return <StudyListItem key={index}
+                                                              newWindow={embedded}
+                                                              link={item.relative_url}
+                                                              logo={item.logo}
+                                                              name={localizedText(item.title, 'en')}
+                                                              description={localizedText(item.shortDescription, 'en')}
+                                                              recruitmentStatus={item.recruitmentStatus}
+                                                              intervention={item.intervention}
+                                                              condition={item.condition}
+                                        />
+                                    })}
+
+                                    {pages > 1 && <div className="Pagination">
+                                        <Pagination>
+                                            {this.getPagination()}
+                                        </Pagination>
+                                    </div>}
+                                </div> : <div className="NoResults">No studies found.</div>}
+                            </div> : <div className={classNames('Map', this.state.isLoadingMap && 'Loading')}>
+                                <DatasetMap datasets={this.state.map} />
+                            </div>}
+                        </Col>
+                        <Col md={4}
+                             className={classNames('Filters',
+                                 ! this.state.displayList && 'StickyDisabled',
+                                 ! this.state.displayFilter && 'Hidden',
+                                 (! this.state.displayList && this.state.displayFilter) && 'Overlay')}>
+                            <Sticky>
+                                {({style, isSticky}) => (
+                                      <Filters className={classNames(isSticky && 'Sticky')}
+                                               style={style}
+                                               catalog={this.props.match.params.catalog}
+                                               onFilter={(filter) => this.handleFilter(filter)}
+                                      />
+                                )}
+                            </Sticky>
+                        </Col>
+                    </Row>
+                </StickyContainer>
             </div>}
         </FAIRDataInformation>;
     }
