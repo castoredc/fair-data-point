@@ -82,8 +82,7 @@ class LocalizedText
     {
         foreach ($this->texts as $text) {
             /** @var LocalizedTextItem $text */
-            if($text->getLanguage()->getCode() === $language)
-            {
+            if ($text->getLanguage()->getCode() === $language) {
                 return $text;
             }
         }

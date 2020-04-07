@@ -19,7 +19,6 @@ class FAIRDataPointController extends FAIRDataController
      */
     public function index(Request $request, MessageBusInterface $bus): Response
     {
-
         $envelope = $bus->dispatch(new GetFAIRDataPointCommand());
 
         /** @var HandledStamp $handledStamp */
@@ -33,7 +32,7 @@ class FAIRDataPointController extends FAIRDataController
                 'react.html.twig',
                 [
                     'title' => $fdp->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $fdp->getDescription()->getTextByLanguageString('en')->getText()
+                    'description' => $fdp->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }

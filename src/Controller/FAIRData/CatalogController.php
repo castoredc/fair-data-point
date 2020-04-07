@@ -25,7 +25,7 @@ class CatalogController extends FAIRDataController
                 'react.html.twig',
                 [
                     'title' => $catalog->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $catalog->getDescription()->getTextByLanguageString('en')->getText()
+                    'description' => $catalog->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }
