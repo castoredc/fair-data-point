@@ -17,13 +17,13 @@ export default class AdminStudyListItem extends Component {
                 </Link>
             </Col>
             <Col md={1} className="AttributeCheckmark">
-                {consent.socialMedia && <Icon type="checkmark" />}
+                {consent.socialMedia && <Link to={'/fdp/' + catalog + '/' + slug} target="_blank"><Icon type="checkmark" /></Link>}
             </Col>
             <Col md={1} className="AttributeCheckmark">
-                {consent.publish && <Icon type="checkmark" />}
+                {consent.publish && <Link to={'/fdp/' + catalog + '/' + slug} target="_blank"><Icon type="checkmark" /></Link>}
             </Col>
             <Col md={1} className="AttributeCheckmark">
-                {published && <Icon type="checkmark" />}
+                {published && <Link to={'/fdp/' + catalog + '/' + slug} target="_blank"><Icon type="checkmark" /></Link>}
             </Col>
             <Col md={3} className="AdminStudyListItemButtons">
                 <Link to={'/fdp/' + catalog + '/' + slug} target="_blank">
