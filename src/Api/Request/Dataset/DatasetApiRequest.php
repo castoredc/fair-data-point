@@ -35,12 +35,26 @@ class DatasetApiRequest extends SingleApiRequest
      */
     private $country;
 
+    /**
+     * @var int
+     * @Assert\Type("integer")
+     */
+    private $perPage;
+
+    /**
+     * @var int
+     * @Assert\Type("integer")
+     */
+    private $page;
+
     protected function parse(): void
     {
         $this->search = $this->getFromQuery('search');
         $this->studyType = $this->getFromQuery('studyType');
         $this->methodType = $this->getFromQuery('methodType');
         $this->country = $this->getFromQuery('country');
+        $this->perPage = (int) $this->getFromQuery('perPage');
+        $this->page = (int) $this->getFromQuery('page');
     }
 
     public function getSearch(): ?string
@@ -64,5 +78,15 @@ class DatasetApiRequest extends SingleApiRequest
     public function getCountry(): ?array
     {
         return $this->country;
+    }
+
+    public function getPerPage(): int
+    {
+        return $this->perPage;
+    }
+
+    public function getPage(): int
+    {
+        return $this->page;
     }
 }
