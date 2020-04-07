@@ -43,6 +43,8 @@ export default class Catalog extends Component {
             pages:              null,
             page:               null
         };
+
+        this.datasetsRef = React.createRef();
     }
 
     componentDidMount() {
@@ -99,6 +101,10 @@ export default class Catalog extends Component {
         if(newFilters === false)
         {
             newFilters = {page: 1};
+        }
+        else
+        {
+            window.scrollTo(0, this.datasetsRef.current.offsetTop - 35);
         }
 
         newFilters['perPage'] = perPage;
@@ -171,7 +177,6 @@ export default class Catalog extends Component {
         newFilters['page'] = page;
 
         this.getDatasets(newFilters);
-        window.scrollTo(0, 0);
     };
 
     changeView = (displayList) => {
@@ -243,7 +248,7 @@ export default class Catalog extends Component {
                 </Col>
             </Row>}
             {this.state.showDatasets && <div>
-                <Row className="DatasetsHeader">
+                <Row className="DatasetsHeader" ref={this.datasetsRef}>
                     <Col md={headerWidth} className="DatasetsHeaderTitle">
                         <h2>Studies</h2>
                     </Col>
