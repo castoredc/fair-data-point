@@ -171,6 +171,7 @@ export default class Catalog extends Component {
         newFilters['page'] = page;
 
         this.getDatasets(newFilters);
+        window.scrollTo(0, 0);
     };
 
     changeView = (displayList) => {
