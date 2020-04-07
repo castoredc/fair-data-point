@@ -57,7 +57,20 @@ class CatalogApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
-        return new JsonResponse((new DatasetsFilterApiResource($catalog->getDatasets($this->isGranted('edit', $catalog))->toArray()))->toArray());
+        try {
+            if ($this->isGranted('ROLE_ADMIN')) {
+                $datasets = $catalog->getDatasets($this->isGranted('edit', $catalog))->toArray();
+            } else {
+                $envelope = $bus->dispatch(new GetDatasetsCommand($catalog, null, null, null, null));
+                /** @var HandledStamp $handledStamp */
+                $handledStamp = $envelope->last(HandledStamp::class);
+                $datasets = $handledStamp->getResult();
+            }
+
+            return new JsonResponse((new DatasetsFilterApiResource($datasets))->toArray());
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
     }
 
     /**
