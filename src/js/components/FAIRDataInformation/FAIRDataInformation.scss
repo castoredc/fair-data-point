@@ -249,6 +249,15 @@
 
 .Datasets {
     position: relative;
+
+    .pagination {
+        display: block;
+        text-align: right;
+
+        li {
+            display: inline-block;
+        }
+    }
 }
 
 .FilterButton {
