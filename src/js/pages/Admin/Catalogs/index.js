@@ -29,7 +29,6 @@ export default class Catalogs extends Component {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 if (error.response && typeof error.response.data.message !== "undefined") {
                     this.setState({
                         isLoading:    false,
