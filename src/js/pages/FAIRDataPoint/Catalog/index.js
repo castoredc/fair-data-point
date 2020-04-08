@@ -17,6 +17,7 @@ import Button from "react-bootstrap/Button";
 import Pagination from 'react-bootstrap/Pagination'
 import DatasetMap from "../../../components/DatasetMap";
 import Icon from "../../../components/Icon";
+import TagManager from "react-gtm-module";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -161,6 +162,15 @@ export default class Catalog extends Component {
 
     handleFilter = (filters) => {
         this.setState({ filters: filters });
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'FdpCatalogFilter',
+            data: {
+                catalog: this.props.match.params.catalog,
+                filters: filters
+            }
+        });
 
         let newFilters = filters;
         newFilters['page'] = 1;

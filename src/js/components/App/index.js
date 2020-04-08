@@ -8,6 +8,7 @@ import {toast, ToastContainer} from "react-toastify";
 import axios from "axios";
 import ToastContent from "../ToastContent";
 import LoadingScreen from "../LoadingScreen";
+import {withRouter} from "react-router-dom";
 
 class App extends Component {
     constructor(props) {
@@ -17,6 +18,26 @@ class App extends Component {
             user: null
         };
     }
+
+    componentDidMount() {
+        this.getUser();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.onRouteChanged();
+        }
+    }
+
+    onRouteChanged = () => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'FdpPageView',
+            data: {
+                url: this.props.location.pathname
+            }
+        });
+    };
 
     getUser = () => {
         axios.get('/api/user')
@@ -42,10 +63,6 @@ class App extends Component {
             });
     };
 
-    componentDidMount() {
-        this.getUser();
-    }
-
     render() {
         return (
             <div>
@@ -68,4 +85,4 @@ class App extends Component {
     }
 }
 
-export default App
+export default withRouter(App);
