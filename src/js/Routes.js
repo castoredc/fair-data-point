@@ -13,6 +13,7 @@ import {PrivateRoute, ProtectedRoute} from "./components/Route";
 import SingleCatalog from "./pages/Admin/SingleCatalog";
 import AddStudy from "./pages/Admin/AddStudy";
 import AdminStudyMetadataWrapper from "./pages/Admin/AdminStudyMetadataWrapper";
+import MetadataXmlParse from "./pages/Tools/MetadataXmlParse";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -36,6 +37,9 @@ export default ({user}) =>
         <Route path="/fdp/:catalog" exact component={Catalog} />
         <Route path="/fdp/:catalog/:dataset" exact component={Dataset} />
         <Route path="/fdp/:catalog/:dataset/:distribution" exact component={Distribution} />
+
+        /* Tools */
+        <Route path="/tools/metadata-xml-parse" exact component={MetadataXmlParse} />
 
         /* My studies */
         {/*<PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />*/}

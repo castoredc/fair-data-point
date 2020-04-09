@@ -15,6 +15,7 @@ import flagNL from './flag-nl.svg'
 import flagUK from './flag-uk.svg'
 import flagUS from './flag-us.svg'
 import checkmark from './checkmark.svg';
+import download from './download.svg';
 
 export default {
     add,
@@ -33,5 +34,6 @@ export default {
     flagNL,
     flagUK,
     flagUS,
-    checkmark
+    checkmark,
+    download
 };

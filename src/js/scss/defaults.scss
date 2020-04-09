@@ -45,3 +45,11 @@ ul {
     max-width: none;
   //max-width: 600px;
 }
+
+.btn-primary .Icon {
+  margin-right: 5px;
+
+  path {
+    fill: $generic-white;
+  }
+}
