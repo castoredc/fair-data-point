@@ -17,7 +17,6 @@ import Button from "react-bootstrap/Button";
 import Pagination from 'react-bootstrap/Pagination'
 import DatasetMap from "../../../components/DatasetMap";
 import Icon from "../../../components/Icon";
-import TagManager from "react-gtm-module";
 
 export default class Catalog extends Component {
     constructor(props) {
