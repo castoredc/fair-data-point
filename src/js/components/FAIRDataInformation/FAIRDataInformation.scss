@@ -231,7 +231,7 @@
     }
 }
 
-.DatasetsHeader {
+.DatasetsHeader, .ResultsHeader {
     margin-bottom: 16px;
 
     h2 {
@@ -242,8 +242,14 @@
         color: $neutral-800;
     }
 
-    .DatasetHeaderButtons {
+    .DatasetHeaderButtons, .ResultsHeaderButtons {
         text-align: right;
+    }
+}
+
+.Results {
+    .table-bordered th, .table-bordered td {
+        overflow: hidden;
     }
 }
 

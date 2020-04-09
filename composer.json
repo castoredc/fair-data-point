@@ -26,7 +26,8 @@
         "symfony/twig-bundle": "^5.0",
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "^5.0",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "castor/coding-standard": "^3.1",
