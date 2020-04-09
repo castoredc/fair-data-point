@@ -39,7 +39,7 @@ class MetadataParseCommandHandler implements MessageHandlerInterface
             foreach ($fieldContainer->children() as $field) {
                 $variableName = (string) $field->field_variable_name;
 
-                if (! isset($field->metadata) || $variableName !== '') {
+                if (! isset($field->metadata) || $variableName === '') {
                     continue;
                 }
 
