@@ -11,20 +11,14 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\RenderCSVDistributionCommand;
+use App\MessageHandler\CSVCommandHandler;
 use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use function count;
-use function fclose;
-use function feof;
-use function fopen;
-use function fputcsv;
-use function fread;
-use function rewind;
 
-class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
+class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
     /** @var ApiClient */
     private $apiClient;
@@ -103,40 +97,5 @@ class RenderCSVDistributionCommandHandler implements MessageHandlerInterface
         }
 
         return $data;
-    }
-
-    /**
-     * @param string[]     $columns
-     * @param array<mixed> $data
-     */
-    private function generateCsv(array $columns, array $data, string $delimiter = ',', string $enclosure = '"'): string
-    {
-        $handle = fopen('php://temp', 'r+');
-
-        if ($handle === false) {
-            return '';
-        }
-
-        $contents = null;
-
-        if (count($data) === 0) {
-            return '';
-        }
-
-        fputcsv($handle, $columns, $delimiter, $enclosure);
-
-        foreach ($data as $line) {
-            fputcsv($handle, $line, $delimiter, $enclosure);
-        }
-
-        rewind($handle);
-
-        while (! feof($handle)) {
-            $contents .= fread($handle, 8192);
-        }
-
-        fclose($handle);
-
-        return $contents;
     }
 }
