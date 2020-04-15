@@ -22,7 +22,7 @@ class StudyStructureApiController extends ApiController
 {
     /**
      * @Route("/api/study/{study}/structure", name="api_study_structure")
-     * @ParamConverter("study", options={"mapping": {"study": "slug"}})
+     * @ParamConverter("study", options={"mapping": {"study": "id"}})
      */
     public function studyStructure(Study $study, Request $request, MessageBusInterface $bus): Response
     {

@@ -13,9 +13,13 @@ class DistributionApiResource implements ApiResource
     /** @var Distribution */
     private $distribution;
 
-    public function __construct(Distribution $distribution)
+    /** @var bool */
+    private $isAdmin;
+
+    public function __construct(Distribution $distribution, bool $isAdmin)
     {
         $this->distribution = $distribution;
+        $this->isAdmin = $isAdmin;
     }
 
     /**
@@ -23,23 +27,8 @@ class DistributionApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $accessUrl = null;
-        $downloadUrl = null;
-        $type = null;
-
-        if ($this->distribution instanceof RDFDistribution) {
-            $accessUrl = $this->distribution->getRDFUrl();
-            $downloadUrl = $this->distribution->getRDFUrl() . '/?download=1';
-            $type = 'rdf';
-        }
-
-        if ($this->distribution instanceof CSVDistribution) {
-            $downloadUrl = $this->distribution->getAccessUrl();
-            $type = 'csv';
-        }
-
-        return [
-            'access_url' => $accessUrl,
+        $data = [
+            'access_url' => null,
             'relative_url' => $this->distribution->getRelativeUrl(),
             'id' => $this->distribution->getId(),
             'slug' => $this->distribution->getSlug(),
@@ -52,8 +41,25 @@ class DistributionApiResource implements ApiResource
             'created' => $this->distribution->getCreated(),
             'updated' => $this->distribution->getUpdated(),
             'accessRights' => $this->distribution->getAccessRights(),
-            'download_url' => $downloadUrl,
-            'type' => $type
+            'download_url' => null,
+            'type' => null
         ];
+
+        if ($this->distribution instanceof RDFDistribution) {
+            $data['accessUrl'] = $this->distribution->getRDFUrl();
+            $data['downloadUrl'] = $this->distribution->getRDFUrl() . '/?download=1';
+            $data['type'] = 'rdf';
+        }
+
+        if ($this->distribution instanceof CSVDistribution) {
+            $data['downloadUrl'] = $this->distribution->getAccessUrl();
+            $data['type'] = 'csv';
+        }
+
+        if($this->isAdmin) {
+            $data['studyId'] = $this->distribution->getDataset()->getStudy()->getId();
+        }
+
+        return $data;
     }
 }

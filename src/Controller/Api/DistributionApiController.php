@@ -37,7 +37,7 @@ class DistributionApiController extends ApiController
             throw $this->createNotFoundException();
         }
 
-        return new JsonResponse((new DistributionApiResource($distribution))->toArray());
+        return new JsonResponse((new DistributionApiResource($distribution, $this->isGranted('ROLE_ADMIN')))->toArray());
     }
 
     /**
