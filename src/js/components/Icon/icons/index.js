@@ -16,6 +16,7 @@ import flagUK from './flag-uk.svg'
 import flagUS from './flag-us.svg'
 import checkmark from './checkmark.svg';
 import download from './download.svg';
+import formLibrary from './form-library.svg';
 
 export default {
     add,
@@ -35,5 +36,6 @@ export default {
     flagUK,
     flagUS,
     checkmark,
+    formLibrary,
     download
 };

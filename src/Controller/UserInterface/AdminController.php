@@ -5,6 +5,8 @@ namespace App\Controller\UserInterface;
 
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution\Distribution;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +56,21 @@ class AdminController extends AbstractController
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
     public function adminStudy(Catalog $catalog, Study $study): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
+    }
+
+    /**
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution", name="admin_study_distributions")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     */
+    public function adminDataset(Catalog $catalog, Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
