@@ -40,6 +40,36 @@ class StructureCollection
         $this->surveys->add($survey);
     }
 
+    public function getPhases(): PhaseCollection
+    {
+        return $this->phases;
+    }
+
+    public function getReports(): ReportCollection
+    {
+        return $this->reports;
+    }
+
+    public function getSurveys(): SurveyCollection
+    {
+        return $this->surveys;
+    }
+
+    public function setPhases(PhaseCollection $phases): void
+    {
+        $this->phases = $phases;
+    }
+
+    public function setReports(ReportCollection $reports): void
+    {
+        $this->reports = $reports;
+    }
+
+    public function setSurveys(SurveyCollection $surveys): void
+    {
+        $this->surveys = $surveys;
+    }
+
     public function order(): void
     {
         $this->phases->order();

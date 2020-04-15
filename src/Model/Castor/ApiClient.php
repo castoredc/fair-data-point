@@ -18,6 +18,9 @@ use App\Entity\Castor\Structure\Report;
 use App\Entity\Castor\Structure\Step\ReportStep;
 use App\Entity\Castor\Structure\Step\StudyStep;
 use App\Entity\Castor\Structure\StructureCollection\PhaseCollection;
+use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
+use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
+use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
 use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
@@ -334,10 +337,10 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getSurveys(Study $study, bool $includeFields = false): ArrayCollection
+    public function getSurveys(Study $study, bool $includeFields = false): SurveyCollection
     {
         $pages = 1;
-        $surveys = new ArrayCollection();
+        $surveys = new SurveyCollection();
         for ($page = 1; $page <= $pages; $page++) {
             $body = $this->request('/api/study/' . $study->getId() . '/survey?include=steps&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
@@ -369,10 +372,10 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getReports(Study $study, bool $includeFields = false): ArrayCollection
+    public function getReports(Study $study, bool $includeFields = false): ReportCollection
     {
         $pages = 1;
-        $reports = new ArrayCollection();
+        $reports = new ReportCollection();
         for ($page = 1; $page <= $pages; $page++) {
             $body = $this->request('/api/study/' . $study->getId() . '/report?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
@@ -544,5 +547,25 @@ class ApiClient
         $record->setData($dataCollection);
 
         return $record;
+    }
+
+    /**
+     * @param Study $study
+     *
+     * @return StructureCollection
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getStructure(Study $study): StructureCollection
+    {
+        $structure = new StructureCollection();
+
+        $structure->setPhases($this->getPhasesAndSteps($study, false));
+        $structure->setReports($this->getReports($study, false));
+        $structure->setSurveys($this->getSurveys($study, false));
+
+        return $structure;
     }
 }

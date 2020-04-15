@@ -9,7 +9,7 @@ use function array_merge;
 
 abstract class StructureElementCollection
 {
-    /** @var StructureElement[] */
+    /** @var StructureElement[]|null */
     protected $elements;
 
     public function add(StructureElement $element): void
@@ -23,9 +23,9 @@ abstract class StructureElementCollection
     }
 
     /**
-     * @return StructureElement[]
+     * @return StructureElement[]|null
      */
-    public function getElements(): array
+    public function getElements(): ?array
     {
         return $this->elements;
     }
