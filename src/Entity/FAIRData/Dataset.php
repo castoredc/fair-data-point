@@ -6,14 +6,16 @@ namespace App\Entity\FAIRData;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\Iri;
+use App\Security\CastorUser;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-//use EasyRdf_Graph;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DatasetRepository")
  * @ORM\Table(name="dataset", indexes={@ORM\Index(name="slug", columns={"slug"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class Dataset
 {
@@ -96,6 +98,38 @@ class Dataset
      * @var bool
      */
     private $isPublished = false;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var DateTime $created
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable = true)
+     *
+     * @var DateTime|null $updated
+     */
+    protected $updated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $createdBy
+     * @Gedmo\Blameable(on="create")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $updatedBy
+     * @Gedmo\Blameable(on="update")
+     */
+    private $updatedBy;
 
     /**
      * @param Collection<string, Agent> $publishers
@@ -284,5 +318,41 @@ class Dataset
     public function hasDistribution(Distribution $distribution): bool
     {
         return $this->distributions->contains($distribution);
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersist(): void
+    {
+        $this->created = new DateTime('now');
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate(): void
+    {
+        $this->updated = new DateTime('now');
+    }
+
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
+
+    public function getUpdated(): ?DateTime
+    {
+        return $this->updated;
+    }
+
+    public function getCreatedBy(): ?CastorUser
+    {
+        return $this->createdBy;
+    }
+
+    public function getUpdatedBy(): ?CastorUser
+    {
+        return $this->updatedBy;
     }
 }

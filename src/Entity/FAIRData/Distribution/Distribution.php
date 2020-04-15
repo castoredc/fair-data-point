@@ -8,15 +8,18 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
+use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class Distribution
 {
@@ -81,20 +84,6 @@ class Distribution
     private $license;
 
     /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime
-     */
-    private $issued;
-
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime
-     */
-    private $modified;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions",cascade={"persist"})
      *
      * @var Dataset|null
@@ -110,9 +99,48 @@ class Distribution
     private $accessRights;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $isPublished = false;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var DateTime $created
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable = true)
+     *
+     * @var DateTime|null $updated
+     */
+    protected $updated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $createdBy
+     * @Gedmo\Blameable(on="create")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $updatedBy
+     * @Gedmo\Blameable(on="update")
+     */
+    private $updatedBy;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, int $accessRights)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, int $accessRights, Dataset $dataset)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -121,9 +149,8 @@ class Distribution
         $this->publishers = $publishers;
         $this->language = $language;
         $this->license = $license;
-        $this->issued = $issued;
-        $this->modified = $modified;
         $this->accessRights = $accessRights;
+        $this->dataset = $dataset;
     }
 
     public function getId(): string
@@ -212,26 +239,6 @@ class Distribution
         $this->license = $license;
     }
 
-    public function getIssued(): DateTime
-    {
-        return $this->issued;
-    }
-
-    public function setIssued(DateTime $issued): void
-    {
-        $this->issued = $issued;
-    }
-
-    public function getModified(): DateTime
-    {
-        return $this->modified;
-    }
-
-    public function setModified(DateTime $modified): void
-    {
-        $this->modified = $modified;
-    }
-
     public function getDataset(): Dataset
     {
         return $this->dataset;
@@ -265,5 +272,51 @@ class Distribution
     public function getAccessRights(): int
     {
         return $this->accessRights;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): void
+    {
+        $this->isPublished = $isPublished;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersist(): void
+    {
+        $this->created = new DateTime('now');
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate(): void
+    {
+        $this->updated = new DateTime('now');
+    }
+
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
+
+    public function getUpdated(): ?DateTime
+    {
+        return $this->updated;
+    }
+
+    public function getCreatedBy(): ?CastorUser
+    {
+        return $this->createdBy;
+    }
+
+    public function getUpdatedBy(): ?CastorUser
+    {
+        return $this->updatedBy;
     }
 }

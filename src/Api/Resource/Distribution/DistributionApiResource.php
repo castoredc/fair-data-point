@@ -25,14 +25,17 @@ class DistributionApiResource implements ApiResource
     {
         $accessUrl = null;
         $downloadUrl = null;
+        $type = null;
 
         if ($this->distribution instanceof RDFDistribution) {
             $accessUrl = $this->distribution->getRDFUrl();
             $downloadUrl = $this->distribution->getRDFUrl() . '/?download=1';
+            $type = 'rdf';
         }
 
         if ($this->distribution instanceof CSVDistribution) {
             $downloadUrl = $this->distribution->getAccessUrl();
+            $type = 'csv';
         }
 
         return [
@@ -46,10 +49,11 @@ class DistributionApiResource implements ApiResource
             'publishers' => [],
             'language' => $this->distribution->getLanguage()->toArray(),
             'license' => $this->distribution->getLicense()->toArray(),
-            'issued' => $this->distribution->getIssued(),
-            'modified' => $this->distribution->getModified(),
+            'created' => $this->distribution->getCreated(),
+            'updated' => $this->distribution->getUpdated(),
             'accessRights' => $this->distribution->getAccessRights(),
             'download_url' => $downloadUrl,
+            'type' => $type
         ];
     }
 }
