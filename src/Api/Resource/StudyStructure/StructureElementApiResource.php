@@ -19,6 +19,7 @@ class StructureElementApiResource implements ApiResource
     {
         return [
             'id' => $this->element->getId(),
+            'name' => $this->element->getName(),
             'steps' => (new StepsApiResource($this->element->getSteps()))->toArray()
         ];
     }

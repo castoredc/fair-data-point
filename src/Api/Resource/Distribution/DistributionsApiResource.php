@@ -27,7 +27,7 @@ class DistributionsApiResource implements ApiResource
         $data = [];
 
         foreach ($this->distributions as $distributions) {
-            $data[] = (new DistributionApiResource($distributions))->toArray();
+            $data[] = (new DistributionApiResource($distributions, false))->toArray();
         }
 
         return $data;
