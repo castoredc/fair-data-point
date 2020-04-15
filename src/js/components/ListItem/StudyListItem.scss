@@ -22,7 +22,7 @@
 
   .StudyListItemHeader {
     padding-bottom: 24px;
-    overflow: hidden;
+    overflow: hidden;;
 
     .StudyListItemName {
       font-family: 'Rubik', sans-serif;
@@ -55,7 +55,7 @@
   }
 }
 
-.AdminStudyListItem {
+.AdminListItem {
   padding: 0;
   border-radius: 0;
   margin-bottom: 0;
@@ -68,11 +68,12 @@
     }
   }
 
-  &.AdminStudyListItemHeader {
+  &.AdminListItemHeader {
     background: $neutral-30;
     border-top: solid 1px $neutral-40;
     color: $neutral-800;
     font-weight: 600;
+    min-height: 40px;
 
     & > div {
       display: flex;
@@ -81,7 +82,7 @@
     }
   }
 
-  .AdminStudyListItemTitle a, .AttributeCheckmark a {
+  .AdminListItemTitle a, .AdminListItemType a, .AttributeCheckmark a {
     display: block;
     padding: 12px 0;
   }
@@ -90,7 +91,7 @@
     text-align: center;
   }
 
-  .AdminStudyListItemTitle a {
+  .AdminListItemTitle a, .AdminListItemType a {
     font-weight: 600;
     font-size: 16px;
     color: $neutral-800;
@@ -103,13 +104,14 @@
       color: $neutral-800;
     }
   }
-  .AdminStudyListItemButtons {
+  .AdminListItemButtons {
     text-align: right;
 
     .btn {
       font-weight: 700;
       color: $neutral-700;
-      padding: 12px 20px;
+      padding: 12px 6px;
+      opacity: 0;
 
       .Icon {
         margin-right: 5px;
@@ -127,6 +129,12 @@
           fill: $neutral-300;
         }
       }
+    }
+  }
+
+  &:hover {
+    .AdminListItemButtons .btn {
+      opacity: 1;
     }
   }
 }

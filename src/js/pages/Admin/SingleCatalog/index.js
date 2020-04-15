@@ -16,6 +16,7 @@ import Filters from "../../../components/Filters";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Icon from "../../../components/Icon";
+import arrowLeft from "../../../components/Icon/icons/arrow-left.svg";
 
 export default class SingleCatalog extends Component {
     constructor(props) {
@@ -168,10 +169,17 @@ export default class SingleCatalog extends Component {
             title={localizedText(this.state.catalog.title, 'en')}
         >
             <Row>
-                <Col>
+                <Col sm={6}>
+                    <div className="ButtonBar">
+                        <LinkContainer to="/admin">
+                            <Button variant="link" className="BackButton"><Icon type="arrowLeft" /> All catalogs</Button>
+                        </LinkContainer>
+                    </div>
+                </Col>
+                <Col sm={6}>
                     <div className="ButtonBar Right">
                         <LinkContainer to={'/admin/' + this.props.match.params.catalog + '/study/add'}>
-                            <Button variant="primary">Add study</Button>
+                            <Button variant="primary" className="AddButton"><Icon type="add" /> Add study</Button>
                         </LinkContainer>
 
                         <ButtonGroup className={classNames('FilterButton', this.state.displayList && 'Hidden')}>
@@ -190,12 +198,12 @@ export default class SingleCatalog extends Component {
                         </Col>
                     </Row> : <div>
                         {this.state.datasets.length > 0 ? <Container>
-                            <Row className="ListItem AdminStudyListItem AdminStudyListItemHeader">
-                                <Col md={6}>Name</Col>
+                            <Row className="ListItem AdminListItem AdminListItemHeader">
+                                <Col md={7}>Name</Col>
                                 <Col md={1}><small>Consent</small> Social</Col>
                                 <Col md={1}><small>Consent</small> Publish</Col>
                                 <Col md={1}>Published</Col>
-                                <Col md={3} />
+                                <Col md={2} />
                             </Row>
 
                             {this.state.datasets.map((item, index) => {
@@ -203,7 +211,6 @@ export default class SingleCatalog extends Component {
                                                                id={item.studyId}
                                                                catalog={this.props.match.params.catalog}
                                                                name={localizedText(item.title, 'en')}
-                                                               published={item.published}
                                                                slug={item.slug}
                                                                consent={item.consent}
                                     />
