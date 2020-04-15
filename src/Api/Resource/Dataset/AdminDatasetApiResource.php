@@ -65,8 +65,8 @@ class AdminDatasetApiResource implements ApiResource
         }
 
         return [
-            'access_url' => $this->dataset->getAccessUrl(),
-            'relative_url' => $this->dataset->getRelativeUrl(),
+            'accessUrl' => $this->dataset->getAccessUrl(),
+            'relativeUrl' => $this->dataset->getRelativeUrl(),
             'id' => $this->dataset->getId(),
             'studyId' => $study->getId(),
             'slug' => $this->dataset->getSlug(),

@@ -22,8 +22,8 @@ class FAIRDataPointApiResource implements ApiResource
     public function toArray(): array
     {
         return [
-            'access_url' => $this->fairDataPoint->getAccessUrl(),
-            'relative_url' => $this->fairDataPoint->getRelativeUrl(),
+            'accessUrl' => $this->fairDataPoint->getAccessUrl(),
+            'relativeUrl' => $this->fairDataPoint->getRelativeUrl(),
             'iri' => $this->fairDataPoint->getIri(),
             'title' => $this->fairDataPoint->getTitle()->toArray(),
             'version' => $this->fairDataPoint->getVersion(),

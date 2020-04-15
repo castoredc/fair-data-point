@@ -28,8 +28,8 @@ class DistributionApiResource implements ApiResource
     public function toArray(): array
     {
         $data = [
-            'access_url' => null,
-            'relative_url' => $this->distribution->getRelativeUrl(),
+            'accessUrl' => null,
+            'relativeUrl' => $this->distribution->getRelativeUrl(),
             'id' => $this->distribution->getId(),
             'slug' => $this->distribution->getSlug(),
             'title' => $this->distribution->getTitle()->toArray(),
@@ -41,7 +41,7 @@ class DistributionApiResource implements ApiResource
             'created' => $this->distribution->getCreated(),
             'updated' => $this->distribution->getUpdated(),
             'accessRights' => $this->distribution->getAccessRights(),
-            'download_url' => null,
+            'downloadUrl' => null,
             'type' => null
         ];
 
