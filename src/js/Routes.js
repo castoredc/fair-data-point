@@ -14,6 +14,7 @@ import SingleCatalog from "./pages/Admin/SingleCatalog";
 import AddStudy from "./pages/Admin/AddStudy";
 import AdminStudyMetadataWrapper from "./pages/Admin/AdminStudyMetadataWrapper";
 import MetadataXmlParse from "./pages/Tools/MetadataXmlParse";
+import AddDistribution from "./pages/Admin/AddDistribution";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -62,5 +63,6 @@ export default ({user}) =>
         <ProtectedRoute path="/admin/:catalog/study/:studyId/metadata/:action/consent" exact user={user} component={AdminStudyMetadataWrapper} />
 
         <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution" exact user={user} component={AdminStudyMetadataWrapper} />
+        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/add" exact user={user} component={AddDistribution} />
         <Route component={NotFound} />
     </Switch>;

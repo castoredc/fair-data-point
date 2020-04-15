@@ -134,6 +134,9 @@ export default class Distributions extends Component {
                 </Col>
                 <Col sm={6}>
                     <div className="ButtonBar Right">
+                        <LinkContainer to={'/admin/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/add'}>
+                            <Button variant="primary" className="AddButton"><Icon type="add" /> Add distribution</Button>
+                        </LinkContainer>
                     </div>
                 </Col>
             </Row>
