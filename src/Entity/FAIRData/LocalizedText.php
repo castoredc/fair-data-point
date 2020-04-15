@@ -35,6 +35,12 @@ class LocalizedText
     public function __construct(Collection $texts)
     {
         $this->texts = $texts;
+
+        foreach($this->texts as $text)
+        {
+            /** @var LocalizedTextItem $text */
+            $text->setParent($this);
+        }
     }
 
     public function getId(): string
