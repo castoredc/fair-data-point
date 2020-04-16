@@ -258,7 +258,17 @@ class ApiClient
             $results->set($field->getId(), $field);
         }
 
-        return $results;
+        $iterator = $results->getIterator();
+
+        $iterator->uasort(static function (Field $a, Field $b) {
+            if ($a->getNumber() === $b->getNumber()) {
+                return 0;
+            }
+
+            return $a->getNumber() < $b->getNumber() ? -1 : 1;
+        });
+
+        return new ArrayCollection(iterator_to_array($iterator));
     }
 
     /**

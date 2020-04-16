@@ -100,11 +100,4 @@ abstract class StructureElement
 
         return null;
     }
-
-    public function orderFieldsInSteps(): void
-    {
-        foreach ($this->steps as $step) {
-            $step->orderFields();
-        }
-    }
 }

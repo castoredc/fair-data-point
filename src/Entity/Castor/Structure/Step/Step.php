@@ -135,18 +135,4 @@ abstract class Step
     {
         $this->fields[$field->getNumber()] = $field;
     }
-
-    public function orderFields(): void
-    {
-        if($this->fields === null) {
-            return;
-        }
-        uasort($this->fields, static function (Field $a, Field $b) {
-            if ($a->getNumber() === $b->getNumber()) {
-                return 0;
-            }
-
-            return $a->getNumber() < $b->getNumber() ? -1 : 1;
-        });
-    }
 }
