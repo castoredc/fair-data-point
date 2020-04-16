@@ -3,11 +3,13 @@
 namespace App\Controller\Api;
 
 use App\Api\Resource\Dataset\DatasetApiResource;
+use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Message\Country\GetCountriesCommand;
+use App\Message\Study\GetFieldsForStepCommand;
 use App\Message\Study\GetStudyStructureCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -37,5 +39,25 @@ class StudyStructureApiController extends ApiController
         $handledStamp = $envelope->last(HandledStamp::class);
 
         return new JsonResponse((new StudyStructureApiResource($handledStamp->getResult()))->toArray());
+    }
+
+
+    /**
+     * @Route("/api/study/{study}/structure/step/{step}/fields", name="api_study_structure_step")
+     * @ParamConverter("study", options={"mapping": {"study": "id"}})
+     */
+    public function studyStructureStep(Study $study, string $step, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $study);
+
+        /** @var CastorUser|null $user */
+        $user = $this->getUser();
+
+        $envelope = $bus->dispatch(new GetFieldsForStepCommand($study, $step, $user));
+
+        /** @var HandledStamp $handledStamp */
+        $handledStamp = $envelope->last(HandledStamp::class);
+
+        return new JsonResponse((new FieldsApiResource($handledStamp->getResult()))->toArray());
     }
 }

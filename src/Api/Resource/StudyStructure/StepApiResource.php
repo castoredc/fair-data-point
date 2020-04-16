@@ -20,6 +20,7 @@ class StepApiResource implements ApiResource
     {
         return [
             'id' => $this->step->getId(),
+            'position' => $this->step->getPosition(),
             'name' => $this->step->getName(),
             'description' => $this->step->getDescription(),
         ];
