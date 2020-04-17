@@ -45,7 +45,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 
         $data = [];
         $fields = [];
-        $columns = [];
+        $columns = ['record_id'];
 
         foreach ($studyFields as $field) {
             /** @var Field $field */
@@ -63,7 +63,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             if (count($recordData) <= 0) {
                 continue;
             }
-
+            $recordData['record_id'] = $record->getId();
             $data[] = $recordData;
         }
 

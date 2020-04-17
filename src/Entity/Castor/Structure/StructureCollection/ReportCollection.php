@@ -14,9 +14,5 @@ class ReportCollection extends StructureElementCollection
         uasort($this->elements, static function (Report $a, Report $b): int {
             return strcasecmp($a->getName(), $b->getName());
         });
-
-        foreach ($this->elements as $element) {
-            $element->orderFieldsInSteps();
-        }
     }
 }

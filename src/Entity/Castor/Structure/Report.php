@@ -6,9 +6,6 @@ namespace App\Entity\Castor\Structure;
 class Report extends StructureElement
 {
     /** @var string|null */
-    private $name;
-
-    /** @var string|null */
     private $description;
 
     /** @var string|null */
@@ -16,32 +13,10 @@ class Report extends StructureElement
 
     public function __construct(?string $id, ?string $name, ?string $description, ?string $type)
     {
-        parent::__construct();
+        parent::__construct($id, $name);
 
-        $this->id = $id;
-        $this->name = $name;
         $this->description = $description;
         $this->type = $type;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): void
-    {
-        $this->name = $name;
     }
 
     public function getDescription(): ?string

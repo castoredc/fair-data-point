@@ -8,6 +8,9 @@ import StudyDetails from "../StudyDetails";
 import StudyOrganizations from "../StudyOrganizations";
 import StudyContacts from "../StudyContacts";
 import StudyConsent from "../StudyConsent";
+import Distributions from "../Distributions";
+import SingleDistribution from "../SingleDistribution";
+import SingleDistributionContent from "../SingleDistributionContent";
 
 export default class AdminStudyMetadataWrapper extends Component {
     constructor(props) {
@@ -60,6 +63,12 @@ export default class AdminStudyMetadataWrapper extends Component {
                    render={(props) => <StudyContacts {...props} catalog={this.state.catalog}/>}/>
             <Route path="/admin/:catalog/study/:studyId/metadata/:action/consent" exact
                    render={(props) => <StudyConsent {...props} catalog={this.state.catalog}/>}/>
+            <Route path="/admin/:catalog/dataset/:dataset/distribution" exact
+                   render={(props) => <Distributions {...props} catalog={this.state.catalog}/>}/>
+            <Route path="/admin/:catalog/dataset/:dataset/distribution/:distribution" exact
+                   render={(props) => <SingleDistribution {...props} catalog={this.state.catalog}/>}/>
+            <Route path="/admin/:catalog/dataset/:dataset/distribution/:distribution/content" exact
+                   render={(props) => <SingleDistributionContent {...props} catalog={this.state.catalog}/>}/>
         </Switch>;
     }
 }

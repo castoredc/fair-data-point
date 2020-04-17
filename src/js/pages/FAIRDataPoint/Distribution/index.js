@@ -102,12 +102,12 @@ export default class Distribution extends Component {
                         icon="lock"
                         message="The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself."/>
                     }
-                    {this.state.distribution.access_url && <ListItem link={this.state.distribution.access_url}
+                    {this.state.distribution.accessUrl && <ListItem link={this.state.distribution.accessUrl}
                               title="Access the data"
                               description="Get access to the distribution."
                               smallIcon={restricted && 'lock'} />}
 
-                    {this.state.distribution.download_url && <ListItem link={this.state.distribution.download_url}
+                    {this.state.distribution.downloadUrl && <ListItem link={this.state.distribution.downloadUrl}
                               title="Download the data"
                               description="Get a downloadable file for this distribution."
                               smallIcon={restricted && 'lock'} />}

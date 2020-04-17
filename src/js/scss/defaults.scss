@@ -46,6 +46,33 @@ ul {
   //max-width: 600px;
 }
 
+.AddButton.btn {
+  padding: 5px 20px 5px 15px;
+}
+
+.BackButton.btn {
+  padding: 5px 0;
+  color: $neutral-400;
+  text-decoration: none;
+
+  .Icon {
+    margin-right: 3px;
+
+    path {
+      fill: $neutral-400;
+    }
+  }
+
+  &:hover, &:active {
+    color: $neutral-700;
+    text-decoration: none;
+
+    .Icon path {
+      fill: $neutral-700;
+    }
+  }
+}
+
 .btn-primary .Icon {
   margin-right: 5px;
 

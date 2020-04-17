@@ -1,0 +1,130 @@
+@import '../../scss/colors';
+
+.StructureElements {
+  padding: 15px 20px;
+  border-radius: 4px;
+  background: $neutral-20;
+}
+
+.StructureElement {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid $neutral-60;
+
+  &:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+
+  .StructureElementName {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .Steps {
+    .Step {
+      display: block;
+      padding: 5px 0;
+      color: $neutral-300;
+      text-decoration: none;
+
+      &.active, &:hover {
+        color: $neutral-800;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.Fields {
+  .FieldCheckbox {
+    margin-right: 10px;
+
+    .Checkbox {
+      margin-bottom: 0;
+    }
+  }
+
+  .FieldIcon {
+    margin-right: 10px;
+
+    .FieldIcon path {
+      fill: black!important;
+    }
+  }
+
+  .FieldNumber {
+    width: 35px;
+    font-size: 12px;
+    color: $neutral-100;
+    border-radius: 7px;
+    border: 1px solid $neutral-40;
+    text-align: center;
+    margin-right: 10px;
+  }
+  
+  .FieldCheckbox, .FieldNumber, .FieldIcon, .FieldLabel {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .FieldLabel {
+    color: $neutral-800;
+  }
+
+  .FieldVariableName {
+    font-size: 11px;
+    line-height: 11px;
+    color: $neutral-90;
+  }
+}
+
+.StudyStructureTabs {
+  &.row {
+    margin: 0 0 20px 0;
+  }
+
+  & > div {
+     border-bottom: 1px solid $neutral-40;
+  }
+
+  .nav-tabs {
+    border-bottom: 0;
+
+    .nav-link {
+      border: none;
+      border-radius: 0;
+      background: none;
+      padding: 5px 3px;
+      margin-right: 20px;
+      border-bottom: 2px solid transparent;
+      color: $neutral-300;
+
+      &.active {
+        border-bottom-color: $mid-blue;
+        color: $neutral-800;
+      }
+
+      &.disabled {
+        color: $neutral-60;
+      }
+    }
+  }
+}
+
+.StudyStructureFooter {
+  border-top: 1px solid $neutral-40;
+  margin-top: 40px;
+  padding-top: 20px;
+
+  .SaveButton {
+    text-align: right;
+
+    .FieldCount {
+      color: $neutral-300;
+      margin-right: 10px;
+    }
+  }
+}

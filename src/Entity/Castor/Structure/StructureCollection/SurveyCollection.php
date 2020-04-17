@@ -14,9 +14,5 @@ class SurveyCollection extends StructureElementCollection
         uasort($this->elements, static function (Survey $a, Survey $b): int {
             return strcasecmp($a->getName(), $b->getName());
         });
-
-        foreach ($this->elements as $element) {
-            $element->orderFieldsInSteps();
-        }
     }
 }

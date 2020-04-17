@@ -11,7 +11,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JsonSerializable;
 use function count;
 
 /**
@@ -19,7 +18,7 @@ use function count;
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Study implements JsonSerializable
+class Study
 {
     /**
      * @ORM\Id
@@ -283,17 +282,5 @@ class Study implements JsonSerializable
             $data['slug'] ?? null,
             null
         );
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function jsonSerialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'slug' => $this->slug,
-        ];
     }
 }

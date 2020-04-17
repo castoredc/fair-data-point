@@ -5,14 +5,17 @@ namespace App\Entity\FAIRData;
 
 use App\Entity\Iri;
 use App\Security\ApiUser;
+use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="catalog", indexes={@ORM\Index(name="slug", columns={"slug"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class Catalog
 {
@@ -31,8 +34,6 @@ class Catalog
      * @var string
      */
     private $slug;
-
-    /* DC terms */
 
     /**
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
@@ -75,20 +76,6 @@ class Catalog
      * @var License|null
      */
     private $license;
-
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime
-     */
-    private $issued;
-
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime
-     */
-    private $modified;
 
     /**
      * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
@@ -143,9 +130,41 @@ class Catalog
     private $apiUser;
 
     /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var DateTime $created
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable = true)
+     *
+     * @var DateTime|null $updated
+     */
+    protected $updated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $createdBy
+     * @Gedmo\Blameable(on="create")
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
+     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
+     *
+     * @var CastorUser|null $updatedBy
+     * @Gedmo\Blameable(on="update")
+     */
+    private $updatedBy;
+
+    /**
      * @param Collection<string, Agent> $publishers
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, ?Iri $homepage)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, ?Iri $homepage)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -154,8 +173,6 @@ class Catalog
         $this->publishers = $publishers;
         $this->language = $language;
         $this->license = $license;
-        $this->issued = $issued;
-        $this->modified = $modified;
         $this->datasets = new ArrayCollection();
         $this->homepage = $homepage;
     }
@@ -244,26 +261,6 @@ class Catalog
     public function setLicense(License $license): void
     {
         $this->license = $license;
-    }
-
-    public function getIssued(): DateTime
-    {
-        return $this->issued;
-    }
-
-    public function setIssued(DateTime $issued): void
-    {
-        $this->issued = $issued;
-    }
-
-    public function getModified(): DateTime
-    {
-        return $this->modified;
-    }
-
-    public function setModified(DateTime $modified): void
-    {
-        $this->modified = $modified;
     }
 
     public function getFairDataPoint(): FAIRDataPoint
@@ -355,5 +352,41 @@ class Catalog
     public function getApiUser(): ?ApiUser
     {
         return $this->apiUser;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersist(): void
+    {
+        $this->created = new DateTime('now');
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate(): void
+    {
+        $this->updated = new DateTime('now');
+    }
+
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
+
+    public function getUpdated(): ?DateTime
+    {
+        return $this->updated;
+    }
+
+    public function getCreatedBy(): ?CastorUser
+    {
+        return $this->createdBy;
+    }
+
+    public function getUpdatedBy(): ?CastorUser
+    {
+        return $this->updatedBy;
     }
 }

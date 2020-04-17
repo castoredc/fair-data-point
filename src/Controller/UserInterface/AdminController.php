@@ -5,6 +5,8 @@ namespace App\Controller\UserInterface;
 
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution\Distribution;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,6 +58,43 @@ class AdminController extends AbstractController
     public function adminStudy(Catalog $catalog, Study $study): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
+    }
+
+    /**
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution", name="admin_study_distributions")
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution/add", name="admin_add_study_distribution")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     */
+    public function adminDataset(Catalog $catalog, Dataset $dataset): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
+    }
+
+    /**
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution/{distribution}/content", name="admin_study_distribution_content")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function adminDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+            throw $this->createNotFoundException();
+        }
 
         return $this->render(
             'react.html.twig',

@@ -21,7 +21,6 @@ class PhaseCollection extends StructureElementCollection
         foreach ($this->elements as $phase) {
             /** @var Phase $phase */
             $phase->orderSteps();
-            $phase->orderFieldsInSteps();
         }
     }
 }

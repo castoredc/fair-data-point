@@ -35,7 +35,13 @@ abstract class CSVCommandHandler implements MessageHandlerInterface
         fputcsv($handle, $columns, $delimiter, $enclosure);
 
         foreach ($data as $line) {
-            fputcsv($handle, $line, $delimiter, $enclosure);
+            $row = [];
+
+            foreach ($columns as $column) {
+                $row[] = $line[$column] ?? null;
+            }
+
+            fputcsv($handle, $row, $delimiter, $enclosure);
         }
 
         rewind($handle);

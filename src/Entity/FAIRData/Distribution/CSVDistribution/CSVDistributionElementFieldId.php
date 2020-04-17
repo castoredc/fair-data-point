@@ -17,6 +17,11 @@ class CSVDistributionElementFieldId extends CSVDistributionElement
      */
     private $fieldId;
 
+    public function __construct(string $fieldId)
+    {
+        $this->fieldId = $fieldId;
+    }
+
     public function getFieldId(): string
     {
         return $this->fieldId;

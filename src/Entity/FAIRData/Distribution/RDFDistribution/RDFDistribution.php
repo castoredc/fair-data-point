@@ -3,12 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData\Distribution\RDFDistribution;
 
-use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Distribution\Distribution;
-use App\Entity\FAIRData\Language;
-use App\Entity\FAIRData\License;
-use App\Entity\FAIRData\LocalizedText;
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,18 +29,6 @@ class RDFDistribution extends Distribution
      * @var string
      */
     private $prefix;
-
-    /**
-     * @param Collection<string, Agent>                 $publishers
-     * @param Collection<string, RDFDistributionModule> $modules
-     */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, DateTime $issued, DateTime $modified, int $accessRights, Collection $modules, string $prefix)
-    {
-        parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $issued, $modified, $accessRights);
-
-        $this->modules = $modules;
-        $this->prefix = $prefix;
-    }
 
     /**
      * @return Collection<string, RDFDistributionModule>

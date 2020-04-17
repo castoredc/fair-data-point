@@ -6,7 +6,6 @@ namespace App\Entity\Castor\Structure\Step;
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Structure\StructureElement;
 use function ksort;
-use function uasort;
 
 abstract class Step
 {
@@ -134,16 +133,5 @@ abstract class Step
     public function addField(Field $field): void
     {
         $this->fields[$field->getNumber()] = $field;
-    }
-
-    public function orderFields(): void
-    {
-        uasort($this->fields, static function (Field $a, Field $b) {
-            if ($a->getNumber() === $b->getNumber()) {
-                return 0;
-            }
-
-            return $a->getNumber() < $b->getNumber() ? -1 : 1;
-        });
     }
 }

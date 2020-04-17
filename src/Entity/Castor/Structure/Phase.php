@@ -11,30 +11,15 @@ class Phase extends StructureElement
     /** @var string|null */
     private $description;
 
-    /** @var string|null */
-    private $name;
-
     /** @var int|null */
     private $position;
 
-    public function __construct(?string $id, ?string $description, ?string $name, ?int $position)
+    public function __construct(?string $id, ?string $name, ?string $description, ?int $position)
     {
-        parent::__construct();
+        parent::__construct($id, $name);
 
-        $this->id = $id;
         $this->description = $description;
-        $this->name = $name;
         $this->position = $position;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getDescription(): ?string
@@ -45,16 +30,6 @@ class Phase extends StructureElement
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): void
-    {
-        $this->name = $name;
     }
 
     public function getPosition(): ?int
@@ -85,8 +60,8 @@ class Phase extends StructureElement
     {
         return new Phase(
             $data['id'] ?? null,
-            $data['phase_description'] ?? null,
             $data['phase_name'] ?? null,
+            $data['phase_description'] ?? null,
             $data['phase_order'] ?? null
         );
     }
