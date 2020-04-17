@@ -80,4 +80,25 @@ class AdminController extends AbstractController
             ['title' => 'Admin']
         );
     }
+
+    /**
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
+     * @Route("/admin/{catalog}/dataset/{dataset}/distribution/{distribution}/content", name="admin_study_distribution_content")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function adminDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
+    }
 }

@@ -27,6 +27,11 @@ export default class AdminDistributionListItem extends Component {
                         <Icon type="view" />
                     </Button>
                 </Link>
+                <Link to={'/admin/' + catalog + '/dataset/' + dataset + '/distribution/' + slug}>
+                    <Button variant="link">
+                        <Icon type="edit" />
+                    </Button>
+                </Link>
             </Col>
         </Row>;
     }

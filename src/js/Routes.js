@@ -64,5 +64,8 @@ export default ({user}) =>
 
         <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution" exact user={user} component={AdminStudyMetadataWrapper} />
         <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/add" exact user={user} component={AddDistribution} />
+        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/:distribution" exact user={user} component={AdminStudyMetadataWrapper} />
+        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/:distribution/content" exact user={user} component={AdminStudyMetadataWrapper} />
+
         <Route component={NotFound} />
     </Switch>;

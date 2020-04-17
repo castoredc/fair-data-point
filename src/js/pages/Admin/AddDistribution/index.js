@@ -13,7 +13,7 @@ import {LinkContainer} from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
 import AdminPage from "../../../components/AdminPage";
 import CastorStudyForm from "../../../components/Form/Admin/CastorStudyForm";
-import AddDistributionForm from "../../../components/Form/Admin/Distribution/AddDistributionForm";
+import DistributionForm from "../../../components/Form/Admin/Distribution/DistributionForm";
 
 export default class AddDistribution extends Component {
     constructor(props) {
@@ -68,7 +68,7 @@ export default class AddDistribution extends Component {
         >
             <Row>
                 <Col>
-                    <AddDistributionForm catalog={this.props.match.params.catalog} dataset={this.props.match.params.dataset} />
+                    <DistributionForm catalog={this.props.match.params.catalog} dataset={this.props.match.params.dataset} />
                 </Col>
             </Row>
         </AdminPage>;
