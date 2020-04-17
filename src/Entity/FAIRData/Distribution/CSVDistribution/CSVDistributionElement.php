@@ -14,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class CSVDistributionElement
 {
+    const FIELD_ID = "fieldId";
+    const VARIABLE_NAME = "variableName";
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -39,5 +42,10 @@ abstract class CSVDistributionElement
     public function getDistribution(): ?CSVDistribution
     {
         return $this->distribution;
+    }
+
+    public function setDistribution(?CSVDistribution $distribution): void
+    {
+        $this->distribution = $distribution;
     }
 }

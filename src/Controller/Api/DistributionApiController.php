@@ -4,14 +4,19 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\Distribution\DistributionApiRequest;
+use App\Api\Request\Distribution\DistributionContentApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
 use App\Entity\FAIRData\Distribution\Distribution;
 use App\Exception\ApiRequestParseError;
+use App\Exception\GroupedApiRequestParseError;
 use App\Exception\LanguageNotFound;
+use App\Message\Distribution\AddCSVDistributionContentCommand;
 use App\Message\Distribution\AddDistributionCommand;
+use App\Message\Distribution\ClearDistributionContentCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -57,6 +62,42 @@ class DistributionApiController extends ApiController
 
         return new JsonResponse((new DistributionContentApiResource($distribution))->toArray());
     }
+
+    /**
+     * @Route("/api/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/contents", methods={"POST"}, name="api_distribution_contents_change")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function changeDistributionContents(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $distribution);
+
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            /** @var DistributionContentApiRequest[] $parsed */
+            $parsed = $this->parseGroupedRequest(DistributionContentApiRequest::class, $request);
+
+            $bus->dispatch(new ClearDistributionContentCommand($distribution));
+
+            if ($distribution instanceof CSVDistribution)
+            {
+                foreach ($parsed as $item) {
+                    $bus->dispatch(new AddCSVDistributionContentCommand($distribution, $item->getType(), $item->getValue()));
+                }
+            }
+
+            return new JsonResponse([], 200);
+        } catch (GroupedApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
+    }
+
     /**
      * @Route("/api/catalog/{catalog}/dataset/{dataset}/distribution/add", methods={"POST"}, name="api_distribution_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
