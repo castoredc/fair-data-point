@@ -35,6 +35,7 @@ class CSVDistribution extends Distribution
      */
     private $includeAll = false;
 
+    /** @inheritDoc */
     public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, int $accessRights, bool $includeAll, Dataset $dataset)
     {
         parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $accessRights, $dataset);
@@ -51,6 +52,9 @@ class CSVDistribution extends Distribution
         return $this->elements;
     }
 
+    /**
+     * @param Collection<string, CSVDistributionElement> $elements
+     */
     public function setElements(Collection $elements): void
     {
         $this->elements = $elements;

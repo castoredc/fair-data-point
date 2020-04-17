@@ -84,8 +84,7 @@ class DistributionApiController extends ApiController
 
             $bus->dispatch(new ClearDistributionContentCommand($distribution));
 
-            if ($distribution instanceof CSVDistribution)
-            {
+            if ($distribution instanceof CSVDistribution) {
                 foreach ($parsed as $item) {
                     $bus->dispatch(new AddCSVDistributionContentCommand($distribution, $item->getType(), $item->getValue()));
                 }

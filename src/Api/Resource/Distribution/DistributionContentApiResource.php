@@ -5,11 +5,9 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElement;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementFieldId;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementVariableName;
 use App\Entity\FAIRData\Distribution\Distribution;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
 
 class DistributionContentApiResource implements ApiResource
 {
@@ -33,17 +31,16 @@ class DistributionContentApiResource implements ApiResource
 
             $elements = [];
 
-            foreach($this->distribution->getElements() as $element)
-            {
+            foreach ($this->distribution->getElements() as $element) {
                 if ($element instanceof CSVDistributionElementFieldId) {
                     $elements[] = [
                         'type' => 'fieldId',
-                        'value' => $element->getFieldId()
+                        'value' => $element->getFieldId(),
                     ];
                 } elseif ($element instanceof CSVDistributionElementVariableName) {
                     $elements[] = [
                         'type' => 'variableName',
-                        'value' => $element->getVariableName()
+                        'value' => $element->getVariableName(),
                     ];
                 }
             }

@@ -36,8 +36,7 @@ class LocalizedText
     {
         $this->texts = $texts;
 
-        foreach($this->texts as $text)
-        {
+        foreach ($this->texts as $text) {
             /** @var LocalizedTextItem $text */
             $text->setParent($this);
         }

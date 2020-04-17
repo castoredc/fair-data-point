@@ -1,10 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\StudyStructure;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Castor\Structure\Step\Step;
-use App\Entity\Castor\Structure\StructureElement;
 
 class StepsApiResource implements ApiResource
 {
@@ -12,8 +12,6 @@ class StepsApiResource implements ApiResource
     private $steps;
 
     /**
-     * StepsApiResource constructor.
-     *
      * @param Step[] $steps
      */
     public function __construct(array $steps)
@@ -21,6 +19,9 @@ class StepsApiResource implements ApiResource
         $this->steps = $steps;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         $data = [];

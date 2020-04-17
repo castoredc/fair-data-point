@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace App\MessageHandler\Distribution;
 
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Exception\InvalidDistributionType;
 use App\Exception\LanguageNotFound;
-use App\Message\Distribution\AddDistributionCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

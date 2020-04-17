@@ -1,14 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Dataset;
-use App\Message\Country\GetCountriesCommand;
 use App\Message\Study\GetFieldsForStepCommand;
 use App\Message\Study\GetStudyStructureCommand;
 use App\Security\CastorUser;
@@ -40,7 +37,6 @@ class StudyStructureApiController extends ApiController
 
         return new JsonResponse((new StudyStructureApiResource($handledStamp->getResult()))->toArray());
     }
-
 
     /**
      * @Route("/api/study/{study}/structure/step/{step}/fields", name="api_study_structure_step")

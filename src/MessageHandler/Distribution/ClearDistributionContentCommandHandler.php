@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
@@ -22,8 +23,7 @@ class ClearDistributionContentCommandHandler implements MessageHandlerInterface
     {
         $distribution = $message->getDistribution();
 
-        if($distribution instanceof CSVDistribution)
-        {
+        if ($distribution instanceof CSVDistribution) {
             $distribution->setElements(new ArrayCollection());
         }
 

@@ -42,7 +42,7 @@ class DistributionApiResource implements ApiResource
             'updated' => $this->distribution->getUpdated(),
             'accessRights' => $this->distribution->getAccessRights(),
             'downloadUrl' => null,
-            'type' => null
+            'type' => null,
         ];
 
         if ($this->distribution instanceof RDFDistribution) {
@@ -56,7 +56,7 @@ class DistributionApiResource implements ApiResource
             $data['type'] = 'csv';
         }
 
-        if($this->isAdmin) {
+        if ($this->isAdmin) {
             $data['studyId'] = $this->distribution->getDataset()->getStudy()->getId();
         }
 

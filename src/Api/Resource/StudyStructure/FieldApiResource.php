@@ -1,10 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\StudyStructure;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Castor\Form\Field;
-use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 
 class FieldApiResource implements ApiResource
 {
@@ -16,6 +16,9 @@ class FieldApiResource implements ApiResource
         $this->field = $field;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [

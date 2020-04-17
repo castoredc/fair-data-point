@@ -30,11 +30,13 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Security\ApiUser;
 use App\Security\CastorUser;
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Throwable;
+use function iterator_to_array;
 use function json_decode;
 
 class ApiClient
@@ -258,6 +260,7 @@ class ApiClient
             $results->set($field->getId(), $field);
         }
 
+        /** @var ArrayIterator $iterator */
         $iterator = $results->getIterator();
 
         $iterator->uasort(static function (Field $a, Field $b) {
@@ -560,9 +563,6 @@ class ApiClient
     }
 
     /**
-     * @param Study $study
-     *
-     * @return StructureCollection
      * @throws ErrorFetchingCastorData
      * @throws NoAccessPermission
      * @throws NotFound

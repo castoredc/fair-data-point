@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\StudyStructure;
 
@@ -15,10 +16,13 @@ class StudyStructureApiResource implements ApiResource
         $this->structure = $structure;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [
-            'study'  => (new StructureElementCollectionApiResource($this->structure->getPhases()))->toArray(),
+            'study' => (new StructureElementCollectionApiResource($this->structure->getPhases()))->toArray(),
             'survey' => (new StructureElementCollectionApiResource($this->structure->getSurveys()))->toArray(),
             'report' => (new StructureElementCollectionApiResource($this->structure->getReports()))->toArray(),
         ];

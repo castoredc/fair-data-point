@@ -1,10 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\StudyStructure;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Castor\Structure\Step\Step;
-use App\Entity\Castor\Structure\StructureElement;
 
 class StepApiResource implements ApiResource
 {
@@ -16,6 +16,9 @@ class StepApiResource implements ApiResource
         $this->step = $step;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         return [

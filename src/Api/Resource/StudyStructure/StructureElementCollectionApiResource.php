@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\StudyStructure;
 
@@ -20,7 +21,7 @@ class StructureElementCollectionApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        if($this->collection->getElements() === null) {
+        if ($this->collection->getElements() === null) {
             return [];
         }
 

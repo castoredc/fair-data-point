@@ -1,14 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElement;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementFieldId;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementVariableName;
 use App\Message\Distribution\AddCSVDistributionContentCommand;
-use App\Message\Distribution\ClearDistributionContentCommand;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -26,11 +24,9 @@ class AddCSVDistributionContentCommandHandler implements MessageHandlerInterface
     {
         $distribution = $message->getDistribution();
 
-        if($message->getType() === CSVDistributionElement::FIELD_ID)
-        {
+        if ($message->getType() === CSVDistributionElement::FIELD_ID) {
             $distribution->addElement(new CSVDistributionElementFieldId($message->getValue()));
-        } elseif($message->getType() === CSVDistributionElement::VARIABLE_NAME)
-        {
+        } elseif ($message->getType() === CSVDistributionElement::VARIABLE_NAME) {
             $distribution->addElement(new CSVDistributionElementVariableName($message->getValue()));
         }
 
