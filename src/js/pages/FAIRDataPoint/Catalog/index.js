@@ -21,6 +21,9 @@ import Icon from "../../../components/Icon";
 export default class Catalog extends Component {
     constructor(props) {
         super(props);
+        const params = queryString.parse(this.props.location.search);
+        const embedded = (typeof params.embed !== 'undefined');
+
         this.state = {
             isLoadingFDP:       true,
             hasLoadedFDP:       false,
@@ -39,9 +42,10 @@ export default class Catalog extends Component {
             displayList:        true,
             displayFilter:      true,
             filters:            {},
-            perPage:            10,
+            perPage:            embedded ? 5 : 10,
             pages:              null,
-            page:               null
+            page:               null,
+            embedded:           embedded
         };
 
         this.datasetsRef = React.createRef();
@@ -218,10 +222,8 @@ export default class Catalog extends Component {
     };
 
     render() {
-        const { pages } = this.state;
+        const { pages, embedded } = this.state;
 
-        const params = queryString.parse(this.props.location.search);
-        const embedded = (typeof params.embed !== 'undefined');
         const listWidth = this.state.displayList ? 8 : 12;
         const headerWidth = this.state.displayList ? 5 : 4;
         const buttonWidth = this.state.displayList ? 3 : 8;
