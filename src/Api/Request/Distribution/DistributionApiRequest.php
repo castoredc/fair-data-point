@@ -64,6 +64,12 @@ class DistributionApiRequest extends SingleApiRequest
      */
     private $accessRights;
 
+    /**
+     * @var bool|null
+     * @Assert\Type("bool")
+     */
+    private $includeAllData;
+
     protected function parse(): void
     {
         $this->type = $this->getFromData('type');
@@ -74,6 +80,7 @@ class DistributionApiRequest extends SingleApiRequest
         $this->language = $this->getFromData('language');
         $this->license = $this->getFromData('license');
         $this->accessRights = (int) $this->getFromData('accessRights');
+        $this->includeAllData = $this->getFromData('includeAllData');
     }
 
     public function getType(): string
@@ -114,5 +121,10 @@ class DistributionApiRequest extends SingleApiRequest
     public function getAccessRights(): int
     {
         return $this->accessRights;
+    }
+
+    public function getIncludeAllData(): ?bool
+    {
+        return $this->includeAllData;
     }
 }

@@ -64,6 +64,7 @@ class AddDistributionCommandHandler implements MessageHandlerInterface
                 $language,
                 $license,
                 $message->getAccessRights(),
+                $message->getIncludeAllData(),
                 $message->getDataset()
             );
         } else {

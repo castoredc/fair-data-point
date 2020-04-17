@@ -17,6 +17,7 @@ use App\Exception\LanguageNotFound;
 use App\Message\Distribution\AddCSVDistributionContentCommand;
 use App\Message\Distribution\AddDistributionCommand;
 use App\Message\Distribution\ClearDistributionContentCommand;
+use App\Message\Distribution\UpdateDistributionCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -127,7 +128,60 @@ class DistributionApiController extends ApiController
                     $parsed->getLanguage(),
                     $parsed->getLicense(),
                     $parsed->getAccessRights(),
+                    $parsed->getIncludeAllData(),
                     $dataset,
+                    $user
+                )
+            );
+
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            return new JsonResponse([], 200);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof LanguageNotFound) {
+                return new JsonResponse($e->toArray(), 409);
+            }
+
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/api/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/update", methods={"POST"}, name="api_distribution_update")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function updateDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $dataset);
+
+        if (! $dataset->hasCatalog($catalog)) {
+            throw $this->createNotFoundException();
+        }
+
+        /** @var CastorUser $user */
+        $user = $this->getUser();
+
+        try {
+            /** @var DistributionApiRequest $parsed */
+            $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
+            $envelope = $bus->dispatch(
+                new UpdateDistributionCommand(
+                    $distribution,
+                    $parsed->getSlug(),
+                    $parsed->getTitle(),
+                    $parsed->getVersion(),
+                    $parsed->getDescription(),
+                    $parsed->getLanguage(),
+                    $parsed->getLicense(),
+                    $parsed->getAccessRights(),
+                    $parsed->getIncludeAllData(),
                     $user
                 )
             );

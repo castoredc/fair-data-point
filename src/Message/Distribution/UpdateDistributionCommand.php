@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace App\Message\Distribution;
 
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution\Distribution;
 use App\Security\CastorUser;
 
-class AddDistributionCommand
+class UpdateDistributionCommand
 {
-    /** @var string */
-    private $type;
+    /** @var Distribution */
+    private $distribution;
 
     /** @var string */
     private $slug;
@@ -32,9 +33,6 @@ class AddDistributionCommand
     /** @var int */
     private $accessRights;
 
-    /** @var Dataset */
-    private $dataset;
-
     /** @var bool|null */
     private $includeAllData;
 
@@ -42,7 +40,7 @@ class AddDistributionCommand
     private $user;
 
     public function __construct(
-        string $type,
+        Distribution $distribution,
         string $slug,
         string $title,
         string $version,
@@ -51,10 +49,9 @@ class AddDistributionCommand
         string $license,
         int $accessRights,
         ?bool $includeAllData,
-        Dataset $dataset,
         CastorUser $user
     ) {
-        $this->type = $type;
+        $this->distribution = $distribution;
         $this->slug = $slug;
         $this->title = $title;
         $this->version = $version;
@@ -63,13 +60,12 @@ class AddDistributionCommand
         $this->license = $license;
         $this->accessRights = $accessRights;
         $this->includeAllData = $includeAllData;
-        $this->dataset = $dataset;
         $this->user = $user;
     }
 
-    public function getType(): string
+    public function getDistribution(): Distribution
     {
-        return $this->type;
+        return $this->distribution;
     }
 
     public function getSlug(): string
@@ -110,11 +106,6 @@ class AddDistributionCommand
     public function getIncludeAllData(): ?bool
     {
         return $this->includeAllData;
-    }
-
-    public function getDataset(): Dataset
-    {
-        return $this->dataset;
     }
 
     public function getUser(): CastorUser

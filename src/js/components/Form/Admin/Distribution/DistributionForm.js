@@ -17,29 +17,48 @@ import Dropdown from "../../../Input/Dropdown";
 import {recruitmentStatus} from "../../StudyDetailsForm";
 import {CheckboxGroup} from "../../../Input/Checkbox";
 import RadioGroup from "../../../RadioGroup";
+import {localizedText} from "../../../../util";
 
-export default class AddDistributionForm extends Component {
+export default class DistributionForm extends Component {
     constructor(props) {
         super(props);
 
+        let data = {
+            title: '',
+            type: '',
+            version: '',
+            slug: '',
+            description: '',
+            language: null,
+            license: null,
+            accessRights: null,
+            includeAllData: null
+        };
+
+        if (typeof props.distribution !== 'undefined' && typeof props.contents !== 'undefined') {
+            data = {
+                title: localizedText(props.distribution.title, 'en'),
+                type: props.distribution.type,
+                version: props.distribution.version,
+                slug: props.distribution.slug,
+                description: localizedText(props.distribution.description, 'en'),
+                language: props.distribution.language.code,
+                license: props.distribution.license.slug,
+                accessRights: props.distribution.accessRights,
+                update: true,
+                includeAllData: props.contents
+            }
+        }
+
         this.state = {
-            data: {
-                title: '',
-                type: '',
-                version: '',
-                slug: '',
-                description: '',
-                language: null,
-                license: null,
-                accessRights: null
-            },
-            metadataSource: null,
+            data: data,
             visitedFields: {},
             validation: {},
             isSaved: false,
             submitDisabled: false,
             languages: [],
-            licenses: []
+            licenses: [],
+            update: (typeof props.distribution !== 'undefined')
         };
     }
 
@@ -112,13 +131,17 @@ export default class AddDistributionForm extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        const { update } = this.state;
+
         this.setState({
             submitDisabled: true,
             isLoading: true
         });
 
         if(this.form.isFormValid()) {
-           axios.post('/api/catalog/' + this.props.catalog + '/dataset/' + this.props.dataset + '/distribution/add', this.state.data)
+            const url = '/api/catalog/' + this.props.catalog + '/dataset/' + this.props.dataset + '/distribution/' + (update ? this.props.distribution.slug + '/update' : 'add');
+
+           axios.post(url, this.state.data)
                 .then(() => {
                     this.setState({
                         isSaved: true,
@@ -146,11 +169,11 @@ export default class AddDistributionForm extends Component {
 
     render() {
         const { catalog, dataset } = this.props;
-        const { languages, licenses } = this.state;
+        const { languages, licenses, isSaved, update } = this.state;
 
         const required = "This field is required";
 
-        if(this.state.isSaved)
+        if(isSaved)
         {
             return <Redirect push to={'/admin/' + catalog + '/dataset/' + dataset + '/distribution/'} />;
         }
@@ -188,6 +211,17 @@ export default class AddDistributionForm extends Component {
                                 name="type"
                             />
                         </FormItem>
+
+                        {this.state.data.type === 'csv' && <FormItem label="Available data">
+                            <RadioGroup
+                                options={availableData}
+                                onChange={this.handleChange}
+                                onBlur={this.handleFieldVisit}
+                                value={this.state.data.includeAllData}
+                                variant="horizontal"
+                                name="includeAllData"
+                            />
+                        </FormItem>}
 
                         <FormItem label="Version">
                             <Input
@@ -275,7 +309,8 @@ export default class AddDistributionForm extends Component {
                         </LinkContainer>
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Add distribution</Button>
+                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {update ? 'Update' : 'Add'} distribution</Button>
                     </Col>
                 </Row>
 
@@ -292,4 +327,9 @@ export const accessTypes = [
 export const distributionTypes = [
     { value: 'csv', label: 'CSV Distribution' },
     { value: 'rdf', label: 'RDF Distribution' },
+];
+
+export const availableData = [
+    { value: true, label: 'All data' },
+    { value: false, label: 'Selection of data' },
 ];

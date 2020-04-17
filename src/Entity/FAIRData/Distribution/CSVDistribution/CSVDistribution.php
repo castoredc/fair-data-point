@@ -35,11 +35,12 @@ class CSVDistribution extends Distribution
      */
     private $includeAll = false;
 
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, int $accessRights, Dataset $dataset)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, int $accessRights, bool $includeAll, Dataset $dataset)
     {
         parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $accessRights, $dataset);
 
         $this->elements = new ArrayCollection();
+        $this->includeAll = $includeAll;
     }
 
     /**
@@ -59,6 +60,11 @@ class CSVDistribution extends Distribution
     {
         $element->setDistribution($this);
         $this->elements->add($element);
+    }
+
+    public function setIncludeAll(bool $includeAll): void
+    {
+        $this->includeAll = $includeAll;
     }
 
     public function isIncludeAll(): bool
