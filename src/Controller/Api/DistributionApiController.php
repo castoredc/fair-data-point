@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 
 use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
+use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution\Distribution;
@@ -40,6 +41,22 @@ class DistributionApiController extends ApiController
         return new JsonResponse((new DistributionApiResource($distribution, $this->isGranted('ROLE_ADMIN')))->toArray());
     }
 
+    /**
+     * @Route("/api/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/contents", methods={"GET"}, name="api_distribution_contents")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function distributionContents(Catalog $catalog, Dataset $dataset, Distribution $distribution): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $distribution);
+
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+            throw $this->createNotFoundException();
+        }
+
+        return new JsonResponse((new DistributionContentApiResource($distribution))->toArray());
+    }
     /**
      * @Route("/api/catalog/{catalog}/dataset/{dataset}/distribution/add", methods={"POST"}, name="api_distribution_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
