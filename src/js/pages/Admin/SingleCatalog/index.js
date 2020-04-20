@@ -213,6 +213,7 @@ export default class SingleCatalog extends Component {
                                                                name={localizedText(item.title, 'en')}
                                                                slug={item.slug}
                                                                consent={item.consent}
+                                                               published={item.published}
                                     />
                                 },
                             )}

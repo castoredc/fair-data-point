@@ -29,7 +29,7 @@ export default class DatasetMap extends Component {
                     {datasets.map((dataset, index) => {
                         return <Marker key={index} position={[dataset.coordinates.lat, dataset.coordinates.long]}>
                             <Popup>
-                                <Link to={dataset.relative_url} className="PopupDatasetTitle" target="_blank">
+                                <Link to={dataset.relativeUrl} className="PopupDatasetTitle" target="_blank">
                                     <h3>{localizedText(dataset.title, 'en')}</h3>
                                 </Link>
                                 <div className="PopupOrganization">
