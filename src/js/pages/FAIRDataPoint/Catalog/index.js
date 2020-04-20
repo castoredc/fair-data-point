@@ -244,7 +244,7 @@ export default class Catalog extends Component {
             issued={this.state.catalog.issued}
             modified={this.state.catalog.modified}
             license={this.state.catalog.license}
-            back={{link: this.state.fdp.relative_url, text: localizedText(this.state.fdp.title, 'en')}}
+            back={{link: this.state.fdp.relativeUrl, text: localizedText(this.state.fdp.title, 'en')}}
         >
             {(this.state.catalog.description && !embedded) && <Row>
                 <Col md={12} className="InformationCol">
@@ -284,7 +284,7 @@ export default class Catalog extends Component {
                                     {this.state.datasets.map((item, index) => {
                                         return <StudyListItem key={index}
                                                               newWindow={embedded}
-                                                              link={item.relative_url}
+                                                              link={item.relativeUrl}
                                                               logo={item.logo}
                                                               name={localizedText(item.title, 'en')}
                                                               description={localizedText(item.shortDescription, 'en')}

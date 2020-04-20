@@ -135,7 +135,7 @@ export default class Dataset extends Component {
             modified={this.state.dataset.modified}
             license={this.state.dataset.license}
             badge={badge}
-            back={{link: this.state.catalog.relative_url, text: localizedText(this.state.catalog.title, 'en')}}
+            back={{link: this.state.catalog.relativeUrl, text: localizedText(this.state.catalog.title, 'en')}}
         >
             <Row>
                 <Col md={8} className="InformationCol">
@@ -151,7 +151,7 @@ export default class Dataset extends Component {
                     {this.state.distributions.map((item, index) => {
                         return <ListItem key={index}
                                          newWindow={embedded}
-                                         link={item.relative_url}
+                                         link={item.relativeUrl}
                                          title={localizedText(item.title, 'en')}
                                          description={localizedText(item.description, 'en')}
                                          smallIcon={(item.accessRights === 2 || item.accessRights === 3) && 'lock'}

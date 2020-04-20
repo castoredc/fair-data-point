@@ -90,7 +90,7 @@ export default class FAIRDataPointMain extends Component {
                     {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
                         return <ListItem key={index}
                                          newWindow={embedded}
-                                         link={item.relative_url}
+                                         link={item.relativeUrl}
                                          title={localizedText(item.title, 'en')}
                                          description={localizedText(item.description, 'en')} />}
                     ) : <div className="NoResults">No catalogs found.</div>}
