@@ -233,6 +233,9 @@ export default class StudyDetailsForm extends Component {
                             />
                         </FormItem>
                         <FormItem label="Brief Summary">
+                            <p>
+                                Please include the objective, design, research question and the population of your study.
+                            </p>
                             <Input
                                 validators={['required']}
                                 errorMessages={[required]}
