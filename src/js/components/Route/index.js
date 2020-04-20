@@ -7,7 +7,7 @@ export const PrivateRoute = ({ component: Component, path, user, ...rest }) => (
             ? <Component {...props} />
             : <Redirect to={{
                 pathname: '/login',
-                search:   '?path=' + encodeURI(path)
+                search:   '?path=' + encodeURI(window.location.pathname)
             }} />
     )} />
 );
