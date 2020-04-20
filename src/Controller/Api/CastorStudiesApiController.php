@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Api\Resource\Study\StudiesApiResource;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Study\FindStudiesByUserCommand;
@@ -33,7 +34,7 @@ class CastorStudiesApiController extends ApiController
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            return new JsonResponse($handledStamp->getResult());
+            return new JsonResponse((new StudiesApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
