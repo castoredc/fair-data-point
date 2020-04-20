@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Message\Metadata;
 
-use App\Entity\Metadata\StudyMetadata;
+use App\Entity\Castor\Study;
 
 class UpdateConsentCommand
 {
-    /** @var StudyMetadata */
-    private $metadata;
+    /** @var Study */
+    private $study;
 
     /** @var bool */
     private $publish;
@@ -16,16 +16,16 @@ class UpdateConsentCommand
     /** @var bool */
     private $socialMedia;
 
-    public function __construct(StudyMetadata $metadata, bool $publish, bool $socialMedia)
+    public function __construct(Study $study, bool $publish, bool $socialMedia)
     {
-        $this->metadata = $metadata;
+        $this->study = $study;
         $this->publish = $publish;
         $this->socialMedia = $socialMedia;
     }
 
-    public function getMetadata(): StudyMetadata
+    public function getStudy(): Study
     {
-        return $this->metadata;
+        return $this->study;
     }
 
     public function getPublish(): bool

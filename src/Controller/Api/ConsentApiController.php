@@ -55,7 +55,7 @@ class ConsentApiController extends ApiController
 
             $bus->dispatch(
                 new UpdateConsentCommand(
-                    $study->getLatestMetadata(),
+                    $study,
                     $parsed->getPublish(),
                     $parsed->getSocialMedia()
                 )
@@ -81,7 +81,7 @@ class ConsentApiController extends ApiController
                 return new JsonResponse([], 200);
             }
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([$e->getMessage()], 500);
         }
     }
 }

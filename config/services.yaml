@@ -32,3 +32,7 @@ services:
         public:     false
         tags:
             - { name: security.voter }
+
+    App\Model\Slack\ApiClient:
+        arguments:
+            - '%env(SLACK_WEBHOOK_URL)%'
