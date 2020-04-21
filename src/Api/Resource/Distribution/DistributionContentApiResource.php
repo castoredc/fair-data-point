@@ -7,7 +7,7 @@ use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementFieldId;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementVariableName;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource
 {

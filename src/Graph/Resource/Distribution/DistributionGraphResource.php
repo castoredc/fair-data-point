@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Graph\Resource\Distribution;
 
 use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\GraphResource;

@@ -6,7 +6,7 @@ namespace App\Controller\UserInterface;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

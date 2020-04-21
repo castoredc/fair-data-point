@@ -8,7 +8,7 @@ use App\Entity\Castor\Record;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordsCommand;
