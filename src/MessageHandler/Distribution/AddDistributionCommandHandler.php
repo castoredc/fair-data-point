@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Data\CSV\CSVDistribution;
+use App\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;

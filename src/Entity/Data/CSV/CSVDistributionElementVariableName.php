@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution\CSVDistribution;
+namespace App\Data\CSV;
 
 use Doctrine\ORM\Mapping as ORM;
 

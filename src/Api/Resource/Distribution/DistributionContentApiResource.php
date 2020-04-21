@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementFieldId;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementVariableName;
+use App\Data\CSV\CSVDistribution;
+use App\Data\CSV\CSVDistributionElementFieldId;
+use App\Data\CSV\CSVDistributionElementVariableName;
 use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource

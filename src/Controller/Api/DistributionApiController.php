@@ -9,7 +9,7 @@ use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
+use App\Data\CSV\CSVDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;

@@ -5,7 +5,7 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\Record;
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Data\RDF\RDFDistribution;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;

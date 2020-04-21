@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Data\CSV\CSVDistribution;
 use App\Entity\FAIRData\Distribution;
+use App\Data\RDF\RDFDistribution;
 
 class DistributionApiResource implements ApiResource
 {
