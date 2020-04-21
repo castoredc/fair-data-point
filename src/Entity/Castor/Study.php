@@ -6,6 +6,7 @@ namespace App\Entity\Castor;
 use App\Entity\Castor\Form\Field;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
+use App\Security\CastorServer;
 use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -70,7 +71,7 @@ class Study
     private $enteredManually = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CastorServer")
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorServer")
      * @ORM\JoinColumn(name="server", referencedColumnName="id")
      *
      * @var CastorServer|null

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\Castor\CastorServer;
+use App\Security\CastorServer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,7 +42,7 @@ class ApiUser
     private $clientSecret;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorServer")
+     * @ORM\ManyToOne(targetEntity="App\Security\CastorServer")
      * @ORM\JoinColumn(name="server", referencedColumnName="id")
      *
      * @var CastorServer|null

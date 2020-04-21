@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Security;
 
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
