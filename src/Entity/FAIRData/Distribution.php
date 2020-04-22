@@ -19,6 +19,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Distribution
 {
+    public const TYPE_RDF = 'rdf';
+    public const TYPE_CSV = 'csv';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -270,8 +273,7 @@ class Distribution
 
     public function setDatabaseInformation(): void
     {
-        if($this->id === null)
-        {
+        if ($this->id === null) {
             throw new DistributionNotStoredYet();
         }
 

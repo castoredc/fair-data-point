@@ -7,6 +7,7 @@ use App\Entity\FAIRData\Distribution;
 use Doctrine\ORM\Mapping as ORM;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Hackzilla\PasswordGenerator\RandomGenerator\Php7RandomGenerator;
+use function str_replace;
 
 /**
  * @ORM\Entity
@@ -15,6 +16,7 @@ use Hackzilla\PasswordGenerator\RandomGenerator\Php7RandomGenerator;
 class DistributionDatabaseInformation
 {
     public const DBNAME_PREPEND = 'dist_';
+    public const DBNAME_PREPEND_ESCAPE = 'dist\_';
     public const USERNAME_PREPEND = 'du_';
 
     /**
@@ -72,6 +74,11 @@ class DistributionDatabaseInformation
     public function getDatabase(): string
     {
         return $this->database;
+    }
+
+    public function getEscapedDatabase(): string
+    {
+        return str_replace($this::DBNAME_PREPEND, $this::DBNAME_PREPEND_ESCAPE, $this->database);
     }
 
     public function getUsername(): string
