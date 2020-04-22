@@ -35,7 +35,7 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
     {
         $study = $message->getDistribution()->getDataset()->getStudy();
 
-        if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
+        if ($message->getDistribution()->getContents()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
         } else {
             $this->apiClient->setUser($message->getUser());

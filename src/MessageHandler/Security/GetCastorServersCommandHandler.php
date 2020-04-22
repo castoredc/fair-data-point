@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Security;
 
-use App\Security\CastorServer;
 use App\Message\Security\GetCastorServersCommand;
+use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

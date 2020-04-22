@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity\Data;
 
@@ -73,13 +74,6 @@ class DistributionContents
      */
     private $updatedBy;
 
-    /**
-     * DistributionContents constructor.
-     *
-     * @param Distribution $distribution
-     * @param int          $accessRights
-     * @param bool         $isPublished
-     */
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
         $this->distribution = $distribution;

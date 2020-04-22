@@ -48,7 +48,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         }
 
         $template = $this->twig->createTemplate($message->getDistribution()->getTwig());
-        $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
+        $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
 
         $return = '';
 

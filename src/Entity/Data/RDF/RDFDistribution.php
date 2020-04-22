@@ -58,7 +58,7 @@ class RDFDistribution extends DistributionContents
 
     public function getRDFUrl(): string
     {
-        return parent::getAccessUrl() . '/rdf';
+        return $this->getDistribution()->getAccessUrl() . '/rdf';
     }
 
     public function getTwig(): string

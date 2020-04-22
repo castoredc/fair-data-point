@@ -6,7 +6,6 @@ namespace App\MessageHandler\Distribution;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Exception\InvalidDistributionType;
-use App\Exception\LanguageNotFound;
 use App\Message\Distribution\AddDistributionContentsCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
@@ -43,8 +41,7 @@ class AddDistributionCommandHandler implements MessageHandlerInterface
             throw new LanguageNotFound();
         }
 
-        if($message->getType() !== 'rdf' && $message->getType() !== 'csv')
-        {
+        if ($message->getType() !== 'rdf' && $message->getType() !== 'csv') {
             throw new InvalidDistributionType();
         }
 

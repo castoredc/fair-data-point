@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Graph\Resource\Distribution;
 
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Distribution;
-use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\GraphResource;
@@ -52,9 +52,11 @@ class DistributionGraphResource implements GraphResource
 
         $graph->addResource($url, 'dcterms:license', $this->distribution->getLicense()->getUrl()->getValue());
 
-        if ($this->distribution instanceof RDFDistribution) {
-            $graph->addResource($url, 'dcat:downloadURL', $this->distribution->getRDFUrl() . '/?download=1');
-            $graph->addResource($url, 'dcat:accessURL', $this->distribution->getRDFUrl());
+        $contents = $this->distribution->getContents();
+
+        if ($contents instanceof RDFDistribution) {
+            $graph->addResource($url, 'dcat:downloadURL', $contents->getRDFUrl() . '/?download=1');
+            $graph->addResource($url, 'dcat:accessURL', $contents->getRDFUrl());
             $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
         }
 

@@ -46,13 +46,16 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
         $distribution->setDescription(new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getDescription(), $language)])));
         $distribution->setLanguage($language);
         $distribution->setLicense($license);
-        $distribution->setAccessRights($message->getAccessRights());
 
-        if ($distribution instanceof CSVDistribution) {
-            $distribution->setIncludeAll($message->getIncludeAllData());
+        $contents = $distribution->getContents();
+        $contents->setAccessRights($message->getAccessRights());
+
+        if ($contents instanceof CSVDistribution) {
+            $contents->setIncludeAll($message->getIncludeAllData());
         }
 
         $this->em->persist($distribution);
+        $this->em->persist($contents);
         $this->em->flush();
     }
 }

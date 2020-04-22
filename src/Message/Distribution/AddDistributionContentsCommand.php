@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Security\CastorUser;
 

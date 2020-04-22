@@ -24,7 +24,7 @@ class DistributionContentApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        if($this->distribution->getContents() === null) {
+        if ($this->distribution->getContents() === null) {
             return [];
         }
 
@@ -32,12 +32,14 @@ class DistributionContentApiResource implements ApiResource
             'accessRights' => $this->distribution->getContents()->getAccessRights(),
         ];
 
-        if ($this->distribution instanceof CSVDistribution) {
-            $data['includeAll'] = $this->distribution->isIncludeAll();
+        $contents = $this->distribution->getContents();
+
+        if ($contents instanceof CSVDistribution) {
+            $data['includeAll'] = $contents->isIncludeAll();
 
             $elements = [];
 
-            foreach ($this->distribution->getElements() as $element) {
+            foreach ($contents->getElements() as $element) {
                 if ($element instanceof CSVDistributionElementFieldId) {
                     $elements[] = [
                         'type' => 'fieldId',

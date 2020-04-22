@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Distribution;
 use App\Entity\Iri;
 use App\Security\CastorUser;
 use DateTime;

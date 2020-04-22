@@ -5,8 +5,8 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\FAIRData\Distribution;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\FAIRData\Distribution;
 
 class DistributionApiResource implements ApiResource
 {

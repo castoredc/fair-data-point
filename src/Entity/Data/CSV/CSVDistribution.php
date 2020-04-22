@@ -5,11 +5,7 @@ namespace App\Entity\Data\CSV;
 
 use App\Entity\Castor\Form\Field;
 use App\Entity\Data\DistributionContents;
-use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
-use App\Entity\FAIRData\Language;
-use App\Entity\FAIRData\License;
-use App\Entity\FAIRData\LocalizedText;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
