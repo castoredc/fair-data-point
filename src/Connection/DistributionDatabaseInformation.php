@@ -51,10 +51,13 @@ class DistributionDatabaseInformation
     {
         $this->distribution = $distribution;
         $this->database = $this::DBNAME_PREPEND . $distribution->getId();
-        $this->username = $this::USERNAME_PREPEND . $distribution->getId();
 
         $generator = new ComputerPasswordGenerator();
         $generator->setRandomGenerator(new Php7RandomGenerator());
+        $generator->setOptionValue(ComputerPasswordGenerator::OPTION_LENGTH, 13);
+
+        $this->username = $this::USERNAME_PREPEND . $generator->generatePassword();
+
         $generator->setOptionValue(ComputerPasswordGenerator::OPTION_SYMBOLS, true);
         $generator->setOptionValue(ComputerPasswordGenerator::OPTION_LENGTH, 32);
 
