@@ -1,88 +1,37 @@
 doctrine:
     dbal:
-        default_connection: default
-        connections:
-
-            default:
-                driver: 'pdo_mysql'
-                server_version: '5.7'
-                host: '%env(DB_HOST)%'
-                port: '%env(DB_PORT)%'
-                dbname: '%env(DB_DEFAULT_NAME)%'
-                user: '%env(DB_DEFAULT_USER)%'
-                password: '%env(DB_DEFAULT_PASS)%'
-                default_table_options:
-                    charset: utf8
-                    collate: utf8_general_ci
-
-            distribution:
-                driver: 'pdo_mysql'
-                server_version: '5.7'
-                host: '%env(DB_HOST)%'
-                port: '%env(DB_PORT)%'
-                dbname: ~
-                user: ~
-                password: ~
-                wrapper_class: App\Connection\Wrapper
-                default_table_options:
-                    charset: utf8
-                    collate: utf8_general_ci
-
+        driver: 'pdo_mysql'
+        server_version: '5.7'
+        charset: utf8
+        default_table_options:
+            charset: utf8
+            collate: utf8_general_ci
+        host: '%env(DB_HOST)%'
+        port: '%env(DB_PORT)%'
+        dbname: '%env(DB_DEFAULT_NAME)%'
+        user: '%env(DB_DEFAULT_USER)%'
+        password: '%env(DB_DEFAULT_PASS)%'
         types:
             iri:  App\Type\IriType
             StudyType:  App\Type\StudyType
             DistributionAccessType:  App\Type\DistributionAccessType
             RecruitmentStatusType:  App\Type\RecruitmentStatusType
             MethodType:  App\Type\MethodType
+
     orm:
         auto_generate_proxy_classes: true
-        default_entity_manager: default
-
-        entity_managers:
-            default:
-                auto_mapping:     false
-                connection:       default
-                naming_strategy:  doctrine.orm.naming_strategy.underscore
-                mappings:
-                    Castor:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Castor'
-                        prefix: 'App\Entity\Castor'
-                        alias: Castor
-                    FAIRData:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/FAIRData'
-                        prefix: 'App\Entity\FAIRData'
-                        alias: FAIRData
-                    Metadata:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Metadata'
-                        prefix: 'App\Entity\Metadata'
-                        alias: Metadata
-                    Terminology:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Terminology'
-                        prefix: 'App\Entity\Terminology'
-                        alias: Terminology
-                    Security:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Security'
-                        prefix: 'App\Security'
-                        alias: Security
-
-            distribution:
-                auto_mapping:     false
-                connection:       distribution
-                naming_strategy:  doctrine.orm.naming_strategy.underscore
-                mappings:
-                    Data:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Data'
-                        prefix: 'App\Entity\Data'
-                        alias: Data
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+            security:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Security'
+                prefix: 'App\Security'
+                alias: Security
