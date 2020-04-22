@@ -24,7 +24,13 @@ class DistributionContentApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $data = [];
+        if($this->distribution->getContents() === null) {
+            return [];
+        }
+
+        $data = [
+            'accessRights' => $this->distribution->getContents()->getAccessRights(),
+        ];
 
         if ($this->distribution instanceof CSVDistribution) {
             $data['includeAll'] = $this->distribution->isIncludeAll();

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\Data\DistributionContents;
 use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
@@ -82,6 +83,13 @@ class Distribution
      * @var Dataset|null
      */
     private $dataset;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents", mappedBy="distribution")
+     *
+     * @var DistributionContents|null
+     */
+    private $contents;
 
     /**
      * @ORM\Column(type="datetime")
@@ -239,6 +247,16 @@ class Distribution
     public function getBaseUrl(): string
     {
         return $this->dataset->getBaseUrl();
+    }
+
+    public function getContents(): ?DistributionContents
+    {
+        return $this->contents;
+    }
+
+    public function setContents(?DistributionContents $contents): void
+    {
+        $this->contents = $contents;
     }
 
     /**

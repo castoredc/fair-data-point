@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Data\CSV;
+namespace App\Entity\Data\CSV;
 
 use App\Entity\Castor\Form\Field;
 use App\Entity\Data\DistributionContents;
@@ -37,9 +37,9 @@ class CSVDistribution extends DistributionContents
     private $includeAll = false;
 
     /** @inheritDoc */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, int $accessRights, bool $includeAll, Dataset $dataset)
+    public function __construct(Distribution $distribution, int $accessRights, bool $isPublished, bool $includeAll)
     {
-        parent::__construct($slug, $title, $version, $description, $publishers, $language, $license, $accessRights, $dataset);
+        parent::__construct($distribution, $accessRights, $isPublished);
 
         $this->elements = new ArrayCollection();
         $this->includeAll = $includeAll;
@@ -98,6 +98,6 @@ class CSVDistribution extends DistributionContents
 
     public function getAccessUrl(): string
     {
-        return parent::getAccessUrl() . '/csv';
+        return $this->getDistribution()->getAccessUrl() . '/csv';
     }
 }

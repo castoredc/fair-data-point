@@ -36,6 +36,7 @@ class RDFDistributionModule
 
     /**
      * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="modules",cascade={"persist"})
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="distribution")
      *
      * @var RDFDistribution|null
      */

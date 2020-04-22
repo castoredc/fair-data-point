@@ -12,21 +12,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="distribution")
+ * @ORM\Table(name="distribution_contents")
  * @ORM\HasLifecycleCallbacks
  */
 class DistributionContents
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
-     *
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Distribution")
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="contents")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Distribution
@@ -89,23 +82,11 @@ class DistributionContents
      */
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
-        $this->id = $distribution->getId();
         $this->distribution = $distribution;
         $this->accessRights = $accessRights;
         $this->isPublished = $isPublished;
     }
 
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Distribution
-     */
     public function getDistribution(): Distribution
     {
         return $this->distribution;

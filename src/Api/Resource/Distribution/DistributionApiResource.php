@@ -40,19 +40,20 @@ class DistributionApiResource implements ApiResource
             'license' => $this->distribution->getLicense()->toArray(),
             'created' => $this->distribution->getCreated(),
             'updated' => $this->distribution->getUpdated(),
-            'accessRights' => $this->distribution->getAccessRights(),
             'downloadUrl' => null,
             'type' => null,
         ];
 
-        if ($this->distribution instanceof RDFDistribution) {
-            $data['accessUrl'] = $this->distribution->getRDFUrl();
-            $data['downloadUrl'] = $this->distribution->getRDFUrl() . '/?download=1';
+        $contents = $this->distribution->getContents();
+
+        if ($contents instanceof RDFDistribution) {
+            $data['accessUrl'] = $contents->getRDFUrl();
+            $data['downloadUrl'] = $contents->getRDFUrl() . '/?download=1';
             $data['type'] = 'rdf';
         }
 
-        if ($this->distribution instanceof CSVDistribution) {
-            $data['downloadUrl'] = $this->distribution->getAccessUrl();
+        if ($contents instanceof CSVDistribution) {
+            $data['downloadUrl'] = $contents->getAccessUrl();
             $data['type'] = 'csv';
         }
 

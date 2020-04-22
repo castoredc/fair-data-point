@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Data\CSV\CSVDistribution;
-use App\Data\RDF\RDFDistribution;
+use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
@@ -30,7 +31,7 @@ class AddDistributionCommandHandler implements MessageHandlerInterface
      * @throws LanguageNotFound
      * @throws InvalidDistributionType
      */
-    public function __invoke(AddDistributionCommand $message): void
+    public function __invoke(AddDistributionCommand $message): Distribution
     {
         /** @var Language|null $language */
         $language = $this->em->getRepository(Language::class)->find($message->getLanguage());
@@ -42,36 +43,25 @@ class AddDistributionCommandHandler implements MessageHandlerInterface
             throw new LanguageNotFound();
         }
 
-        if ($message->getType() === 'rdf') {
-            $distribution = new RDFDistribution(
-                $message->getSlug(),
-                new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getTitle(), $language)])),
-                $message->getVersion(),
-                new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getDescription(), $language)])),
-                new ArrayCollection(),
-                $language,
-                $license,
-                $message->getAccessRights(),
-                $message->getDataset()
-            );
-        } elseif ($message->getType() === 'csv') {
-            $distribution = new CSVDistribution(
-                $message->getSlug(),
-                new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getTitle(), $language)])),
-                $message->getVersion(),
-                new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getDescription(), $language)])),
-                new ArrayCollection(),
-                $language,
-                $license,
-                $message->getAccessRights(),
-                $message->getIncludeAllData(),
-                $message->getDataset()
-            );
-        } else {
+        if($message->getType() !== 'rdf' && $message->getType() !== 'csv')
+        {
             throw new InvalidDistributionType();
         }
 
+        $distribution = new Distribution(
+            $message->getSlug(),
+            new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getTitle(), $language)])),
+            $message->getVersion(),
+            new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getDescription(), $language)])),
+            new ArrayCollection(),
+            $language,
+            $license,
+            $message->getDataset()
+        );
+
         $this->em->persist($distribution);
         $this->em->flush();
+
+        return $distribution;
     }
 }
