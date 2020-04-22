@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
+use App\Exception\DistributionNotStoredYet;
 use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
@@ -90,6 +92,13 @@ class Distribution
      * @var DistributionContents|null
      */
     private $contents;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Connection\DistributionDatabaseInformation", mappedBy="distribution")
+     *
+     * @var DistributionDatabaseInformation|null
+     */
+    private $databaseInformation;
 
     /**
      * @ORM\Column(type="datetime")
@@ -257,6 +266,21 @@ class Distribution
     public function setContents(?DistributionContents $contents): void
     {
         $this->contents = $contents;
+    }
+
+    public function setDatabaseInformation(): void
+    {
+        if($this->id === null)
+        {
+            throw new DistributionNotStoredYet();
+        }
+
+        $this->databaseInformation = new DistributionDatabaseInformation($this);
+    }
+
+    public function getDatabaseInformation(): ?DistributionDatabaseInformation
+    {
+        return $this->databaseInformation;
     }
 
     /**
