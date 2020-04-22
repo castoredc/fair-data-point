@@ -5,7 +5,7 @@ namespace App\Graph\Resource\Distribution;
 
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Distribution;
-use App\Data\RDF\RDFDistribution;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\GraphResource;

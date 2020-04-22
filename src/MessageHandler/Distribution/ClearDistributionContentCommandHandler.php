@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Data\CSV\CSVDistribution;
+use App\Entity\Data\CSV\CSVDistribution;
 use App\Message\Distribution\ClearDistributionContentCommand;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

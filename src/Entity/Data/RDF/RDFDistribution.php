@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Data\RDF;
+namespace App\Entity\Data\RDF;
 
 use App\Entity\Data\DistributionContents;
 use Doctrine\Common\Collections\Collection;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Data\CSV;
+namespace App\Entity\Data\CSV;
 
 use Doctrine\ORM\Mapping as ORM;
 

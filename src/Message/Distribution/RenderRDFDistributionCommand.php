@@ -5,7 +5,7 @@ namespace App\Message\Distribution;
 
 use App\Entity\Castor\Record;
 use App\Entity\FAIRData\Catalog;
-use App\Data\RDF\RDFDistribution;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Security\CastorUser;
 
 class RenderRDFDistributionCommand

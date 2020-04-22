@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Data\CSV\CSVDistribution;
+use App\Entity\Data\CSV\CSVDistribution;
 
 class AddCSVDistributionContentCommand
 {
