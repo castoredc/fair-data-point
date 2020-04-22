@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\RDF;
 
 use App\Entity\Data\DistributionContents;
+use App\Entity\FAIRData\Distribution;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +30,13 @@ class RDFDistribution extends DistributionContents
      * @var string
      */
     private $prefix;
+
+    /** @inheritDoc */
+    public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
+    {
+        parent::__construct($distribution, $accessRights, $isPublished);
+        $this->prefix = '';
+    }
 
     /**
      * @return Collection<string, RDFDistributionModule>
