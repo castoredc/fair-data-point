@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Distribution\Distribution;
 use App\Entity\Iri;
 use App\Security\CastorUser;
 use DateTime;
@@ -62,7 +61,7 @@ class Dataset
     private $catalogs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution\Distribution", mappedBy="dataset",cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Collection<string, Distribution>

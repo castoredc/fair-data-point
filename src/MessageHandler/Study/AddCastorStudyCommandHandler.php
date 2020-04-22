@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Study;
 
-use App\Entity\Castor\CastorServer;
 use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Language;
@@ -12,6 +11,7 @@ use App\Exception\StudyAlreadyExists;
 use App\Message\Study\AddCastorStudyCommand;
 use App\Model\Castor\ApiClient;
 use App\Repository\CastorServerRepository;
+use App\Security\CastorServer;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

@@ -5,10 +5,10 @@ namespace App\Controller\FAIRData\Data;
 
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Castor\Record;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Distribution\Distribution;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Entity\FAIRData\Distribution;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordCommand;
@@ -37,8 +37,9 @@ class RDFDistributionController extends FAIRDataController
     public function rdfDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
+        $contents = $distribution->getContents();
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution) {
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution) {
             throw $this->createNotFoundException();
         }
 
@@ -53,7 +54,7 @@ class RDFDistributionController extends FAIRDataController
             $records = $handledStamp->getResult();
 
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $distribution, $catalog, $user))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents, $catalog, $user))->last(HandledStamp::class);
             $turtle = $handledStamp->getResult();
 
             if ($request->query->getBoolean('download') === true) {
@@ -95,8 +96,9 @@ class RDFDistributionController extends FAIRDataController
     public function rdfRecordDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, string $record, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
+        $contents = $distribution->getContents();
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $distribution instanceof RDFDistribution) {
+        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution) {
             throw $this->createNotFoundException();
         }
 
@@ -111,7 +113,7 @@ class RDFDistributionController extends FAIRDataController
             $record = $handledStamp->getResult();
 
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($record, $distribution, $catalog, $user))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($record, $contents, $catalog, $user))->last(HandledStamp::class);
             $turtle = $handledStamp->getResult();
 
             if ($request->query->getBoolean('download') === true) {

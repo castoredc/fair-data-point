@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Message\Distribution;
 
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 use App\Security\CastorUser;
 
 class GetRecordsCommand

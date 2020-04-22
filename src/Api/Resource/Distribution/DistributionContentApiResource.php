@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementFieldId;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistributionElementVariableName;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\CSV\CSVDistributionElementFieldId;
+use App\Entity\Data\CSV\CSVDistributionElementVariableName;
+use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource
 {
@@ -24,14 +24,22 @@ class DistributionContentApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $data = [];
+        if ($this->distribution->getContents() === null) {
+            return [];
+        }
 
-        if ($this->distribution instanceof CSVDistribution) {
-            $data['includeAll'] = $this->distribution->isIncludeAll();
+        $data = [
+            'accessRights' => $this->distribution->getContents()->getAccessRights(),
+        ];
+
+        $contents = $this->distribution->getContents();
+
+        if ($contents instanceof CSVDistribution) {
+            $data['includeAll'] = $contents->isIncludeAll();
 
             $elements = [];
 
-            foreach ($this->distribution->getElements() as $element) {
+            foreach ($contents->getElements() as $element) {
                 if ($element instanceof CSVDistributionElementFieldId) {
                     $elements[] = [
                         'type' => 'fieldId',

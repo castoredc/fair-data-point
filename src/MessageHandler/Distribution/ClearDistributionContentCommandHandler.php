@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
+use App\Entity\Data\CSV\CSVDistribution;
 use App\Message\Distribution\ClearDistributionContentCommand;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,12 +22,13 @@ class ClearDistributionContentCommandHandler implements MessageHandlerInterface
     public function __invoke(ClearDistributionContentCommand $message): void
     {
         $distribution = $message->getDistribution();
+        $contents = $distribution->getContents();
 
-        if ($distribution instanceof CSVDistribution) {
-            $distribution->setElements(new ArrayCollection());
+        if ($contents instanceof CSVDistribution) {
+            $contents->setElements(new ArrayCollection());
         }
 
-        $this->em->persist($distribution);
+        $this->em->persist($contents);
         $this->em->flush();
     }
 }

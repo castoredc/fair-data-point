@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 use App\Security\CastorUser;
 use App\Type\DistributionAccessType;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -55,7 +55,11 @@ class DistributionVoter extends Voter
 
     private function canAccessData(Distribution $distribution, TokenInterface $token): bool
     {
-        if ($distribution->getAccessRights() === DistributionAccessType::PUBLIC) {
+        if ($distribution->getContents() === null) {
+            return false;
+        }
+
+        if ($distribution->getContents()->getAccessRights() === DistributionAccessType::PUBLIC) {
             return true;
         }
 

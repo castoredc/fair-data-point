@@ -5,7 +5,7 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\Record;
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
@@ -48,7 +48,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         }
 
         $template = $this->twig->createTemplate($message->getDistribution()->getTwig());
-        $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
+        $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
 
         $return = '';
 

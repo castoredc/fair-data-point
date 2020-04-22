@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution\RDFDistribution;
+namespace App\Entity\Data\RDF;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,6 +36,7 @@ class RDFDistributionModule
 
     /**
      * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="modules",cascade={"persist"})
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="distribution")
      *
      * @var RDFDistribution|null
      */
