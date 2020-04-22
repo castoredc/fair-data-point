@@ -17,9 +17,9 @@ export default class AdminDistributionListItem extends Component {
                 </Link>
             </Col>
             <Col md={2} className="AdminListItemType">
-                <Link to={'/fdp/' + catalog + '/' + dataset + '/' + slug} target="_blank">
+                {type && <Link to={'/fdp/' + catalog + '/' + dataset + '/' + slug} target="_blank">
                     {type.toUpperCase()}
-                </Link>
+                </Link>}
             </Col>
             <Col md={2} className="AdminStudyListItemButtons AdminListItemButtons">
                 <Link to={'/fdp/' + catalog + '/' + dataset + '/' + slug} target="_blank">
