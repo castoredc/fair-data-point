@@ -164,7 +164,7 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 409);
             }
 
-            return new JsonResponse([$e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine()], 500);
+            return new JsonResponse([], 500);
         }
     }
 
