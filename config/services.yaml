@@ -43,3 +43,7 @@ services:
             - '%env(DB_HOST)%'
             - '%env(DB_CREATOR_USER)%'
             - '%env(DB_CREATOR_PASS)%'
+
+    App\Encryption\EncryptionService:
+        arguments:
+            - '%env(ENCRYPTION_KEY)%'
