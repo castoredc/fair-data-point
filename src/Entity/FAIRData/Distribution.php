@@ -5,7 +5,6 @@ namespace App\Entity\FAIRData;
 
 use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
-use App\Exception\DistributionNotStoredYet;
 use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
@@ -271,13 +270,9 @@ class Distribution
         $this->contents = $contents;
     }
 
-    public function setDatabaseInformation(): void
+    public function setDatabaseInformation(DistributionDatabaseInformation $databaseInformation): void
     {
-        if ($this->id === null) {
-            throw new DistributionNotStoredYet();
-        }
-
-        $this->databaseInformation = new DistributionDatabaseInformation($this);
+        $this->databaseInformation = $databaseInformation;
     }
 
     public function getDatabaseInformation(): ?DistributionDatabaseInformation

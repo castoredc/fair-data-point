@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Connection;
 
+use App\Encryption\EncryptionService;
 use App\Exception\CouldNotConnectToMySqlServer;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
@@ -61,15 +62,15 @@ class DistributionService
     /**
      * @throws DBALException
      */
-    public function createDistributionConnection(DistributionDatabaseInformation $databaseInformation): Connection
+    public function createDistributionConnection(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): Connection
     {
         $config = new DBALConfiguration();
 
         $params = [
             'driver' => 'pdo_mysql',
             'host' => $this->host,
-            'user' => $databaseInformation->getUsername(),
-            'password' => $databaseInformation->getPassword(),
+            'user' => $databaseInformation->getDecryptedUsername($encryptionService),
+            'password' => $databaseInformation->getDecryptedPassword($encryptionService),
             'dbname' => $databaseInformation->getDatabase(),
         ];
 
@@ -90,12 +91,16 @@ class DistributionService
      * @throws CouldNotCreateDatabase
      * @throws CouldNotConnectToMySqlServer
      */
-    public function createMysqlUser(DistributionDatabaseInformation $databaseInformation): void
+    public function createMysqlUser(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): void
     {
         $connection = $this->createCreatorConnection();
 
         try {
-            $sql = sprintf("CREATE USER '%s'@'%%' IDENTIFIED BY '%s'", $databaseInformation->getUsername(), $databaseInformation->getPassword());
+            $sql = sprintf(
+                "CREATE USER '%s'@'%%' IDENTIFIED BY '%s'",
+                $databaseInformation->getDecryptedUsername($encryptionService),
+                $databaseInformation->getDecryptedPassword($encryptionService)
+            );
             $connection->exec($sql);
         } catch (Throwable $t) {
             throw new CouldNotCreateDatabaseUser();
@@ -104,7 +109,7 @@ class DistributionService
         try {
             $connection->exec(
                 'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER, EXECUTE, LOCK TABLES
-                ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getUsername() . '\'@\'%\';'
+                ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService) . '\'@\'%\';'
             );
         } catch (Throwable $t) {
             throw new CouldNotCreateDatabase();
