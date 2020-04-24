@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5115db982109f0db313278441893d037",
+    "content-hash": "40e6390ff0b0280cf8495988af60da03",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1745,46 +1745,6 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
-        },
-        {
-            "name": "hackzilla/password-generator",
-            "version": "1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hackzilla/password-generator.git",
-                "reference": "22c7af49ef46d349d60af0fa30f61dd4dec53330"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hackzilla/password-generator/zipball/22c7af49ef46d349d60af0fa30f61dd4dec53330",
-                "reference": "22c7af49ef46d349d60af0fa30f61dd4dec53330",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.0|^8.0|^9.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Hackzilla\\PasswordGenerator\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Platt",
-                    "email": "github@ofdan.co.uk",
-                    "homepage": "http://www.hackzilla.org"
-                }
-            ],
-            "description": "Password Generator Library",
-            "time": "2020-04-06T15:47:25+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -8337,7 +8297,8 @@
         "php": "^7.3",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "ext-sodium": "*"
     },
     "platform-dev": []
 }

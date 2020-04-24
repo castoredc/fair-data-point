@@ -76,9 +76,9 @@ class ApiUser
     /**
      * @throws CouldNotTransformEncryptedStringToJson
      */
-    public function setDecryptedClientId(EncryptionService $cryptobox, string $clientId): void
+    public function setDecryptedClientId(EncryptionService $encryptionService, string $clientId): void
     {
-        $encoded = json_encode($cryptobox->encrypt(new SensitiveDataString($clientId)));
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($clientId)));
 
         if ($encoded === false) {
             throw new CouldNotTransformEncryptedStringToJson();
@@ -100,9 +100,9 @@ class ApiUser
     /**
      * @throws CouldNotTransformEncryptedStringToJson
      */
-    public function setDecryptedClientSecret(EncryptionService $cryptobox, string $clientSecret): void
+    public function setDecryptedClientSecret(EncryptionService $encryptionService, string $clientSecret): void
     {
-        $encoded = json_encode($cryptobox->encrypt(new SensitiveDataString($clientSecret)));
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($clientSecret)));
 
         if ($encoded === false) {
             throw new CouldNotTransformEncryptedStringToJson();

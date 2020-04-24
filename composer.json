@@ -11,7 +11,6 @@
         "easyrdf/easyrdf": "^0.9.1",
         "fresh/doctrine-enum-bundle": "^7.0",
         "guzzlehttp/guzzle": "~6.5",
-        "hackzilla/password-generator": "^1.5",
         "knpuniversity/oauth2-client-bundle": "^1.32",
         "league/oauth2-client": "^2.3",
         "ml/json-ld": "^1.1",
@@ -29,8 +28,7 @@
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "^5.0",
         "twig/twig": "^3.0",
-        "ext-sodium": "*",
-        "ext-libsodium": "*"
+        "ext-sodium": "*"
     },
     "require-dev": {
         "castor/coding-standard": "^3.1",

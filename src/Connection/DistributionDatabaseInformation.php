@@ -96,9 +96,9 @@ class DistributionDatabaseInformation
     /**
      * @throws CouldNotTransformEncryptedStringToJson
      */
-    public function setUsername(EncryptionService $cryptobox, string $username): void
+    public function setUsername(EncryptionService $encryptionService, string $username): void
     {
-        $encoded = json_encode($cryptobox->encrypt(new SensitiveDataString($username)));
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($username)));
 
         if ($encoded === false) {
             throw new CouldNotTransformEncryptedStringToJson();
@@ -110,9 +110,9 @@ class DistributionDatabaseInformation
     /**
      * @throws CouldNotTransformEncryptedStringToJson
      */
-    public function setPassword(EncryptionService $cryptobox, string $password): void
+    public function setPassword(EncryptionService $encryptionService, string $password): void
     {
-        $encoded = json_encode($cryptobox->encrypt(new SensitiveDataString($password)));
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($password)));
 
         if ($encoded === false) {
             throw new CouldNotTransformEncryptedStringToJson();

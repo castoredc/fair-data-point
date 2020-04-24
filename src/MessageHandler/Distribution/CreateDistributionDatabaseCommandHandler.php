@@ -6,11 +6,16 @@ namespace App\MessageHandler\Distribution;
 use App\Connection\DistributionDatabaseInformation;
 use App\Connection\DistributionService;
 use App\Encryption\EncryptionService;
+use App\Exception\CouldNotConnectToMySqlServer;
+use App\Exception\CouldNotCreateDatabase;
+use App\Exception\CouldNotCreateDatabaseUser;
+use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use Doctrine\ORM\EntityManagerInterface;
-use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
-use Hackzilla\PasswordGenerator\RandomGenerator\Php7RandomGenerator;
+use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function bin2hex;
+use function random_bytes;
 
 class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterface
 {
@@ -30,22 +35,21 @@ class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterfac
         $this->encryptionService = $encryptionService;
     }
 
+    /**
+     * @throws CouldNotConnectToMySqlServer
+     * @throws CouldNotCreateDatabase
+     * @throws CouldNotCreateDatabaseUser
+     * @throws CouldNotTransformEncryptedStringToJson
+     * @throws Exception
+     */
     public function __invoke(CreateDistributionDatabaseCommand $message): void
     {
         $distribution = $message->getDistribution();
 
         $databaseInformation = new DistributionDatabaseInformation($distribution);
 
-        $generator = new ComputerPasswordGenerator();
-        $generator->setRandomGenerator(new Php7RandomGenerator());
-        $generator->setOptionValue(ComputerPasswordGenerator::OPTION_LENGTH, 13);
-
-        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . $generator->generatePassword());
-
-        $generator->setOptionValue(ComputerPasswordGenerator::OPTION_SYMBOLS, true);
-        $generator->setOptionValue(ComputerPasswordGenerator::OPTION_LENGTH, 32);
-
-        $databaseInformation->setPassword($this->encryptionService, $generator->generatePassword());
+        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . bin2hex(random_bytes(13)));
+        $databaseInformation->setPassword($this->encryptionService, bin2hex(random_bytes(32)));
 
         $distribution->setDatabaseInformation($databaseInformation);
 
