@@ -32,7 +32,7 @@ class DistributionDatabaseInformation
     private $distribution;
 
     /**
-     * @ORM\Column(type="string", name="db")
+     * @ORM\Column(type="string", name="database_name")
      *
      * @var string
      */
@@ -46,7 +46,7 @@ class DistributionDatabaseInformation
     private $username;
 
     /**
-     * @ORM\Column(type="string", name="pass", type="text", length=65535, nullable=false)
+     * @ORM\Column(type="string", name="password", type="text", length=65535, nullable=false)
      *
      * @var string
      */

@@ -21,7 +21,7 @@ final class Version20200422084028 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE distribution_databases (distribution CHAR(36) NOT NULL COMMENT \'(DC2Type:guid)\', db VARCHAR(255) NOT NULL, user VARCHAR(255) NOT NULL, pass VARCHAR(255) NOT NULL, PRIMARY KEY(distribution)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_general_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE distribution_databases (distribution CHAR(36) NOT NULL COMMENT \'(DC2Type:guid)\', `database_name` VARCHAR(255) NOT NULL, user VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, PRIMARY KEY(distribution)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_general_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE distribution_databases ADD CONSTRAINT FK_8086D1DEA4483781 FOREIGN KEY (distribution) REFERENCES distribution (id)');
     }
 
