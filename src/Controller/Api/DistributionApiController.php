@@ -18,6 +18,7 @@ use App\Message\Distribution\AddCSVDistributionContentCommand;
 use App\Message\Distribution\AddDistributionCommand;
 use App\Message\Distribution\AddDistributionContentsCommand;
 use App\Message\Distribution\ClearDistributionContentCommand;
+use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -149,6 +150,10 @@ class DistributionApiController extends ApiController
                 )
             );
 
+            if ($parsed->getType() === Distribution::TYPE_RDF) {
+                $bus->dispatch(new CreateDistributionDatabaseCommand($distribution));
+            }
+
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
@@ -159,7 +164,7 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 409);
             }
 
-            return new JsonResponse([$e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine()], 500);
+            return new JsonResponse([], 500);
         }
     }
 

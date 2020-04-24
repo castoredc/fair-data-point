@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Encryption\EncryptedString;
+use App\Encryption\EncryptionService;
+use App\Encryption\SensitiveDataString;
+use App\Exception\CouldNotTransformEncryptedStringToJson;
 use Doctrine\ORM\Mapping as ORM;
+use function json_encode;
 
 /**
  * @ORM\Entity
@@ -27,14 +32,14 @@ class ApiUser
     private $emailAddress;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", type="text", length=65535, nullable=false)
      *
      * @var string
      */
     private $clientId;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", type="text", length=65535, nullable=false)
      *
      * @var string
      */
@@ -63,9 +68,47 @@ class ApiUser
         return $this->clientId;
     }
 
+    public function getDecryptedClientId(EncryptionService $encryptionService): string
+    {
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientId))->exposeAsString();
+    }
+
+    /**
+     * @throws CouldNotTransformEncryptedStringToJson
+     */
+    public function setDecryptedClientId(EncryptionService $encryptionService, string $clientId): void
+    {
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($clientId)));
+
+        if ($encoded === false) {
+            throw new CouldNotTransformEncryptedStringToJson();
+        }
+
+        $this->clientId = $encoded;
+    }
+
     public function getClientSecret(): string
     {
         return $this->clientSecret;
+    }
+
+    public function getDecryptedClientSecret(EncryptionService $encryptionService): string
+    {
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientSecret))->exposeAsString();
+    }
+
+    /**
+     * @throws CouldNotTransformEncryptedStringToJson
+     */
+    public function setDecryptedClientSecret(EncryptionService $encryptionService, string $clientSecret): void
+    {
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($clientSecret)));
+
+        if ($encoded === false) {
+            throw new CouldNotTransformEncryptedStringToJson();
+        }
+
+        $this->clientSecret = $encoded;
     }
 
     public function getServer(): ?CastorServer

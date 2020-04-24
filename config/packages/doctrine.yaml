@@ -29,7 +29,13 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
-            security:
+            Connection:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Connection'
+                prefix: 'App\Connection'
+                alias: Connection
+            Security:
                 is_bundle: false
                 type: annotation
                 dir: '%kernel.project_dir%/src/Security'

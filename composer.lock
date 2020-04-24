@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "514b106016d0224333a2d456ddc7a802",
+    "content-hash": "40e6390ff0b0280cf8495988af60da03",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1953,9 +1953,9 @@
             "authors": [
                 {
                     "name": "Markus Lanthaler",
+                    "role": "Developer",
                     "email": "mail@markus-lanthaler.com",
-                    "homepage": "http://www.markus-lanthaler.com",
-                    "role": "Developer"
+                    "homepage": "http://www.markus-lanthaler.com"
                 }
             ],
             "description": "IRI handling for PHP",
@@ -2004,9 +2004,9 @@
             "authors": [
                 {
                     "name": "Markus Lanthaler",
+                    "role": "Developer",
                     "email": "mail@markus-lanthaler.com",
-                    "homepage": "http://www.markus-lanthaler.com",
-                    "role": "Developer"
+                    "homepage": "http://www.markus-lanthaler.com"
                 }
             ],
             "description": "JSON-LD Processor for PHP",
@@ -8347,7 +8347,8 @@
         "php": "^7.3",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "ext-sodium": "*"
     },
     "platform-dev": []
 }

@@ -36,3 +36,14 @@ services:
     App\Model\Slack\ApiClient:
         arguments:
             - '%env(SLACK_WEBHOOK_URL)%'
+
+    App\Connection\DistributionService:
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%env(DB_HOST)%'
+            - '%env(DB_CREATOR_USER)%'
+            - '%env(DB_CREATOR_PASS)%'
+
+    App\Encryption\EncryptionService:
+        arguments:
+            - '%env(ENCRYPTION_KEY)%'

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
 use App\Security\CastorUser;
 use DateTime;
@@ -17,6 +18,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Distribution
 {
+    public const TYPE_RDF = 'rdf';
+    public const TYPE_CSV = 'csv';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -90,6 +94,13 @@ class Distribution
      * @var DistributionContents|null
      */
     private $contents;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Connection\DistributionDatabaseInformation", mappedBy="distribution")
+     *
+     * @var DistributionDatabaseInformation|null
+     */
+    private $databaseInformation;
 
     /**
      * @ORM\Column(type="datetime")
@@ -257,6 +268,16 @@ class Distribution
     public function setContents(?DistributionContents $contents): void
     {
         $this->contents = $contents;
+    }
+
+    public function setDatabaseInformation(DistributionDatabaseInformation $databaseInformation): void
+    {
+        $this->databaseInformation = $databaseInformation;
+    }
+
+    public function getDatabaseInformation(): ?DistributionDatabaseInformation
+    {
+        return $this->databaseInformation;
     }
 
     /**
