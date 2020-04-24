@@ -29,7 +29,7 @@ export default class SingleCatalog extends Component {
             catalog:           null,
             datasets:          [],
             filters:           {},
-            perPage:           25,
+            perPage:           999,
             pages:             null,
             page:              null,
             displayFilter:     false,
