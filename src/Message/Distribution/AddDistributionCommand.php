@@ -29,14 +29,8 @@ class AddDistributionCommand
     /** @var string */
     private $license;
 
-    /** @var int */
-    private $accessRights;
-
     /** @var Dataset */
     private $dataset;
-
-    /** @var bool|null */
-    private $includeAllData;
 
     /** @var CastorUser */
     private $user;
@@ -49,8 +43,6 @@ class AddDistributionCommand
         string $description,
         string $language,
         string $license,
-        int $accessRights,
-        ?bool $includeAllData,
         Dataset $dataset,
         CastorUser $user
     ) {
@@ -61,8 +53,6 @@ class AddDistributionCommand
         $this->description = $description;
         $this->language = $language;
         $this->license = $license;
-        $this->accessRights = $accessRights;
-        $this->includeAllData = $includeAllData;
         $this->dataset = $dataset;
         $this->user = $user;
     }
@@ -100,16 +90,6 @@ class AddDistributionCommand
     public function getLicense(): string
     {
         return $this->license;
-    }
-
-    public function getAccessRights(): int
-    {
-        return $this->accessRights;
-    }
-
-    public function getIncludeAllData(): ?bool
-    {
-        return $this->includeAllData;
     }
 
     public function getDataset(): Dataset

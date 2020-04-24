@@ -7,15 +7,16 @@ use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Request\Distribution\DistributionContentApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
+use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Exception\LanguageNotFound;
 use App\Message\Distribution\AddCSVDistributionContentCommand;
 use App\Message\Distribution\AddDistributionCommand;
+use App\Message\Distribution\AddDistributionContentsCommand;
 use App\Message\Distribution\ClearDistributionContentCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
 use App\Security\CastorUser;
@@ -73,6 +74,7 @@ class DistributionApiController extends ApiController
     public function changeDistributionContents(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
+        $contents = $distribution->getContents();
 
         if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
@@ -84,9 +86,9 @@ class DistributionApiController extends ApiController
 
             $bus->dispatch(new ClearDistributionContentCommand($distribution));
 
-            if ($distribution instanceof CSVDistribution) {
+            if ($contents instanceof CSVDistribution) {
                 foreach ($parsed as $item) {
-                    $bus->dispatch(new AddCSVDistributionContentCommand($distribution, $item->getType(), $item->getValue()));
+                    $bus->dispatch(new AddCSVDistributionContentCommand($contents, $item->getType(), $item->getValue()));
                 }
             }
 
@@ -126,8 +128,6 @@ class DistributionApiController extends ApiController
                     $parsed->getDescription(),
                     $parsed->getLanguage(),
                     $parsed->getLicense(),
-                    $parsed->getAccessRights(),
-                    $parsed->getIncludeAllData(),
                     $dataset,
                     $user
                 )
@@ -135,6 +135,19 @@ class DistributionApiController extends ApiController
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+
+            /** @var Distribution $distribution */
+            $distribution = $handledStamp->getResult();
+
+            $bus->dispatch(
+                new AddDistributionContentsCommand(
+                    $distribution,
+                    $parsed->getType(),
+                    $parsed->getAccessRights(),
+                    $parsed->getIncludeAllData(),
+                    $user
+                )
+            );
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
@@ -146,7 +159,7 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 409);
             }
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([$e->getMessage(), $e->getCode(), $e->getFile(), $e->getLine()], 500);
         }
     }
 

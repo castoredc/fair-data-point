@@ -39,7 +39,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             $this->apiClient->setUser($message->getUser());
         }
 
-        $study = $this->apiClient->getStudy($message->getDistribution()->getDataset()->getStudy()->getId());
+        $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
         $studyFields = $this->apiClient->getPhasesAndSteps($study, true)->getFields();
         $slugify = new Slugify(['separator' => '_']);
 

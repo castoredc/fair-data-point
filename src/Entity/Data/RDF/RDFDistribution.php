@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution\RDFDistribution;
+namespace App\Entity\Data\RDF;
 
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\Data\DistributionContents;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution_rdf")
  */
-class RDFDistribution extends Distribution
+class RDFDistribution extends DistributionContents
 {
     /**
      * @ORM\OneToMany(targetEntity="RDFDistributionModule", mappedBy="distribution",cascade={"persist"}, fetch="EAGER")
@@ -58,7 +58,7 @@ class RDFDistribution extends Distribution
 
     public function getRDFUrl(): string
     {
-        return parent::getAccessUrl() . '/rdf';
+        return $this->getDistribution()->getAccessUrl() . '/rdf';
     }
 
     public function getTwig(): string

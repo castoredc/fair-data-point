@@ -5,7 +5,7 @@ namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Distribution\Distribution;
+use App\Entity\FAIRData\Distribution;
 use App\Graph\Resource\Distribution\DistributionGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;

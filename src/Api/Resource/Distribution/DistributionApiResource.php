@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Distribution\CSVDistribution\CSVDistribution;
-use App\Entity\FAIRData\Distribution\Distribution;
-use App\Entity\FAIRData\Distribution\RDFDistribution\RDFDistribution;
+use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\FAIRData\Distribution;
 
 class DistributionApiResource implements ApiResource
 {
@@ -40,19 +40,20 @@ class DistributionApiResource implements ApiResource
             'license' => $this->distribution->getLicense()->toArray(),
             'created' => $this->distribution->getCreated(),
             'updated' => $this->distribution->getUpdated(),
-            'accessRights' => $this->distribution->getAccessRights(),
             'downloadUrl' => null,
             'type' => null,
         ];
 
-        if ($this->distribution instanceof RDFDistribution) {
-            $data['accessUrl'] = $this->distribution->getRDFUrl();
-            $data['downloadUrl'] = $this->distribution->getRDFUrl() . '/?download=1';
+        $contents = $this->distribution->getContents();
+
+        if ($contents instanceof RDFDistribution) {
+            $data['accessUrl'] = $contents->getRDFUrl();
+            $data['downloadUrl'] = $contents->getRDFUrl() . '/?download=1';
             $data['type'] = 'rdf';
         }
 
-        if ($this->distribution instanceof CSVDistribution) {
-            $data['downloadUrl'] = $this->distribution->getAccessUrl();
+        if ($contents instanceof CSVDistribution) {
+            $data['downloadUrl'] = $contents->getAccessUrl();
             $data['type'] = 'csv';
         }
 

@@ -1,23 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution;
+namespace App\Entity\FAIRData;
 
-use App\Entity\FAIRData\Agent;
-use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Language;
-use App\Entity\FAIRData\License;
-use App\Entity\FAIRData\LocalizedText;
+use App\Entity\Data\DistributionContents;
 use App\Security\CastorUser;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
@@ -91,19 +85,11 @@ class Distribution
     private $dataset;
 
     /**
-     * @ORM\Column(name="access", type="DistributionAccessType", nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents", mappedBy="distribution")
      *
-     * @DoctrineAssert\Enum(entity="App\Type\DistributionAccessType")
-     * @var int
+     * @var DistributionContents|null
      */
-    private $accessRights;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $isPublished = false;
+    private $contents;
 
     /**
      * @ORM\Column(type="datetime")
@@ -140,7 +126,7 @@ class Distribution
     /**
      * @param Collection<string, Agent> $publishers
      */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, int $accessRights, Dataset $dataset)
+    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, Dataset $dataset)
     {
         $this->slug = $slug;
         $this->title = $title;
@@ -149,7 +135,6 @@ class Distribution
         $this->publishers = $publishers;
         $this->language = $language;
         $this->license = $license;
-        $this->accessRights = $accessRights;
         $this->dataset = $dataset;
     }
 
@@ -264,24 +249,14 @@ class Distribution
         return $this->dataset->getBaseUrl();
     }
 
-    public function setAccessRights(int $accessRights): void
+    public function getContents(): ?DistributionContents
     {
-        $this->accessRights = $accessRights;
+        return $this->contents;
     }
 
-    public function getAccessRights(): int
+    public function setContents(?DistributionContents $contents): void
     {
-        return $this->accessRights;
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->isPublished;
-    }
-
-    public function setIsPublished(bool $isPublished): void
-    {
-        $this->isPublished = $isPublished;
+        $this->contents = $contents;
     }
 
     /**

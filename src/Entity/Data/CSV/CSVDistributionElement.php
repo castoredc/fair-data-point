@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData\Distribution\CSVDistribution;
+namespace App\Entity\Data\CSV;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +28,7 @@ abstract class CSVDistributionElement
 
     /**
      * @ORM\ManyToOne(targetEntity="CSVDistribution", inversedBy="elements",cascade={"persist"})
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="distribution")
      *
      * @var CSVDistribution|null
      */
