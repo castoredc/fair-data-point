@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Form;
 
-class FieldOptionGroup
-{
-    /** @var string|null */
-    private $id;
+use App\Entity\Castor\CastorEntity;
+use App\Entity\Castor\Study;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ */
+class FieldOptionGroup extends CastorEntity
+{
     /** @var string|null */
     private $name;
 
@@ -23,23 +27,14 @@ class FieldOptionGroup
     /**
      * @param FieldOption[]|null $options
      */
-    public function __construct(?string $id, ?string $name, ?string $description, ?string $layout, ?array $options)
+    public function __construct(string $id, Study $study, ?string $name, ?string $description, ?string $layout, ?array $options)
     {
-        $this->id = $id;
+        parent::__construct($id, $study, null);
+
         $this->name = $name;
         $this->description = $description;
         $this->layout = $layout;
         $this->options = $options;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getName(): ?string
@@ -103,16 +98,17 @@ class FieldOptionGroup
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): FieldOptionGroup
+    public static function fromData(array $data, Study $study): FieldOptionGroup
     {
         $options = [];
         if (isset($data['options'])) {
             foreach ($data['options'] as $option) {
-                $options[] = FieldOption::fromData($option);
+                $options[] = FieldOption::fromData($option, $study);
             }
         }
         $group = new FieldOptionGroup(
-            $data['id'] ?? null,
+            $data['id'],
+            $study,
             $data['name'] ?? null,
             $data['description'] ?? null,
             $data['layout'] ?? null,

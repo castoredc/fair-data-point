@@ -3,19 +3,18 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Form;
 
+use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\Structure\MetadataPoint;
 use App\Entity\Castor\Structure\Step\Step;
+use App\Entity\Castor\Study;
+use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 
-class Field
+/**
+ * @ORM\Entity
+ */
+class Field extends CastorEntity
 {
-    /**
-     * Unique identifier of the Field (same as field_id)
-     *
-     * @var string|null
-     */
-    private $id;
-
     /**
      * The Field type
      *
@@ -87,9 +86,10 @@ class Field
     /** @var array<MetadataPoint> */
     private $metadata;
 
-    public function __construct(?string $id, ?string $type, ?string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
+    public function __construct(string $id, Study $study, ?string $type, ?string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
     {
-        $this->id = $id;
+        parent::__construct($id, $study, null);
+
         $this->type = $type;
         $this->label = $label;
         $this->number = $number;
@@ -100,16 +100,6 @@ class Field
         $this->units = $units;
         $this->parentId = $parentId;
         $this->optionGroup = $optionGroup;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getType(): ?string
@@ -241,10 +231,11 @@ class Field
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): Field
+    public static function fromData(array $data, Study $study): Field
     {
         return new Field(
             $data['id'] ?? null,
+            $study,
             $data['field_type'] ?? null,
             $data['field_label'] ?? null,
             $data['field_number'] ?? null,
@@ -254,7 +245,7 @@ class Field
             $data['field_info'] ?? null,
             $data['field_units'] ?? null,
             $data['parent_id'] ?? null,
-            isset($data['option_group']) ? FieldOptionGroup::fromData($data['option_group']) : null
+            isset($data['option_group']) ? FieldOptionGroup::fromData($data['option_group'], $study) : null
         );
     }
 }

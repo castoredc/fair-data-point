@@ -17,6 +17,7 @@ doctrine:
             DistributionAccessType:  App\Type\DistributionAccessType
             RecruitmentStatusType:  App\Type\RecruitmentStatusType
             MethodType:  App\Type\MethodType
+            StructureType:  App\Type\StructureType
 
     orm:
         auto_generate_proxy_classes: true

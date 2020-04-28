@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Form;
 
-class FieldOption
-{
-    /** @var string|null */
-    private $id;
+use App\Entity\Castor\CastorEntity;
+use App\Entity\Castor\Study;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ */
+class FieldOption extends CastorEntity
+{
     /** @var string|null */
     private $name;
 
@@ -20,22 +24,13 @@ class FieldOption
     /** @var FieldOptionGroup */
     private $optionGroup;
 
-    public function __construct(?string $id, ?string $name, ?string $value, ?int $groupOrder)
+    public function __construct(string $id, Study $study, ?string $name, ?string $value, ?int $groupOrder)
     {
-        $this->id = $id;
+        parent::__construct($id, $study, null);
+
         $this->name = $name;
         $this->value = $value;
         $this->groupOrder = $groupOrder;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getName(): ?string
@@ -81,10 +76,11 @@ class FieldOption
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): FieldOption
+    public static function fromData(array $data, Study $study): FieldOption
     {
         return new FieldOption(
-            $data['id'] ?? null,
+            $data['id'],
+            $study,
             $data['name'] ?? null,
             $data['value'] ?? null,
             $data['groupOrder'] ?? null

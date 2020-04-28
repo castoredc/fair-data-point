@@ -233,7 +233,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fields'] as $rawField) {
-                $field = Field::fromData($rawField);
+                $field = Field::fromData($rawField, $study);
                 $fields->set($field->getId(), $field);
             }
         }
@@ -308,7 +308,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['phases'] as $phase) {
-                $phases->add(Phase::fromData($phase));
+                $phases->add(Phase::fromData($phase, $study));
             }
         }
 
@@ -330,7 +330,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['steps'] as $step) {
-                $newStep = StudyStep::fromData($step);
+                $newStep = StudyStep::fromData($step, $study);
 
                 if ($includeFields) {
                     $fields = $this->getFieldByParent($study, $step['step_id']);
@@ -359,7 +359,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['surveys'] as $survey) {
-                $tempSurvey = Survey::fromData($survey);
+                $tempSurvey = Survey::fromData($survey, $study);
 
                 if ($includeFields) {
                     $steps = [];
@@ -394,11 +394,11 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['reports'] as $report) {
-                $tempReport = Report::fromData($report);
+                $tempReport = Report::fromData($report, $study);
                 $steps = $this->request('/api/study/' . $study->getId() . '/report/' . $report['report_id'] . '/report-step?page=' . $page . '&page_size=' . $this->pageSize);
 
                 foreach ($steps['_embedded']['report_steps'] as $step) {
-                    $newStep = ReportStep::fromData($step);
+                    $newStep = ReportStep::fromData($step, $study);
 
                     if ($includeFields) {
                         $fields = $this->getFieldByParent($study, $step['id']);
