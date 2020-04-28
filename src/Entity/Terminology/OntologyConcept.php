@@ -4,19 +4,42 @@ declare(strict_types=1);
 namespace App\Entity\Terminology;
 
 use App\Entity\Iri;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="ontology_concept")
+ */
 class OntologyConcept
 {
-    /** @var Iri */
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="iri")
+     *
+     * @var Iri
+     */
     private $url;
 
-    /** @var string */
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
     private $id;
 
-    /** @var Ontology */
+    /**
+     * @ORM\ManyToOne(targetEntity="Ontology",cascade={"persist"})
+     * @ORM\JoinColumn(name="ontology", referencedColumnName="url", nullable=false)
+     *
+     * @var Ontology
+     */
     private $ontology;
 
-    /** @var string */
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
     private $displayName;
 
     public function __construct(Iri $url, string $id, Ontology $ontology, string $displayName)

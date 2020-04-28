@@ -7,8 +7,10 @@ use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
 use App\Entity\Data\RDF\RDFTripleObject;
 use App\Entity\Enum\CastorValueType;
+use App\Entity\Terminology\Ontology;
 use App\Exception\InvalidValueType;
 use Doctrine\ORM\Mapping as ORM;
+use function count;
 
 /**
  * @ORM\Entity
@@ -19,7 +21,7 @@ class CastorValueTriple extends RDFTripleElement implements RDFTripleObject
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Form\Field",cascade={"persist"})
-     * @ORM\JoinColumn(name="field", referencedColumnName="id")
+     * @ORM\JoinColumn(name="field", referencedColumnName="id", nullable=false)
      *
      * @var Field
      */
@@ -32,10 +34,19 @@ class CastorValueTriple extends RDFTripleElement implements RDFTripleObject
      */
     private $type;
 
-    public function __construct(Field $field, CastorValueType $type)
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Terminology\Ontology",cascade={"persist"})
+     * @ORM\JoinColumn(name="ontology", referencedColumnName="url", nullable=true)
+     *
+     * @var Ontology|null
+     */
+    private $ontology;
+
+    public function __construct(Field $field, CastorValueType $type, ?Ontology $ontology)
     {
         $this->field = $field;
         $this->type = $type;
+        $this->ontology = $ontology;
     }
 
     public function getLabel(): string
@@ -67,10 +78,15 @@ class CastorValueTriple extends RDFTripleElement implements RDFTripleObject
         }
 
         if ($this->type === CastorValueType::annotated()) {
-            // TODO: Add annotations
             $option = $this->field->getOptionGroup()->getOptionByValue($fieldResult->getValue());
 
-            return '';
+            $annotations = $option->getAnnotationsByOntology($this->ontology);
+
+            if (count($annotations) === 0) {
+                return '';
+            }
+
+            return $annotations[0]->getId();
         }
 
         return '';

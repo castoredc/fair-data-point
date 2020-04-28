@@ -18,7 +18,7 @@ class CastorEntityTriple extends RDFTripleElement implements RDFTripleSubject, R
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity",cascade={"persist"})
-     * @ORM\JoinColumn(name="entity", referencedColumnName="id")
+     * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
      *
      * @var CastorEntity
      */

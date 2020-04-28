@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace App\Entity\Castor;
 
 use App\Entity\Enum\StructureType;
+use App\Entity\Terminology\Annotation;
+use App\Entity\Terminology\Ontology;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,7 +34,7 @@ abstract class CastorEntity
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
      *
      * @var Study|null
@@ -58,6 +62,13 @@ abstract class CastorEntity
      */
     protected $slug;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Terminology\Annotation", mappedBy="entity", cascade={"persist"}, fetch="EAGER")
+     *
+     * @var Collection<string, Annotation>
+     */
+    protected $annotations;
+
     public function __construct(string $id, string $label, Study $study, ?StructureType $structureType)
     {
         $this->id = $id;
@@ -65,6 +76,7 @@ abstract class CastorEntity
         $this->slug = $id;
         $this->study = $study;
         $this->structureType = $structureType;
+        $this->annotations = new ArrayCollection();
     }
 
     public function getId(): string
@@ -95,5 +107,50 @@ abstract class CastorEntity
     public function getLabel(): string
     {
         return $this->label;
+    }
+
+    /**
+     * @return Collection<string, Annotation>
+     */
+    public function getAnnotations(): Collection
+    {
+        return $this->annotations;
+    }
+
+    /**
+     * @return Annotation[]
+     */
+    public function getAnnotationsByOntology(Ontology $ontology): array
+    {
+        $return = [];
+
+        foreach ($this->annotations as $annotation) {
+            /** @var Annotation $annotation */
+            if ($annotation->getConcept()->getOntology() !== $ontology) {
+                continue;
+            }
+
+            $return[] = $annotation;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Collection<string, Annotation> $annotations
+     */
+    public function setAnnotations(Collection $annotations): void
+    {
+        $this->annotations = $annotations;
+    }
+
+    public function addAnnotation(Annotation $annotation): void
+    {
+        $this->annotations->add($annotation);
+    }
+
+    public function removeAnnotation(Annotation $annotation): void
+    {
+        $this->annotations->remove($annotation->getId());
     }
 }
