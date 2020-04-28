@@ -75,6 +75,17 @@ class FieldOptionGroup extends CastorEntity
         return $this->options;
     }
 
+    public function getOptionByValue(string $value): ?FieldOption
+    {
+        foreach ($this->options as $option) {
+            if ($option->getValue() === $value) {
+                return $option;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param FieldOption[]|null $options
      */
