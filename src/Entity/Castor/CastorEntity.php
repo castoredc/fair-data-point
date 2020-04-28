@@ -44,9 +44,25 @@ abstract class CastorEntity
      */
     protected $structureType;
 
-    public function __construct(string $id, Study $study, ?StructureType $structureType)
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    protected $label;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    protected $slug;
+
+    public function __construct(string $id, string $label, Study $study, ?StructureType $structureType)
     {
         $this->id = $id;
+        $this->label = $label;
+        $this->slug = $id;
         $this->study = $study;
         $this->structureType = $structureType;
     }
@@ -54,6 +70,16 @@ abstract class CastorEntity
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
     }
 
     public function getStudy(): ?Study
@@ -64,5 +90,10 @@ abstract class CastorEntity
     public function getStructureType(): ?StructureType
     {
         return $this->structureType;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
     }
 }

@@ -43,9 +43,9 @@ abstract class Step extends CastorEntity
     /** @var StructureElement */
     protected $parent;
 
-    public function __construct(string $id, Study $study, StructureType $structureType, ?string $description, ?string $name, ?int $position)
+    public function __construct(string $id, Study $study, StructureType $structureType, ?string $description, string $name, ?int $position)
     {
-        parent::__construct($id, $study, $structureType);
+        parent::__construct($id, $name, $study, $structureType);
 
         $this->description = $description;
         $this->name = $name;

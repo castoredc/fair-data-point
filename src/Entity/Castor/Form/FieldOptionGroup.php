@@ -27,9 +27,9 @@ class FieldOptionGroup extends CastorEntity
     /**
      * @param FieldOption[]|null $options
      */
-    public function __construct(string $id, Study $study, ?string $name, ?string $description, ?string $layout, ?array $options)
+    public function __construct(string $id, Study $study, string $name, ?string $description, ?string $layout, ?array $options)
     {
-        parent::__construct($id, $study, null);
+        parent::__construct($id, $name, $study, null);
 
         $this->name = $name;
         $this->description = $description;
@@ -109,7 +109,7 @@ class FieldOptionGroup extends CastorEntity
         $group = new FieldOptionGroup(
             $data['id'],
             $study,
-            $data['name'] ?? null,
+            $data['name'],
             $data['description'] ?? null,
             $data['layout'] ?? null,
             $options

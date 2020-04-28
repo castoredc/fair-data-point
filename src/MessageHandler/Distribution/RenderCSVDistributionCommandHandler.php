@@ -54,7 +54,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             }
 
             $fields[] = $field;
-            $columns[$field->getId()] = $field->getVariableName() ?? $slugify->slugify($field->getLabel());
+            $columns[$field->getId()] = $field->getVariableName() ?? $slugify->slugify($field->getFieldLabel());
         }
 
         foreach ($message->getRecords() as $record) {

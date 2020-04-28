@@ -20,9 +20,9 @@ abstract class StructureElement extends CastorEntity
     /** @var Step[] */
     protected $steps;
 
-    public function __construct(string $id, Study $study, StructureType $structureType, ?string $name)
+    public function __construct(string $id, Study $study, StructureType $structureType, string $name)
     {
-        parent::__construct($id, $study, $structureType);
+        parent::__construct($id, $name, $study, $structureType);
 
         $this->name = $name;
         $this->steps = [];

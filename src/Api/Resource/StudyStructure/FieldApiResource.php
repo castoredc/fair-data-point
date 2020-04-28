@@ -24,7 +24,7 @@ class FieldApiResource implements ApiResource
         return [
             'id' => $this->field->getId(),
             'type' => $this->field->getType(),
-            'label' => $this->field->getLabel(),
+            'label' => $this->field->getFieldLabel(),
             'number' => $this->field->getNumber(),
             'variableName' => $this->field->getVariableName(),
             'required' => $this->field->getRequired(),

@@ -26,7 +26,7 @@ class Field extends CastorEntity
      *
      * @var string|null
      */
-    private $label;
+    private $fieldLabel;
 
     /**
      * The Field&#39;s position within a step
@@ -86,12 +86,12 @@ class Field extends CastorEntity
     /** @var array<MetadataPoint> */
     private $metadata;
 
-    public function __construct(string $id, Study $study, ?string $type, ?string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
+    public function __construct(string $id, Study $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
     {
-        parent::__construct($id, $study, null);
+        parent::__construct($id, $label, $study, null);
 
         $this->type = $type;
-        $this->label = $label;
+        $this->fieldLabel = $label;
         $this->number = $number;
         $this->variableName = $variableName;
         $this->required = $required;
@@ -112,14 +112,14 @@ class Field extends CastorEntity
         $this->type = $type;
     }
 
-    public function getLabel(): ?string
+    public function getFieldLabel(): string
     {
-        return $this->label;
+        return $this->fieldLabel;
     }
 
-    public function setLabel(?string $label): void
+    public function setFieldLabel(?string $fieldLabel): void
     {
-        $this->label = $label;
+        $this->fieldLabel = $fieldLabel;
     }
 
     public function getNumber(): ?float
@@ -237,7 +237,7 @@ class Field extends CastorEntity
             $data['id'] ?? null,
             $study,
             $data['field_type'] ?? null,
-            $data['field_label'] ?? null,
+            $data['field_label'],
             $data['field_number'] ?? null,
             $data['field_variable_name'] ?? null,
             boolval($data['field_required']) ?? null,
