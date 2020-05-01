@@ -11,8 +11,8 @@ security:
             anonymous: ~
             provider: castor
             logout:
-                path:       /logout
-                target:     /
+                path:       logout
+                target:     fdp
                 invalidate_session: true
             guard:
                 authenticators:
