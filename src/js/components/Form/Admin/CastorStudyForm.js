@@ -13,6 +13,7 @@ import axios from "axios";
 import FormItem from "./../FormItem";
 import FormHeading from "../FormHeading";
 import Input from "../../Input";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class CastorStudyForm extends Component {
     constructor(props) {
@@ -24,6 +25,7 @@ export default class CastorStudyForm extends Component {
                 studyName: '',
                 studySlug: ''
             },
+            dataset: null,
             metadataSource: null,
             visitedFields: {},
             validation: {},
@@ -77,6 +79,7 @@ export default class CastorStudyForm extends Component {
                 .then((response) => {
                     this.setState({
                         isSaved: true,
+                        dataset: response.data,
                     });
                 })
                 .catch((error) => {
@@ -101,12 +104,13 @@ export default class CastorStudyForm extends Component {
 
     render() {
         const { catalog } = this.props;
+        const { isLoading, isSaved, dataset } = this.state;
 
         const required = "This field is required";
 
-        if(this.state.isSaved)
+        if(isSaved)
         {
-            return <Redirect push to={'/admin/' + catalog + '/study/' + this.state.data.studyId + '/metadata/add/details'} />;
+            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug} />;
         }
 
         return (
@@ -160,12 +164,12 @@ export default class CastorStudyForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={'/admin/' + catalog} exact={true}>
-                            <Button variant="secondary">Back</Button>
-                        </LinkContainer>
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Add study</Button>
+                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                            Add study
+                        </Button>
                     </Col>
                 </Row>
 

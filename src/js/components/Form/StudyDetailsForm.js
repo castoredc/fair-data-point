@@ -16,6 +16,8 @@ import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
 import FormHeading from "./FormHeading";
 import LoadingScreen from "../LoadingScreen";
+import InlineLoader from "../LoadingScreen/InlineLoader";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class StudyDetailsForm extends Component {
     constructor(props) {
@@ -34,7 +36,7 @@ export default class StudyDetailsForm extends Component {
                 estimatedStudyStartDate: '',
                 estimatedStudyCompletionDate: '',
                 summary: '',
-                recruitmentStatus: '',
+                recruitmentStatus: null,
                 methodType: ''
             },
             metadataSource: null,
@@ -47,6 +49,7 @@ export default class StudyDetailsForm extends Component {
     }
 
     getMetadata = () => {
+        const { data } = this.state;
         this.setState({
             isLoading: true,
         });
@@ -68,7 +71,7 @@ export default class StudyDetailsForm extends Component {
                 }
 
                 this.setState({
-                    data: metadata,
+                    data: { ...data, ...metadata } ,
                     metadataSource: response.data.source,
                     isLoading: false
                 });
@@ -133,18 +136,19 @@ export default class StudyDetailsForm extends Component {
     };
 
     handleSubmit = (event) => {
+        const { studyId, admin = false, onSave } = this.props;
         event.preventDefault();
 
-        this.setState({
-            submitDisabled: true,
-            isLoading: true
-        });
-
         if(this.form.isFormValid()) {
+            this.setState({
+                submitDisabled: true,
+                isLoading: true
+            });
+
             let estimatedStudyStartDate = moment(this.state.data.estimatedStudyStartDate, 'DD-MM-YYYY');
             let estimatedStudyCompletionDate = moment(this.state.data.estimatedStudyCompletionDate, 'DD-MM-YYYY');
 
-            let url = '/api/study/' + this.props.studyId + '/metadata/' + (this.state.metadataSource === 'database' ? this.state.data.id + '/update' : 'add');
+            let url = '/api/study/' + studyId + '/metadata/' + (this.state.metadataSource === 'database' ? this.state.data.id + '/update' : 'add');
 
             axios.post(url, {
                 briefName:                    this.state.data.briefName,
@@ -163,7 +167,18 @@ export default class StudyDetailsForm extends Component {
                 .then((response) => {
                     this.setState({
                         isSaved: true,
+                        isLoading: false,
+                        submitDisabled: false,
                     });
+
+                    if (admin) {
+                        toast.success(<ToastContent type="success" message="The study details are saved successfully" />, {
+                            position: "top-right"
+                        });
+
+                        onSave();
+                        window.scrollTo(0, 0);
+                    }
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -186,17 +201,22 @@ export default class StudyDetailsForm extends Component {
     };
 
     render() {
-        const { catalog, studyId, action, admin } = this.props;
+        const { catalog, studyId, admin = false } = this.props;
+        const { isSaved, isLoading, submitDisabled } = this.state;
 
-        const backUrl = admin ? '/admin/' + catalog : '/my-studies/' + catalog + '/study/add';
-        const nextUrl = admin ? '/admin/' + catalog + '/study/' + studyId + '/metadata/' + action + '/centers' : '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
+        const backUrl = '/my-studies/' + catalog + '/study/add';
+        const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
-        if(this.state.isSaved)
+        if(isSaved && !admin)
         {
             return <Redirect push to={nextUrl} />;
+        }
+
+        if(isLoading && !submitDisabled) {
+            return <InlineLoader />;
         }
 
         return (
@@ -204,9 +224,7 @@ export default class StudyDetailsForm extends Component {
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
-                // className="row"
             >
-                {this.state.isLoading && <LoadingScreen showLoading={true}/>}
                 <Row>
                     <Col md={6}>
                         <FormHeading label="Overview" />
@@ -369,12 +387,17 @@ export default class StudyDetailsForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={backUrl}>
+                        {!admin && <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
-                        </LinkContainer>
+                        </LinkContainer>}
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
+                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                            Save
+                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            Next
+                        </Button>}
                     </Col>
                 </Row>
 

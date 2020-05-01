@@ -12,7 +12,7 @@ export default class AdminDistributionListItem extends Component {
 
         return <Row className="ListItem AdminDistributionListItem AdminListItem">
             <Col md={8} className="AdminStudyListItemTitle AdminListItemTitle">
-                <Link to={'/fdp/' + catalog + '/' + dataset + '/' + slug} target="_blank">
+                <Link to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + slug}>
                     {name}
                 </Link>
             </Col>
@@ -27,7 +27,7 @@ export default class AdminDistributionListItem extends Component {
                         <Icon type="view" />
                     </Button>
                 </Link>
-                <Link to={'/admin/' + catalog + '/dataset/' + dataset + '/distribution/' + slug}>
+                <Link to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + slug}>
                     <Button variant="link">
                         <Icon type="edit" />
                     </Button>

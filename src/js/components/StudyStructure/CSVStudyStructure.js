@@ -11,6 +11,7 @@ import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import {Redirect} from "react-router-dom";
+import InlineLoader from "../LoadingScreen/InlineLoader";
 
 export default class CSVStudyStructure extends Component {
     constructor(props) {
@@ -101,15 +102,15 @@ export default class CSVStudyStructure extends Component {
     };
 
     render() {
-        const { studyId, catalog, dataset } = this.props;
+        const { studyId, catalog, dataset, distribution } = this.props;
         const { structure, distributionContents, submitDisabled, isSaved } = this.state;
 
         if (!this.state.hasLoadedStructure) {
-            return <LoadingScreen showLoading={true}/>;
+            return <InlineLoader />;
         }
 
         if (isSaved) {
-            return <Redirect push to={'/admin/' + catalog + '/dataset/' + dataset + '/distribution'} />;
+            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution} />;
         }
 
         return <div>

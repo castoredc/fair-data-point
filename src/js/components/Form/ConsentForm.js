@@ -13,6 +13,8 @@ import axios from "axios";
 import FormItem from "./FormItem";
 import LoadingScreen from "../LoadingScreen";
 import RadioGroup from "../RadioGroup";
+import InlineLoader from "../LoadingScreen/InlineLoader";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class ConsentForm extends Component {
     constructor(props) {
@@ -100,22 +102,31 @@ export default class ConsentForm extends Component {
     };
 
     handleSubmit = (event) => {
+        const { catalog, studyId, admin = false } = this.props;
         event.preventDefault();
 
-        this.setState({
-            submitDisabled: true,
-            isLoading: true
-        });
-
         if(this.form.isFormValid()) {
-            axios.post('/api/catalog/' + this.props.catalog + '/study/' + this.props.studyId + '/consent', {
+            this.setState({
+                submitDisabled: true,
+                isLoading: true
+            });
+
+            axios.post('/api/catalog/' + catalog + '/study/' + studyId + '/consent', {
                 publish:                   this.state.data.publish,
                 socialMedia:               this.state.data.socialMedia,
             })
-                .then((response) => {
+                .then(() => {
                     this.setState({
                         isSaved: true,
+                        isLoading: false,
+                        submitDisabled: false,
                     });
+
+                    if (admin) {
+                        toast.success(<ToastContent type="success" message="The contacts are saved successfully" />, {
+                           position: "top-right"
+                        });
+                    }
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -138,16 +149,19 @@ export default class ConsentForm extends Component {
     };
 
     render() {
-        const { catalog, studyId, action, admin} = this.props;
+        const { catalog, studyId, admin = false } = this.props;
+        const { isSaved, isLoading, submitDisabled } = this.state;
 
-        const backUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/contacts' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/contacts';
-        const nextUrl = admin ? '/admin/' + catalog : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/finished';
+        const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/contacts';
+        const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/finished';
 
-        const required = "This field is required";
-
-        if(this.state.isSaved)
+        if(isSaved && !admin)
         {
             return <Redirect push to={nextUrl} />;
+        }
+
+        if(isLoading && !isSaved) {
+            return <InlineLoader />;
         }
 
         return (
@@ -156,8 +170,6 @@ export default class ConsentForm extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                {this.state.isLoading && <LoadingScreen showLoading={true}/>}
-
                 <Col md={12}>
                     <FormItem label="Do you give permission to share high-level information about your study on a webpage to allow other researchers to find your project?">
                         <RadioGroup
@@ -201,12 +213,17 @@ export default class ConsentForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={backUrl}>
+                        {!admin && <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
-                        </LinkContainer>
+                        </LinkContainer>}
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Finish</Button>
+                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                            Save
+                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            Finish
+                        </Button>}
                     </Col>
                 </Row>
 
