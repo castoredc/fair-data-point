@@ -45,7 +45,7 @@ class DistributionApiResource implements ApiResource
             'downloadUrl' => null,
             'type' => null,
             'accessRights' => $contents !== null ? $contents->getAccessRights() : null,
-            'includeAll' => null
+            'includeAll' => null,
         ];
 
         if ($contents instanceof RDFDistribution) {

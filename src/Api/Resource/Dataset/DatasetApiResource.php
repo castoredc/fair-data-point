@@ -36,7 +36,7 @@ class DatasetApiResource implements ApiResource
                 'id' => $this->dataset->getId(),
                 'studyId' => $study->getId(),
                 'slug' => $this->dataset->getSlug(),
-                'hasMetadata' => false
+                'hasMetadata' => false,
             ];
         }
 
@@ -95,7 +95,7 @@ class DatasetApiResource implements ApiResource
             'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
             'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
             'published' => $this->dataset->isPublished(),
-            'hasMetadata' => true
+            'hasMetadata' => true,
         ];
     }
 }
