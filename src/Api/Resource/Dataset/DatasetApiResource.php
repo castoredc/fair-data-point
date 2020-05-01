@@ -32,7 +32,12 @@ class DatasetApiResource implements ApiResource
         $metadata = $study->getLatestMetadata();
 
         if ($metadata === null) {
-            return [];
+            return [
+                'id' => $this->dataset->getId(),
+                'studyId' => $study->getId(),
+                'slug' => $this->dataset->getSlug(),
+                'hasMetadata' => false
+            ];
         }
 
         $contactPoints = [];
@@ -90,6 +95,7 @@ class DatasetApiResource implements ApiResource
             'condition' => $metadata->getCondition() !== null ? $metadata->getCondition()->toArray() : null,
             'intervention' => $metadata->getIntervention() !== null ? $metadata->getIntervention()->toArray() : null,
             'published' => $this->dataset->isPublished(),
+            'hasMetadata' => true
         ];
     }
 }
