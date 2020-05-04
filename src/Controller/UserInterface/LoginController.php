@@ -25,6 +25,13 @@ class LoginController extends AbstractController
     }
 
     /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): void
+    {
+    }
+
+    /**
      * @Route("/login/{catalog}", name="login_catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */

@@ -18,6 +18,7 @@ import {recruitmentStatus} from "../../StudyDetailsForm";
 import {CheckboxGroup} from "../../../Input/Checkbox";
 import RadioGroup from "../../../RadioGroup";
 import {localizedText} from "../../../../util";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class DistributionForm extends Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export default class DistributionForm extends Component {
             includeAllData: null
         };
 
-        if (typeof props.distribution !== 'undefined' && typeof props.contents !== 'undefined') {
+        if (typeof props.distribution !== 'undefined') {
             data = {
                 title: localizedText(props.distribution.title, 'en'),
                 type: props.distribution.type,
@@ -46,7 +47,7 @@ export default class DistributionForm extends Component {
                 license: props.distribution.license.slug,
                 accessRights: props.distribution.accessRights,
                 update: true,
-                includeAllData: props.contents
+                includeAllData: props.distribution.includeAll
             }
         }
 
@@ -123,29 +124,38 @@ export default class DistributionForm extends Component {
                     licenses: response.data,
                 });
             })
-            .catch((error) => {
+            .catch(() => {
                 toast.error(<ToastContent type="error" message="An error occurred" />);
             });
     };
 
     handleSubmit = (event) => {
+        const { catalog, dataset, distribution } = this.props;
         event.preventDefault();
 
         const { update } = this.state;
 
-        this.setState({
-            submitDisabled: true,
-            isLoading: true
-        });
-
         if(this.form.isFormValid()) {
-            const url = '/api/catalog/' + this.props.catalog + '/dataset/' + this.props.dataset + '/distribution/' + (update ? this.props.distribution.slug + '/update' : 'add');
+            this.setState({
+                submitDisabled: true,
+                isLoading: true
+            });
+
+            const url = '/api/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + (update ? distribution.slug + '/update' : 'add');
 
            axios.post(url, this.state.data)
                 .then(() => {
                     this.setState({
                         isSaved: true,
+                        isLoading: false,
+                        submitDisabled: false
                     });
+
+                    if (update) {
+                        toast.success(<ToastContent type="success" message="The distribution details are saved successfully" />, {
+                            position: "top-right"
+                        });
+                    }
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -169,13 +179,13 @@ export default class DistributionForm extends Component {
 
     render() {
         const { catalog, dataset } = this.props;
-        const { languages, licenses, isSaved, update } = this.state;
+        const { languages, licenses, isSaved, update, isLoading } = this.state;
 
         const required = "This field is required";
 
-        if(isSaved)
+        if(isSaved && !update)
         {
-            return <Redirect push to={'/admin/' + catalog + '/dataset/' + dataset + '/distribution/'} />;
+            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distributions'} />;
         }
 
         return (
@@ -304,13 +314,14 @@ export default class DistributionForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={'/admin/' + catalog + '/dataset/' + dataset + '/distribution'} exact={true}>
-                            <Button variant="secondary">Back</Button>
-                        </LinkContainer>
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
-                            {update ? 'Update' : 'Add'} distribution</Button>
+                        {update ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                            Update distribution
+                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            Add distribution
+                        </Button>}
                     </Col>
                 </Row>
 

@@ -8,89 +8,25 @@ import {LinkContainer} from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
 import AdminPage from "../../../components/AdminPage";
 import Container from "react-bootstrap/Container";
-import {toast} from "react-toastify";
+import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import AdminDistributionListItem from "../../../components/ListItem/AdminDistributionListItem";
 import Icon from "../../../components/Icon";
+import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 
-export default class Distributions extends Component {
+export default class DatasetDistributions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingCatalog:       true,
-            isLoadingDataset:       true,
             isLoadingDistributions: true,
-            hasLoadedCatalog:       false,
-            hasLoadedDataset:       false,
             hasLoadedDistributions: false,
-            catalog:                null,
-            dataset:                null,
             distributions:          [],
         };
     }
 
     componentDidMount() {
-        this.getCatalog();
-        this.getDataset();
         this.getDistributions();
     }
-
-
-    getCatalog = () => {
-        this.setState({
-            isLoadingCatalog: true,
-        });
-
-        axios.get('/api/catalog/' + this.props.match.params.catalog)
-            .then((response) => {
-                this.setState({
-                    catalog:          response.data,
-                    isLoadingCatalog: false,
-                    hasLoadedCatalog: true,
-                });
-            })
-            .catch((error) => {
-                if (error.response && typeof error.response.data.message !== "undefined") {
-                    this.setState({
-                        isLoadingCatalog: false,
-                        hasError:         true,
-                        errorMessage:     error.response.data.message,
-                    });
-                } else {
-                    this.setState({
-                        isLoadingCatalog: false,
-                    });
-                }
-            });
-    };
-
-    getDataset = () => {
-        this.setState({
-            isLoadingDataset: true,
-        });
-
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
-            .then((response) => {
-                this.setState({
-                    dataset:          response.data,
-                    isLoadingDataset: false,
-                    hasLoadedDataset: true,
-                });
-            })
-            .catch((error) => {
-                if (error.response && typeof error.response.data.message !== "undefined") {
-                    this.setState({
-                        isLoadingDataset: false,
-                        hasError:         true,
-                        errorMessage:     error.response.data.message,
-                    });
-                } else {
-                    this.setState({
-                        isLoadingDataset: false,
-                    });
-                }
-            });
-    };
 
     getDistributions = () => {
         this.setState({
@@ -116,25 +52,20 @@ export default class Distributions extends Component {
     };
 
     render() {
-        if (!this.state.hasLoadedCatalog || !this.state.hasLoadedDataset || !this.state.hasLoadedDistributions) {
-            return <LoadingScreen showLoading={true}/>;
+        const { isLoadingDistributions } = this.state;
+        const { catalog, dataset } = this.props;
+
+        if (isLoadingDistributions) {
+            return <InlineLoader />;
         }
 
-        return <AdminPage
-            className="Dataset"
-            title={localizedText(this.state.dataset.title, 'en')}
-        >
+        return <div>
             <Row>
                 <Col sm={6}>
-                    <div className="ButtonBar">
-                        <LinkContainer to={'/admin/' + this.props.match.params.catalog}>
-                            <Button variant="link" className="BackButton"><Icon type="arrowLeft" /> {localizedText(this.state.catalog.title, 'en')}</Button>
-                        </LinkContainer>
-                    </div>
                 </Col>
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <LinkContainer to={'/admin/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/add'}>
+                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/distributions/add'}>
                             <Button variant="primary" className="AddButton"><Icon type="add" /> Add distribution</Button>
                         </LinkContainer>
                     </div>
@@ -152,8 +83,8 @@ export default class Distributions extends Component {
                         {this.state.distributions.map((item, index) => {
                                 return <AdminDistributionListItem  key={index}
                                                                    id={item.studyId}
-                                                                   catalog={this.props.match.params.catalog}
-                                                                   dataset={this.props.match.params.dataset}
+                                                                   catalog={catalog}
+                                                                   dataset={dataset.slug}
                                                                    name={localizedText(item.title, 'en')}
                                                                    slug={item.slug}
                                                                    type={item.type}
@@ -163,6 +94,6 @@ export default class Distributions extends Component {
                     </Container> : <div className="NoResults">No distributions found.</div>}
                 </Col>
             </Row>
-        </AdminPage>;
+        </div>;
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\Study\ManualCastorStudyApiRequest;
+use App\Api\Resource\Dataset\DatasetApiResource;
+use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Exception\StudyAlreadyExists;
@@ -40,9 +42,11 @@ class AdminStudiesApiController extends ApiController
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            $bus->dispatch(new AddStudyToCatalogCommand($handledStamp->getResult(), $catalog));
+            /** @var Study $study */
+            $study = $handledStamp->getResult();
+            $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse((new DatasetApiResource($study->getDataset()))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

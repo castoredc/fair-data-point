@@ -15,6 +15,8 @@ import Input from "../Input";
 import FormHeading from "./FormHeading";
 import LoadingScreen from "../LoadingScreen";
 import Icon from "../Icon";
+import InlineLoader from "../LoadingScreen/InlineLoader";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class ContactsForm extends Component {
     constructor(props) {
@@ -170,21 +172,30 @@ export default class ContactsForm extends Component {
     };
 
     handleSubmit = (event) => {
+        const { studyId, admin = false } = this.props;
         event.preventDefault();
 
         window.onbeforeunload = null;
 
-        this.setState({
-            submitDisabled: true,
-            isLoading: true
-        });
-
         if(this.form.isFormValid()) {
-            axios.post('/api/study/' + this.props.studyId + '/contacts/add', this.state.contacts)
+            this.setState({
+                submitDisabled: true,
+                isLoading: true
+            });
+
+            axios.post('/api/study/' + studyId + '/contacts/add', this.state.contacts)
                 .then((response) => {
                     this.setState({
-                        isSaved: true
+                        isSaved: true,
+                        isLoading: false,
+                        submitDisabled: false,
                     });
+
+                    if (admin) {
+                        toast.success(<ToastContent type="success" message="The contacts are saved successfully" />, {
+                            position: "top-right"
+                        });
+                    }
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -207,17 +218,22 @@ export default class ContactsForm extends Component {
     };
 
     render() {
-        const { catalog, studyId, action, admin} = this.props;
+        const { catalog, studyId, admin = false } = this.props;
+        const { isSaved, isLoading, submitDisabled } = this.state;
 
-        const backUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/centers' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/centers';
-        const nextUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/consent' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/consent';
+        const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
+        const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/consent';
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
-        if(this.state.isSaved)
+        if(isSaved && !admin)
         {
             return <Redirect push to={nextUrl} />;
+        }
+
+        if(isLoading && !submitDisabled) {
+            return <InlineLoader />;
         }
 
         return (
@@ -226,8 +242,6 @@ export default class ContactsForm extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                {this.state.isLoading && <LoadingScreen showLoading={true}/>}
-
                 <div className="Contacts">
                     {this.state.contacts.map((contact, index) => {
                     return <Row key={index} className="Contact RepeatedBlock">
@@ -306,12 +320,17 @@ export default class ContactsForm extends Component {
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={backUrl}>
+                        {!admin && <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
-                        </LinkContainer>
+                        </LinkContainer>}
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
+                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                            Save
+                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            Next
+                        </Button>}
                     </Col>
                 </Row>
 
