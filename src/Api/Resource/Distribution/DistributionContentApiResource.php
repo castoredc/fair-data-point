@@ -35,8 +35,6 @@ class DistributionContentApiResource implements ApiResource
         $contents = $this->distribution->getContents();
 
         if ($contents instanceof CSVDistribution) {
-            $data['includeAll'] = $contents->isIncludeAll();
-
             $elements = [];
 
             foreach ($contents->getElements() as $element) {

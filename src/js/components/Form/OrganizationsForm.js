@@ -16,6 +16,8 @@ import Dropdown from "../Input/Dropdown";
 import FormHeading from "./FormHeading";
 import LoadingScreen from "../LoadingScreen";
 import Icon from "../Icon";
+import InlineLoader from "../LoadingScreen/InlineLoader";
+import Spinner from "react-bootstrap/Spinner";
 
 export default class OrganizationsForm extends Component {
     constructor(props) {
@@ -191,21 +193,30 @@ export default class OrganizationsForm extends Component {
     };
 
     handleSubmit = (event) => {
+        const { studyId, admin = false } = this.props;
         event.preventDefault();
 
         window.onbeforeunload = null;
 
-        this.setState({
-            submitDisabled: true,
-            isLoading: true
-        });
-
         if(this.form.isFormValid()) {
-            axios.post('/api/study/' + this.props.studyId + '/centers/add', this.state.organizations)
-                .then((response) => {
+            this.setState({
+                submitDisabled: true,
+                isLoading: true
+            });
+
+            axios.post('/api/study/' + studyId + '/centers/add', this.state.organizations)
+                .then(() => {
                     this.setState({
-                        isSaved: true
+                        isSaved: true,
+                        isLoading: false,
+                        submitDisabled: false,
                     });
+
+                    if (admin) {
+                        toast.success(<ToastContent type="success" message="The organizations are saved successfully" />, {
+                            position: "top-right"
+                        });
+                    }
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
@@ -228,17 +239,21 @@ export default class OrganizationsForm extends Component {
     };
 
     render() {
-        const { catalog, studyId, action, admin } = this.props;
+        const { catalog, studyId, admin = false } = this.props;
+        const { isSaved, isLoading, submitDisabled } = this.state;
 
-        const backUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/details' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/details';
-        const nextUrl = admin ? '/admin/' + catalog + '/study/' + this.props.studyId + '/metadata/' + action + '/contacts' : '/my-studies/' + catalog + '/study/' + this.props.studyId + '/metadata/contacts';
+        const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/details';
+        const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/contacts';
 
         const required = "This field is required";
-        const invalid = "This value is invalid";
 
-        if(this.state.isSaved)
+        if(isSaved && !admin)
         {
             return <Redirect push to={nextUrl} />;
+        }
+
+        if(isLoading && !submitDisabled) {
+            return <InlineLoader />;
         }
 
         return (
@@ -247,8 +262,6 @@ export default class OrganizationsForm extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                {this.state.isLoading && <LoadingScreen showLoading={true}/>}
-
                 <div className="Organizations">
                     {this.state.organizations.map((organization, index) => {
                     return <Row key={index} className="Organization RepeatedBlock">
@@ -342,18 +355,23 @@ export default class OrganizationsForm extends Component {
                 </div>
                 <Row>
                     <Col md={12}>
-                        <Button variant="link" onClick={this.handleNewOrganization}>+ Add Another Organisation</Button>
+                        <Button variant="link" onClick={this.handleNewOrganization}>+ Add Another Organization</Button>
                     </Col>
                 </Row>
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
-                        <LinkContainer to={backUrl}>
+                        {!admin && <LinkContainer to={backUrl}>
                             <Button variant="secondary">Back</Button>
-                        </LinkContainer>
+                        </LinkContainer>}
                     </Col>
                     <Col>
-                        <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>Next</Button>
+                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                            Save
+                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                            Next
+                        </Button>}
                     </Col>
                 </Row>
 

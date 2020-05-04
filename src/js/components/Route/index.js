@@ -15,7 +15,7 @@ export const PrivateRoute = ({ component: Component, path, user, ...rest }) => (
 export const ProtectedRoute = ({ component: Component, path, user, ...rest }) => (
     <Route {...rest} render={(props) => (
         user !== null && user.isAdmin === true
-            ? <Component {...props} />
+            ? <Component {...props} user={user} />
             : <Redirect to={{
                 pathname: '/',
             }} />

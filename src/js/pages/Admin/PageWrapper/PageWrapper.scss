@@ -1,0 +1,102 @@
+@import '../../../scss/colors';
+
+.Admin {
+  .Header {
+    background: $azul;
+
+    .navbar {
+      padding: 0;
+    }
+  }
+
+  .LogoContainer, .MenuContainer {
+    padding: 6px 15px;
+  }
+
+  .LeftNav, .Back {
+    flex: 0 0 210px;
+    max-width: 210px;
+  }
+
+  .LeftNav {
+    padding: 15px;
+    font-weight: 700;
+
+    hr {
+      margin: 10px 0 14px 0;
+    }
+
+    a.nav-link {
+      color: $neutral-500;
+      border-radius: 3px;
+      margin-bottom: 4px;
+      text-decoration: none;
+      border: 1px solid transparent;
+
+      &.disabled {
+        color: $neutral-60;
+      }
+
+      &.active {
+        color: $azul;
+        border-color: $azul;
+      }
+
+      &:hover {
+        background: $neutral-30;
+      }
+    }
+  }
+
+  .Back .Icon {
+    height: 14px;
+    width: 14px;
+  }
+
+  .LogoContainer {
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+  }
+
+  .Page, .PageTitle {
+      flex: 1;
+      max-width: none;
+  }
+
+  .Page {
+    padding: 15px;
+  }
+
+  .PageHeader {
+    margin-top: 15px;
+
+    & > div {
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .PageTitle {
+      div {
+        border-bottom: 1px solid $neutral-40;
+        padding: 5px 0 7px 0;
+      }
+
+      h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+        color: $neutral-500;
+      }
+    }
+  }
+
+  .Logo {
+    width: 90px;
+    height: 24px;
+
+    path {
+      fill: $generic-white;
+    }
+  }
+}

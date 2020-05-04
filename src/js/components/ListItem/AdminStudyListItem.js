@@ -10,20 +10,22 @@ export default class AdminStudyListItem extends Component {
     render() {
         const { id, name, catalog, slug, published, consent}  = this.props;
 
+        const url = '/admin/catalog/' + catalog + '/dataset/' + slug;
+
         return <Row className="ListItem AdminStudyListItem AdminListItem">
             <Col md={7} className="AdminStudyListItemTitle AdminListItemTitle">
-                <Link to={'/fdp/' + catalog + '/' + slug} target="_blank">
+                <Link to={url}>
                     {name}
                 </Link>
             </Col>
             <Col md={1} className="AttributeCheckmark">
-                {consent.socialMedia && <Link to={'/fdp/' + catalog + '/' + slug} target="_blank"><Icon type="checkmark" /></Link>}
+                {consent.socialMedia && <Link to={url}><Icon type="checkmark" /></Link>}
             </Col>
             <Col md={1} className="AttributeCheckmark">
-                {consent.publish && <Link to={'/fdp/' + catalog + '/' + slug} target="_blank"><Icon type="checkmark" /></Link>}
+                {consent.publish && <Link to={url}><Icon type="checkmark" /></Link>}
             </Col>
             <Col md={1} className="AttributeCheckmark">
-                {published && <Link to={'/fdp/' + catalog + '/' + slug} target="_blank"><Icon type="checkmark" /></Link>}
+                {published && <Link to={url}><Icon type="checkmark" /></Link>}
             </Col>
             <Col md={2} className="AdminStudyListItemButtons AdminListItemButtons">
                 <Link to={'/fdp/' + catalog + '/' + slug} target="_blank">
@@ -31,14 +33,9 @@ export default class AdminStudyListItem extends Component {
                         <Icon type="view" />
                     </Button>
                 </Link>
-                <Link to={'/admin/' + catalog + '/study/' + id + '/metadata/update/details'}>
+                <Link to={url}>
                     <Button variant="link">
                         <Icon type="edit" />
-                    </Button>
-                </Link>
-                <Link to={'/admin/' + catalog + '/dataset/' + slug + '/distribution'}>
-                    <Button variant="link">
-                        <Icon type="formLibrary" />
                     </Button>
                 </Link>
             </Col>

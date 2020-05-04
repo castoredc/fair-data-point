@@ -8,13 +8,9 @@ import Distribution from "./pages/FAIRDataPoint/Distribution";
 import Login from "./pages/Login";
 import axios from "axios";
 import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
-import Catalogs from "./pages/Admin/Catalogs";
 import {PrivateRoute, ProtectedRoute} from "./components/Route";
-import SingleCatalog from "./pages/Admin/SingleCatalog";
-import AddStudy from "./pages/Admin/AddStudy";
-import AdminStudyMetadataWrapper from "./pages/Admin/AdminStudyMetadataWrapper";
+import AdminPageWrapper from "./pages/Admin/PageWrapper";
 import MetadataXmlParse from "./pages/Tools/MetadataXmlParse";
-import AddDistribution from "./pages/Admin/AddDistribution";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -52,20 +48,7 @@ export default ({user}) =>
         <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={StudyMetadataWrapper} />
 
         /* Admin */
-        <ProtectedRoute path="/admin" exact user={user} component={Catalogs} />
-        <ProtectedRoute path="/admin/:catalog" exact user={user} component={SingleCatalog} />
-        <ProtectedRoute path="/admin/:catalog/study/add" exact user={user} component={AddStudy} />
-
-        {/*<ProtectedRoute path="/admin/:catalog/study/:studyId" exact user={user} component={SingleCatalog} />*/}
-        <ProtectedRoute path="/admin/:catalog/study/:studyId/metadata/:action/details" exact user={user} component={AdminStudyMetadataWrapper} />
-        <ProtectedRoute path="/admin/:catalog/study/:studyId/metadata/:action/centers" exact user={user} component={AdminStudyMetadataWrapper} />
-        <ProtectedRoute path="/admin/:catalog/study/:studyId/metadata/:action/contacts" exact user={user} component={AdminStudyMetadataWrapper} />
-        <ProtectedRoute path="/admin/:catalog/study/:studyId/metadata/:action/consent" exact user={user} component={AdminStudyMetadataWrapper} />
-
-        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution" exact user={user} component={AdminStudyMetadataWrapper} />
-        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/add" exact user={user} component={AddDistribution} />
-        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/:distribution" exact user={user} component={AdminStudyMetadataWrapper} />
-        <ProtectedRoute path="/admin/:catalog/dataset/:dataset/distribution/:distribution/content" exact user={user} component={AdminStudyMetadataWrapper} />
+        <ProtectedRoute path="/admin" user={user} component={AdminPageWrapper} />
 
         <Route component={NotFound} />
     </Switch>;

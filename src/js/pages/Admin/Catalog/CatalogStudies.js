@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import AdminPage from "../../../components/AdminPage";
 import AdminStudyListItem from "../../../components/ListItem/AdminStudyListItem";
 import Container from "react-bootstrap/Container";
-import {toast} from "react-toastify";
+import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import Pagination from "react-bootstrap/Pagination";
 import Filters from "../../../components/Filters";
@@ -18,15 +18,12 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Icon from "../../../components/Icon";
 import arrowLeft from "../../../components/Icon/icons/arrow-left.svg";
 
-export default class SingleCatalog extends Component {
+export default class CatalogStudies extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingCatalog:  true,
             isLoadingDatasets: true,
-            hasLoadedCatalogs: false,
             hasLoadedDatasets: false,
-            catalog:           null,
             datasets:          [],
             filters:           {},
             perPage:           999,
@@ -39,37 +36,8 @@ export default class SingleCatalog extends Component {
     }
 
     componentDidMount() {
-        this.getCatalog();
         this.getDatasets(false);
     }
-
-    getCatalog = () => {
-        this.setState({
-            isLoadingCatalog: true,
-        });
-
-        axios.get('/api/catalog/' + this.props.match.params.catalog)
-            .then((response) => {
-                this.setState({
-                    catalog:          response.data,
-                    isLoadingCatalog: false,
-                    hasLoadedCatalog: true,
-                });
-            })
-            .catch((error) => {
-                if (error.response && typeof error.response.data.message !== "undefined") {
-                    this.setState({
-                        isLoadingCatalog: false,
-                        hasError:         true,
-                        errorMessage:     error.response.data.message,
-                    });
-                } else {
-                    this.setState({
-                        isLoadingCatalog: false,
-                    });
-                }
-            });
-    };
 
     getDatasets = (filters) => {
         const {perPage} = this.state;
@@ -155,30 +123,18 @@ export default class SingleCatalog extends Component {
 
     render() {
         const {pages} = this.state;
+        const {catalog} = this.props;
 
-        if (this.state.isLoadingCatalog) {
-            return <LoadingScreen showLoading={true}/>;
+        if (!this.state.hasLoadedDatasets) {
+            return <InlineLoader />;
         }
 
-        if (!this.state.hasLoadedCatalog || !this.state.hasLoadedDatasets) {
-            return <LoadingScreen showLoading={true}/>;
-        }
-
-        return <AdminPage
-            className="Catalog"
-            title={localizedText(this.state.catalog.title, 'en')}
-        >
+        return <div>
             <Row>
-                <Col sm={6}>
-                    <div className="ButtonBar">
-                        <LinkContainer to="/admin">
-                            <Button variant="link" className="BackButton"><Icon type="arrowLeft" /> All catalogs</Button>
-                        </LinkContainer>
-                    </div>
-                </Col>
+                <Col sm={6} />
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <LinkContainer to={'/admin/' + this.props.match.params.catalog + '/study/add'}>
+                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/studies/add'}>
                             <Button variant="primary" className="AddButton"><Icon type="add" /> Add study</Button>
                         </LinkContainer>
 
@@ -233,6 +189,6 @@ export default class SingleCatalog extends Component {
                     />
                 </Col>
             </Row>
-        </AdminPage>;
+        </div>;
     }
 }
