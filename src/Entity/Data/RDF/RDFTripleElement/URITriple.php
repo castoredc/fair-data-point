@@ -18,9 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
 class URITriple extends RDFTripleElement implements RDFTripleSubject, RDFTriplePredicate, RDFTripleObject
 {
     /**
-     * @ORM\Column(type="iri")
+     * @ORM\Column(type="iri", nullable=false)
      *
-     * @var Iri|null
+     * @var Iri
      */
     private $uri;
 
@@ -31,7 +31,7 @@ class URITriple extends RDFTripleElement implements RDFTripleSubject, RDFTripleP
      */
     private $label;
 
-    public function __construct(?Iri $uri, string $label)
+    public function __construct(Iri $uri, string $label)
     {
         $this->uri = $uri;
         $this->label = $label;
