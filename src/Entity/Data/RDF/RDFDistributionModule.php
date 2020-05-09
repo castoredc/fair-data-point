@@ -30,7 +30,7 @@ class RDFDistributionModule
     private $title;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="`order`", type="integer")
      *
      * @var int
      */
@@ -52,9 +52,8 @@ class RDFDistributionModule
      */
     private $triples;
 
-    public function __construct(string $id, string $title, int $order, RDFDistribution $distribution)
+    public function __construct(string $title, int $order, RDFDistribution $distribution)
     {
-        $this->id = $id;
         $this->title = $title;
         $this->order = $order;
         $this->distribution = $distribution;

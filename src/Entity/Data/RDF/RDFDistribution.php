@@ -51,7 +51,20 @@ class RDFDistribution extends DistributionContents
 
     public function addModule(RDFDistributionModule $module): void
     {
-        $this->modules->add($module);
+        $order = $module->getOrder();
+        $newModules = new ArrayCollection();
+
+        foreach($this->modules as $currentModule) {
+            /** @var RDFDistributionModule $currentModule */
+            $currentOrder = $currentModule->getOrder();
+            $newOrder = $currentOrder >= $order ? ($currentOrder + 1) : $currentOrder;
+            $currentModule->setOrder($newOrder);
+
+            $newModules->add($currentModule);
+        }
+
+        $newModules->add($module);
+        $this->modules = $newModules;
     }
 
     public function removeModule(RDFDistributionModule $module): void
