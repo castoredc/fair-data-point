@@ -25,12 +25,21 @@ class RDFDistribution extends DistributionContents
      */
     private $modules;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RDFDistributionPrefix", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="prefixes", referencedColumnName="id")
+     *
+     * @var Collection<string, RDFDistributionPrefix>
+     */
+    private $prefixes;
+
     /** @inheritDoc */
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
         parent::__construct($distribution, $accessRights, $isPublished);
 
         $this->modules = new ArrayCollection();
+        $this->prefixes = new ArrayCollection();
     }
 
     /**
@@ -70,6 +79,25 @@ class RDFDistribution extends DistributionContents
     public function removeModule(RDFDistributionModule $module): void
     {
         $this->modules->remove($module->getId());
+    }
+
+    /**
+     * @return Collection<string, RDFDistributionPrefix>
+     */
+    public function getPrefixes(): Collection
+    {
+        return $this->prefixes;
+    }
+
+    public function addPrefix(RDFDistributionPrefix $prefix): void
+    {
+        $prefix->setDistribution($this);
+        $this->prefixes->add($prefix);
+    }
+
+    public function removePrefix(RDFDistributionPrefix $prefix): void
+    {
+        $this->prefixes->remove($prefix->getId());
     }
 
     public function getRDFUrl(): string
