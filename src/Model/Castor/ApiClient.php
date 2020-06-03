@@ -10,6 +10,7 @@ use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
 use App\Entity\Castor\Data\SurveyData;
 use App\Entity\Castor\Form\Field;
+use App\Entity\Castor\Form\FieldOptionGroup;
 use App\Entity\Castor\Instances\ReportInstance;
 use App\Entity\Castor\Instances\SurveyPackageInstance;
 use App\Entity\Castor\Record;
@@ -413,6 +414,44 @@ class ApiClient
         }
 
         return $reports;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getOptionGroups(Study $study): CastorEntityCollection
+    {
+        /** @var CastorEntityCollection<FieldOptionGroup> $collection */
+        $optionGroups = new CastorEntityCollection();
+
+        $pages = 1;
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup?page=' . $page . '&page_size=' . $this->pageSize);
+            $pages = $body['page_count'];
+
+            foreach ($body['_embedded']['fieldOptionGroups'] as $optionGroup) {
+                $optionGroups->add(FieldOptionGroup::fromData($optionGroup, $study));
+            }
+        }
+
+        return $optionGroups;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getOptionGroup(Study $study, string $optionGroupId): FieldOptionGroup
+    {
+        $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup/' . $optionGroupId);
+
+        return FieldOptionGroup::fromData($body, $study);
     }
 
     /**

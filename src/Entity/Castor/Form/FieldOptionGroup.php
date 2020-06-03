@@ -77,7 +77,7 @@ class FieldOptionGroup extends CastorEntity
 
     public function getOptionByValue(string $value): ?FieldOption
     {
-        if($this->options === null) {
+        if ($this->options === null) {
             return null;
         }
 
@@ -92,7 +92,7 @@ class FieldOptionGroup extends CastorEntity
 
     public function getOptionById(string $id): ?FieldOption
     {
-        if($this->options === null) {
+        if ($this->options === null) {
             return null;
         }
 

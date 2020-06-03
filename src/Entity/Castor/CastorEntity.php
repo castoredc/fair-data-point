@@ -206,7 +206,6 @@ abstract class CastorEntity
         return null;
     }
 
-    /** @return CastorEntity|null */
     public function getChild(string $id): ?CastorEntity
     {
         return null;
