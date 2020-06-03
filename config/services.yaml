@@ -47,3 +47,7 @@ services:
     App\Encryption\EncryptionService:
         arguments:
             - '%env(ENCRYPTION_KEY)%'
+
+    Castor\BioPortal\Api\ApiWrapper:
+        arguments:
+            - { apiKey: '%env(BIOPORTAL_API_KEY)%' }
