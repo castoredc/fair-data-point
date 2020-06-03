@@ -64,6 +64,7 @@ class AdminController extends AbstractController
      * @Route("/admin/catalog/{catalog}/dataset/{dataset}/consent", name="admin_dataset_consent")
      * @Route("/admin/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_dataset_distributions")
      * @Route("/admin/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_dataset_distribution_add")
+     * @Route("/admin/catalog/{catalog}/dataset/{dataset}/annotations", name="admin_dataset_annotations")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */

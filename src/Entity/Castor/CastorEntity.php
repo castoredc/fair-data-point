@@ -6,12 +6,13 @@ namespace App\Entity\Castor;
 use App\Entity\Enum\StructureType;
 use App\Entity\Terminology\Annotation;
 use App\Entity\Terminology\Ontology;
+use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CastorEntityRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="castor_entity")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -69,6 +70,14 @@ abstract class CastorEntity
      */
     protected $annotations;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="CastorEntity",cascade={"persist"})
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id")
+     *
+     * @var CastorEntity|null
+     */
+    private $parent;
+
     public function __construct(string $id, string $label, Study $study, ?StructureType $structureType)
     {
         $this->id = $id;
@@ -109,6 +118,11 @@ abstract class CastorEntity
         return $this->label;
     }
 
+    public function setLabel(string $label): void
+    {
+        $this->label = $label;
+    }
+
     /**
      * @return Collection<string, Annotation>
      */
@@ -136,6 +150,18 @@ abstract class CastorEntity
         return $return;
     }
 
+    public function hasAnnotation(OntologyConcept $ontologyConcept): bool
+    {
+        foreach ($this->annotations as $annotation) {
+            /** @var Annotation $annotation */
+            if ($annotation->getConcept() === $ontologyConcept) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param Collection<string, Annotation> $annotations
      */
@@ -152,5 +178,37 @@ abstract class CastorEntity
     public function removeAnnotation(Annotation $annotation): void
     {
         $this->annotations->remove($annotation->getId());
+    }
+
+    public function hasParent(): bool
+    {
+        return $this->parent !== null;
+    }
+
+    public function getParent(): ?CastorEntity
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?CastorEntity $parent): void
+    {
+        $this->parent = $parent;
+    }
+
+    public function hasChildren(): bool
+    {
+        return false;
+    }
+
+    /** @return CastorEntity[]|null */
+    public function getChildren(): ?array
+    {
+        return null;
+    }
+
+    /** @return CastorEntity|null */
+    public function getChild(string $id): ?CastorEntity
+    {
+        return null;
     }
 }

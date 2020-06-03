@@ -70,6 +70,7 @@ class FieldOption extends CastorEntity
 
     public function setOptionGroup(FieldOptionGroup $optionGroup): void
     {
+        $this->setParent($optionGroup);
         $this->optionGroup = $optionGroup;
     }
 

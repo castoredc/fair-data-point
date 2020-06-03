@@ -218,16 +218,6 @@ class Field extends CastorEntity
         $this->optionGroup = $optionGroup;
     }
 
-    public function getParent(): Step
-    {
-        return $this->parent;
-    }
-
-    public function setParent(Step $parent): void
-    {
-        $this->parent = $parent;
-    }
-
     /**
      * @param array<mixed> $data
      */

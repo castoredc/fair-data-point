@@ -7,13 +7,21 @@ use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="ontology_concept")
+ * @ORM\Entity(repositoryClass="App\Repository\OntologyConceptRepository")
+ * @ORM\Table(name="ontology_concept", indexes={@ORM\Index(name="ontology_code", columns={"ontology","code"})})
  */
 class OntologyConcept
 {
     /**
      * @ORM\Id
+     * @ORM\Column(type="guid", length=190)
+     * @ORM\GeneratedValue(strategy="UUID")
+     *
+     * @var string
+     */
+    private $id;
+
+    /**
      * @ORM\Column(type="iri")
      *
      * @var Iri
@@ -25,11 +33,11 @@ class OntologyConcept
      *
      * @var string
      */
-    private $id;
+    private $code;
 
     /**
      * @ORM\ManyToOne(targetEntity="Ontology",cascade={"persist"})
-     * @ORM\JoinColumn(name="ontology", referencedColumnName="url", nullable=false)
+     * @ORM\JoinColumn(name="ontology", referencedColumnName="id", nullable=false)
      *
      * @var Ontology
      */
@@ -42,12 +50,17 @@ class OntologyConcept
      */
     private $displayName;
 
-    public function __construct(Iri $url, string $id, Ontology $ontology, string $displayName)
+    public function __construct(Iri $url, string $code, Ontology $ontology, string $displayName)
     {
         $this->url = $url;
-        $this->id = $id;
+        $this->code = $code;
         $this->ontology = $ontology;
         $this->displayName = $displayName;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getUrl(): Iri
@@ -60,14 +73,14 @@ class OntologyConcept
         $this->url = $url;
     }
 
-    public function getId(): string
+    public function getCode(): string
     {
-        return $this->id;
+        return $this->code;
     }
 
-    public function setId(string $id): void
+    public function setCode(string $code): void
     {
-        $this->id = $id;
+        $this->code = $code;
     }
 
     public function getOntology(): Ontology

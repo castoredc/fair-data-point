@@ -82,16 +82,6 @@ abstract class Step extends CastorEntity
         $this->position = $position;
     }
 
-    public function getParent(): StructureElement
-    {
-        return $this->parent;
-    }
-
-    public function setParent(StructureElement $parent): void
-    {
-        $this->parent = $parent;
-    }
-
     /**
      * @return Field[]
      */

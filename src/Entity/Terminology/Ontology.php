@@ -14,6 +14,14 @@ class Ontology
 {
     /**
      * @ORM\Id
+     * @ORM\Column(type="guid", length=190)
+     * @ORM\GeneratedValue(strategy="UUID")
+     *
+     * @var string
+     */
+    private $id;
+
+    /**
      * @ORM\Column(type="iri")
      *
      * @var Iri
@@ -39,6 +47,11 @@ class Ontology
         $this->name = $name;
         $this->url = $url;
         $this->bioPortalId = $bioPortalId;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getName(): string

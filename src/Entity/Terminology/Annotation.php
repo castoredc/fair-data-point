@@ -31,7 +31,7 @@ class Annotation
 
     /**
      * @ORM\ManyToOne(targetEntity="OntologyConcept",cascade={"persist"})
-     * @ORM\JoinColumn(name="concept", referencedColumnName="url", nullable=false)
+     * @ORM\JoinColumn(name="concept", referencedColumnName="id", nullable=false)
      *
      * @var OntologyConcept
      */

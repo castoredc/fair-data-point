@@ -77,6 +77,10 @@ class FieldOptionGroup extends CastorEntity
 
     public function getOptionByValue(string $value): ?FieldOption
     {
+        if($this->options === null) {
+            return null;
+        }
+
         foreach ($this->options as $option) {
             if ($option->getValue() === $value) {
                 return $option;
@@ -84,6 +88,36 @@ class FieldOptionGroup extends CastorEntity
         }
 
         return null;
+    }
+
+    public function getOptionById(string $id): ?FieldOption
+    {
+        if($this->options === null) {
+            return null;
+        }
+
+        foreach ($this->options as $option) {
+            if ($option->getId() === $id) {
+                return $option;
+            }
+        }
+
+        return null;
+    }
+
+    public function hasChildren(): bool
+    {
+        return true;
+    }
+
+    public function getChildren(): ?array
+    {
+        return $this->options;
+    }
+
+    public function getChild(string $id): ?CastorEntity
+    {
+        return $this->getOptionById($id);
     }
 
     /**
@@ -122,7 +156,7 @@ class FieldOptionGroup extends CastorEntity
             $study,
             $data['name'],
             $data['description'] ?? null,
-            $data['layout'] ?? null,
+            $data['layout'] !== null && $data['layout'] !== false ? $data['layout'] : null,
             $options
         );
 

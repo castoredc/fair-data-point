@@ -36,7 +36,7 @@ class CastorValueTriple extends RDFTripleElement implements RDFTripleObject
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Terminology\Ontology",cascade={"persist"})
-     * @ORM\JoinColumn(name="ontology", referencedColumnName="url", nullable=true)
+     * @ORM\JoinColumn(name="ontology", referencedColumnName="id", nullable=true)
      *
      * @var Ontology|null
      */
