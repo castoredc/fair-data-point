@@ -63,7 +63,7 @@ class RDFDistribution extends DistributionContents
         $order = $module->getOrder();
         $newModules = new ArrayCollection();
 
-        foreach($this->modules as $currentModule) {
+        foreach ($this->modules as $currentModule) {
             /** @var RDFDistributionModule $currentModule */
             $currentOrder = $currentModule->getOrder();
             $newOrder = $currentOrder >= $order ? ($currentOrder + 1) : $currentOrder;

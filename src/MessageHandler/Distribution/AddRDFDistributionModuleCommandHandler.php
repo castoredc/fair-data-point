@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Data\RDF\RDFDistributionModule;
 use App\Exception\InvalidDistributionType;
-use App\Message\Distribution\AddDistributionContentsCommand;
 use App\Message\Distribution\AddRDFDistributionModuleCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

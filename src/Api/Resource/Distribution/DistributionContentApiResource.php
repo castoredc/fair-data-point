@@ -63,7 +63,7 @@ class DistributionContentApiResource implements ApiResource
             foreach ($contents->getModules() as $module) {
                 /** @var RDFDistributionModule $module */
                 $triples = [];
-                foreach($module->getTriples() as $triple) {
+                foreach ($module->getTriples() as $triple) {
                     /** @var RDFTriple $triple */
                     $triples[] = (new RDFTripleApiResource($triple))->toArray();
                 }

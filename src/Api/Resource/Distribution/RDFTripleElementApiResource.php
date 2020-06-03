@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\RDF\RDFTriple;
 use App\Entity\Data\RDF\RDFTripleElement\RDFTripleElement;
 
 class RDFTripleElementApiResource implements ApiResource
@@ -22,7 +22,7 @@ class RDFTripleElementApiResource implements ApiResource
     public function toArray(): array
     {
         return [
-            'label' => $this->element->getLabel()
+            'label' => $this->element->getLabel(),
         ];
     }
 }

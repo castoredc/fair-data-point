@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
@@ -36,6 +37,4 @@ class AddRDFDistributionModuleCommand
     {
         return $this->distribution;
     }
-
-
 }

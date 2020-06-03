@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity\Data\RDF;
 
@@ -42,12 +43,6 @@ class RDFDistributionPrefix
      */
     private $distribution;
 
-    /**
-     * RDFDistributionPrefix constructor.
-     *
-     * @param string          $prefix
-     * @param Iri             $uri
-     */
     public function __construct(string $prefix, Iri $uri)
     {
         $this->prefix = $prefix;
