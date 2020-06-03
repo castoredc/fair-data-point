@@ -110,6 +110,7 @@ class FieldOptionGroup extends CastorEntity
         return true;
     }
 
+    /** {@inheritdoc} */
     public function getChildren(): ?array
     {
         return $this->options;

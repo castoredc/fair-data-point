@@ -27,11 +27,15 @@ class CastorEntityType extends Enum
 
     public function getClassName(): string
     {
-        if($this->isField()) {
+        if ($this->isField()) {
             return Field::class;
-        } else if($this->isFieldOption()) {
+        }
+
+        if ($this->isFieldOption()) {
             return FieldOption::class;
-        } else if($this->isFieldOptionGroup()) {
+        }
+
+        if ($this->isFieldOptionGroup()) {
             return FieldOptionGroup::class;
         }
 

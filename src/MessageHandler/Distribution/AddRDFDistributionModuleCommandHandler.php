@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Data\RDF\RDFDistributionModule;
 use App\Exception\InvalidDistributionType;
 use App\Message\Distribution\AddRDFDistributionModuleCommand;
@@ -26,10 +25,6 @@ class AddRDFDistributionModuleCommandHandler implements MessageHandlerInterface
     public function __invoke(AddRDFDistributionModuleCommand $message): void
     {
         $distribution = $message->getDistribution();
-
-        if (! $distribution instanceof RDFDistribution) {
-            throw new InvalidDistributionType();
-        }
 
         $module = new RDFDistributionModule($message->getTitle(), $message->getOrder(), $distribution);
         $distribution->addModule($module);

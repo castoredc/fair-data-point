@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model\Castor;
 
@@ -6,13 +7,16 @@ use App\Entity\Castor\CastorEntity;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use function array_key_exists;
+use function count;
+use function in_array;
 
 class CastorEntityCollection implements Countable, IteratorAggregate
 {
     /**
      * An array containing the entries of this collection.
      *
-     * @var array
+     * @var CastorEntity[]
      */
     private $entities;
 
@@ -21,10 +25,10 @@ class CastorEntityCollection implements Countable, IteratorAggregate
      */
     public function __construct(?array $entities = null)
     {
-        $this->entities = $entities ? $this->parseEntities($entities) : [];
+        $this->entities = $entities !== null ? $this->parseEntities($entities) : [];
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->entities);
     }
@@ -34,17 +38,17 @@ class CastorEntityCollection implements Countable, IteratorAggregate
         $this->entities[$entity->getId()] = $entity;
     }
 
-    public function containsId(string $id)
+    public function containsId(string $id): bool
     {
         return isset($this->entities[$id]) || array_key_exists($id, $this->entities);
     }
 
-    public function contains(CastorEntity $entity)
+    public function contains(CastorEntity $entity): bool
     {
         return in_array($entity, $this->entities, true);
     }
 
-    public function getById(string $id)
+    public function getById(string $id): ?CastorEntity
     {
         return $this->entities[$id] ?? null;
     }
@@ -54,6 +58,7 @@ class CastorEntityCollection implements Countable, IteratorAggregate
         return count($this->entities);
     }
 
+    /** @return CastorEntity[] */
     public function toArray(): array
     {
         return $this->entities;
@@ -61,14 +66,14 @@ class CastorEntityCollection implements Countable, IteratorAggregate
 
     /**
      * @param CastorEntity[] $entities
+     *
      * @return CastorEntity[]
      */
     private function parseEntities(array $entities): array
     {
         $newArray = [];
 
-        foreach($entities as $entity)
-        {
+        foreach ($entities as $entity) {
             $newArray[$entity->getId()] = $entity;
         }
 

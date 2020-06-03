@@ -11,29 +11,18 @@ use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 {
     /** @var ApiClient */
     private $apiClient;
 
-    /** @var Environment $twig */
-    private $twig;
-
-    public function __construct(ApiClient $apiClient, Environment $twig)
+    public function __construct(ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
-        $this->twig = $twig;
     }
 
     /**
-     * @throws LoaderError
-     * @throws SyntaxError
-     * @throws RuntimeError
      * @throws Exception
      */
     public function __invoke(RenderRDFDistributionCommand $message): string

@@ -5,7 +5,6 @@ namespace App\Entity\Castor\Form;
 
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\Structure\MetadataPoint;
-use App\Entity\Castor\Structure\Step\Step;
 use App\Entity\Castor\Study;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
@@ -69,9 +68,6 @@ class Field extends CastorEntity
      * @var string|null
      */
     private $units;
-
-    /** @var Step */
-    private $parent;
 
     /**
      * The field&#39;s parent id

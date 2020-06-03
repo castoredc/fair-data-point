@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Castor;
 
 use App\Entity\Castor\CastorEntity;
-use App\Exception\InvalidEntityType;
 use App\Message\Castor\GetCastorEntityCommand;
-use App\Repository\CastorEntityRepository;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

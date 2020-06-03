@@ -11,6 +11,7 @@ class OntologyConceptSearchApiResource implements ApiResource
     /** @var Concept[] */
     private $concepts;
 
+    /** @param Concept[] $concepts */
     public function __construct(array $concepts)
     {
         $this->concepts = $concepts;

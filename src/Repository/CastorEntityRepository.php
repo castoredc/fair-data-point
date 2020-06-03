@@ -5,8 +5,6 @@ namespace App\Repository;
 
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\Study;
-use App\Entity\Enum\CastorEntityType;
-use App\Entity\FAIRData\Dataset;
 use Doctrine\ORM\EntityRepository;
 
 class CastorEntityRepository extends EntityRepository
@@ -14,9 +12,9 @@ class CastorEntityRepository extends EntityRepository
     public function findByIdAndStudy(Study $study, string $id): ?CastorEntity
     {
         return $this->findOneBy([
-                                    'study' => $study,
-                                    'id' => $id,
-                                ]);
+            'study' => $study,
+            'id' => $id,
+        ]);
     }
 
     /** @return CastorEntity[] */

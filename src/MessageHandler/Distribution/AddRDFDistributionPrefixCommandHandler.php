@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Data\RDF\RDFDistributionPrefix;
 use App\Entity\Iri;
 use App\Exception\InvalidDistributionType;
@@ -27,10 +26,6 @@ class AddRDFDistributionPrefixCommandHandler implements MessageHandlerInterface
     public function __invoke(AddRDFDistributionPrefixCommand $message): void
     {
         $distribution = $message->getDistribution();
-
-        if (! $distribution instanceof RDFDistribution) {
-            throw new InvalidDistributionType();
-        }
 
         $prefix = new RDFDistributionPrefix($message->getPrefix(), new Iri($message->getUri()));
         $distribution->addPrefix($prefix);

@@ -424,7 +424,7 @@ class ApiClient
      */
     public function getOptionGroups(Study $study): CastorEntityCollection
     {
-        /** @var CastorEntityCollection<FieldOptionGroup> $collection */
+        /** @var CastorEntityCollection<FieldOptionGroup> $optionGroups */
         $optionGroups = new CastorEntityCollection();
 
         $pages = 1;

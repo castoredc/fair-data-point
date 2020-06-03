@@ -59,7 +59,7 @@ abstract class Enum
 
     protected static function inflectConstantToMethodName(string $option): string
     {
-        return Inflector::camelize($option);
+        return lcfirst(str_replace([' ', '_', '-'], '', ucwords($option, ' _-')));
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Study;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
@@ -13,6 +13,7 @@ use App\Repository\CastorEntityRepository;
 use App\Security\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use function assert;
 
 class CastorEntityHelper
 {
@@ -37,6 +38,7 @@ class CastorEntityHelper
     {
         /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
+
         return $repository->findByIdAndStudy($study, $id);
     }
 
@@ -44,6 +46,7 @@ class CastorEntityHelper
     {
         /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
+
         return new CastorEntityCollection($repository->findByStudyAndType($study, $type->getClassName()));
     }
 
@@ -51,6 +54,7 @@ class CastorEntityHelper
     {
         /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
+
         return new CastorEntityCollection($repository->findByStudyAndParent($study, $parent));
     }
 
@@ -62,7 +66,7 @@ class CastorEntityHelper
         if ($type->isFieldOption()) {
             $optionGroup = $this->apiClient->getOptionGroup($study, $parentId);
             $entity = $optionGroup->getOptionById($id);
-        } elseif($type->isFieldOptionGroup()) {
+        } elseif ($type->isFieldOptionGroup()) {
             $entity = $this->apiClient->getOptionGroup($study, $id);
         } else {
             throw new InvalidEntityType();
@@ -74,7 +78,8 @@ class CastorEntityHelper
     /**
      * @throws InvalidEntityType
      */
-    public function getEntityByTypeAndId(Study $study, CastorEntityType $type, string $id, ?string $parentId = null) {
+    public function getEntityByTypeAndId(Study $study, CastorEntityType $type, string $id, ?string $parentId = null): CastorEntity
+    {
         $entity = null;
 
         $dbEntity = $this->getEntityFromDatabaseById($study, $id);
@@ -84,12 +89,11 @@ class CastorEntityHelper
             // Entity not found in database, use the entity from Castor
             $entity = $castorEntity;
 
-            if($entity->hasParent())
-            {
+            if ($entity->hasParent()) {
                 // Entity has parent, check if parent is available in database
                 $dbParentEntity = $this->getEntityFromDatabaseById($study, $entity->getParent()->getId());
 
-                if($dbParentEntity !== null) {
+                if ($dbParentEntity !== null) {
                     // Parent entity found in database, attach to entity
                     $entity->setParent($dbParentEntity);
                 }
@@ -103,40 +107,42 @@ class CastorEntityHelper
         return $entity;
     }
 
-    public function getEntitiesByType(Study $study, CastorEntityType $type): CastorEntityCollection {
+    public function getEntitiesByType(Study $study, CastorEntityType $type): CastorEntityCollection
+    {
         $dbEntities = $this->getEntitiesFromDatabaseByType($study, $type);
 
         // Get entities from Castor
-        if($type->isFieldOptionGroup()) {
-            $castorEntities = $this->apiClient->getOptionGroups($study);
-        } else {
+        if (! $type->isFieldOptionGroup()) {
             throw new InvalidEntityType();
         }
+
+        $castorEntities = $this->apiClient->getOptionGroups($study);
 
         // Merge entities
         // Entities from Castor are leading, since they contain more information
 
-        foreach($dbEntities as $dbEntity)
-        {
+        foreach ($dbEntities as $dbEntity) {
             /** @var CastorEntity $castorEntity */
             $castorEntity = $castorEntities->getById($dbEntity->getId());
             $castorEntity->setAnnotations($dbEntity->getAnnotations());
 
-            if($castorEntity->hasChildren())
-            {
-                $dbChildren = $this->getEntitiesFromDatabaseByParent($study, $dbEntity);
+            if (! $castorEntity->hasChildren()) {
+                continue;
+            }
 
-                foreach($dbChildren as $dbChild) {
-                    $castorChild = $castorEntity->getChild($dbChild->getId());
+            $dbChildren = $this->getEntitiesFromDatabaseByParent($study, $dbEntity);
 
-                    if($castorChild !== null) {
-                        $castorChild->setAnnotations($dbChild->getAnnotations());
-                    }
+            foreach ($dbChildren as $dbChild) {
+                $castorChild = $castorEntity->getChild($dbChild->getId());
+
+                if ($castorChild === null) {
+                    continue;
                 }
+
+                $castorChild->setAnnotations($dbChild->getAnnotations());
             }
         }
 
         return $castorEntities;
     }
-
 }
