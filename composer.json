@@ -5,7 +5,7 @@
         "php": "^7.3",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ciwit/bioportal-browser": "@dev",
+        "ciwit/bioportal-browser": "^1.0",
         "ext-simplexml": "*",
         "beberlei/assert": "^3.2",
         "cocur/slugify": "^4.0",

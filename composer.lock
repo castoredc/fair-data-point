@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7192fbb1a480d2e8f153aedfb0e487c",
+    "content-hash": "945b7169a90029a062aea7bdc7974909",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -115,17 +115,17 @@
         },
         {
             "name": "ciwit/bioportal-browser",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:castoredc/bioportal-browser.git",
-                "reference": "0055c505064e5c12270ca14430f3436398fd590f"
+                "reference": "8643571f65c623368e9d450e96d913432355a79a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.ciwit.nl/dist/ciwit-bioportal-browser-0055c505064e5c12270ca14430f3436398fd590f-zip-2c41e4.zip",
-                "reference": "0055c505064e5c12270ca14430f3436398fd590f",
-                "shasum": "0bc9228bda959a5f2bdeab234d0171a3bf760980"
+                "url": "https://packages.ciwit.nl/dist/ciwit-bioportal-browser-8643571f65c623368e9d450e96d913432355a79a-zip-8a43af.zip",
+                "reference": "8643571f65c623368e9d450e96d913432355a79a",
+                "shasum": "2124fac52b4ccd51b1a8cfa86779d4d541250898"
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.3",
@@ -154,10 +154,9 @@
             ],
             "description": "PHP Client for the Bioportal API",
             "support": {
-                "source": "https://github.com/castoredc/bioportal-browser/tree/master",
-                "issues": "https://github.com/castoredc/bioportal-browser/issues"
+                "source": "https://github.com/castoredc/bioportal-browser/tree/master"
             },
-            "time": "2018-06-12T07:40:51+00:00"
+            "time": "2020-06-07T12:20:05+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -447,16 +446,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "2.13.2",
+            "version": "2.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "6902fafacb43333d9dc3d949c0a06048a31549ac"
+                "reference": "f3812c026e557892c34ef37f6ab808a6b567da7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/6902fafacb43333d9dc3d949c0a06048a31549ac",
-                "reference": "6902fafacb43333d9dc3d949c0a06048a31549ac",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/f3812c026e557892c34ef37f6ab808a6b567da7f",
+                "reference": "f3812c026e557892c34ef37f6ab808a6b567da7f",
                 "shasum": ""
             },
             "require": {
@@ -526,7 +525,7 @@
                 "doctrine",
                 "php"
             ],
-            "time": "2020-05-29T17:35:20+00:00"
+            "time": "2020-06-05T16:46:05+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -1443,12 +1442,12 @@
             "version": "0.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/njh/easyrdf.git",
+                "url": "https://github.com/easyrdf/easyrdf.git",
                 "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/njh/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
+                "url": "https://api.github.com/repos/easyrdf/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
                 "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566",
                 "shasum": ""
             },
@@ -7110,28 +7109,28 @@
         },
         {
             "name": "phpunit/php-timer",
-            "version": "3.1.4",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "dc9368fae6ef2ffa57eba80a7410bcef81df6258"
+                "reference": "b0d089de001ba60ffa3be36b23e1b8150d072238"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/dc9368fae6ef2ffa57eba80a7410bcef81df6258",
-                "reference": "dc9368fae6ef2ffa57eba80a7410bcef81df6258",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/b0d089de001ba60ffa3be36b23e1b8150d072238",
+                "reference": "b0d089de001ba60ffa3be36b23e1b8150d072238",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.0"
+                "phpunit/phpunit": "^9.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -7155,7 +7154,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2020-04-20T06:00:37+00:00"
+            "time": "2020-06-07T12:05:53+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -7208,16 +7207,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.1.5",
+            "version": "9.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1b570cd7edbe136055bf5f651857dc8af6b829d2"
+                "reference": "8fd0d8f80029682da89516a554f4d5f5a030345c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1b570cd7edbe136055bf5f651857dc8af6b829d2",
-                "reference": "1b570cd7edbe136055bf5f651857dc8af6b829d2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8fd0d8f80029682da89516a554f4d5f5a030345c",
+                "reference": "8fd0d8f80029682da89516a554f4d5f5a030345c",
                 "shasum": ""
             },
             "require": {
@@ -7237,7 +7236,7 @@
                 "phpunit/php-file-iterator": "^3.0",
                 "phpunit/php-invoker": "^3.0",
                 "phpunit/php-text-template": "^2.0",
-                "phpunit/php-timer": "^3.1.4",
+                "phpunit/php-timer": "^5.0",
                 "sebastian/code-unit": "^1.0.2",
                 "sebastian/comparator": "^4.0",
                 "sebastian/diff": "^4.0",
@@ -7246,7 +7245,7 @@
                 "sebastian/global-state": "^4.0",
                 "sebastian/object-enumerator": "^4.0",
                 "sebastian/resource-operations": "^3.0",
-                "sebastian/type": "^2.0",
+                "sebastian/type": "^2.1",
                 "sebastian/version": "^3.0"
             },
             "require-dev": {
@@ -7263,7 +7262,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "9.1-dev"
+                    "dev-master": "9.2-dev"
                 }
             },
             "autoload": {
@@ -7292,7 +7291,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-05-22T13:54:05+00:00"
+            "time": "2020-06-07T14:14:21+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -7300,12 +7299,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "55922f51129488c246a776ff944463605d447da0"
+                "reference": "de6fda3af9b36c77fdeb62b968157032f7111b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/55922f51129488c246a776ff944463605d447da0",
-                "reference": "55922f51129488c246a776ff944463605d447da0",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/de6fda3af9b36c77fdeb62b968157032f7111b09",
+                "reference": "de6fda3af9b36c77fdeb62b968157032f7111b09",
                 "shasum": ""
             },
             "conflict": {
@@ -7359,8 +7358,9 @@
                 "ezsystems/ezplatform": ">=1.7,<1.7.9.1|>=1.13,<1.13.5.1|>=2.5,<2.5.4",
                 "ezsystems/ezplatform-admin-ui": ">=1.3,<1.3.5|>=1.4,<1.4.6",
                 "ezsystems/ezplatform-admin-ui-assets": ">=4,<4.2",
+                "ezsystems/ezplatform-kernel": ">=1,<1.0.2.1",
                 "ezsystems/ezplatform-user": ">=1,<1.0.1",
-                "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.14.1|>=6,<6.7.9.1|>=6.8,<6.13.6.2|>=7,<7.2.4.1|>=7.3,<7.3.2.1|>=7.5,<7.5.6.2",
+                "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.14.2|>=6,<6.7.9.1|>=6.8,<6.13.6.3|>=7,<7.2.4.1|>=7.3,<7.3.2.1|>=7.5,<7.5.7.1",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.6|>=5.4,<5.4.14.1|>=2011,<2017.12.7.2|>=2018.6,<2018.6.1.4|>=2018.9,<2018.9.1.3|>=2019.3,<2019.3.4.2",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
                 "ezyang/htmlpurifier": "<4.1.1",
@@ -7398,6 +7398,7 @@
                 "monolog/monolog": ">=1.8,<1.12",
                 "namshi/jose": "<2.2",
                 "nzo/url-encryptor-bundle": ">=4,<4.3.2|>=5,<5.0.1",
+                "october/october": ">=1.0.319,<1.0.466",
                 "onelogin/php-saml": "<2.10.4",
                 "oneup/uploader-bundle": "<1.9.3|>=2,<2.1.5",
                 "openid/php-openid": "<2.3",
@@ -7424,6 +7425,7 @@
                 "propel/propel": ">=2-alpha.1,<=2-alpha.7",
                 "propel/propel1": ">=1,<=1.7.1",
                 "pusher/pusher-php-server": "<2.2.1",
+                "rainlab/debugbar-plugin": "<3.1",
                 "robrichards/xmlseclibs": "<3.0.4",
                 "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
@@ -7562,7 +7564,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2020-05-28T00:01:39+00:00"
+            "time": "2020-06-04T00:00:55+00:00"
         },
         {
             "name": "sebastian/code-unit",
@@ -8468,7 +8470,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ciwit/bioportal-browser": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
