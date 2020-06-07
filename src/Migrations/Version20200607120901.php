@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200607115322 extends AbstractMigration
+final class Version20200607120901 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -109,10 +109,6 @@ final class Version20200607115322 extends AbstractMigration
         $this->addSql('ALTER TABLE distribution DROP access, DROP dtype, DROP is_published, CHANGE created created DATETIME NOT NULL');
         $this->addSql('CREATE INDEX slug ON distribution (slug)');
         $this->addSql('DROP INDEX iri ON fdp');
-        $this->addSql('ALTER TABLE fdp ADD CONSTRAINT FK_E28FB11F2B36786B FOREIGN KEY (title) REFERENCES text_localized (id)');
-        $this->addSql('ALTER TABLE fdp ADD CONSTRAINT FK_E28FB11F6DE44026 FOREIGN KEY (description) REFERENCES text_localized (id)');
-        $this->addSql('ALTER TABLE fdp ADD CONSTRAINT FK_E28FB11FD4DB71B5 FOREIGN KEY (language) REFERENCES language (code)');
-        $this->addSql('ALTER TABLE fdp ADD CONSTRAINT FK_E28FB11F5768F419 FOREIGN KEY (license) REFERENCES license (slug)');
         $this->addSql('CREATE INDEX iri ON fdp (iri)');
         $this->addSql('ALTER TABLE user_api CHANGE client_id client_id TEXT NOT NULL, CHANGE client_secret client_secret TEXT NOT NULL');
     }
@@ -186,10 +182,6 @@ final class Version20200607115322 extends AbstractMigration
         $this->addSql('DROP INDEX IDX_DDC596AF992ABE46 ON distribution_rdf');
         $this->addSql('ALTER TABLE distribution_rdf ADD prefix LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_general_ci`, DROP data_model');
         $this->addSql('ALTER TABLE distribution_rdf ADD CONSTRAINT FK_DDC596AFBF396750 FOREIGN KEY (id) REFERENCES distribution (id) ON UPDATE NO ACTION ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE fdp DROP FOREIGN KEY FK_E28FB11F2B36786B');
-        $this->addSql('ALTER TABLE fdp DROP FOREIGN KEY FK_E28FB11F6DE44026');
-        $this->addSql('ALTER TABLE fdp DROP FOREIGN KEY FK_E28FB11FD4DB71B5');
-        $this->addSql('ALTER TABLE fdp DROP FOREIGN KEY FK_E28FB11F5768F419');
         $this->addSql('DROP INDEX iri ON fdp');
         $this->addSql('CREATE INDEX iri ON fdp (iri(191))');
         $this->addSql('DROP INDEX slug ON study');
