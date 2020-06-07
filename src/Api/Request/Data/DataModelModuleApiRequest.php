@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Distribution;
+namespace App\Api\Request\Data;
 
 use App\Api\Request\SingleApiRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RDFDistributionModuleApiRequest extends SingleApiRequest
+class DataModelModuleApiRequest extends SingleApiRequest
 {
     /**
      * @var string

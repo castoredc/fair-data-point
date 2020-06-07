@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Resource\Distribution;
+namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\RDF\RDFDistributionPrefix;
+use App\Entity\Data\DataModel\NamespacePrefix;
 
-class RDFDistributionPrefixResource implements ApiResource
+class DataModelPrefixApiResource implements ApiResource
 {
-    /** @var RDFDistributionPrefix */
+    /** @var NamespacePrefix */
     private $prefix;
 
-    public function __construct(RDFDistributionPrefix $prefix)
+    public function __construct(NamespacePrefix $prefix)
     {
         $this->prefix = $prefix;
     }

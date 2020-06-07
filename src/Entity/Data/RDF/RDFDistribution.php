@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\RDF;
 
+use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DistributionContents;
-use App\Entity\FAIRData\Distribution;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,91 +16,41 @@ use Doctrine\ORM\Mapping as ORM;
 class RDFDistribution extends DistributionContents
 {
     /**
-     * @ORM\OneToMany(targetEntity="RDFDistributionModule", mappedBy="distribution",cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="modules", referencedColumnName="id")
-     * @ORM\OrderBy({"order" = "ASC", "id" = "ASC"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel")
+     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var Collection<string, RDFDistributionModule>
+     * @var DataModel
      */
-    private $modules;
+    private $dataModel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RDFDistributionPrefix", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="prefixes", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
-     * @var Collection<string, RDFDistributionPrefix>
+     * @var Collection<DataModelMapping>
      */
-    private $prefixes;
+    private $mappings;
 
-    /** @inheritDoc */
-    public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
+    public function getDataModel(): DataModel
     {
-        parent::__construct($distribution, $accessRights, $isPublished);
-
-        $this->modules = new ArrayCollection();
-        $this->prefixes = new ArrayCollection();
+        return $this->dataModel;
     }
 
-    /**
-     * @return Collection<string, RDFDistributionModule>
-     */
-    public function getModules(): Collection
+    public function setDataModel(DataModel $dataModel): void
     {
-        return $this->modules;
-    }
-
-    /**
-     * @param Collection<string, RDFDistributionModule> $modules
-     */
-    public function setModules(Collection $modules): void
-    {
-        $this->modules = $modules;
-    }
-
-    public function addModule(RDFDistributionModule $module): void
-    {
-        $order = $module->getOrder();
-        $newModules = new ArrayCollection();
-
-        foreach ($this->modules as $currentModule) {
-            /** @var RDFDistributionModule $currentModule */
-            $currentOrder = $currentModule->getOrder();
-            $newOrder = $currentOrder >= $order ? ($currentOrder + 1) : $currentOrder;
-            $currentModule->setOrder($newOrder);
-
-            $newModules->add($currentModule);
-        }
-
-        $newModules->add($module);
-        $this->modules = $newModules;
-    }
-
-    public function removeModule(RDFDistributionModule $module): void
-    {
-        $this->modules->remove($module->getId());
-    }
-
-    /**
-     * @return Collection<string, RDFDistributionPrefix>
-     */
-    public function getPrefixes(): Collection
-    {
-        return $this->prefixes;
-    }
-
-    public function addPrefix(RDFDistributionPrefix $prefix): void
-    {
-        $prefix->setDistribution($this);
-        $this->prefixes->add($prefix);
-    }
-
-    public function removePrefix(RDFDistributionPrefix $prefix): void
-    {
-        $this->prefixes->remove($prefix->getId());
+        $this->dataModel = $dataModel;
     }
 
     public function getRDFUrl(): string
     {
         return $this->getDistribution()->getAccessUrl() . '/rdf';
+    }
+
+    /**
+     * @return Collection<DataModelMapping>
+     */
+    public function getMappings(): Collection
+    {
+        return $this->mappings;
     }
 }

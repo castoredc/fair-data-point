@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\RDF;
-
-interface RDFTriplePredicate extends RDFTriplePart
-{
-}
+// declare(strict_types=1);
+//
+// namespace App\Entity\Data\RDF;
+//
+// interface RDFTriplePredicate extends RDFTriplePart
+// {
+// }

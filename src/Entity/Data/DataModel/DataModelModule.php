@@ -1,18 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\RDF;
+namespace App\Entity\Data\DataModel;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="distribution_rdf_modules")
+ * @ORM\Table(name="data_model_module")
+ * @ORM\HasLifecycleCallbacks
  */
-class RDFDistributionModule
+class DataModelModule
 {
+    use CreatedAndUpdated;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -37,28 +40,27 @@ class RDFDistributionModule
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="modules",cascade={"persist"})
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="distribution", nullable=false)
+     * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="modules",cascade={"persist"})
+     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var RDFDistribution
+     * @var DataModel
      */
-
-    private $distribution;
+    private $dataModel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RDFTriple", mappedBy="module", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Triple", mappedBy="module", cascade={"persist"}, fetch="EAGER")
      *
-     * @var Collection<string, RDFTriple>
+     * @var Collection<string, Triple>
      */
     private $triples;
 
-    public function __construct(string $title, int $order, RDFDistribution $distribution)
+    public function __construct(string $title, int $order, DataModel $dataModel)
     {
         $this->title = $title;
         $this->order = $order;
-        $this->distribution = $distribution;
+        $this->dataModel = $dataModel;
 
-        $this->triples = new ArrayCollection();
+        // $this->triples = new ArrayCollection();
     }
 
     public function getId(): string
@@ -91,18 +93,18 @@ class RDFDistributionModule
         $this->order = $order;
     }
 
-    public function getDistribution(): RDFDistribution
+    public function getDataModel(): DataModel
     {
-        return $this->distribution;
+        return $this->dataModel;
     }
 
-    public function setDistribution(RDFDistribution $distribution): void
+    public function setDataModel(DataModel $dataModel): void
     {
-        $this->distribution = $distribution;
+        $this->dataModel = $dataModel;
     }
 
     /**
-     * @return Collection<string, RDFTriple>
+     * @return Collection<string, Triple>
      */
     public function getTriples(): Collection
     {
@@ -110,20 +112,20 @@ class RDFDistributionModule
     }
 
     /**
-     * @param Collection<string, RDFTriple> $triples
+     * @param Collection<string, Triple> $triples
      */
     public function setTriples(Collection $triples): void
     {
         $this->triples = $triples;
     }
 
-    public function addTriple(RDFTriple $triple): void
+    public function addTriple(Triple $triple): void
     {
         $this->triples->add($triple);
     }
 
-    public function removeTriple(RDFTriple $triple): void
+    public function removeTriple(Triple $triple): void
     {
-        $this->triples->remove($triple->getId());
+        $this->triples->removeElement($triple);
     }
 }

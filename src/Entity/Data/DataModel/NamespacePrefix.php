@@ -1,17 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\RDF;
+namespace App\Entity\Data\DataModel;
 
 use App\Entity\Iri;
+use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="rdf_prefix")
+ * @ORM\Table(name="data_model_prefix")
+ * @ORM\HasLifecycleCallbacks
  */
-class RDFDistributionPrefix
+class NamespacePrefix
 {
+    use CreatedAndUpdated;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -36,12 +40,12 @@ class RDFDistributionPrefix
     private $uri;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="prefixes",cascade={"persist"})
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="distribution", nullable=false)
+     * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="prefixes",cascade={"persist"})
+     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var RDFDistribution
+     * @var DataModel
      */
-    private $distribution;
+    private $dataModel;
 
     public function __construct(string $prefix, Iri $uri)
     {
@@ -64,11 +68,6 @@ class RDFDistributionPrefix
         return $this->uri;
     }
 
-    public function getDistribution(): RDFDistribution
-    {
-        return $this->distribution;
-    }
-
     public function setPrefix(string $prefix): void
     {
         $this->prefix = $prefix;
@@ -79,8 +78,13 @@ class RDFDistributionPrefix
         $this->uri = $uri;
     }
 
-    public function setDistribution(RDFDistribution $distribution): void
+    public function getDataModel(): DataModel
     {
-        $this->distribution = $distribution;
+        return $this->dataModel;
+    }
+
+    public function setDataModel(DataModel $dataModel): void
+    {
+        $this->dataModel = $dataModel;
     }
 }
