@@ -18,6 +18,7 @@ import DatasetDetails from "./DatasetDetails";
 import DatasetContacts from "./DatasetContacts";
 import DatasetOrganizations from "./DatasetOrganizations";
 import DatasetConsent from "./DatasetConsent";
+import DatasetAnnotations from "./DatasetAnnotations";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -90,6 +91,9 @@ export default class Dataset extends Component {
                             <Nav.Link disabled={!dataset.hasMetadata}>Consent</Nav.Link>
                         </LinkContainer>
                         <hr />
+                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/annotations'} exact={true}>
+                            <Nav.Link disabled={!dataset.hasMetadata}>Annotations</Nav.Link>
+                        </LinkContainer>
                         <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
                             <Nav.Link disabled={!dataset.hasMetadata}>Available data</Nav.Link>
                         </LinkContainer>
@@ -109,6 +113,8 @@ export default class Dataset extends Component {
                                render={(props) => <DatasetDistributions {...props} catalog={catalog} dataset={dataset} />} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distributions/add" exact
                                render={(props) => <AddDistribution {...props} catalog={catalog} dataset={dataset} />} />
+                        <Route path="/admin/catalog/:catalog/dataset/:dataset/annotations" exact
+                               render={(props) => <DatasetAnnotations {...props} studyId={dataset.studyId} catalog={catalog} dataset={dataset} />} />
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

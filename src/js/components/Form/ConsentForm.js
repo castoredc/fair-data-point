@@ -12,7 +12,7 @@ import ToastContent from "../ToastContent";
 import axios from "axios";
 import FormItem from "./FormItem";
 import LoadingScreen from "../LoadingScreen";
-import RadioGroup from "../RadioGroup";
+import RadioGroup from "../Input/RadioGroup";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import Spinner from "react-bootstrap/Spinner";
 

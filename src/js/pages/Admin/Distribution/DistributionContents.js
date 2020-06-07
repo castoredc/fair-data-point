@@ -1,15 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-
-import {Col, Row} from "react-bootstrap";
-import LoadingScreen from "../../../components/LoadingScreen";
-import {localizedText} from "../../../util";
-import {LinkContainer} from "react-router-bootstrap";
-import Button from "react-bootstrap/Button";
-import AdminPage from "../../../components/AdminPage";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
-import Icon from "../../../components/Icon";
 import CSVStudyStructure from "../../../components/StudyStructure/CSVStudyStructure";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 
@@ -70,6 +62,8 @@ export default class DistributionContents extends Component {
                 dataset={dataset}
                 distribution={distribution.slug}
             />;
+        } else if (distribution.type === 'rdf') {
+            return null;
         }
 
         return <div className="NoResults">This distribution does not have contents.</div>;

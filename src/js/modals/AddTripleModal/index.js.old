@@ -1,0 +1,401 @@
+import React, {Component} from 'react'
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+import {ValidatorForm} from "react-form-validator-core";
+import Input from "../../components/Input";
+import FormItem from "../../components/Form/FormItem";
+import RadioGroup from "../../components/RadioGroup";
+import {classNames} from "../../util";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import RDFStudyStructure from "../../components/StudyStructure/RDFStudyStructure";
+import Dropdown from "../../components/Input/Dropdown";
+import Icon from "../../components/Icon";
+import {FieldIcons} from "../../components/Icon/FieldIcons";
+
+export default class AddTripleModal extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            data: this.handleNewData(props.data),
+            validation: {},
+            showFieldSelector: false
+        };
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.type !== prevProps.type) {
+            this.setState({
+                data: this.handleNewData(this.props.data)
+            })
+        }
+    }
+
+    handleNewData = (newData) => {
+        let data = {...defaultData};
+
+        if(newData === null) {
+            return data;
+        }
+
+        data.type = newData.type;
+
+        if(newData.type === 'uri') {
+            data = {
+                ...data,
+                uri: newData.value.uri
+            }
+        } else if(newData.type === 'entity') {
+            data = {
+                ...data,
+                entityType: newData.value.type,
+                entity: newData.value.entity
+            }
+        } else if(newData.type === 'value') {
+            data = {
+                ...data,
+                valueType: newData.value.type,
+                entity: newData.value.entity
+            }
+        }
+
+        console.log(data);
+
+        return data;
+    };
+
+    handleChange = (event, callback = (() => {})) => {
+        const { data } = this.state;
+        this.setState({
+            data: {
+                ...data,
+                [event.target.name]: event.target.value,
+            },
+            validation: {
+                [event.target.name]: false,
+            }
+        }, callback);
+    };
+
+    handleTypeChange = (event) => {
+        this.setState({
+            data: {
+                ...defaultData,
+                type: event.target.value
+            }
+        });
+    };
+
+    handleEntityTypeChange = (event) => {
+        const { data } = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                entityType: event,
+                entity: null,
+                showFieldSelector: false
+            }
+        });
+    };
+
+    handleEntityChange = (event) => {
+        const { data } = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                entity: event
+            }
+        });
+    };
+
+    handleValueChange = (event) => {
+        const { data } = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                valueType: event
+            }
+        });
+    };
+
+    showFieldSelector = () => {
+        this.setState({
+            showFieldSelector: true
+        });
+    };
+
+    handleEntitySelect = (event, field, selectValue) => {
+        const { data } = this.state;
+
+        if(event.target.tagName.toUpperCase() !== 'INPUT' && selectValue === true) {
+            this.setState({
+                data: {
+                    ...data,
+                    entity: field
+                },
+                showFieldSelector: false
+            });
+        }
+    };
+
+    handleSubmit = (event) => {
+        const {type, handleSave} = this.props;
+        const {data} = this.state;
+        event.preventDefault();
+
+        if (this.form.isFormValid()) {
+            let triple = {
+                type: data.type,
+                value: null
+            };
+
+            if(data.type === 'uri') {
+                triple.value = {
+                    uri: data.uri
+                }
+            } else if(data.type === 'entity') {
+                triple.value = {
+                    type: data.entityType,
+                    entity: data.entity
+                }
+            } else if(data.type === 'value') {
+                triple.value = {
+                    type: data.valueType,
+                    entity: data.entity
+                }
+            }
+
+            handleSave(type, triple);
+        }
+    };
+
+    render() {
+        const { type, show, handleClose, catalog, dataset, studyId, distribution, structure } = this.props;
+        const { data, validation, showFieldSelector } = this.state;
+
+        const required = "This field is required";
+        const validUrl = "Please enter a valid URI";
+        const selectedEntityType = data.entityType ? data.entityType : null;
+        const parent = selectedEntityType ? structure[selectedEntityType.parent] : null;
+        const selectedEntity = data.entity ? data.entity : null;
+        let children = [];
+        const valueTypesForField = data.entity !== null ? fieldTypes[data.entity.type] : null;
+
+        if(selectedEntityType !== null) {
+            if (selectedEntityType.type === 'form') {
+                children = parent.map((form) => {
+                    return { value: form.id, label: form.name };
+                });
+            } else if (selectedEntityType.type === 'step') {
+                children = parent.map((form) => {
+                    return {
+                        label: form.name,
+                        options: form.steps.map((step) => {
+                            return { value: step.id, label: step.position + '. ' + step.name };
+                        })
+                    }
+                });
+            }
+        }
+
+        return <Modal show={show} onHide={handleClose} className={classNames('AddTripleModal', showFieldSelector && 'LargeTripleModal')}>
+            <ValidatorForm
+                ref={node => (this.form = node)}
+                onSubmit={this.handleSubmit}
+                method="post"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Add {type}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <Row>
+                            <Col sm={showFieldSelector ? 2 : 12}>
+                                <FormItem label="Type">
+                                    <RadioGroup
+                                        validators={['required']}
+                                        errorMessages={[required]}
+                                        options={tripleTypes[type]}
+                                        onChange={this.handleTypeChange}
+                                        value={data.type}
+                                        name="type"
+                                    />
+                                </FormItem>
+
+                                {data.type === 'entity' && <FormItem label="Element type">
+                                    <Dropdown
+                                        validators={['required']}
+                                        errorMessages={[required]}
+                                        options={entityTypes}
+                                        name="entityType"
+                                        value={selectedEntityType}
+                                        onChange={this.handleEntityTypeChange}
+                                    />
+                                </FormItem>}
+
+                                {(data.type === 'entity' && data.entityType !== null && data.entityType.value !== 'field') &&  <FormItem label="Element">
+                                    <Dropdown
+                                        validators={['required']}
+                                        errorMessages={[required]}
+                                        options={children}
+                                        name="entity"
+                                        value={selectedEntity}
+                                        onChange={this.handleEntityChange}
+                                    />
+                                </FormItem>}
+
+                                {(data.type === 'value' || (data.type === 'entity' && data.entityType !== null && data.entityType.value === 'field')) &&  <FormItem label="Field">
+                                    {(data.entity === null || showFieldSelector) ? <Button variant="link" className="SelectFieldButton" onClick={this.showFieldSelector}>
+                                        <span className="placeholder">Select Field</span>
+                                    </Button> : <div className="SelectedField Fields">
+                                        <div className="FieldNumber">
+                                            {data.entity.stepNumber}.{data.entity.number}
+                                        </div>
+                                        <div className="FieldIcon">
+                                            <Icon type={FieldIcons[data.entity.type]} height={12} width={12} />
+                                        </div>
+                                        <div className="FieldLabel">
+                                            {data.entity.label}
+                                            <div className="FieldVariableName">{data.entity.variableName}</div>
+                                        </div>
+                                        <Button variant="link" className="EditFieldButton" onClick={this.showFieldSelector}>
+                                            <Icon type="edit" />
+                                        </Button>
+                                    </div>}
+                                </FormItem>}
+
+                                {data.type === 'uri' && <FormItem label="URI">
+                                    <Input
+                                        validators={['required', 'isUrl']}
+                                        errorMessages={[required, validUrl]}
+                                        name="uri"
+                                        onChange={this.handleChange}
+                                        value={data.uri}
+                                        serverError={validation.uri}
+                                    />
+                                </FormItem>}
+
+                                {(data.type === 'value') &&  <FormItem label="Type of value">
+                                    <Dropdown
+                                        validators={['required']}
+                                        errorMessages={[required]}
+                                        options={valueTypesForField}
+                                        name="valueType"
+                                        value={data.valueType}
+                                        onChange={this.handleValueChange}
+                                    />
+                                </FormItem>}
+                            </Col>
+                            {showFieldSelector && <Col sm={10}>
+                                <RDFStudyStructure
+                                    studyId={studyId}
+                                    catalog={catalog}
+                                    dataset={dataset}
+                                    distribution={distribution}
+                                    selected={data.entity}
+                                    handleSelect={this.handleEntitySelect}
+                                    structure={structure}
+                                />
+                            </Col>}
+                        </Row>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" type="submit">
+                        Add {type}
+                    </Button>
+                </Modal.Footer>
+            </ValidatorForm>
+        </Modal>
+    }
+}
+
+export const tripleTypes = {
+    subject: [
+        { value: 'record', label: 'Record' },
+        { value: 'uri', label: 'URI' },
+        { value: 'entity', label: 'Element' },
+    ],
+    predicate: [
+        { value: 'uri', label: 'URI' },
+    ],
+    object: [
+        { value: 'record', label: 'Record' },
+        { value: 'uri', label: 'URI' },
+        { value: 'entity', label: 'Element' },
+        { value: 'value', label: 'Field value' },
+    ]
+};
+
+export const entityTypes = [
+    {
+        label: "Form",
+        options: [
+            { value: 'study', label: 'Phase', parent: 'study', type: 'form' },
+            { value: 'report', label: 'Report', parent: 'report', type: 'form' },
+            { value: 'survey', label: 'Survey', parent: 'survey', type: 'form' },
+        ]
+    },
+    {
+        label: "Step",
+        options: [
+            { value: 'study-step', label: 'Study step', parent: 'study', type: 'step' },
+            { value: 'report-step', label: 'Report step', parent: 'report', type: 'step' },
+            { value: 'survey-step', label: 'Survey step', parent: 'survey', type: 'step' },
+        ]
+    },
+    {
+        label: "Field",
+        options: [
+            { value: 'field', label: 'Field' }
+        ]
+    },
+];
+
+export const valueTypes = {
+    hasOptions: [
+        { value: 'plain', label: 'Plain field value' },
+        { value: 'annotated', label: 'Annotated field value' },
+        { value: 'entity', label: 'Option group item entity' }
+    ],
+    noOptions: [
+        { value: 'plain', label: 'Plain field value' }
+    ],
+};
+
+export const fieldTypes = {
+    'numeric' : valueTypes.noOptions,
+    'radio' : valueTypes.hasOptions,
+    'dropdown' : valueTypes.hasOptions,
+    'checkbox' : valueTypes.hasOptions,
+    'date' : valueTypes.noOptions,
+    'year' : valueTypes.noOptions,
+    'time' : valueTypes.noOptions,
+    'calculation' : valueTypes.noOptions,
+    'slider' : valueTypes.noOptions,
+    'remark' : [],
+    'summary' : [],
+    'repeated_measures' : [],
+    'string' : valueTypes.noOptions,
+    'textarea' : valueTypes.noOptions,
+    'randomization' : valueTypes.noOptions,
+    'upload' : valueTypes.noOptions,
+    'image' : [],
+    'grid' : valueTypes.noOptions,
+    'datetime' : valueTypes.noOptions,
+    'numberdate' : valueTypes.noOptions,
+    'add_report_button' : []
+};
+
+const defaultData = {
+    type: '',
+    entityType: null,
+    uri: '',
+    entity: null,
+    valueType: null
+};

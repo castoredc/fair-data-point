@@ -2,11 +2,9 @@ import React, {Component} from "react";
 import axios from "axios/index";
 
 import {Col, Row} from "react-bootstrap";
-import LoadingScreen from "../../../components/LoadingScreen";
 import {localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
 import Button from "react-bootstrap/Button";
-import AdminPage from "../../../components/AdminPage";
 import Container from "react-bootstrap/Container";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";

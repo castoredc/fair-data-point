@@ -66,9 +66,9 @@ export default class Distribution extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/catalog/' + catalog + '/studies'}>
+                    <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset}>
                         <Button variant="link" className="BackButton">
-                            <Icon type="arrowLeft" /> Back to catalog
+                            <Icon type="arrowLeft" /> Back to dataset
                         </Button>
                     </LinkContainer>
                 </Col>
@@ -82,6 +82,7 @@ export default class Distribution extends Component {
                         <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug} exact={true}>
                             <Nav.Link>Distribution</Nav.Link>
                         </LinkContainer>
+                        <hr />
                         <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents'} exact={true}>
                             <Nav.Link>Contents</Nav.Link>
                         </LinkContainer>

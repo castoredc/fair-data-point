@@ -4,12 +4,22 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Icon from '../Icon';
 import Checkbox from "../Input/Checkbox";
+import {FieldIcons} from "../Icon/FieldIcons";
 
 export default class FieldListItem extends Component {
     render() {
         const { id, type, label, stepNumber, number, variableName, selectable, selected, onSelect, children}  = this.props;
 
-        const changeFunction = typeof onSelect !== 'undefined' ? (event) => { onSelect(event, id, variableName, !selected) } : null;
+        const data = {
+            id,
+            type,
+            label,
+            stepNumber,
+            number,
+            variableName
+        };
+
+        const changeFunction = typeof onSelect !== 'undefined' ? (event) => { onSelect(event, data, !selected) } : null;
 
         return <Row className="ListItem FieldListItem" onClick={changeFunction}>
             <Col md={9} className="FieldListItemType">
@@ -38,27 +48,3 @@ export default class FieldListItem extends Component {
         </Row>;
     }
 }
-
-const FieldIcons = {
-    'numeric' : 'numeric',
-    'radio' : 'radioOptions',
-    'dropdown' : 'selectList',
-    'checkbox' : 'checkboxes',
-    'date' : 'date',
-    'year' : 'year',
-    'time' : 'time',
-    'calculation' : 'calculation',
-    'slider' : 'slider',
-    'remark' : 'remark',
-    'summary' : 'summary',
-    'repeated_measures' : 'repeatedMeasure',
-    'string' : 'textarea',
-    'textarea' : 'textarea',
-    'randomization' : 'randomization',
-    'upload' : 'upload',
-    'image' : 'picture',
-    'grid' : 'grid2',
-    'datetime' : 'dateTime',
-    'numberdate' : 'numberDate',
-    'add_report_button' : 'addReport'
-};

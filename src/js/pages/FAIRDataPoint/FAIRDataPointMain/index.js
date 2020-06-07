@@ -83,10 +83,7 @@ export default class FAIRDataPointMain extends Component {
         >
             <Row>
                 <Col className="InformationCol">
-                    <h2>Catalogs</h2>
-                    <div className="Description">
-                        Catalogs are collections of datasets.
-                    </div>
+                    <h2>Collections</h2>
                     {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
                         return <ListItem key={index}
                                          newWindow={embedded}

@@ -1,0 +1,23 @@
+export const FieldIcons = {
+    'numeric' : 'numeric',
+    'radio' : 'radioOptions',
+    'dropdown' : 'selectList',
+    'checkbox' : 'checkboxes',
+    'date' : 'date',
+    'year' : 'year',
+    'time' : 'time',
+    'calculation' : 'calculation',
+    'slider' : 'slider',
+    'remark' : 'remark',
+    'summary' : 'summary',
+    'repeated_measures' : 'repeatedMeasure',
+    'string' : 'textarea',
+    'textarea' : 'textarea',
+    'randomization' : 'randomization',
+    'upload' : 'upload',
+    'image' : 'picture',
+    'grid' : 'grid2',
+    'datetime' : 'dateTime',
+    'numberdate' : 'numberDate',
+    'add_report_button' : 'addReport'
+};

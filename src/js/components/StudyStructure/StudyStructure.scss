@@ -29,6 +29,7 @@
       padding: 5px 0;
       color: $neutral-300;
       text-decoration: none;
+      text-align: left;
 
       &.active, &:hover {
         color: $neutral-800;
@@ -81,39 +82,6 @@
   }
 }
 
-.StudyStructureTabs {
-  &.row {
-    margin: 0 0 20px 0;
-  }
-
-  & > div {
-     border-bottom: 1px solid $neutral-40;
-  }
-
-  .nav-tabs {
-    border-bottom: 0;
-
-    .nav-link {
-      border: none;
-      border-radius: 0;
-      background: none;
-      padding: 5px 3px;
-      margin-right: 20px;
-      border-bottom: 2px solid transparent;
-      color: $neutral-300;
-
-      &.active {
-        border-bottom-color: $mid-blue;
-        color: $neutral-800;
-      }
-
-      &.disabled {
-        color: $neutral-60;
-      }
-    }
-  }
-}
-
 .StudyStructureFooter {
   border-top: 1px solid $neutral-40;
   margin-top: 40px;
@@ -125,6 +93,37 @@
     .FieldCount {
       color: $neutral-300;
       margin-right: 10px;
+    }
+  }
+}
+
+.OptionGroups {
+  margin-top: 15px;
+
+  .OptionGroupTableHeader {
+    font-weight: bold;
+  }
+
+  .OptionGroupItem {
+    padding-top: 10px;
+
+    &:hover {
+      background: $neutral-20;
+    }
+
+    &:last-child::after {
+      border-bottom: none;
+    }
+  }
+
+  .OptionGroupItem, .OptionGroupTableHeader {
+    color: $neutral-800;
+
+    &::after {
+      content: '';
+      border-bottom: solid 1px $neutral-40;
+      width: 100%;
+      margin: 10px 15px 0 15px;
     }
   }
 }

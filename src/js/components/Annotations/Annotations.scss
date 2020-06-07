@@ -1,0 +1,12 @@
+@import '../../scss/colors';
+@import '../../scss/const';
+
+.Annotation {
+  .row {
+    margin: 0 -5px;
+
+    & > div {
+      padding: 0 5px;
+    }
+  }
+}

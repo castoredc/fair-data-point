@@ -2,15 +2,46 @@
 
 .Admin {
   .Header {
-    background: $azul;
+    background: $cobalt;
 
     .navbar {
-      padding: 0;
-    }
-  }
+      padding: 8px 0;
 
-  .LogoContainer, .MenuContainer {
-    padding: 6px 15px;
+      .DropdownMenu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 1;
+        margin-top: 5px;
+      }
+
+      .nav-link {
+        margin-left: 5px;
+        transition-delay: 0s, 0s;
+        transition-duration: 0.2s, 0.2s;
+        transition-property: background, border-color;
+        transition-timing-function: ease, ease;
+        border: 1px solid transparent;
+        padding: 5px 10px;
+
+        &.active {
+          background: $azul;
+          border-color: $blue-100;
+        }
+
+        &:hover {
+          background: $azul;
+          border-color: $generic-white;
+        }
+
+        &:first-child {
+          margin-right: 0;
+        }
+      }
+      .navbar-nav {
+        position: relative;
+      }
+    }
   }
 
   .LeftNav, .Back {
@@ -98,5 +129,17 @@
     path {
       fill: $generic-white;
     }
+  }
+
+  .AccountIcon, .DropdownIcon {
+    vertical-align: -3px;
+  }
+
+  .AccountIcon {
+    margin-right: 2px;
+  }
+
+  .DropdownIcon {
+    margin-left: 2px;
   }
 }

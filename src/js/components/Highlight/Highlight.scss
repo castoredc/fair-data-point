@@ -1,0 +1,19 @@
+@import '../../scss/const';
+@import '../../scss/colors';
+
+.Highlight {
+  font-family: 'Fira Code', monospace;
+  white-space: pre;
+}
+
+.Variable, .Record {
+  background: currentColor;
+  padding: 1px 5px;
+  margin-top: 2px;
+  display: inline-block;
+  border-radius: 3px;
+
+  span {
+    color: white;
+  }
+}
