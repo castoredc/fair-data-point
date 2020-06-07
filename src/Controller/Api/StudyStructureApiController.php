@@ -23,7 +23,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
-use function dump;
 
 class StudyStructureApiController extends ApiController
 {
@@ -137,8 +136,6 @@ class StudyStructureApiController extends ApiController
                 return new JsonResponse($e->toArray(), 401);
             }
         }
-
-        dump($e);
 
         return new JsonResponse([], 500);
     }
