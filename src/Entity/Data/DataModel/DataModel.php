@@ -77,8 +77,10 @@ class DataModel
         $this->title = $title;
         $this->description = $description;
 
-        // $this->modules = new ArrayCollection();
-        // $this->prefixes = new ArrayCollection();
+        $this->modules = new ArrayCollection();
+        $this->prefixes = new ArrayCollection();
+        $this->nodes = new ArrayCollection();
+        $this->predicates = new ArrayCollection();
     }
 
     public function getId(): string
