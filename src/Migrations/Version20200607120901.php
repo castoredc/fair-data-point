@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -12,12 +11,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200607120901 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
@@ -113,7 +112,7 @@ final class Version20200607120901 extends AbstractMigration
         $this->addSql('ALTER TABLE user_api CHANGE client_id client_id TEXT NOT NULL, CHANGE client_secret client_secret TEXT NOT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
