@@ -35,7 +35,7 @@ services:
 
     App\Model\Slack\ApiClient:
         arguments:
-            - '%env(SLACK_WEBHOOK_URL)%'
+            - '%env(SLACK_INFO_WEBHOOK_URL)%'
 
     App\Connection\DistributionService:
         arguments:
