@@ -6,6 +6,7 @@ namespace App\Entity\Castor\Form;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\Study;
 use Doctrine\ORM\Mapping as ORM;
+use function boolval;
 
 /**
  * @ORM\Entity
@@ -18,7 +19,7 @@ class FieldOptionGroup extends CastorEntity
     /** @var string|null */
     private $description;
 
-    /** @var string|null */
+    /** @var bool */
     private $layout;
 
     /** @var FieldOption[]|null */
@@ -27,7 +28,7 @@ class FieldOptionGroup extends CastorEntity
     /**
      * @param FieldOption[]|null $options
      */
-    public function __construct(string $id, Study $study, string $name, ?string $description, ?string $layout, ?array $options)
+    public function __construct(string $id, Study $study, string $name, ?string $description, bool $layout, ?array $options)
     {
         parent::__construct($id, $name, $study, null);
 
@@ -57,12 +58,12 @@ class FieldOptionGroup extends CastorEntity
         $this->description = $description;
     }
 
-    public function getLayout(): ?string
+    public function getLayout(): bool
     {
         return $this->layout;
     }
 
-    public function setLayout(?string $layout): void
+    public function setLayout(bool $layout): void
     {
         $this->layout = $layout;
     }
@@ -157,7 +158,7 @@ class FieldOptionGroup extends CastorEntity
             $study,
             $data['name'],
             $data['description'] ?? null,
-            $data['layout'] !== null && $data['layout'] !== false ? $data['layout'] : null,
+            $data['layout'] !== null ? boolval($data['layout']) : false,
             $options
         );
 
