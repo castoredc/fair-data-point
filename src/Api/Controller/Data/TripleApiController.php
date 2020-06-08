@@ -7,8 +7,11 @@ use App\Api\Request\Data\TripleApiRequest;
 use App\Api\Resource\Data\TriplesApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\Triple;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateTripleCommand;
+use App\Message\Data\DeleteTripleCommand;
+use App\Message\Data\UpdateTripleCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,9 +37,9 @@ class TripleApiController extends ApiController
     }
 
     /**
-     * @Route("/add", name="api_triple_add")
+     * @Route("", methods={"POST"}, name="api_triple_add")
      */
-    public function addNode(DataModelModule $module, Request $request, MessageBusInterface $bus): Response
+    public function addTriple(DataModelModule $module, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $module->getDataModel());
 
@@ -45,6 +48,47 @@ class TripleApiController extends ApiController
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
 
             $bus->dispatch(new CreateTripleCommand($module, $parsed->getObjectType(), $parsed->getObjectValue(), $parsed->getPredicateValue(), $parsed->getSubjectType(), $parsed->getSubjectValue()));
+
+            return new JsonResponse([]);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @Route("/{triple}", methods={"POST"}, name="api_triple_update")
+     * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
+     */
+    public function updateTriple(DataModelModule $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+
+        try {
+            /** @var TripleApiRequest $parsed */
+            $parsed = $this->parseRequest(TripleApiRequest::class, $request);
+
+            $bus->dispatch(new UpdateTripleCommand($triple, $parsed->getObjectType(), $parsed->getObjectValue(), $parsed->getPredicateValue(), $parsed->getSubjectType(), $parsed->getSubjectValue()));
+
+            return new JsonResponse([]);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @Route("/{triple}", methods={"DELETE"}, name="api_triple_delete")
+     * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
+     */
+    public function deleteTriple(DataModelModule $module, Triple $triple, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+
+        try {
+            $bus->dispatch(new DeleteTripleCommand($triple));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {

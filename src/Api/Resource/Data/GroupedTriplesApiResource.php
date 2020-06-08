@@ -6,6 +6,7 @@ namespace App\Api\Resource\Data;
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Triple;
+use function array_merge;
 use function array_values;
 
 class GroupedTriplesApiResource implements ApiResource
@@ -41,7 +42,9 @@ class GroupedTriplesApiResource implements ApiResource
                 $data[$subject->getId()]['predicates'][$predicate->getId()]['objects'] = [];
             }
 
-            $data[$subject->getId()]['predicates'][$predicate->getId()]['objects'][] = (new NodeApiResource($object))->toArray();
+            $data[$subject->getId()]['predicates'][$predicate->getId()]['objects'][] = array_merge([
+                'tripleId' => $triple->getId(),
+            ], (new NodeApiResource($object))->toArray());
         }
 
         foreach ($data as $subjectId => $subject) {
