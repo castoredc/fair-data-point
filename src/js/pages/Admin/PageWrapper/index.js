@@ -28,11 +28,11 @@ export default class PageWrapper extends Component {
     };
 
     componentDidMount() {
-        document.addEventListener("mousedown", this.handleClick);
+        document.addEventListener("click", this.handleClick);
     }
 
     componentWillUnmount() {
-        document.removeEventListener("mousedown", this.handleClick);
+        document.removeEventListener("click", this.handleClick);
     }
 
     handleClick = (e) => {

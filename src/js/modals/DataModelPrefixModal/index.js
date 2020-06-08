@@ -9,21 +9,29 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Spinner from "react-bootstrap/Spinner";
 import {Button} from "@castoredc/matter";
+import Container from "react-bootstrap/Container";
 
-export default class AddDataModelPrefixModal extends Component {
+export default class DataModelPrefixModal extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: {
-                prefix: '',
-                uri: ''
-            },
+            data: props.data ? props.data : defaultData,
             validation: {},
             isSaved: false,
             submitDisabled: false,
             isLoading: false
         };
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { show, data } = this.props;
+
+        if (show !== prevProps.show || data !== prevProps.data) {
+            this.setState({
+                data: data ? data : defaultData,
+            })
+        }
     }
 
     componentDidMount() {
@@ -53,7 +61,9 @@ export default class AddDataModelPrefixModal extends Component {
     };
 
     handleSubmit = (event) => {
-        const {modelId, onSaved} = this.props;
+        const { modelId, onSaved } = this.props;
+        const { data } = this.state;
+
         event.preventDefault();
 
         if (this.form.isFormValid()) {
@@ -62,9 +72,9 @@ export default class AddDataModelPrefixModal extends Component {
                 isLoading:      true
             });
 
-            axios.post('/api/model/' + modelId + '/prefix/add', {
-                prefix: this.state.data.prefix,
-                uri: this.state.data.uri,
+            axios.post('/api/model/' + modelId + '/prefix' + (data.id ? '/' + data.id : ''), {
+                prefix: data.prefix,
+                uri: data.uri,
             })
                 .then(() => {
                     this.setState({
@@ -107,37 +117,44 @@ export default class AddDataModelPrefixModal extends Component {
                 method="post"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Add module</Modal.Title>
+                    {data.id ? <Modal.Title>Edit prefix</Modal.Title> : <Modal.Title>Add prefix</Modal.Title>}
                 </Modal.Header>
                 <Modal.Body>
-                    <FormItem label="Prefix">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="prefix"
-                            onChange={this.handleChange}
-                            value={data.prefix}
-                            serverError={validation.prefix}
-                        />
-                    </FormItem>
+                    <Container>
+                        <FormItem label="Prefix">
+                            <Input
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="prefix"
+                                onChange={this.handleChange}
+                                value={data.prefix}
+                                serverError={validation.prefix}
+                            />
+                        </FormItem>
 
-                    <FormItem label="URI">
-                        <Input
-                            validators={['required', 'isUrl']}
-                            errorMessages={[required, validUrl]}
-                            name="uri"
-                            onChange={this.handleChange}
-                            value={data.uri}
-                            serverError={validation.uri}
-                        />
-                    </FormItem>
+                        <FormItem label="URI">
+                            <Input
+                                validators={['required', 'isUrl']}
+                                errorMessages={[required, validUrl]}
+                                name="uri"
+                                onChange={this.handleChange}
+                                value={data.uri}
+                                serverError={validation.uri}
+                            />
+                        </FormItem>
+                    </Container>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="submit" disabled={isLoading}>
-                        Add prefix
+                        {data.id ? 'Edit prefix' : 'Add prefix'}
                     </Button>
                 </Modal.Footer>
             </ValidatorForm>
         </Modal>
     }
 }
+
+const defaultData = {
+    prefix: '',
+    uri: ''
+};

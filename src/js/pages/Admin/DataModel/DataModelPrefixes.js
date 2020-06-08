@@ -5,16 +5,22 @@ import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Col, Row} from "react-bootstrap";
 import {Button, DataTable} from "@castoredc/matter";
-import AddDataModelPrefixModal from "../../../modals/AddDataModelPrefixModal";
+import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
+import TripleModal from "../../../modals/TripleModal";
+import ConfirmModal from "../../../modals/ConfirmModal";
 
 export default class DataModelPrefixes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:             false,
-            isLoadingContents:     true,
-            hasLoadedContents:     false,
-            prefixes:              null,
+            showModal:         {
+                add:    false,
+                remove: false,
+            },
+            isLoadingContents: true,
+            hasLoadedContents: false,
+            prefixes:          null,
+            prefixModalData:   null,
         };
     }
 
@@ -23,7 +29,7 @@ export default class DataModelPrefixes extends Component {
     }
 
     getContents = () => {
-        const { dataModel } = this.props;
+        const {dataModel} = this.props;
 
         this.setState({
             isLoadingContents: true,
@@ -47,67 +53,132 @@ export default class DataModelPrefixes extends Component {
             });
     };
 
+    openModal = (type, data) => {
+        const {showModal} = this.state;
 
-    openModal = () => {
         this.setState({
-            showModal: true
+            showModal:       {
+                ...showModal,
+                [type]: true,
+            },
+            prefixModalData: data,
         });
     };
 
-    closeModal = () => {
+    closeModal = (type) => {
+        const {showModal} = this.state;
+
         this.setState({
-            showModal: false
+            showModal: {
+                ...showModal,
+                [type]: false,
+            },
         });
     };
 
-    onSaved = () => {
-        this.setState({
-            showModal: false
-        });
-
+    onSaved = (type) => {
+        this.closeModal(type);
         this.getContents();
     };
 
+    removePrefix = () => {
+        const {dataModel} = this.props;
+        const {prefixModalData} = this.state;
+
+        axios.delete('/api/model/' + dataModel.id + '/prefix/' + prefixModalData.id)
+            .then(() => {
+                this.onSaved('remove');
+            })
+            .catch((error) => {
+                toast.error(<ToastContent type="error" message="An error occurred"/>, {
+                    position: "top-center",
+                });
+            });
+    };
+
     render() {
-        const {showModal, isLoadingContents, prefixes} = this.state;
+        const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
         const {dataModel} = this.props;
 
         return <div>
-            <AddDataModelPrefixModal
-                show={showModal}
-                handleClose={this.closeModal}
-                onSaved={this.onSaved}
+            <DataModelPrefixModal
+                show={showModal.add}
+                handleClose={() => {
+                    this.closeModal('add')
+                }}
+                onSaved={() => {
+                    this.onSaved('add')
+                }}
                 modelId={dataModel.id}
+                data={prefixModalData}
             />
+
+            {prefixModalData && <ConfirmModal
+                title="Delete prefix"
+                action="Delete prefix"
+                variant="danger"
+                onConfirm={this.removePrefix}
+                onCancel={() => {
+                    this.closeModal('remove')
+                }}
+                show={showModal.remove}
+            >
+                Are you sure you want to delete prefix <strong>{prefixModalData.prefix}</strong>?
+            </ConfirmModal>}
+
             <Row>
-                <Col sm={6} />
+                <Col sm={6}/>
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <Button icon="add" onClick={this.openModal}>Add prefix</Button>
+                        <Button icon="add" onClick={() => {
+                            this.openModal('add', null)
+                        }}>Add prefix</Button>
                     </div>
                 </Col>
             </Row>
             <Row>
                 <Col sm={12}>
                     {isLoadingContents ? <InlineLoader/> : <DataTable
-                            emptyTableMessage="This data model does not have prefixes"
-                            cellSpacing="default"
-                            rows={prefixes.map((item) => {
-                                return [item.prefix, item.uri];
-                            })}
-                            structure={{
-                                id:    {
-                                    header:    'Prefix',
-                                    resizable: true,
-                                    template:  'fixed',
-                                },
-                                title: {
-                                    header:    'URI',
-                                    resizable: true,
-                                    template:  'fixed',
-                                },
-                            }}
-                        />}
+                        anchorRight={1}
+                        emptyTableMessage="This data model does not have prefixes"
+                        cellSpacing="default"
+                        rows={prefixes.map((item) => {
+                            return [
+                                item.prefix,
+                                item.uri,
+                                [
+                                    {
+                                        destination: () => {
+                                            this.openModal('add', {id: item.id, prefix: item.prefix, uri: item.uri})
+                                        },
+                                        label:       'Edit prefix',
+                                    },
+                                    {
+                                        destination: () => {
+                                            this.openModal('remove', {id: item.id, prefix: item.prefix, uri: item.uri})
+                                        },
+                                        label:       'Delete prefix',
+                                    },
+                                ],
+                            ];
+                        })}
+                        structure={{
+                            id:      {
+                                header:    'Prefix',
+                                resizable: true,
+                                template:  'fixed',
+                            },
+                            title:   {
+                                header:    'URI',
+                                resizable: true,
+                                template:  'fixed',
+                            },
+                            actions: {
+                                header:   '',
+                                template: 'rowAction',
+                            },
+                        }}
+                    />}
                 </Col>
             </Row>
         </div>;

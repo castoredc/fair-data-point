@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import AddDataModelModuleModal from "../../../modals/AddDataModelModuleModal";
+import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 import {Col, Row} from "react-bootstrap";
 import {Button} from "@castoredc/matter";
 import './DataModelModules.scss';
@@ -8,22 +8,27 @@ import {toast} from "react-toastify";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import DataModelModule from "../../../components/DataModelModule/DataModelModule";
 import ToastContent from "../../../components/ToastContent";
-import AddTripleModal from "../../../modals/AddTripleModal";
+import TripleModal from "../../../modals/TripleModal";
+import ConfirmModal from "../../../modals/ConfirmModal";
 
 export default class DataModelModules extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:            {
+            showModal: {
                 triple: false,
+                removeTriple: false,
                 module: false
             },
+            tripleModalData:      null,
+            moduleModalData:      null,
             isLoadingModules:     true,
             hasLoadedModules:     false,
             modules:              [],
             isLoadingNodes:       true,
             hasLoadedNodes:       false,
             nodes:                [],
+            currentModuleId:      null
         };
     }
 
@@ -86,7 +91,7 @@ export default class DataModelModules extends Component {
     };
 
     getOrderOptions = () => {
-        const { modules } = this.state;
+        const { modules, currentModuleId } = this.state;
 
         let order = [{value: 1, label: 'At the beginning of the data model'}];
 
@@ -96,8 +101,14 @@ export default class DataModelModules extends Component {
 
         for (let i = 0; i < modules.length; i++) {
             const item = modules[i];
-            const moduleNumber = (i + 1);
-            order.push({value: (moduleNumber + 1), label: 'After Module ' + moduleNumber + ' (' + item.title + ')'});
+
+            if(item.id !== currentModuleId) {
+                const moduleNumber = (i + 1);
+                order.push({
+                    value: (moduleNumber + 1),
+                    label: 'After Module ' + moduleNumber + ' (' + item.title + ')'
+                });
+            }
         }
 
         return order;
@@ -125,15 +136,30 @@ export default class DataModelModules extends Component {
         });
     };
 
-    openModuleModal = () => {
-        this.openModal('module');
+    openModuleModal = (moduleData) => {
+        this.setState({
+            currentModuleId: moduleData ? moduleData.id : null,
+            moduleModalData: moduleData
+        }, () => {
+            this.openModal('module');
+        });
     };
 
-    openTripleModal = (moduleId) => {
+    openTripleModal = (moduleId, tripleData) => {
         this.setState({
-            currentModuleId: moduleId
+            currentModuleId: moduleId,
+            tripleModalData: tripleData
         }, () => {
             this.openModal('triple')
+        });
+    };
+
+    openRemoveTripleModal = (moduleId, tripleData) => {
+        this.setState({
+            currentModuleId: moduleId,
+            tripleModalData: tripleData
+        }, () => {
+            this.openModal('removeTriple')
         });
     };
 
@@ -147,9 +173,25 @@ export default class DataModelModules extends Component {
         this.getModules();
     };
 
+    removeTriple = () => {
+        const { dataModel } = this.props;
+        const { currentModuleId, tripleModalData } = this.state;
+
+        axios.delete('/api/model/' + dataModel.id + '/module/' + currentModuleId + '/triple/' + tripleModalData.id )
+            .then(() => {
+                this.closeModal('removeTriple');
+                this.getModules();
+            })
+            .catch((error) => {
+                toast.error(<ToastContent type="error" message="An error occurred"/>, {
+                    position: "top-center"
+                });
+            });
+    };
+
     render() {
         const { dataModel } = this.props;
-        const { showModal, hasLoadedModules, hasLoadedNodes, modules, nodes, currentModuleId } = this.state;
+        const { showModal, hasLoadedModules, hasLoadedNodes, modules, nodes, currentModuleId, moduleModalData, tripleModalData } = this.state;
 
         if (!hasLoadedModules || !hasLoadedNodes) {
             return <InlineLoader />;
@@ -158,28 +200,41 @@ export default class DataModelModules extends Component {
         const orderOptions = this.getOrderOptions();
 
         return <div>
-            <AddDataModelModuleModal
+            <DataModelModuleModal
                 orderOptions={orderOptions}
                 show={showModal.module}
                 handleClose={() => { this.closeModal('module')}}
                 onSaved={this.onModuleSaved}
                 modelId={dataModel.id}
+                data={moduleModalData}
             />
 
-            <AddTripleModal
+            <TripleModal
                 show={showModal.triple}
                 handleClose={() => { this.closeModal('triple')}}
                 onSaved={this.onTripleSaved}
                 modelId={dataModel.id}
                 moduleId={currentModuleId}
                 nodes={nodes}
+                data={tripleModalData}
             />
+
+            <ConfirmModal
+                title="Delete triple"
+                action="Delete triple"
+                variant="danger"
+                onConfirm={this.removeTriple}
+                onCancel={this.hideDeleteModal}
+                show={showModal.removeTriple}
+            >
+                Are you sure you want to delete this triple?
+            </ConfirmModal>
 
             <Row>
                 <Col sm={6} />
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <Button icon="add" onClick={this.openModuleModal}>Add module</Button>
+                        <Button icon="add" onClick={() => {this.openModuleModal(null)}}>Add module</Button>
                     </div>
                 </Col>
             </Row>
@@ -193,7 +248,9 @@ export default class DataModelModules extends Component {
                             order={element.order}
                             groupedTriples={element.groupedTriples}
                             modelId={dataModel.id}
-                            openModal={() => this.openTripleModal(element.id)}
+                            openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order})}
+                            openTripleModal={(tripleData) => this.openTripleModal(element.id, tripleData)}
+                            openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element.id, tripleData)}
                         />;
                     })}
                 </Col>

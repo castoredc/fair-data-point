@@ -21,13 +21,13 @@
   }
 }
 
-.AddTripleModal, .RDFDistributionModuleAddTriple {
+.TripleModal, .RDFDistributionModuleAddTriple {
   .placeholder {
     border-bottom: 1px dotted;
   }
 }
 
-.AddTripleModal {
+.TripleModal {
   .SelectFieldButton, .EditFieldButton {
     padding: 5px 0;
 
@@ -89,6 +89,8 @@
 .TripleObject {
   padding: 10px 0;
   border-bottom: solid 1px $neutral-40;
+  display: flex;
+  justify-content: space-between;
 
   &:last-child {
     border-bottom: 0;

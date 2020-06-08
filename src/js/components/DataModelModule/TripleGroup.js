@@ -1,10 +1,20 @@
 import React, {Component} from 'react'
 import {Col, Row} from "react-bootstrap";
-import {Icon} from "@castoredc/matter";
+import {ActionMenu, Icon} from "@castoredc/matter";
+import TripleModal from "../../modals/TripleModal";
+import ConfirmModal from "../../modals/ConfirmModal";
+import axios from "axios";
+import {toast} from "react-toastify";
+import ToastContent from "../ToastContent";
 
 export default class TripleGroup extends Component {
     render() {
-        const { id, type, title, description, value, predicates } = this.props;
+        const { id, type, title, description, value, predicates, openTripleModal, openRemoveTripleModal } = this.props;
+
+        const newData = {
+            subjectType: type,
+            subjectValue: id,
+        };
 
         return <Row className="DataModelTriple">
             <Col sm={4}>
@@ -12,7 +22,15 @@ export default class TripleGroup extends Component {
             </Col>
             <Col sm={8}>
                 {predicates.map((predicate) => {
-                    return <TriplePredicate key={predicate.id} id={predicate.id} value={predicate.value} objects={predicate.objects} />;
+                    return <TriplePredicate
+                        key={predicate.id}
+                        id={predicate.id}
+                        value={predicate.value}
+                        objects={predicate.objects}
+                        data={newData}
+                        openTripleModal={openTripleModal}
+                        openRemoveTripleModal={openRemoveTripleModal}
+                    />;
                 })}
             </Col>
         </Row>;
@@ -21,7 +39,12 @@ export default class TripleGroup extends Component {
 
 export class TriplePredicate extends Component {
     render() {
-        const { id, value, objects } = this.props;
+        const { id, value, objects, data, openTripleModal, openRemoveTripleModal } = this.props;
+
+        const newData = {
+            ...data,
+            predicateValue: value.value,
+        };
 
         return <Row className="TriplePredicate">
             <Col sm={6}>
@@ -29,7 +52,18 @@ export class TriplePredicate extends Component {
             </Col>
             <Col sm={6}>
                 {objects.map((object) => {
-                    return <TripleObject key={object.id} id={object.id} type={object.type} title={object.title} description={object.description} value={object.value} />;
+                    return <TripleObject
+                        key={object.id}
+                        id={object.id}
+                        type={object.type}
+                        title={object.title}
+                        description={object.description}
+                        value={object.value}
+                        data={newData}
+                        tripleId={object.tripleId}
+                        openTripleModal={openTripleModal}
+                        openRemoveTripleModal={openRemoveTripleModal}
+                    />;
                 })}
             </Col>
         </Row>;
@@ -37,11 +71,41 @@ export class TriplePredicate extends Component {
 }
 
 export class TripleObject extends Component {
+    constructor(props) {
+        super(props);
+        this.ref = React.createRef();
+    }
+
     render() {
-        const { id, type, title, description, value } = this.props;
+        const { tripleId, id, type, title, description, value, openTripleModal, data, openRemoveTripleModal } = this.props;
+
+        const newData = {
+            ...data,
+            objectType: type,
+            objectValue: id,
+            id: tripleId
+        };
 
         return <div className="TripleObject">
             {Node(title, type, value)}
+
+            <div className="TripleActions" ref={this.ref}>
+                <ActionMenu
+                    accessibleLabel="Contextual menu"
+                    // container={this.ref.current}
+                    container={this.ref.current}
+                    items={[
+                        {
+                            destination: () => {openTripleModal(newData)},
+                            label: 'Edit triple'
+                        },
+                        {
+                            destination: () => {openRemoveTripleModal(newData)},
+                            label: 'Delete triple'
+                        }
+                    ]}
+                />
+            </div>
         </div>;
     }
 }

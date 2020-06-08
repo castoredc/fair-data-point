@@ -47,7 +47,7 @@ export default class AddDataModelModal extends Component {
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
 
-            axios.post('/api/model/add', data)
+            axios.post('/api/model', data)
                 .then((response) => {
                     this.setState({
                         isLoading: false,

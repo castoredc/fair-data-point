@@ -53,8 +53,6 @@ export default class AddAnnotationModal extends Component {
     loadConcepts = (inputValue, callback) => {
         const {data, axiosCancel} = this.state;
 
-        console.log(inputValue);
-
         if (data.ontology === null) {
             return null;
         }
@@ -119,7 +117,6 @@ export default class AddAnnotationModal extends Component {
 
     handleConceptChange = (event) => {
         const {data} = this.state;
-        console.log(event);
 
         this.setState({
             data: {

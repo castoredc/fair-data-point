@@ -13,12 +13,12 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
 
-export default class AddTripleModal extends Component {
+export default class TripleModal extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: defaultData,
+            data: props.data ? props.data : defaultData,
             validation: {},
             showFieldSelector: false,
             isLoading: false
@@ -26,9 +26,11 @@ export default class AddTripleModal extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.show !== prevProps.show) {
+        const { show, data } = this.props;
+
+        if (show !== prevProps.show || data !== prevProps.data) {
             this.setState({
-                data: defaultData,
+                data: data ? data : defaultData,
             })
         }
     }
@@ -68,8 +70,6 @@ export default class AddTripleModal extends Component {
                 subjectType: event.value,
                 subjectValue: ''
             }
-        }, () => {
-            console.log(this.state);
         });
     };
 
@@ -114,7 +114,7 @@ export default class AddTripleModal extends Component {
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
-            axios.post('/api/model/' + modelId + '/module/' + moduleId + '/triple/add', data)
+            axios.post('/api/model/' + modelId + '/module/' + moduleId + '/triple' + (data.id ? '/' + data.id : ''), data)
                 .then((response) => {
                     this.setState({
                         isLoading: false,
@@ -157,14 +157,14 @@ export default class AddTripleModal extends Component {
         const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value');
         const objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
 
-        return <Modal show={show} onHide={handleClose} className="AddTripleModal">
+        return <Modal show={show} onHide={handleClose} className="TripleModal">
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Add triple</Modal.Title>
+                    {data.id ? <Modal.Title>Edit triple</Modal.Title> : <Modal.Title>Add triple</Modal.Title>}
                 </Modal.Header>
                 <Modal.Body>
                     <Container>
@@ -255,7 +255,7 @@ export default class AddTripleModal extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="submit" disabled={isLoading}>
-                        Add triple
+                        {data.id ? 'Edit triple' : 'Add triple'}
                     </Button>
                 </Modal.Footer>
             </ValidatorForm>

@@ -4,14 +4,25 @@ import Toggle from "../Toggle";
 import Icon from "../Icon";
 import Container from "react-bootstrap/Container";
 import TripleGroup from "./TripleGroup";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 
 export default class DataModelModule extends Component {
     render() {
-        const { title, order, groupedTriples, openModal } = this.props;
+        const { title, order, groupedTriples, openModuleModal, openTripleModal, openRemoveTripleModal } = this.props;
 
         return <div className="DataModelModule">
             <Toggle title={`Module ${order}. ${title}`}>
+                <div className="ButtonBar">
+                    <Stack alignment="end" distribution="trailing">
+                        <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
+                            Edit module
+                        </Button>
+                        <Button icon="add" onClick={() => {openTripleModal(null)}}>
+                            Add triple
+                        </Button>
+                    </Stack>
+                </div>
+
                 <Row className="DataModelTableHeader">
                     <Col sm={4}>Subject</Col>
                     <Col sm={4}>Predicate</Col>
@@ -27,16 +38,13 @@ export default class DataModelModule extends Component {
                                 title={element.title}
                                 description={element.description}
                                 value={element.value}
-                                predicates={element.predicates} />;
+                                predicates={element.predicates}
+                                openTripleModal={openTripleModal}
+                                openRemoveTripleModal={openRemoveTripleModal}
+                            />;
                         })}
                     </Container>
                     }
-                </Row>
-                <Row className="DataModelModuleAddTriple">
-                    <Col sm={12}>
-                        {/*<Button variant="primary" className="AddButton" onClick={openModal}><Icon type="add" /> Add triple</Button>*/}
-                        <Button icon="add" onClick={openModal}>Add triple</Button>
-                    </Col>
                 </Row>
             </Toggle>
         </div>;
