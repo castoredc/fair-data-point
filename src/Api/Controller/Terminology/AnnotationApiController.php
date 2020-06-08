@@ -23,7 +23,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
-use function dump;
 
 /**
  * @Route("/api/study/{study}/annotations")
@@ -71,8 +70,6 @@ class AnnotationApiController extends ApiController
             if ($e instanceof AnnotationAlreadyExists) {
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
-
-            dump($e);
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
