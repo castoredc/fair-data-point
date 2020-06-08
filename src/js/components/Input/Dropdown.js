@@ -1,26 +1,74 @@
 import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
 import Form from 'react-bootstrap/Form'
-import Select from 'react-select'
+import AsyncSelect from 'react-select/async';
+import {Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
 
 import './Input.scss'
 
 class Dropdown extends ValidatorComponent {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            ...this.state,
+            cachedOptions: []
+        };
+    }
+
+    loadOptions = (inputValue, callback) => {
+        const { loadOptions } = this.props;
+
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null
+        }
+
+        this.timeout = setTimeout(() => {
+            loadOptions(inputValue, (options) => {
+                this.setState({
+                    cachedOptions: options
+                });
+
+                callback(options);
+            });
+        }, 1000);
+    };
 
     render() {
-        const { errorMessages, serverError, validators, requiredError, validatorListener, type, mask, ...rest } = this.props;
+        const {   serverError,
+                  placeholder,
+                  isDisabled,
+                  options,
+                  value,
+                  width,
+                  async = false,
+                  onChange } = this.props;
+        const { cachedOptions, isValid } = this.state;
 
         return (
-            <Form.Group className="Select" onClick={this.props.onClick}>
-                <Select
-                    {...rest}
+            <Form.Group className="Select" onClick={this.props.onClick}
+                        ref={(r) => { this.input = r; }}>
+                {async ? <AsyncSelect
+                    loadOptions={this.loadOptions}
+                    options={cachedOptions}
+                    openMenuOnClick={false}
                     ref={(r) => { this.input = r; }}
-                />
+                /> : <CastorDropdown
+                    invalid={!isValid}
+                    onChange={onChange}
+                    value={value}
+                    options={options}
+                    placeholder={placeholder}
+                    isDisabled={isDisabled}
+                    width={width}
+                    menuPlacement="auto"
+                /> }
                 {this.errorText()}
                 {serverError && serverError.map((errorText, index) => (
-                    <Form.Text key={index} className="InputError">
+                    <TextStyle key={index} variation="error">
                         {errorText}
-                    </Form.Text>
+                    </TextStyle>
                 ))}
             </Form.Group>
         );
@@ -34,9 +82,9 @@ class Dropdown extends ValidatorComponent {
         }
 
         return (
-            <Form.Text className="InputError">
+            <TextStyle variation="error">
                 {this.getErrorMessage()}
-            </Form.Text>
+            </TextStyle>
         );
     }
 }

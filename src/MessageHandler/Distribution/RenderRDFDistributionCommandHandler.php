@@ -11,32 +11,18 @@ use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use Twig\TemplateWrapper;
-use function preg_replace;
-use function trim;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 {
     /** @var ApiClient */
     private $apiClient;
 
-    /** @var Environment $twig */
-    private $twig;
-
-    public function __construct(ApiClient $apiClient, Environment $twig)
+    public function __construct(ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
-        $this->twig = $twig;
     }
 
     /**
-     * @throws LoaderError
-     * @throws SyntaxError
-     * @throws RuntimeError
      * @throws Exception
      */
     public function __invoke(RenderRDFDistributionCommand $message): string
@@ -47,34 +33,22 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
             $this->apiClient->setUser($message->getUser());
         }
 
-        $template = $this->twig->createTemplate($message->getDistribution()->getTwig());
         $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
 
         $return = '';
 
         foreach ($message->getRecords() as $record) {
-            $return .= $this->renderRecord($template, $message->getDistribution(), $study, $record) . "\n\n";
+            $return .= $this->renderRecord($message->getDistribution(), $study, $record) . "\n\n";
         }
-
-        $return = $message->getDistribution()->getPrefix() . "\n\n" . $return;
 
         return $return;
     }
 
-    private function renderRecord(TemplateWrapper $template, RDFDistribution $distribution, Study $study, Record $record): string
+    private function renderRecord(RDFDistribution $distribution, Study $study, Record $record): string
     {
+        // TODO: Render RDF
         $record = $this->apiClient->getRecordDataCollection($study, $record);
 
-        $templateData = [
-            'url' => $distribution->getRDFUrl(),
-            'record' => $record,
-        ];
-
-        $content = $template->render($templateData);
-
-        $trimmedContent = trim(preg_replace('/\n\s*\n/', "\n", $content));
-        $trimmedContent = trim(preg_replace('/\t+/', '', $trimmedContent));
-
-        return $trimmedContent;
+        return '';
     }
 }

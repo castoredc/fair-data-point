@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Structure;
 
 use App\Entity\Castor\Structure\Step\Step;
+use App\Entity\Castor\Study;
+use App\Entity\Enum\StructureType;
 use function uasort;
 
 class Phase extends StructureElement
@@ -14,9 +16,9 @@ class Phase extends StructureElement
     /** @var int|null */
     private $position;
 
-    public function __construct(?string $id, ?string $name, ?string $description, ?int $position)
+    public function __construct(string $id, Study $study, ?string $name, ?string $description, ?int $position)
     {
-        parent::__construct($id, $name);
+        parent::__construct($id, $study, StructureType::study(), $name);
 
         $this->description = $description;
         $this->position = $position;
@@ -56,10 +58,11 @@ class Phase extends StructureElement
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): Phase
+    public static function fromData(array $data, Study $study): Phase
     {
         return new Phase(
-            $data['id'] ?? null,
+            $data['id'],
+            $study,
             $data['phase_name'] ?? null,
             $data['phase_description'] ?? null,
             $data['phase_order'] ?? null

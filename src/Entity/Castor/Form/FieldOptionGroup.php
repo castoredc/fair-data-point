@@ -3,18 +3,23 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Form;
 
-class FieldOptionGroup
-{
-    /** @var string|null */
-    private $id;
+use App\Entity\Castor\CastorEntity;
+use App\Entity\Castor\Study;
+use Doctrine\ORM\Mapping as ORM;
+use function boolval;
 
+/**
+ * @ORM\Entity
+ */
+class FieldOptionGroup extends CastorEntity
+{
     /** @var string|null */
     private $name;
 
     /** @var string|null */
     private $description;
 
-    /** @var string|null */
+    /** @var bool */
     private $layout;
 
     /** @var FieldOption[]|null */
@@ -23,23 +28,14 @@ class FieldOptionGroup
     /**
      * @param FieldOption[]|null $options
      */
-    public function __construct(?string $id, ?string $name, ?string $description, ?string $layout, ?array $options)
+    public function __construct(string $id, Study $study, string $name, ?string $description, bool $layout, ?array $options)
     {
-        $this->id = $id;
+        parent::__construct($id, $name, $study, null);
+
         $this->name = $name;
         $this->description = $description;
         $this->layout = $layout;
         $this->options = $options;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getName(): ?string
@@ -62,12 +58,12 @@ class FieldOptionGroup
         $this->description = $description;
     }
 
-    public function getLayout(): ?string
+    public function getLayout(): bool
     {
         return $this->layout;
     }
 
-    public function setLayout(?string $layout): void
+    public function setLayout(bool $layout): void
     {
         $this->layout = $layout;
     }
@@ -78,6 +74,52 @@ class FieldOptionGroup
     public function getOptions(): ?array
     {
         return $this->options;
+    }
+
+    public function getOptionByValue(string $value): ?FieldOption
+    {
+        if ($this->options === null) {
+            return null;
+        }
+
+        foreach ($this->options as $option) {
+            if ($option->getValue() === $value) {
+                return $option;
+            }
+        }
+
+        return null;
+    }
+
+    public function getOptionById(string $id): ?FieldOption
+    {
+        if ($this->options === null) {
+            return null;
+        }
+
+        foreach ($this->options as $option) {
+            if ($option->getId() === $id) {
+                return $option;
+            }
+        }
+
+        return null;
+    }
+
+    public function hasChildren(): bool
+    {
+        return true;
+    }
+
+    /** {@inheritdoc} */
+    public function getChildren(): ?array
+    {
+        return $this->options;
+    }
+
+    public function getChild(string $id): ?CastorEntity
+    {
+        return $this->getOptionById($id);
     }
 
     /**
@@ -103,19 +145,20 @@ class FieldOptionGroup
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): FieldOptionGroup
+    public static function fromData(array $data, Study $study): FieldOptionGroup
     {
         $options = [];
         if (isset($data['options'])) {
             foreach ($data['options'] as $option) {
-                $options[] = FieldOption::fromData($option);
+                $options[] = FieldOption::fromData($option, $study);
             }
         }
         $group = new FieldOptionGroup(
-            $data['id'] ?? null,
-            $data['name'] ?? null,
+            $data['id'],
+            $study,
+            $data['name'],
             $data['description'] ?? null,
-            $data['layout'] ?? null,
+            $data['layout'] !== null ? boolval($data['layout']) : false,
             $options
         );
 

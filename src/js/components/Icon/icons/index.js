@@ -37,6 +37,9 @@ import grid2 from './grid_2.svg';
 import dateTime from './date-time.svg';
 import numberDate from './number-date.svg';
 import addReport from './add-report.svg';
+import closed from './closed.svg';
+import surveys from './surveys.svg';
+import form from './form.svg';
 
 export default {
     add,
@@ -77,5 +80,8 @@ export default {
     grid2,
     dateTime,
     numberDate,
-    addReport
+    addReport,
+    closed,
+    surveys,
+    form
 };

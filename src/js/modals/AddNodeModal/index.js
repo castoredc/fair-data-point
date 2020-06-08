@@ -1,0 +1,232 @@
+import React, {Component} from 'react'
+import Modal from "react-bootstrap/Modal";
+import {ValidatorForm} from "react-form-validator-core";
+import Input from "../../components/Input";
+import FormItem from "../../components/Form/FormItem";
+import RadioGroup from "../../components/Input/RadioGroup";
+import Container from "react-bootstrap/Container";
+import axios from "axios";
+import {toast} from "react-toastify";
+import ToastContent from "../../components/ToastContent";
+import {Button} from "@castoredc/matter";
+import Dropdown from "../../components/Input/Dropdown";
+
+export default class AddNodeModal extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            data: defaultData,
+            validation: {},
+            showFieldSelector: false,
+            isLoading: false
+        };
+    }
+
+    componentDidMount() {
+        ValidatorForm.addValidationRule('isUrl', (value) => {
+            var pattern = new RegExp('^((ft|htt)ps?:\\/\\/)?'+ // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                '(\\:\\d+)?'+ // port
+                '(\\/[-a-z\\d%@_.~+&:]*)*'+ // path
+                '(\\?[;&a-z\\d%@_.,~+&:=-]*)?'+ // query string
+                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            return pattern.test(value);
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.show !== prevProps.show) {
+            this.setState({
+                data: defaultData
+            })
+        }
+    }
+
+    handleChange = (event, callback = (() => {})) => {
+        const { data } = this.state;
+        this.setState({
+            data: {
+                ...data,
+                [event.target.name]: event.target.value,
+            },
+            validation: {
+                [event.target.name]: false,
+            }
+        }, callback);
+    };
+
+    handleDataTypeChange = (event) => {
+        const { data } = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                dataType: event.value
+            }
+        });
+    };
+
+    handleSubmit = (event) => {
+        const {type, modelId, onSaved} = this.props;
+        const {data} = this.state;
+        event.preventDefault();
+
+        if (this.form.isFormValid()) {
+            if (this.form.isFormValid()) {
+                this.setState({isLoading: true});
+
+                axios.post('/api/model/' + modelId + '/node/' + type + '/add', data)
+                    .then((response) => {
+                        this.setState({
+                            isLoading: false,
+                        });
+
+                        onSaved();
+                    })
+                    .catch((error) => {
+                        if (error.response && error.response.status === 400) {
+                            this.setState({
+                                validation: error.response.data.fields
+                            });
+                        } else {
+                            toast.error(<ToastContent type="error" message="An error occurred"/>, {
+                                position: "top-center"
+                            });
+                        }
+                        this.setState({isLoading: false});
+                    });
+            }
+        }
+    };
+
+    render() {
+        const { type, show, handleClose } = this.props;
+        const { data, validation, isLoading } = this.state;
+
+        const required = "This field is required";
+        const validUrl = "Please enter a valid URI";
+
+        const showDataTypes = (type === 'literal' || (type === 'value' && data.value === 'plain'));
+
+        return <Modal show={show} onHide={handleClose} className="AddNodeModal">
+            <ValidatorForm
+                ref={node => (this.form = node)}
+                onSubmit={this.handleSubmit}
+                method="post"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Add {type} node</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <FormItem label="Title">
+                            <Input
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="title"
+                                onChange={this.handleChange}
+                                value={data.title}
+                                serverError={validation.title}
+                            />
+                        </FormItem>
+                        <FormItem label="Description">
+                            <Input
+                                name="description"
+                                onChange={this.handleChange}
+                                value={data.description}
+                                serverError={validation.description}
+                                as="textarea" rows="3"
+                            />
+                        </FormItem>
+                        {type === 'external' && <FormItem label="URI">
+                            <Input
+                                validators={['required', 'isUrl']}
+                                errorMessages={[required, validUrl]}
+                                name="value"
+                                onChange={this.handleChange}
+                                value={data.value}
+                                serverError={validation.value}
+                            />
+                        </FormItem>}
+                        {type === 'internal' && <FormItem label="Slug">
+                            <Input
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="value"
+                                onChange={this.handleChange}
+                                value={data.value}
+                                serverError={validation.value}
+                            />
+                        </FormItem>}
+                        {type === 'literal' && <FormItem label="Value">
+                            <Input
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="value"
+                                onChange={this.handleChange}
+                                value={data.value}
+                                serverError={validation.value}
+                            />
+                        </FormItem>}
+                        {type === 'value' && <FormItem label="Value">
+                            <RadioGroup
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={[
+                                    { value: 'plain', label: 'Plain value' },
+                                    { value: 'annotated', label: 'Annotated value' },
+                                ]}
+                                onChange={this.handleChange}
+                                value={data.value}
+                                serverError={validation.value}
+                                name="value"
+                            />
+                        </FormItem>}
+                        {showDataTypes && <FormItem label="Data type">
+                            <Dropdown
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={dataTypes}
+                                onChange={this.handleDataTypeChange}
+                                value={dataTypes.find((dataType) => {return data.dataType === dataType.value})}
+                                serverError={validation.dataType}
+                                name="dataType"
+                            />
+                        </FormItem>}
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type="submit" disabled={isLoading}>
+                        Add node
+                    </Button>
+                </Modal.Footer>
+            </ValidatorForm>
+        </Modal>
+    }
+}
+
+const defaultData = {
+    title: '',
+    description: '',
+    value: '',
+    dataType: null
+};
+
+const dataTypes = [
+    { value: 'float', label: 'Float (number)' },
+    { value: 'double', label: 'Double (number)' },
+    { value: 'decimal', label: 'Decimal (number)' },
+    { value: 'integer', label: 'Integer (number)' },
+    { value: 'dateTime', label: 'Date and time (date/time)' },
+    { value: 'date', label: 'Date (date/time)' },
+    { value: 'time', label: 'Time (date/time)' },
+    { value: 'gDay', label: 'Day (date/time)' },
+    { value: 'gMonth', label: 'Month (date/time)' },
+    { value: 'gYear', label: 'Year (date/time)' },
+    { value: 'gYearMonth', label: 'Year and month (date/time)' },
+    { value: 'gMonthDay', label: 'Month and day (date/time)' },
+    { value: 'string', label: 'String' },
+    { value: 'boolean', label: 'Boolean' },
+];

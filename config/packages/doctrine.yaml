@@ -17,6 +17,9 @@ doctrine:
             DistributionAccessType:  App\Type\DistributionAccessType
             RecruitmentStatusType:  App\Type\RecruitmentStatusType
             MethodType:  App\Type\MethodType
+            StructureType:  App\Type\StructureType
+            CastorValueType:  App\Type\CastorValueType
+            XsdDataType:  App\Type\XsdDataType
 
     orm:
         auto_generate_proxy_classes: true

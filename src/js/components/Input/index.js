@@ -4,11 +4,13 @@ import Form from 'react-bootstrap/Form'
 import MaskedInput from 'react-text-mask'
 
 import './Input.scss'
+import {TextInput, TextStyle} from "@castoredc/matter";
 
 class Input extends ValidatorComponent {
 
     render() {
         const { errorMessages, serverError, validators, requiredError, validatorListener, mask, ...rest } = this.props;
+        const { isValid } = this.state;
         return (
             <Form.Group className="Input">
                 {mask ? <MaskedInput
@@ -16,17 +18,17 @@ class Input extends ValidatorComponent {
                         className="form-control"
                         {...rest}
                         ref={(r) => { this.input = r; }}
-                    /> :
-                    <Form.Control
+                    /> : <TextInput
                         {...rest}
+                        invalid={!isValid}
                         ref={(r) => { this.input = r; }}
                     />
                 }
                 {this.errorText()}
                 {serverError && serverError.map((errorText, index) => (
-                    <Form.Text key={index} className="InputError">
+                    <TextStyle key={index} variation="error">
                         {errorText}
-                    </Form.Text>
+                    </TextStyle>
                 ))}
             </Form.Group>
         );
@@ -40,9 +42,9 @@ class Input extends ValidatorComponent {
         }
 
         return (
-            <Form.Text className="InputError">
+            <TextStyle variation="error">
                {this.getErrorMessage()}
-            </Form.Text>
+            </TextStyle>
         );
     }
 }

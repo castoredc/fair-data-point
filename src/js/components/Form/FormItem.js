@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Form from 'react-bootstrap/Form'
 import {classNames} from "../../util";
+import {FormLabel} from "@castoredc/matter";
 
 class FormItem extends Component {
     render() {
@@ -8,7 +9,7 @@ class FormItem extends Component {
         return (
             <div className={classNames('FormItem', hidden && 'Hidden', this.props.classNames)}>
                 <Form.Row>
-                    <Form.Label className="FormLabel">{label}</Form.Label>
+                    <FormLabel>{label}</FormLabel>
                 </Form.Row>
                 <Form.Row>
                     {children}

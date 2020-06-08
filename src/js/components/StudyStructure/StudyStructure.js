@@ -87,31 +87,26 @@ export default class StudyStructure extends Component {
             </Col>
             <Col sm={9}>
                 {isLoadingFields ? <InlineLoader /> : <div className="Fields">
-                    <ValidatorForm
-                        ref={node => (this.form = node)}
-                        onSubmit={() => {}}
-                    >
-                        <Container>
-                            {fields.map((field) => {
-                                const selected = selection.filter(({type, value}) => {
-                                    return (type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName)
-                                }).length > 0;
+                    <Container>
+                        {fields.map((field) => {
+                            const selected = selection.filter(({type, value}) => {
+                                return (type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName)
+                            }).length > 0;
 
-                                return <FieldListItem
-                                    selectable={selectable}
-                                    selected={selected}
-                                    onSelect={onSelect}
-                                    key={field.id}
-                                    id={field.id}
-                                    type={field.type}
-                                    label={field.label}
-                                    stepNumber={selectedStep.position}
-                                    number={field.number}
-                                    variableName={field.variableName}
-                                />;
-                            })}
-                        </Container>
-                    </ValidatorForm>
+                            return <FieldListItem
+                                selectable={selectable}
+                                selected={selected}
+                                onSelect={onSelect}
+                                key={field.id}
+                                id={field.id}
+                                type={field.type}
+                                label={field.label}
+                                stepNumber={selectedStep.position}
+                                number={field.number}
+                                variableName={field.variableName}
+                            />;
+                        })}
+                    </Container>
                 </div>}
             </Col>
         </Row>

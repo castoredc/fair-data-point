@@ -3,19 +3,17 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Form;
 
+use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\Structure\MetadataPoint;
-use App\Entity\Castor\Structure\Step\Step;
+use App\Entity\Castor\Study;
+use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 
-class Field
+/**
+ * @ORM\Entity
+ */
+class Field extends CastorEntity
 {
-    /**
-     * Unique identifier of the Field (same as field_id)
-     *
-     * @var string|null
-     */
-    private $id;
-
     /**
      * The Field type
      *
@@ -27,7 +25,7 @@ class Field
      *
      * @var string|null
      */
-    private $label;
+    private $fieldLabel;
 
     /**
      * The Field&#39;s position within a step
@@ -71,9 +69,6 @@ class Field
      */
     private $units;
 
-    /** @var Step */
-    private $parent;
-
     /**
      * The field&#39;s parent id
      *
@@ -87,11 +82,12 @@ class Field
     /** @var array<MetadataPoint> */
     private $metadata;
 
-    public function __construct(?string $id, ?string $type, ?string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
+    public function __construct(string $id, Study $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
     {
-        $this->id = $id;
+        parent::__construct($id, $label, $study, null);
+
         $this->type = $type;
-        $this->label = $label;
+        $this->fieldLabel = $label;
         $this->number = $number;
         $this->variableName = $variableName;
         $this->required = $required;
@@ -100,16 +96,6 @@ class Field
         $this->units = $units;
         $this->parentId = $parentId;
         $this->optionGroup = $optionGroup;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getType(): ?string
@@ -122,14 +108,14 @@ class Field
         $this->type = $type;
     }
 
-    public function getLabel(): ?string
+    public function getFieldLabel(): string
     {
-        return $this->label;
+        return $this->fieldLabel;
     }
 
-    public function setLabel(?string $label): void
+    public function setFieldLabel(?string $fieldLabel): void
     {
-        $this->label = $label;
+        $this->fieldLabel = $fieldLabel;
     }
 
     public function getNumber(): ?float
@@ -228,25 +214,16 @@ class Field
         $this->optionGroup = $optionGroup;
     }
 
-    public function getParent(): Step
-    {
-        return $this->parent;
-    }
-
-    public function setParent(Step $parent): void
-    {
-        $this->parent = $parent;
-    }
-
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): Field
+    public static function fromData(array $data, Study $study): Field
     {
         return new Field(
             $data['id'] ?? null,
+            $study,
             $data['field_type'] ?? null,
-            $data['field_label'] ?? null,
+            $data['field_label'],
             $data['field_number'] ?? null,
             $data['field_variable_name'] ?? null,
             boolval($data['field_required']) ?? null,
@@ -254,7 +231,7 @@ class Field
             $data['field_info'] ?? null,
             $data['field_units'] ?? null,
             $data['parent_id'] ?? null,
-            isset($data['option_group']) ? FieldOptionGroup::fromData($data['option_group']) : null
+            isset($data['option_group']) ? FieldOptionGroup::fromData($data['option_group'], $study) : null
         );
     }
 }

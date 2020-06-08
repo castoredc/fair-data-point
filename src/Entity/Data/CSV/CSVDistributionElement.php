@@ -28,7 +28,7 @@ abstract class CSVDistributionElement
 
     /**
      * @ORM\ManyToOne(targetEntity="CSVDistribution", inversedBy="elements",cascade={"persist"})
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="distribution")
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var CSVDistribution|null
      */

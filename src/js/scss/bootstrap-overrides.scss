@@ -63,7 +63,7 @@ $navbar-dark-hover-color: $generic-white;
 }
 
 .btn {
-  font-size: 14px;
+  //font-size: 14px;
   font-weight: 600;
   font-stretch: normal;
   font-style: normal;
@@ -104,6 +104,13 @@ $navbar-dark-hover-color: $generic-white;
       opacity: 0.85;
       fill: $generic-white;
       color: $generic-white;
+    }
+
+    &.disabled, &:disabled {
+      background-color: $generic-white;
+      color: $blue-400;
+      border: 1px solid $blue-400;
+      fill: $blue-400;
     }
   }
   &.disabled {

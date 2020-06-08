@@ -33,6 +33,12 @@ services:
         tags:
             - { name: security.voter }
 
+    security.access.datamodel_voter:
+        class:      App\Security\Authorization\Voter\DataModelVoter
+        public:     false
+        tags:
+            - { name: security.voter }
+
     App\Model\Slack\ApiClient:
         arguments:
             - '%env(SLACK_WEBHOOK_URL)%'
@@ -47,3 +53,7 @@ services:
     App\Encryption\EncryptionService:
         arguments:
             - '%env(ENCRYPTION_KEY)%'
+
+    Castor\BioPortal\Api\ApiWrapper:
+        arguments:
+            - { apiKey: '%env(BIOPORTAL_API_KEY)%' }

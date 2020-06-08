@@ -3,53 +3,34 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure;
 
+use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\Structure\Step\Step;
 use App\Entity\Castor\Study;
+use App\Entity\Enum\StructureType;
+use Doctrine\ORM\Mapping as ORM;
 
-abstract class StructureElement
+/**
+ * @ORM\Entity
+ */
+abstract class StructureElement extends CastorEntity
 {
-    /** @var string|null */
-    protected $id;
-
     /** @var string|null */
     protected $name;
 
     /** @var Step[] */
     protected $steps;
 
-    /** @var Study|null */
-    protected $study;
-
-    public function __construct(?string $id, ?string $name)
+    public function __construct(string $id, Study $study, StructureType $structureType, string $name)
     {
-        $this->id = $id;
+        parent::__construct($id, $name, $study, $structureType);
+
         $this->name = $name;
         $this->steps = [];
-    }
-
-    public function getStudy(): ?Study
-    {
-        return $this->study;
-    }
-
-    public function setStudy(?Study $study): void
-    {
-        $this->study = $study;
     }
 
     public function addStep(Step $step): void
     {
         $this->steps[] = $step;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getName(): ?string

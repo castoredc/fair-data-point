@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import LoadingScreen from "../LoadingScreen";
 import Tab from "react-bootstrap/Tab";
 import StudyStructure from "./StudyStructure";
 import Row from "react-bootstrap/Row";
@@ -58,16 +57,16 @@ export default class CSVStudyStructure extends Component {
             });
     };
 
-    handleSelect = (event, id, variableName, selectValue) => {
+    handleSelect = (event, field, selectValue) => {
         if(event.target.tagName.toUpperCase() !== 'INPUT') {
             let { distributionContents } = this.state;
 
             distributionContents = distributionContents.filter(({type, value}) => {
-                return !((type === 'fieldId' && value === id) || (type === 'variableName' && value === variableName))
+                return !((type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName))
             });
 
             if (selectValue === true) {
-                distributionContents.push({type: 'fieldId', value: id});
+                distributionContents.push({type: 'fieldId', value: field.id});
             }
 
             this.setState({
@@ -116,7 +115,7 @@ export default class CSVStudyStructure extends Component {
         return <div>
             <Container>
                 <Tab.Container id="csv-study-structure" defaultActiveKey="study">
-                    <Row className="StudyStructureTabs">
+                    <Row className="TabTabs StudyStructureTabs">
                         <Col sm={3} />
                         <Col sm={9}>
                             <Nav variant="tabs">

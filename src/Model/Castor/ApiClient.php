@@ -10,6 +10,7 @@ use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
 use App\Entity\Castor\Data\SurveyData;
 use App\Entity\Castor\Form\Field;
+use App\Entity\Castor\Form\FieldOptionGroup;
 use App\Entity\Castor\Instances\ReportInstance;
 use App\Entity\Castor\Instances\SurveyPackageInstance;
 use App\Entity\Castor\Record;
@@ -233,7 +234,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fields'] as $rawField) {
-                $field = Field::fromData($rawField);
+                $field = Field::fromData($rawField, $study);
                 $fields->set($field->getId(), $field);
             }
         }
@@ -308,7 +309,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['phases'] as $phase) {
-                $phases->add(Phase::fromData($phase));
+                $phases->add(Phase::fromData($phase, $study));
             }
         }
 
@@ -330,7 +331,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['steps'] as $step) {
-                $newStep = StudyStep::fromData($step);
+                $newStep = StudyStep::fromData($step, $study);
 
                 if ($includeFields) {
                     $fields = $this->getFieldByParent($study, $step['step_id']);
@@ -359,7 +360,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['surveys'] as $survey) {
-                $tempSurvey = Survey::fromData($survey);
+                $tempSurvey = Survey::fromData($survey, $study);
 
                 if ($includeFields) {
                     $steps = [];
@@ -394,11 +395,11 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['reports'] as $report) {
-                $tempReport = Report::fromData($report);
+                $tempReport = Report::fromData($report, $study);
                 $steps = $this->request('/api/study/' . $study->getId() . '/report/' . $report['report_id'] . '/report-step?page=' . $page . '&page_size=' . $this->pageSize);
 
                 foreach ($steps['_embedded']['report_steps'] as $step) {
-                    $newStep = ReportStep::fromData($step);
+                    $newStep = ReportStep::fromData($step, $study);
 
                     if ($includeFields) {
                         $fields = $this->getFieldByParent($study, $step['id']);
@@ -413,6 +414,44 @@ class ApiClient
         }
 
         return $reports;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getOptionGroups(Study $study): CastorEntityCollection
+    {
+        /** @var CastorEntityCollection<FieldOptionGroup> $optionGroups */
+        $optionGroups = new CastorEntityCollection();
+
+        $pages = 1;
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup?page=' . $page . '&page_size=' . $this->pageSize);
+            $pages = $body['page_count'];
+
+            foreach ($body['_embedded']['fieldOptionGroups'] as $optionGroup) {
+                $optionGroups->add(FieldOptionGroup::fromData($optionGroup, $study));
+            }
+        }
+
+        return $optionGroups;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getOptionGroup(Study $study, string $optionGroupId): FieldOptionGroup
+    {
+        $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup/' . $optionGroupId);
+
+        return FieldOptionGroup::fromData($body, $study);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Api\Resource\ApiResource;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\CSV\CSVDistributionElementFieldId;
 use App\Entity\Data\CSV\CSVDistributionElementVariableName;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource
@@ -52,6 +53,28 @@ class DistributionContentApiResource implements ApiResource
             }
 
             $data['elements'] = $elements;
+        }
+
+        if ($contents instanceof RDFDistribution) {
+            $elements = [];
+
+            // foreach ($contents->getModules() as $module) {
+            //     /** @var RDFDistributionModule $module */
+            //     $triples = [];
+            //     foreach ($module->getTriples() as $triple) {
+            //         /** @var RDFTriple $triple */
+            //         $triples[] = (new RDFTripleApiResource($triple))->toArray();
+            //     }
+            //
+            //     $elements[] = [
+            //         'id' => $module->getId(),
+            //         'title' => $module->getTitle(),
+            //         'order' => $module->getOrder(),
+            //         'triples' => $triples,
+            //     ];
+            // }
+            //
+            // $data['elements'] = $elements;
         }
 
         return $data;

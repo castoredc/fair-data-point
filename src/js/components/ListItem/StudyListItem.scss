@@ -82,7 +82,7 @@
     }
   }
 
-  .AdminListItemTitle a, .AdminListItemType a, .AttributeCheckmark a {
+  .AdminListItemTitle div, .AdminListItemContent div, .AdminListItemTitle a, .AdminListItemType a, .AttributeCheckmark a {
     display: block;
     padding: 12px 0;
   }
@@ -91,7 +91,7 @@
     text-align: center;
   }
 
-  .AdminListItemTitle a, .AdminListItemType a {
+  .AdminListItemTitle div, .AdminListItemTitle a, .AdminListItemType a {
     font-weight: 600;
     font-size: 16px;
     color: $neutral-800;

@@ -15,8 +15,11 @@ import MetadataXmlParse from "./pages/Tools/MetadataXmlParse";
 axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    if (401 === error.response.status) {
-        window.location.href = '/login?path' + encodeURIComponent(window.location.pathname);
+    if (axios.isCancel(error)) {
+        return Promise.reject(error);
+    }
+    else if (401 === error.response.status) {
+        window.location.href = '/login?path=' + encodeURIComponent(window.location.pathname);
     } else {
         return Promise.reject(error);
     }

@@ -27,8 +27,18 @@ ul {
   transform: rotate(180deg);
 }
 
-.IconOpen {
-  //fill: $n100;
+.ToggleArrow {
+  float: right;
+
+  svg path {
+    fill: $neutral-500;
+  }
+
+  &.Active {
+    svg {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 .IconHover {
@@ -83,4 +93,61 @@ ul {
 
 .btn .spinner-border {
   margin-right: 5px;
+}
+
+.NoResults {
+  text-align: center;
+  padding: 50px 0;
+  color: $neutral-80;
+  font-size: 16px;
+}
+
+
+.TabTabs {
+  &.row {
+    margin: 0 0 20px 0;
+  }
+
+  & > div {
+    border-bottom: 1px solid $neutral-40;
+  }
+
+  .nav-tabs {
+    border-bottom: 0;
+
+    .nav-link {
+      border: none;
+      border-radius: 0;
+      background: none;
+      padding: 5px 3px;
+      margin-right: 20px;
+      border-bottom: 2px solid transparent;
+      color: $neutral-300;
+
+      &.active {
+        border-bottom-color: $mid-blue;
+        color: $neutral-800;
+      }
+
+      &.disabled {
+        color: $neutral-60;
+      }
+    }
+  }
+}
+
+
+/* Design system overrides */
+
+.SelectableDataTable {
+  table {
+    td {
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+  }
+}
+
+fieldset {
+  margin-bottom: 0!important;
 }

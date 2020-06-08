@@ -1,55 +1,116 @@
-import React, {Component} from "react";
-import {Route, Switch} from "react-router-dom";
+import React, {Component, createRef} from "react";
+import {Redirect, Route, Switch} from "react-router-dom";
 import {Container} from "react-bootstrap";
 import Logo from "../../../components/Logo";
 import './PageWrapper.scss';
 import NotFound from "../../NotFound";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Catalog from "../Catalog";
-import Home from "../Home";
 import Dataset from "../Dataset";
 import Distribution from "../Distribution";
+import DataModels from "../Home/DataModels";
+import DataModel from "../DataModel";
+import {LinkContainer} from 'react-router-bootstrap'
+import Catalogs from "../Home/Catalogs";
+import {Icon, Menu} from "@castoredc/matter";
 
 export default class PageWrapper extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showMenu: false
+        };
+
+        this.link = createRef();
+        this.menu = createRef();
+    };
+
+    componentDidMount() {
+        document.addEventListener("mousedown", this.handleClick);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("mousedown", this.handleClick);
+    }
+
+    handleClick = (e) => {
+        if (this.link.current.contains(e.target) || (this.menu.current !== null && this.menu.current.contains(e.target))) {
+            // inside click
+            return;
+        }
+
+        this.setState({
+            showMenu: false
+        });
+    };
+
+    toggleMenu = () => {
+        const { showMenu } = this.state;
+
+        this.setState({
+            showMenu: !showMenu
+        });
+    };
+
     render() {
         const {user} = this.props;
+        const {showMenu} = this.state;
 
         return <div className="Admin">
             <div className="Header">
                 <Container>
-                    <Row>
-                        <Col className="LogoContainer">
+                    <Navbar bg="transparent" variant="dark" expand="lg">
+                        <Navbar.Brand className="LogoContainer">
                             <Logo />
-                        </Col>
-                        <Col className="MenuContainer">
-                            <Navbar bg="transparent" variant="dark" expand="lg">
-                                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                                <Navbar.Collapse id="basic-navbar-nav">
-                                    <Nav className="mr-auto">
-                                    </Nav>
-                                    <Nav>
-                                        <NavDropdown title={user.fullName} id="basic-nav-dropdown" alignRight>
-                                            <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
-                                        </NavDropdown>
-                                    </Nav>
-                                </Navbar.Collapse>
-                            </Navbar>
-                        </Col>
-                    </Row>
+                        </Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="mr-auto">
+                                <LinkContainer to={'/admin/catalog'}>
+                                    <Nav.Link>
+                                        Catalogs
+                                    </Nav.Link>
+                                </LinkContainer>
+                                <LinkContainer to={'/admin/model'}>
+                                    <Nav.Link>
+                                        Data models
+                                    </Nav.Link>
+                                </LinkContainer>
+                            </Nav>
+                            <Nav>
+                                <Nav.Link onClick={this.toggleMenu} active={showMenu} ref={this.link}>
+                                    <Icon type="account" className="AccountIcon" /> {user.fullName} <Icon type="arrowBottom" className="DropdownIcon" />
+                                </Nav.Link>
+
+                                {showMenu && <div className="DropdownMenu" ref={this.menu}>
+                                    <Menu
+                                        items={[
+                                            {
+                                                destination: '/logout',
+                                                icon: 'logOut',
+                                                label: 'Log out'
+                                            }
+                                        ]}
+                                    />
+                                </div>}
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Navbar>
                 </Container>
             </div>
             <div className="Main">
                 <Container className="MainContainer">
                     <Switch>
-                        <Route path="/admin" exact component={Home} />
+                        <Redirect exact from="/admin" to="/admin/catalog" />
+                        <Route path="/admin/catalog" exact component={Catalogs} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" component={Distribution} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset" component={Dataset} />
                         <Route path="/admin/catalog/:catalog" component={Catalog} />
                         <Route path="/admin/study/:study" component={Catalog} />
+                        <Route path="/admin/model" exact component={DataModels} />
+                        <Route path="/admin/model/:model" component={DataModel} />
                         <Route component={NotFound} />
                     </Switch>
                 </Container>

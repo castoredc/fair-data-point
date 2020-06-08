@@ -16,7 +16,7 @@ import Input from "../../../Input";
 import Dropdown from "../../../Input/Dropdown";
 import {recruitmentStatus} from "../../StudyDetailsForm";
 import {CheckboxGroup} from "../../../Input/Checkbox";
-import RadioGroup from "../../../RadioGroup";
+import RadioGroup from "../../../Input/RadioGroup";
 import {localizedText} from "../../../../util";
 import Spinner from "react-bootstrap/Spinner";
 
