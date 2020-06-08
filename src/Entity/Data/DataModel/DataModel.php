@@ -152,25 +152,44 @@ class DataModel
 
     public function addModule(DataModelModule $module): void
     {
-        $order = $module->getOrder();
+        $newModuleOrder = $module->getOrder();
         $newModules = new ArrayCollection();
 
+        $order = 1;
         foreach ($this->modules as $currentModule) {
             /** @var DataModelModule $currentModule */
-            $currentOrder = $currentModule->getOrder();
-            $newOrder = $currentOrder >= $order ? ($currentOrder + 1) : $currentOrder;
+            $newOrder = $order >= $newModuleOrder ? ($order + 1) : $order;
             $currentModule->setOrder($newOrder);
-
             $newModules->add($currentModule);
+
+            $order++;
         }
 
         $newModules->add($module);
         $this->modules = $newModules;
     }
 
+    public function reorderModules(): void
+    {
+        $newModules = new ArrayCollection();
+        $order = 1;
+
+        foreach ($this->modules as $currentModule) {
+            /** @var DataModelModule $currentModule */
+            $currentModule->setOrder($order);
+            $newModules->add($currentModule);
+
+            $order++;
+        }
+
+        $this->modules = $newModules;
+    }
+
     public function removeModule(DataModelModule $module): void
     {
         $this->modules->removeElement($module);
+
+        $this->reorderModules();
     }
 
     /**

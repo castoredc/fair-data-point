@@ -7,8 +7,11 @@ use App\Api\Request\Data\DataModelModuleApiRequest;
 use App\Api\Resource\Data\DataModelModulesApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelModule;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateDataModelModuleCommand;
+use App\Message\Data\DeleteDataModelModuleCommand;
+use App\Message\Data\UpdateDataModelModuleCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,9 +37,9 @@ class DataModelModuleApiController extends ApiController
     }
 
     /**
-     * @Route("/add", methods={"POST"}, name="api_distribution_rdf_module_add")
+     * @Route("", methods={"POST"}, name="api_model_module_add")
      */
-    public function addRdfModule(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function addModule(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModel);
 
@@ -49,6 +52,45 @@ class DataModelModuleApiController extends ApiController
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/{module}", methods={"POST"}, name="api_model_module_update")
+     * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "model"}})
+     */
+    public function updateModule(DataModelModule $module, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+
+        try {
+            /** @var DataModelModuleApiRequest $parsed */
+            $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
+
+            $bus->dispatch(new UpdateDataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder()));
+
+            return new JsonResponse([], 200);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/{module}", methods={"DELETE"}, name="api_model_module_delete")
+     * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "model"}})
+     */
+    public function deleteModule(DataModelModule $module, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+
+        try {
+            $bus->dispatch(new DeleteDataModelModuleCommand($module));
+
+            return new JsonResponse([], 200);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
