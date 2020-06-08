@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DataModelApiController extends ApiController
 {
     /**
-     * @Route("", name="api_models")
+     * @Route("", methods={"GET"}, name="api_models")
      */
     public function dataModels(MessageBusInterface $bus): Response
     {
@@ -42,7 +42,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/add", name="api_model_add")
+     * @Route("", methods={"POST"}, name="api_model_add")
      */
     public function addDataModel(Request $request, MessageBusInterface $bus): Response
     {
