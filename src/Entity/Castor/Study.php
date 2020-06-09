@@ -7,11 +7,9 @@ use App\Entity\Castor\Form\Field;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
 use App\Security\CastorServer;
-use App\Security\CastorUser;
-use DateTime;
+use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use function count;
 
 /**
@@ -21,6 +19,8 @@ use function count;
  */
 class Study
 {
+    use CreatedAndUpdated;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
@@ -35,9 +35,6 @@ class Study
      * @var string
      */
     private $name;
-
-    /** @var string|null */
-    private $mainAgent;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -79,45 +76,12 @@ class Study
     private $server;
 
     /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime $created
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime", nullable = true)
-     *
-     * @var DateTime|null $updated
-     */
-    protected $updated;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $createdBy
-     * @Gedmo\Blameable(on="create")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $updatedBy
-     * @Gedmo\Blameable(on="update")
-     */
-    private $updatedBy;
-
-    /**
      * @param ArrayCollection<string, Field>|null $fields
      */
-    public function __construct(?string $id, ?string $name, ?string $mainAgent, ?string $slug, ?ArrayCollection $fields)
+    public function __construct(?string $id, ?string $name, ?string $slug, ?ArrayCollection $fields)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->mainAgent = $mainAgent;
         $this->slug = $slug;
         $this->fields = $fields;
         $this->metadata = new ArrayCollection();
@@ -141,16 +105,6 @@ class Study
     public function setName(?string $name): void
     {
         $this->name = $name;
-    }
-
-    public function getMainAgent(): ?string
-    {
-        return $this->mainAgent;
-    }
-
-    public function setMainAgent(?string $mainAgent): void
-    {
-        $this->mainAgent = $mainAgent;
     }
 
     public function getSlug(): ?string
@@ -246,32 +200,6 @@ class Study
     }
 
     /**
-     * @ORM\PrePersist
-     */
-    public function onPrePersist(): void
-    {
-        $this->created = new DateTime('now');
-    }
-
-    /**
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate(): void
-    {
-        $this->updated = new DateTime('now');
-    }
-
-    public function getCreatedBy(): ?CastorUser
-    {
-        return $this->createdBy;
-    }
-
-    public function getUpdatedBy(): ?CastorUser
-    {
-        return $this->updatedBy;
-    }
-
-    /**
      * @param array<mixed> $data
      */
     public static function fromData(array $data): Study
@@ -279,7 +207,6 @@ class Study
         return new Study(
             $data['study_id'] ?? null,
             $data['name'] ?? null,
-            $data['main_contact'] ?? null,
             $data['slug'] ?? null,
             null
         );
