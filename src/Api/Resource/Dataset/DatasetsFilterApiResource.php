@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Resource\Dataset;
+namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
+use App\Api\Resource\PaginatedApiResource;
+use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Department;
-use function in_array;
-use function sort;
 
-class DatasetsFilterApiResource implements ApiResource
+class DatasetsFilterApiResource extends PaginatedApiResource
 {
     /** @var Dataset[] */
     private $datasets;
@@ -27,60 +27,15 @@ class DatasetsFilterApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return $this->generateFilters();
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function generateFilters(): array
-    {
-        $filters = [
-            'country' => [],
-            'studyType' => [],
-            'methodType' => [],
-        ];
+        $metadata = [];
 
         foreach ($this->datasets as $dataset) {
-            $metadata = $dataset->getStudy()->getLatestMetadata();
-
-            if ($metadata === null) {
-                continue;
+            $study = $dataset->getStudy();
+            if($study->hasMetadata()) {
+                $metadata[] = $study->getLatestMetadata();
             }
-
-            foreach ($metadata->getCenters() as $center) {
-                if (! ($center instanceof Department)) {
-                    continue;
-                }
-
-                $filters = $this->addFilterItem($filters, 'country', $center->getOrganization()->getCountry()->getCode());
-            }
-
-            if ($metadata->getMethodType() !== null) {
-                $filters = $this->addFilterItem($filters, 'methodType', $metadata->getMethodType()->toString());
-            }
-
-            $filters = $this->addFilterItem($filters, 'studyType', $metadata->getType()->toString());
         }
 
-        sort($filters['country']);
-        sort($filters['studyType']);
-        sort($filters['methodType']);
-
-        return $filters;
-    }
-
-    /**
-     * @param array<mixed> $filters
-     *
-     * @return array<mixed>
-     */
-    private function addFilterItem(array $filters, string $key, string $item): array
-    {
-        if (! in_array($item, $filters[$key], true)) {
-            $filters[$key][] = $item;
-        }
-
-        return $filters;
+        return (new StudyMetadataFilterApiResource($metadata))->toArray();
     }
 }

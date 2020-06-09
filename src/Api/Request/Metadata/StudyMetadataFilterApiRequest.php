@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Dataset;
+namespace App\Api\Request\Metadata;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\MethodType;
@@ -10,8 +10,10 @@ use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use function boolval;
 
-class DatasetApiRequest extends SingleApiRequest
+class StudyMetadataFilterApiRequest extends SingleApiRequest
 {
+    const DEFAULT_PER_PAGE = 25;
+
     /**
      * @var string|null
      * @Assert\Type("string")
@@ -48,12 +50,6 @@ class DatasetApiRequest extends SingleApiRequest
      */
     private $page;
 
-    /**
-     * @var bool
-     * @Assert\Type("boolean")
-     */
-    private $admin;
-
     protected function parse(): void
     {
         $this->search = $this->getFromQuery('search');
@@ -62,7 +58,6 @@ class DatasetApiRequest extends SingleApiRequest
         $this->country = $this->getFromQuery('country');
         $this->perPage = (int) $this->getFromQuery('perPage');
         $this->page = (int) $this->getFromQuery('page');
-        $this->admin = boolval($this->getFromQuery('admin'));
     }
 
     public function getSearch(): ?string
@@ -90,16 +85,11 @@ class DatasetApiRequest extends SingleApiRequest
 
     public function getPerPage(): int
     {
-        return $this->perPage;
+        return $this->perPage !== 0 ? $this->perPage : self::DEFAULT_PER_PAGE;
     }
 
     public function getPage(): int
     {
-        return $this->page;
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->admin;
+        return $this->page !== 0 ? $this->page : 1;
     }
 }

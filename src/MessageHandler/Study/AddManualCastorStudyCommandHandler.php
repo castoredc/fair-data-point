@@ -27,7 +27,7 @@ class AddManualCastorStudyCommandHandler implements MessageHandlerInterface
 
     public function __invoke(AddManualCastorStudyCommand $message): Study
     {
-        $study = new Study($message->getStudyId(), $message->getStudyName(), null, $message->getStudySlug(), null);
+        $study = new Study($message->getStudyId(), $message->getStudyName(), $message->getStudySlug(), null);
         $study->setEnteredManually(true);
 
         /** @var Language|null $language */

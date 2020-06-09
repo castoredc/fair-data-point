@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Message\Dataset;
+namespace App\Message\Study;
 
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Catalog;
 
-class GetAdminPaginatedDatasetsCommand
+class GetPaginatedStudiesCommand
 {
-    /** @var Catalog */
+    /** @var Catalog|null */
     private $catalog;
 
     /** @var string|null */
@@ -35,7 +35,7 @@ class GetAdminPaginatedDatasetsCommand
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function __construct(Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, int $perPage, int $page)
+    public function __construct(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, int $perPage, int $page)
     {
         $this->catalog = $catalog;
         $this->search = $search;
@@ -46,7 +46,7 @@ class GetAdminPaginatedDatasetsCommand
         $this->page = $page;
     }
 
-    public function getCatalog(): Catalog
+    public function getCatalog(): ?Catalog
     {
         return $this->catalog;
     }

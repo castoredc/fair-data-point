@@ -49,7 +49,7 @@ class DetailsApiController extends ApiController
     }
 
     /**
-     * @Route("/api/study/{studyId}/metadata/add", methods={"POST"}, name="api_add_metadata")
+     * @Route("/api/study/{studyId}/metadata", methods={"POST"}, name="api_add_metadata")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
     public function addMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
@@ -91,7 +91,7 @@ class DetailsApiController extends ApiController
     }
 
     /**
-     * @Route("/api/study/{studyId}/metadata/{metadataId}/update", methods={"POST"}, name="api_update_metadata")
+     * @Route("/api/study/{studyId}/metadata/{metadataId}", methods={"POST"}, name="api_update_metadata")
      * @ParamConverter("studyMetadata", options={"mapping": {"metadataId": "id", "studyId": "study"}})
      */
     public function updateMetadata(StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response

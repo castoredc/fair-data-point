@@ -15,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use function count;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\StudyRepository")
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */

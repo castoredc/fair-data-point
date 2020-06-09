@@ -1,12 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Study;
 
 use App\Api\Request\Study\CastorStudyApiRequest;
+use App\Api\Resource\Study\StudiesApiResource;
+use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermissionToStudy;
+use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
 use App\Message\Study\AddCastorStudyCommand;
 use App\Message\Study\AddStudyToCatalogCommand;
@@ -21,23 +24,37 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
-class StudiesApiController extends ApiController
+class CastorStudyApiController extends ApiController
 {
     /**
-     * @Route("/api/study", name="api_studies")
+     * @Route("/api/castor/studies", name="api_castor_studies")
      */
-    public function studies(MessageBusInterface $bus): Response
+    public function castorStudies(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         /** @var CastorUser $user */
         $user = $this->getUser();
-        $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
 
-        /** @var HandledStamp $handledStamp */
-        $handledStamp = $envelope->last(HandledStamp::class);
+        try {
+            $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, true, $request->get('hide') !== null));
 
-        return new JsonResponse($handledStamp->getResult());
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            return new JsonResponse((new StudiesApiResource($handledStamp->getResult()))->toArray());
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof SessionTimedOut) {
+                return new JsonResponse($e->toArray(), 401);
+            }
+            if ($e instanceof NoAccessPermissionToStudy) {
+                return new JsonResponse($e->toArray(), 403);
+            }
+        }
+
+        return new JsonResponse([], 500);
     }
 
     /**

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\Dataset\DatasetApiRequest;
+use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Catalog\CatalogBrandApiResource;
-use App\Api\Resource\Dataset\DatasetsFilterApiResource;
+use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
 use App\Api\Resource\Dataset\DatasetsMapApiResource;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
@@ -53,7 +53,7 @@ class CatalogApiController extends ApiController
      * @Route("/api/catalog/{catalog}/filters", name="api_catalog_filters")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
-    public function studyFilters(Catalog $catalog, MessageBusInterface $bus): Response
+    public function datasetFilters(Catalog $catalog, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
@@ -67,7 +67,7 @@ class CatalogApiController extends ApiController
                 $datasets = $handledStamp->getResult();
             }
 
-            return new JsonResponse((new DatasetsFilterApiResource($datasets))->toArray());
+            return new JsonResponse((new StudyMetadataFilterApiResource($datasets))->toArray());
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
@@ -82,32 +82,18 @@ class CatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            /** @var DatasetApiRequest $parsed */
-            $parsed = $this->parseRequest(DatasetApiRequest::class, $request);
+            /** @var StudyMetadataFilterApiRequest $parsed */
+            $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
 
-            if ($parsed->isAdmin() && $this->isGranted('ROLE_ADMIN')) {
-                $command = new GetAdminPaginatedDatasetsCommand(
-                    $catalog,
-                    $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry(),
-                    $parsed->getPerPage(),
-                    $parsed->getPage()
-                );
-            } else {
-                $command = new GetPaginatedDatasetsCommand(
-                    $catalog,
-                    $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry(),
-                    $parsed->getPerPage(),
-                    $parsed->getPage()
-                );
-            }
-
-            $envelope = $bus->dispatch($command);
+            $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
+                                           $catalog,
+                                           $parsed->getSearch(),
+                                           $parsed->getStudyType(),
+                                           $parsed->getMethodType(),
+                                           $parsed->getCountry(),
+                                           $parsed->getPerPage(),
+                                           $parsed->getPage()
+                                       ));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
@@ -129,8 +115,8 @@ class CatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            /** @var DatasetApiRequest $parsed */
-            $parsed = $this->parseRequest(DatasetApiRequest::class, $request);
+            /** @var StudyMetadataFilterApiRequest $parsed */
+            $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
 
             $envelope = $bus->dispatch(new GetDatasetsCommand($catalog, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
 

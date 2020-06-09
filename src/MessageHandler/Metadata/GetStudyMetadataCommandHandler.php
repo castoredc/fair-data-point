@@ -5,7 +5,7 @@ namespace App\MessageHandler\Metadata;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Metadata\CastorStudyMetadataApiResource;
-use App\Api\Resource\Metadata\DatabaseStudyMetadataApiResource;
+use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\Metadata\ManualCastorStudyMetadataApiResource;
 use App\Message\Metadata\GetStudyMetadataCommand;
 use App\Model\Castor\ApiClient;
@@ -24,7 +24,7 @@ class GetStudyMetadataCommandHandler implements MessageHandlerInterface
     public function __invoke(GetStudyMetadataCommand $message): ApiResource
     {
         if ($message->getStudy()->hasMetadata()) {
-            return new DatabaseStudyMetadataApiResource($message->getStudy()->getLatestMetadata());
+            return new StudyMetadataApiResource($message->getStudy()->getLatestMetadata());
         }
 
         if ($message->getStudy()->isEnteredManually()) {

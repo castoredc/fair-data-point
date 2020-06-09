@@ -4,24 +4,21 @@ declare(strict_types=1);
 namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Entity\Castor\Study;
 
-class StudiesApiResource extends PaginatedApiResource
+class StudiesFilterApiResource extends PaginatedApiResource
 {
     /** @var Study[] */
     private $studies;
 
-    /** @var bool */
-    private $isAdmin;
-
     /**
      * @param Study[] $studies
      */
-    public function __construct(array $studies, bool $isAdmin)
+    public function __construct(array $studies)
     {
         $this->studies = $studies;
-        $this->isAdmin = $isAdmin;
     }
 
     /**
@@ -29,12 +26,14 @@ class StudiesApiResource extends PaginatedApiResource
      */
     public function toArray(): array
     {
-        $data = [];
+        $metadata = [];
 
         foreach ($this->studies as $study) {
-            $data[] = (new StudyApiResource($study, $this->isAdmin))->toArray();
+            if($study->hasMetadata()) {
+                $metadata[] = $study->getLatestMetadata();
+            }
         }
 
-        return $data;
+        return (new StudyMetadataFilterApiResource($metadata))->toArray();
     }
 }
