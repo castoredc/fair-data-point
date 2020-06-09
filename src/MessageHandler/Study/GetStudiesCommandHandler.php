@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Study;
 
 use App\Entity\Castor\Study;
-use App\Message\Study\FindStudiesByUserCommand;
 use App\Message\Study\GetStudiesCommand;
-use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

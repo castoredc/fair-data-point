@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Controller;
+namespace App\Api\Controller\Study;
 
 use App\Api\Resource\Catalog\CatalogBrandApiResource;
 use App\Controller\Api\ApiController;

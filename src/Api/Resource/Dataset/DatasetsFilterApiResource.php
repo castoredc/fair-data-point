@@ -1,15 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Resource\Study;
+namespace App\Api\Resource\Dataset;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
-use App\Api\Resource\PaginatedApiResource;
-use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Dataset;
 
-class DatasetsFilterApiResource extends PaginatedApiResource
+class DatasetsFilterApiResource implements ApiResource
 {
     /** @var Dataset[] */
     private $datasets;
@@ -31,9 +29,11 @@ class DatasetsFilterApiResource extends PaginatedApiResource
 
         foreach ($this->datasets as $dataset) {
             $study = $dataset->getStudy();
-            if($study->hasMetadata()) {
-                $metadata[] = $study->getLatestMetadata();
+            if (! $study->hasMetadata()) {
+                continue;
             }
+
+            $metadata[] = $study->getLatestMetadata();
         }
 
         return (new StudyMetadataFilterApiResource($metadata))->toArray();

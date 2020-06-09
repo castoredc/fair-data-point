@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Resource;
 
@@ -15,11 +16,6 @@ class PaginatedApiResource implements ApiResource
     /** @var bool */
     private $isAdmin;
 
-    /**
-     * PaginatedApiResource constructor.
-     *
-     * @param PaginatedResultCollection<mixed> $results
-     */
     public function __construct(string $apiResourceType, PaginatedResultCollection $results, bool $isAdmin = false)
     {
         $this->apiResourceType = $apiResourceType;
@@ -34,11 +30,10 @@ class PaginatedApiResource implements ApiResource
     {
         $results = [];
 
-        foreach($this->results as $result)
-        {
+        foreach ($this->results as $result) {
             $resource = new $this->apiResourceType($result);
 
-            if($resource instanceof RoleBasedApiResource) {
+            if ($resource instanceof RoleBasedApiResource) {
                 $resource->setAdmin($this->isAdmin);
             }
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\Castor\Study;
 use App\Entity\Iri;
 use App\Security\ApiUser;
 use App\Security\CastorUser;
@@ -296,13 +297,14 @@ class Catalog
         return $datasets;
     }
 
+    /** @return Study[] */
     public function getStudies(bool $includeUnpublishedDatasets): array
     {
         $datasets = $this->getDatasets($includeUnpublishedDatasets);
 
         $studies = [];
 
-        foreach($datasets as $dataset) {
+        foreach ($datasets as $dataset) {
             $studies[] = $dataset->getStudy();
         }
 

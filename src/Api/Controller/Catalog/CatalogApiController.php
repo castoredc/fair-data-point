@@ -116,14 +116,14 @@ class CatalogApiController extends ApiController
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
 
             $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
-                                           $catalog,
-                                           $parsed->getSearch(),
-                                           $parsed->getStudyType(),
-                                           $parsed->getMethodType(),
-                                           $parsed->getCountry(),
-                                           $parsed->getPerPage(),
-                                           $parsed->getPage()
-                                       ));
+                $catalog,
+                $parsed->getSearch(),
+                $parsed->getStudyType(),
+                $parsed->getMethodType(),
+                $parsed->getCountry(),
+                $parsed->getPerPage(),
+                $parsed->getPage()
+            ));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);

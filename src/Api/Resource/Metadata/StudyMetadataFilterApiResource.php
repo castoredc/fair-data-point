@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Api\Resource\Metadata;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Department;
 use App\Entity\Metadata\StudyMetadata;
 use function in_array;
@@ -16,7 +15,7 @@ class StudyMetadataFilterApiResource implements ApiResource
     private $metadata;
 
     /**
-     * @param StudyMetadata[] $datasets
+     * @param StudyMetadata[] $metadata
      */
     public function __construct(array $metadata)
     {
@@ -43,10 +42,6 @@ class StudyMetadataFilterApiResource implements ApiResource
         ];
 
         foreach ($this->metadata as $metadata) {
-            if ($metadata === null) {
-                continue;
-            }
-
             foreach ($metadata->getCenters() as $center) {
                 if (! ($center instanceof Department)) {
                     continue;

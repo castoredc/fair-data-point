@@ -5,10 +5,9 @@ namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Entity\Castor\Study;
 
-class StudiesFilterApiResource extends PaginatedApiResource
+class StudiesFilterApiResource implements ApiResource
 {
     /** @var Study[] */
     private $studies;
@@ -29,9 +28,11 @@ class StudiesFilterApiResource extends PaginatedApiResource
         $metadata = [];
 
         foreach ($this->studies as $study) {
-            if($study->hasMetadata()) {
-                $metadata[] = $study->getLatestMetadata();
+            if (! $study->hasMetadata()) {
+                continue;
             }
+
+            $metadata[] = $study->getLatestMetadata();
         }
 
         return (new StudyMetadataFilterApiResource($metadata))->toArray();

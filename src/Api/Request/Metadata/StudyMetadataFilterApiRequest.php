@@ -8,11 +8,10 @@ use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudyType;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-use function boolval;
 
 class StudyMetadataFilterApiRequest extends SingleApiRequest
 {
-    const DEFAULT_PER_PAGE = 25;
+    public const DEFAULT_PER_PAGE = 25;
 
     /**
      * @var string|null

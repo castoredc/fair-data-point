@@ -23,6 +23,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function assert;
 
 /**
  * @Route("/api/study")
@@ -68,7 +69,9 @@ class StudyApiController extends ApiController
      */
     public function studiesFilters(MessageBusInterface $bus): Response
     {
-        $studies = $this->getStudies($this->getUser(), $bus);
+        /** @var CastorUser|null $user */
+        $user = $this->getUser();
+        $studies = $this->getStudies($user, $bus);
 
         return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
     }
@@ -101,6 +104,7 @@ class StudyApiController extends ApiController
         return new JsonResponse($handledStamp->getResult());
     }
 
+    /** @return Study[] */
     private function getStudies(?UserInterface $user, MessageBusInterface $bus): array
     {
         assert($user instanceof CastorUser);

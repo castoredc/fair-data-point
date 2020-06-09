@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use function ceil;
+use function count;
 
 class PaginatedResultCollection implements Countable, IteratorAggregate
 {
@@ -39,17 +42,11 @@ class PaginatedResultCollection implements Countable, IteratorAggregate
         return $this->results;
     }
 
-    /**
-     * @return int
-     */
     public function getCurrentPage(): int
     {
         return $this->currentPage;
     }
 
-    /**
-     * @return int
-     */
     public function getPerPage(): int
     {
         return $this->perPage;
@@ -79,13 +76,13 @@ class PaginatedResultCollection implements Countable, IteratorAggregate
      * Count elements of an object
      *
      * @link  https://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
      * </p>
      * <p>
      * The return value is cast to an integer.
-     * @since 5.1.0
      */
-    public function count()
+    public function count(): int
     {
         return count($this->results);
     }

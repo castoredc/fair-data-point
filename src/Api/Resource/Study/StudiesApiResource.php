@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Entity\Castor\Study;
 
-class StudiesApiResource extends PaginatedApiResource
+class StudiesApiResource implements ApiResource
 {
     /** @var Study[] */
     private $studies;
