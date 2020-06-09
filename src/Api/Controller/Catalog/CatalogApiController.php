@@ -1,19 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Catalog;
 
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
-use App\Api\Resource\Catalog\CatalogBrandApiResource;
-use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
 use App\Api\Resource\Dataset\DatasetsMapApiResource;
+use App\Api\Resource\PaginatedApiResource;
+use App\Api\Resource\Study\StudiesFilterApiResource;
+use App\Api\Resource\Study\StudyApiResource;
+use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Message\Catalog\GetCatalogsCommand;
-use App\Message\Dataset\GetAdminPaginatedDatasetsCommand;
 use App\Message\Dataset\GetDatasetsCommand;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
+use App\Message\Study\GetPaginatedStudiesCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +25,13 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/api/catalog")
+ */
 class CatalogApiController extends ApiController
 {
     /**
-     * @Route("/api/catalog", name="api_catalogs")
+     * @Route("", name="api_catalogs")
      */
     public function catalogs(MessageBusInterface $bus): Response
     {
@@ -39,10 +44,10 @@ class CatalogApiController extends ApiController
     }
 
     /**
-     * @Route("/api/catalog/{catalog}", name="api_catalog")
+     * @Route("/{catalog}", name="api_catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
-    public function studies(Catalog $catalog, MessageBusInterface $bus): Response
+    public function catalog(Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
@@ -50,31 +55,56 @@ class CatalogApiController extends ApiController
     }
 
     /**
-     * @Route("/api/catalog/{catalog}/filters", name="api_catalog_filters")
+     * @Route("/{catalog}/study", name="api_catalog_studies")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
-    public function datasetFilters(Catalog $catalog, MessageBusInterface $bus): Response
+    public function studies(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            if ($this->isGranted('ROLE_ADMIN')) {
-                $datasets = $catalog->getDatasets($this->isGranted('edit', $catalog))->toArray();
-            } else {
-                $envelope = $bus->dispatch(new GetDatasetsCommand($catalog, null, null, null, null));
-                /** @var HandledStamp $handledStamp */
-                $handledStamp = $envelope->last(HandledStamp::class);
-                $datasets = $handledStamp->getResult();
-            }
+            /** @var StudyMetadataFilterApiRequest $parsed */
+            $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
 
-            return new JsonResponse((new StudyMetadataFilterApiResource($datasets))->toArray());
+            $envelope = $bus->dispatch(
+                new GetPaginatedStudiesCommand(
+                    $catalog,
+                    $parsed->getSearch(),
+                    $parsed->getStudyType(),
+                    $parsed->getMethodType(),
+                    $parsed->getCountry(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
+
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            $results = $handledStamp->getResult();
+
+            return new JsonResponse((new PaginatedApiResource(StudyApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
     }
 
     /**
-     * @Route("/api/catalog/{catalog}/dataset", name="api_catalog_datasets")
+     * @Route("/{catalog}/study/filters", name="api_catalog_studies_filters")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function studyFilters(Catalog $catalog): Response
+    {
+        $this->denyAccessUnlessGranted('view', $catalog);
+        $studies = $catalog->getStudies($this->isGranted('edit', $catalog));
+
+        return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
+    }
+
+    /**
+     * @Route("/{catalog}/dataset", name="api_catalog_datasets")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
     public function datasets(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
@@ -107,7 +137,7 @@ class CatalogApiController extends ApiController
     }
 
     /**
-     * @Route("/api/catalog/{catalog}/map", name="api_catalog_datasets_map")
+     * @Route("/{catalog}/map", name="api_catalog_datasets_map")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
     public function datasetsMap(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
@@ -129,16 +159,5 @@ class CatalogApiController extends ApiController
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
-    }
-
-    /**
-     * @Route("/api/brand/{catalog}", name="api_catalog_brand")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function brand(Catalog $catalog, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('view', $catalog);
-
-        return new JsonResponse((new CatalogBrandApiResource($catalog))->toArray());
     }
 }

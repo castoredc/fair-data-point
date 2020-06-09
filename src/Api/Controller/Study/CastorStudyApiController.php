@@ -42,7 +42,7 @@ class CastorStudyApiController extends ApiController
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            return new JsonResponse((new StudiesApiResource($handledStamp->getResult()))->toArray());
+            return new JsonResponse((new StudiesApiResource($handledStamp->getResult(), false))->toArray());
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 

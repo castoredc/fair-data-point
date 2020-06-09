@@ -38,20 +38,17 @@ class StudyRepository extends EntityRepository
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
 
         $qb = $this->createQueryBuilder('study')
-                   ->select('study');
+                   ->select('study')
+                   ->join(Dataset::class, 'dataset', Join::WITH, 'dataset.study = study.id');
 
-        // if ($catalog !== null) {
-        //     $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-        //        ->setParameter('catalog_id', $catalog->getId());
-        // }
+        if ($catalog !== null) {
+            $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
+               ->setParameter('catalog_id', $catalog->getId());
+        }
 
         $qb->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
            ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
            ->where('metadata2.id IS NULL');
-        //
-        // if (! $admin) {
-        //     $qb->andWhere('dataset.isPublished = 1');
-        // }
 
         if ($search !== null) {
             $qb->andWhere(
@@ -102,14 +99,13 @@ class StudyRepository extends EntityRepository
     public function countStudies(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country): int
     {
         $qb = $this->createQueryBuilder('study')
-                    ->select('count(study.id)');
+                    ->select('count(study.id)')
+                    ->join(Dataset::class, 'dataset', Join::WITH, 'dataset.study = study.id');
 
-
-        //     $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-        //        ->setParameter('catalog_id', $catalog->getId());
-        // }
-
-        // $qb->join(Study::class, 'study', Join::WITH, 'study.id = dataset.study')
+        if ($catalog !== null) {
+            $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
+               ->setParameter('catalog_id', $catalog->getId());
+        }
 
         $qb->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
            ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')

@@ -24,8 +24,8 @@ class ConsentApiRequest extends SingleApiRequest
 
     protected function parse(): void
     {
-        $this->publish = $this->getFromData('publish');
-        $this->socialMedia = $this->getFromData('socialMedia');
+        $this->publish = boolval($this->getFromData('publish'));
+        $this->socialMedia = boolval($this->getFromData('socialMedia'));
     }
 
     public function getPublish(): bool

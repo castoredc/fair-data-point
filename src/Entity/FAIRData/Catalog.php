@@ -274,15 +274,15 @@ class Catalog
     }
 
     /**
-     * @return Collection<string, Dataset>
+     * @return Dataset[]
      */
-    public function getDatasets(bool $includeUnpublishedDatasets): Collection
+    public function getDatasets(bool $includeUnpublishedDatasets): array
     {
         if ($includeUnpublishedDatasets) {
-            return $this->datasets;
+            return $this->datasets->toArray();
         }
 
-        $datasets = new ArrayCollection();
+        $datasets = [];
 
         foreach ($this->datasets as $dataset) {
             /** @var Dataset $dataset */
@@ -290,18 +290,23 @@ class Catalog
                 continue;
             }
 
-            $datasets->set($dataset->getId(), $dataset);
+            $datasets[] = $dataset;
         }
 
         return $datasets;
     }
 
-    /**
-     * @param Collection<string, Dataset> $datasets
-     */
-    public function setDatasets(Collection $datasets): void
+    public function getStudies(bool $includeUnpublishedDatasets): array
     {
-        $this->datasets = $datasets;
+        $datasets = $this->getDatasets($includeUnpublishedDatasets);
+
+        $studies = [];
+
+        foreach($datasets as $dataset) {
+            $studies[] = $dataset->getStudy();
+        }
+
+        return $studies;
     }
 
     public function getHomepage(): ?Iri
