@@ -5,7 +5,8 @@ import {Choice, TextStyle} from "@castoredc/matter";
 
 export default class RadioGroup extends ValidatorComponent {
     render() {
-        const { value, options, onChange, name, variant, isValid } = this.props;
+        const { defaultValue, value, options, onChange, name, variant, isValid } = this.props;
+
         return <Form.Group className="Input">
             <div
                 className={'RadioGroup'  + (variant === 'horizontal' ? ' Horizontal' : ' Vertical')}
@@ -20,7 +21,9 @@ export default class RadioGroup extends ValidatorComponent {
                     options={options.map((option) => {
                         return {labelText: option.label, value: option.value};
                     })}
+                    defaultValue={defaultValue}
                     value={value}
+                    defaultChecked={true}
                 />
                 {this.errorText()}
             </div>

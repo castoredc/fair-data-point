@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
+import {Button} from "@castoredc/matter";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
@@ -11,10 +11,8 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import axios from "axios";
 import FormItem from "./FormItem";
-import LoadingScreen from "../LoadingScreen";
 import RadioGroup from "../Input/RadioGroup";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import Spinner from "react-bootstrap/Spinner";
 
 export default class ConsentForm extends Component {
     constructor(props) {
@@ -30,7 +28,7 @@ export default class ConsentForm extends Component {
             validation: {},
             isSaved: false,
             submitDisabled: true,
-            isLoading: false
+            isLoading: true
         };
     }
 
@@ -45,10 +43,13 @@ export default class ConsentForm extends Component {
 
         axios.get('/api/study/' + this.props.studyId + '/consent')
             .then((response) => {
-                this.checkConsent(response.data.consent.publish, response.data.consent.socialMedia);
+                this.checkConsent(response.data.publish, response.data.socialMedia);
 
                 this.setState({
-                    data: response.data.consent,
+                    data: {
+                        socialMedia: response.data.socialMedia,
+                        publish: response.data.publish
+                    },
                     isLoading: false
                 });
             })
@@ -103,6 +104,8 @@ export default class ConsentForm extends Component {
 
     handleSubmit = (event) => {
         const { catalog, studyId, admin = false } = this.props;
+        const { data } = this.state;
+
         event.preventDefault();
 
         if(this.form.isFormValid()) {
@@ -112,8 +115,8 @@ export default class ConsentForm extends Component {
             });
 
             axios.post('/api/catalog/' + catalog + '/study/' + studyId + '/consent', {
-                publish:                   this.state.data.publish,
-                socialMedia:               this.state.data.socialMedia,
+                publish:     data.publish,
+                socialMedia: data.socialMedia,
             })
                 .then(() => {
                     this.setState({
@@ -150,7 +153,7 @@ export default class ConsentForm extends Component {
 
     render() {
         const { catalog, studyId, admin = false } = this.props;
-        const { isSaved, isLoading, submitDisabled } = this.state;
+        const { data, isSaved, isLoading, submitDisabled } = this.state;
 
         const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/contacts';
         const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/finished';
@@ -185,7 +188,8 @@ export default class ConsentForm extends Component {
                             ]}
                             onChange={this.handleChange}
                             onBlur={this.handleFieldVisit}
-                            value={this.state.data.publish}
+                            value={data.publish}
+                            defaultValue={data.publish}
                             variant="horizontal"
                             name="publish"
                         />
@@ -204,7 +208,8 @@ export default class ConsentForm extends Component {
                             ]}
                             onChange={this.handleChange}
                             onBlur={this.handleFieldVisit}
-                            value={this.state.data.socialMedia}
+                            value={data.socialMedia}
+                            defaultValue={data.socialMedia}
                             variant="horizontal"
                             name="socialMedia"
                         />
@@ -214,14 +219,13 @@ export default class ConsentForm extends Component {
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
                         {!admin && <LinkContainer to={backUrl}>
-                            <Button variant="secondary">Back</Button>
+                            <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}
                     </Col>
                     <Col>
-                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
-                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                        {admin ? <Button type="submit" disabled={submitDisabled}>
                             Save
-                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                        </Button> : <Button type="submit" disabled={submitDisabled}>
                             Finish
                         </Button>}
                     </Col>

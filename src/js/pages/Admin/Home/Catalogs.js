@@ -2,16 +2,17 @@ import React, {Component} from "react";
 import axios from "axios/index";
 
 import {Col, Row} from "react-bootstrap";
-import {localizedText} from "../../../util";
-import ListItem from "../../../components/ListItem";
+import {classNames, localizedText} from "../../../util";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
+import {DataTable} from "@castoredc/matter";
+import {toast} from "react-toastify";
+import ToastContent from "../../../components/ToastContent";
 
 export default class Catalogs extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoading:    true,
-            isLoaded:     false,
             hasError:     false,
             catalogs:     {}
         };
@@ -23,26 +24,23 @@ export default class Catalogs extends Component {
                 this.setState({
                     catalogs:   response.data,
                     isLoading: false,
-                    isLoaded:  true,
                 });
             })
             .catch((error) => {
-                if (error.response && typeof error.response.data.message !== "undefined") {
-                    this.setState({
-                        isLoading:    false,
-                        hasError:     true,
-                        errorMessage: error.response.data.message,
-                    });
-                } else {
-                    this.setState({
-                        isLoading: false,
-                    });
-                }
+                this.setState({
+                    isLoading: false,
+                });
+
+                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalogs';
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     }
 
     render() {
-        if (this.state.isLoading) {
+        const {catalogs, isLoading} = this.state;
+        const {history} = this.props;
+
+        if (isLoading) {
             return <InlineLoader />;
         }
 
@@ -54,13 +52,38 @@ export default class Catalogs extends Component {
             </Row>
             <Row>
                 <Col sm={12} className="Page">
-                    {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
-                            return <ListItem    key={index}
-                                                link={'/admin/catalog/' + item.slug}
-                                                title={localizedText(item.title, 'en')}
-                                                description={localizedText(item.description, 'en')} />
-                        },
-                    ) : <div className="NoResults">No catalogs found.</div>}
+                    <div className={classNames('SelectableDataTable FullHeightDataTable', isLoading && 'Loading')}>
+                        <div className="DataTableWrapper">
+                            <DataTable
+                                emptyTableMessage="No catalogs found"
+                                highlightRowOnHover
+                                cellSpacing="default"
+                                onClick={(event, rowID, index) => {
+                                    if(typeof index !== "undefined") {
+                                        history.push(`/admin/catalog/${catalogs[index].slug}`)
+                                    }
+                                }}
+                                rows={catalogs.map((item) => {
+                                    return [
+                                        localizedText(item.title, 'en'),
+                                        localizedText(item.description, 'en')
+                                    ];
+                                })}
+                                structure={{
+                                    title: {
+                                        header:    'Name',
+                                        resizable: true,
+                                        template:  'text',
+                                    },
+                                    type: {
+                                        header:    'Type',
+                                        resizable: true,
+                                        template:  'text',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </Col>
             </Row>
         </div>;

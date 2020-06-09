@@ -44,9 +44,13 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/study/{studyId}", name="admin_study")
+     * @Route("/study/{studyId}/contacts", name="admin_study_contacts")
+     * @Route("/study/{studyId}/organizations", name="admin_study_organizations")
+     * @Route("/study/{studyId}/consent", name="admin_study_consent")
+     * @Route("/study/{studyId}/annotations", name="admin_study_annotations")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function adminStudy(Catalog $catalog, Study $study): Response
+    public function adminStudy(Study $study): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -59,6 +63,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/catalog", name="admin_catalogs")
      * @Route("/model", name="admin_models")
+     * @Route("/study", name="admin_studies")
      */
     public function adminModels(): Response
     {
@@ -90,12 +95,8 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_dataset")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/contacts", name="admin_dataset_contacts")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/organizations", name="admin_dataset_organizations")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/consent", name="admin_dataset_consent")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_dataset_distributions")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_dataset_distribution_add")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/annotations", name="admin_dataset_annotations")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */

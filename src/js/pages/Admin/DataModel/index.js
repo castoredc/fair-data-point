@@ -8,7 +8,6 @@ import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
-import Icon from "../../../components/Icon";
 import DataModelPrefixes from "./DataModelPrefixes";
 import DataModelModules from "./DataModelModules";
 import DataModelDetails from "./DataModelDetails";
@@ -89,7 +88,7 @@ export default class DataModel extends Component {
                     <div><h3>{dataModel.title}</h3></div>
                 </Col>
             </Row>
-            <Row>
+            <Row className="FillHeight">
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
                         <LinkContainer to={'/admin/model/' + dataModel.id} exact={true}>

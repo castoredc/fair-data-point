@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 import DocumentTitle from "../../components/DocumentTitle";
 import './Login.scss';

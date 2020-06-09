@@ -18,7 +18,7 @@ export default class MyStudies extends Component {
     }
 
     componentDidMount() {
-        axios.get('/api/study')
+        axios.get('/api/study/my')
             .then((response) => {
                 this.setState({
                     studies: response.data,

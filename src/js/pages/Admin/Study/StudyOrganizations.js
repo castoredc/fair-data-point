@@ -2,14 +2,13 @@ import React, {Component} from "react";
 import OrganizationsForm from "../../../components/Form/OrganizationsForm";
 import Container from "react-bootstrap/Container";
 
-export default class DatasetOrganizations extends Component {
+export default class StudyOrganizations extends Component {
     render() {
-        const { catalog, dataset } = this.props;
+        const { study } = this.props;
 
         return <Container>
             <OrganizationsForm
-                catalog={catalog}
-                studyId={dataset.studyId}
+                studyId={study.id}
                 admin={true}
             />
         </Container>;

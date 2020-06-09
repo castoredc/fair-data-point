@@ -10,8 +10,6 @@ import ToastContent from "../../../components/ToastContent";
 import Icon from "../../../components/Icon";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import Nav from "react-bootstrap/Nav";
-import DatasetDistributions from "../Dataset/DatasetDistributions";
-import AddDistribution from "../Dataset/AddDistribution";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import DistributionDetails from "./DistributionDetails";

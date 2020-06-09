@@ -71,3 +71,9 @@ $checkboxTop: (($labelLineHeight * $labelFontSize) - $checkboxDimensions) / 2;
     margin-bottom: 0;
   }
 }
+
+.CheckboxFormGroup {
+  label span::after {
+    box-sizing: initial!important;
+  }
+}

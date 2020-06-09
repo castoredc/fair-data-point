@@ -6,8 +6,7 @@ import Form from 'react-bootstrap/Form'
 import './Checkbox.scss';
 import './Input.scss'
 
-class Checkbox extends ValidatorComponent {
-
+export default class Checkbox extends ValidatorComponent {
     render() {
         const {
             errorMessages, validators, requiredError, validatorListener, type,
@@ -54,15 +53,3 @@ class Checkbox extends ValidatorComponent {
         );
     }
 }
-
-export const CheckboxGroup = ({ label, checkboxes }) => {
-  return (
-    <div className="CheckboxesGroup">
-      {checkboxes.map((checkbox, index) => (
-        <Checkbox key={index} {...checkbox} />
-      ))}
-    </div>
-  );
-};
-
-export default Checkbox;

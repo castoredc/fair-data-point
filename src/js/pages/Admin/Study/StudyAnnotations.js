@@ -4,7 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import OptionGroups from "../../../components/StudyStructure/OptionGroups";
 import AddAnnotationModal from "../../../modals/AddAnnotationModal";
 
-export default class DatasetAnnotations extends Component {
+export default class StudyAnnotations extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,7 +42,7 @@ export default class DatasetAnnotations extends Component {
     };
 
     render() {
-        const { studyId } = this.props;
+        const { study } = this.props;
         const { showModal, modalData, shouldUpdate } = this.state;
 
         return <div>
@@ -51,7 +51,7 @@ export default class DatasetAnnotations extends Component {
                 entity={modalData}
                 handleClose={this.closeModal}
                 onSaved={this.onSaved}
-                studyId={studyId}
+                studyId={study.id}
             />
             <Tab.Container id="DatasetAnnotations" defaultActiveKey="optionGroup">
                 <div className="TabTabs DatasetAnnotationsTabs">
@@ -63,7 +63,7 @@ export default class DatasetAnnotations extends Component {
                 </div>
                 <Tab.Content>
                     <Tab.Pane eventKey="optionGroup">
-                        <OptionGroups studyId={studyId} openModal={this.openModal} shouldUpdate={shouldUpdate} onUpdate={this.onUpdate} />
+                        <OptionGroups studyId={study.id} openModal={this.openModal} shouldUpdate={shouldUpdate} onUpdate={this.onUpdate} />
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
