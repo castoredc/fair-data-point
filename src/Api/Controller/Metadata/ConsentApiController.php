@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Metadata;
 
 use App\Api\Request\Metadata\ConsentApiRequest;
 use App\Api\Resource\Metadata\ConsentApiResource;
+use App\Controller\Api\ApiController;
 use App\Entity\Castor\Study;
-use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
-use App\Exception\CatalogNotFound;
 use App\Exception\StudyAlreadyHasDataset;
 use App\Exception\StudyAlreadyHasSameDataset;
 use App\Exception\StudyNotFound;
@@ -22,31 +21,27 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/api/study/{studyId}/consent")
+ * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
+ */
 class ConsentApiController extends ApiController
 {
     /**
-     * @Route("/api/study/{studyId}/consent", methods={"GET"}, name="api_get_consent")
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
+     * @Route("", methods={"GET"}, name="api_get_consent")
      */
-    public function getConsent(Study $study, Request $request, MessageBusInterface $bus): Response
+    public function getConsent(Study $study): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        try {
-            return new JsonResponse((new ConsentApiResource($study->getLatestMetadata()))->toArray());
-        } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
-        }
+        return new JsonResponse((new ConsentApiResource($study->getLatestMetadata()))->toArray());
     }
 
     /**
-     * @Route("/api/catalog/{catalog}/study/{studyId}/consent", methods={"POST"}, name="api_change_consent")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
+     * @Route("", methods={"POST"}, name="api_change_consent")
      */
-    public function changeConsent(Catalog $catalog, Study $study, Request $request, MessageBusInterface $bus): Response
+    public function changeConsent(Study $study, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('add', $catalog);
         $this->denyAccessUnlessGranted('edit', $study);
 
         try {
@@ -71,7 +66,7 @@ class ConsentApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            if ($e instanceof CatalogNotFound || $e instanceof StudyNotFound) {
+            if ($e instanceof StudyNotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
             if ($e instanceof StudyAlreadyHasDataset) {

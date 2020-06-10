@@ -36,11 +36,13 @@ export default class ConsentForm extends Component {
     }
 
     getConsent = () => {
+        const { studyId } = this.props;
+
         this.setState({
             isLoading: true,
         });
 
-        axios.get('/api/study/' + this.props.studyId + '/consent')
+        axios.get('/api/study/' + studyId + '/consent')
             .then((response) => {
                 this.checkConsent(response.data.publish, response.data.socialMedia);
 
@@ -90,7 +92,7 @@ export default class ConsentForm extends Component {
     };
 
     handleSubmit = (event) => {
-        const { catalog, studyId, admin = false } = this.props;
+        const { studyId, admin = false } = this.props;
         const { data } = this.state;
 
         event.preventDefault();
@@ -101,7 +103,7 @@ export default class ConsentForm extends Component {
                 isLoading: true
             });
 
-            axios.post('/api/catalog/' + catalog + '/study/' + studyId + '/consent', {
+            axios.post('/api/study/' + studyId + '/consent', {
                 publish:     data.publish,
                 socialMedia: data.socialMedia,
             })
@@ -113,7 +115,7 @@ export default class ConsentForm extends Component {
                     });
 
                     if (admin) {
-                        toast.success(<ToastContent type="success" message="The contacts are saved successfully" />, {
+                        toast.success(<ToastContent type="success" message="The consent is saved successfully" />, {
                            position: "top-right"
                         });
                     }
