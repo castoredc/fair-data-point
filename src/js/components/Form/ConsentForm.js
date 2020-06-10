@@ -24,7 +24,6 @@ export default class ConsentForm extends Component {
                 socialMedia: null
             },
             metadataSource: null,
-            visitedFields: {},
             validation: {},
             isSaved: false,
             submitDisabled: true,
@@ -74,15 +73,13 @@ export default class ConsentForm extends Component {
     };
 
     handleChange = (event, callback = (() => {})) => {
-        const { data, changedFieldsSinceFormSubmission } = this.state;
+        console.log(event.target.name);
+        console.log(event.target.value);
+        const { data } = this.state;
         const newState = {
             data: {
                 ...data,
                 [event.target.name]: event.target.value,
-            },
-            changedFieldsSinceFormSubmission: {
-                ...changedFieldsSinceFormSubmission,
-                [event.target.name]: true,
             },
             validation: {
                 [event.target.name]: false,
@@ -90,16 +87,6 @@ export default class ConsentForm extends Component {
         };
         this.setState(newState, callback);
         this.checkConsent(newState.data.publish, newState.data.socialMedia);
-    };
-
-    handleFieldVisit = (event) => {
-        const { visitedFields } = this.state;
-        this.setState({
-            visitedFields: {
-                ...visitedFields,
-                [event.target.name]: true,
-            },
-        });
     };
 
     handleSubmit = (event) => {
@@ -187,9 +174,7 @@ export default class ConsentForm extends Component {
                                 }
                             ]}
                             onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
                             value={data.publish}
-                            defaultValue={data.publish}
                             variant="horizontal"
                             name="publish"
                         />
@@ -207,9 +192,7 @@ export default class ConsentForm extends Component {
                                 }
                             ]}
                             onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
                             value={data.socialMedia}
-                            defaultValue={data.socialMedia}
                             variant="horizontal"
                             name="socialMedia"
                         />
