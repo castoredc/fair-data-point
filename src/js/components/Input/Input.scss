@@ -40,3 +40,19 @@
     margin-right: 0;
   }
 }
+
+.DropdownMultiOption {
+  label {
+    span:first-of-type {
+      margin-top: 0.3rem;
+
+      &::after {
+        box-sizing: initial!important;
+      }
+    }
+  }
+
+  &::after {
+    display: none;
+  }
+}

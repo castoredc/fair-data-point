@@ -61,7 +61,7 @@ class Dropdown extends ValidatorComponent {
             />
         } else if(isMulti) {
             const CustomOption = props => (
-                <components.Option {...props}>
+                <components.Option className="DropdownMultiOption" {...props}>
                     <ChoiceOption
                         labelText={props.data.label}
                         checked={props.isSelected}
