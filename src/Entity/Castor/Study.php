@@ -6,9 +6,11 @@ namespace App\Entity\Castor;
 use App\Entity\Castor\Form\Field;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
+use App\Entity\Version;
 use App\Security\CastorServer;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function count;
 
@@ -47,18 +49,18 @@ class Study
     private $fields;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study",cascade={"persist"}, fetch = "EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study", cascade={"persist"}, fetch = "EAGER")
      *
      * @var StudyMetadata[]|ArrayCollection
      */
     private $metadata;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study")
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study", fetch = "EAGER")
      *
-     * @var Dataset|null
+     * @var Collection<Dataset>
      */
-    private $dataset;
+    private $datasets;
 
     /**
      * @ORM\Column(type="boolean")
@@ -85,6 +87,7 @@ class Study
         $this->slug = $slug;
         $this->fields = $fields;
         $this->metadata = new ArrayCollection();
+        $this->datasets = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -146,9 +149,9 @@ class Study
         return $this->metadata->isEmpty() ? null : $this->metadata->last();
     }
 
-    public function getLatestMetadataVersion(): int
+    public function getLatestMetadataVersion(): Version
     {
-        return $this->metadata->count();
+        return $this->metadata->last()->getVersion();
     }
 
     public function hasMetadata(): bool
@@ -156,27 +159,25 @@ class Study
         return count($this->metadata) > 0;
     }
 
-    /**
-     * @param StudyMetadata[]|ArrayCollection $metadata
-     */
-    public function setMetadata($metadata): void
-    {
-        $this->metadata = $metadata;
-    }
-
     public function addMetadata(StudyMetadata $metadata): void
     {
-        $this->metadata[] = $metadata;
+        $this->metadata->add($metadata);
     }
 
-    public function getDataset(): ?Dataset
+    /** @return Collection<Dataset> */
+    public function getDatasets(): Collection
     {
-        return $this->dataset;
+        return $this->datasets;
     }
 
-    public function setDataset(?Dataset $dataset): void
+    public function addDataset(Dataset $dataset): void
     {
-        $this->dataset = $dataset;
+        $this->datasets->add($dataset);
+    }
+
+    public function removeDataset(Dataset $dataset): void
+    {
+        $this->datasets->removeElement($dataset);
     }
 
     public function isEnteredManually(): bool

@@ -12,12 +12,11 @@ use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Organization;
 use App\Entity\Iri;
 use App\Entity\Terminology\CodedText;
-use App\Security\CastorUser;
-use DateTime;
+use App\Entity\Version;
+use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -26,6 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class StudyMetadata
 {
+    use CreatedAndUpdated;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -37,11 +38,18 @@ class StudyMetadata
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
      *
-     * @var Study|null
+     * @var Study
      */
     private $study;
+
+    /**
+     * @ORM\Column(type="version")
+     *
+     * @var Version
+     */
+    private $version;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -173,76 +181,31 @@ class StudyMetadata
      */
     private $logo = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime $created
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime", nullable = true)
-     *
-     * @var DateTime|null $updated
-     */
-    protected $updated;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $createdBy
-     * @Gedmo\Blameable(on="create")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $updatedBy
-     * @Gedmo\Blameable(on="update")
-     */
-    private $updatedBy;
-
-    public function __construct(
-        string $briefName,
-        ?string $scientificName,
-        ?string $briefSummary,
-        ?string $summary,
-        StudyType $type,
-        ?CodedText $condition,
-        ?CodedText $intervention,
-        int $estimatedEnrollment,
-        ?DateTimeImmutable $estimatedStudyStartDate,
-        ?DateTimeImmutable $estimatedStudyCompletionDate,
-        ?RecruitmentStatus $recruitmentStatus,
-        MethodType $methodType
-    ) {
-        $this->briefName = $briefName;
-        $this->scientificName = $scientificName;
-        $this->briefSummary = $briefSummary;
-        $this->summary = $summary;
-        $this->type = $type;
-        $this->condition = $condition;
-        $this->intervention = $intervention;
-        $this->estimatedEnrollment = $estimatedEnrollment;
-        $this->estimatedStudyStartDate = $estimatedStudyStartDate;
-        $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
-        $this->recruitmentStatus = $recruitmentStatus;
-        $this->methodType = $methodType;
+    public function __construct(Study $study)
+    {
+        $this->study = $study;
         $this->centers = new ArrayCollection();
         $this->contacts = new ArrayCollection();
     }
 
-    public function getStudy(): ?Study
+    public function getStudy(): Study
     {
         return $this->study;
     }
 
-    public function setStudy(?Study $study): void
+    public function setStudy(Study $study): void
     {
         $this->study = $study;
+    }
+
+    public function getVersion(): Version
+    {
+        return $this->version;
+    }
+
+    public function setVersion(Version $version): void
+    {
+        $this->version = $version;
     }
 
     public function getBriefName(): string
@@ -460,16 +423,6 @@ class StudyMetadata
         $this->logo = $logo;
     }
 
-    public function getCreated(): DateTime
-    {
-        return $this->created;
-    }
-
-    public function getUpdated(): ?DateTime
-    {
-        return $this->updated;
-    }
-
     public function hasConsentPublish(): ?bool
     {
         return $this->consentPublish;
@@ -498,31 +451,5 @@ class StudyMetadata
     public function setMethodType(?MethodType $methodType): void
     {
         $this->methodType = $methodType;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function onPrePersist(): void
-    {
-        $this->created = new DateTime('now');
-    }
-
-    /**
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate(): void
-    {
-        $this->updated = new DateTime('now');
-    }
-
-    public function getCreatedBy(): ?CastorUser
-    {
-        return $this->createdBy;
-    }
-
-    public function getUpdatedBy(): ?CastorUser
-    {
-        return $this->updatedBy;
     }
 }

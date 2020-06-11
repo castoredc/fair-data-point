@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 
 class StudyRepository extends EntityRepository
 {
@@ -34,53 +35,12 @@ class StudyRepository extends EntityRepository
         ?int $page,
         bool $admin
     ) {
-        $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
-
         $qb = $this->createQueryBuilder('study')
-                   ->select('study')
-                   ->join(Dataset::class, 'dataset', Join::WITH, 'dataset.study = study.id');
+                   ->select('study');
 
-        if ($catalog !== null) {
-            $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-               ->setParameter('catalog_id', $catalog->getId());
-        }
+        $qb = $this->getStudyQuery($qb, $catalog, $search, $studyType, $methodType, $country, $admin);
 
-        $qb->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
-           ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
-           ->where('metadata2.id IS NULL');
-
-        if ($search !== null) {
-            $qb->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->like('metadata.briefName', ':search'),
-                    $qb->expr()->like('metadata.briefSummary', ':search'),
-                    $qb->expr()->like('metadata.summary', ':search')
-                )
-            );
-            $qb->setParameter('search', '%' . $search . '%');
-        }
-
-        if ($studyType !== null) {
-            $qb->andWhere('metadata.type IN (:studyType)');
-            $qb->setParameter('studyType', $studyType);
-        }
-
-        if ($methodType !== null) {
-            $qb->andWhere('metadata.methodType IN (:methodType)');
-            $qb->setParameter('methodType', $methodType);
-        }
-
-        if ($country !== null) {
-            $qb->innerJoin('metadata.centers', 'agent')
-               ->join(Department::class, 'department', Join::WITH, 'agent.id = department.id')
-               ->join(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id')
-               ->andWhere('organization.country IN (:country)');
-
-            $qb->setParameter('country', $country);
-        }
-
-        $qb->orderBy('metadata.briefName', 'ASC');
-
+        $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
 
         if ($perPage !== null) {
@@ -95,21 +55,55 @@ class StudyRepository extends EntityRepository
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function countStudies(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country): int
+    public function countStudies(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, bool $admin): int
     {
         $qb = $this->createQueryBuilder('study')
-                    ->select('count(study.id)')
-                    ->join(Dataset::class, 'dataset', Join::WITH, 'dataset.study = study.id');
+                   ->select('count(study.id)');
+
+        $qb = $this->getStudyQuery($qb, $catalog, $search, $studyType, $methodType, $country, $admin);
+
+        try {
+            return (int) $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return 0;
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * @param Catalog|null $catalog
+     * @param string|null  $search
+     * @param array|null   $studyType
+     * @param array|null   $methodType
+     * @param array|null   $country
+     * @param bool         $admin
+     *
+     * @return QueryBuilder
+     */
+    private function getStudyQuery(
+        QueryBuilder $qb,
+        ?Catalog $catalog,
+        ?string $search,
+        ?array $studyType,
+        ?array $methodType,
+        ?array $country,
+        bool $admin
+    ): QueryBuilder {
+        $qb = $qb->join(Dataset::class, 'dataset', Join::WITH, 'dataset.study = study.id');
 
         if ($catalog !== null) {
             $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
                ->setParameter('catalog_id', $catalog->getId());
         }
 
-        $qb->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
-           ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
+        $qb->leftJoin(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
+           ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.createdAt < metadata2.createdAt')
            ->where('metadata2.id IS NULL');
-           // ->andWhere('dataset.isPublished = 1');
+
+        if (! $admin) {
+            $qb->andWhere('dataset.isPublished = 1');
+        }
 
         if ($search !== null) {
             $qb->andWhere(
@@ -143,12 +137,6 @@ class StudyRepository extends EntityRepository
 
         $qb->orderBy('metadata.briefName', 'ASC');
 
-        try {
-            return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
-    }
+        return $qb;
+}
 }
