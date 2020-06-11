@@ -21,8 +21,10 @@ class CatalogBrandApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $metadata = $this->catalog->getLatestMetadata();
+
         return [
-            'name' => $this->catalog->getTitle()->toArray(),
+            'name' => $metadata->getTitle()->toArray(),
             'accessingData' => $this->catalog->isSubmissionAccessingData(),
         ];
     }

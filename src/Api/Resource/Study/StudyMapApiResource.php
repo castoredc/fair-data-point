@@ -1,26 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Resource\Dataset;
+namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\LocalizedText;
-use App\Entity\FAIRData\LocalizedTextItem;
+use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Organization;
-use Doctrine\Common\Collections\ArrayCollection;
 
-class DatasetMapApiResource implements ApiResource
+class StudyMapApiResource implements ApiResource
 {
-    /** @var Dataset */
-    private $dataset;
+    /** @var Study */
+    private $study;
 
     /** @var Organization */
     private $organization;
 
-    public function __construct(Dataset $dataset, Organization $organization)
+    public function __construct(Study $study, Organization $organization)
     {
-        $this->dataset = $dataset;
+        $this->study = $study;
         $this->organization = $organization;
     }
 
@@ -29,10 +26,7 @@ class DatasetMapApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $study = $this->dataset->getStudy();
-        $metadata = $study->getLatestMetadata();
-
-        $title = new LocalizedText(new ArrayCollection([new LocalizedTextItem($metadata->getBriefName(), $this->dataset->getLanguage())]));
+        $metadata = $this->study->getLatestMetadata();
 
         $coordinates = [
             'lat' => $this->organization->getCoordinatesLatitude(),
@@ -40,8 +34,8 @@ class DatasetMapApiResource implements ApiResource
         ];
 
         return [
-            'title' => $title->toArray(),
-            'relative_url' => $this->dataset->getRelativeUrl(),
+            'title' => $metadata->getBriefName(),
+            'relative_url' => $this->study->getSlug(),
             'organization' => $this->organization->getName(),
             'city' => $this->organization->getCity(),
             'country' => $this->organization->getCountry()->getName(),

@@ -21,22 +21,34 @@ class CatalogApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return [
+        $catalog = [
             'accessUrl' => $this->catalog->getAccessUrl(),
             'relativeUrl' => $this->catalog->getRelativeUrl(),
             'id' => $this->catalog->getId(),
             'slug' => $this->catalog->getSlug(),
-            'title' => $this->catalog->getTitle()->toArray(),
-            'version' => $this->catalog->getVersion(),
-            'description' => $this->catalog->getDescription()->toArray(),
-            'publishers' => [],
-            'language' => $this->catalog->getLanguage()->toArray(),
-            'license' => $this->catalog->getLicense()->toArray(),
-            'created' => $this->catalog->getCreated(),
-            'updated' => $this->catalog->getUpdated(),
-            'homepage' => $this->catalog->getHomepage() !== null ? $this->catalog->getHomepage()->getValue() : null,
-            'logo' => $this->catalog->getLogo() !== null ? $this->catalog->getLogo()->getValue() : null,
             'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
+            'hasMetadata' => $this->catalog->hasMetadata(),
         ];
+
+        if($this->catalog->hasMetadata()) {
+            $metadata = $this->catalog->getLatestMetadata();
+
+            $catalog['metadata'] = [
+                'title' => $metadata->getTitle()->toArray(),
+                'version' => [
+                    'metadata' => $metadata->getVersion()->getValue(),
+                ],
+                'description' => $metadata->getDescription()->toArray(),
+                'publishers' => [],
+                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
+                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
+                'created' => $metadata->getCreatedAt(),
+                'updated' => $metadata->getUpdatedAt(),
+                'homepage' => $metadata->getHomepage() !== null ? $metadata->getHomepage()->getValue() : null,
+                'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null
+            ];
+        }
+
+        return $catalog;
     }
 }
