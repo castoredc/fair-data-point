@@ -1,0 +1,46 @@
+<?php
+declare(strict_types=1);
+
+namespace App\MessageHandler\Metadata;
+
+use App\Entity\Iri;
+use App\Entity\Metadata\CatalogMetadata;
+use App\Message\Metadata\CreateCatalogMetadataCommand;
+
+class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
+{
+    public function __invoke(CreateCatalogMetadataCommand $command): void
+    {
+        $catalog = $command->getCatalog();
+        $metadata = new CatalogMetadata($catalog);
+
+        $newVersion = $this->updateVersionNumber($catalog->getLatestMetadataVersion(), $command->getVersionUpdate());
+        $metadata->setVersion($newVersion);
+
+        $metadata->setTitle($this->parseLocalizedText($command->getTitle()));
+        $metadata->setDescription($this->parseLocalizedText($command->getDescription()));
+
+        if($command->getLanguage() !== null) {
+            $metadata->setLanguage($this->getLanguage($command->getLanguage()));
+        }
+
+        if($command->getLicense() !== null) {
+            $metadata->setLicense($this->getLicense($command->getLicense()));
+        }
+
+        if($command->getHomepage() !== null) {
+            $metadata->setHomepage(new Iri($command->getHomepage()));
+        }
+
+        if($command->getLogo() !== null) {
+            $metadata->setLogo(new Iri($command->getLogo()));
+        }
+
+        $catalog->addMetadata($metadata);
+
+        $this->em->persist($catalog);
+        $this->em->persist($metadata);
+
+        $this->em->flush();
+    }
+}
