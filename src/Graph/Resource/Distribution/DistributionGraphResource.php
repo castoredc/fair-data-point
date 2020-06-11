@@ -7,7 +7,6 @@ use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\GraphResource;
 use EasyRdf_Graph;
 
@@ -26,31 +25,31 @@ class DistributionGraphResource implements GraphResource
         $graph = new EasyRdf_Graph();
         $url = $this->distribution->getAccessUrl();
         $baseUrl = $this->distribution->getBaseUrl();
-        $metadata = $this->distribution->getDataset()->getStudy()->getLatestMetadata();
+        $metadata = $this->distribution->getLatestMetadata();
 
         $graph->addResource($url, 'a', 'dcat:Dataset');
 
-        foreach ($this->distribution->getTitle()->getTexts() as $text) {
+        foreach ($metadata->getTitle()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
             $graph->addLiteral($url, 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
             $graph->addLiteral($url, 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addLiteral($url, 'dcterms:hasVersion', $this->distribution->getVersion());
+        $graph->addLiteral($url, 'dcterms:hasVersion', $metadata->getVersion()->getValue());
 
-        foreach ($this->distribution->getDescription()->getTexts() as $text) {
+        foreach ($metadata->getDescription()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
             $graph->addLiteral($url, 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        foreach ($metadata->getDepartments() as $department) {
+        foreach ($metadata->getPublishers() as $agent) {
             /** @var Department $department */
-            $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
+            // $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
         }
 
-        $graph->addResource($url, 'dcterms:language', $this->distribution->getLanguage()->getAccessUrl());
+        $graph->addResource($url, 'dcterms:language', $metadata->getLanguage()->getAccessUrl());
 
-        $graph->addResource($url, 'dcterms:license', $this->distribution->getLicense()->getUrl()->getValue());
+        $graph->addResource($url, 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());
 
         $contents = $this->distribution->getContents();
 
