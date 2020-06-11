@@ -31,15 +31,8 @@ class AddDistributionCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(AddDistributionCommand $message): Distribution
     {
-        /** @var Language|null $language */
-        $language = $this->em->getRepository(Language::class)->find($message->getLanguage());
-
         /** @var License|null $license */
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
-
-        if ($language === null) {
-            throw new LanguageNotFound();
-        }
 
         if ($message->getType() !== 'rdf' && $message->getType() !== 'csv') {
             throw new InvalidDistributionType();
@@ -47,14 +40,12 @@ class AddDistributionCommandHandler implements MessageHandlerInterface
 
         $distribution = new Distribution(
             $message->getSlug(),
-            new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getTitle(), $language)])),
-            $message->getVersion(),
-            new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getDescription(), $language)])),
-            new ArrayCollection(),
-            $language,
-            $license,
             $message->getDataset()
         );
+
+        if($license) {
+            $distribution->setLicense($license);
+        }
 
         $this->em->persist($distribution);
         $this->em->flush();

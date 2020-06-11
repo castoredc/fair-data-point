@@ -15,18 +15,6 @@ class AddDistributionCommand
     private $slug;
 
     /** @var string */
-    private $title;
-
-    /** @var string */
-    private $version;
-
-    /** @var string */
-    private $description;
-
-    /** @var string */
-    private $language;
-
-    /** @var string */
     private $license;
 
     /** @var Dataset */
@@ -38,20 +26,12 @@ class AddDistributionCommand
     public function __construct(
         string $type,
         string $slug,
-        string $title,
-        string $version,
-        string $description,
-        string $language,
         string $license,
         Dataset $dataset,
         CastorUser $user
     ) {
         $this->type = $type;
         $this->slug = $slug;
-        $this->title = $title;
-        $this->version = $version;
-        $this->description = $description;
-        $this->language = $language;
         $this->license = $license;
         $this->dataset = $dataset;
         $this->user = $user;
@@ -65,26 +45,6 @@ class AddDistributionCommand
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->language;
     }
 
     public function getLicense(): string
