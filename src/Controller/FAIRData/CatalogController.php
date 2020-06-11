@@ -12,6 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CatalogController extends FAIRDataController
 {
+    // /**
+    //  * @Route("/fdp/{catalog}", name="redirect_old_catalog")
+    //  */
+    // public function catalogRedirect(string $catalog): Response
+    // {
+    //     return $this->redirectToRoute('catalog', ['catalog' => $catalog], Response::HTTP_MOVED_PERMANENTLY);
+    // }
+
     /**
      * @Route("/fdp/{catalog}", name="catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
@@ -24,8 +32,8 @@ class CatalogController extends FAIRDataController
             return $this->render(
                 'react.html.twig',
                 [
-                    'title' => $catalog->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $catalog->getDescription()->getTextByLanguageString('en')->getText(),
+                    'title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $catalog->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }

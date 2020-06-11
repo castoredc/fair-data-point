@@ -22,7 +22,7 @@ class MyStudiesController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Add study']
+            ['title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText() . ' | Add study']
         );
     }
 
@@ -41,7 +41,7 @@ class MyStudiesController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Add metadata']
+            ['title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText() . ' | Add metadata']
         );
     }
 }

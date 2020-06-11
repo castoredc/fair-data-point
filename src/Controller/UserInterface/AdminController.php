@@ -28,6 +28,8 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/catalog/{catalog}", name="admin_catalog")
+     * @Route("/catalog/{catalog}/metadata", name="admin_catalog_metadata")
+     * @Route("/catalog/{catalog}/datasets", name="admin_catalog_datasets")
      * @Route("/catalog/{catalog}/studies", name="admin_catalog_studies")
      * @Route("/catalog/{catalog}/studies/add", name="admin_catalog_study_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
@@ -36,10 +38,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'Admin | ' . $catalog->getTitle()->getTextByLanguageString('en')->getText()]
-        );
+        return $this->render('react.html.twig', ['title' => 'Admin']);
     }
 
     /**
@@ -54,10 +53,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'Admin']
-        );
+        return $this->render('react.html.twig', ['title' => 'Admin']);
     }
 
     /**
@@ -95,6 +91,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_dataset")
+     * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_dataset_metadata")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_dataset_distributions")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_dataset_distribution_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
@@ -112,6 +109,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
+     * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/prefixes", name="admin_study_distribution_prefix")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
