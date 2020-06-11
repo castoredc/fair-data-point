@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Study;
 
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
+use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
@@ -74,6 +75,17 @@ class StudyApiController extends ApiController
         $studies = $this->getStudies($user, $bus);
 
         return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
+    }
+
+    /**
+     * @Route("/slug/{study}", methods={"GET"}, name="api_study_byslug")
+     * @ParamConverter("study", options={"mapping": {"study": "slug"}})
+     */
+    public function studyBySlug(Study $study): Response
+    {
+        $this->denyAccessUnlessGranted('view', $study);
+
+        return new JsonResponse((new StudyMetadataApiResource($study->getLatestMetadata()))->toArray());
     }
 
     /**

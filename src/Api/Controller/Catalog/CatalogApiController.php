@@ -5,7 +5,8 @@ namespace App\Api\Controller\Catalog;
 
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
-use App\Api\Resource\Dataset\DatasetsMapApiResource;
+use App\Api\Resource\Dataset\DatasetApiResource;
+use App\Api\Resource\Dataset\StudiesMapApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
@@ -87,6 +88,7 @@ class CatalogApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            dump($e);
             return new JsonResponse([], 500);
         }
     }
@@ -128,7 +130,9 @@ class CatalogApiController extends ApiController
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            return new JsonResponse($handledStamp->getResult()->toArray());
+            $results = $handledStamp->getResult();
+
+            return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -153,7 +157,7 @@ class CatalogApiController extends ApiController
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
 
-            return new JsonResponse((new DatasetsMapApiResource($handledStamp->getResult()))->toArray());
+            return new JsonResponse((new StudiesMapApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
