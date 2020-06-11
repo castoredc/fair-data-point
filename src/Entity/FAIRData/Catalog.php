@@ -4,14 +4,14 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Castor\Study;
-use App\Entity\Iri;
+use App\Entity\Metadata\CatalogMetadata;
+use App\Entity\Version;
 use App\Security\ApiUser;
-use App\Security\CastorUser;
-use DateTime;
+use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use function count;
 
 /**
  * @ORM\Entity
@@ -20,6 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Catalog
 {
+    use CreatedAndUpdated;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -37,48 +39,6 @@ class Catalog
     private $slug;
 
     /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="title", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $title;
-
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $version;
-
-    /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="description", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $description;
-
-    /** @var Collection<string, Agent> */
-    private $publishers;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
-     * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     *
-     * @var Language|null
-     */
-    private $language;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     *
-     * @var License|null
-     */
-    private $license;
-
-    /**
      * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
      *
@@ -93,20 +53,6 @@ class Catalog
      * @var Collection<string, Dataset>
      */
     private $datasets;
-
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $homepage;
-
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $logo;
 
     /**
      * @ORM\Column(type="boolean")
@@ -131,51 +77,18 @@ class Catalog
     private $apiUser;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog", fetch="EAGER")
+     * @ORM\OrderBy({"createdAt" = "ASC"})
      *
-     * @var DateTime $created
+     * @var Collection<CatalogMetadata>
      */
-    protected $created;
+    private $metadata;
 
-    /**
-     * @ORM\Column(type="datetime", nullable = true)
-     *
-     * @var DateTime|null $updated
-     */
-    protected $updated;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $createdBy
-     * @Gedmo\Blameable(on="create")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $updatedBy
-     * @Gedmo\Blameable(on="update")
-     */
-    private $updatedBy;
-
-    /**
-     * @param Collection<string, Agent> $publishers
-     */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, ?Iri $homepage)
+    public function __construct(string $slug)
     {
         $this->slug = $slug;
-        $this->title = $title;
-        $this->version = $version;
-        $this->description = $description;
-        $this->publishers = $publishers;
-        $this->language = $language;
-        $this->license = $license;
         $this->datasets = new ArrayCollection();
-        $this->homepage = $homepage;
+        $this->metadata = new ArrayCollection();
     }
 
     public function getId(): string
@@ -196,72 +109,6 @@ class Catalog
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-    }
-
-    public function getTitle(): LocalizedText
-    {
-        return $this->title;
-    }
-
-    public function setTitle(LocalizedText $title): void
-    {
-        $this->title = $title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function setVersion(string $version): void
-    {
-        $this->version = $version;
-    }
-
-    public function getDescription(): LocalizedText
-    {
-        return $this->description;
-    }
-
-    public function setDescription(LocalizedText $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return Collection<string, Agent>
-     */
-    public function getPublishers(): Collection
-    {
-        return $this->publishers;
-    }
-
-    /**
-     * @param Collection<string, Agent> $publishers
-     */
-    public function setPublishers(Collection $publishers): void
-    {
-        $this->publishers = $publishers;
-    }
-
-    public function getLanguage(): Language
-    {
-        return $this->language;
-    }
-
-    public function setLanguage(Language $language): void
-    {
-        $this->language = $language;
-    }
-
-    public function getLicense(): License
-    {
-        return $this->license;
-    }
-
-    public function setLicense(License $license): void
-    {
-        $this->license = $license;
     }
 
     public function getFairDataPoint(): FAIRDataPoint
@@ -311,16 +158,6 @@ class Catalog
         return $studies;
     }
 
-    public function getHomepage(): ?Iri
-    {
-        return $this->homepage;
-    }
-
-    public function setHomepage(?Iri $homepage): void
-    {
-        $this->homepage = $homepage;
-    }
-
     public function addDataset(Dataset $dataset): void
     {
         $this->datasets[] = $dataset;
@@ -328,22 +165,17 @@ class Catalog
 
     public function getAccessUrl(): string
     {
-        return $this->fairDataPoint->getAccessUrl() . '/' . $this->slug;
+        return $this->fairDataPoint->getAccessUrl() . '/catalog/' . $this->slug;
     }
 
     public function getRelativeUrl(): string
     {
-        return $this->fairDataPoint->getRelativeUrl() . '/' . $this->slug;
+        return $this->fairDataPoint->getRelativeUrl() . '/catalog/' . $this->slug;
     }
 
     public function getBaseUrl(): string
     {
         return $this->fairDataPoint->getIri()->getValue();
-    }
-
-    public function getLogo(): ?Iri
-    {
-        return $this->logo;
     }
 
     public function isAcceptingSubmissions(): bool
@@ -361,39 +193,23 @@ class Catalog
         return $this->apiUser;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function onPrePersist(): void
+    public function getLatestMetadata(): ?CatalogMetadata
     {
-        $this->created = new DateTime('now');
+        return $this->metadata->isEmpty() ? null : $this->metadata->last();
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate(): void
+    public function getLatestMetadataVersion(): ?Version
     {
-        $this->updated = new DateTime('now');
+        return $this->metadata->isEmpty() ? null : $this->metadata->last()->getVersion();
     }
 
-    public function getCreated(): DateTime
+    public function hasMetadata(): bool
     {
-        return $this->created;
+        return count($this->metadata) > 0;
     }
 
-    public function getUpdated(): ?DateTime
+    public function addMetadata(CatalogMetadata $metadata): void
     {
-        return $this->updated;
-    }
-
-    public function getCreatedBy(): ?CastorUser
-    {
-        return $this->createdBy;
-    }
-
-    public function getUpdatedBy(): ?CastorUser
-    {
-        return $this->updatedBy;
+        $this->metadata->add($metadata);
     }
 }
