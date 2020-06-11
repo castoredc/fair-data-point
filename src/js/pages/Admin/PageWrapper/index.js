@@ -14,6 +14,8 @@ import Catalogs from "../Home/Catalogs";
 import {Icon, Menu} from "@castoredc/matter";
 import Studies from "../Home/Studies";
 import Catalog from "../Catalog";
+import Distribution from "../Distribution";
+import Dataset from "../Dataset";
 
 export default class PageWrapper extends Component {
     constructor(props) {
@@ -111,9 +113,9 @@ export default class PageWrapper extends Component {
                         <Redirect exact from="/admin" to="/admin/catalog" />
 
                         <Route path="/admin/catalog" exact component={Catalogs} />
+                        <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" component={Distribution} />
+                        <Route path="/admin/catalog/:catalog/dataset/:dataset" component={Dataset} />
                         <Route path="/admin/catalog/:catalog" component={Catalog} />
-                        {/*<Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" component={Distribution} />*/}
-                        {/*<Route path="/admin/catalog/:catalog/dataset/:dataset" component={Dataset} />*/}
 
                         <Route path="/admin/study" exact component={Studies} />
                         <Route path="/admin/study/:study" component={Study} />

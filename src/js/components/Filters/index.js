@@ -38,6 +38,22 @@ export default class Filters extends Component {
     }
 
     componentDidMount() {
+        const { isLoading } = this.props;
+
+        if(! isLoading) {
+            this.parseOptions();
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { isLoading } = this.props;
+
+        if(! isLoading && prevProps.isLoading !== isLoading) {
+            this.parseOptions();
+        }
+    }
+
+    parseOptions = () => {
         const { filters } = this.props;
         const { options } = this.state;
 
@@ -64,7 +80,7 @@ export default class Filters extends Component {
         }, () => {
             this.getCountries();
         });
-    }
+    };
 
     getCountries = () => {
         const { filters } = this.props;
@@ -133,10 +149,10 @@ export default class Filters extends Component {
     };
 
     render() {
-        const { style, className, overlay, hidden, filters } = this.props;
+        const { style, className, overlay, sticky, hidden, filters, isLoading } = this.props;
         const { isLoadingCountries, data, options } = this.state;
 
-        if(isLoadingCountries)
+        if(isLoadingCountries || isLoading)
         {
             return <InlineLoader />;
         }
@@ -151,7 +167,7 @@ export default class Filters extends Component {
             return null;
         }
 
-        return <div className={classNames('FilterForm', overlay && 'Overlay', className)} style={style}>
+        return <div className={classNames('FilterForm', overlay && 'Overlay', sticky && 'Sticky', className)} style={style}>
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={() => {}}

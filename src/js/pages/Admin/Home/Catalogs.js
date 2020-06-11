@@ -65,8 +65,8 @@ export default class Catalogs extends Component {
                                 }}
                                 rows={catalogs.map((item) => {
                                     return [
-                                        localizedText(item.title, 'en'),
-                                        localizedText(item.description, 'en')
+                                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '',
+                                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''
                                     ];
                                 })}
                                 structure={{
@@ -76,7 +76,7 @@ export default class Catalogs extends Component {
                                         template:  'text',
                                     },
                                     type: {
-                                        header:    'Type',
+                                        header:    'Description',
                                         resizable: true,
                                         template:  'text',
                                     },

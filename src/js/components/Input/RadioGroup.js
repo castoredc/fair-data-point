@@ -8,8 +8,6 @@ export default class RadioGroup extends ValidatorComponent {
     render() {
         const { value, options, onChange, name, variant } = this.props;
 
-        console.log(value);
-
         return <Form.Group className="Input">
             <div
                 className={'RadioGroup'  + (variant === 'horizontal' ? ' Horizontal' : ' Vertical')}

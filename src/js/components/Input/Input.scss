@@ -27,7 +27,7 @@
   color: $red-400;
 }
 
-.RadioGroup div {
+.RadioGroup.Horizontal div {
   float: left;
   margin-right: 20px;
 }
@@ -54,5 +54,12 @@
 
   &::after {
     display: none;
+  }
+}
+
+.LocalizedTextInputItem {
+  .LocalizedTextInputText, .LocalizedTextInputLanguage {
+    display: inline-block;
+    margin-right: 15px;
   }
 }

@@ -50,7 +50,7 @@ export default class DistributionContents extends Component {
             return <InlineLoader/>;
         }
 
-        if (distribution.includeAll) {
+        if (distribution.includeAllData) {
             return <div className="NoResults">This distribution contains all fields.</div>;
         }
 

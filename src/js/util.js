@@ -38,7 +38,9 @@ export const paragraphText = (text) => {
 };
 
 export const localizedText = (texts, language = 'en', paragraph = false) => {
-    if (texts === null) return '';
+    if (texts === null || typeof texts === 'undefined') {
+        return '';
+    }
 
     for (const text of texts) {
         if (text.language === language) {
@@ -101,4 +103,14 @@ export const getCenterFromDegrees = (data) => {
     let newY = (centerLon * 180 / Math.PI);
 
     return [newX, newY];
+};
+
+export const replaceAt = (array, index, value) => {
+    const ret = array.slice(0);
+    ret[index] = value;
+    return ret;
+};
+
+export const mergeData = (defaultData, newData) => {
+    return Object.keys(defaultData).reduce((a, key) => ({ ...a, [key]: newData[key] || defaultData[key]}), {});
 };

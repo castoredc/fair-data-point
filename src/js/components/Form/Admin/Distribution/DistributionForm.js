@@ -1,65 +1,33 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
 import '../../Form.scss'
 import {Redirect} from "react-router-dom";
-import {LinkContainer} from "react-router-bootstrap";
 import {toast} from "react-toastify";
 import ToastContent from "../../../ToastContent";
 import axios from "axios";
 import FormItem from "./../../FormItem";
-import FormHeading from "../../FormHeading";
 import Input from "../../../Input";
 import Dropdown from "../../../Input/Dropdown";
-import {recruitmentStatus} from "../../StudyDetailsForm";
-import {CheckboxGroup} from "../../../Input/Checkbox";
 import RadioGroup from "../../../Input/RadioGroup";
-import {localizedText} from "../../../../util";
-import Spinner from "react-bootstrap/Spinner";
+import {mergeData} from "../../../../util";
+import {Button} from "@castoredc/matter";
 
 export default class DistributionForm extends Component {
     constructor(props) {
         super(props);
 
-        let data = {
-            title: '',
-            type: '',
-            version: '',
-            slug: '',
-            description: '',
-            language: null,
-            license: null,
-            accessRights: null,
-            includeAllData: null
-        };
-
-        if (typeof props.distribution !== 'undefined') {
-            data = {
-                title: localizedText(props.distribution.title, 'en'),
-                type: props.distribution.type,
-                version: props.distribution.version,
-                slug: props.distribution.slug,
-                description: localizedText(props.distribution.description, 'en'),
-                language: props.distribution.language.code,
-                license: props.distribution.license.slug,
-                accessRights: props.distribution.accessRights,
-                update: true,
-                includeAllData: props.distribution.includeAll
-            }
-        }
-
         this.state = {
-            data: data,
+            data: props.distribution ? mergeData(defaultData, props.distribution) : defaultData,
             visitedFields: {},
             validation: {},
             isSaved: false,
             submitDisabled: false,
             languages: [],
             licenses: [],
-            update: (typeof props.distribution !== 'undefined')
+            distribution: props.distribution ? props.distribution : null,
         };
     }
 
@@ -133,7 +101,7 @@ export default class DistributionForm extends Component {
         const { catalog, dataset, distribution } = this.props;
         event.preventDefault();
 
-        const { update } = this.state;
+        const { data } = this.state;
 
         if(this.form.isFormValid()) {
             this.setState({
@@ -141,17 +109,18 @@ export default class DistributionForm extends Component {
                 isLoading: true
             });
 
-            const url = '/api/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + (update ? distribution.slug + '/update' : 'add');
+            const url = '/api/catalog/' + catalog + '/dataset/' + dataset + '/distribution' + (distribution ? '/' + distribution.slug : '');
 
-           axios.post(url, this.state.data)
-                .then(() => {
+           axios.post(url, data)
+                .then((response) => {
                     this.setState({
                         isSaved: true,
                         isLoading: false,
-                        submitDisabled: false
+                        submitDisabled: false,
+                        distribution: response.data
                     });
 
-                    if (update) {
+                    if (distribution) {
                         toast.success(<ToastContent type="success" message="The distribution details are saved successfully" />, {
                             position: "top-right"
                         });
@@ -179,13 +148,13 @@ export default class DistributionForm extends Component {
 
     render() {
         const { catalog, dataset } = this.props;
-        const { languages, licenses, isSaved, update, isLoading } = this.state;
+        const { data, validation, licenses, isSaved, update, distribution, submitDisabled } = this.state;
 
         const required = "This field is required";
 
         if(isSaved && !update)
         {
-            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distributions'} />;
+            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} />;
         }
 
         return (
@@ -194,132 +163,68 @@ export default class DistributionForm extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Row>
-                    <Col md={12}>
-                        <FormHeading label="Distribution information" />
-                    </Col>
-                    <Col md={6}>
-                        <FormItem label="Title">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="title"
-                                onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.title}
-                                serverError={this.state.validation.title}
-                            />
-                        </FormItem>
+                <FormItem label="Type">
+                    <RadioGroup
+                        options={distributionTypes}
+                        onChange={this.handleChange}
+                        value={data.type}
+                        variant="horizontal"
+                        name="type"
+                    />
+                </FormItem>
 
-                        <FormItem label="Type">
-                            <RadioGroup
-                                options={distributionTypes}
-                                onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.type}
-                                variant="horizontal"
-                                name="type"
-                            />
-                        </FormItem>
+                {data.type === 'csv' && <FormItem label="Available data">
+                    <RadioGroup
+                        options={availableData}
+                        onChange={this.handleChange}
+                        value={data.includeAllData}
+                        variant="horizontal"
+                        name="includeAllData"
+                    />
+                </FormItem>}
 
-                        {this.state.data.type === 'csv' && <FormItem label="Available data">
-                            <RadioGroup
-                                options={availableData}
-                                onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.includeAllData}
-                                variant="horizontal"
-                                name="includeAllData"
-                            />
-                        </FormItem>}
+                <FormItem label="Slug">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="slug"
+                        onChange={this.handleChange}
+                        value={data.slug}
+                        serverError={validation.slug}
+                    />
+                </FormItem>
 
-                        <FormItem label="Version">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="version"
-                                onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.version}
-                                serverError={this.state.validation.version}
-                            />
-                        </FormItem>
+                <FormItem label="License">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={licenses}
+                        name="license"
+                        onChange={(e) => {this.handleSelectChange('license', e)}}
+                        value={licenses.filter(({value}) => value === data.license)}
+                        serverError={validation.license}
+                    />
+                </FormItem>
 
-                        <FormItem label="Slug">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="slug"
-                                onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.slug}
-                                serverError={this.state.validation.slug}
-                            />
-                        </FormItem>
-                    </Col>
-                    <Col md={6}>
-                        <FormItem label="Description">
-                            <Input
-                                name="description"
-                                onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.description}
-                                serverError={this.state.validation.description}
-                                as="textarea" rows="8"
-                            />
-                        </FormItem>
-                    </Col>
-
-                    <Col md={6}>
-                        <FormItem label="Language">
-                            <Dropdown
-                                validators={['required']}
-                                errorMessages={[required]}
-                                options={languages}
-                                name="language"
-                                onChange={(e) => {this.handleSelectChange('language', e)}}
-                                onBlur={this.handleFieldVisit}
-                                value={languages.filter(({value}) => value === this.state.data.language)}
-                                serverError={this.state.validation.language}
-                            />
-                        </FormItem>
-
-                        <FormItem label="License">
-                            <Dropdown
-                                validators={['required']}
-                                errorMessages={[required]}
-                                options={licenses}
-                                name="license"
-                                onChange={(e) => {this.handleSelectChange('license', e)}}
-                                onBlur={this.handleFieldVisit}
-                                value={licenses.filter(({value}) => value === this.state.data.license)}
-                                serverError={this.state.validation.license}
-                            />
-                        </FormItem>
-
-                        <FormItem label="Access type">
-                            <Dropdown
-                                validators={['required']}
-                                errorMessages={[required]}
-                                options={accessTypes}
-                                name="accessRights"
-                                onChange={(e) => {this.handleSelectChange('accessRights', e)}}
-                                onBlur={this.handleFieldVisit}
-                                value={accessTypes.filter(({value}) => value === this.state.data.accessRights)}
-                                serverError={this.state.validation.accessRights}
-                            />
-                        </FormItem>
-                    </Col>
-                </Row>
+                <FormItem label="Access type">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={accessTypes}
+                        name="accessRights"
+                        onChange={(e) => {this.handleSelectChange('accessRights', e)}}
+                        value={accessTypes.filter(({value}) => value === data.accessRights)}
+                        serverError={validation.accessRights}
+                    />
+                </FormItem>
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
                     </Col>
                     <Col>
-                        {update ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
-                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                        {distribution ? <Button disabled={submitDisabled}>
                             Update distribution
-                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                        </Button> : <Button disabled={submitDisabled}>
                             Add distribution
                         </Button>}
                     </Col>
@@ -344,3 +249,11 @@ export const availableData = [
     { value: true, label: 'All data' },
     { value: false, label: 'Selection of data' },
 ];
+
+export const defaultData = {
+    type: '',
+    slug: '',
+    accessRights: null,
+    includeAllData: null,
+    license: null
+};

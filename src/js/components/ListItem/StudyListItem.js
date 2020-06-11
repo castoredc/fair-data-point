@@ -17,13 +17,13 @@ class StudyListItem extends Component {
 
         let tags = [];
 
-        if(condition !== null && condition.text !== '')
+        if(condition !== null && condition !== '')
         {
-            tags.push(condition.text);
+            tags.push(condition);
         }
-        if(intervention !== null && intervention.text !== '')
+        if(intervention !== null && intervention !== '')
         {
-            tags.push(intervention.text);
+            tags.push(intervention);
         }
 
         return <Link to={link} className="StudyListItem" target={newWindow ? '_blank' : null}>

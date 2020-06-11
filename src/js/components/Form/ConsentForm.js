@@ -75,8 +75,6 @@ export default class ConsentForm extends Component {
     };
 
     handleChange = (event, callback = (() => {})) => {
-        console.log(event.target.name);
-        console.log(event.target.value);
         const { data } = this.state;
         const newState = {
             data: {

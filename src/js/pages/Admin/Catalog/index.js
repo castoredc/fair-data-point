@@ -11,13 +11,14 @@ import {Route, Switch} from "react-router-dom";
 import CatalogStudies from "./CatalogStudies";
 import CatalogDetails from "./CatalogDetails";
 import {Button} from "@castoredc/matter";
+import CatalogDatasets from "./CatalogDatasets";
+import CatalogMetadata from "./CatalogMetadata";
 
 export default class Catalog extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoadingCatalog:  true,
-            hasLoadedCatalog: false,
             catalog:           null,
         };
     }
@@ -36,7 +37,6 @@ export default class Catalog extends Component {
                 this.setState({
                     catalog:          response.data,
                     isLoadingCatalog: false,
-                    hasLoadedCatalog: true,
                 });
             })
             .catch((error) => {
@@ -71,7 +71,7 @@ export default class Catalog extends Component {
                     </LinkContainer>
                 </Col>
                 <Col sm={10} className="PageTitle">
-                    <div><h3>{localizedText(catalog.title, 'en')}</h3></div>
+                    <div><h3>{catalog.hasMetadata && localizedText(catalog.metadata.title, 'en')}</h3></div>
                 </Col>
             </Row>
             <Row className="FillHeight">
@@ -80,7 +80,13 @@ export default class Catalog extends Component {
                         <LinkContainer to={'/admin/catalog/' + catalog.slug} exact={true}>
                             <Nav.Link>Catalog</Nav.Link>
                         </LinkContainer>
+                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/metadata'} exact={true}>
+                            <Nav.Link>Metadata</Nav.Link>
+                        </LinkContainer>
                         <hr />
+                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/datasets'} exact={true}>
+                            <Nav.Link>Datasets</Nav.Link>
+                        </LinkContainer>
                         <LinkContainer to={'/admin/catalog/' + catalog.slug + '/studies'} exact={true}>
                             <Nav.Link>Studies</Nav.Link>
                         </LinkContainer>
@@ -90,10 +96,14 @@ export default class Catalog extends Component {
                     <Switch>
                         <Route path="/admin/catalog/:catalog" exact
                                render={(props) => <CatalogDetails {...props} catalog={catalog} />} />
+                        <Route path="/admin/catalog/:catalog/metadata" exact
+                               render={(props) => <CatalogMetadata {...props} catalog={catalog} onSave={this.getCatalog} />} />
                         {/*<Route path="/admin/catalog/:catalog/studies/add" exact*/}
                         {/*       render={(props) => <AddStudy {...props} catalog={catalog} />} />*/}
                         <Route path="/admin/catalog/:catalog/studies" exact
                                render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
+                        <Route path="/admin/catalog/:catalog/datasets" exact
+                               render={(props) => <CatalogDatasets {...props} catalog={catalog} />} />
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

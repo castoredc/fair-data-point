@@ -19,8 +19,6 @@ export default class Dataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingCatalog:       true,
-            hasLoadedCatalog:       false,
             isLoadingDataset:       true,
             hasLoadedDataset:       false,
             isLoadingDistributions: true,
