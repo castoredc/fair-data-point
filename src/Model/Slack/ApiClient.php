@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Slack;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use GuzzleHttp\Client;
 use Throwable;
 use function array_unique;

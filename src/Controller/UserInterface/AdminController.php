@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
@@ -57,9 +57,10 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/catalog", name="admin_catalogs")
-     * @Route("/model", name="admin_models")
-     * @Route("/study", name="admin_studies")
+     * @Route("/catalogs", name="admin_catalogs")
+     * @Route("/models", name="admin_models")
+     * @Route("/studies", name="admin_studies")
+     * @Route("/studies/add", name="admin_studies_add")
      */
     public function adminModels(): Response
     {

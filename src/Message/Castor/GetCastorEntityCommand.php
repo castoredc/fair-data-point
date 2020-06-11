@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Castor;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Enum\CastorEntityType;
 use App\Security\CastorUser;
 

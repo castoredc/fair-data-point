@@ -16,6 +16,7 @@ import Studies from "../Home/Studies";
 import Catalog from "../Catalog";
 import Distribution from "../Distribution";
 import Dataset from "../Dataset";
+import AddStudy from "../Study/AddStudy";
 
 export default class PageWrapper extends Component {
     constructor(props) {
@@ -28,25 +29,6 @@ export default class PageWrapper extends Component {
         this.link = createRef();
         this.menu = createRef();
     };
-
-    // componentDidMount() {
-    //     document.addEventListener("click", this.handleClick);
-    // }
-    //
-    // componentWillUnmount() {
-    //     document.removeEventListener("click", this.handleClick);
-    // }
-
-    // handleClick = (e) => {
-    //     if (this.link.current.contains(e.target) || (this.menu.current !== null && this.menu.current.contains(e.target))) {
-    //         // inside click
-    //         return;
-    //     }
-    //
-    //     this.setState({
-    //         showMenu: false
-    //     });
-    // };
 
     toggleMenu = () => {
         const { showMenu } = this.state;
@@ -70,19 +52,19 @@ export default class PageWrapper extends Component {
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="mr-auto">
-                                <LinkContainer to={'/admin/catalog'}>
+                                <LinkContainer to={'/admin/catalogs'}>
                                     <Nav.Link>
                                         <Icon type="folderClose" /> Catalogs
                                     </Nav.Link>
                                 </LinkContainer>
-                                <LinkContainer to={'/admin/study'}>
+                                <LinkContainer to={'/admin/studies'}>
                                     <Nav.Link>
                                         <Icon type="study" /> Studies
                                     </Nav.Link>
                                 </LinkContainer>
-                                <LinkContainer to={'/admin/model'}>
+                                <LinkContainer to={'/admin/models'}>
                                     <Nav.Link>
-                                        Data models
+                                        <Icon type="structure" /> Data models
                                     </Nav.Link>
                                 </LinkContainer>
                             </Nav>
@@ -112,15 +94,16 @@ export default class PageWrapper extends Component {
                     <Switch>
                         <Redirect exact from="/admin" to="/admin/catalog" />
 
-                        <Route path="/admin/catalog" exact component={Catalogs} />
+                        <Route path="/admin/catalogs" exact component={Catalogs} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" component={Distribution} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset" component={Dataset} />
                         <Route path="/admin/catalog/:catalog" component={Catalog} />
 
-                        <Route path="/admin/study" exact component={Studies} />
+                        <Route path="/admin/studies" exact component={Studies} />
+                        <Route path="/admin/studies/add" exact component={AddStudy} />
                         <Route path="/admin/study/:study" component={Study} />
 
-                        <Route path="/admin/model" exact component={DataModels} />
+                        <Route path="/admin/models" exact component={DataModels} />
                         <Route path="/admin/model/:model" component={DataModel} />
                         <Route component={NotFound} />
                     </Switch>

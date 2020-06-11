@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;

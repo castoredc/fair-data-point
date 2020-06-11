@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Data;
 
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use Exception;
 
 class StudyData extends RecordData
@@ -16,7 +16,7 @@ class StudyData extends RecordData
      *
      * @inheritDoc
      */
-    public static function fromData(array $data, Study $study, Record $record): RecordData
+    public static function fromData(array $data, CastorStudy $study, Record $record): RecordData
     {
         $recordData = new StudyData($record);
 

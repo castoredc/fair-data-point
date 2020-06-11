@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\FAIRData\Organization;
 
 class StudyMapApiResource implements ApiResource

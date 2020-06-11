@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
@@ -37,7 +37,7 @@ class StudyMetadata
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
      *
      * @var Study

@@ -78,7 +78,7 @@ export default class DataModel extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/model'}>
+                    <LinkContainer to={'/admin/models'}>
                         <Button buttonType="secondary" icon="arrowLeftChevron">
                             Back to data models
                         </Button>

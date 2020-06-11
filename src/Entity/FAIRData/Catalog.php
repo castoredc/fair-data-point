@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Version;
 use App\Security\ApiUser;
@@ -50,9 +50,17 @@ class Catalog
      * @ORM\ManyToMany(targetEntity="Dataset", inversedBy="catalogs",cascade={"persist"})
      * @ORM\JoinTable(name="catalogs_datasets")
      *
-     * @var Collection<string, Dataset>
+     * @var Collection<Dataset>
      */
     private $datasets;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Study", inversedBy="catalogs", cascade={"persist"})
+     * @ORM\JoinTable(name="catalogs_studies")
+     *
+     * @var Collection<Study>
+     */
+    private $studies;
 
     /**
      * @ORM\Column(type="boolean")
@@ -88,6 +96,7 @@ class Catalog
     {
         $this->slug = $slug;
         $this->datasets = new ArrayCollection();
+        $this->studies = new ArrayCollection();
         $this->metadata = new ArrayCollection();
     }
 
@@ -145,14 +154,21 @@ class Catalog
     }
 
     /** @return Study[] */
-    public function getStudies(bool $includeUnpublishedDatasets): array
+    public function getStudies(bool $includeUnpublishedStudies): array
     {
-        $datasets = $this->getDatasets($includeUnpublishedDatasets);
+        if ($includeUnpublishedStudies) {
+            return $this->studies->toArray();
+        }
 
         $studies = [];
 
-        foreach ($datasets as $dataset) {
-            $studies[] = $dataset->getStudy();
+        foreach ($this->studies as $study) {
+            /** @var Study $study */
+            if (! $study->isPublished()) {
+                continue;
+            }
+
+            $studies[] = $dataset;
         }
 
         return $studies;
@@ -160,7 +176,22 @@ class Catalog
 
     public function addDataset(Dataset $dataset): void
     {
-        $this->datasets[] = $dataset;
+        $this->datasets->add($dataset);
+    }
+
+    public function removeDataset(Dataset $dataset): void
+    {
+        $this->datasets->removeElement($dataset);
+    }
+
+    public function addStudy(Study $study): void
+    {
+        $this->studies->add($study);
+    }
+
+    public function removeStudy(Study $study): void
+    {
+        $this->studies->removeElement($study);
     }
 
     public function getAccessUrl(): string

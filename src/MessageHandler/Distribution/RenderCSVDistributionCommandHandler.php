@@ -5,7 +5,7 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;

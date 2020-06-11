@@ -5,7 +5,7 @@ namespace App\Entity\Castor\Data;
 
 use App\Entity\Castor\Instances\Instance;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class InstanceDataCollection extends RecordData
@@ -49,7 +49,7 @@ abstract class InstanceDataCollection extends RecordData
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, Study $study, Record $record, ArrayCollection $instances): ?InstanceDataCollection
+    public static function fromData(array $data, CastorStudy $study, Record $record, ArrayCollection $instances): ?InstanceDataCollection
     {
         return null;
     }

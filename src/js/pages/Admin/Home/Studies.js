@@ -1,13 +1,7 @@
 import React, {Component} from "react";
-import axios from "axios/index";
 import {Col, Row} from "react-bootstrap";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
-import {Button, DataTable, Pagination} from "@castoredc/matter";
-import {MethodType, StudyType} from "../../../components/MetadataItem/EnumMappings";
-import Filters from "../../../components/Filters";
-import {classNames} from "../../../util";
+import {Button} from "@castoredc/matter";
+import {LinkContainer} from "react-router-bootstrap";
 import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
 
 export default class Studies extends Component {
@@ -31,7 +25,6 @@ export default class Studies extends Component {
     };
 
     render() {
-        const {studies, isLoadingStudies, hasLoadedStudies, hasLoadedFilters, filterOptions, pagination, showModal} = this.state;
         const {history} = this.props;
 
         return <div className="PageContainer">
@@ -44,7 +37,9 @@ export default class Studies extends Component {
                 <Col sm={6}/>
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <Button icon="add" onClick={this.openModal}>New study</Button>
+                        <LinkContainer to="/admin/studies/add">
+                            <Button icon="add">New study</Button>
+                        </LinkContainer>
                     </div>
                 </Col>
             </Row>

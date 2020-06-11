@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Agent;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Iri;
 
 class CreateDepartmentAndOrganizationCommand

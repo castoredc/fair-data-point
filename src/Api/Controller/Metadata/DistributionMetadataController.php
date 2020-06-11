@@ -49,7 +49,6 @@ class DistributionMetadataController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
-            dump($e);
             return new JsonResponse([], 500);
         }
     }

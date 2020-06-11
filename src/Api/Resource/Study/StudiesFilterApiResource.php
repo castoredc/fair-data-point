@@ -5,7 +5,7 @@ namespace App\Api\Resource\Study;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 
 class StudiesFilterApiResource implements ApiResource
 {

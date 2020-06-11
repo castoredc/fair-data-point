@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Enum\MethodType;
+use App\Entity\Enum\StudySource;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Organization;
 use App\Entity\Metadata\StudyMetadata;
@@ -90,10 +90,9 @@ class StudyRepository extends EntityRepository
         ?array $country,
         bool $admin
     ): QueryBuilder {
-        $qb = $qb->join(Dataset::class, 'dataset', Join::WITH, 'dataset.study = study.id');
 
         if ($catalog !== null) {
-            $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
+            $qb->innerJoin('study.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
                ->setParameter('catalog_id', $catalog->getId());
         }
 
@@ -102,7 +101,7 @@ class StudyRepository extends EntityRepository
            ->where('metadata2.id IS NULL');
 
         if (! $admin) {
-            $qb->andWhere('dataset.isPublished = 1');
+            $qb->andWhere('study.isPublished = 1');
         }
 
         if ($search !== null) {
@@ -138,5 +137,20 @@ class StudyRepository extends EntityRepository
         $qb->orderBy('metadata.briefName', 'ASC');
 
         return $qb;
-}
+    }
+
+
+    /**
+     * @param StudyType[]|null  $studyType
+     * @param MethodType[]|null $methodType
+     * @param string[]|null     $country
+     *
+     * @return mixed
+     */
+    public function studyExists(StudySource $source, string $sourceId) {
+        return $this->count([
+            'source' => $source,
+            'sourceId' => $sourceId,
+        ]) > 0;
+    }
 }

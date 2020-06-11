@@ -1,35 +1,54 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Castor;
+namespace App\Entity;
 
-use App\Entity\Castor\Form\Field;
+use App\Entity\Enum\StudySource;
+use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
-use App\Entity\Version;
-use App\Security\CastorServer;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use function count;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StudyRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @DiscriminatorColumn(name="type", type="string")
+ * @DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Study
+abstract class Study
 {
     use CreatedAndUpdated;
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="string", length=190)
+     * @ORM\Column(type="guid", length=190)
+     * @ORM\GeneratedValue(strategy="UUID")
      *
      * @var string
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=TRUE)
+     *
+     * @var string|null
+     */
+    private $sourceId;
+
+    /**
+     * @ORM\Column(type="StudySource", nullable=TRUE)
+     *
+     * @var StudySource|null
+     */
+    private $source;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -44,9 +63,6 @@ class Study
      * @var string
      */
     private $slug;
-
-    /** @var ArrayCollection<string, Field>|null */
-    private $fields;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study", cascade={"persist"}, fetch = "EAGER")
@@ -70,22 +86,25 @@ class Study
     private $enteredManually = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorServer")
-     * @ORM\JoinColumn(name="server", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Catalog", mappedBy="studies", cascade={"persist"})
      *
-     * @var CastorServer|null
+     * @var Collection<Catalog>
      */
-    private $server;
+    private $catalogs;
 
     /**
-     * @param ArrayCollection<string, Field>|null $fields
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
-    public function __construct(?string $id, ?string $name, ?string $slug, ?ArrayCollection $fields)
+    private $isPublished = false;
+
+    public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)
     {
-        $this->id = $id;
+        $this->source = $source;
+        $this->sourceId = $sourceId;
         $this->name = $name;
         $this->slug = $slug;
-        $this->fields = $fields;
         $this->metadata = new ArrayCollection();
         $this->datasets = new ArrayCollection();
     }
@@ -118,22 +137,6 @@ class Study
     public function setSlug(?string $slug): void
     {
         $this->slug = $slug;
-    }
-
-    /**
-     * @return ArrayCollection<string, Field>|null
-     */
-    public function getFields(): ?ArrayCollection
-    {
-        return $this->fields;
-    }
-
-    /**
-     * @param ArrayCollection<string, Field>|null $fields
-     */
-    public function setFields(?ArrayCollection $fields): void
-    {
-        $this->fields = $fields;
     }
 
     /**
@@ -190,26 +193,21 @@ class Study
         $this->enteredManually = $enteredManually;
     }
 
-    public function getServer(): ?CastorServer
+    public function isPublished(): bool
     {
-        return $this->server;
+        return $this->isPublished;
     }
 
-    public function setServer(?CastorServer $server): void
+    public function setIsPublished(bool $isPublished): void
     {
-        $this->server = $server;
+        $this->isPublished = $isPublished;
     }
 
     /**
-     * @param array<mixed> $data
+     * @return Collection<Catalog>
      */
-    public static function fromData(array $data): Study
+    public function getCatalogs(): Collection
     {
-        return new Study(
-            $data['study_id'] ?? null,
-            $data['name'] ?? null,
-            $data['slug'] ?? null,
-            null
-        );
+        return $this->catalogs;
     }
 }

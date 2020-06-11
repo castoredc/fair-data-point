@@ -3,16 +3,16 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
-import '../../Form.scss'
+import '../Form.scss'
 import {Redirect} from "react-router-dom";
 import {toast} from "react-toastify";
-import ToastContent from "../../../ToastContent";
+import ToastContent from "../../ToastContent";
 import axios from "axios";
-import FormItem from "./../../FormItem";
-import Input from "../../../Input";
-import Dropdown from "../../../Input/Dropdown";
-import RadioGroup from "../../../Input/RadioGroup";
-import {mergeData} from "../../../../util";
+import FormItem from "./../FormItem";
+import Input from "../../Input";
+import Dropdown from "../../Input/Dropdown";
+import RadioGroup from "../../Input/RadioGroup";
+import {mergeData} from "../../../util";
 import {Button} from "@castoredc/matter";
 
 export default class DistributionForm extends Component {

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Security\CastorUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

@@ -10,6 +10,7 @@ use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use PhpParser\Node\Expr\Cast;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CastorEntityRepository")
@@ -35,10 +36,10 @@ abstract class CastorEntity
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
      *
-     * @var Study|null
+     * @var CastorStudy|null
      */
     protected $study;
 
@@ -78,7 +79,7 @@ abstract class CastorEntity
      */
     private $parent;
 
-    public function __construct(string $id, string $label, Study $study, ?StructureType $structureType)
+    public function __construct(string $id, string $label, CastorStudy $study, ?StructureType $structureType)
     {
         $this->id = $id;
         $this->label = $label;
@@ -103,7 +104,7 @@ abstract class CastorEntity
         $this->slug = $slug;
     }
 
-    public function getStudy(): ?Study
+    public function getStudy(): ?CastorStudy
     {
         return $this->study;
     }

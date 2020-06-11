@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Message\Terminology;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 
 class AddAnnotationCommand
 {

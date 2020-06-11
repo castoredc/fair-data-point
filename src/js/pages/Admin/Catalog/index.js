@@ -13,6 +13,7 @@ import CatalogDetails from "./CatalogDetails";
 import {Button} from "@castoredc/matter";
 import CatalogDatasets from "./CatalogDatasets";
 import CatalogMetadata from "./CatalogMetadata";
+import CatalogAddStudy from "./CatalogAddStudy";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -64,7 +65,7 @@ export default class Catalog extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin'}>
+                    <LinkContainer to={'/admin/catalogs'}>
                         <Button buttonType="secondary" icon="arrowLeftChevron">
                             Back to catalogs
                         </Button>
@@ -98,8 +99,8 @@ export default class Catalog extends Component {
                                render={(props) => <CatalogDetails {...props} catalog={catalog} />} />
                         <Route path="/admin/catalog/:catalog/metadata" exact
                                render={(props) => <CatalogMetadata {...props} catalog={catalog} onSave={this.getCatalog} />} />
-                        {/*<Route path="/admin/catalog/:catalog/studies/add" exact*/}
-                        {/*       render={(props) => <AddStudy {...props} catalog={catalog} />} />*/}
+                        <Route path="/admin/catalog/:catalog/studies/add" exact
+                               render={(props) => <CatalogAddStudy {...props} catalog={catalog} />} />
                         <Route path="/admin/catalog/:catalog/studies" exact
                                render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
                         <Route path="/admin/catalog/:catalog/datasets" exact

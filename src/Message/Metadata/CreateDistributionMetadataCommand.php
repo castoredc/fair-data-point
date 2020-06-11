@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Metadata;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;

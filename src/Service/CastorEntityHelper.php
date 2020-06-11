@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
 use App\Model\Castor\ApiClient;
@@ -34,7 +34,7 @@ class CastorEntityHelper
         $this->apiClient->setUser($user);
     }
 
-    public function getEntityFromDatabaseById(Study $study, string $id): ?CastorEntity
+    public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity
     {
         /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
@@ -42,7 +42,7 @@ class CastorEntityHelper
         return $repository->findByIdAndStudy($study, $id);
     }
 
-    public function getEntitiesFromDatabaseByType(Study $study, CastorEntityType $type): CastorEntityCollection
+    public function getEntitiesFromDatabaseByType(CastorStudy $study, CastorEntityType $type): CastorEntityCollection
     {
         /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
@@ -50,7 +50,7 @@ class CastorEntityHelper
         return new CastorEntityCollection($repository->findByStudyAndType($study, $type->getClassName()));
     }
 
-    public function getEntitiesFromDatabaseByParent(Study $study, CastorEntity $parent): CastorEntityCollection
+    public function getEntitiesFromDatabaseByParent(CastorStudy $study, CastorEntity $parent): CastorEntityCollection
     {
         /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
@@ -61,7 +61,7 @@ class CastorEntityHelper
     /**
      * @throws InvalidEntityType
      */
-    public function getEntityFromCastorByTypeAndId(Study $study, CastorEntityType $type, string $id, string $parentId): CastorEntity
+    public function getEntityFromCastorByTypeAndId(CastorStudy $study, CastorEntityType $type, string $id, string $parentId): CastorEntity
     {
         if ($type->isFieldOption()) {
             $optionGroup = $this->apiClient->getOptionGroup($study, $parentId);
@@ -78,7 +78,7 @@ class CastorEntityHelper
     /**
      * @throws InvalidEntityType
      */
-    public function getEntityByTypeAndId(Study $study, CastorEntityType $type, string $id, ?string $parentId = null): CastorEntity
+    public function getEntityByTypeAndId(CastorStudy $study, CastorEntityType $type, string $id, ?string $parentId = null): CastorEntity
     {
         $entity = null;
 
@@ -107,7 +107,7 @@ class CastorEntityHelper
         return $entity;
     }
 
-    public function getEntitiesByType(Study $study, CastorEntityType $type): CastorEntityCollection
+    public function getEntitiesByType(CastorStudy $study, CastorEntityType $type): CastorEntityCollection
     {
         $dbEntities = $this->getEntitiesFromDatabaseByType($study, $type);
 

@@ -5,7 +5,7 @@ namespace App\Controller\Api;
 
 use App\Api\Request\Metadata\StudyMetadataApiRequest;
 use App\Api\Resource\Metadata\StudyMetadataApiResource;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Metadata\StudyMetadata;
 use App\Exception\ApiRequestParseError;
 use App\Message\Metadata\CreateStudyMetadataCommand;

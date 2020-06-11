@@ -60,7 +60,7 @@ export default class Study extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/study'}>
+                    <LinkContainer to={'/admin/studies'}>
                         <Button buttonType="secondary" icon="arrowLeftChevron">
                             Back to studies
                         </Button>

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
@@ -53,7 +53,7 @@ class Dataset
     private $distributions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Study", inversedBy="datasets", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=TRUE)
      *
      * @var Study|null

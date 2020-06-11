@@ -6,7 +6,7 @@ namespace App\Api\Controller\Metadata;
 use App\Api\Request\Metadata\ConsentApiRequest;
 use App\Api\Resource\Metadata\ConsentApiResource;
 use App\Controller\Api\ApiController;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Exception\StudyAlreadyHasDataset;
 use App\Exception\StudyAlreadyHasSameDataset;

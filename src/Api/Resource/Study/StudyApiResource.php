@@ -6,7 +6,7 @@ namespace App\Api\Resource\Study;
 use App\Api\Resource\Metadata\ConsentApiResource;
 use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\RoleBasedApiResource;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 
 class StudyApiResource extends RoleBasedApiResource
 {

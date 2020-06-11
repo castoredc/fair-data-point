@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Form;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,7 +24,7 @@ class FieldOption extends CastorEntity
     /** @var FieldOptionGroup */
     private $optionGroup;
 
-    public function __construct(string $id, Study $study, string $name, ?string $value, ?int $groupOrder)
+    public function __construct(string $id, CastorStudy $study, string $name, ?string $value, ?int $groupOrder)
     {
         parent::__construct($id, $name, $study, null);
 
@@ -77,7 +77,7 @@ class FieldOption extends CastorEntity
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, Study $study): FieldOption
+    public static function fromData(array $data, CastorStudy $study): FieldOption
     {
         return new FieldOption(
             $data['id'],

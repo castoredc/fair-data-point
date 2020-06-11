@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Castor;
 
 use App\Api\Resource\Security\CastorServersApiResource;
+use App\Controller\Api\ApiController;
 use App\Message\Security\GetCastorServersCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CastorServersApiController extends ApiController
 {
     /**
-     * @Route("/api/servers", name="api_servers")
+     * @Route("/api/castor/servers", name="api_servers")
      */
     public function catalogs(MessageBusInterface $bus): Response
     {

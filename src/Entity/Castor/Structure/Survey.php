@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Structure;
 
 use App\Entity\Castor\Structure\Step\SurveyStep;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\StructureType;
 
 class Survey extends StructureElement
@@ -15,7 +15,7 @@ class Survey extends StructureElement
     /**
      * @param SurveyStep[] $surveySteps
      */
-    public function __construct(string $id, Study $study, ?string $name, ?string $description, array $surveySteps)
+    public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, array $surveySteps)
     {
         parent::__construct($id, $study, StructureType::survey(), $name);
 
@@ -36,7 +36,7 @@ class Survey extends StructureElement
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, Study $study): Survey
+    public static function fromData(array $data, CastorStudy $study): Survey
     {
         $steps = [];
         if (isset($data['survey_steps'])) {

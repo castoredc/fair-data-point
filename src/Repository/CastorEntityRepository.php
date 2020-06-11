@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\EntityRepository;
 
 class CastorEntityRepository extends EntityRepository
 {
-    public function findByIdAndStudy(Study $study, string $id): ?CastorEntity
+    public function findByIdAndStudy(CastorStudy $study, string $id): ?CastorEntity
     {
         return $this->findOneBy([
             'study' => $study,
@@ -18,7 +18,7 @@ class CastorEntityRepository extends EntityRepository
     }
 
     /** @return CastorEntity[] */
-    public function findByStudyAndType(Study $study, string $type): array
+    public function findByStudyAndType(CastorStudy $study, string $type): array
     {
         return $this->createQueryBuilder('entity')
                     ->select('entity')
@@ -31,7 +31,7 @@ class CastorEntityRepository extends EntityRepository
     }
 
     /** @return CastorEntity[] */
-    public function findByStudyAndParent(Study $study, CastorEntity $parent): array
+    public function findByStudyAndParent(CastorStudy $study, CastorEntity $parent): array
     {
         return $this->findBy([
             'study' => $study,

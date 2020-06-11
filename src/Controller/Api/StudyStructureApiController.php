@@ -6,7 +6,7 @@ namespace App\Controller\Api;
 use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\OptionGroupsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;

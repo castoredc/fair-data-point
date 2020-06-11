@@ -21,6 +21,7 @@ doctrine:
             CastorValueType:  App\Type\CastorValueType
             XsdDataType:  App\Type\XsdDataType
             version:  App\Type\VersionType
+            StudySource: App\Type\StudySource
 
     orm:
         auto_generate_proxy_classes: true

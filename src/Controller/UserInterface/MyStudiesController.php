@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Entity\FAIRData\Catalog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Security\CastorUser;
 
 class GetRecordCommand
