@@ -27,34 +27,6 @@ class DistributionApiRequest extends SingleApiRequest
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $title;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
-    private $version;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
-    private $description;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
-    private $language;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
     private $license;
 
     /**
@@ -74,10 +46,6 @@ class DistributionApiRequest extends SingleApiRequest
     {
         $this->type = $this->getFromData('type');
         $this->slug = $this->getFromData('slug');
-        $this->title = $this->getFromData('title');
-        $this->version = $this->getFromData('version');
-        $this->description = $this->getFromData('description');
-        $this->language = $this->getFromData('language');
         $this->license = $this->getFromData('license');
         $this->accessRights = (int) $this->getFromData('accessRights');
         $this->includeAllData = $this->getFromData('includeAllData');
@@ -91,26 +59,6 @@ class DistributionApiRequest extends SingleApiRequest
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->language;
     }
 
     public function getLicense(): string

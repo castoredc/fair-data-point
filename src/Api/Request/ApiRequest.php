@@ -41,6 +41,14 @@ abstract class ApiRequest
             return null;
         }
 
+        $value = $this->data[$key];
+
+        if(is_string($value))
+        {
+            $value = trim($value);
+            return $value !== '' ? $value : null;
+        }
+
         return $this->data[$key];
     }
 
