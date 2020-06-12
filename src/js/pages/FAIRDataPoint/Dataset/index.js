@@ -49,13 +49,13 @@ export default class Dataset extends Component {
                     isLoadingCatalog: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalog';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalog';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     getDataset = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
+        axios.get('/api/dataset/' + this.props.match.params.dataset)
             .then((response) => {
                 this.setState({
                     dataset: response.data,
@@ -68,13 +68,13 @@ export default class Dataset extends Component {
                     isLoadingDataset: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the dataset';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     getDistributions = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution')
+        axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution')
             .then((response) => {
                 this.setState({
                     distributions: response.data,
@@ -87,7 +87,7 @@ export default class Dataset extends Component {
                     isLoadingDistributions: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distributions';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distributions';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };

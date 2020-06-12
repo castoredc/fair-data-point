@@ -31,7 +31,7 @@ export default class Catalogs extends Component {
                     isLoading: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalogs';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalogs';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     }

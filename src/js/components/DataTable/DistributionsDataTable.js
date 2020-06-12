@@ -48,7 +48,7 @@ export default class DistributionsDataTable extends Component {
                     isLoadingDistributions: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distributions';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distributions';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };

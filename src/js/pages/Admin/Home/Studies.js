@@ -3,6 +3,7 @@ import {Col, Row} from "react-bootstrap";
 import {Button} from "@castoredc/matter";
 import {LinkContainer} from "react-router-bootstrap";
 import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
+import AddStudyModal from "../../../modals/AddStudyModal";
 
 export default class Studies extends Component {
     constructor(props) {
@@ -25,9 +26,15 @@ export default class Studies extends Component {
     };
 
     render() {
-        const {history} = this.props;
+        const { history } = this.props;
+        const { showModal } = this.state;
 
         return <div className="PageContainer">
+            <AddStudyModal
+                show={showModal}
+                handleClose={this.closeModal}
+            />
+
             <Row className="PageHeader">
                 <Col sm={12} className="PageTitle">
                     <div><h3>Studies</h3></div>
@@ -37,9 +44,7 @@ export default class Studies extends Component {
                 <Col sm={6}/>
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <LinkContainer to="/admin/studies/add">
-                            <Button icon="add">New study</Button>
-                        </LinkContainer>
+                        <Button icon="add" onClick={this.openModal}>New study</Button>
                     </div>
                 </Col>
             </Row>

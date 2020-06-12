@@ -43,7 +43,7 @@ export default class Dataset extends Component {
                     isLoadingDataset: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the dataset';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -55,15 +55,17 @@ export default class Dataset extends Component {
         if(isLoadingDataset) {
             return <InlineLoader />;
         }
+        
+        const url = '/admin' + (catalog ? '/catalog/' + catalog : '');
 
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/catalog/' + catalog + '/studies'}>
+                    {catalog && <LinkContainer to={url + '/studies'}>
                         <Button buttonType="secondary" icon="arrowLeftChevron">
                             Back to catalog
                         </Button>
-                    </LinkContainer>
+                    </LinkContainer>}
                 </Col>
                 <Col sm={10} className="PageTitle">
                     <div><h3>{dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Dataset'}</h3></div>
@@ -72,14 +74,14 @@ export default class Dataset extends Component {
             <Row>
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug} exact={true}>
+                        <LinkContainer to={url + '/dataset/' + dataset.slug} exact={true}>
                             <Nav.Link>Dataset</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/metadata'} exact={true}>
+                        <LinkContainer to={url + '/dataset/' + dataset.slug + '/metadata'} exact={true}>
                             <Nav.Link>Metadata</Nav.Link>
                         </LinkContainer>
                         <hr />
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
+                        <LinkContainer to={url + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
                             <Nav.Link disabled={!dataset.hasMetadata}>Available data</Nav.Link>
                         </LinkContainer>
                     </Nav>
@@ -94,6 +96,17 @@ export default class Dataset extends Component {
                                render={(props) => <DatasetDistributions {...props} catalog={catalog} dataset={dataset} />} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distributions/add" exact
                                render={(props) => <AddDistribution {...props} catalog={catalog} dataset={dataset} />} />
+
+                        <Route path="/admin/dataset/:dataset" exact
+                               render={(props) => <DatasetDetails {...props} dataset={dataset} onSave={this.getDataset} />} />
+                        <Route path="/admin/dataset/:dataset/metadata" exact
+                               render={(props) => <DatasetMetadata {...props} dataset={dataset} onSave={this.getDataset} />} />
+                        <Route path="/admin/dataset/:dataset/distributions" exact
+                               render={(props) => <DatasetDistributions {...props} dataset={dataset} />} />
+                        <Route path="/admin/dataset/:dataset/distributions/add" exact
+                               render={(props) => <AddDistribution {...props} dataset={dataset} />} />
+
+
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

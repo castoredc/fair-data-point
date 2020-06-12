@@ -217,7 +217,7 @@ export default class ContactsForm extends Component {
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
-            >.
+            >
                 <div className="Contacts">
                     {contacts.map((contact, index) => {
                         const name = [contact.firstName, contact.middleName, contact.lastName].filter(Boolean).join(' ');

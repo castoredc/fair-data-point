@@ -1,25 +1,25 @@
 import React, {Component} from "react";
-import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
 import {Col, Row} from "react-bootstrap";
 import {Button} from "@castoredc/matter";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import AddStudyModal from "../../../modals/AddStudyModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
+import DatasetsDataTable from "../../../components/DataTable/DatasetsDataTable";
+import {localizedText} from "../../../util";
 
-export default class CatalogAddStudy extends Component {
+export default class CatalogAddDataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
             displayFilter: false,
             showModal: {
-                newStudy: false,
+                newDataset: false,
                 confirm: false
             },
-            selectedStudy: null,
-            addedStudy: null
+            selectedDataset: null,
+            addedDataset: null
         };
     }
 
@@ -51,9 +51,9 @@ export default class CatalogAddStudy extends Component {
         });
     };
 
-    handleStudyClick = (study) => {
+    handleDatasetClick = (dataset) => {
         this.setState({
-            selectedStudy: study,
+            selectedDataset: dataset,
         }, () => {
             this.openModal('confirm');
         })
@@ -61,57 +61,49 @@ export default class CatalogAddStudy extends Component {
 
     handleAdd = () => {
         const { catalog } = this.props;
-        const { selectedStudy } = this.state;
+        const { selectedDataset } = this.state;
 
-        axios.post('/api/catalog/' + catalog.slug + '/study/add', {
-            studyId: selectedStudy.id
+        axios.post('/api/catalog/' + catalog.slug + '/dataset/add', {
+            datasetId: selectedDataset.id
         })
             .then((response) => {
-                toast.success(<ToastContent type="success" message="The study was successfully added to the catalog" />, {
+                toast.success(<ToastContent type="success" message="The dataset was successfully added to the catalog" />, {
                     position: "top-right"
                 });
 
                 this.closeModal('confirm');
 
                 this.setState({
-                    addedStudy: selectedStudy,
+                    addedDataset: selectedDataset,
                 });
 
             })
             .catch((error) => {
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while adding the study to the catalog';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while adding the dataset to the catalog';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     render() {
         const { catalog } = this.props;
-        const { displayFilter, showModal, selectedStudy, addedStudy } = this.state;
+        const { displayFilter, showModal, selectedDataset, addedDataset } = this.state;
 
         return <div className="SubPage">
-            <AddStudyModal
-                show={showModal.newStudy}
-                handleClose={() => {this.closeModal('newStudy')}}
-                catalog={catalog}
-            />
-
-            {selectedStudy && <ConfirmModal
-                title="Add study"
-                action="Add study"
+            {selectedDataset && <ConfirmModal
+                title="Add dataset"
+                action="Add dataset"
                 variant="primary"
                 onConfirm={this.handleAdd}
                 onCancel={() => {this.closeModal('confirm')}}
                 show={showModal.confirm}
             >
-                Are you sure you want to add <strong>{selectedStudy.name}</strong> to this catalog?
+                Are you sure you want to add {selectedDataset.hasMetadata ? <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to this catalog?
             </ConfirmModal>}
 
             <Row>
                 <Col sm={6} />
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <Button icon="add" className="AddButton" onClick={() => {this.openModal('newStudy')}}>Create new study</Button>
-
                         <ButtonGroup className="FilterButton">
                             <Button icon="filters" buttonType="secondary" onClick={this.toggleFilter} active={displayFilter}>
                                 Filters
@@ -120,11 +112,11 @@ export default class CatalogAddStudy extends Component {
                     </div>
                 </Col>
             </Row>
-            <StudiesDataTable
-                onClick={this.handleStudyClick}
+            <DatasetsDataTable
+                onClick={this.handleDatasetClick}
                 displayOverlay={displayFilter}
                 hideCatalog={catalog}
-                lastHandledStudy={addedStudy}
+                lastHandledDataset={addedDataset}
                 overlay
             />
         </div>;

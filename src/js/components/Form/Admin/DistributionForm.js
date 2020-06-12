@@ -109,7 +109,7 @@ export default class DistributionForm extends Component {
                 isLoading: true
             });
 
-            const url = '/api/catalog/' + catalog + '/dataset/' + dataset + '/distribution' + (distribution ? '/' + distribution.slug : '');
+           const url = '/api/dataset/' + dataset + '/distribution' + (distribution ? '/' + distribution.slug : '');
 
            axios.post(url, data)
                 .then((response) => {
@@ -154,7 +154,7 @@ export default class DistributionForm extends Component {
 
         if(isSaved && !update)
         {
-            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} />;
+            return <Redirect push to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} />;
         }
 
         return (

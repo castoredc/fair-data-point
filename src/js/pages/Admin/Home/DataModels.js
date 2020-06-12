@@ -40,7 +40,7 @@ export default class DataModels extends Component {
                     isLoadingDataModels: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the data models';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data models';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };

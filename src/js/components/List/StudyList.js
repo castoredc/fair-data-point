@@ -74,7 +74,7 @@ export default class StudyList extends Component {
                     isLoadingStudies: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the studies';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the studies';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -100,7 +100,7 @@ export default class StudyList extends Component {
                     isLoadingMap: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the map';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the map';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -124,7 +124,7 @@ export default class StudyList extends Component {
                     isLoadingFilters: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the filters';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the filters';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };

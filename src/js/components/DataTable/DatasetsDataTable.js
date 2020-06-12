@@ -4,9 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Button, DataTable, Pagination} from "@castoredc/matter";
-import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
-import Filters from "../Filters";
+import {DataTable, Pagination} from "@castoredc/matter";
 import {classNames, localizedText} from "../../util";
 
 export default class DatasetsDataTable extends Component {
@@ -32,9 +30,17 @@ export default class DatasetsDataTable extends Component {
         this.getDatasets();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { lastHandledDataset } = this.props;
+
+        if(lastHandledDataset !== prevProps.lastHandledDataset) {
+            this.getDatasets();
+        }
+    }
+
     getDatasets = () => {
         const { pagination, hasLoadedDatasets } = this.state;
-        const { catalog } = this.props;
+        const { catalog, study, hideCatalog } = this.props;
 
         this.setState({
             isLoadingDatasets: true,
@@ -45,11 +51,25 @@ export default class DatasetsDataTable extends Component {
             perPage: pagination.perPage
         };
 
+        if(hideCatalog) {
+            filters['hideCatalogs'] = [hideCatalog.id];
+        }
+
         if(hasLoadedDatasets) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
-        axios.get(catalog ? '/api/catalog/' + catalog.slug + '/dataset' : '/api/dataset', {params: filters})
+        let url =  '/api/dataset';
+
+        if(catalog) {
+            url = '/api/catalog/' + catalog.slug + '/dataset';
+        }
+
+        if(study) {
+            url = '/api/study/' + study.id + '/dataset';
+        }
+
+        axios.get(url, {params: filters})
             .then((response) => {
                 this.setState({
                     datasets:          response.data.results,
@@ -69,7 +89,7 @@ export default class DatasetsDataTable extends Component {
                     isLoadingDatasets: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the datasets';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the datasets';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -88,9 +108,21 @@ export default class DatasetsDataTable extends Component {
         });
     };
 
+    handleClick = (event, rowID, index) => {
+        const { datasets } = this.state;
+        const { catalog, history, onClick } = this.props;
+
+        if(typeof index !== "undefined" && datasets.length > 0) {
+            if(onClick) {
+                onClick(datasets[index]);
+            } else {
+                history.push('/admin' + (catalog ? '/catalog/' + catalog.slug : '') + '/dataset/' + datasets[index].slug)
+            }
+        }
+    };
+
     render() {
         const { datasets, isLoadingDatasets, hasLoadedDatasets, pagination } = this.state;
-        const { history, catalog } = this.props;
 
         if(!hasLoadedDatasets) {
             return <Row>
@@ -108,11 +140,7 @@ export default class DatasetsDataTable extends Component {
                         emptyTableMessage="No datasets found"
                         highlightRowOnHover
                         cellSpacing="default"
-                        onClick={(event, rowID, index) => {
-                            if(typeof index !== "undefined") {
-                                history.push('/admin/' + (catalog ? 'catalog/' + catalog.slug : '') + '/dataset/' + datasets[index].slug)
-                            }
-                        }}
+                        onClick={this.handleClick}
                         rows={datasets.map((item) => {
                             return [
                                 item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',

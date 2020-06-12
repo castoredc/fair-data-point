@@ -15,6 +15,7 @@ import StudyOrganizations from "./StudyOrganizations";
 import StudyConsent from "./StudyConsent";
 import StudyAnnotations from "./StudyAnnotations";
 import {Button} from "@castoredc/matter";
+import StudyDatasets from "./StudyDatasets";
 
 export default class Study extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class Study extends Component {
                     isLoadingStudy: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the study';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the study';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -86,6 +87,10 @@ export default class Study extends Component {
                             <Nav.Link disabled={!study.hasMetadata}>Consent</Nav.Link>
                         </LinkContainer>
                         <hr />
+                        <LinkContainer to={'/admin/study/' + study.id  + '/datasets'} exact={true}>
+                            <Nav.Link disabled={!study.hasMetadata}>Datasets</Nav.Link>
+                        </LinkContainer>
+                        <hr />
                         <LinkContainer to={'/admin/study/' + study.id  + '/annotations'} exact={true}>
                             <Nav.Link disabled={!study.hasMetadata}>Annotations</Nav.Link>
                         </LinkContainer>
@@ -106,6 +111,8 @@ export default class Study extends Component {
                                render={(props) => <StudyConsent {...props}study={study} />} />
                         <Route path="/admin/study/:study/annotations" exact
                                render={(props) => <StudyAnnotations {...props} study={study} />} />
+                        <Route path="/admin/study/:study/datasets" exact
+                               render={(props) => <StudyDatasets {...props} study={study} />} />
                         {/*<Route path="/admin/catalog/:catalog/study/:study/distributions" exact*/}
                         {/*       render={(props) => <StudyDistributions {...props} catalog={catalog} study={study} />} />*/}
                         {/*<Route path="/admin/catalog/:catalog/study/:study/distributions/add" exact*/}

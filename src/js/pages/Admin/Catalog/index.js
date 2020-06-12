@@ -14,6 +14,7 @@ import {Button} from "@castoredc/matter";
 import CatalogDatasets from "./CatalogDatasets";
 import CatalogMetadata from "./CatalogMetadata";
 import CatalogAddStudy from "./CatalogAddStudy";
+import CatalogAddDataset from "./CatalogAddDataset";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -41,11 +42,11 @@ export default class Catalog extends Component {
                 });
             })
             .catch((error) => {
-                if (error.response && typeof error.response.data.message !== "undefined") {
+                if (error.response && typeof error.response.data.error !== "undefined") {
                     this.setState({
                         isLoadingCatalog: false,
                         hasError:         true,
-                        errorMessage:     error.response.data.message,
+                        errorMessage:     error.response.data.error,
                     });
                 } else {
                     this.setState({
@@ -105,6 +106,8 @@ export default class Catalog extends Component {
                                render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
                         <Route path="/admin/catalog/:catalog/datasets" exact
                                render={(props) => <CatalogDatasets {...props} catalog={catalog} />} />
+                        <Route path="/admin/catalog/:catalog/datasets/add" exact
+                               render={(props) => <CatalogAddDataset {...props} catalog={catalog} />} />
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

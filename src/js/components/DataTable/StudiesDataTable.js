@@ -21,7 +21,7 @@ export default class StudiesDataTable extends Component {
                 start: 0,
                 perPage: 25,
                 totalResults: null,
-                totalPages: null
+                totalPages: null,
             },
             isLoadingFilters: true,
             hasLoadedFilters: false,
@@ -37,9 +37,18 @@ export default class StudiesDataTable extends Component {
         this.getFilters();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { lastHandledStudy } = this.props;
+
+        if(lastHandledStudy !== prevProps.lastHandledStudy) {
+            this.getStudies();
+            this.getFilters();
+        }
+    }
+
     getStudies = () => {
         const { appliedFilters, pagination, hasLoadedStudies } = this.state;
-        const { catalog } = this.props;
+        const { catalog, hideCatalog } = this.props;
 
         this.setState({
             isLoadingStudies: true,
@@ -48,6 +57,10 @@ export default class StudiesDataTable extends Component {
         let filters = appliedFilters;
         filters['page'] = pagination.currentPage;
         filters['perPage'] = pagination.perPage;
+
+        if(hideCatalog) {
+            filters['hideCatalogs'] = [hideCatalog.id];
+        }
 
         if(hasLoadedStudies) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
@@ -73,7 +86,7 @@ export default class StudiesDataTable extends Component {
                     isLoadingStudies: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the studies';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the studies';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -90,7 +103,7 @@ export default class StudiesDataTable extends Component {
                 this.setState({
                     filterOptions:    response.data,
                     isLoadingFilters: false,
-                    hasLoadedFilters: true,
+                    hasLoadedFilters: true
                 });
             })
             .catch((error) => {
@@ -98,7 +111,7 @@ export default class StudiesDataTable extends Component {
                     isLoadingFilters: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the filters';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the filters';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -131,9 +144,22 @@ export default class StudiesDataTable extends Component {
         });
     };
 
+    handleClick = (event, rowID, index) => {
+        const { studies } = this.state;
+        const { history, onClick } = this.props;
+
+        if(typeof index !== "undefined" && studies.length > 0) {
+            if(onClick) {
+                onClick(studies[index]);
+            } else {
+                history.push(`/admin/study/${studies[index].id}`)
+            }
+        }
+    };
+
     render() {
         const {studies, isLoadingStudies, hasLoadedStudies, hasLoadedFilters, filterOptions, pagination} = this.state;
-        const {history, overlay = false, displayOverlay = false} = this.props;
+        const {overlay = false, displayOverlay = false} = this.props;
 
         const hasLoaded = (hasLoadedStudies && hasLoadedFilters);
 
@@ -153,11 +179,7 @@ export default class StudiesDataTable extends Component {
                         emptyTableMessage="No studies found"
                         highlightRowOnHover
                         cellSpacing="default"
-                        onClick={(event, rowID, index) => {
-                            if(typeof index !== "undefined") {
-                                history.push(`/admin/study/${studies[index].id}`)
-                            }
-                        }}
+                        onClick={this.handleClick}
                         rows={studies.map((item) => {
                             return [
                                 item.hasMetadata ? item.metadata.briefName : item.name,

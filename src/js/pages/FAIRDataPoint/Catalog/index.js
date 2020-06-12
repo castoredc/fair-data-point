@@ -53,7 +53,7 @@ export default class Catalog extends Component {
                     isLoadingFDP: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the FAIR Data Point information';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the FAIR Data Point information';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -72,7 +72,7 @@ export default class Catalog extends Component {
                     isLoadingCatalog: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalog information';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalog information';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
