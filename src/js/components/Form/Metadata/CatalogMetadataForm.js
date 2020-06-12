@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import {Button} from "@castoredc/matter/lib/matter.esm";
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import '../Form.scss'
 import MetadataForm from "./MetadataForm";
 import FormItem from "../FormItem";

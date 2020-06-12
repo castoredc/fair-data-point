@@ -7,7 +7,6 @@ import {Col, Row} from "react-bootstrap";
 import {Button, DataTable} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
-import {classNames} from "../../../util";
 
 export default class DataModelPrefixes extends Component {
     constructor(props) {

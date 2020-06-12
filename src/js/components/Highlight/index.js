@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Prism from 'prismjs/components/prism-core'
 import 'prismjs/themes/prism.css'
 import './Highlight.scss'

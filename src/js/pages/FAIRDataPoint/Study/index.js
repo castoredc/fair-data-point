@@ -3,7 +3,7 @@ import axios from "axios/index";
 
 import {Col, Row} from "react-bootstrap";
 import LoadingScreen from "../../../components/LoadingScreen";
-import {localizedText, paragraphText} from "../../../util";
+import {paragraphText} from "../../../util";
 import MetadataItem from "../../../components/MetadataItem";
 import queryString from "query-string";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";

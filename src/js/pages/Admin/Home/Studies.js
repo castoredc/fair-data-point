@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Col, Row} from "react-bootstrap";
 import {Button} from "@castoredc/matter";
-import {LinkContainer} from "react-router-bootstrap";
 import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
 import AddStudyModal from "../../../modals/AddStudyModal";
 

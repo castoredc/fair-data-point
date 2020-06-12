@@ -6,7 +6,6 @@ import {localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
-import Icon from "../../../components/Icon";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";

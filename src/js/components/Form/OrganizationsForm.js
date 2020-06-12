@@ -13,8 +13,6 @@ import axios from "axios";
 import FormItem from "./FormItem";
 import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
-import FormHeading from "./FormHeading";
-import Icon from "../Icon";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import Toggle from "../Toggle";
 import Container from "react-bootstrap/Container";

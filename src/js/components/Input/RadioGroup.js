@@ -1,7 +1,7 @@
 import React from 'react';
 import Form from "react-bootstrap/Form";
 import {ValidatorComponent} from "react-form-validator-core";
-import {Choice, ChoiceOption, TextStyle} from "@castoredc/matter";
+import {ChoiceOption, TextStyle} from "@castoredc/matter";
 import './Input.scss'
 
 export default class RadioGroup extends ValidatorComponent {

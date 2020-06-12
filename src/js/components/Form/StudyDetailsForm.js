@@ -15,9 +15,7 @@ import FormItem from "./FormItem";
 import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
 import FormHeading from "./FormHeading";
-import LoadingScreen from "../LoadingScreen";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import Spinner from "react-bootstrap/Spinner";
 
 export default class StudyDetailsForm extends Component {
     constructor(props) {

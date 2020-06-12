@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async';
 import {ChoiceOption, Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
 
-import { components } from 'react-select';
+import {components} from 'react-select';
 
 import './Input.scss'
 

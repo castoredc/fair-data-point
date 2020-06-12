@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import Modal from "react-bootstrap/Modal";
-import {ValidatorForm} from "react-form-validator-core";
 import FormItem from "../../components/Form/FormItem";
 import {Button} from "@castoredc/matter";
-import CheckboxGroup from "../../components/Input/CheckboxGroup";
 import RadioGroup from "../../components/Input/RadioGroup";
 import Container from "react-bootstrap/Container";
 

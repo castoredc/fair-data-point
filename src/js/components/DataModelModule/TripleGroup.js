@@ -1,11 +1,6 @@
 import React, {Component} from 'react'
 import {Col, Row} from "react-bootstrap";
 import {ActionMenu, Icon} from "@castoredc/matter";
-import TripleModal from "../../modals/TripleModal";
-import ConfirmModal from "../../modals/ConfirmModal";
-import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "../ToastContent";
 
 export default class TripleGroup extends Component {
     render() {

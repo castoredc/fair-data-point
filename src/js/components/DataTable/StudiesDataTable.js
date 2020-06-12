@@ -4,7 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Button, DataTable, Pagination} from "@castoredc/matter";
+import {DataTable, Pagination} from "@castoredc/matter";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import Filters from "../Filters";
 import {classNames} from "../../util";

@@ -10,7 +10,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import FieldListItem from "../ListItem/FieldListItem";
 import Container from "react-bootstrap/Container";
-import {ValidatorForm} from "react-form-validator-core";
 
 export default class StudyStructure extends Component {
     constructor(props) {

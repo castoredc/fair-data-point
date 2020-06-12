@@ -9,7 +9,6 @@ import queryString from "query-string";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import StudyList from "../../../components/List/StudyList";
-import Icon from "../../../components/Icon";
 import {Button, Stack} from "@castoredc/matter";
 
 export default class Catalog extends Component {
