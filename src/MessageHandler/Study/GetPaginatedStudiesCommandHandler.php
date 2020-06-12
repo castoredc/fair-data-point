@@ -34,6 +34,7 @@ class GetPaginatedStudiesCommandHandler implements MessageHandlerInterface
 
         $count = $datasetRepository->countStudies(
             $message->getCatalog(),
+            $message->getHideCatalogs(),
             $message->getSearch(),
             $message->getStudyType(),
             $message->getMethodType(),
@@ -43,6 +44,7 @@ class GetPaginatedStudiesCommandHandler implements MessageHandlerInterface
 
         $studies = $datasetRepository->findStudies(
             $message->getCatalog(),
+            $message->getHideCatalogs(),
             $message->getSearch(),
             $message->getStudyType(),
             $message->getMethodType(),

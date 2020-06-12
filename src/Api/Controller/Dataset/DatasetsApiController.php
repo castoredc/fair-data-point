@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Controller\Study;
+namespace App\Api\Controller\Dataset;
 
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
+use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
@@ -11,6 +12,7 @@ use App\Api\Resource\Study\StudyApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
+use App\Message\Dataset\GetPaginatedDatasetsCommand;
 use App\Message\Study\FindStudiesByUserCommand;
 use App\Message\Study\GetPaginatedStudiesCommand;
 use App\Message\Study\GetStudiesCommand;
@@ -27,12 +29,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use function assert;
 
 /**
- * @Route("/api/study")
+ * @Route("/api/dataset")
  */
-class StudiesApiController extends ApiController
+class DatasetsApiController extends ApiController
 {
     /**
-     * @Route("", methods={"GET"}, name="api_studies")
+     * @Route("", methods={"GET"}, name="api_datasets")
      */
     public function studies(Request $request, MessageBusInterface $bus): Response
     {
@@ -41,7 +43,7 @@ class StudiesApiController extends ApiController
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
 
             $envelope = $bus->dispatch(
-                new GetPaginatedStudiesCommand(
+                new GetPaginatedDatasetsCommand(
                     null,
                     $parsed->getSearch(),
                     $parsed->getStudyType(),
@@ -58,35 +60,11 @@ class StudiesApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(StudyApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
-    }
-
-    /**
-     * @Route("/filters", name="api_studies_filters")
-     */
-    public function studiesFilters(MessageBusInterface $bus): Response
-    {
-        /** @var CastorUser|null $user */
-        $user = $this->getUser();
-        $studies = $this->getStudies($user, $bus);
-
-        return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
-    }
-
-    /** @return Study[] */
-    private function getStudies(?UserInterface $user, MessageBusInterface $bus): array
-    {
-        assert($user instanceof CastorUser);
-        $envelope = $bus->dispatch(new GetStudiesCommand());
-
-        /** @var HandledStamp $handledStamp */
-        $handledStamp = $envelope->last(HandledStamp::class);
-
-        return $handledStamp->getResult();
     }
 }

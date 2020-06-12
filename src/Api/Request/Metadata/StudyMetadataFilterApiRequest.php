@@ -49,6 +49,12 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
      */
     private $page;
 
+    /**
+     * @var string[]|null
+     * @Assert\Type("array")
+     */
+    private $hideCatalogs;
+
     protected function parse(): void
     {
         $this->search = $this->getFromQuery('search');
@@ -57,6 +63,7 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
         $this->country = $this->getFromQuery('country');
         $this->perPage = (int) $this->getFromQuery('perPage');
         $this->page = (int) $this->getFromQuery('page');
+        $this->hideCatalogs = $this->getFromQuery('hideCatalogs');
     }
 
     public function getSearch(): ?string
@@ -90,5 +97,13 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
     public function getPage(): int
     {
         return $this->page !== 0 ? $this->page : 1;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getHideCatalogs(): ?array
+    {
+        return $this->hideCatalogs;
     }
 }

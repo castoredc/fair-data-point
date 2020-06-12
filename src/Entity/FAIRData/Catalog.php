@@ -176,7 +176,9 @@ class Catalog
 
     public function addDataset(Dataset $dataset): void
     {
-        $this->datasets->add($dataset);
+        if(! $this->datasets->contains($dataset)) {
+            $this->datasets->add($dataset);
+        }
     }
 
     public function removeDataset(Dataset $dataset): void
@@ -186,7 +188,9 @@ class Catalog
 
     public function addStudy(Study $study): void
     {
-        $this->studies->add($study);
+        if(! $this->studies->contains($study)) {
+            $this->studies->add($study);
+        }
     }
 
     public function removeStudy(Study $study): void

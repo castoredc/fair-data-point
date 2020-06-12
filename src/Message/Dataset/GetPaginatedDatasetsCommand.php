@@ -30,23 +30,27 @@ class GetPaginatedDatasetsCommand
     /** @var int */
     private $page;
 
+    /** @var string[]|null */
+    private $hideCatalogs;
+
     /**
      * @param StudyType[]|null  $studyType
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function __construct(Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, int $perPage, int $page)
+    public function __construct(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?array $hideCatalogs, int $perPage, int $page)
     {
         $this->catalog = $catalog;
         $this->search = $search;
         $this->studyType = $studyType;
         $this->methodType = $methodType;
         $this->country = $country;
+        $this->hideCatalogs = $hideCatalogs;
         $this->perPage = $perPage;
         $this->page = $page;
     }
 
-    public function getCatalog(): Catalog
+    public function getCatalog(): ?Catalog
     {
         return $this->catalog;
     }
@@ -88,5 +92,13 @@ class GetPaginatedDatasetsCommand
     public function getPage(): int
     {
         return $this->page;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getHideCatalogs()
+    {
+        return $this->hideCatalogs;
     }
 }

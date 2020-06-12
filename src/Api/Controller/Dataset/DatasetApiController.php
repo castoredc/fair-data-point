@@ -26,7 +26,7 @@ class DatasetApiController extends ApiController
     }
 
     /**
-     * @Route("/api/dataset/{dataset}/distribution", name="api_dataset_distributions")
+     * @Route("/api/dataset/{dataset}/distribution", methods={"GET"}, name="api_dataset_distributions")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */
     public function distributions(Dataset $dataset): Response

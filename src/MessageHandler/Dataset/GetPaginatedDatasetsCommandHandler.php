@@ -27,17 +27,16 @@ class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-
-    public function __invoke(GetPaginatedDatasetsCommand $message): PaginatedResultCollection
+    public function __invoke(GetPaginatedDatasetsCommand $command): PaginatedResultCollection
     {
         /** @var DatasetRepository $datasetRepository */
         $datasetRepository = $this->em->getRepository(Dataset::class);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
-        $count = $datasetRepository->countDatasets($message->getCatalog(), $isAdmin);
-        $datasets = $datasetRepository->findDatasets($message->getCatalog(), $message->getPerPage(), $message->getPage(), $isAdmin);
+        $count = $datasetRepository->countDatasets($command->getCatalog(), $command->getHideCatalogs(), $isAdmin);
+        $datasets = $datasetRepository->findDatasets($command->getCatalog(), $command->getHideCatalogs(), $command->getPerPage(), $command->getPage(), $isAdmin);
 
-        return new PaginatedResultCollection($datasets, $message->getPage(), $message->getPerPage(), $count);
+        return new PaginatedResultCollection($datasets, $command->getPage(), $command->getPerPage(), $count);
     }
 }

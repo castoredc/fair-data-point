@@ -78,6 +78,7 @@ class Dataset
     public function __construct(string $slug)
     {
         $this->slug = $slug;
+        $this->catalogs = new ArrayCollection();
         $this->metadata = new ArrayCollection();
     }
 

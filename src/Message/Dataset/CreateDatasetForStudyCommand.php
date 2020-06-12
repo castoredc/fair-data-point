@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Message\Dataset;
+
+use App\Entity\Study;
+
+class CreateDatasetForStudyCommand
+{
+    /** @var Study */
+    private $study;
+
+    public function __construct(Study $study)
+    {
+        $this->study = $study;
+    }
+
+    public function getStudy(): Study
+    {
+        return $this->study;
+    }
+}

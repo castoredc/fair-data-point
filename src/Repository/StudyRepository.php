@@ -20,6 +20,7 @@ class StudyRepository extends EntityRepository
 {
     /**
      * @param StudyType[]|null  $studyType
+     * @param string[]|null     $hideCatalogs
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      *
@@ -27,6 +28,7 @@ class StudyRepository extends EntityRepository
      */
     public function findStudies(
         ?Catalog $catalog,
+        ?array $hideCatalogs,
         ?string $search,
         ?array $studyType,
         ?array $methodType,
@@ -38,7 +40,7 @@ class StudyRepository extends EntityRepository
         $qb = $this->createQueryBuilder('study')
                    ->select('study');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $search, $studyType, $methodType, $country, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -52,15 +54,16 @@ class StudyRepository extends EntityRepository
 
     /**
      * @param StudyType[]|null  $studyType
+     * @param string[]|null     $hideCatalogs
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function countStudies(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, bool $admin): int
+    public function countStudies(?Catalog $catalog, ?array $hideCatalogs, ?string $search, ?array $studyType, ?array $methodType, ?array $country, bool $admin): int
     {
         $qb = $this->createQueryBuilder('study')
                    ->select('count(study.id)');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $search, $studyType, $methodType, $country, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -73,6 +76,7 @@ class StudyRepository extends EntityRepository
 
     /**
      * @param Catalog|null $catalog
+     * @param string[]|null     $hideCatalogs
      * @param string|null  $search
      * @param array|null   $studyType
      * @param array|null   $methodType
@@ -84,13 +88,13 @@ class StudyRepository extends EntityRepository
     private function getStudyQuery(
         QueryBuilder $qb,
         ?Catalog $catalog,
+        ?array $hideCatalogs,
         ?string $search,
         ?array $studyType,
         ?array $methodType,
         ?array $country,
         bool $admin
     ): QueryBuilder {
-
         if ($catalog !== null) {
             $qb->innerJoin('study.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
                ->setParameter('catalog_id', $catalog->getId());
@@ -99,6 +103,11 @@ class StudyRepository extends EntityRepository
         $qb->leftJoin(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
            ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.createdAt < metadata2.createdAt')
            ->where('metadata2.id IS NULL');
+
+        if ($hideCatalogs !== null) {
+            $qb->andWhere(':catalog_ids NOT MEMBER OF datasets.catalogs')
+               ->setParameter('catalog_ids', $hideCatalogs);
+        }
 
         if (! $admin) {
             $qb->andWhere('study.isPublished = 1');

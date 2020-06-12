@@ -32,8 +32,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/catalog/{catalog}/dataset/{dataset}/distribution", methods={"POST"}, name="api_distribution_add")
- * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+ * @Route("/api/dataset/{dataset}/distribution")
  * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
  */
 class DistributionApiController extends ApiController
@@ -42,11 +41,11 @@ class DistributionApiController extends ApiController
      * @Route("/{distribution}", methods={"GET"}, name="api_distribution")
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distribution(Catalog $catalog, Dataset $dataset, Distribution $distribution): Response
+    public function distribution(Dataset $dataset, Distribution $distribution): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+        if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 
@@ -57,11 +56,11 @@ class DistributionApiController extends ApiController
      * @Route("/{distribution}/contents", methods={"GET"}, name="api_distribution_contents")
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distributionContents(Catalog $catalog, Dataset $dataset, Distribution $distribution): Response
+    public function distributionContents(Dataset $dataset, Distribution $distribution): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+        if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 
@@ -72,12 +71,12 @@ class DistributionApiController extends ApiController
      * @Route("/{distribution}/contents", methods={"POST"}, name="api_distribution_contents_change")
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function changeDistributionContents(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function changeDistributionContents(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+        if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 
@@ -104,13 +103,9 @@ class DistributionApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_distribution_add")
      */
-    public function addDistribution(Catalog $catalog, Dataset $dataset, Request $request, MessageBusInterface $bus): Response
+    public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
-
-        if (! $dataset->hasCatalog($catalog)) {
-            throw $this->createNotFoundException();
-        }
 
         /** @var CastorUser $user */
         $user = $this->getUser();
@@ -166,13 +161,9 @@ class DistributionApiController extends ApiController
      * @Route("/{distribution}", methods={"POST"}, name="api_distribution_update")
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function updateDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function updateDistribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
-
-        if (! $dataset->hasCatalog($catalog)) {
-            throw $this->createNotFoundException();
-        }
 
         /** @var CastorUser $user */
         $user = $this->getUser();
