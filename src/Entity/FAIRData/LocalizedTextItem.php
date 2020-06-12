@@ -43,9 +43,7 @@ class LocalizedTextItem
      */
     private $language;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $languageCode;
 
     public function __construct(string $text)

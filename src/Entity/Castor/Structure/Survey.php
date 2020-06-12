@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure;
 
-use App\Entity\Castor\Structure\Step\SurveyStep;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Castor\Structure\Step\SurveyStep;
 use App\Entity\Enum\StructureType;
 
 class Survey extends StructureElement

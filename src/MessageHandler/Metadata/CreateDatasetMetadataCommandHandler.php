@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Metadata;
 
-use App\Entity\Iri;
-use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Metadata\DatasetMetadata;
-use App\Message\Metadata\CreateCatalogMetadataCommand;
 use App\Message\Metadata\CreateDatasetMetadataCommand;
 
 class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
@@ -22,11 +19,11 @@ class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
         $metadata->setTitle($this->parseLocalizedText($command->getTitle()));
         $metadata->setDescription($this->parseLocalizedText($command->getDescription()));
 
-        if($command->getLanguage() !== null) {
+        if ($command->getLanguage() !== null) {
             $metadata->setLanguage($this->getLanguage($command->getLanguage()));
         }
 
-        if($command->getLicense() !== null) {
+        if ($command->getLicense() !== null) {
             $metadata->setLicense($this->getLicense($command->getLicense()));
         }
 

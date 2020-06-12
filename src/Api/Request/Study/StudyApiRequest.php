@@ -16,9 +16,7 @@ class StudyApiRequest extends SingleApiRequest
      */
     private $source;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $sourceServer;
 
     /**
@@ -43,7 +41,7 @@ class StudyApiRequest extends SingleApiRequest
     protected function parse(): void
     {
         $this->source = $this->getFromData('source');
-        $this->sourceServer = $this->getFromData('sourceServer');
+        $this->sourceServer = $this->getFromData('sourceServer') !== null ? (string) $this->getFromData('sourceServer') : null;
         $this->id = $this->getFromData('id');
         $this->name = $this->getFromData('name');
         $this->catalog = $this->getFromData('catalog');
@@ -56,7 +54,7 @@ class StudyApiRequest extends SingleApiRequest
 
     public function getSourceServer(): ?string
     {
-        return $this->sourceServer !== null ? (string) $this->sourceServer : null;
+        return $this->sourceServer;
     }
 
     public function getId(): ?string

@@ -13,13 +13,9 @@ class DistributionApiResource implements ApiResource
     /** @var Distribution */
     private $distribution;
 
-    /** @var bool */
-    private $isAdmin;
-
-    public function __construct(Distribution $distribution, bool $isAdmin)
+    public function __construct(Distribution $distribution)
     {
         $this->distribution = $distribution;
-        $this->isAdmin = $isAdmin;
     }
 
     /**
@@ -37,8 +33,7 @@ class DistributionApiResource implements ApiResource
             'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
         ];
 
-
-        if($this->distribution->hasMetadata()) {
+        if ($this->distribution->hasMetadata()) {
             $metadata = $this->distribution->getLatestMetadata();
 
             $distribution['metadata'] = [
@@ -51,11 +46,11 @@ class DistributionApiResource implements ApiResource
                 'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
                 'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
                 'created' => $metadata->getCreatedAt(),
-                'updated' => $metadata->getUpdatedAt()
+                'updated' => $metadata->getUpdatedAt(),
             ];
         }
 
-        if($this->distribution->hasContents()) {
+        if ($this->distribution->hasContents()) {
             $contents = $this->distribution->getContents();
             $distribution['accessRights'] = $contents->getAccessRights();
 

@@ -57,7 +57,7 @@ class StudyVoter extends Voter
             return true;
         }
 
-        return $study->getDataset()->isPublished();
+        return $study->isPublished();
     }
 
     private function canEdit(Study $study, TokenInterface $token): bool

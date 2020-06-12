@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Request\Metadata;
 
@@ -6,9 +7,9 @@ use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\VersionType;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
+use App\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as AppAssert;
 
 abstract class MetadataApiRequest extends SingleApiRequest
 {
@@ -83,7 +84,7 @@ abstract class MetadataApiRequest extends SingleApiRequest
     {
         $texts = new ArrayCollection();
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $text = new LocalizedTextItem($item['text']);
             $text->setLanguageCode($item['language']);
 

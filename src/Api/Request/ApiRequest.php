@@ -5,6 +5,8 @@ namespace App\Api\Request;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use function array_key_exists;
+use function is_string;
+use function trim;
 
 abstract class ApiRequest
 {
@@ -43,9 +45,9 @@ abstract class ApiRequest
 
         $value = $this->data[$key];
 
-        if(is_string($value))
-        {
+        if (is_string($value)) {
             $value = trim($value);
+
             return $value !== '' ? $value : null;
         }
 

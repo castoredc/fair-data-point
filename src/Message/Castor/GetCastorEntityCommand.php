@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Castor;
 
-use App\Entity\Study;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\CastorEntityType;
 use App\Security\CastorUser;
 
@@ -12,7 +12,7 @@ class GetCastorEntityCommand
     /** @var CastorUser */
     private $user;
 
-    /** @var Study */
+    /** @var CastorStudy */
     private $study;
 
     /** @var CastorEntityType */
@@ -24,7 +24,7 @@ class GetCastorEntityCommand
     /** @var string|null */
     private $parentId;
 
-    public function __construct(Study $study, CastorUser $user, CastorEntityType $type, string $id, ?string $parentId)
+    public function __construct(CastorStudy $study, CastorUser $user, CastorEntityType $type, string $id, ?string $parentId)
     {
         $this->user = $user;
         $this->study = $study;
@@ -38,7 +38,7 @@ class GetCastorEntityCommand
         return $this->user;
     }
 
-    public function getStudy(): Study
+    public function getStudy(): CastorStudy
     {
         return $this->study;
     }

@@ -3,15 +3,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Study;
-use App\Entity\Enum\MethodType;
-use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Organization;
 use App\Entity\Metadata\DatasetMetadata;
-use App\Entity\Metadata\StudyMetadata;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -21,7 +15,8 @@ use Doctrine\ORM\QueryBuilder;
 class DatasetRepository extends EntityRepository
 {
     /**
-     * @param string[]|null     $hideCatalogs
+     * @param string[]|null $hideCatalogs
+     *
      * @return Dataset[]
      */
     public function findDatasets(?Catalog $catalog, ?array $hideCatalogs, ?int $perPage, ?int $page, bool $admin): array
@@ -41,7 +36,7 @@ class DatasetRepository extends EntityRepository
     }
 
     /**
-     * @param string[]|null     $hideCatalogs
+     * @param string[]|null $hideCatalogs
      */
     public function countDatasets(?Catalog $catalog, ?array $hideCatalogs, bool $admin): int
     {
@@ -60,15 +55,11 @@ class DatasetRepository extends EntityRepository
     }
 
     /**
-     * @param Catalog $catalog
-     * @param string[]|null     $hideCatalogs
-     * @param bool    $admin
-     *
-     * @return QueryBuilder
+     * @param string[]|null $hideCatalogs
      */
     private function getDatasetQuery(QueryBuilder $qb, ?Catalog $catalog, ?array $hideCatalogs, bool $admin): QueryBuilder
     {
-        if($catalog !== null) {
+        if ($catalog !== null) {
             $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
                 ->setParameter('catalog_id', $catalog->getId());
         }
@@ -76,7 +67,6 @@ class DatasetRepository extends EntityRepository
         $qb->leftJoin(DatasetMetadata::class, 'metadata', Join::WITH, 'metadata.dataset = dataset.id')
            ->leftJoin(DatasetMetadata::class, 'metadata2', Join::WITH, 'metadata2.dataset = dataset.id AND metadata.createdAt < metadata2.createdAt')
            ->where('metadata2.id IS NULL');
-
 
         if ($hideCatalogs !== null) {
             $qb->andWhere(':catalog_ids NOT MEMBER OF dataset.catalogs')

@@ -30,7 +30,7 @@ class CatalogApiResource implements ApiResource
             'hasMetadata' => $this->catalog->hasMetadata(),
         ];
 
-        if($this->catalog->hasMetadata()) {
+        if ($this->catalog->hasMetadata()) {
             $metadata = $this->catalog->getLatestMetadata();
 
             $catalog['metadata'] = [
@@ -45,7 +45,7 @@ class CatalogApiResource implements ApiResource
                 'created' => $metadata->getCreatedAt(),
                 'updated' => $metadata->getUpdatedAt(),
                 'homepage' => $metadata->getHomepage() !== null ? $metadata->getHomepage()->getValue() : null,
-                'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null
+                'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
             ];
         }
 

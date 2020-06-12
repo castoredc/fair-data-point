@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
-use App\Entity\Study;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
@@ -16,6 +16,7 @@ use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
+use function assert;
 use function count;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
@@ -33,13 +34,16 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
      */
     public function __invoke(RenderCSVDistributionCommand $message): string
     {
+        $dbStudy = $message->getDistribution()->getDistribution()->getDataset()->getStudy();
+        assert($dbStudy instanceof CastorStudy);
+
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
         } else {
             $this->apiClient->setUser($message->getUser());
         }
 
-        $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
+        $study = $this->apiClient->getStudy($dbStudy->getId());
         $studyFields = $this->apiClient->getPhasesAndSteps($study, true)->getFields();
         $slugify = new Slugify(['separator' => '_']);
 
@@ -81,7 +85,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    private function renderRecord(array $fields, array $columns, Study $study, Record $record): array
+    private function renderRecord(array $fields, array $columns, CastorStudy $study, Record $record): array
     {
         $record = $this->apiClient->getRecordDataCollection($study, $record);
         $studyData = $record->getData()->getStudy();

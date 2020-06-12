@@ -38,7 +38,6 @@ class ApiClient
     public function postStudyMetadataNotification(Study $study): void
     {
         $metadata = $study->getLatestMetadata();
-        $dataset = $study->getDataset();
 
         $type = $metadata->getType()->toString();
         $method = $metadata->getMethodType() !== null ? $metadata->getMethodType()->toString() : 'N/A';
@@ -59,8 +58,10 @@ class ApiClient
         $organizations = count($organizationArray) > 0 ? implode(', ', array_unique($organizationArray)) : 'N/A';
         $countries = count($countryArray) > 0 ? implode(', ', array_unique($countryArray)) : 'N/A';
 
-        $updated = $study->getMetadata()->count() > 1 ? true : ($metadata->getUpdated() !== null);
+        $updated = $study->getMetadata()->count() > 1 ? true : ($metadata->getUpdatedAt() !== null);
         $header = $updated ? 'The metadata for a study were edited' : 'A new study was added to the FAIR Data Point';
+
+        $url = $study->getSlug();
 
         $message = [
             'text' => $header,
@@ -69,7 +70,7 @@ class ApiClient
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => $header . ":\n*<" . $dataset->getAccessUrl() . '|' . $metadata->getBriefName() . '>*',
+                        'text' => $header . ":\n*<" . $url . '|' . $metadata->getBriefName() . '>*',
                     ],
                 ],
                 [

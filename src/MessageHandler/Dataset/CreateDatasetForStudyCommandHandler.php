@@ -4,15 +4,13 @@ declare(strict_types=1);
 namespace App\MessageHandler\Dataset;
 
 use App\Entity\FAIRData\Dataset;
-use App\Entity\PaginatedResultCollection;
+use App\Exception\NoAccessPermissionToStudy;
 use App\Message\Dataset\CreateDatasetForStudyCommand;
-use App\Message\Dataset\GetDatasetsByStudyCommand;
-use App\Message\Dataset\GetDatasetsCommand;
-use App\Repository\DatasetRepository;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function uniqid;
 
 class CreateDatasetForStudyCommandHandler implements MessageHandlerInterface
 {
@@ -31,6 +29,11 @@ class CreateDatasetForStudyCommandHandler implements MessageHandlerInterface
     public function __invoke(CreateDatasetForStudyCommand $command): Dataset
     {
         $study = $command->getStudy();
+
+        if (! $this->security->isGranted('edit', $study)) {
+            throw new NoAccessPermissionToStudy();
+        }
+
         $slugify = new Slugify();
         $slug = $slugify->slugify($study->getName() . ' ' . uniqid());
 

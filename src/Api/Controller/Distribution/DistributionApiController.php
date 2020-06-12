@@ -9,7 +9,6 @@ use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
@@ -49,7 +48,7 @@ class DistributionApiController extends ApiController
             throw $this->createNotFoundException();
         }
 
-        return new JsonResponse((new DistributionApiResource($distribution, $this->isGranted('ROLE_ADMIN')))->toArray());
+        return new JsonResponse((new DistributionApiResource($distribution))->toArray());
     }
 
     /**
@@ -143,7 +142,7 @@ class DistributionApiController extends ApiController
                 $bus->dispatch(new CreateDistributionDatabaseCommand($distribution));
             }
 
-            return new JsonResponse((new DistributionApiResource($distribution, false))->toArray(), 200);
+            return new JsonResponse((new DistributionApiResource($distribution))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -175,10 +174,6 @@ class DistributionApiController extends ApiController
                 new UpdateDistributionCommand(
                     $distribution,
                     $parsed->getSlug(),
-                    $parsed->getTitle(),
-                    $parsed->getVersion(),
-                    $parsed->getDescription(),
-                    $parsed->getLanguage(),
                     $parsed->getLicense(),
                     $parsed->getAccessRights(),
                     $parsed->getIncludeAllData(),

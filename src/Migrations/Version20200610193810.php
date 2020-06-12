@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -12,12 +11,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200610193810 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
@@ -75,7 +74,7 @@ final class Version20200610193810 extends AbstractMigration
         $this->addSql('ALTER TABLE metadata_study ADD version VARCHAR(255) NOT NULL COMMENT \'(DC2Type:version)\', ADD created_at DATETIME NOT NULL DEFAULT NOW()  COMMENT \'(DC2Type:datetime_immutable)\', DROP created, CHANGE study_id study_id VARCHAR(190) NOT NULL, CHANGE updated updated_at DATETIME DEFAULT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');

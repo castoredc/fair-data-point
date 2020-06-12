@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\MessageHandler\Study;
 
 use App\Entity\Castor\CastorStudy;
-use App\Entity\Enum\StudySource;
 use App\Entity\Study;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
@@ -22,6 +21,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function in_array;
 
 class AddStudyCommandHandler implements MessageHandlerInterface
 {
@@ -42,9 +42,6 @@ class AddStudyCommandHandler implements MessageHandlerInterface
     }
 
     /**
-     * @param AddStudyCommand $command
-     *
-     * @return Study
      * @throws NoAccessPermissionToStudy
      * @throws StudyAlreadyExists
      * @throws ErrorFetchingCastorData
@@ -59,8 +56,7 @@ class AddStudyCommandHandler implements MessageHandlerInterface
         /** @var StudyRepository $repository */
         $repository = $this->em->getRepository(Study::class);
 
-        if($command->getSourceId() !== null && $repository->studyExists($source, $command->getSourceId()))
-        {
+        if ($command->getSourceId() !== null && $repository->studyExists($source, $command->getSourceId())) {
             throw new StudyAlreadyExists();
         }
 
@@ -71,7 +67,7 @@ class AddStudyCommandHandler implements MessageHandlerInterface
 
         $study = null;
 
-        if($source->isCastor()) {
+        if ($source->isCastor()) {
             $study = $this->createCastorStudy($command->isManuallyEntered(), $command->getSourceId(), $command->getName(), $command->getSourceServer(), $slug);
         }
 
@@ -82,13 +78,6 @@ class AddStudyCommandHandler implements MessageHandlerInterface
     }
 
     /**
-     * @param bool        $manuallyEntered
-     * @param string|null $sourceId
-     * @param string|null $name
-     * @param string|null $sourceServer
-     * @param string      $slug
-     *
-     * @return CastorStudy
      * @throws NoAccessPermissionToStudy
      * @throws ErrorFetchingCastorData
      * @throws NoAccessPermission
@@ -105,7 +94,7 @@ class AddStudyCommandHandler implements MessageHandlerInterface
         /** @var CastorUser $user */
         $user = $this->security->getUser();
 
-        if($isAdmin && $manuallyEntered) {
+        if ($isAdmin && $manuallyEntered) {
             $study = new CastorStudy($sourceId, $name, $slug);
             $study->setEnteredManually(true);
 

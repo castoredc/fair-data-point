@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Data;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Instances\SurveyInstance;
 use App\Entity\Castor\Instances\SurveyPackageInstance;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\CastorStudy;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use function count;

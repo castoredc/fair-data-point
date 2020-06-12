@@ -5,7 +5,6 @@ namespace App\MessageHandler\Study;
 
 use App\Exception\CatalogNotExceptingSubmissions;
 use App\Message\Study\AddStudyToCatalogCommand;
-use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

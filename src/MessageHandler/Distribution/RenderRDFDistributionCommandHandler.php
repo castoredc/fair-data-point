@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
-use App\Entity\Study;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Study;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function assert;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 {
@@ -27,13 +29,16 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(RenderRDFDistributionCommand $message): string
     {
+        $dbStudy = $message->getDistribution()->getDistribution()->getDataset()->getStudy();
+        assert($dbStudy instanceof CastorStudy);
+
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
         } else {
             $this->apiClient->setUser($message->getUser());
         }
 
-        $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
+        $study = $this->apiClient->getStudy($dbStudy->getId());
 
         $return = '';
 
@@ -47,7 +52,6 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
     private function renderRecord(RDFDistribution $distribution, Study $study, Record $record): string
     {
         // TODO: Render RDF
-        $record = $this->apiClient->getRecordDataCollection($study, $record);
 
         return '';
     }

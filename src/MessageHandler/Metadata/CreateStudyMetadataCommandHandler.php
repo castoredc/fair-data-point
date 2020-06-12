@@ -30,11 +30,11 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
         $metadata->setSummary($message->getSummary());
         $metadata->setType($message->getType());
 
-        if($message->getCondition() !== null) {
+        if ($message->getCondition() !== null) {
             $metadata->setCondition(new CodedText($message->getCondition()));
         }
 
-        if($message->getIntervention() !== null) {
+        if ($message->getIntervention() !== null) {
             $metadata->setCondition(new CodedText($message->getIntervention()));
         }
 

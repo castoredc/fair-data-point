@@ -11,7 +11,6 @@ namespace App\Entity\Enum;
  * @method static static other()
  * @method bool isCastor()
  * @method bool isOther()
- *
  * @inheritDoc
  */
 class StudySource extends Enum

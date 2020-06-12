@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
@@ -12,6 +13,7 @@ use App\Message\Distribution\GetRecordsCommand;
 use App\Model\Castor\ApiClient;
 use App\Type\DistributionAccessType;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function assert;
 
 class GetRecordsCommandHandler implements MessageHandlerInterface
 {
@@ -34,6 +36,7 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
     public function __invoke(GetRecordsCommand $message): array
     {
         $study = $message->getDistribution()->getDataset()->getStudy();
+        assert($study instanceof CastorStudy);
 
         if ($message->getDistribution()->getContents()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());

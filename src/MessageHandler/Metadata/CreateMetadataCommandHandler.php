@@ -8,17 +8,13 @@ use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Entity\Metadata\StudyMetadata;
-use App\Entity\Terminology\CodedText;
 use App\Entity\Version;
-use App\Message\Metadata\CreateCatalogMetadataCommand;
-use App\Message\Metadata\CreateStudyMetadataCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
 {
-    const DEFAULT_VERSION_NUMBER = '1.0.0';
+    public const DEFAULT_VERSION_NUMBER = '1.0.0';
 
     /** @var EntityManagerInterface */
     protected $em;
@@ -30,21 +26,21 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
 
     protected function updateVersionNumber(?Version $currentVersion, VersionType $versionUpdate): Version
     {
-        if($currentVersion === null) {
+        if ($currentVersion === null) {
             return new Version(self::DEFAULT_VERSION_NUMBER);
         }
 
         $version = new Version();
 
-        if($versionUpdate->isMajor()) {
+        if ($versionUpdate->isMajor()) {
             $version->setMajor($currentVersion->getMajor() + 1);
             $version->setMinor(0);
             $version->setPatch(0);
-        } elseif($versionUpdate->isMinor()) {
+        } elseif ($versionUpdate->isMinor()) {
             $version->setMajor($currentVersion->getMajor());
             $version->setMinor($currentVersion->getMinor() + 1);
             $version->setPatch(0);
-        } elseif($versionUpdate->isPatch()) {
+        } elseif ($versionUpdate->isPatch()) {
             $version->setMajor($currentVersion->getMajor());
             $version->setMinor($currentVersion->getMinor());
             $version->setPatch($currentVersion->getPatch() + 1);
@@ -55,12 +51,11 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
 
     protected function parseLocalizedText(?LocalizedText $localizedText): ?LocalizedText
     {
-        if($localizedText === null) {
+        if ($localizedText === null) {
             return null;
         }
 
-        foreach($localizedText->getTexts() as $text)
-        {
+        foreach ($localizedText->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
             $text->setLanguage($this->getLanguage($text->getLanguageCode()));
         }

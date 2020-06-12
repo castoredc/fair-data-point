@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
-use App\Entity\Study;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
@@ -11,6 +10,7 @@ use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Organization;
 use App\Entity\Iri;
+use App\Entity\Study;
 use App\Entity\Terminology\CodedText;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
@@ -185,7 +185,8 @@ class StudyMetadata
     {
         $this->study = $study;
         $this->centers = new ArrayCollection();
-        $this->contacts = new ArrayCollection();;
+        $this->contacts = new ArrayCollection();
+
         $this->centers = new ArrayCollection();
     }
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Data\InstanceDataCollection;
 use App\Entity\Castor\Data\RecordData;
 use App\Entity\Castor\Data\RecordDataCollection;
@@ -23,7 +24,6 @@ use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
-use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\User;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;

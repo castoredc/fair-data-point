@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Structure\Step;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Castor\Form\Field;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 use function ksort;

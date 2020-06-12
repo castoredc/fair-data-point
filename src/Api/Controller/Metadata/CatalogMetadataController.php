@@ -1,20 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Request\Metadata\CatalogMetadataApiRequest;
-use App\Api\Request\Metadata\ConsentApiRequest;
 use App\Controller\Api\ApiController;
-use App\Entity\Enum\VersionType;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\LocalizedText;
 use App\Exception\ApiRequestParseError;
-use App\Exception\StudyAlreadyHasDataset;
-use App\Exception\StudyAlreadyHasSameDataset;
-use App\Exception\StudyNotFound;
 use App\Message\Metadata\CreateCatalogMetadataCommand;
-use App\Message\Metadata\UpdateConsentCommand;
-use App\Message\Study\PublishStudyCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

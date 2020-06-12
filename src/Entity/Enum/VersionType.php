@@ -13,7 +13,6 @@ namespace App\Entity\Enum;
  * @method bool isMajor()
  * @method bool isMinor()
  * @method bool isPatch()
- *
  * @inheritDoc
  */
 class VersionType extends Enum

@@ -21,7 +21,6 @@ use App\Message\Dataset\CreateDatasetForStudyCommand;
 use App\Message\Dataset\GetDatasetsByStudyCommand;
 use App\Message\Study\AddStudyCommand;
 use App\Message\Study\AddStudyToCatalogCommand;
-use App\Message\Study\GetPaginatedStudiesCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +71,7 @@ class StudyApiController extends ApiController
 
             $catalog = null;
 
-            if($parsed->getCatalog() !== null) {
+            if ($parsed->getCatalog() !== null) {
                 $envelope = $bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
 
                 /** @var HandledStamp $handledStamp */
@@ -92,7 +91,7 @@ class StudyApiController extends ApiController
             /** @var Study $study */
             $study = $handledStamp->getResult();
 
-            if($catalog !== null) {
+            if ($catalog !== null) {
                 $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
             }
 
@@ -106,16 +105,16 @@ class StudyApiController extends ApiController
                 return new JsonResponse($e->toArray(), 404);
             }
 
+            if ($e instanceof NoAccessPermissionToStudy) {
+                return new JsonResponse($e->toArray(), 403);
+            }
+
             if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
 
             if ($e instanceof StudyAlreadyExists) {
                 return new JsonResponse($e->toArray(), 409);
-            }
-
-            if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
             }
 
             return new JsonResponse([], 500);

@@ -102,96 +102,63 @@ abstract class Metadata
      */
     private $landingPage;
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return LocalizedText|null
-     */
     public function getTitle(): ?LocalizedText
     {
         return $this->title;
     }
 
-    /**
-     * @param LocalizedText|null $title
-     */
     public function setTitle(?LocalizedText $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return Version
-     */
     public function getVersion(): Version
     {
         return $this->version;
     }
 
-    /**
-     * @param Version $version
-     */
     public function setVersion(Version $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return LocalizedText|null
-     */
     public function getDescription(): ?LocalizedText
     {
         return $this->description;
     }
 
-    /**
-     * @param LocalizedText|null $description
-     */
     public function setDescription(?LocalizedText $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return Language|null
-     */
     public function getLanguage(): ?Language
     {
         return $this->language;
     }
 
-    /**
-     * @param Language|null $language
-     */
     public function setLanguage(?Language $language): void
     {
         $this->language = $language;
     }
 
-    /**
-     * @return License|null
-     */
     public function getLicense(): ?License
     {
         return $this->license;
     }
 
-    /**
-     * @param License|null $license
-     */
     public function setLicense(?License $license): void
     {
         $this->license = $license;
     }
 
     /**
-     * @return Collection
+     * @return Collection<Agent>
      */
     public function getPublishers(): Collection
     {
@@ -199,31 +166,25 @@ abstract class Metadata
     }
 
     /**
-     * @param Collection $publishers
+     * @param Collection<Agent> $publishers
      */
     public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
 
-    /**
-     * @return LocalizedText|null
-     */
     public function getKeyword(): ?LocalizedText
     {
         return $this->keyword;
     }
 
-    /**
-     * @param LocalizedText|null $keyword
-     */
     public function setKeyword(?LocalizedText $keyword): void
     {
         $this->keyword = $keyword;
     }
 
     /**
-     * @return Collection
+     * @return Collection<Agent>
      */
     public function getContacts(): Collection
     {
@@ -231,24 +192,18 @@ abstract class Metadata
     }
 
     /**
-     * @param Collection $contacts
+     * @param Collection<Agent> $contacts
      */
     public function setContacts(Collection $contacts): void
     {
         $this->contacts = $contacts;
     }
 
-    /**
-     * @return Iri|null
-     */
     public function getLandingPage(): ?Iri
     {
         return $this->landingPage;
     }
 
-    /**
-     * @param Iri|null $landingPage
-     */
     public function setLandingPage(?Iri $landingPage): void
     {
         $this->landingPage = $landingPage;

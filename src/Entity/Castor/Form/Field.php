@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Form;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Structure\MetadataPoint;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Castor\Structure\MetadataPoint;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 

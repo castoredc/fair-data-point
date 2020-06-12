@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace App\Graph\Resource\Dataset;
 
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\FAIRData\Person;
-use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use App\Graph\Resource\GraphResource;
 use EasyRdf_Graph;
@@ -56,10 +54,10 @@ class DatasetGraphResource implements GraphResource
             $graph = (new PersonGraphResource($contactPoint))->addToGraph($baseUrl, $url, 'dcat:contactPoint', $graph);
         }
 
-        foreach ($metadata->getDepartments() as $department) {
-            /** @var Department $department */
-            $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
-        }
+        // foreach ($metadata->getDepartments() as $department) {
+        //     /** @var Department $department */
+        //     $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
+        // }
 
         $graph->addResource($url, 'dcterms:language', $metadata->getLanguage()->getAccessUrl());
 

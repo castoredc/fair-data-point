@@ -29,11 +29,11 @@ class GetDatasetCommandHandler implements MessageHandlerInterface
     {
         $dataset = $this->em->getRepository(Dataset::class)->find($command->getId());
 
-        if($dataset === null) {
+        if ($dataset === null) {
             throw new NotFound();
         }
 
-        if(! $this->security->isGranted('view', $dataset)) {
+        if (! $this->security->isGranted('view', $dataset)) {
             throw new NoAccessPermission();
         }
 

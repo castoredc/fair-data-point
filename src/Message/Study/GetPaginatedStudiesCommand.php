@@ -98,7 +98,7 @@ class GetPaginatedStudiesCommand
     /**
      * @return string[]|null
      */
-    public function getHideCatalogs()
+    public function getHideCatalogs(): ?array
     {
         return $this->hideCatalogs;
     }

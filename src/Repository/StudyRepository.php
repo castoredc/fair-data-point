@@ -75,15 +75,10 @@ class StudyRepository extends EntityRepository
     }
 
     /**
-     * @param Catalog|null $catalog
      * @param string[]|null     $hideCatalogs
-     * @param string|null  $search
-     * @param array|null   $studyType
-     * @param array|null   $methodType
-     * @param array|null   $country
-     * @param bool         $admin
-     *
-     * @return QueryBuilder
+     * @param StudyType[]|null  $studyType
+     * @param MethodType[]|null $methodType
+     * @param string[]|null     $country
      */
     private function getStudyQuery(
         QueryBuilder $qb,
@@ -148,15 +143,8 @@ class StudyRepository extends EntityRepository
         return $qb;
     }
 
-
-    /**
-     * @param StudyType[]|null  $studyType
-     * @param MethodType[]|null $methodType
-     * @param string[]|null     $country
-     *
-     * @return mixed
-     */
-    public function studyExists(StudySource $source, string $sourceId) {
+    public function studyExists(StudySource $source, string $sourceId): bool
+    {
         return $this->count([
             'source' => $source,
             'sourceId' => $sourceId,

@@ -20,19 +20,19 @@ class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
         $metadata->setTitle($this->parseLocalizedText($command->getTitle()));
         $metadata->setDescription($this->parseLocalizedText($command->getDescription()));
 
-        if($command->getLanguage() !== null) {
+        if ($command->getLanguage() !== null) {
             $metadata->setLanguage($this->getLanguage($command->getLanguage()));
         }
 
-        if($command->getLicense() !== null) {
+        if ($command->getLicense() !== null) {
             $metadata->setLicense($this->getLicense($command->getLicense()));
         }
 
-        if($command->getHomepage() !== null) {
+        if ($command->getHomepage() !== null) {
             $metadata->setHomepage(new Iri($command->getHomepage()));
         }
 
-        if($command->getLogo() !== null) {
+        if ($command->getLogo() !== null) {
             $metadata->setLogo(new Iri($command->getLogo()));
         }
 

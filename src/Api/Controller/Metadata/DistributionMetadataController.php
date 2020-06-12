@@ -1,13 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Request\Metadata\DatasetMetadataApiRequest;
 use App\Controller\Api\ApiController;
-use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
-use App\Message\Metadata\CreateDatasetMetadataCommand;
 use App\Message\Metadata\CreateDistributionMetadataCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

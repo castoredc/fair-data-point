@@ -30,11 +30,11 @@ class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
         /** @var Catalog|null $catalog */
         $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $command->getSlug()]);
 
-        if($catalog === null) {
+        if ($catalog === null) {
             throw new CatalogNotFound();
         }
 
-        if(! $this->security->isGranted('view', $catalog)) {
+        if (! $this->security->isGranted('view', $catalog)) {
             throw new NoAccessPermission();
         }
 

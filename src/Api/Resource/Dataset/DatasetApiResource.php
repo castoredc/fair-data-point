@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Api\Resource\Dataset;
 
 use App\Api\Resource\ApiResource;
-use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\FAIRData\Dataset;
 
 class DatasetApiResource implements ApiResource
@@ -31,7 +30,7 @@ class DatasetApiResource implements ApiResource
             'published' => $this->dataset->isPublished(),
         ];
 
-        if($this->dataset->hasMetadata()) {
+        if ($this->dataset->hasMetadata()) {
             $metadata = $this->dataset->getLatestMetadata();
 
             $dataset['metadata'] = [
@@ -44,7 +43,7 @@ class DatasetApiResource implements ApiResource
                 'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
                 'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
                 'created' => $metadata->getCreatedAt(),
-                'updated' => $metadata->getUpdatedAt()
+                'updated' => $metadata->getUpdatedAt(),
             ];
         }
 

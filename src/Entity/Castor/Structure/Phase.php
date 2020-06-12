@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure;
 
-use App\Entity\Castor\Structure\Step\Step;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Castor\Structure\Step\Step;
 use App\Entity\Enum\StructureType;
 use function uasort;
 

@@ -25,7 +25,6 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/catalog/{catalog}")
  * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
- *
  */
 class CatalogApiController extends ApiController
 {

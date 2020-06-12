@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\Study;
 use App\Entity\Metadata\CatalogMetadata;
+use App\Entity\Study;
 use App\Entity\Version;
 use App\Security\ApiUser;
 use App\Traits\CreatedAndUpdated;
@@ -168,7 +168,7 @@ class Catalog
                 continue;
             }
 
-            $studies[] = $dataset;
+            $studies[] = $study;
         }
 
         return $studies;
@@ -176,9 +176,11 @@ class Catalog
 
     public function addDataset(Dataset $dataset): void
     {
-        if(! $this->datasets->contains($dataset)) {
-            $this->datasets->add($dataset);
+        if ($this->datasets->contains($dataset)) {
+            return;
         }
+
+        $this->datasets->add($dataset);
     }
 
     public function removeDataset(Dataset $dataset): void
@@ -188,9 +190,11 @@ class Catalog
 
     public function addStudy(Study $study): void
     {
-        if(! $this->studies->contains($study)) {
-            $this->studies->add($study);
+        if ($this->studies->contains($study)) {
+            return;
         }
+
+        $this->studies->add($study);
     }
 
     public function removeStudy(Study $study): void

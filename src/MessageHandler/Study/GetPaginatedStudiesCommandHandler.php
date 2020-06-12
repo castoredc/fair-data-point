@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Study;
 
-use App\Entity\Study;
 use App\Entity\PaginatedResultCollection;
+use App\Entity\Study;
 use App\Message\Study\GetPaginatedStudiesCommand;
 use App\Repository\StudyRepository;
 use Doctrine\ORM\EntityManagerInterface;

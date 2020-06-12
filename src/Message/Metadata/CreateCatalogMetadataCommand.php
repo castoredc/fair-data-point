@@ -3,15 +3,9 @@ declare(strict_types=1);
 
 namespace App\Message\Metadata;
 
-use App\Entity\Study;
-use App\Entity\Enum\MethodType;
-use App\Entity\Enum\RecruitmentStatus;
-use App\Entity\Enum\StudyType;
 use App\Entity\Enum\VersionType;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\LocalizedText;
-use App\Security\CastorUser;
-use DateTimeImmutable;
 
 class CreateCatalogMetadataCommand extends CreateMetadataCommand
 {

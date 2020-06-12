@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\Study;
 use App\Entity\Metadata\DatasetMetadata;
+use App\Entity\Study;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;

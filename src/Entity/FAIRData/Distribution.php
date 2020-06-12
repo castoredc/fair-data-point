@@ -169,17 +169,11 @@ class Distribution
         $this->metadata->add($metadata);
     }
 
-    /**
-     * @return License|null
-     */
     public function getLicense(): ?License
     {
         return $this->license;
     }
 
-    /**
-     * @param License|null $license
-     */
     public function setLicense(?License $license): void
     {
         $this->license = $license;

@@ -18,10 +18,11 @@ use function count;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StudyRepository")
  * @ORM\InheritanceType("JOINED")
- * @DiscriminatorColumn(name="type", type="string")
- * @DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
+ *
+ * @DiscriminatorColumn(name="type", type="string")
+ * @DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  */
 abstract class Study
 {
@@ -209,5 +210,15 @@ abstract class Study
     public function getCatalogs(): Collection
     {
         return $this->catalogs;
+    }
+
+    public function getSourceId(): ?string
+    {
+        return $this->sourceId;
+    }
+
+    public function getSource(): ?StudySource
+    {
+        return $this->source;
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -7,13 +6,14 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use function sprintf;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
 final class Version20200611191819 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
@@ -24,34 +24,25 @@ final class Version20200611191819 extends AbstractMigration
         $this->setForeignKeyChecks(false);
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function postUp(Schema $schema): void
     {
         parent::postUp($schema);
         $this->setForeignKeyChecks(true);
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function preDown(Schema $schema): void
     {
         parent::preDown($schema);
         $this->setForeignKeyChecks(false);
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function postDown(Schema $schema): void
     {
         parent::postDown($schema);
         $this->setForeignKeyChecks(true);
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
@@ -78,7 +69,7 @@ final class Version20200611191819 extends AbstractMigration
         $this->addSql('UPDATE study SET type = "castor"');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
@@ -95,16 +86,15 @@ final class Version20200611191819 extends AbstractMigration
         $this->addSql('ALTER TABLE study ADD server INT DEFAULT NULL, DROP source_id, DROP source, DROP type, CHANGE id id VARCHAR(190) CHARACTER SET utf8 NOT NULL COLLATE `utf8_general_ci`');
     }
 
-    /**
-     * @param boolean $enabled
-     */
-    protected function setForeignKeyChecks($enabled)
+    protected function setForeignKeyChecks(bool $enabled): void
     {
         $connection = $this->connection;
         $platform = $connection->getDatabasePlatform();
 
-        if ($platform instanceof MySqlPlatform) {
-            $connection->exec(sprintf('SET FOREIGN_KEY_CHECKS = %s;', (int)$enabled));
+        if (! ($platform instanceof MySqlPlatform)) {
+            return;
         }
+
+        $connection->exec(sprintf('SET FOREIGN_KEY_CHECKS = %s;', (int) $enabled));
     }
 }

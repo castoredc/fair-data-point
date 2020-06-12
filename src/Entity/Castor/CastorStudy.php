@@ -67,8 +67,7 @@ class CastorStudy extends Study
         return new self(
             $data['study_id'] ?? null,
             $data['name'] ?? null,
-            $data['slug'] ?? null,
-            null
+            $data['slug'] ?? null
         );
     }
 }

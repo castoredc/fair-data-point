@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Graph\Resource\Distribution;
 
 use App\Entity\Data\RDF\RDFDistribution;
-use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\GraphResource;
@@ -42,10 +41,10 @@ class DistributionGraphResource implements GraphResource
             $graph->addLiteral($url, 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        foreach ($metadata->getPublishers() as $agent) {
-            /** @var Department $department */
-            // $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
-        }
+        // foreach ($metadata->getPublishers() as $agent) {
+        //     /** @var Department $department */
+        //     // $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
+        // }
 
         $graph->addResource($url, 'dcterms:language', $metadata->getLanguage()->getAccessUrl());
 

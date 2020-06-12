@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Dataset;
 
-use App\Api\Resource\Dataset\PaginatedDatasetsApiResource;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\PaginatedResultCollection;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
 use App\Repository\DatasetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use function ceil;
 use Symfony\Component\Security\Core\Security;
 
 class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface

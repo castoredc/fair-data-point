@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Message\Agent;
 
-use App\Entity\Study;
 use App\Entity\Iri;
+use App\Entity\Study;
 
 class CreateDepartmentAndOrganizationCommand
 {

@@ -27,7 +27,7 @@ class StudiesMapApiResource implements ApiResource
         $data = [];
 
         foreach ($this->studies as $study) {
-            if(! $study->hasMetadata()) {
+            if (! $study->hasMetadata()) {
                 continue;
             }
             foreach ($study->getLatestMetadata()->getOrganizations() as $organization) {

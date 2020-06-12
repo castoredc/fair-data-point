@@ -6,9 +6,7 @@ namespace App\MessageHandler\Study;
 use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
-use App\Message\Study\GetStudiesCommand;
 use App\Message\Study\GetStudyCommand;
-use App\Security\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -31,11 +29,11 @@ class GetStudyCommandHandler implements MessageHandlerInterface
     {
         $study = $this->em->getRepository(Study::class)->find($command->getId());
 
-        if($study === null) {
+        if ($study === null) {
             throw new StudyNotFound();
         }
 
-        if(! $this->security->isGranted('view', $study)) {
+        if (! $this->security->isGranted('view', $study)) {
             throw new NoAccessPermissionToStudy();
         }
 

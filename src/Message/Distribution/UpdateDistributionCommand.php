@@ -15,18 +15,6 @@ class UpdateDistributionCommand
     private $slug;
 
     /** @var string */
-    private $title;
-
-    /** @var string */
-    private $version;
-
-    /** @var string */
-    private $description;
-
-    /** @var string */
-    private $language;
-
-    /** @var string */
     private $license;
 
     /** @var int */
@@ -41,10 +29,6 @@ class UpdateDistributionCommand
     public function __construct(
         Distribution $distribution,
         string $slug,
-        string $title,
-        string $version,
-        string $description,
-        string $language,
         string $license,
         int $accessRights,
         ?bool $includeAllData,
@@ -52,10 +36,6 @@ class UpdateDistributionCommand
     ) {
         $this->distribution = $distribution;
         $this->slug = $slug;
-        $this->title = $title;
-        $this->version = $version;
-        $this->description = $description;
-        $this->language = $language;
         $this->license = $license;
         $this->accessRights = $accessRights;
         $this->includeAllData = $includeAllData;
@@ -70,26 +50,6 @@ class UpdateDistributionCommand
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->language;
     }
 
     public function getLicense(): string
