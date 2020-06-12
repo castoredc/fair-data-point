@@ -30,7 +30,7 @@ export default class Distribution extends Component {
     }
 
     getDataset = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
+        axios.get('/api/dataset/' + this.props.match.params.dataset)
             .then((response) => {
                 this.setState({
                     dataset: response.data,
@@ -43,13 +43,13 @@ export default class Distribution extends Component {
                     isLoadingDataset: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the dataset';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     getDistribution = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
+        axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
             .then((response) => {
                 this.setState({
                     distribution: response.data,
@@ -62,7 +62,7 @@ export default class Distribution extends Component {
                     isLoadingDistribution: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };

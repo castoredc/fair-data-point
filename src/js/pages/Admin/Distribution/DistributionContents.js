@@ -24,7 +24,7 @@ export default class DistributionContents extends Component {
             isLoadingContents: true,
         });
 
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution + '/contents')
+        axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution + '/contents')
             .then((response) => {
                 this.setState({
                     contents:          response.data.elements,
@@ -37,7 +37,7 @@ export default class DistributionContents extends Component {
                     isLoadingContents: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -50,7 +50,7 @@ export default class DistributionContents extends Component {
             return <InlineLoader/>;
         }
 
-        if (distribution.includeAll) {
+        if (distribution.includeAllData) {
             return <div className="NoResults">This distribution contains all fields.</div>;
         }
 

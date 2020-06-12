@@ -1,16 +1,10 @@
 import React, {Component} from 'react'
-import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "../ToastContent";
 import Tab from "react-bootstrap/Tab";
 import StudyStructure from "./StudyStructure";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import {Redirect} from "react-router-dom";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 
 export default class RDFStudyStructure extends Component {
     render() {

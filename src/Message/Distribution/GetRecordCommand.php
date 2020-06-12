@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use App\Security\CastorUser;
 
 class GetRecordCommand
 {
-    /** @var Study */
+    /** @var CastorStudy */
     private $study;
 
     /** @var string */
@@ -17,14 +17,14 @@ class GetRecordCommand
     /** @var CastorUser */
     private $user;
 
-    public function __construct(Study $study, string $recordId, CastorUser $user)
+    public function __construct(CastorStudy $study, string $recordId, CastorUser $user)
     {
         $this->study = $study;
         $this->recordId = $recordId;
         $this->user = $user;
     }
 
-    public function getStudy(): Study
+    public function getStudy(): CastorStudy
     {
         return $this->study;
     }

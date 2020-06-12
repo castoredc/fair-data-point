@@ -8,7 +8,6 @@ import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
-import Icon from "../../../components/Icon";
 import DataModelPrefixes from "./DataModelPrefixes";
 import DataModelModules from "./DataModelModules";
 import DataModelDetails from "./DataModelDetails";
@@ -51,7 +50,7 @@ export default class DataModel extends Component {
                     isLoadingDataModels: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the data models';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data models';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -79,7 +78,7 @@ export default class DataModel extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/model'}>
+                    <LinkContainer to={'/admin/models'}>
                         <Button buttonType="secondary" icon="arrowLeftChevron">
                             Back to data models
                         </Button>
@@ -89,7 +88,7 @@ export default class DataModel extends Component {
                     <div><h3>{dataModel.title}</h3></div>
                 </Col>
             </Row>
-            <Row>
+            <Row className="FillHeight">
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
                         <LinkContainer to={'/admin/model/' + dataModel.id} exact={true}>

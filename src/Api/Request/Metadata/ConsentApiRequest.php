@@ -5,6 +5,7 @@ namespace App\Api\Request\Metadata;
 
 use App\Api\Request\SingleApiRequest;
 use Symfony\Component\Validator\Constraints as Assert;
+use function boolval;
 
 class ConsentApiRequest extends SingleApiRequest
 {
@@ -24,8 +25,8 @@ class ConsentApiRequest extends SingleApiRequest
 
     protected function parse(): void
     {
-        $this->publish = $this->getFromData('publish');
-        $this->socialMedia = $this->getFromData('socialMedia');
+        $this->publish = boolval($this->getFromData('publish'));
+        $this->socialMedia = boolval($this->getFromData('socialMedia'));
     }
 
     public function getPublish(): bool

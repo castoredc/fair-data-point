@@ -6,7 +6,6 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Col, Row} from "react-bootstrap";
 import {Button, DataTable} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
-import TripleModal from "../../../modals/TripleModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 
 export default class DataModelPrefixes extends Component {
@@ -48,7 +47,7 @@ export default class DataModelPrefixes extends Component {
                     isLoadingContents: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -100,7 +99,7 @@ export default class DataModelPrefixes extends Component {
         const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
         const {dataModel} = this.props;
 
-        return <div>
+        return <div className="SubPage">
             <DataModelPrefixModal
                 show={showModal.add}
                 handleClose={() => {
@@ -136,49 +135,53 @@ export default class DataModelPrefixes extends Component {
                     </div>
                 </Col>
             </Row>
-            <Row>
-                <Col sm={12}>
-                    {isLoadingContents ? <InlineLoader/> : <DataTable
-                        anchorRight={1}
-                        emptyTableMessage="This data model does not have prefixes"
-                        cellSpacing="default"
-                        rows={prefixes.map((item) => {
-                            return [
-                                item.prefix,
-                                item.uri,
-                                [
-                                    {
-                                        destination: () => {
-                                            this.openModal('add', {id: item.id, prefix: item.prefix, uri: item.uri})
+            <Row className="FillHeight">
+                <Col sm={12} className="Page">
+                    <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
+                        {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
+                                <DataTable
+                            anchorRight={1}
+                            emptyTableMessage="This data model does not have prefixes"
+                            cellSpacing="default"
+                            rows={prefixes.map((item) => {
+                                return [
+                                    item.prefix,
+                                    item.uri,
+                                    [
+                                        {
+                                            destination: () => {
+                                                this.openModal('add', {id: item.id, prefix: item.prefix, uri: item.uri})
+                                            },
+                                            label:       'Edit prefix',
                                         },
-                                        label:       'Edit prefix',
-                                    },
-                                    {
-                                        destination: () => {
-                                            this.openModal('remove', {id: item.id, prefix: item.prefix, uri: item.uri})
+                                        {
+                                            destination: () => {
+                                                this.openModal('remove', {id: item.id, prefix: item.prefix, uri: item.uri})
+                                            },
+                                            label:       'Delete prefix',
                                         },
-                                        label:       'Delete prefix',
-                                    },
-                                ],
-                            ];
-                        })}
-                        structure={{
-                            id:      {
-                                header:    'Prefix',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                            title:   {
-                                header:    'URI',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                            actions: {
-                                header:   '',
-                                template: 'rowAction',
-                            },
-                        }}
-                    />}
+                                    ],
+                                ];
+                            })}
+                            structure={{
+                                id:      {
+                                    header:    'Prefix',
+                                    resizable: true,
+                                    template:  'fixed',
+                                },
+                                title:   {
+                                    header:    'URI',
+                                    resizable: true,
+                                    template:  'fixed',
+                                },
+                                actions: {
+                                    header:   '',
+                                    template: 'rowAction',
+                                },
+                            }}
+                        />
+                        </div>}
+                    </div>
                 </Col>
             </Row>
         </div>;

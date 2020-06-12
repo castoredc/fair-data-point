@@ -6,7 +6,7 @@ namespace App\Controller\Api;
 use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\OptionGroupsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
@@ -30,7 +30,7 @@ class StudyStructureApiController extends ApiController
      * @Route("/api/study/{study}/structure", name="api_study_structure")
      * @ParamConverter("study", options={"mapping": {"study": "id"}})
      */
-    public function studyStructure(Study $study, Request $request, MessageBusInterface $bus): Response
+    public function studyStructure(CastorStudy $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
@@ -68,7 +68,7 @@ class StudyStructureApiController extends ApiController
      * @Route("/api/study/{study}/structure/step/{step}/fields", name="api_study_structure_step")
      * @ParamConverter("study", options={"mapping": {"study": "id"}})
      */
-    public function studyStructureStep(Study $study, string $step, Request $request, MessageBusInterface $bus): Response
+    public function studyStructureStep(CastorStudy $study, string $step, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
@@ -106,7 +106,7 @@ class StudyStructureApiController extends ApiController
      * @Route("/api/study/{study}/optiongroups", name="api_study_optiongroups")
      * @ParamConverter("study", options={"mapping": {"study": "id"}})
      */
-    public function optionGroups(Study $study, MessageBusInterface $bus): Response
+    public function optionGroups(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 

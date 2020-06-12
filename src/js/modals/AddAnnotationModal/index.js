@@ -6,7 +6,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Dropdown from "../../components/Input/Dropdown";
 import FormItem from "../../components/Form/FormItem";
-import Spinner from "react-bootstrap/Spinner";
 import {Button} from "@castoredc/matter";
 
 export default class AddAnnotationModal extends Component {

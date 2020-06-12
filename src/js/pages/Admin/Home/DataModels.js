@@ -4,10 +4,8 @@ import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button} from "@castoredc/matter";
-import Icon from "../../../components/Icon";
+import {Button, DataTable} from "@castoredc/matter";
 import AddDataModelModal from "../../../modals/AddDataModelModal";
-import {DataTable} from "@castoredc/matter";
 
 export default class DataModels extends Component {
     constructor(props) {
@@ -42,7 +40,7 @@ export default class DataModels extends Component {
                     isLoadingDataModels: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the data models';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data models';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };

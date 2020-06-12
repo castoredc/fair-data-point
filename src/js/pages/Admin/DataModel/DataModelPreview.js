@@ -3,7 +3,6 @@ import {Col, Row} from "react-bootstrap";
 import axios from "axios";
 import {toast} from "react-toastify";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import DataModelModule from "../../../components/DataModelModule/DataModelModule";
 import ToastContent from "../../../components/ToastContent";
 import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";
 import Toggle from "../../../components/Toggle";

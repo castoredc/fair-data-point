@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
-use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Graph\Resource\Distribution\DistributionGraphResource;
@@ -20,11 +19,11 @@ class DistributionController extends FAIRDataController
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request): Response
+    public function distribution(Dataset $dataset, Distribution $distribution, Request $request): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+        if ($dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 
@@ -32,8 +31,8 @@ class DistributionController extends FAIRDataController
             return $this->render(
                 'react.html.twig',
                 [
-                    'title' => $distribution->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $distribution->getDescription()->getTextByLanguageString('en')->getText(),
+                    'title' => $distribution->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $distribution->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }

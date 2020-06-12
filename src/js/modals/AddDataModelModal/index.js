@@ -5,7 +5,6 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import FormItem from "../../components/Form/FormItem";
-import Spinner from "react-bootstrap/Spinner";
 import Input from "../../components/Input";
 import {Redirect} from "react-router-dom";
 import {Button} from "@castoredc/matter";

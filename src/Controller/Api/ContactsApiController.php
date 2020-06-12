@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\Study\Provenance\StudyContactApiRequest;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Exception\GroupedApiRequestParseError;
 use App\Message\Agent\CreatePersonCommand;
 use App\Message\Study\Provenance\ClearStudyContactsCommand;

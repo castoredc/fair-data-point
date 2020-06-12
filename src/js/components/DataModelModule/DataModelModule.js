@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {Col, Row} from "react-bootstrap";
 import Toggle from "../Toggle";
-import Icon from "../Icon";
 import Container from "react-bootstrap/Container";
 import TripleGroup from "./TripleGroup";
 import {Button, Stack} from "@castoredc/matter";

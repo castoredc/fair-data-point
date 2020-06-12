@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Structure\Step;
 
 use App\Entity\Castor\CastorEntity;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Form\Field;
-use App\Entity\Castor\Study;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 use function ksort;
@@ -39,7 +39,7 @@ abstract class Step extends CastorEntity
     /** @var Field[] */
     protected $fields;
 
-    public function __construct(string $id, Study $study, StructureType $structureType, ?string $description, string $name, ?int $position)
+    public function __construct(string $id, CastorStudy $study, StructureType $structureType, ?string $description, string $name, ?int $position)
     {
         parent::__construct($id, $name, $study, $structureType);
 

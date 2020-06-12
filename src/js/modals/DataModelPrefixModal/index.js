@@ -3,11 +3,9 @@ import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import Input from "../../components/Input";
 import FormItem from "../../components/Form/FormItem";
-import Dropdown from "../../components/Input/Dropdown";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
-import Spinner from "react-bootstrap/Spinner";
 import {Button} from "@castoredc/matter";
 import Container from "react-bootstrap/Container";
 

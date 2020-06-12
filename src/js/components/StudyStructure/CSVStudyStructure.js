@@ -83,7 +83,7 @@ export default class CSVStudyStructure extends Component {
             submitDisabled: true
         });
 
-        axios.post('/api/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution + '/contents', distributionContents)
+        axios.post('/api/dataset/' + dataset + '/distribution/' + distribution + '/contents', distributionContents)
             .then(() => {
                 this.setState({
                     isSaved: true,
@@ -91,7 +91,7 @@ export default class CSVStudyStructure extends Component {
                 });
             })
             .catch((error) => {
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while saving the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while saving the distribution';
                 toast.error(<ToastContent type="error" message={message}/>);
 
                 this.setState({

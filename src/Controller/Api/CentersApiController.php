@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Api\Request\Study\Provenance\StudyCenterApiRequest;
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Exception\GroupedApiRequestParseError;
 use App\Message\Agent\CreateDepartmentAndOrganizationCommand;
 use App\Message\Study\Provenance\ClearStudyCentersCommand;

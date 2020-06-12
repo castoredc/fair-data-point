@@ -1,0 +1,38 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Entity\Metadata;
+
+use App\Entity\FAIRData\Distribution;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="metadata_distribution")
+ * @ORM\HasLifecycleCallbacks
+ */
+class DistributionMetadata extends Metadata
+{
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="metadata", fetch="EAGER")
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=FALSE)
+     *
+     * @var Distribution
+     */
+    private $distribution;
+
+    public function __construct(Distribution $distribution)
+    {
+        $this->distribution = $distribution;
+    }
+
+    public function getDistribution(): Distribution
+    {
+        return $this->distribution;
+    }
+
+    public function setDistribution(Distribution $distribution): void
+    {
+        $this->distribution = $distribution;
+    }
+}

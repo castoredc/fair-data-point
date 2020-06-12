@@ -53,7 +53,7 @@ class LocalizedText
     }
 
     /**
-     * @return Collection<string, LocalizedTextItem>
+     * @return Collection<LocalizedTextItem>
      */
     public function getTexts(): Collection
     {
@@ -61,7 +61,7 @@ class LocalizedText
     }
 
     /**
-     * @param Collection<string, LocalizedTextItem> $texts
+     * @param Collection<LocalizedTextItem> $texts
      */
     public function setTexts(Collection $texts): void
     {

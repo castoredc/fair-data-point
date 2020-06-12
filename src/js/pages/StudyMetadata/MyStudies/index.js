@@ -18,7 +18,7 @@ export default class MyStudies extends Component {
     }
 
     componentDidMount() {
-        axios.get('/api/study')
+        axios.get('/api/study/my')
             .then((response) => {
                 this.setState({
                     studies: response.data,
@@ -26,12 +26,12 @@ export default class MyStudies extends Component {
                 });
             })
             .catch((error) => {
-                if(error.response && typeof error.response.data.message !== "undefined")
+                if(error.response && typeof error.response.data.error !== "undefined")
                 {
                     this.setState({
                         isLoading: false,
                         hasError: true,
-                        errorMessage: error.response.data.message
+                        errorMessage: error.response.data.error
                     });
                 } else {
                     this.setState({

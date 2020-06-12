@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
+import {Button, Stack} from "@castoredc/matter";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
@@ -12,11 +12,9 @@ import ToastContent from "../ToastContent";
 import axios from "axios";
 import FormItem from "./FormItem";
 import Input from "../Input";
-import FormHeading from "./FormHeading";
-import LoadingScreen from "../LoadingScreen";
-import Icon from "../Icon";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import Spinner from "react-bootstrap/Spinner";
+import Toggle from "../Toggle";
+import Container from "react-bootstrap/Container";
 
 export default class ContactsForm extends Component {
     constructor(props) {
@@ -24,24 +22,12 @@ export default class ContactsForm extends Component {
 
         this.state = {
             contacts: [
-                {
-                    firstName: '',
-                    middleName: '',
-                    lastName: '',
-                    email: '',
-                    orcid: ''
-                }
+                defaultData
             ],
             visitedFields: {},
             changedFieldsSinceFormSubmission: {},
             validation: [
-                {
-                    firstName: null,
-                    middleName: null,
-                    lastName: null,
-                    email: null,
-                    orcid: null
-                }
+                defaultValidation
             ],
             isSaved: false,
             submitDisabled: false,
@@ -49,38 +35,30 @@ export default class ContactsForm extends Component {
         };
     }
 
-    handleNewContact = () => {
+    handleNewContact = (e) => {
+        const { contacts, validation } = this.state;
+        e.preventDefault();
+
         this.form.isFormValid(false).then(valid => {
             if (valid) {
                 this.setState({
                     contacts: [
-                        ...this.state.contacts,
-                        {
-                            firstName: '',
-                            middleName: '',
-                            lastName: '',
-                            email: '',
-                            orcid: ''
-                        }
+                        ...contacts,
+                        defaultData
                     ],
                     validation:    [
-                        ...this.state.validation,
-                        {
-                            firstName: null,
-                            middleName: null,
-                            lastName: null,
-                            email: null,
-                            orcid: null
-                        }
+                        ...validation,
+                        defaultValidation
                     ]
                 });
             }
         });
     };
 
-    removeContact = (index) => {
-
+    removeContact = (e, index) => {
         const { contacts, validation } = this.state;
+
+        e.preventDefault();
 
         contacts.splice(index, 1);
         validation.splice(index, 1);
@@ -102,13 +80,7 @@ export default class ContactsForm extends Component {
                 {
                     let validation = [];
                     for (let i = 0; i < response.data.length; i++) {
-                        validation.push({
-                            firstName: null,
-                            middleName: null,
-                            lastName: null,
-                            email: null,
-                            orcid: null
-                        });
+                        validation.push(defaultValidation);
                     }
 
                     this.setState({
@@ -173,6 +145,8 @@ export default class ContactsForm extends Component {
 
     handleSubmit = (event) => {
         const { studyId, admin = false } = this.props;
+        const { contacts } = this.state;
+
         event.preventDefault();
 
         window.onbeforeunload = null;
@@ -183,7 +157,7 @@ export default class ContactsForm extends Component {
                 isLoading: true
             });
 
-            axios.post('/api/study/' + studyId + '/contacts/add', this.state.contacts)
+            axios.post('/api/study/' + studyId + '/contacts/add', contacts)
                 .then((response) => {
                     this.setState({
                         isSaved: true,
@@ -219,7 +193,7 @@ export default class ContactsForm extends Component {
 
     render() {
         const { catalog, studyId, admin = false } = this.props;
-        const { isSaved, isLoading, submitDisabled } = this.state;
+        const { contacts, validation, isSaved, isLoading, submitDisabled } = this.state;
 
         const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
         const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/consent';
@@ -243,92 +217,96 @@ export default class ContactsForm extends Component {
                 method="post"
             >
                 <div className="Contacts">
-                    {this.state.contacts.map((contact, index) => {
-                    return <Row key={index} className="Contact RepeatedBlock">
-                        <Col md={12}>
-                            <FormHeading label={'Contact ' + (index + 1)} />
-                            {index > 0 && <Button variant="link" className="RemoveButton" onClick={() => {this.removeContact(index)}}>Delete contact <Icon type="crossThick"/></Button>}
-                        </Col>
-                        <Col md={6}>
-                            <FormItem label="First Name">
-                                <Input
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    name="firstName"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={contact.firstName}
-                                    serverError={this.state.validation[index].firstName}
-                                />
-                            </FormItem>
-                            <FormItem label="Middle Name">
-                                <Input
-                                    name="middleName"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={contact.middleName}
-                                    serverError={this.state.validation[index].middleName}
-                                />
-                            </FormItem>
-                            <FormItem label="Last Name">
-                                <Input
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    name="lastName"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={contact.lastName}
-                                    serverError={this.state.validation[index].lastName}
-                                />
-                            </FormItem>
-                            <FormItem label="Email address">
-                                <Input
-                                    validators={['required', 'isEmail']}
-                                    errorMessages={[required, invalid]}
-                                    name="email"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={contact.email}
-                                    serverError={this.state.validation[index].email}
-                                />
-                            </FormItem>
-                            <FormItem label="ORCID">
-                                <Input
-                                    placeholder="0000-0000-0000-0000"
-                                    validators={['isOrcid']}
-                                    errorMessages={[invalid]}
-                                    name="orcid"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={contact.orcid}
-                                    mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /[\dX]/]}
-                                    serverError={this.state.validation[index].orcid}
-                                />
-                            </FormItem>
-                        </Col>
-                        <Col md={6}>
+                    {contacts.map((contact, index) => {
+                        const name = [contact.firstName, contact.middleName, contact.lastName].filter(Boolean).join(' ');
+                        const title = 'Contact ' + (index + 1) + (name.length > 0 ? ': ' + name : '');
 
-                        </Col>
-                    </Row>;
+                        return <Toggle key={index} title={title} expanded={contacts.length === (index + 1)}>
+                            <Container>
+                                <Row>
+                                    <Col>
+                                        <FormItem label="First Name">
+                                            <Input
+                                                validators={['required']}
+                                                errorMessages={[required]}
+                                                name="firstName"
+                                                onChange={(e) => {this.handleChange(index, e)}}
+                                                onBlur={this.handleFieldVisit}
+                                                value={contact.firstName}
+                                                serverError={validation[index].firstName}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="Middle Name">
+                                            <Input
+                                                name="middleName"
+                                                onChange={(e) => {this.handleChange(index, e)}}
+                                                onBlur={this.handleFieldVisit}
+                                                value={contact.middleName}
+                                                serverError={validation[index].middleName}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="Last Name">
+                                            <Input
+                                                validators={['required']}
+                                                errorMessages={[required]}
+                                                name="lastName"
+                                                onChange={(e) => {this.handleChange(index, e)}}
+                                                onBlur={this.handleFieldVisit}
+                                                value={contact.lastName}
+                                                serverError={validation[index].lastName}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="Email address">
+                                            <Input
+                                                validators={['required', 'isEmail']}
+                                                errorMessages={[required, invalid]}
+                                                name="email"
+                                                onChange={(e) => {this.handleChange(index, e)}}
+                                                onBlur={this.handleFieldVisit}
+                                                value={contact.email}
+                                                serverError={validation[index].email}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="ORCID">
+                                            <Input
+                                                placeholder="0000-0000-0000-0000"
+                                                validators={['isOrcid']}
+                                                errorMessages={[invalid]}
+                                                name="orcid"
+                                                onChange={(e) => {this.handleChange(index, e)}}
+                                                onBlur={this.handleFieldVisit}
+                                                value={contact.orcid}
+                                                mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /[\dX]/]}
+                                                serverError={validation[index].orcid}
+                                            />
+                                        </FormItem>
+                                    </Col>
+                                    <Col>
+                                        {index > 0 && <Stack alignment="end" distribution="trailing">
+                                            <Button buttonType="danger" className="RemoveButton" icon="cross" onClick={(e) => {this.removeContact(e, index)}}>Delete contact</Button>
+                                        </Stack>}
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Toggle>;
                 })}
                 </div>
                 <Row>
                     <Col md={12}>
-                        <Button variant="link" onClick={this.handleNewContact}>+ Add Another Contact</Button>
+                        <Button buttonType="secondary" icon="add" onClick={this.handleNewContact}>Add Another Contact</Button>
                     </Col>
                 </Row>
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
                         {!admin && <LinkContainer to={backUrl}>
-                            <Button variant="secondary">Back</Button>
+                            <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}
                     </Col>
                     <Col>
-                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
-                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                        {admin ? <Button type="submit" disabled={this.state.submitDisabled}>
                             Save
-                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                        </Button> : <Button type="submit" disabled={this.state.submitDisabled}>
                             Next
                         </Button>}
                     </Col>
@@ -338,3 +316,19 @@ export default class ContactsForm extends Component {
         );
     }
 }
+
+const defaultData = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    email: '',
+    orcid: ''
+};
+
+const defaultValidation = {
+    firstName: null,
+    middleName: null,
+    lastName: null,
+    email: null,
+    orcid: null
+};

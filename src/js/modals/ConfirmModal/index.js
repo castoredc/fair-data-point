@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
-import {Button, Stack} from "@castoredc/matter";
+import {Button} from "@castoredc/matter";
 import './ConfirmModal.scss';
 
 export default class ConfirmModal extends Component {

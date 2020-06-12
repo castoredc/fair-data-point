@@ -2,7 +2,9 @@ import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
 import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async';
-import {Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
+import {ChoiceOption, Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
+
+import {components} from 'react-select';
 
 import './Input.scss'
 
@@ -43,27 +45,80 @@ class Dropdown extends ValidatorComponent {
                   value,
                   width,
                   async = false,
-                  onChange } = this.props;
+                  onChange,
+                  isMulti = false,
+              } = this.props;
         const { cachedOptions, isValid } = this.state;
+
+        let SelectComponent = null;
+
+        if(async) {
+            SelectComponent = <AsyncSelect
+                loadOptions={this.loadOptions}
+                options={cachedOptions}
+                openMenuOnClick={false}
+                ref={(r) => { this.input = r; }}
+            />
+        } else if(isMulti) {
+            const CustomOption = props => (
+                <components.Option className="DropdownMultiOption" {...props}>
+                    <ChoiceOption
+                        labelText={props.data.label}
+                        checked={props.isSelected}
+                        onChange={() => undefined}
+                    />
+                </components.Option>
+            );
+
+            const MultiValue = ({ children, ...props }) => {
+                const value = props.getValue();
+
+                if (value.length === 1) {
+                    return  <div>{value[0].label}</div>;
+                }
+
+                if (value.length === options.length) {
+                    return props.index === 0 ? <div>All</div> : null;
+                }
+
+                return props.index === 0 ? <div>{value.length} selected</div> : null;
+            };
+
+            SelectComponent = <CastorDropdown
+                invalid={!isValid}
+                onChange={onChange}
+                value={value}
+                options={options}
+                placeholder={placeholder}
+                isDisabled={isDisabled}
+                width={width}
+                isMulti={true}
+                closeMenuOnSelect={false}
+                hideSelectedOptions={false}
+                isClearable={false}
+                menuPlacement="auto"
+                components={{
+                    Option: CustomOption,
+                    MultiValue,
+                }}
+            />;
+        } else {
+            SelectComponent = <CastorDropdown
+                invalid={!isValid}
+                onChange={onChange}
+                value={value}
+                options={options}
+                placeholder={placeholder}
+                isDisabled={isDisabled}
+                width={width}
+                menuPlacement="auto"
+            />;
+        }
 
         return (
             <Form.Group className="Select" onClick={this.props.onClick}
                         ref={(r) => { this.input = r; }}>
-                {async ? <AsyncSelect
-                    loadOptions={this.loadOptions}
-                    options={cachedOptions}
-                    openMenuOnClick={false}
-                    ref={(r) => { this.input = r; }}
-                /> : <CastorDropdown
-                    invalid={!isValid}
-                    onChange={onChange}
-                    value={value}
-                    options={options}
-                    placeholder={placeholder}
-                    isDisabled={isDisabled}
-                    width={width}
-                    menuPlacement="auto"
-                /> }
+                {SelectComponent}
                 {this.errorText()}
                 {serverError && serverError.map((errorText, index) => (
                     <TextStyle key={index} variation="error">

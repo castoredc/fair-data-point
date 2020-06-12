@@ -6,7 +6,8 @@ namespace App\Api\Controller\Terminology;
 use App\Api\Request\Terminology\AnnotationApiRequest;
 use App\Controller\Api\ApiController;
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
+use App\Entity\Study;
 use App\Exception\AnnotationAlreadyExists;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidEntityType;
@@ -23,6 +24,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study/{study}/annotations")
@@ -44,6 +46,8 @@ class AnnotationApiController extends ApiController
         try {
             /** @var AnnotationApiRequest $parsed */
             $parsed = $this->parseRequest(AnnotationApiRequest::class, $request);
+
+            assert($study instanceof CastorStudy);
 
             $envelope = $bus->dispatch(new GetCastorEntityCommand($study, $user, $parsed->getEntityType(), $parsed->getEntityId(), $parsed->getEntityParent()));
 

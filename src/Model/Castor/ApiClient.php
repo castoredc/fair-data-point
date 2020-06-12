@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Data\InstanceDataCollection;
 use App\Entity\Castor\Data\RecordData;
 use App\Entity\Castor\Data\RecordDataCollection;
@@ -23,7 +24,6 @@ use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
-use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
@@ -152,16 +152,16 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getStudy(string $studyId): Study
+    public function getStudy(string $studyId): CastorStudy
     {
-        $study = Study::fromData($this->request('/api/study/' . $studyId));
+        $study = CastorStudy::fromData($this->request('/api/study/' . $studyId));
         $study->setFields($this->getFields($study));
 
         return $study;
     }
 
     /**
-     * @return Study[]
+     * @return CastorStudy[]
      *
      * @throws ErrorFetchingCastorData
      * @throws SessionTimedOut
@@ -174,14 +174,14 @@ class ApiClient
         $studies = $this->request('/api/study');
 
         foreach ($studies['_embedded']['study'] as $study) {
-            $return[] = Study::fromData($study);
+            $return[] = CastorStudy::fromData($study);
         }
 
         return $return;
     }
 
     /**
-     * @param Study[]|null $studies
+     * @param CastorStudy[]|null $studies
      *
      * @return array<string>
      *
@@ -224,7 +224,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getFields(Study $study): ArrayCollection
+    public function getFields(CastorStudy $study): ArrayCollection
     {
         $pages = 1;
         $fields = new ArrayCollection();
@@ -248,7 +248,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getFieldByParent(Study $study, string $parentId): ArrayCollection
+    public function getFieldByParent(CastorStudy $study, string $parentId): ArrayCollection
     {
         $fields = $this->getFields($study);
         $results = new ArrayCollection();
@@ -281,7 +281,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getPhasesAndSteps(Study $study, bool $includeFields = false): PhaseCollection
+    public function getPhasesAndSteps(CastorStudy $study, bool $includeFields = false): PhaseCollection
     {
         $phases = $this->getPhases($study);
         $steps = $this->getStudySteps($study, $includeFields);
@@ -300,7 +300,7 @@ class ApiClient
     /**
      * @throws Exception
      */
-    public function getPhases(Study $study): PhaseCollection
+    public function getPhases(CastorStudy $study): PhaseCollection
     {
         $pages = 1;
         $phases = new PhaseCollection();
@@ -322,7 +322,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getStudySteps(Study $study, bool $includeFields = false): ArrayCollection
+    public function getStudySteps(CastorStudy $study, bool $includeFields = false): ArrayCollection
     {
         $pages = 1;
         $steps = new ArrayCollection();
@@ -351,7 +351,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getSurveys(Study $study, bool $includeFields = false): SurveyCollection
+    public function getSurveys(CastorStudy $study, bool $includeFields = false): SurveyCollection
     {
         $pages = 1;
         $surveys = new SurveyCollection();
@@ -386,7 +386,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getReports(Study $study, bool $includeFields = false): ReportCollection
+    public function getReports(CastorStudy $study, bool $includeFields = false): ReportCollection
     {
         $pages = 1;
         $reports = new ReportCollection();
@@ -422,7 +422,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getOptionGroups(Study $study): CastorEntityCollection
+    public function getOptionGroups(CastorStudy $study): CastorEntityCollection
     {
         /** @var CastorEntityCollection<FieldOptionGroup> $optionGroups */
         $optionGroups = new CastorEntityCollection();
@@ -447,7 +447,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getOptionGroup(Study $study, string $optionGroupId): FieldOptionGroup
+    public function getOptionGroup(CastorStudy $study, string $optionGroupId): FieldOptionGroup
     {
         $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup/' . $optionGroupId);
 
@@ -460,7 +460,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecord(Study $study, string $recordId): Record
+    public function getRecord(CastorStudy $study, string $recordId): Record
     {
         $body = $this->request('/api/study/' . $study->getId() . '/record/' . $recordId);
 
@@ -473,7 +473,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecords(Study $study, bool $extractArchived = false): ArrayCollection
+    public function getRecords(CastorStudy $study, bool $extractArchived = false): ArrayCollection
     {
         $pages = 1;
         $records = new ArrayCollection();
@@ -497,7 +497,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordStudyData(Study $study, Record $record): RecordData
+    private function getRecordStudyData(CastorStudy $study, Record $record): RecordData
     {
         $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/study');
 
@@ -510,7 +510,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordReportInstances(Study $study, Record $record): ArrayCollection
+    private function getRecordReportInstances(CastorStudy $study, Record $record): ArrayCollection
     {
         $reportInstances = new ArrayCollection();
 
@@ -534,7 +534,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordSurveyPackageInstances(Study $study, Record $record): ArrayCollection
+    private function getRecordSurveyPackageInstances(CastorStudy $study, Record $record): ArrayCollection
     {
         $surveyPackageInstances = new ArrayCollection();
 
@@ -554,7 +554,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordSurveyData(Study $study, Record $record): InstanceDataCollection
+    private function getRecordSurveyData(CastorStudy $study, Record $record): InstanceDataCollection
     {
         $surveyPackageInstances = $this->getRecordSurveyPackageInstances($study, $record);
         $surveyData = new SurveyData($record);
@@ -574,7 +574,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordReportData(Study $study, Record $record): InstanceDataCollection
+    private function getRecordReportData(CastorStudy $study, Record $record): InstanceDataCollection
     {
         $reportInstances = $this->getRecordReportInstances($study, $record);
         $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/report-instance');
@@ -588,7 +588,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecordDataCollection(Study $study, Record $record): Record
+    public function getRecordDataCollection(CastorStudy $study, Record $record): Record
     {
         $dataCollection = new RecordDataCollection($record);
 
@@ -607,7 +607,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getStructure(Study $study): StructureCollection
+    public function getStructure(CastorStudy $study): StructureCollection
     {
         $structure = new StructureCollection();
 

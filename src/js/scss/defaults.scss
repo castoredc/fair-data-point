@@ -140,10 +140,36 @@ ul {
 /* Design system overrides */
 
 .SelectableDataTable {
+  transition-delay: 0s;
+  transition-duration: 0.2s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+
   table {
     td {
-      border: 1px solid transparent;
+      border-top: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
       cursor: pointer;
+    }
+  }
+
+  &.Loading {
+    opacity: 0.5;
+  }
+}
+
+.FullHeightDataTable {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  .DataTableWrapper {
+    flex: 1;
+    overflow: auto;
+
+    & > div > div {
+      height: 100%;
     }
   }
 }

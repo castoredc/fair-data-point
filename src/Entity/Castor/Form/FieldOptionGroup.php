@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Castor\Form;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 
@@ -28,7 +28,7 @@ class FieldOptionGroup extends CastorEntity
     /**
      * @param FieldOption[]|null $options
      */
-    public function __construct(string $id, Study $study, string $name, ?string $description, bool $layout, ?array $options)
+    public function __construct(string $id, CastorStudy $study, string $name, ?string $description, bool $layout, ?array $options)
     {
         parent::__construct($id, $name, $study, null);
 
@@ -145,7 +145,7 @@ class FieldOptionGroup extends CastorEntity
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, Study $study): FieldOptionGroup
+    public static function fromData(array $data, CastorStudy $study): FieldOptionGroup
     {
         $options = [];
         if (isset($data['options'])) {

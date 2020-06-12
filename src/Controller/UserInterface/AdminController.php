@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
-use App\Entity\Castor\Study;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\Study;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +28,9 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/catalog/{catalog}", name="admin_catalog")
+     * @Route("/catalog/{catalog}/metadata", name="admin_catalog_metadata")
+     * @Route("/catalog/{catalog}/datasets", name="admin_catalog_datasets")
+     * @Route("/catalog/{catalog}/datasets/add", name="admin_catalog_dataset_add")
      * @Route("/catalog/{catalog}/studies", name="admin_catalog_studies")
      * @Route("/catalog/{catalog}/studies/add", name="admin_catalog_study_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
@@ -36,29 +39,29 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'Admin | ' . $catalog->getTitle()->getTextByLanguageString('en')->getText()]
-        );
+        return $this->render('react.html.twig', ['title' => 'Admin']);
     }
 
     /**
      * @Route("/study/{studyId}", name="admin_study")
+     * @Route("/study/{studyId}/contacts", name="admin_study_contacts")
+     * @Route("/study/{studyId}/organizations", name="admin_study_organizations")
+     * @Route("/study/{studyId}/consent", name="admin_study_consent")
+     * @Route("/study/{studyId}/annotations", name="admin_study_annotations")
+     * @Route("/study/{studyId}/datasets", name="admin_study_datasets")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function adminStudy(Catalog $catalog, Study $study): Response
+    public function adminStudy(Study $study): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'Admin']
-        );
+        return $this->render('react.html.twig', ['title' => 'Admin']);
     }
 
     /**
-     * @Route("/catalog", name="admin_catalogs")
-     * @Route("/model", name="admin_models")
+     * @Route("/catalogs", name="admin_catalogs")
+     * @Route("/models", name="admin_models")
+     * @Route("/studies", name="admin_studies")
      */
     public function adminModels(): Response
     {
@@ -89,17 +92,31 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_dataset")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/contacts", name="admin_dataset_contacts")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/organizations", name="admin_dataset_organizations")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/consent", name="admin_dataset_consent")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_dataset_distributions")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_dataset_distribution_add")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/annotations", name="admin_dataset_annotations")
+     * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_catalog_dataset")
+     * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_catalog_dataset_metadata")
+     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_catalog_dataset_distributions")
+     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_catalog_dataset_distribution_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */
-    public function adminDataset(Catalog $catalog, Dataset $dataset): Response
+    public function adminCatalogDataset(Catalog $catalog, Dataset $dataset): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
+    }
+
+    /**
+     * @Route("/dataset/{dataset}", name="admin_dataset")
+     * @Route("/dataset/{dataset}/metadata", name="admin_dataset_metadata")
+     * @Route("/dataset/{dataset}/distributions", name="admin_dataset_distributions")
+     * @Route("/dataset/{dataset}/distributions/add", name="admin_dataset_distribution_add")
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     */
+    public function adminDataset(Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -111,6 +128,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
+     * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/prefixes", name="admin_study_distribution_prefix")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})

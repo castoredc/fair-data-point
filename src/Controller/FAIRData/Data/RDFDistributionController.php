@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData\Data;
 
 use App\Controller\FAIRData\FAIRDataController;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Catalog;
@@ -24,6 +25,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 use function time;
 
 class RDFDistributionController extends FAIRDataController
@@ -106,8 +108,11 @@ class RDFDistributionController extends FAIRDataController
         $user = $this->getUser();
 
         try {
+            $study = $dataset->getStudy();
+            assert($study instanceof CastorStudy);
+
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new GetRecordCommand($dataset->getStudy(), $record, $user))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new GetRecordCommand($study, $record, $user))->last(HandledStamp::class);
 
             /** @var Record[] $record */
             $record = $handledStamp->getResult();

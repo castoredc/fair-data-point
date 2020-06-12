@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
+import {Button} from "@castoredc/matter";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
@@ -15,9 +15,7 @@ import FormItem from "./FormItem";
 import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
 import FormHeading from "./FormHeading";
-import LoadingScreen from "../LoadingScreen";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import Spinner from "react-bootstrap/Spinner";
 
 export default class StudyDetailsForm extends Component {
     constructor(props) {
@@ -39,7 +37,6 @@ export default class StudyDetailsForm extends Component {
                 recruitmentStatus: null,
                 methodType: ''
             },
-            metadataSource: null,
             visitedFields: {},
             validation: {},
             isSaved: false,
@@ -50,29 +47,29 @@ export default class StudyDetailsForm extends Component {
 
     getMetadata = () => {
         const { data } = this.state;
+
         this.setState({
             isLoading: true,
         });
 
-        axios.get('/api/study/' + this.props.studyId + '/metadata')
+        axios.get('/api/study/' + this.props.studyId)
             .then((response) => {
                 let metadata = response.data.metadata;
 
-                if(metadata.estimatedStudyStartDate !== '')
-                {
-                    let estimatedStudyStartDate = moment(metadata.estimatedStudyStartDate, 'YYYY-MM-DD');
-                    metadata.estimatedStudyStartDate = estimatedStudyStartDate.format("DD-MM-YYYY");
-                }
+                if(metadata != null) {
+                    if (metadata.estimatedStudyStartDate !== '') {
+                        let estimatedStudyStartDate = moment(metadata.estimatedStudyStartDate, 'YYYY-MM-DD');
+                        metadata.estimatedStudyStartDate = estimatedStudyStartDate.format("DD-MM-YYYY");
+                    }
 
-                if(metadata.estimatedStudyCompletionDate !== '')
-                {
-                    let estimatedStudyCompletionDate = moment(metadata.estimatedStudyCompletionDate, 'YYYY-MM-DD');
-                    metadata.estimatedStudyCompletionDate = estimatedStudyCompletionDate.format("DD-MM-YYYY");
+                    if (metadata.estimatedStudyCompletionDate !== '') {
+                        let estimatedStudyCompletionDate = moment(metadata.estimatedStudyCompletionDate, 'YYYY-MM-DD');
+                        metadata.estimatedStudyCompletionDate = estimatedStudyCompletionDate.format("DD-MM-YYYY");
+                    }
                 }
 
                 this.setState({
                     data: { ...data, ...metadata } ,
-                    metadataSource: response.data.source,
                     isLoading: false
                 });
             })
@@ -137,6 +134,8 @@ export default class StudyDetailsForm extends Component {
 
     handleSubmit = (event) => {
         const { studyId, admin = false, onSave } = this.props;
+        const { data } = this.state;
+        
         event.preventDefault();
 
         if(this.form.isFormValid()) {
@@ -145,24 +144,22 @@ export default class StudyDetailsForm extends Component {
                 isLoading: true
             });
 
-            let estimatedStudyStartDate = moment(this.state.data.estimatedStudyStartDate, 'DD-MM-YYYY');
-            let estimatedStudyCompletionDate = moment(this.state.data.estimatedStudyCompletionDate, 'DD-MM-YYYY');
+            let estimatedStudyStartDate = moment(data.estimatedStudyStartDate, 'DD-MM-YYYY');
+            let estimatedStudyCompletionDate = moment(data.estimatedStudyCompletionDate, 'DD-MM-YYYY');
 
-            let url = '/api/study/' + studyId + '/metadata/' + (this.state.metadataSource === 'database' ? this.state.data.id + '/update' : 'add');
-
-            axios.post(url, {
-                briefName:                    this.state.data.briefName,
-                scientificName:               this.state.data.scientificName,
-                briefSummary:                 this.state.data.briefSummary,
-                type:                         this.state.data.studyType,
-                condition:                    this.state.data.condition,
-                intervention:                 this.state.data.intervention,
-                estimatedEnrollment:          this.state.data.estimatedEnrollment,
+            axios.post('/api/study/' + studyId + '/metadata' + (data.id ? '/' + data.id : ''), {
+                briefName:                    data.briefName,
+                scientificName:               data.scientificName,
+                briefSummary:                 data.briefSummary,
+                type:                         data.studyType,
+                condition:                    data.condition,
+                intervention:                 data.intervention,
+                estimatedEnrollment:          data.estimatedEnrollment,
                 estimatedStudyStartDate:      estimatedStudyStartDate.format('YYYY-MM-DD'),
                 estimatedStudyCompletionDate: estimatedStudyCompletionDate.format('YYYY-MM-DD'),
-                summary:                      this.state.data.summary,
-                recruitmentStatus:            this.state.data.recruitmentStatus,
-                methodType:                   this.state.data.methodType,
+                summary:                      data.summary,
+                recruitmentStatus:            data.recruitmentStatus,
+                methodType:                   data.methodType,
             })
                 .then((response) => {
                     this.setState({
@@ -388,14 +385,13 @@ export default class StudyDetailsForm extends Component {
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
                         {!admin && <LinkContainer to={backUrl}>
-                            <Button variant="secondary">Back</Button>
+                            <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}
                     </Col>
                     <Col>
-                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
-                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                        {admin ? <Button type="submit" disabled={this.state.submitDisabled}>
                             Save
-                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                        </Button> : <Button type="submit" disabled={this.state.submitDisabled}>
                             Next
                         </Button>}
                     </Col>

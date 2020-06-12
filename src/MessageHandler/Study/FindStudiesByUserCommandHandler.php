@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Study;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use App\Message\Study\FindStudiesByUserCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;

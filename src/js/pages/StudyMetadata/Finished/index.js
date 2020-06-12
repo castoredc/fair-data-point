@@ -32,7 +32,7 @@ export default class Finished extends Component {
         axios.get('/api/study/' + this.props.match.params.studyId + '/consent')
             .then((response) => {
                 this.setState({
-                    consent: response.data.consent,
+                    consent: response.data,
                     isLoading: false
                 });
             })

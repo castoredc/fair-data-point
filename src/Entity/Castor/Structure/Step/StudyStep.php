@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure\Step;
 
-use App\Entity\Castor\Study;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\StructureType;
 
 class StudyStep extends Step
@@ -11,7 +11,7 @@ class StudyStep extends Step
     /** @var string */
     private $parentId;
 
-    public function __construct(string $id, Study $study, ?string $stepDescription, ?string $stepName, ?int $stepOrder, string $parentId)
+    public function __construct(string $id, CastorStudy $study, ?string $stepDescription, ?string $stepName, ?int $stepOrder, string $parentId)
     {
         parent::__construct($id, $study, StructureType::study(), $stepDescription, $stepName, $stepOrder);
 
@@ -31,7 +31,7 @@ class StudyStep extends Step
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, Study $study): StudyStep
+    public static function fromData(array $data, CastorStudy $study): StudyStep
     {
         return new StudyStep(
             $data['id'],

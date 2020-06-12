@@ -4,18 +4,16 @@ import axios from "axios/index";
 import {Col, Row} from "react-bootstrap";
 import {localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
-import Button from "react-bootstrap/Button";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
-import Icon from "../../../components/Icon";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import Nav from "react-bootstrap/Nav";
-import DatasetDistributions from "../Dataset/DatasetDistributions";
-import AddDistribution from "../Dataset/AddDistribution";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import DistributionDetails from "./DistributionDetails";
 import DistributionContents from "./DistributionContents";
+import DistributionMetadata from "./DistributionMetadata";
+import {Button} from "@castoredc/matter";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -38,7 +36,7 @@ export default class Distribution extends Component {
             isLoadingDistribution: true,
         });
 
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
+        axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
             .then((response) => {
                 this.setState({
                     distribution:          response.data,
@@ -51,7 +49,7 @@ export default class Distribution extends Component {
                     isLoadingDistribution: false,
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -67,13 +65,13 @@ export default class Distribution extends Component {
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
                     <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset}>
-                        <Button variant="link" className="BackButton">
-                            <Icon type="arrowLeft" /> Back to dataset
+                        <Button buttonType="secondary" icon="arrowLeftChevron">
+                            Back to dataset
                         </Button>
                     </LinkContainer>
                 </Col>
                 <Col sm={10} className="PageTitle">
-                    <div><h3>{localizedText(distribution.title, 'en')}</h3></div>
+                    <div><h3>{distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Distribution'}</h3></div>
                 </Col>
             </Row>
             <Row>
@@ -81,6 +79,9 @@ export default class Distribution extends Component {
                     <Nav className="flex-column">
                         <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug} exact={true}>
                             <Nav.Link>Distribution</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} exact={true}>
+                            <Nav.Link>Metadata</Nav.Link>
                         </LinkContainer>
                         <hr />
                         <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents'} exact={true}>
@@ -92,6 +93,8 @@ export default class Distribution extends Component {
                     <Switch>
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" exact
                                render={(props) => <DistributionDetails {...props} catalog={catalog} dataset={dataset} distribution={distribution} />} />
+                        <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution/metadata" exact
+                               render={(props) => <DistributionMetadata {...props} catalog={catalog} dataset={dataset} distribution={distribution} onSave={this.getDistribution}/>} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution/contents" exact
                                render={(props) => <DistributionContents {...props} catalog={catalog} dataset={dataset} distribution={distribution} />} />
                         <Route component={NotFound} />

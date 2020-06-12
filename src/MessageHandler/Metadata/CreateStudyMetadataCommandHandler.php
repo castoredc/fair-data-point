@@ -21,26 +21,33 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
 
     public function __invoke(CreateStudyMetadataCommand $message): void
     {
-        $metadata = new StudyMetadata(
-            $message->getBriefName(),
-            $message->getScientificName(),
-            $message->getBriefSummary(),
-            $message->getSummary(),
-            $message->getType(),
-            $message->getCondition() !== null ? new CodedText($message->getCondition()) : null,
-            $message->getIntervention() !== null ? new CodedText($message->getIntervention()) : null,
-            $message->getEstimatedEnrollment(),
-            $message->getEstimatedStudyStartDate(),
-            $message->getEstimatedStudyCompletionDate(),
-            $message->getRecruitmentStatus(),
-            $message->getMethodType()
-        );
+        $study = $message->getStudy();
+        $metadata = new StudyMetadata($study);
 
-        $metadata->setStudy($message->getStudy());
-        $message->getStudy()->addMetadata($metadata);
+        $metadata->setBriefName($message->getBriefName());
+        $metadata->setScientificName($message->getScientificName());
+        $metadata->setBriefSummary($message->getBriefSummary());
+        $metadata->setSummary($message->getSummary());
+        $metadata->setType($message->getType());
+
+        if ($message->getCondition() !== null) {
+            $metadata->setCondition(new CodedText($message->getCondition()));
+        }
+
+        if ($message->getIntervention() !== null) {
+            $metadata->setCondition(new CodedText($message->getIntervention()));
+        }
+
+        $metadata->setEstimatedEnrollment($message->getEstimatedEnrollment());
+        $metadata->setEstimatedStudyStartDate($message->getEstimatedStudyStartDate());
+        $metadata->setEstimatedStudyCompletionDate($message->getEstimatedStudyCompletionDate());
+        $metadata->setRecruitmentStatus($message->getRecruitmentStatus());
+        $metadata->setMethodType($message->getMethodType());
+
+        $study->addMetadata($metadata);
 
         $this->em->persist($metadata);
-        $this->em->persist($message->getStudy());
+        $this->em->persist($study);
         $this->em->flush();
     }
 }

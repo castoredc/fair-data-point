@@ -19,8 +19,8 @@ class PublishStudyCommandHandler implements MessageHandlerInterface
 
     public function __invoke(PublishStudyCommand $message): void
     {
-        $message->getStudy()->getDataset()->setIsPublished(true);
-        $this->em->persist($message->getStudy()->getDataset());
+        $message->getStudy()->setIsPublished(true);
+        $this->em->persist($message->getStudy());
 
         $this->em->flush();
     }

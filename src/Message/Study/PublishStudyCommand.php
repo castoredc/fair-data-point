@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Study;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 
 class PublishStudyCommand
 {

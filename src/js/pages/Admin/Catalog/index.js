@@ -4,22 +4,23 @@ import axios from "axios/index";
 import {Col, Row} from "react-bootstrap";
 import {localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
-import Button from "react-bootstrap/Button";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import Icon from "../../../components/Icon";
 import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import CatalogStudies from "./CatalogStudies";
 import CatalogDetails from "./CatalogDetails";
-import AddStudy from "./AddStudy";
+import {Button} from "@castoredc/matter";
+import CatalogDatasets from "./CatalogDatasets";
+import CatalogMetadata from "./CatalogMetadata";
+import CatalogAddStudy from "./CatalogAddStudy";
+import CatalogAddDataset from "./CatalogAddDataset";
 
 export default class Catalog extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoadingCatalog:  true,
-            hasLoadedCatalog: false,
             catalog:           null,
         };
     }
@@ -38,15 +39,14 @@ export default class Catalog extends Component {
                 this.setState({
                     catalog:          response.data,
                     isLoadingCatalog: false,
-                    hasLoadedCatalog: true,
                 });
             })
             .catch((error) => {
-                if (error.response && typeof error.response.data.message !== "undefined") {
+                if (error.response && typeof error.response.data.error !== "undefined") {
                     this.setState({
                         isLoadingCatalog: false,
                         hasError:         true,
-                        errorMessage:     error.response.data.message,
+                        errorMessage:     error.response.data.error,
                     });
                 } else {
                     this.setState({
@@ -66,21 +66,28 @@ export default class Catalog extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/'}>
-                        <Button variant="link" className="BackButton">
-                            <Icon type="arrowLeft" /> Back to catalogs
+                    <LinkContainer to={'/admin/catalogs'}>
+                        <Button buttonType="secondary" icon="arrowLeftChevron">
+                            Back to catalogs
                         </Button>
                     </LinkContainer>
                 </Col>
                 <Col sm={10} className="PageTitle">
-                    <div><h3>{localizedText(catalog.title, 'en')}</h3></div>
+                    <div><h3>{catalog.hasMetadata && localizedText(catalog.metadata.title, 'en')}</h3></div>
                 </Col>
             </Row>
-            <Row>
+            <Row className="FillHeight">
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
                         <LinkContainer to={'/admin/catalog/' + catalog.slug} exact={true}>
                             <Nav.Link>Catalog</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/metadata'} exact={true}>
+                            <Nav.Link>Metadata</Nav.Link>
+                        </LinkContainer>
+                        <hr />
+                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/datasets'} exact={true}>
+                            <Nav.Link>Datasets</Nav.Link>
                         </LinkContainer>
                         <LinkContainer to={'/admin/catalog/' + catalog.slug + '/studies'} exact={true}>
                             <Nav.Link>Studies</Nav.Link>
@@ -91,10 +98,16 @@ export default class Catalog extends Component {
                     <Switch>
                         <Route path="/admin/catalog/:catalog" exact
                                render={(props) => <CatalogDetails {...props} catalog={catalog} />} />
+                        <Route path="/admin/catalog/:catalog/metadata" exact
+                               render={(props) => <CatalogMetadata {...props} catalog={catalog} onSave={this.getCatalog} />} />
                         <Route path="/admin/catalog/:catalog/studies/add" exact
-                               render={(props) => <AddStudy {...props} catalog={catalog} />} />
+                               render={(props) => <CatalogAddStudy {...props} catalog={catalog} />} />
                         <Route path="/admin/catalog/:catalog/studies" exact
                                render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
+                        <Route path="/admin/catalog/:catalog/datasets" exact
+                               render={(props) => <CatalogDatasets {...props} catalog={catalog} />} />
+                        <Route path="/admin/catalog/:catalog/datasets/add" exact
+                               render={(props) => <CatalogAddDataset {...props} catalog={catalog} />} />
                         <Route component={NotFound} />
                     </Switch>
                 </Col>
