@@ -55,8 +55,10 @@ export default class StudyList extends Component {
 
         axios.get('/api/catalog/' + catalog.slug + '/study', { params: filters })
             .then((response) => {
+                const studies = response.data.results.filter((study) => { return study.hasMetadata });
+
                 this.setState({
-                    studies: response.data.results,
+                    studies: studies,
                     pagination:       {
                         currentPage: response.data.currentPage,
                         perPage: response.data.perPage,
@@ -173,6 +175,9 @@ export default class StudyList extends Component {
                         {displayList && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
                             {studies.length > 0 ? <div>
                                 {studies.map((item, index) => {
+                                    if(item.hasMetadata === false) {
+                                        return null;
+                                    }
                                     return <StudyListItem key={index}
                                                           newWindow={embedded}
                                                           link={`/study/${item.slug}`}
@@ -204,7 +209,7 @@ export default class StudyList extends Component {
                              ! displayList && 'StickyDisabled',
                              ! displayFilter && 'Hidden',
                              (! displayList && displayFilter) && 'Overlay')}>
-                        <Sticky>
+                        {studies.length > 0 && <Sticky>
                             {({style, isSticky}) => (
                                 <Filters filters={filterOptions}
                                          isLoading={isLoadingFilters}
@@ -213,7 +218,7 @@ export default class StudyList extends Component {
                                          onFilter={(filter) => this.handleFilter(filter)}
                                  />
                             )}
-                        </Sticky>
+                        </Sticky>}
                     </Col>
                 </Row>
             </StickyContainer>;

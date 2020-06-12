@@ -21,7 +21,7 @@ class CatalogController extends FAIRDataController
     // }
 
     /**
-     * @Route("/fdp/{catalog}", name="catalog")
+     * @Route("/fdp/catalog/{catalog}", name="catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
     public function catalog(Catalog $catalog, Request $request): Response

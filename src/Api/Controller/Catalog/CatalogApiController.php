@@ -6,9 +6,9 @@ namespace App\Api\Controller\Catalog;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
-use App\Api\Resource\Dataset\StudiesMapApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
+use App\Api\Resource\Study\StudiesMapApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
@@ -16,7 +16,9 @@ use App\Exception\ApiRequestParseError;
 use App\Message\Catalog\GetCatalogsCommand;
 use App\Message\Dataset\GetDatasetsCommand;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
+use App\Message\Study\FilterStudiesCommand;
 use App\Message\Study\GetPaginatedStudiesCommand;
+use App\Message\Study\GetStudiesCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,7 +145,7 @@ class CatalogApiController extends ApiController
      * @Route("/{catalog}/map", name="api_catalog_datasets_map")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
-    public function datasetsMap(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    public function studiesMap(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
@@ -151,7 +153,7 @@ class CatalogApiController extends ApiController
             /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new GetDatasetsCommand($catalog, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
+            $envelope = $bus->dispatch(new FilterStudiesCommand($catalog, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
