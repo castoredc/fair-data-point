@@ -100,7 +100,7 @@ class StudyRepository extends EntityRepository
            ->where('metadata2.id IS NULL');
 
         if ($hideCatalogs !== null) {
-            $qb->andWhere(':catalog_ids NOT MEMBER OF datasets.catalogs')
+            $qb->andWhere(':catalog_ids NOT MEMBER OF study.catalogs')
                ->setParameter('catalog_ids', $hideCatalogs);
         }
 
