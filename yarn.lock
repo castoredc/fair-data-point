@@ -934,9 +934,9 @@
     lodash "^4.17.11"
 
 "@castoredc/matter@^9.7.3":
-  version "9.7.3"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter/9.7.3/2fc20b907ef99b7838e7443da5d37a3f41726ea7d2ae922a6fae273a05fa00ec#bc89e278c27fd75ef07de09636ddd317b722bbbf"
-  integrity sha512-bxkmNbqGFlPS+w9+cv4BUPkNStwL7kQOcI2L6XbM0QBRibY2mybGcfgS2Jd+d262Hrre5gH65jrwm2IXc/YVgQ==
+  version "9.8.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter/9.8.0/20430c5b8ee9d7d2bb05054d4122b34eef4deb17c8ad505837d1dbc028c7a109#205deb68714def0f43c0fb8c99558913041ff8fb"
+  integrity sha512-IhHt+bdnsozVSjQOXBNj+Fdnjq0g3DbkwkcOn487HtKAnLlNhBR/AfJd/SlCAJktsyc/woZkRpGjbnvWCw8J5A==
   dependencies:
     core-js "^3.6.4"
     lodash "^4.17.11"
