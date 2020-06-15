@@ -5,24 +5,13 @@ namespace App\MessageHandler\Study;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
-use App\Exception\ErrorFetchingCastorData;
-use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
-use App\Exception\NotFound;
-use App\Exception\SessionTimedOut;
-use App\Exception\StudyAlreadyExists;
-use App\Message\Study\CreateStudyCommand;
 use App\Message\Study\UpdateStudyCommand;
-use App\Model\Castor\ApiClient;
-use App\Repository\CastorServerRepository;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
-use App\Security\CastorUser;
-use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function in_array;
+use function assert;
 
 class UpdateStudyCommandHandler implements MessageHandlerInterface
 {
@@ -32,7 +21,7 @@ class UpdateStudyCommandHandler implements MessageHandlerInterface
     /** @var Security */
     private $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $apiClient)
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
         $this->security = $security;
@@ -42,7 +31,7 @@ class UpdateStudyCommandHandler implements MessageHandlerInterface
     {
         $study = $command->getStudy();
 
-        if(! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted('edit', $study)) {
             throw new NoAccessPermissionToStudy();
         }
 

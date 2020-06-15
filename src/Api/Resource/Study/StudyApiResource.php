@@ -32,7 +32,7 @@ class StudyApiResource extends RoleBasedApiResource
         $metadata = $hasMetadata ? (new StudyMetadataApiResource($dbMetadata))->toArray() : null;
         $sourceServer = null;
 
-        if($this->study instanceof CastorStudy) {
+        if ($this->study instanceof CastorStudy) {
             $sourceServer = $this->study->getServer() !== null ? $this->study->getServer()->getId() : null;
         }
 
@@ -45,7 +45,7 @@ class StudyApiResource extends RoleBasedApiResource
             'source' => $this->study->getSource()->toString(),
             'sourceId' => $this->study->getSourceId(),
             'sourceServer' => $sourceServer,
-            'published' => $this->study->isPublished()
+            'published' => $this->study->isPublished(),
         ];
 
         if ($this->isAdmin) {

@@ -38,14 +38,10 @@ class StudyApiRequest extends SingleApiRequest
      */
     private $catalog;
 
-    /**
-     * @var bool|null
-     */
+    /** @var bool|null */
     private $published;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $slug;
 
     protected function parse(): void
@@ -86,7 +82,7 @@ class StudyApiRequest extends SingleApiRequest
 
     public function getPublished(): bool
     {
-        return $this->published !== null ? $this->published : false;
+        return $this->published ?? false;
     }
 
     public function getSlug(): ?string
