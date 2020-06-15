@@ -112,5 +112,7 @@ export const replaceAt = (array, index, value) => {
 };
 
 export const mergeData = (defaultData, newData) => {
-    return Object.keys(defaultData).reduce((a, key) => ({ ...a, [key]: newData[key] || defaultData[key]}), {});
+    return Object.keys(defaultData).reduce((a, key) => (
+        { ...a, [key]: (key in newData ? newData[key] : defaultData[key])}
+        ), {});
 };

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Catalog;
 
+use App\Api\Request\Catalog\CatalogApiRequest;
+use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
@@ -10,9 +12,15 @@ use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesMapApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
+use App\Exception\LanguageNotFound;
+use App\Message\Catalog\UpdateCatalogCommand;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
+use App\Message\Distribution\UpdateDistributionCommand;
 use App\Message\Study\FilterStudiesCommand;
+use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,13 +37,36 @@ use Symfony\Component\Routing\Annotation\Route;
 class CatalogApiController extends ApiController
 {
     /**
-     * @Route("", name="api_catalog")
+     * @Route("", methods={"GET"}, name="api_catalog")
      */
     public function catalog(Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         return new JsonResponse((new CatalogApiResource($catalog))->toArray());
+    }
+
+    /**
+     * @Route("", methods={"POST"}, name="api_catalog_update")
+     */
+    public function updateCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $catalog);
+
+        try {
+            /** @var CatalogApiRequest $parsed */
+            $parsed = $this->parseRequest(CatalogApiRequest::class, $request);
+
+            $bus->dispatch(
+                new UpdateCatalogCommand($catalog, $parsed->getSlug(), $parsed->isAcceptSubmissions(), $parsed->isSubmissionAccessesData())
+            );
+
+            return new JsonResponse([], 200);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
     }
 
     /**

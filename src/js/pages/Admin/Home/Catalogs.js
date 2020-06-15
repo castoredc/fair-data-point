@@ -4,9 +4,11 @@ import axios from "axios/index";
 import {Col, Row} from "react-bootstrap";
 import {classNames, localizedText} from "../../../util";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {DataTable} from "@castoredc/matter";
+import {Button, DataTable} from "@castoredc/matter";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
+import AddStudyModal from "../../../modals/AddStudyModal";
+import AddCatalogModal from "../../../modals/AddCatalogModal";
 
 export default class Catalogs extends Component {
     constructor(props) {
@@ -14,7 +16,8 @@ export default class Catalogs extends Component {
         this.state = {
             isLoading:    true,
             hasError:     false,
-            catalogs:     {}
+            catalogs:     {},
+            showModal:    false,
         };
     }
 
@@ -36,8 +39,20 @@ export default class Catalogs extends Component {
             });
     }
 
+    openModal = () => {
+        this.setState({
+            showModal: true,
+        });
+    };
+
+    closeModal = () => {
+        this.setState({
+            showModal: false,
+        });
+    };
+
     render() {
-        const {catalogs, isLoading} = this.state;
+        const {catalogs, isLoading, showModal} = this.state;
         const {history} = this.props;
 
         if (isLoading) {
@@ -45,9 +60,22 @@ export default class Catalogs extends Component {
         }
 
         return <div className="PageContainer">
+            <AddCatalogModal
+                show={showModal}
+                handleClose={this.closeModal}
+            />
+
             <Row className="PageHeader">
                 <Col sm={12} className="PageTitle">
                     <div><h3>Catalogs</h3></div>
+                </Col>
+            </Row>
+            <Row>
+                <Col sm={6}/>
+                <Col sm={6}>
+                    <div className="ButtonBar Right">
+                        <Button icon="add" onClick={this.openModal}>New catalog</Button>
+                    </div>
                 </Col>
             </Row>
             <Row>

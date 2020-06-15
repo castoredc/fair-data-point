@@ -222,9 +222,19 @@ class Catalog
         return $this->acceptSubmissions;
     }
 
+    public function setAcceptSubmissions(bool $acceptSubmissions): void
+    {
+        $this->acceptSubmissions = $acceptSubmissions;
+    }
+
     public function isSubmissionAccessingData(): bool
     {
         return $this->submissionAccessesData;
+    }
+
+    public function setSubmissionAccessesData(bool $submissionAccessesData): void
+    {
+        $this->submissionAccessesData = $submissionAccessesData;
     }
 
     public function getApiUser(): ?ApiUser

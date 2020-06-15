@@ -20,14 +20,15 @@ export default class DistributionForm extends Component {
         super(props);
 
         this.state = {
-            data: props.distribution ? mergeData(defaultData, props.distribution) : defaultData,
-            visitedFields: {},
-            validation: {},
-            isSaved: false,
+            data:           props.distribution ? mergeData(defaultData, props.distribution) : defaultData,
+            visitedFields:  {},
+            validation:     {},
+            isSaved:        false,
             submitDisabled: false,
-            languages: [],
-            licenses: [],
-            distribution: props.distribution ? props.distribution : null,
+            languages:      [],
+            licenses:       [],
+            distribution:   props.distribution ? props.distribution : null,
+            update:         !!props.distribution,
         };
     }
 
