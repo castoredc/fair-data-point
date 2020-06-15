@@ -1,0 +1,14 @@
+monolog:
+  channels: ['fdp']
+
+  handlers:
+      slack_errors:
+        type:           slackWebhook
+        webhook_url:     '%env(SLACK_DEBUG_WEBHOOK_URL)%'
+        level:          critical
+
+      slack_info:
+        type:           slackWebhook
+        webhook_url:     '%env(SLACK_INFO_WEBHOOK_URL)%'
+        level:          debug
+        channels:       ['fdp']
