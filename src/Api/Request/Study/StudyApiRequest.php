@@ -23,7 +23,7 @@ class StudyApiRequest extends SingleApiRequest
      * @var string|null
      * @Assert\Type("string")
      */
-    private $id;
+    private $sourceId;
 
     /**
      * @var string
@@ -38,13 +38,25 @@ class StudyApiRequest extends SingleApiRequest
      */
     private $catalog;
 
+    /**
+     * @var bool|null
+     */
+    private $published;
+
+    /**
+     * @var string|null
+     */
+    private $slug;
+
     protected function parse(): void
     {
         $this->source = $this->getFromData('source');
         $this->sourceServer = $this->getFromData('sourceServer') !== null ? (string) $this->getFromData('sourceServer') : null;
-        $this->id = $this->getFromData('id');
+        $this->sourceId = $this->getFromData('sourceId');
         $this->name = $this->getFromData('name');
         $this->catalog = $this->getFromData('catalog');
+        $this->published = $this->getFromData('published');
+        $this->slug = $this->getFromData('slug');
     }
 
     public function getSource(): StudySource
@@ -57,9 +69,9 @@ class StudyApiRequest extends SingleApiRequest
         return $this->sourceServer;
     }
 
-    public function getId(): ?string
+    public function getSourceId(): ?string
     {
-        return $this->id;
+        return $this->sourceId;
     }
 
     public function getName(): string
@@ -70,5 +82,15 @@ class StudyApiRequest extends SingleApiRequest
     public function getCatalog(): ?string
     {
         return $this->catalog;
+    }
+
+    public function getPublished(): bool
+    {
+        return $this->published !== null ? $this->published : false;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }

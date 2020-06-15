@@ -5,7 +5,7 @@ namespace App\Message\Study;
 
 use App\Entity\Enum\StudySource;
 
-class AddStudyCommand
+class CreateStudyCommand
 {
     /** @var StudySource */
     private $source;

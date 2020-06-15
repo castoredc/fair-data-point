@@ -11,7 +11,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
-use App\Message\Study\AddStudyCommand;
+use App\Message\Study\CreateStudyCommand;
 use App\Model\Castor\ApiClient;
 use App\Repository\CastorServerRepository;
 use App\Repository\StudyRepository;
@@ -23,7 +23,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function in_array;
 
-class AddStudyCommandHandler implements MessageHandlerInterface
+class CreateStudyCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
@@ -49,7 +49,7 @@ class AddStudyCommandHandler implements MessageHandlerInterface
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function __invoke(AddStudyCommand $command): Study
+    public function __invoke(CreateStudyCommand $command): Study
     {
         $source = $command->getSource();
 

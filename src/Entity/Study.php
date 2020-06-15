@@ -221,4 +221,9 @@ abstract class Study
     {
         return $this->source;
     }
+
+    public function setSourceId(?string $sourceId): void
+    {
+        $this->sourceId = $sourceId;
+    }
 }

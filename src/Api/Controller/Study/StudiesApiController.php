@@ -4,15 +4,25 @@ declare(strict_types=1);
 namespace App\Api\Controller\Study;
 
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
+use App\Api\Request\Study\StudyApiRequest;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Controller\Api\ApiController;
+use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
+use App\Exception\CatalogNotFound;
+use App\Exception\NoAccessPermission;
+use App\Exception\NoAccessPermissionToStudy;
+use App\Exception\StudyAlreadyExists;
+use App\Message\Catalog\GetCatalogBySlugCommand;
+use App\Message\Study\CreateStudyCommand;
+use App\Message\Study\AddStudyToCatalogCommand;
 use App\Message\Study\GetPaginatedStudiesCommand;
 use App\Message\Study\GetStudiesCommand;
 use App\Security\CastorUser;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,6 +83,69 @@ class StudiesApiController extends ApiController
         $studies = $this->getStudies($user, $bus);
 
         return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
+    }
+
+    /**
+     * @Route("", methods={"POST"}, name="api_add_study")
+     */
+    public function addStudy(Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        try {
+            /** @var StudyApiRequest $parsed */
+            $parsed = $this->parseRequest(StudyApiRequest::class, $request);
+
+            $catalog = null;
+
+            if ($parsed->getCatalog() !== null) {
+                $envelope = $bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
+
+                /** @var HandledStamp $handledStamp */
+                $handledStamp = $envelope->last(HandledStamp::class);
+
+                /** @var Catalog $catalog */
+                $catalog = $handledStamp->getResult();
+
+                $this->denyAccessUnlessGranted('add', $catalog);
+            }
+
+            $envelope = $bus->dispatch(new CreateStudyCommand($parsed->getSource(), $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), true));
+
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            /** @var Study $study */
+            $study = $handledStamp->getResult();
+
+            if ($catalog !== null) {
+                $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
+            }
+
+            return new JsonResponse((new StudyApiResource($study))->toArray(), 200);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof CatalogNotFound) {
+                return new JsonResponse($e->toArray(), 404);
+            }
+
+            if ($e instanceof NoAccessPermissionToStudy) {
+                return new JsonResponse($e->toArray(), 403);
+            }
+
+            if ($e instanceof NoAccessPermission) {
+                return new JsonResponse($e->toArray(), 403);
+            }
+
+            if ($e instanceof StudyAlreadyExists) {
+                return new JsonResponse($e->toArray(), 409);
+            }
+
+            return new JsonResponse([], 500);
+        }
     }
 
     /** @return Study[] */

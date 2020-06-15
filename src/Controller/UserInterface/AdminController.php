@@ -44,6 +44,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/study/{studyId}", name="admin_study")
+     * @Route("/study/{studyId}/metadata", name="admin_study_metadata")
      * @Route("/study/{studyId}/contacts", name="admin_study_contacts")
      * @Route("/study/{studyId}/organizations", name="admin_study_organizations")
      * @Route("/study/{studyId}/consent", name="admin_study_consent")

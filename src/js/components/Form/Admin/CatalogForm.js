@@ -54,9 +54,7 @@ export default class CatalogForm extends Component {
                 isLoading: true
             });
 
-           const url = '/api/catalog' + (catalog ? '/' + catalog.slug : '');
-
-           axios.post(url, data)
+           axios.post('/api/catalog' + (catalog ? '/' + catalog.slug : ''), data)
                 .then((response) => {
                     this.setState({
                         isSaved: true,

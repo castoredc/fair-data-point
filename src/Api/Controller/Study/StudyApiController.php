@@ -19,8 +19,9 @@ use App\Exception\StudyAlreadyExists;
 use App\Message\Catalog\GetCatalogBySlugCommand;
 use App\Message\Dataset\CreateDatasetForStudyCommand;
 use App\Message\Dataset\GetDatasetsByStudyCommand;
-use App\Message\Study\AddStudyCommand;
+use App\Message\Study\CreateStudyCommand;
 use App\Message\Study\AddStudyToCatalogCommand;
+use App\Message\Study\UpdateStudyCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,104 +59,22 @@ class StudyApiController extends ApiController
     }
 
     /**
-     * @Route("", methods={"POST"}, name="api_add_study")
+     * @Route("/{study}", methods={"POST"}, name="api_update_study")
      * @ParamConverter("study", options={"mapping": {"study": "id"}})
      */
-    public function addStudy(Request $request, MessageBusInterface $bus): Response
+    public function updateStudy(Study $study, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('view', $study);
 
         try {
             /** @var StudyApiRequest $parsed */
             $parsed = $this->parseRequest(StudyApiRequest::class, $request);
 
-            $catalog = null;
+            $bus->dispatch(new UpdateStudyCommand($study, $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), $parsed->getSlug(), $parsed->getPublished()));
 
-            if ($parsed->getCatalog() !== null) {
-                $envelope = $bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
-
-                /** @var HandledStamp $handledStamp */
-                $handledStamp = $envelope->last(HandledStamp::class);
-
-                /** @var Catalog $catalog */
-                $catalog = $handledStamp->getResult();
-
-                $this->denyAccessUnlessGranted('add', $catalog);
-            }
-
-            $envelope = $bus->dispatch(new AddStudyCommand($parsed->getSource(), $parsed->getId(), $parsed->getSourceServer(), $parsed->getName(), true));
-
-            /** @var HandledStamp $handledStamp */
-            $handledStamp = $envelope->last(HandledStamp::class);
-
-            /** @var Study $study */
-            $study = $handledStamp->getResult();
-
-            if ($catalog !== null) {
-                $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
-            }
-
-            return new JsonResponse((new StudyApiResource($study))->toArray(), 200);
+            return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
-        } catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            if ($e instanceof CatalogNotFound) {
-                return new JsonResponse($e->toArray(), 404);
-            }
-
-            if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
-            }
-
-            if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
-            }
-
-            if ($e instanceof StudyAlreadyExists) {
-                return new JsonResponse($e->toArray(), 409);
-            }
-
-            return new JsonResponse([], 500);
-        }
-    }
-
-    /**
-     * @Route("/{study}/dataset", methods={"GET"}, name="api_study_datasets")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
-     */
-    public function datasets(Study $study, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('view', $study);
-
-        $envelope = $bus->dispatch(new GetDatasetsByStudyCommand($study));
-
-        /** @var HandledStamp $handledStamp */
-        $handledStamp = $envelope->last(HandledStamp::class);
-
-        $results = $handledStamp->getResult();
-
-        return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
-    }
-
-    /**
-     * @Route("/{study}/dataset", methods={"POST"}, name="api_study_create_dataset")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
-     */
-    public function createDataset(Study $study, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('edit', $study);
-
-        try {
-            $envelope = $bus->dispatch(new CreateDatasetForStudyCommand($study));
-
-            /** @var HandledStamp $handledStamp */
-            $handledStamp = $envelope->last(HandledStamp::class);
-
-            $dataset = $handledStamp->getResult();
-
-            return new JsonResponse((new DatasetApiResource($dataset))->toArray());
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }

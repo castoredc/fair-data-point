@@ -16,6 +16,7 @@ import StudyConsent from "./StudyConsent";
 import StudyAnnotations from "./StudyAnnotations";
 import {Button} from "@castoredc/matter";
 import StudyDatasets from "./StudyDatasets";
+import StudyMetadata from "./StudyMetadata";
 
 export default class Study extends Component {
     constructor(props) {
@@ -77,6 +78,9 @@ export default class Study extends Component {
                         <LinkContainer to={'/admin/study/' + study.id} exact={true}>
                             <Nav.Link>Study</Nav.Link>
                         </LinkContainer>
+                        <LinkContainer to={'/admin/study/' + study.id + '/metadata'} exact={true}>
+                            <Nav.Link>Metadata</Nav.Link>
+                        </LinkContainer>
                         <LinkContainer to={'/admin/study/' + study.id + '/contacts'} exact={true}>
                             <Nav.Link disabled={!study.hasMetadata}>Contacts</Nav.Link>
                         </LinkContainer>
@@ -103,6 +107,8 @@ export default class Study extends Component {
                     <Switch>
                         <Route path="/admin/study/:study" exact
                                render={(props) => <StudyDetails {...props} study={study} onSave={this.getStudy} />} />
+                        <Route path="/admin/study/:study/metadata" exact
+                               render={(props) => <StudyMetadata {...props} study={study} onSave={this.getStudy} />} />
                         <Route path="/admin/study/:study/contacts" exact
                                render={(props) => <StudyContacts {...props} study={study} />} />
                         <Route path="/admin/study/:study/organizations" exact

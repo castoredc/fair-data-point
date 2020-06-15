@@ -191,6 +191,9 @@ export default class StudiesDataTable extends Component {
                                 item.hasMetadata && item.consent.socialMedia ? {
                                     type: 'tickSmall'
                                 } : undefined,
+                                item.published ? {
+                                    type: 'view'
+                                } : undefined,
                             ];
                         })}
                         structure={{
@@ -217,6 +220,11 @@ export default class StudiesDataTable extends Component {
                             consentSocial: {
                                 header:    'Social consent',
                                 icon:      'share',
+                                template:  'icon'
+                            },
+                            published: {
+                                header:    'Published',
+                                icon:      'view',
                                 template:  'icon'
                             },
                         }}

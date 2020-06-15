@@ -6,6 +6,7 @@ namespace App\Api\Resource\Study;
 use App\Api\Resource\Metadata\ConsentApiResource;
 use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\RoleBasedApiResource;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
 
 class StudyApiResource extends RoleBasedApiResource
@@ -29,6 +30,11 @@ class StudyApiResource extends RoleBasedApiResource
         $hasMetadata = ($dbMetadata !== null);
 
         $metadata = $hasMetadata ? (new StudyMetadataApiResource($dbMetadata))->toArray() : null;
+        $sourceServer = null;
+
+        if($this->study instanceof CastorStudy) {
+            $sourceServer = $this->study->getServer() !== null ? $this->study->getServer()->getId() : null;
+        }
 
         $data = [
             'id' => $this->study->getId(),
@@ -36,6 +42,10 @@ class StudyApiResource extends RoleBasedApiResource
             'slug' => $this->study->getSlug(),
             'hasMetadata' => $hasMetadata,
             'metadata' => $metadata,
+            'source' => $this->study->getSource()->toString(),
+            'sourceId' => $this->study->getSourceId(),
+            'sourceServer' => $sourceServer,
+            'published' => $this->study->isPublished()
         ];
 
         if ($this->isAdmin) {
