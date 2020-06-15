@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import Input from "../../components/Input";
 import FormItem from "../../components/Form/FormItem";
@@ -7,7 +6,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
-import Container from "react-bootstrap/Container";
+import Modal from "../Modal";
 
 export default class DataModelPrefixModal extends Component {
     constructor(props) {
@@ -58,11 +57,9 @@ export default class DataModelPrefixModal extends Component {
         }, callback);
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const { modelId, onSaved } = this.props;
         const { data } = this.state;
-
-        event.preventDefault();
 
         if (this.form.isFormValid()) {
             this.setState({
@@ -108,45 +105,43 @@ export default class DataModelPrefixModal extends Component {
         const required = "This field is required";
         const validUrl = "Please enter a valid URI";
 
-        return <Modal show={show} onHide={handleClose}>
+        return <Modal
+            show={show}
+            handleClose={handleClose}
+            title={data.id ? 'Edit prefix' : 'Add prefix'}
+            closeButton
+            footer={(
+                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    {data.id ? 'Edit prefix' : 'Add prefix'}
+                </Button>
+            )}
+        >
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Modal.Header closeButton>
-                    {data.id ? <Modal.Title>Edit prefix</Modal.Title> : <Modal.Title>Add prefix</Modal.Title>}
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <FormItem label="Prefix">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="prefix"
-                                onChange={this.handleChange}
-                                value={data.prefix}
-                                serverError={validation.prefix}
-                            />
-                        </FormItem>
+                <FormItem label="Prefix">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="prefix"
+                        onChange={this.handleChange}
+                        value={data.prefix}
+                        serverError={validation.prefix}
+                    />
+                </FormItem>
 
-                        <FormItem label="URI">
-                            <Input
-                                validators={['required', 'isUrl']}
-                                errorMessages={[required, validUrl]}
-                                name="uri"
-                                onChange={this.handleChange}
-                                value={data.uri}
-                                serverError={validation.uri}
-                            />
-                        </FormItem>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit" disabled={isLoading}>
-                        {data.id ? 'Edit prefix' : 'Add prefix'}
-                    </Button>
-                </Modal.Footer>
+                <FormItem label="URI">
+                    <Input
+                        validators={['required', 'isUrl']}
+                        errorMessages={[required, validUrl]}
+                        name="uri"
+                        onChange={this.handleChange}
+                        value={data.uri}
+                        serverError={validation.uri}
+                    />
+                </FormItem>
             </ValidatorForm>
         </Modal>
     }

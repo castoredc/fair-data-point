@@ -49,6 +49,7 @@
         "react-form-validator-core": "^0.6.5",
         "react-leaflet": "^2.6.3",
         "react-leaflet-markercluster": "^2.0.0",
+        "react-portal": "^4.2.1",
         "react-router-bootstrap": "^0.25.0",
         "react-router-dom": "^5.0.1",
         "react-select": "^3.0.4",

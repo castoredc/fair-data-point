@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
-import Container from "react-bootstrap/Container";
 import {Button} from "@castoredc/matter";
 import './ConfirmModal.scss';
+import Modal from "../Modal";
 
 export default class ConfirmModal extends Component {
     constructor(props) {
@@ -23,9 +22,7 @@ export default class ConfirmModal extends Component {
         }
     }
 
-    handleClick = (e) => {
-        e.preventDefault();
-
+    handleClick = () => {
         this.setState({
             showCancelModal: true,
         });
@@ -58,25 +55,19 @@ export default class ConfirmModal extends Component {
         const modal = <Modal
             show={showCancelModal}
             className="ConfirmModal"
-            backdropClassName="ConfirmModalBackdrop"
-            backdrop="static"
+            title={title}
+            footer={(
+                <div>
+                    <Button buttonType={variant ? variant : 'primary'} onClick={this.handleConfirm}>
+                        {action}
+                    </Button>
+                    <Button buttonType="contentOnly" onClick={this.handleCancel}>
+                        Cancel
+                    </Button>
+                </div>
+            )}
         >
-            <Modal.Header>
-                <Modal.Title>{title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Container>
-                    {children}
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button buttonType={variant ? variant : 'primary'} onClick={this.handleConfirm}>
-                    {action}
-                </Button>
-                <Button buttonType="contentOnly" onClick={this.handleCancel}>
-                    Cancel
-                </Button>
-            </Modal.Footer>
+            {children}
         </Modal>;
 
         if(includeButton) {

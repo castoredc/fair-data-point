@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -7,6 +6,7 @@ import ToastContent from "../../components/ToastContent";
 import Dropdown from "../../components/Input/Dropdown";
 import FormItem from "../../components/Form/FormItem";
 import {Button} from "@castoredc/matter";
+import Modal from "../Modal";
 
 export default class AddAnnotationModal extends Component {
     constructor(props) {
@@ -125,10 +125,9 @@ export default class AddAnnotationModal extends Component {
         });
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const {entity, onSaved, studyId} = this.props;
         const {data} = this.state;
-        event.preventDefault();
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
@@ -174,44 +173,45 @@ export default class AddAnnotationModal extends Component {
             return {value: ontology.id, label: ontology.name};
         });
 
-        return <Modal show={show} onHide={handleClose} className="AddAnnotationModal">
+        return <Modal
+            show={show}
+            handleClose={handleClose}
+            className="AddAnnotationModal"
+            title="Add annotation"
+            closeButton
+            footer={(
+                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    Add annotation
+                </Button>
+            )}
+        >
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>Add annotation</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <FormItem label="Ontology">
-                        <Dropdown
-                            validators={['required']}
-                            errorMessages={[required]}
-                            options={options}
-                            name="ontology"
-                            value={data.ontology}
-                            onChange={this.handleOntologyChange}
-                        />
-                    </FormItem>
-                    <FormItem label="Concept">
-                        <Dropdown
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="concept"
-                            value={data.concept}
-                            async
-                            loadOptions={this.loadConcepts}
-                            onChange={this.handleConceptChange}
-                            isDisabled={data.ontology === null}
-                        />
-                    </FormItem>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit" disabled={isLoading}>
-                        Add annotation
-                    </Button>
-                </Modal.Footer>
+                <FormItem label="Ontology">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={options}
+                        name="ontology"
+                        value={data.ontology}
+                        onChange={this.handleOntologyChange}
+                    />
+                </FormItem>
+                <FormItem label="Concept">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="concept"
+                        value={data.concept}
+                        async
+                        loadOptions={this.loadConcepts}
+                        onChange={this.handleConceptChange}
+                        isDisabled={data.ontology === null}
+                    />
+                </FormItem>
             </ValidatorForm>
         </Modal>
     }

@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -8,6 +7,7 @@ import FormItem from "../../components/Form/FormItem";
 import Input from "../../components/Input";
 import {Redirect} from "react-router-dom";
 import {Button} from "@castoredc/matter";
+import Modal from "../Modal";
 
 export default class AddDataModelModal extends Component {
     constructor(props) {
@@ -39,9 +39,8 @@ export default class AddDataModelModal extends Component {
         }, callback);
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const {data} = this.state;
-        event.preventDefault();
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
@@ -80,41 +79,42 @@ export default class AddDataModelModal extends Component {
             return <Redirect push to={'/admin/model/' + modelId} />;
         }
 
-        return <Modal show={show} onHide={handleClose} className="AddDataModelModal">
+        return <Modal
+            show={show}
+            handleClose={handleClose}
+            className="AddDataModelModal"
+            title="New Data Model"
+            closeButton
+            footer={(
+                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    Create model
+                </Button>
+            )}
+        >
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>New Data Model</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <FormItem label="Title">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="title"
-                            onChange={this.handleChange}
-                            value={data.title}
-                            serverError={this.state.validation.title}
-                        />
-                    </FormItem>
-                    <FormItem label="Description">
-                        <Input
-                            name="description"
-                            onChange={this.handleChange}
-                            value={data.description}
-                            serverError={this.state.validation.description}
-                            as="textarea" rows="5"
-                        />
-                    </FormItem>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit" disabled={isLoading}>
-                        Create model
-                    </Button>
-                </Modal.Footer>
+                <FormItem label="Title">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="title"
+                        onChange={this.handleChange}
+                        value={data.title}
+                        serverError={this.state.validation.title}
+                    />
+                </FormItem>
+                <FormItem label="Description">
+                    <Input
+                        name="description"
+                        onChange={this.handleChange}
+                        value={data.description}
+                        serverError={this.state.validation.description}
+                        as="textarea" rows="5"
+                    />
+                </FormItem>
             </ValidatorForm>
         </Modal>
     }

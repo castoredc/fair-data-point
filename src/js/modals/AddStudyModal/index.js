@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import FormItem from "../../components/Form/FormItem";
-import Container from "react-bootstrap/Container";
 import Input from "../../components/Input";
 import Dropdown from "../../components/Input/Dropdown";
 import axios from "axios";
@@ -10,7 +8,8 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
 import RadioGroup from "../../components/Input/RadioGroup";
-import {Redirect} from "@reach/router";
+import Modal from "../Modal";
+import {Redirect} from "react-router-dom";
 
 export default class AddStudyModal extends Component {
     constructor(props) {
@@ -65,13 +64,11 @@ export default class AddStudyModal extends Component {
         this.setState(newState);
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const { data } = this.state;
 
-        event.preventDefault();
-
         this.setState({
-            submitDisabled: true,
+            isLoading: true,
         });
 
         if(this.form.isFormValid()) {
@@ -93,7 +90,7 @@ export default class AddStudyModal extends Component {
                         });
                     }
                     this.setState({
-                        submitDisabled: false,
+                        isLoading: false,
                     });
                 });
         }
@@ -113,94 +110,93 @@ export default class AddStudyModal extends Component {
             return <Redirect push to={'/admin/study/' + study.id} />;
         }
 
-        return <Modal show={show} onHide={handleClose} className="TripleModal">
+        return <Modal
+            show={show}
+            handleClose={handleClose}
+            className="TripleModal"
+            title="Add new study"
+            closeButton
+            footer={(
+                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    Add study
+                </Button>
+            )}
+        >
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Modal.Header closeButton>
-                    Add new study
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <FormItem label="Source">
-                            <RadioGroup
-                                options={[
-                                    {
-                                        label: 'Castor EDC',
-                                        value: 'castor'
-                                    },
-                                ]}
-                                onChange={this.handleChange}
-                                value={data.source}
-                                name="source"
-                            />
-                        </FormItem>
+                <FormItem label="Source">
+                    <RadioGroup
+                        options={[
+                            {
+                                label: 'Castor EDC',
+                                value: 'castor'
+                            },
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.source}
+                        name="source"
+                    />
+                </FormItem>
 
-                        <FormItem label="Name">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="name"
-                                onChange={this.handleChange}
-                                value={data.name}
-                                serverError={validation.name}
-                            />
-                        </FormItem>
-                        {data.source === 'castor' && <div>
-                            <FormItem label="Server">
-                                <Dropdown
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={castorServers}
-                                    name="sourceServer"
-                                    onChange={(e) => {this.handleChange({target: { name: 'sourceServer', value: e.value }})}}
-                                    value={castorServers.filter(({value}) => value === data.sourceServer)}
-                                    serverError={validation.order}
-                                />
-                            </FormItem>
+                <FormItem label="Name">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="name"
+                        onChange={this.handleChange}
+                        value={data.name}
+                        serverError={validation.name}
+                    />
+                </FormItem>
+                {data.source === 'castor' && <div>
+                    <FormItem label="Server">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={castorServers}
+                            name="sourceServer"
+                            onChange={(e) => {this.handleChange({target: { name: 'sourceServer', value: e.value }})}}
+                            value={castorServers.filter(({value}) => value === data.sourceServer)}
+                            serverError={validation.order}
+                        />
+                    </FormItem>
 
-                            <FormItem label="Is the Study ID known?">
-                                <RadioGroup
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={[
-                                        {
-                                            label: 'Yes',
-                                            value: true
-                                        },
-                                        {
-                                            label: 'No',
-                                            value: false
-                                        }
-                                    ]}
-                                    onChange={this.handleChange}
-                                    value={data.hasStudyId}
-                                    variant="horizontal"
-                                    name="hasStudyId"
-                                />
-                            </FormItem>
+                    <FormItem label="Is the Study ID known?">
+                        <RadioGroup
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={[
+                                {
+                                    label: 'Yes',
+                                    value: true
+                                },
+                                {
+                                    label: 'No',
+                                    value: false
+                                }
+                            ]}
+                            onChange={this.handleChange}
+                            value={data.hasStudyId}
+                            variant="horizontal"
+                            name="hasStudyId"
+                        />
+                    </FormItem>
 
-                            {data.hasStudyId && <FormItem label="Study ID">
-                                <Input
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    name="id"
-                                    onChange={this.handleChange}
-                                    value={data.id}
-                                    serverError={validation.id}
-                                />
-                            </FormItem>}
+                    {data.hasStudyId && <FormItem label="Study ID">
+                        <Input
+                            validators={['required']}
+                            errorMessages={[required]}
+                            name="id"
+                            onChange={this.handleChange}
+                            value={data.id}
+                            serverError={validation.id}
+                        />
+                    </FormItem>}
 
-                        </div>}
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit" disabled={isLoading}>
-                        Add study
-                    </Button>
-                </Modal.Footer>
+                </div>}
             </ValidatorForm>
         </Modal>
     }

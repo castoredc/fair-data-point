@@ -1,15 +1,14 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import Input from "../../components/Input";
 import FormItem from "../../components/Form/FormItem";
 import RadioGroup from "../../components/Input/RadioGroup";
-import Container from "react-bootstrap/Container";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
 import Dropdown from "../../components/Input/Dropdown";
+import Modal from "../Modal";
 
 export default class AddNodeModal extends Component {
     constructor(props) {
@@ -68,10 +67,9 @@ export default class AddNodeModal extends Component {
         });
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const {type, modelId, onSaved} = this.props;
         const {data} = this.state;
-        event.preventDefault();
 
         if (this.form.isFormValid()) {
             if (this.form.isFormValid()) {
@@ -110,98 +108,97 @@ export default class AddNodeModal extends Component {
 
         const showDataTypes = (type === 'literal' || (type === 'value' && data.value === 'plain'));
 
-        return <Modal show={show} onHide={handleClose} className="AddNodeModal">
+        return <Modal
+            show={show}
+            handleClose={handleClose}
+            className="AddNodeModal"
+            title={`Add ${type} node`}
+            closeButton
+            footer={(
+                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    Add node
+                </Button>
+            )}
+        >
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>Add {type} node</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <FormItem label="Title">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="title"
-                                onChange={this.handleChange}
-                                value={data.title}
-                                serverError={validation.title}
-                            />
-                        </FormItem>
-                        <FormItem label="Description">
-                            <Input
-                                name="description"
-                                onChange={this.handleChange}
-                                value={data.description}
-                                serverError={validation.description}
-                                as="textarea" rows="3"
-                            />
-                        </FormItem>
-                        {type === 'external' && <FormItem label="URI">
-                            <Input
-                                validators={['required', 'isUrl']}
-                                errorMessages={[required, validUrl]}
-                                name="value"
-                                onChange={this.handleChange}
-                                value={data.value}
-                                serverError={validation.value}
-                            />
-                        </FormItem>}
-                        {type === 'internal' && <FormItem label="Slug">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="value"
-                                onChange={this.handleChange}
-                                value={data.value}
-                                serverError={validation.value}
-                            />
-                        </FormItem>}
-                        {type === 'literal' && <FormItem label="Value">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="value"
-                                onChange={this.handleChange}
-                                value={data.value}
-                                serverError={validation.value}
-                            />
-                        </FormItem>}
-                        {type === 'value' && <FormItem label="Value">
-                            <RadioGroup
-                                validators={['required']}
-                                errorMessages={[required]}
-                                options={[
-                                    { value: 'plain', label: 'Plain value' },
-                                    { value: 'annotated', label: 'Annotated value' },
-                                ]}
-                                onChange={this.handleChange}
-                                value={data.value}
-                                serverError={validation.value}
-                                name="value"
-                            />
-                        </FormItem>}
-                        {showDataTypes && <FormItem label="Data type">
-                            <Dropdown
-                                validators={['required']}
-                                errorMessages={[required]}
-                                options={dataTypes}
-                                onChange={this.handleDataTypeChange}
-                                value={dataTypes.find((dataType) => {return data.dataType === dataType.value})}
-                                serverError={validation.dataType}
-                                name="dataType"
-                            />
-                        </FormItem>}
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit" disabled={isLoading}>
-                        Add node
-                    </Button>
-                </Modal.Footer>
+                <FormItem label="Title">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="title"
+                        onChange={this.handleChange}
+                        value={data.title}
+                        serverError={validation.title}
+                    />
+                </FormItem>
+                <FormItem label="Description">
+                    <Input
+                        name="description"
+                        onChange={this.handleChange}
+                        value={data.description}
+                        serverError={validation.description}
+                        as="textarea" rows="3"
+                    />
+                </FormItem>
+                {type === 'external' && <FormItem label="URI">
+                    <Input
+                        validators={['required', 'isUrl']}
+                        errorMessages={[required, validUrl]}
+                        name="value"
+                        onChange={this.handleChange}
+                        value={data.value}
+                        serverError={validation.value}
+                    />
+                </FormItem>}
+                {type === 'internal' && <FormItem label="Slug">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="value"
+                        onChange={this.handleChange}
+                        value={data.value}
+                        serverError={validation.value}
+                    />
+                </FormItem>}
+                {type === 'literal' && <FormItem label="Value">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="value"
+                        onChange={this.handleChange}
+                        value={data.value}
+                        serverError={validation.value}
+                    />
+                </FormItem>}
+                {type === 'value' && <FormItem label="Value">
+                    <RadioGroup
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={[
+                            { value: 'plain', label: 'Plain value' },
+                            { value: 'annotated', label: 'Annotated value' },
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.value}
+                        serverError={validation.value}
+                        name="value"
+                    />
+                </FormItem>}
+                {showDataTypes && <FormItem label="Data type">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={dataTypes}
+                        onChange={this.handleDataTypeChange}
+                        value={dataTypes.find((dataType) => {return data.dataType === dataType.value})}
+                        serverError={validation.dataType}
+                        name="dataType"
+                    />
+                </FormItem>}
             </ValidatorForm>
         </Modal>
     }

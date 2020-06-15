@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import FormItem from "../../components/Form/FormItem";
 import Container from "react-bootstrap/Container";
@@ -12,6 +11,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
+import Modal from "../Modal";
 
 export default class TripleModal extends Component {
     constructor(props) {
@@ -107,10 +107,9 @@ export default class TripleModal extends Component {
         });
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const {modelId, moduleId, onSaved} = this.props;
         const {data} = this.state;
-        event.preventDefault();
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
@@ -157,107 +156,108 @@ export default class TripleModal extends Component {
         const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value');
         const objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
 
-        return <Modal show={show} onHide={handleClose} className="TripleModal">
+        return <Modal
+            show={show}
+            className="TripleModal"
+            handleClose={handleClose}
+            title={data.id ? 'Edit triple' : 'Add triple'}
+            closeButton
+            footer={(
+                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    {data.id ? 'Edit triple' : 'Add triple'}
+                </Button>
+            )}
+        >
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Modal.Header closeButton>
-                    {data.id ? <Modal.Title>Edit triple</Modal.Title> : <Modal.Title>Add triple</Modal.Title>}
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            <Col md={12}>
-                                <FormHeading label="Subject" />
-                            </Col>
-                            <Col md={6}>
-                                <FormItem label="Type">
-                                    <Dropdown
-                                        validators={['required']}
-                                        errorMessages={[required]}
-                                        options={tripleTypes.subject}
-                                        onChange={this.handleSubjectTypeChange}
-                                        value={tripleTypes.subject.find((option) => {return data.subjectType === option.value}) || null}
-                                        serverError={validation.subjectType}
-                                        name="subjectType"
-                                        width="fullWidth"
-                                    />
-                                </FormItem>
-                            </Col>
-                            <Col md={6}>
-                                {subjectSelectable && <FormItem label="Node">
-                                    <Dropdown
-                                        validators={['required']}
-                                        errorMessages={[required]}
-                                        options={subjectOptions}
-                                        onChange={this.handleSubjectValueChange}
-                                        value={subjectOptions.find((option) => {return data.subjectValue === option.value}) || null}
-                                        serverError={validation.subjectValue}
-                                        name="subjectValue"
-                                        width="fullWidth"
-                                    />
-                                </FormItem>}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={12}>
-                                <FormHeading label="Predicate" />
-                            </Col>
-                            <Col md={6}>
-                                <FormItem label="URI">
-                                    <Input
-                                        validators={['required', 'isUrl']}
-                                        errorMessages={[required, validUrl]}
-                                        name="predicateValue"
-                                        onChange={this.handleChange}
-                                        value={data.predicateValue}
-                                        serverError={validation.predicateValue}
-                                    />
-                                </FormItem>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={12}>
-                                <FormHeading label="Object" />
-                            </Col>
-                            <Col md={6}>
-                                <FormItem label="Type">
-                                    <Dropdown
-                                        validators={['required']}
-                                        errorMessages={[required]}
-                                        options={tripleTypes.object}
-                                        onChange={this.handleObjectTypeChange}
-                                        value={tripleTypes.object.find((option) => {return data.objectType === option.value}) || null}
-                                        serverError={validation.objectType}
-                                        name="objectType"
-                                        width="fullWidth"
-                                    />
-                                </FormItem>
-                            </Col>
-                            <Col md={6}>
-                                {objectSelectable && <FormItem label="Node">
-                                    <Dropdown
-                                        validators={['required']}
-                                        errorMessages={[required]}
-                                        options={objectOptions}
-                                        onChange={this.handleObjectValueChange}
-                                        value={objectOptions.find((option) => {return data.objectValue === option.value}) || null}
-                                        serverError={validation.objectValue}
-                                        name="objectValue"
-                                        width="fullWidth"
-                                    />
-                                </FormItem>}
-                            </Col>
-                        </Row>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit" disabled={isLoading}>
-                        {data.id ? 'Edit triple' : 'Add triple'}
-                    </Button>
-                </Modal.Footer>
+                <Container>
+                    <Row>
+                        <Col md={12}>
+                            <FormHeading label="Subject" />
+                        </Col>
+                        <Col md={6}>
+                            <FormItem label="Type">
+                                <Dropdown
+                                    validators={['required']}
+                                    errorMessages={[required]}
+                                    options={tripleTypes.subject}
+                                    onChange={this.handleSubjectTypeChange}
+                                    value={tripleTypes.subject.find((option) => {return data.subjectType === option.value}) || null}
+                                    serverError={validation.subjectType}
+                                    name="subjectType"
+                                    width="fullWidth"
+                                />
+                            </FormItem>
+                        </Col>
+                        <Col md={6}>
+                            {subjectSelectable && <FormItem label="Node">
+                                <Dropdown
+                                    validators={['required']}
+                                    errorMessages={[required]}
+                                    options={subjectOptions}
+                                    onChange={this.handleSubjectValueChange}
+                                    value={subjectOptions.find((option) => {return data.subjectValue === option.value}) || null}
+                                    serverError={validation.subjectValue}
+                                    name="subjectValue"
+                                    width="fullWidth"
+                                />
+                            </FormItem>}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <FormHeading label="Predicate" />
+                        </Col>
+                        <Col md={6}>
+                            <FormItem label="URI">
+                                <Input
+                                    validators={['required', 'isUrl']}
+                                    errorMessages={[required, validUrl]}
+                                    name="predicateValue"
+                                    onChange={this.handleChange}
+                                    value={data.predicateValue}
+                                    serverError={validation.predicateValue}
+                                />
+                            </FormItem>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <FormHeading label="Object" />
+                        </Col>
+                        <Col md={6}>
+                            <FormItem label="Type">
+                                <Dropdown
+                                    validators={['required']}
+                                    errorMessages={[required]}
+                                    options={tripleTypes.object}
+                                    onChange={this.handleObjectTypeChange}
+                                    value={tripleTypes.object.find((option) => {return data.objectType === option.value}) || null}
+                                    serverError={validation.objectType}
+                                    name="objectType"
+                                    width="fullWidth"
+                                />
+                            </FormItem>
+                        </Col>
+                        <Col md={6}>
+                            {objectSelectable && <FormItem label="Node">
+                                <Dropdown
+                                    validators={['required']}
+                                    errorMessages={[required]}
+                                    options={objectOptions}
+                                    onChange={this.handleObjectValueChange}
+                                    value={objectOptions.find((option) => {return data.objectValue === option.value}) || null}
+                                    serverError={validation.objectValue}
+                                    name="objectValue"
+                                    width="fullWidth"
+                                />
+                            </FormItem>}
+                        </Col>
+                    </Row>
+                </Container>
             </ValidatorForm>
         </Modal>
     }

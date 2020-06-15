@@ -1,0 +1,94 @@
+@import '../scss/colors';
+
+.FullScreenOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 0!important;
+  background-color: rgba(0,0,0,0);
+  opacity: 1;
+  z-index: 9000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $generic-white;
+    opacity: .8;
+    z-index: -1;
+  }
+}
+
+.Modal {
+  padding: 24px;
+  max-width: 528px;
+  margin: 0 5vw;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid $neutral-40;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  max-height: 90vh;
+  position: relative;
+  background-color: $generic-white;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 2px 4px 0 $modal-shadow;
+  box-shadow: 0 2px 4px 0 $modal-shadow;
+
+  header {
+    color: $neutral-800;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    border-bottom: 1px solid $neutral-40;
+    padding-top: 0;
+    padding-bottom: 16px;
+  }
+
+  .CloseButton {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    color: $neutral-800;
+
+    &:hover {
+      background-color: $pale-grey!important;
+      color: $azul!important;
+    }
+  }
+
+  main {
+    padding-top: 24px;
+    overflow: auto;
+  }
+
+  footer {
+    border-top: 1px solid $neutral-40;
+    padding-top: 24px;
+  }
+}

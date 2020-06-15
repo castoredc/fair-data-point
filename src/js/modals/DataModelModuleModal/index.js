@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import {ValidatorForm} from "react-form-validator-core";
 import Input from "../../components/Input";
 import FormItem from "../../components/Form/FormItem";
@@ -10,7 +9,7 @@ import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
 import ConfirmModal from "../ConfirmModal";
 import {classNames} from "../../util";
-import Container from "react-bootstrap/Container";
+import Modal from "../Modal";
 
 export default class DataModelModuleModal extends Component {
     constructor(props) {
@@ -71,10 +70,9 @@ export default class DataModelModuleModal extends Component {
         });
     };
 
-    handleSubmit = (event) => {
+    handleSubmit = () => {
         const {data} = this.state;
         const {modelId, onSaved} = this.props;
-        event.preventDefault();
 
         if (this.form.isFormValid()) {
             this.setState({
@@ -137,57 +135,57 @@ export default class DataModelModuleModal extends Component {
 
         const required = "This field is required";
 
-        return <Modal show={show} onHide={handleClose}>
-            <ValidatorForm
-                ref={node => (this.form = node)}
-                onSubmit={this.handleSubmit}
-                method="post"
-            >
-                <Modal.Header closeButton>
-                    {data.id ? <Modal.Title>Edit module</Modal.Title> : <Modal.Title>Add module</Modal.Title>}
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <FormItem label="Title">
-                            <Input
-                                validators={['required']}
-                                errorMessages={[required]}
-                                name="title"
-                                onChange={this.handleChange}
-                                value={data.title}
-                                serverError={validation.title}
-                            />
-                        </FormItem>
-
-                        <FormItem label="Position">
-                            <Dropdown
-                                validators={['required']}
-                                errorMessages={[required]}
-                                options={orderOptions}
-                                name="order"
-                                onChange={(e) => {this.handleSelectChange('order', e)}}
-                                onBlur={this.handleFieldVisit}
-                                value={orderOptions.filter(({value}) => value === data.order)}
-                                serverError={validation.order}
-                            />
-                        </FormItem>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer className={classNames(data.id && 'HasConfirmButton')}>
+        return <Modal
+            show={show}
+            handleClose={handleClose}
+            title={data.id ? 'Edit module' : 'Add module'}
+            closeButton
+            footer={(
+                <div className={classNames(data.id && 'HasConfirmButton')}>
                     {data.id && <ConfirmModal
                         title="Delete module"
                         action="Delete module"
                         variant="danger"
                         onConfirm={this.handleDelete}
                         includeButton={true}
-                        >
+                    >
                         Are you sure you want to delete module <strong>{data.title}</strong>?<br />
                         This will also delete all associated triples.
                     </ConfirmModal>}
-                    <Button type="submit" disabled={isLoading}>
+                    <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
                         {data.id ? 'Edit module' : 'Add module'}
                     </Button>
-                </Modal.Footer>
+                </div>
+            )}
+        >
+            <ValidatorForm
+                ref={node => (this.form = node)}
+                onSubmit={this.handleSubmit}
+                method="post"
+            >
+                <FormItem label="Title">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="title"
+                        onChange={this.handleChange}
+                        value={data.title}
+                        serverError={validation.title}
+                    />
+                </FormItem>
+
+                <FormItem label="Position">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={orderOptions}
+                        name="order"
+                        onChange={(e) => {this.handleSelectChange('order', e)}}
+                        onBlur={this.handleFieldVisit}
+                        value={orderOptions.filter(({value}) => value === data.order)}
+                        serverError={validation.order}
+                    />
+                </FormItem>
             </ValidatorForm>
         </Modal>
     }
