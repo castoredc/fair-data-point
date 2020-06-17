@@ -61,14 +61,16 @@ class CastorEntityHelper
     /**
      * @throws InvalidEntityType
      */
-    public function getEntityFromCastorByTypeAndId(CastorStudy $study, CastorEntityType $type, string $id, string $parentId): CastorEntity
+    public function getEntityFromCastorByTypeAndId(CastorStudy $study, CastorEntityType $type, string $id, ?string $parentId = null): CastorEntity
     {
         if ($type->isFieldOption()) {
             $optionGroup = $this->apiClient->getOptionGroup($study, $parentId);
             $entity = $optionGroup->getOptionById($id);
         } elseif ($type->isFieldOptionGroup()) {
             $entity = $this->apiClient->getOptionGroup($study, $id);
-        } else {
+        } elseif ($type->isField()) {
+            $entity = $this->apiClient->getField($study, $id);
+        }else {
             throw new InvalidEntityType();
         }
 
