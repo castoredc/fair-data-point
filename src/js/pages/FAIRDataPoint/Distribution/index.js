@@ -99,8 +99,9 @@ export default class Distribution extends Component {
 
                     {restricted && <Alert
                         variant="info"
-                        icon="lock"
-                        message="The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself."/>
+                        icon="lock">
+                        The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself.
+                    </Alert>
                     }
                     {this.state.distribution.accessUrl && <ListItem link={this.state.distribution.accessUrl}
                               title="Access the data"

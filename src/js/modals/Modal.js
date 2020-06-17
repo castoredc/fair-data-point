@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {Button} from "@castoredc/matter";
 import './Modal.scss';
 import {Portal} from "react-portal";
+import {classNames} from "../util";
+import InlineLoader from "../components/LoadingScreen/InlineLoader";
 
 export default class Modal extends Component {
     handleClick = (event) => {
@@ -13,7 +15,7 @@ export default class Modal extends Component {
     };
 
     render() {
-        const {show, title, children, footer, handleClose, closeButton} = this.props;
+        const {show, title, children, footer, handleClose, className, closeButton, isLoading} = this.props;
 
         if(! show)
         {
@@ -22,10 +24,11 @@ export default class Modal extends Component {
 
         return <Portal>
             <div className="FullScreenOverlay" onClick={this.handleClick}>
-                <div className="Modal">
+                <div className={classNames('Modal', isLoading && 'Loading', className && className)}>
                     {title && <header>{title}</header>}
                     {closeButton && <Button icon="cross" className="CloseButton" onClick={handleClose} iconDescription="Close" />}
                     <main>
+                        {isLoading && <InlineLoader overlay />}
                         {children}
                     </main>
                     {footer && <footer>

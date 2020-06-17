@@ -22,7 +22,6 @@ export default class Distribution extends Component {
             isLoadingDistribution: true,
             hasLoadedDistribution: false,
             distribution:          null,
-            catalog:               props.match.params.catalog,
             dataset:               props.match.params.dataset
         };
     }
@@ -55,7 +54,7 @@ export default class Distribution extends Component {
     };
 
     render() {
-        const { distribution, isLoadingDistribution, catalog, dataset } = this.state;
+        const { distribution, isLoadingDistribution, dataset } = this.state;
 
         if(isLoadingDistribution) {
             return <InlineLoader />;
@@ -64,7 +63,7 @@ export default class Distribution extends Component {
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset}>
+                    <LinkContainer to={'/admin/dataset/' + dataset}>
                         <Button buttonType="secondary" icon="arrowLeftChevron">
                             Back to dataset
                         </Button>
@@ -77,26 +76,26 @@ export default class Distribution extends Component {
             <Row>
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug} exact={true}>
+                        <LinkContainer to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug} exact={true}>
                             <Nav.Link>Distribution</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} exact={true}>
+                        <LinkContainer to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} exact={true}>
                             <Nav.Link>Metadata</Nav.Link>
                         </LinkContainer>
                         <hr />
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents'} exact={true}>
+                        <LinkContainer to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents'} exact={true}>
                             <Nav.Link>Contents</Nav.Link>
                         </LinkContainer>
                     </Nav>
                 </Col>
                 <Col sm={10} className="Page">
                     <Switch>
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" exact
-                               render={(props) => <DistributionDetails {...props} catalog={catalog} dataset={dataset} distribution={distribution} />} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution/metadata" exact
-                               render={(props) => <DistributionMetadata {...props} catalog={catalog} dataset={dataset} distribution={distribution} onSave={this.getDistribution}/>} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution/contents" exact
-                               render={(props) => <DistributionContents {...props} catalog={catalog} dataset={dataset} distribution={distribution} />} />
+                        <Route path="/admin/dataset/:dataset/distribution/:distribution" exact
+                               render={(props) => <DistributionDetails {...props} dataset={dataset} distribution={distribution} />} />
+                        <Route path="/admin/dataset/:dataset/distribution/:distribution/metadata" exact
+                               render={(props) => <DistributionMetadata {...props} dataset={dataset} distribution={distribution} onSave={this.getDistribution}/>} />
+                        <Route path="/admin/dataset/:dataset/distribution/:distribution/contents" exact
+                               render={(props) => <DistributionContents {...props} dataset={dataset} distribution={distribution} />} />
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

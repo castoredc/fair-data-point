@@ -4,6 +4,9 @@ import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import CSVStudyStructure from "../../../components/StudyStructure/CSVStudyStructure";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
+import DataModelMappingsDataTable from "../../../components/DataTable/DataModelMappingsDataTable";
+import DistributionContentsRdf from "./DistributionContentsRdf";
+import DistributionContentsCsv from "./DistributionContentsCsv";
 
 export default class DistributionContents extends Component {
     constructor(props) {
@@ -50,20 +53,10 @@ export default class DistributionContents extends Component {
             return <InlineLoader/>;
         }
 
-        if (distribution.includeAllData) {
-            return <div className="NoResults">This distribution contains all fields.</div>;
-        }
-
         if (distribution.type === 'csv') {
-            return <CSVStudyStructure
-                studyId={distribution.studyId}
-                distributionContents={contents}
-                catalog={catalog}
-                dataset={dataset}
-                distribution={distribution.slug}
-            />;
+            return <DistributionContentsCsv contents={contents} catalog={catalog} distribution={distribution} dataset={dataset} />;
         } else if (distribution.type === 'rdf') {
-            return null;
+            return <DistributionContentsRdf dataset={dataset} distribution={distribution} />;
         }
 
         return <div className="NoResults">This distribution does not have contents.</div>;

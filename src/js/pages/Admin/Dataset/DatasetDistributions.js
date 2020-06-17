@@ -14,7 +14,7 @@ export default class DatasetDistributions extends Component {
                 <Col sm={6} />
                 <Col sm={6}>
                     <div className="ButtonBar Right">
-                        <LinkContainer to={'/admin/' + (catalog ? '/catalog/' + catalog : '') + '/dataset/' + dataset.slug + '/distributions/add'}>
+                        <LinkContainer to={'/admin/dataset/' + dataset.slug + '/distributions/add'}>
                             <Button icon="add" className="AddButton">Add distribution</Button>
                         </LinkContainer>
                     </div>

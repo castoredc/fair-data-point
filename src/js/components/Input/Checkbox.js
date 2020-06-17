@@ -1,39 +1,26 @@
 import React from 'react';
-import {classNames} from '../../util';
 import {ValidatorComponent} from "react-form-validator-core";
 import Form from 'react-bootstrap/Form'
-
-import './Checkbox.scss';
 import './Input.scss'
+import {ChoiceOption} from "@castoredc/matter";
 
 export default class Checkbox extends ValidatorComponent {
     render() {
         const {
-            errorMessages, validators, requiredError, validatorListener, type,
-            invalid,
             label,
             value = false,
             onChange,
-            required,
             name,
-            ...rest
         } = this.props;
 
         return (
             <Form.Group className="CheckboxFormGroup">
-                <label className={classNames('Checkbox', invalid && 'error')}>
-                    <input
-                        type="checkbox"
-                        checked={value}
-                        required={required}
-                        name={name}
-                        onChange={() => onChange({target: {name: name, value: !value}})}
-                        ref={(r) => { this.input = r; }}
-                        {...rest}
-                    />
-                    <div className="icon"/>
-                    <span dangerouslySetInnerHTML={{ __html: label }}></span>
-                </label>
+                <ChoiceOption
+                    labelText={label}
+                    type="checkbox"
+                    onChange={() => onChange({target: {name: name, value: !value}})}
+                    checked={value}
+                />
                 {this.errorText()}
             </Form.Group>
         );

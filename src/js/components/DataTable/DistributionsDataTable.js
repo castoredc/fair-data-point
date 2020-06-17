@@ -75,13 +75,14 @@ export default class DistributionsDataTable extends Component {
                         cellSpacing="default"
                         onClick={(event, rowID, index) => {
                             if(typeof index !== "undefined") {
-                                history.push('/admin/' + (dataset ? 'catalog/' + catalog + '/dataset/' + dataset.slug : '') + '/distribution/' + distributions[index].slug)
+                                history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distributions[index].slug)
                             }
                         }}
                         rows={distributions.map((item) => {
                             return [
                                 item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
                                 item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
+                                item.type ? item.type : '',
                                 item.hasMetadata ? item.metadata.language : '',
                                 item.hasMetadata ? item.metadata.license : '',
                             ];
@@ -94,6 +95,11 @@ export default class DistributionsDataTable extends Component {
                             },
                             description: {
                                 header:    'Description',
+                                resizable: true,
+                                template:  'text',
+                            },
+                            type: {
+                                header:    'Type',
                                 resizable: true,
                                 template:  'text',
                             },

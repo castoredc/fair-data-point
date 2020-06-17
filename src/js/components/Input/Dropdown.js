@@ -58,6 +58,9 @@ class Dropdown extends ValidatorComponent {
                 options={cachedOptions}
                 openMenuOnClick={false}
                 ref={(r) => { this.input = r; }}
+                menuPosition="fixed"
+                menuPlacement="auto"
+                onChange={onChange}
             />
         } else if(isMulti) {
             const CustomOption = props => (

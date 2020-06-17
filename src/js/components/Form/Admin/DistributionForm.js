@@ -27,6 +27,7 @@ export default class DistributionForm extends Component {
             submitDisabled: false,
             languages:      [],
             licenses:       [],
+            dataModels:     [],
             distribution:   props.distribution ? props.distribution : null,
             update:         !!props.distribution,
         };
@@ -35,42 +36,34 @@ export default class DistributionForm extends Component {
     componentDidMount() {
         this.getLanguages();
         this.getLicenses();
+        this.getDataModels();
     }
 
-    handleChange = (event, callback = (() => {})) => {
-        const { data, changedFieldsSinceFormSubmission } = this.state;
+    handleChange = (event) => {
+        const { data } = this.state;
         const newState = {
             data: {
                 ...data,
                 [event.target.name]: event.target.value,
             },
-            changedFieldsSinceFormSubmission: {
-                ...changedFieldsSinceFormSubmission,
-                [event.target.name]: true,
-            },
             validation: {
                 [event.target.name]: false,
             }
         };
-        this.setState(newState, callback);
+        this.setState(newState);
     };
 
-    handleSelectChange = (name, event) => {
-        this.handleChange({
-            target: {
-                name: name,
-                value: event.value
-            }
-        });
-    };
+    handleTypeChange = (event) => {
+        const { data } = this.state;
 
-    handleFieldVisit = (event) => {
-        const { visitedFields } = this.state;
         this.setState({
-            visitedFields: {
-                ...visitedFields,
-                [event.target.name]: true,
-            },
+            data: {
+                ...data,
+                includeAllData: '',
+                dataModel: ''
+            }
+        }, () => {
+            this.handleChange(event);
         });
     };
 
@@ -91,6 +84,20 @@ export default class DistributionForm extends Component {
             .then((response) => {
                 this.setState({
                     licenses: response.data,
+                });
+            })
+            .catch(() => {
+                toast.error(<ToastContent type="error" message="An error occurred" />);
+            });
+    };
+
+    getDataModels = () => {
+        axios.get('/api/model')
+            .then((response) => {
+                this.setState({
+                    dataModels: response.data.map((dataModel) => {
+                        return { label: dataModel.title, value: dataModel.id }
+                    }),
                 });
             })
             .catch(() => {
@@ -148,8 +155,8 @@ export default class DistributionForm extends Component {
     };
 
     render() {
-        const { catalog, dataset } = this.props;
-        const { data, validation, licenses, isSaved, update, distribution, submitDisabled } = this.state;
+        const { dataset } = this.props;
+        const { data, validation, licenses, dataModels, isSaved, update, distribution, submitDisabled } = this.state;
 
         const required = "This field is required";
 
@@ -167,7 +174,7 @@ export default class DistributionForm extends Component {
                 <FormItem label="Type">
                     <RadioGroup
                         options={distributionTypes}
-                        onChange={this.handleChange}
+                        onChange={this.handleTypeChange}
                         value={data.type}
                         variant="horizontal"
                         name="type"
@@ -181,6 +188,18 @@ export default class DistributionForm extends Component {
                         value={data.includeAllData}
                         variant="horizontal"
                         name="includeAllData"
+                    />
+                </FormItem>}
+
+                {data.type === 'rdf' && <FormItem label="Data model">
+                    <Dropdown
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={dataModels}
+                        name="dataModel"
+                        onChange={(e) => {this.handleChange({target: { name: 'dataModel', value: e.value }})}}
+                        value={dataModels.filter(({value}) => value === data.dataModel)}
+                        serverError={validation.dataModel}
                     />
                 </FormItem>}
 
@@ -201,7 +220,7 @@ export default class DistributionForm extends Component {
                         errorMessages={[required]}
                         options={licenses}
                         name="license"
-                        onChange={(e) => {this.handleSelectChange('license', e)}}
+                        onChange={(e) => {this.handleChange({target: { name: 'license', value: e.value }})}}
                         value={licenses.filter(({value}) => value === data.license)}
                         serverError={validation.license}
                     />
@@ -213,7 +232,7 @@ export default class DistributionForm extends Component {
                         errorMessages={[required]}
                         options={accessTypes}
                         name="accessRights"
-                        onChange={(e) => {this.handleSelectChange('accessRights', e)}}
+                        onChange={(e) => {this.handleChange({target: { name: 'accessRights', value: e.value }})}}
                         value={accessTypes.filter(({value}) => value === data.accessRights)}
                         serverError={validation.accessRights}
                     />
@@ -256,5 +275,6 @@ export const defaultData = {
     slug: '',
     accessRights: null,
     includeAllData: null,
+    dataModel: '',
     license: null
 };

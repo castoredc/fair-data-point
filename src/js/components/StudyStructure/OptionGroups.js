@@ -34,7 +34,7 @@ export default class OptionGroups extends Component {
             isLoadingOptionGroups: true,
         });
 
-        axios.get('/api/study/' + studyId + '/optiongroups')
+        axios.get('/api/castor/study/' + studyId + '/optiongroups')
             .then((response) => {
                 this.setState({
                     optionGroups:          response.data,

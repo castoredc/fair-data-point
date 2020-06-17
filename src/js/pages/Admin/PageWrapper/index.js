@@ -94,12 +94,10 @@ export default class PageWrapper extends Component {
                         <Redirect exact from="/admin" to="/admin/catalog" />
 
                         <Route path="/admin/catalogs" exact component={Catalogs} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/distribution/:distribution" component={Distribution} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset" component={Dataset} />
                         <Route path="/admin/catalog/:catalog" component={Catalog} />
 
-                        <Route path="/admin/dataset/:dataset" component={Dataset} />
                         <Route path="/admin/dataset/:dataset/distribution/:distribution" component={Distribution} />
+                        <Route path="/admin/dataset/:dataset" component={Dataset} />
 
                         <Route path="/admin/studies" exact component={Studies} />
                         <Route path="/admin/study/:study" component={Study} />
