@@ -6,6 +6,7 @@ namespace App\Entity\Castor\Form;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Structure\MetadataPoint;
+use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 
@@ -14,6 +15,66 @@ use function boolval;
  */
 class Field extends CastorEntity
 {
+    const EXPORTABLE = [
+        'numeric',
+        'radio',
+        'dropdown',
+        'checkbox',
+        'date',
+        'year',
+        'time',
+        'calculation',
+        'slider',
+        'string',
+        'textarea',
+        'randomization',
+        'grid',
+        'datetime',
+        'numberdate',
+    ];
+
+    const EXPORTABLE_ANNOTATED = [
+        'radio',
+        'dropdown',
+        'checkbox',
+    ];
+
+    const EXPORTABLE_PLAIN = [
+        'numeric',
+        'radio',
+        'dropdown',
+        'checkbox',
+        'date',
+        'year',
+        'time',
+        'calculation',
+        'slider',
+        'string',
+        'textarea',
+        'randomization',
+        'grid',
+        'datetime',
+        'numberdate',
+    ];
+
+    const SUPPORTED_DATA_TYPES = [
+        'numeric' => XsdDataType::NUMBER_TYPES,
+        'radio' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
+        'dropdown' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
+        'checkbox' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
+        'date' => XsdDataType::DATE_TIME_TYPES,
+        'year' => [XsdDataType::G_YEAR],
+        'time' => [XsdDataType::TIME],
+        'calculation' => XsdDataType::ANY_TYPES,
+        'slider' => XsdDataType::NUMBER_TYPES,
+        'string' => XsdDataType::STRING_TYPES,
+        'textarea' => XsdDataType::STRING_TYPES,
+        'randomization' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
+        'grid' => XsdDataType::STRING_TYPES,
+        'datetime' => XsdDataType::DATE_TIME_TYPES,
+        'numberdate' => XsdDataType::NUMBER_TYPES + XsdDataType::DATE_TYPES,
+    ];
+
     /**
      * The Field type
      *
@@ -212,6 +273,31 @@ class Field extends CastorEntity
     public function setOptionGroup(?FieldOptionGroup $optionGroup): void
     {
         $this->optionGroup = $optionGroup;
+    }
+
+    public function isExportable(): bool
+    {
+        return in_array($this->type, self::EXPORTABLE);
+    }
+
+    public function isExportableAnnotated(): bool
+    {
+        return in_array($this->type, self::EXPORTABLE_ANNOTATED);
+    }
+
+    public function isExportablePlain(): bool
+    {
+        return in_array($this->type, self::EXPORTABLE_PLAIN);
+    }
+
+    /** @return string[] */
+    public function getSupportedDataTypes(): array
+    {
+        if(! $this->isExportable()) {
+            return [];
+        }
+
+        return self::SUPPORTED_DATA_TYPES[$this->type];
     }
 
     /**

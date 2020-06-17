@@ -42,30 +42,38 @@ use function in_array;
 class XsdDataType extends Enum
 {
     // Number
-    private const FLOAT = 'float';
-    private const DOUBLE = 'double';
-    private const DECIMAL = 'decimal';
-    private const INTEGER = 'integer';
-    private const NUMBER_TYPES = [self::FLOAT, self::DOUBLE, self::DECIMAL, self::INTEGER];
+    public const FLOAT = 'float';
+    public const DOUBLE = 'double';
+    public const DECIMAL = 'decimal';
+    public const INTEGER = 'integer';
+    public const NUMBER_TYPES = [self::FLOAT, self::DOUBLE, self::DECIMAL, self::INTEGER];
 
     // Date/Time
-    private const DATE_TIME = 'dateTime';
-    private const DATE = 'date';
-    private const TIME = 'time';
-    private const G_DAY = 'gDay';
-    private const G_MONTH = 'gMonth';
-    private const G_YEAR = 'gYear';
-    private const G_YEAR_MONTH = 'gYearMonth';
-    private const G_MONTH_DAY = 'gMonthDay';
-    private const DATE_TIME_TYPES = [self::DATE_TIME, self::DATE, self::TIME, self::G_DAY, self::G_MONTH, self::G_YEAR, self::G_YEAR_MONTH, self::G_MONTH_DAY];
+    public const DATE_TIME = 'dateTime';
+    public const DATE = 'date';
+    public const TIME = 'time';
+    public const G_DAY = 'gDay';
+    public const G_MONTH = 'gMonth';
+    public const G_YEAR = 'gYear';
+    public const G_YEAR_MONTH = 'gYearMonth';
+    public const G_MONTH_DAY = 'gMonthDay';
+    public const DATE_TIME_TYPES = [self::DATE_TIME, self::DATE, self::TIME, self::G_DAY, self::G_MONTH, self::G_YEAR, self::G_YEAR_MONTH, self::G_MONTH_DAY];
+    public const DATE_TYPES = [self::DATE, self::G_DAY, self::G_MONTH, self::G_YEAR, self::G_YEAR_MONTH, self::G_MONTH_DAY];
 
     // String
-    private const STRING = 'string';
-    private const STRING_TYPES = [self::STRING];
+    public const STRING = 'string';
+    public const STRING_TYPES = [self::STRING];
 
     // Boolean
-    private const BOOLEAN = 'boolean';
-    private const BOOLEAN_TYPES = [self::BOOLEAN];
+    public const BOOLEAN = 'boolean';
+    public const BOOLEAN_TYPES = [self::BOOLEAN];
+
+    public const ANY_TYPES = [
+        self::FLOAT, self::DOUBLE, self::DECIMAL, self::INTEGER,
+        self::DATE_TIME, self::DATE, self::TIME, self::G_DAY, self::G_MONTH, self::G_YEAR, self::G_YEAR_MONTH, self::G_MONTH_DAY,
+        self::STRING,
+        self::BOOLEAN
+    ];
 
     public function isNumberType(): bool
     {

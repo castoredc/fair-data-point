@@ -31,6 +31,12 @@ class FieldApiResource implements ApiResource
             'hidden' => $this->field->getHidden(),
             'info' => $this->field->getInfo(),
             'units' => $this->field->getUnits(),
+            'exportable' => [
+                'exportable' => $this->field->isExportable(),
+                'annotated' => $this->field->isExportableAnnotated(),
+                'plain' => $this->field->isExportablePlain(),
+                'dataTypes' => $this->field->getSupportedDataTypes()
+            ]
         ];
     }
 }
