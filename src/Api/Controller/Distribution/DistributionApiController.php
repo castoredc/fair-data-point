@@ -15,12 +15,10 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Exception\LanguageNotFound;
 use App\Message\Distribution\AddCSVDistributionContentCommand;
-use App\Message\Distribution\AddDistributionCommand;
-use App\Message\Distribution\AddDistributionContentsCommand;
+use App\Message\Distribution\CreateDistributionCommand;
 use App\Message\Distribution\ClearDistributionContentCommand;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
-use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,19 +104,18 @@ class DistributionApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
 
-        /** @var CastorUser $user */
-        $user = $this->getUser();
-
         try {
             /** @var DistributionApiRequest $parsed */
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
             $envelope = $bus->dispatch(
-                new AddDistributionCommand(
+                new CreateDistributionCommand(
                     $parsed->getType(),
                     $parsed->getSlug(),
                     $parsed->getLicense(),
                     $dataset,
-                    $user
+                    $parsed->getAccessRights(),
+                    $parsed->getIncludeAllData(),
+                    $parsed->getDataModel()
                 )
             );
 
@@ -128,17 +125,7 @@ class DistributionApiController extends ApiController
             /** @var Distribution $distribution */
             $distribution = $handledStamp->getResult();
 
-            $bus->dispatch(
-                new AddDistributionContentsCommand(
-                    $distribution,
-                    $parsed->getType(),
-                    $parsed->getAccessRights(),
-                    $parsed->getIncludeAllData(),
-                    $user
-                )
-            );
-
-            if ($parsed->getType() === Distribution::TYPE_RDF) {
+            if ($parsed->getType()->isRdf()) {
                 $bus->dispatch(new CreateDistributionDatabaseCommand($distribution));
             }
 
@@ -147,6 +134,8 @@ class DistributionApiController extends ApiController
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
+
+            dump($e);
 
             if ($e instanceof LanguageNotFound) {
                 return new JsonResponse($e->toArray(), 409);
@@ -164,25 +153,19 @@ class DistributionApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
 
-        /** @var CastorUser $user */
-        $user = $this->getUser();
-
         try {
             /** @var DistributionApiRequest $parsed */
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
-            $envelope = $bus->dispatch(
+            $bus->dispatch(
                 new UpdateDistributionCommand(
                     $distribution,
                     $parsed->getSlug(),
                     $parsed->getLicense(),
                     $parsed->getAccessRights(),
                     $parsed->getIncludeAllData(),
-                    $user
+                    $parsed->getDataModel()
                 )
             );
-
-            /** @var HandledStamp $handledStamp */
-            $handledStamp = $envelope->last(HandledStamp::class);
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
