@@ -31,6 +31,7 @@ class DistributionApiResource implements ApiResource
             'hasMetadata' => $this->distribution->hasMetadata(),
             'hasContents' => $this->distribution->hasContents(),
             'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
+            'study' => $this->distribution->getDataset()->getStudy() !== null ? $this->distribution->getDataset()->getStudy()->getId() : null
         ];
 
         if ($this->distribution->hasMetadata()) {
@@ -58,6 +59,7 @@ class DistributionApiResource implements ApiResource
                 $distribution['accessUrl'] = $contents->getRDFUrl();
                 $distribution['downloadUrl'] = $contents->getRDFUrl() . '/?download=1';
                 $distribution['type'] = 'rdf';
+                $distribution['dataModel'] = $contents->getDataModel()->getId();
             }
 
             if ($contents instanceof CSVDistribution) {

@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Castor;
 
 use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\OptionGroupsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
+use App\Controller\Api\ApiController;
 use App\Entity\Castor\CastorStudy;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
@@ -17,28 +18,27 @@ use App\Message\Study\GetStudyStructureCommand;
 use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
-class StudyStructureApiController extends ApiController
+/**
+ * @Route("/api/castor/study/{study}")
+ * @ParamConverter("study", options={"mapping": {"study": "id"}})
+ */
+class CastorStudyStructureApiController extends ApiController
 {
     /**
-     * @Route("/api/study/{study}/structure", name="api_study_structure")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
+     * @Route("/structure", name="api_study_structure")
      */
-    public function studyStructure(CastorStudy $study, Request $request, MessageBusInterface $bus): Response
+    public function studyStructure(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        /** @var CastorUser|null $user */
-        $user = $this->getUser();
-
         try {
-            $envelope = $bus->dispatch(new GetStudyStructureCommand($study, $user));
+            $envelope = $bus->dispatch(new GetStudyStructureCommand($study));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
@@ -65,18 +65,14 @@ class StudyStructureApiController extends ApiController
     }
 
     /**
-     * @Route("/api/study/{study}/structure/step/{step}/fields", name="api_study_structure_step")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
+     * @Route("/structure/step/{step}/fields", name="api_study_structure_step")
      */
-    public function studyStructureStep(CastorStudy $study, string $step, Request $request, MessageBusInterface $bus): Response
+    public function studyStructureStep(CastorStudy $study, string $step, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        /** @var CastorUser|null $user */
-        $user = $this->getUser();
-
         try {
-            $envelope = $bus->dispatch(new GetFieldsForStepCommand($study, $step, $user));
+            $envelope = $bus->dispatch(new GetFieldsForStepCommand($study, $step));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
@@ -103,8 +99,7 @@ class StudyStructureApiController extends ApiController
     }
 
     /**
-     * @Route("/api/study/{study}/optiongroups", name="api_study_optiongroups")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
+     * @Route("/optiongroups", name="api_study_optiongroups")
      */
     public function optionGroups(CastorStudy $study, MessageBusInterface $bus): Response
     {
@@ -114,7 +109,7 @@ class StudyStructureApiController extends ApiController
         $user = $this->getUser();
 
         try {
-            $envelope = $bus->dispatch(new GetOptionGroupsForStudyCommand($study, $user));
+            $envelope = $bus->dispatch(new GetOptionGroupsForStudyCommand($study));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);

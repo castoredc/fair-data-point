@@ -10,16 +10,22 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Message\Study\GetStudyStructureCommand;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorUser;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class GetStudyStructureCommandHandler implements MessageHandlerInterface
 {
     /** @var ApiClient */
     private $apiClient;
 
-    public function __construct(ApiClient $apiClient)
+    /** @var Security */
+    private $security;
+
+    public function __construct(ApiClient $apiClient, Security $security)
     {
         $this->apiClient = $apiClient;
+        $this->security = $security;
     }
 
     /**
@@ -30,7 +36,9 @@ class GetStudyStructureCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetStudyStructureCommand $message): StructureCollection
     {
-        $this->apiClient->setUser($message->getUser());
+        $user = $this->security->getUser();
+        assert($user instanceof CastorUser);
+        $this->apiClient->setUser($user);
 
         return $this->apiClient->getStructure($message->getStudy());
     }

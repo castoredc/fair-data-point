@@ -199,7 +199,7 @@ class ApiClient
         $ids = [];
 
         foreach ($studies as $study) {
-            $ids[] = $study->getId();
+            $ids[] = $study->getSourceId();
         }
 
         return $ids;
@@ -230,7 +230,7 @@ class ApiClient
         $fields = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fields'] as $rawField) {
@@ -240,6 +240,19 @@ class ApiClient
         }
 
         return $fields;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
+    public function getField(CastorStudy $study, string $fieldId): Field
+    {
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/field/' . $fieldId. '?include=metadata');
+
+        return Field::fromData($body, $study);
     }
 
     /**
@@ -305,7 +318,7 @@ class ApiClient
         $pages = 1;
         $phases = new PhaseCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/phase?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/phase?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['phases'] as $phase) {
@@ -327,7 +340,7 @@ class ApiClient
         $pages = 1;
         $steps = new ArrayCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/step?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/step?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['steps'] as $step) {
@@ -356,7 +369,7 @@ class ApiClient
         $pages = 1;
         $surveys = new SurveyCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/survey?include=steps&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/survey?include=steps&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['surveys'] as $survey) {
@@ -391,12 +404,12 @@ class ApiClient
         $pages = 1;
         $reports = new ReportCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/report?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/report?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['reports'] as $report) {
                 $tempReport = Report::fromData($report, $study);
-                $steps = $this->request('/api/study/' . $study->getId() . '/report/' . $report['report_id'] . '/report-step?page=' . $page . '&page_size=' . $this->pageSize);
+                $steps = $this->request('/api/study/' . $study->getSourceId() . '/report/' . $report['report_id'] . '/report-step?page=' . $page . '&page_size=' . $this->pageSize);
 
                 foreach ($steps['_embedded']['report_steps'] as $step) {
                     $newStep = ReportStep::fromData($step, $study);
@@ -430,7 +443,7 @@ class ApiClient
         $pages = 1;
 
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/field-optiongroup?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fieldOptionGroups'] as $optionGroup) {
@@ -449,7 +462,7 @@ class ApiClient
      */
     public function getOptionGroup(CastorStudy $study, string $optionGroupId): FieldOptionGroup
     {
-        $body = $this->request('/api/study/' . $study->getId() . '/field-optiongroup/' . $optionGroupId);
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/field-optiongroup/' . $optionGroupId);
 
         return FieldOptionGroup::fromData($body, $study);
     }
@@ -462,7 +475,7 @@ class ApiClient
      */
     public function getRecord(CastorStudy $study, string $recordId): Record
     {
-        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $recordId);
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $recordId);
 
         return Record::fromData($body);
     }
@@ -479,7 +492,7 @@ class ApiClient
         $records = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['records'] as $rawRecord) {
@@ -499,7 +512,7 @@ class ApiClient
      */
     private function getRecordStudyData(CastorStudy $study, Record $record): RecordData
     {
-        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/study');
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/data-point-collection/study');
 
         return StudyData::fromData($body['_embedded']['items'], $study, $record);
     }
@@ -515,7 +528,7 @@ class ApiClient
         $reportInstances = new ArrayCollection();
 
         try {
-            $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/report-instance');
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/report-instance');
 
             foreach ($body['_embedded']['reportInstances'] as $rawReportInstance) {
                 $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
@@ -538,7 +551,7 @@ class ApiClient
     {
         $surveyPackageInstances = new ArrayCollection();
 
-        $body = $this->request('/api/study/' . $study->getId() . '/surveypackageinstance?record_id=' . $record->getId());
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/surveypackageinstance?record_id=' . $record->getId());
 
         foreach ($body['_embedded']['surveypackageinstance'] as $rawSurveyPackageInstance) {
             $surveyPackageInstance = SurveyPackageInstance::fromData($rawSurveyPackageInstance, $record);
@@ -561,7 +574,7 @@ class ApiClient
 
         foreach ($surveyPackageInstances as $surveyPackageInstance) {
             /** @var SurveyPackageInstance $surveyPackageInstance */
-            $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId());
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId());
             $surveyData->addSurveyPackageData($body['_embedded']['SurveyDataPoints'], $study, $surveyPackageInstance);
         }
 
@@ -577,7 +590,7 @@ class ApiClient
     private function getRecordReportData(CastorStudy $study, Record $record): InstanceDataCollection
     {
         $reportInstances = $this->getRecordReportInstances($study, $record);
-        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/report-instance');
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/data-point-collection/report-instance');
 
         return ReportData::fromData($body['_embedded']['items'], $study, $record, $reportInstances);
     }

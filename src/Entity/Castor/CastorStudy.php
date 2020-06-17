@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="study_castor")
  */
 class CastorStudy extends Study

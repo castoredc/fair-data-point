@@ -11,8 +11,6 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\DiscriminatorColumn;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
 use function count;
 
 /**
@@ -21,8 +19,8 @@ use function count;
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  *
- * @DiscriminatorColumn(name="type", type="string")
- * @DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  */
 abstract class Study
 {

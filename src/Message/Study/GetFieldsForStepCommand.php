@@ -14,17 +14,9 @@ class GetFieldsForStepCommand
     /** @var string */
     private $stepId;
 
-    /** @var CastorUser */
-    private $user;
-
-    public function __construct(
-        CastorStudy $study,
-        string $stepId,
-        CastorUser $user
-    ) {
+    public function __construct(CastorStudy $study, string $stepId) {
         $this->study = $study;
         $this->stepId = $stepId;
-        $this->user = $user;
     }
 
     public function getStudy(): CastorStudy
@@ -35,10 +27,5 @@ class GetFieldsForStepCommand
     public function getStepId(): string
     {
         return $this->stepId;
-    }
-
-    public function getUser(): CastorUser
-    {
-        return $this->user;
     }
 }

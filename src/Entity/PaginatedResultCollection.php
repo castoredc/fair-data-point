@@ -64,7 +64,7 @@ class PaginatedResultCollection implements Countable, IteratorAggregate
 
     public function getTotalPages(): int
     {
-        return (int) ceil($this->totalResults / $this->perPage);
+        return $this->totalResults > 0 ? (int) ceil($this->totalResults / $this->perPage) : 0;
     }
 
     public function getIterator(): ArrayIterator

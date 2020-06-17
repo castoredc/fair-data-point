@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Data\DataModelApiResource;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\CSV\CSVDistributionElementFieldId;
 use App\Entity\Data\CSV\CSVDistributionElementVariableName;
@@ -29,9 +30,7 @@ class DistributionContentApiResource implements ApiResource
             return [];
         }
 
-        $data = [
-            'accessRights' => $this->distribution->getContents()->getAccessRights(),
-        ];
+        $data = [];
 
         $contents = $this->distribution->getContents();
 
@@ -57,6 +56,8 @@ class DistributionContentApiResource implements ApiResource
 
         if ($contents instanceof RDFDistribution) {
             $elements = [];
+
+            $data['dataModel'] = (new DataModelApiResource($contents->getDataModel()))->toArray();
 
             // foreach ($contents->getModules() as $module) {
             //     /** @var RDFDistributionModule $module */

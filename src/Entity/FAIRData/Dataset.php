@@ -45,10 +45,9 @@ class Dataset
     private $catalogs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset",cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset", cascade={"persist"})
      *
-     * @var Collection<string, Distribution>
+     * @var Collection<Distribution>
      */
     private $distributions;
 
