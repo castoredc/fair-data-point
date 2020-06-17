@@ -4,14 +4,20 @@ declare(strict_types=1);
 namespace App\Api\Request\Distribution;
 
 use App\Api\Request\SingleApiRequest;
+use App\Entity\Enum\DistributionType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\GroupSequence;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
-class DistributionApiRequest extends SingleApiRequest
+/**
+ * @Assert\GroupSequenceProvider()
+ */
+class DistributionApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
      * @var string
      * @Assert\NotBlank()
-     * @Assert\Type("string")
+     * @Assert\Choice({ "rdf", "csv" })
      */
     private $type;
 
@@ -38,9 +44,17 @@ class DistributionApiRequest extends SingleApiRequest
 
     /**
      * @var bool|null
+     * @Assert\NotNull(groups = {"csv"})
      * @Assert\Type("bool")
      */
     private $includeAllData;
+
+    /**
+     * @var string|null
+     * @Assert\NotBlank(groups = {"rdf"})
+     * @Assert\Type("string")
+     */
+    private $dataModel;
 
     protected function parse(): void
     {
@@ -49,11 +63,12 @@ class DistributionApiRequest extends SingleApiRequest
         $this->license = $this->getFromData('license');
         $this->accessRights = (int) $this->getFromData('accessRights');
         $this->includeAllData = $this->getFromData('includeAllData');
+        $this->dataModel = $this->getFromData('dataModel');
     }
 
-    public function getType(): string
+    public function getType(): DistributionType
     {
-        return $this->type;
+        return DistributionType::fromString($this->type);
     }
 
     public function getSlug(): string
@@ -74,5 +89,18 @@ class DistributionApiRequest extends SingleApiRequest
     public function getIncludeAllData(): ?bool
     {
         return $this->includeAllData;
+    }
+
+    public function getDataModel(): ?string
+    {
+        return $this->dataModel;
+    }
+
+    public function getGroupSequence()
+    {
+        return [
+            'DistributionApiRequest',
+            $this->getType()->toString()
+        ];
     }
 }

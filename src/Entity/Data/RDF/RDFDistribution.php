@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\RDF;
 
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -52,5 +53,18 @@ class RDFDistribution extends DistributionContents
     public function getMappings(): Collection
     {
         return $this->mappings;
+    }
+
+    public function getMappingByNode(ValueNode $node): ?DataModelMapping
+    {
+        foreach($this->mappings as $mapping) {
+            /** @var DataModelMapping $mapping */
+            if($mapping->getNode() === $node)
+            {
+                return $mapping;
+            }
+        }
+
+        return null;
     }
 }

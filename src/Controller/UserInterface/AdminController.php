@@ -128,19 +128,18 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distribution/{distribution}/prefixes", name="admin_study_distribution_prefix")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @Route("/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/prefixes", name="admin_study_distribution_prefix")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function adminDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution): Response
+    public function adminDistribution(Dataset $dataset, Distribution $distribution): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+        if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 

@@ -66,7 +66,7 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 if ($isLiteral) {
                     assert($object instanceof LiteralNode || $object instanceof ValueNode);
 
-                    $literal = new EasyRdf_Literal($this->getValue($object), null, 'xsd:' . $object->getDataType());
+                    $literal = new EasyRdf_Literal($this->getValue($object));
                     $fullGraph->addLiteral($subjectInFullGraph, $predicateUri, $literal);
                     $moduleGraph->addLiteral($subjectInModuleGraph, $predicateUri, $literal);
                 } else {
@@ -92,7 +92,7 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 return '##Annotated value of ' . $node->getTitle() . '##';
             }
 
-            return '##Plain value of ' . $node->getTitle() . '##';
+            return '##Plain value of ' . $node->getTitle() . ' ('. $node->getDataType() .')##';
         }
 
         return $this->getURI($node);

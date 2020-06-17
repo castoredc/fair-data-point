@@ -29,6 +29,7 @@ class NodeRepository extends EntityRepository
                     ->andWhere('node INSTANCE OF :type')
                     ->setParameter('dataModel', $dataModel)
                     ->setParameter('type', $this->getEntityManager()->getClassMetadata($type->getClassName()))
+                    ->orderBy('node.title', 'ASC')
                     ->getQuery()
                     ->getResult();
     }
