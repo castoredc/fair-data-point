@@ -29,7 +29,7 @@ class LocalizedTextItem
     private $parent;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      *
      * @var string
      */
