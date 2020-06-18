@@ -13,9 +13,11 @@ use App\Exception\SessionTimedOut;
 use App\Message\Distribution\RenderCSVDistributionCommand;
 use App\MessageHandler\CSVCommandHandler;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorUser;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
+use Symfony\Component\Security\Core\Security;
 use function assert;
 use function count;
 
@@ -24,9 +26,13 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
     /** @var ApiClient */
     private $apiClient;
 
-    public function __construct(ApiClient $apiClient)
+    /** @var Security */
+    private $security;
+
+    public function __construct(ApiClient $apiClient, Security $security)
     {
         $this->apiClient = $apiClient;
+        $this->security = $security;
     }
 
     /**
@@ -34,13 +40,16 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
      */
     public function __invoke(RenderCSVDistributionCommand $message): string
     {
+        $user = $this->security->getUser();
+        assert($user instanceof CastorUser);
+
         $dbStudy = $message->getDistribution()->getDistribution()->getDataset()->getStudy();
         assert($dbStudy instanceof CastorStudy);
 
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
         } else {
-            $this->apiClient->setUser($message->getUser());
+            $this->apiClient->setUser($user);
         }
 
         $study = $this->apiClient->getStudy($dbStudy->getId());

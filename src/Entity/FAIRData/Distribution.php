@@ -18,7 +18,7 @@ use function count;
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Distribution
+class Distribution implements AccessibleEntity
 {
     use CreatedAndUpdated;
 
@@ -110,19 +110,9 @@ class Distribution
         $this->dataset = $dataset;
     }
 
-    public function getAccessUrl(): string
-    {
-        return $this->dataset->getAccessUrl() . '/' . $this->slug;
-    }
-
     public function getRelativeUrl(): string
     {
-        return $this->dataset->getRelativeUrl() . '/' . $this->slug;
-    }
-
-    public function getBaseUrl(): string
-    {
-        return $this->dataset->getBaseUrl();
+        return $this->dataset->getRelativeUrl() . '/distribution/' . $this->slug;
     }
 
     public function hasContents(): bool

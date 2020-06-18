@@ -19,23 +19,25 @@ class FAIRDataPointGraphResource implements GraphResource
         $this->fairDataPoint = $fairDataPoint;
     }
 
-    public function toGraph(): EasyRdf_Graph
+    public function toGraph(string $baseUrl): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
 
-        $graph->addResource($this->fairDataPoint->getAccessUrl(), 'a', 'r3d:Repository');
+        $url = $baseUrl . $this->fairDataPoint->getRelativeUrl();
+
+        $graph->addResource($url, 'a', 'r3d:Repository');
 
         foreach ($this->fairDataPoint->getTitle()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->fairDataPoint->getAccessUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
-            $graph->addLiteral($this->fairDataPoint->getAccessUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($url, 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($url, 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addLiteral($this->fairDataPoint->getAccessUrl(), 'dcterms:hasVersion', $this->fairDataPoint->getVersion());
+        $graph->addLiteral($url, 'dcterms:hasVersion', $this->fairDataPoint->getVersion());
 
         foreach ($this->fairDataPoint->getDescription()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
-            $graph->addLiteral($this->fairDataPoint->getAccessUrl(), 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
+            $graph->addLiteral($url, 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
         // foreach ($this->fairDataPoint->getPublishers() as $publisher) {
@@ -43,13 +45,13 @@ class FAIRDataPointGraphResource implements GraphResource
         //     $publisher->addToGraph($this->fairDataPoint->getAccessUrl(), 'dcterms:publisher', $graph);
         // }
 
-        $graph->addResource($this->fairDataPoint->getAccessUrl(), 'dcterms:language', $this->fairDataPoint->getLanguage()->getAccessUrl());
+        $graph->addResource($url, 'dcterms:language', $this->fairDataPoint->getLanguage()->getAccessUrl());
 
-        $graph->addResource($this->fairDataPoint->getAccessUrl(), 'dcterms:license', $this->fairDataPoint->getLicense()->getUrl()->getValue());
+        $graph->addResource($url, 'dcterms:license', $this->fairDataPoint->getLicense()->getUrl()->getValue());
 
         foreach ($this->fairDataPoint->getCatalogs() as $catalog) {
             /** @var Catalog $catalog */
-            $graph->addResource($this->fairDataPoint->getAccessUrl(), 'http://www.re3data.org/schema/3-0#dataCatalog', $catalog->getAccessUrl());
+            $graph->addResource($url, 'http://www.re3data.org/schema/3-0#dataCatalog', $baseUrl . $catalog->getRelativeUrl());
         }
 
         return $graph;

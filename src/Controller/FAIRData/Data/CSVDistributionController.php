@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData\Data;
 
 use App\Controller\FAIRData\FAIRDataController;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\FAIRData\Catalog;
@@ -13,7 +14,6 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordsCommand;
 use App\Message\Distribution\RenderCSVDistributionCommand;
-use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +23,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 use function time;
 
 class CSVDistributionController extends FAIRDataController
@@ -42,18 +43,18 @@ class CSVDistributionController extends FAIRDataController
             throw $this->createNotFoundException();
         }
 
-        /** @var CastorUser|null $user */
-        $user = $this->getUser();
+        $study = $distribution->getDataset()->getStudy();
+        assert($study instanceof CastorStudy);
 
         try {
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution, $catalog, $user))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new GetRecordsCommand($study))->last(HandledStamp::class);
 
             /** @var Record[] $records */
             $records = $handledStamp->getResult();
 
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog, $user))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(HandledStamp::class);
             $csv = $handledStamp->getResult();
 
             $response = new Response($csv);

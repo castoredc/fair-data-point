@@ -14,8 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}", name="distribution")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @Route("/fdp/dataset/{dataset}/{distribution}", name="distribution")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
@@ -23,7 +22,7 @@ class DistributionController extends FAIRDataController
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
-        if ($dataset->hasDistribution($distribution)) {
+        if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 
@@ -38,7 +37,7 @@ class DistributionController extends FAIRDataController
         }
 
         return new Response(
-            (new DistributionGraphResource($distribution))->toGraph()->serialise('turtle'),
+            (new DistributionGraphResource($distribution))->toGraph($this->baseUri)->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

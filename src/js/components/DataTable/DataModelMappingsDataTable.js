@@ -6,6 +6,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {DataTable, Pagination} from "@castoredc/matter";
 import {classNames} from "../../util";
+import {DataType, ValueType} from "../MetadataItem/EnumMappings";
 
 export default class DataModelMappingsDataTable extends Component {
     constructor(props) {
@@ -126,8 +127,8 @@ export default class DataModelMappingsDataTable extends Component {
                         rows={mappings.map((item) => {
                             return [
                                 item.node.title,
-                                item.node.value.value,
-                                item.node.value.dataType,
+                                ValueType[item.node.value.value],
+                                DataType[item.node.value.dataType],
                                 item.element ? item.element.label : ''
                             ];
                         })}
@@ -148,7 +149,7 @@ export default class DataModelMappingsDataTable extends Component {
                                 template:  'text',
                             },
                             mappedElement: {
-                                header:    'Mapped element',
+                                header:    'Mapped field',
                                 resizable: true,
                                 template:  'text',
                             },
@@ -163,7 +164,6 @@ export default class DataModelMappingsDataTable extends Component {
                     start={pagination.start}
                     totalItems={pagination.totalResults}
                 />
-
             </div>
         </Col>
     </Row>;

@@ -18,7 +18,7 @@ use function count;
  * @ORM\Table(name="catalog", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Catalog
+class Catalog implements AccessibleEntity
 {
     use CreatedAndUpdated;
 
@@ -202,14 +202,9 @@ class Catalog
         $this->studies->removeElement($study);
     }
 
-    public function getAccessUrl(): string
-    {
-        return $this->fairDataPoint->getAccessUrl() . '/catalog/' . $this->slug;
-    }
-
     public function getRelativeUrl(): string
     {
-        return $this->fairDataPoint->getRelativeUrl() . '/catalog/' . $this->slug;
+        return '/fdp/catalog/' . $this->slug;
     }
 
     public function getBaseUrl(): string

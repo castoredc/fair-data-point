@@ -6,6 +6,7 @@ namespace App\Entity\Data\RDF;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
+use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution_rdf")
  */
-class RDFDistribution extends DistributionContents
+class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel")
@@ -42,9 +43,9 @@ class RDFDistribution extends DistributionContents
         $this->dataModel = $dataModel;
     }
 
-    public function getRDFUrl(): string
+    public function getRelativeUrl(): string
     {
-        return $this->getDistribution()->getAccessUrl() . '/rdf';
+        return $this->getDistribution()->getRelativeUrl() . '/rdf';
     }
 
     /**

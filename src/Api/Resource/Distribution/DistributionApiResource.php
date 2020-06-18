@@ -24,7 +24,6 @@ class DistributionApiResource implements ApiResource
     public function toArray(): array
     {
         $distribution = [
-            'accessUrl' => $this->distribution->getAccessUrl(),
             'relativeUrl' => $this->distribution->getRelativeUrl(),
             'id' => $this->distribution->getId(),
             'slug' => $this->distribution->getSlug(),
@@ -56,14 +55,14 @@ class DistributionApiResource implements ApiResource
             $distribution['accessRights'] = $contents->getAccessRights();
 
             if ($contents instanceof RDFDistribution) {
-                $distribution['accessUrl'] = $contents->getRDFUrl();
-                $distribution['downloadUrl'] = $contents->getRDFUrl() . '/?download=1';
+                $distribution['accessUrl'] = $contents->getRelativeUrl();
+                $distribution['downloadUrl'] = $contents->getRelativeUrl() . '/?download=1';
                 $distribution['type'] = 'rdf';
                 $distribution['dataModel'] = $contents->getDataModel()->getId();
             }
 
             if ($contents instanceof CSVDistribution) {
-                $distribution['downloadUrl'] = $contents->getAccessUrl();
+                $distribution['downloadUrl'] = $contents->getRelativeUrl();
                 $distribution['type'] = 'csv';
                 $distribution['includeAllData'] = $contents->isIncludeAll();
             }

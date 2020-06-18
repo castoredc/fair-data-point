@@ -69,4 +69,25 @@ class RecordDataCollection
         }
         $this->reportData = $reportData;
     }
+
+    public function getFieldResultByFieldId(string $fieldId): ?FieldResult
+    {
+        $study = $this->studyData->getFieldResultByFieldId($fieldId);
+        $survey = $this->surveyData->getFieldResultByFieldId($fieldId);
+        $report = $this->reportData->getFieldResultByFieldId($fieldId);
+
+        if ($study !== null) {
+            return $study;
+        }
+
+        if ($survey !== null) {
+            return $survey;
+        }
+
+        if ($report !== null) {
+            return $report;
+        }
+
+        return null;
+    }
 }

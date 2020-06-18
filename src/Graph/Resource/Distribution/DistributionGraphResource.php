@@ -19,11 +19,10 @@ class DistributionGraphResource implements GraphResource
         $this->distribution = $distribution;
     }
 
-    public function toGraph(): EasyRdf_Graph
+    public function toGraph(string $baseUrl): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
-        $url = $this->distribution->getAccessUrl();
-        $baseUrl = $this->distribution->getBaseUrl();
+        $url = $baseUrl . $this->distribution->getRelativeUrl();
         $metadata = $this->distribution->getLatestMetadata();
 
         $graph->addResource($url, 'a', 'dcat:Dataset');
@@ -53,8 +52,8 @@ class DistributionGraphResource implements GraphResource
         $contents = $this->distribution->getContents();
 
         if ($contents instanceof RDFDistribution) {
-            $graph->addResource($url, 'dcat:downloadURL', $contents->getRDFUrl() . '/?download=1');
-            $graph->addResource($url, 'dcat:accessURL', $contents->getRDFUrl());
+            $graph->addResource($url, 'dcat:downloadURL', $baseUrl . $contents->getRelativeUrl() . '/?download=1');
+            $graph->addResource($url, 'dcat:accessURL', $baseUrl . $contents->getRelativeUrl());
             $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
         }
 

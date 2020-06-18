@@ -141,10 +141,13 @@ class Field extends CastorEntity
     /** @var FieldOptionGroup|null */
     private $optionGroup;
 
+    /** @var string|null */
+    private $optionGroupId;
+
     /** @var array<MetadataPoint> */
     private $metadata;
 
-    public function __construct(string $id, CastorStudy $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?FieldOptionGroup $optionGroup)
+    public function __construct(string $id, CastorStudy $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?string $optionGroupId)
     {
         parent::__construct($id, $label, $study, null);
 
@@ -157,7 +160,7 @@ class Field extends CastorEntity
         $this->info = $info;
         $this->units = $units;
         $this->parentId = $parentId;
-        $this->optionGroup = $optionGroup;
+        $this->optionGroupId = $optionGroupId;
     }
 
     public function getType(): ?string
@@ -276,6 +279,11 @@ class Field extends CastorEntity
         $this->optionGroup = $optionGroup;
     }
 
+    public function getOptionGroupId(): ?string
+    {
+        return $this->optionGroupId;
+    }
+
     public function isExportable(): bool
     {
         return in_array($this->type, self::EXPORTABLE, true);
@@ -318,7 +326,7 @@ class Field extends CastorEntity
             $data['field_info'] ?? null,
             $data['field_units'] ?? null,
             $data['parent_id'] ?? null,
-            isset($data['option_group']) ? FieldOptionGroup::fromData($data['option_group'], $study) : null
+            isset($data['option_group']) ? $data['option_group']['id'] : null,
         );
     }
 }

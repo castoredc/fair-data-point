@@ -22,7 +22,6 @@ class DatasetApiResource implements ApiResource
     public function toArray(): array
     {
         $dataset = [
-            'accessUrl' => $this->dataset->getAccessUrl(),
             'relativeUrl' => $this->dataset->getRelativeUrl(),
             'id' => $this->dataset->getId(),
             'slug' => $this->dataset->getSlug(),

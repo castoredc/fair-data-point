@@ -22,7 +22,6 @@ class CatalogApiResource implements ApiResource
     public function toArray(): array
     {
         $catalog = [
-            'accessUrl' => $this->catalog->getAccessUrl(),
             'relativeUrl' => $this->catalog->getRelativeUrl(),
             'id' => $this->catalog->getId(),
             'slug' => $this->catalog->getSlug(),

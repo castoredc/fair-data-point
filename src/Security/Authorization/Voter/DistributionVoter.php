@@ -69,6 +69,6 @@ class DistributionVoter extends Voter
             return false;
         }
 
-        return in_array($distribution->getDataset()->getStudy()->getId(), $user->getStudies(), true);
+        return in_array($distribution->getDataset()->getStudy()->getSourceId(), $user->getStudies(), true);
     }
 }

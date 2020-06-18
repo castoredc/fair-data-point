@@ -66,7 +66,7 @@ abstract class Agent
         $this->name = $name;
     }
 
-    public function getAccessUrl(): string
+    public function getRelativeUrl(): string
     {
         return '/agent/generic/' . $this->getSlug();
     }

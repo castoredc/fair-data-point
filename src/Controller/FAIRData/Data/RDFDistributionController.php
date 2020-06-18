@@ -7,15 +7,16 @@ use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Entity\Data\RDF\RDFDistribution;
-use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordCommand;
 use App\Message\Distribution\GetRecordsCommand;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Security\CastorUser;
+use EasyRdf_Graph;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,41 +27,58 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function dump;
 use function time;
 
 class RDFDistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}/rdf", name="distribution_rdf")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @Route("/fdp/dataset/{dataset}/{distribution}/rdf", name="distribution_rdf")
+     * @Route("/fdp/dataset/{dataset}/{distribution}/rdf/{record}", name="distribution_rdf_record")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function rdfDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function rdfDistribution(Dataset $dataset, Distribution $distribution, ?string $record, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution) {
+        if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution) {
             throw $this->createNotFoundException();
         }
+
+        $study = $distribution->getDataset()->getStudy();
+        assert($study instanceof CastorStudy);
 
         /** @var CastorUser|null $user */
         $user = $this->getUser();
 
         try {
-            /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution, $catalog, $user))->last(HandledStamp::class);
+            if ($record !== null) {
+                // Get specific record
 
-            /** @var Record[] $records */
-            $records = $handledStamp->getResult();
+                /** @var HandledStamp $handledStamp */
+                $handledStamp = $bus->dispatch(new GetRecordCommand($study, $record))->last(HandledStamp::class);
+
+                /** @var Record $record */
+                $record = $handledStamp->getResult();
+                $records = [$record];
+            } else {
+                /** @var HandledStamp $handledStamp */
+                $handledStamp = $bus->dispatch(new GetRecordsCommand($study))->last(HandledStamp::class);
+
+                /** @var Record[] $records */
+                $records = $handledStamp->getResult();
+            }
 
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents, $catalog, $user))->last(HandledStamp::class);
-            $turtle = $handledStamp->getResult();
+            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents))->last(HandledStamp::class);
+
+            /** @var EasyRdf_Graph $graph */
+            $graph = $handledStamp->getResult();
 
             if ($request->query->getBoolean('download') === true) {
-                $response = new Response($turtle);
+                $response = new Response($graph->serialise('turtle'));
                 $disposition = $response->headers->makeDisposition(
                     ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                     $dataset->getStudy()->getSlug() . '_' . time() . '.ttl'
@@ -71,7 +89,7 @@ class RDFDistributionController extends FAIRDataController
             }
 
             return new Response(
-                $turtle,
+                $graph->serialise('turtle'),
                 Response::HTTP_OK,
                 ['content-type' => 'text/turtle']
             );
@@ -84,68 +102,11 @@ class RDFDistributionController extends FAIRDataController
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }
-
-            return new JsonResponse([], 500);
-        }
-    }
-
-    /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}/rdf/{record}", name="distribution_rdf_record")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfRecordDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, string $record, Request $request, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('access_data', $distribution);
-        $contents = $distribution->getContents();
-
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution) {
-            throw $this->createNotFoundException();
-        }
-
-        /** @var CastorUser|null $user */
-        $user = $this->getUser();
-
-        try {
-            $study = $dataset->getStudy();
-            assert($study instanceof CastorStudy);
-
-            /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new GetRecordCommand($study, $record, $user))->last(HandledStamp::class);
-
-            /** @var Record[] $record */
-            $record = $handledStamp->getResult();
-
-            /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($record, $contents, $catalog, $user))->last(HandledStamp::class);
-            $turtle = $handledStamp->getResult();
-
-            if ($request->query->getBoolean('download') === true) {
-                $response = new Response($turtle);
-                $disposition = $response->headers->makeDisposition(
-                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                    $dataset->getStudy()->getSlug() . '_' . time() . '.ttl'
-                );
-                $response->headers->set('Content-Disposition', $disposition);
-
-                return $response;
-            }
-
-            return new Response(
-                $turtle,
-                Response::HTTP_OK,
-                ['content-type' => 'text/turtle']
-            );
-        } catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
-            }
-            if ($e instanceof NoAccessPermissionToStudy) {
+            if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
+            dump($e);
 
             return new JsonResponse([], 500);
         }

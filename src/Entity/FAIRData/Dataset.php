@@ -17,7 +17,7 @@ use function count;
  * @ORM\Table(name="dataset", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Dataset
+class Dataset implements AccessibleEntity
 {
     use CreatedAndUpdated;
 
@@ -148,37 +148,9 @@ class Dataset
         $this->distributions[] = $distribution;
     }
 
-    public function getAccessUrl(): string
-    {
-        $first = $this->catalogs->first();
-
-        if ($first === false) {
-            return '';
-        }
-
-        return $first->getFairDataPoint()->getAccessUrl() . '/dataset/' . $this->slug;
-    }
-
     public function getRelativeUrl(): string
     {
-        $first = $this->catalogs->first();
-
-        if ($first === false) {
-            return '';
-        }
-
-        return $first->getFairDataPoint()->getRelativeUrl() . '/dataset/' . $this->slug;
-    }
-
-    public function getBaseUrl(): string
-    {
-        $first = $this->catalogs->first();
-
-        if ($first === false) {
-            return '';
-        }
-
-        return $first->getBaseUrl();
+        return '/fdp/dataset/' . $this->slug;
     }
 
     public function isPublished(): bool

@@ -230,7 +230,7 @@ class ApiClient
         $fields = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getSourceId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/field?include=metadata|optiongroup&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fields'] as $rawField) {

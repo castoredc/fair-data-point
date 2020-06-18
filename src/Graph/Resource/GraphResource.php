@@ -7,7 +7,7 @@ use EasyRdf_Graph;
 
 interface GraphResource
 {
-    public function toGraph(): EasyRdf_Graph;
+    public function toGraph(string $baseUrl): EasyRdf_Graph;
 
     // public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph;
 }

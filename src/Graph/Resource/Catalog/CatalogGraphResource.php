@@ -18,10 +18,10 @@ class CatalogGraphResource implements GraphResource
         $this->catalog = $catalog;
     }
 
-    public function toGraph(): EasyRdf_Graph
+    public function toGraph(string $baseUrl): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
-        $url = $this->catalog->getAccessUrl();
+        $url = $baseUrl . $this->catalog->getRelativeUrl();
         $metadata = $this->catalog->getLatestMetadata();
 
         $graph->addResource($url, 'a', 'dcat:Catalog');
@@ -42,7 +42,7 @@ class CatalogGraphResource implements GraphResource
         $graph->addResource($url, 'dcterms:language', $metadata->getLanguage()->getAccessUrl());
 
         foreach ($this->catalog->getDatasets(false) as $dataset) {
-            $graph->addResource($url, 'dcat:dataset', $dataset->getAccessUrl());
+            $graph->addResource($url, 'dcat:dataset', $baseUrl . $dataset->getRelativeUrl());
         }
 
         $graph->addResource($url, 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());

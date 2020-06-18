@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Graph\Resource\Dataset;
 
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\FAIRData\Person;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
@@ -20,11 +21,10 @@ class DatasetGraphResource implements GraphResource
         $this->dataset = $dataset;
     }
 
-    public function toGraph(): EasyRdf_Graph
+    public function toGraph(string $baseUrl): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
-        $url = $this->dataset->getAccessUrl();
-        $baseUrl = $this->dataset->getBaseUrl();
+        $url = $baseUrl . $this->dataset->getRelativeUrl();
         $metadata = $this->dataset->getLatestMetadata();
 
         if ($metadata === null) {
@@ -68,7 +68,8 @@ class DatasetGraphResource implements GraphResource
         //$graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
 
         foreach ($this->dataset->getDistributions() as $distribution) {
-            $graph->addResource($url, 'dcat:distribution', $distribution->getAccessUrl());
+            /** @var Distribution $distribution */
+            $graph->addResource($url, 'dcat:distribution', $baseUrl . $distribution->getRelativeUrl());
         }
 
         return $graph;

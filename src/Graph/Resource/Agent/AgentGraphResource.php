@@ -24,7 +24,7 @@ abstract class AgentGraphResource implements GraphResource
 
     public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
     {
-        $url = $baseUrl . $this->agent->getAccessUrl();
+        $url = $baseUrl . $this->agent->getRelativeUrl();
         $graph->addResource($url, 'a', 'foaf:Agent');
         $graph->addLiteral($url, 'foaf:name', $this->agent->getName());
 

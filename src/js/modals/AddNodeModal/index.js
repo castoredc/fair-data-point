@@ -9,6 +9,7 @@ import ToastContent from "../../components/ToastContent";
 import {Button} from "@castoredc/matter";
 import Dropdown from "../../components/Input/Dropdown";
 import Modal from "../Modal";
+import {DataType} from "../../components/MetadataItem/EnumMappings";
 
 export default class AddNodeModal extends Component {
     constructor(props) {
@@ -212,18 +213,18 @@ const defaultData = {
 };
 
 const dataTypes = [
-    { value: 'float', label: 'Float (number)' },
-    { value: 'double', label: 'Double (number)' },
-    { value: 'decimal', label: 'Decimal (number)' },
-    { value: 'integer', label: 'Integer (number)' },
-    { value: 'dateTime', label: 'Date and time (date/time)' },
-    { value: 'date', label: 'Date (date/time)' },
-    { value: 'time', label: 'Time (date/time)' },
-    { value: 'gDay', label: 'Day (date/time)' },
-    { value: 'gMonth', label: 'Month (date/time)' },
-    { value: 'gYear', label: 'Year (date/time)' },
-    { value: 'gYearMonth', label: 'Year and month (date/time)' },
-    { value: 'gMonthDay', label: 'Month and day (date/time)' },
-    { value: 'string', label: 'String' },
-    { value: 'boolean', label: 'Boolean' },
+    { value: 'float', label: DataType['float'] },
+    { value: 'double', label: DataType['double'] },
+    { value: 'decimal', label: DataType['decimal'] },
+    { value: 'integer', label: DataType['integer'] },
+    { value: 'dateTime', label: DataType['dateTime'] },
+    { value: 'date', label: DataType['date'] },
+    { value: 'time', label: DataType['time'] },
+    { value: 'gDay', label: DataType['gDay'] },
+    { value: 'gMonth', label: DataType['gMonth'] },
+    { value: 'gYear', label: DataType['gYear'] },
+    { value: 'gYearMonth', label: DataType['gYearMonth'] },
+    { value: 'gMonthDay', label: DataType['gMonthDay'] },
+    { value: 'string', label: DataType['string'] },
+    { value: 'boolean', label: DataType['boolean'] },
 ];

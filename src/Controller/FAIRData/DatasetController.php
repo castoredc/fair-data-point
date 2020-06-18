@@ -14,17 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class DatasetController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}/{dataset}", name="dataset")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @Route("/fdp/dataset/{dataset}", name="dataset")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */
     public function dataset(Catalog $catalog, Dataset $dataset, Request $request): Response
     {
-        $this->denyAccessUnlessGranted('view', $dataset->getStudy());
-
-        if (! $dataset->hasCatalog($catalog)) {
-            throw $this->createNotFoundException();
-        }
+        $this->denyAccessUnlessGranted('view', $dataset);
 
         if ($this->acceptsHttp($request)) {
             $metadata = $dataset->getStudy()->getLatestMetadata();
@@ -39,7 +34,7 @@ class DatasetController extends FAIRDataController
         }
 
         return new Response(
-            (new DatasetGraphResource($dataset))->toGraph()->serialise('turtle'),
+            (new DatasetGraphResource($dataset))->toGraph($this->baseUri)->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

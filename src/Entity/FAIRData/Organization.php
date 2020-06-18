@@ -73,7 +73,7 @@ class Organization extends Agent
         $this->coordinatesLongitude = $coordinatesLongitude;
     }
 
-    public function getAccessUrl(): string
+    public function getRelativeUrl(): string
     {
         return '/agent/organization/' . $this->getSlug();
     }
