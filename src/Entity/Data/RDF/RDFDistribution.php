@@ -57,10 +57,9 @@ class RDFDistribution extends DistributionContents
 
     public function getMappingByNode(ValueNode $node): ?DataModelMapping
     {
-        foreach($this->mappings as $mapping) {
+        foreach ($this->mappings as $mapping) {
             /** @var DataModelMapping $mapping */
-            if($mapping->getNode() === $node)
-            {
+            if ($mapping->getNode() === $node) {
                 return $mapping;
             }
         }

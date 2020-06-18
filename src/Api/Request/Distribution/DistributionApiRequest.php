@@ -6,7 +6,6 @@ namespace App\Api\Request\Distribution;
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\DistributionType;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
@@ -96,11 +95,12 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
         return $this->dataModel;
     }
 
+    /** @inheritDoc */
     public function getGroupSequence()
     {
         return [
             'DistributionApiRequest',
-            $this->getType()->toString()
+            $this->getType()->toString(),
         ];
     }
 }

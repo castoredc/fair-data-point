@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Api\Controller\Distribution;
 
 use App\Api\Request\Distribution\DataModelMappingApiRequest;
-use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Resource\Distribution\DataModelMappingApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Controller\Api\ApiController;
@@ -15,13 +14,11 @@ use App\Entity\FAIRData\Distribution;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidDistributionType;
-use App\Exception\LanguageNotFound;
 use App\Exception\MappingAlreadyExists;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Message\Distribution\CreateDataModelMappingCommand;
 use App\Message\Distribution\GetDataModelMappingCommand;
-use App\Message\Distribution\UpdateDistributionCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +48,7 @@ class RdfDistributionApiController extends ApiController
 
         $contents = $distribution->getContents();
 
-        if(! $contents instanceof RDFDistribution) {
+        if (! $contents instanceof RDFDistribution) {
             throw new InvalidDistributionType();
         }
 
@@ -79,7 +76,7 @@ class RdfDistributionApiController extends ApiController
 
         $contents = $distribution->getContents();
 
-        if(! $contents instanceof RDFDistribution) {
+        if (! $contents instanceof RDFDistribution) {
             throw new InvalidDistributionType();
         }
 

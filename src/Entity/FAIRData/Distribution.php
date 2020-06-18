@@ -41,7 +41,7 @@ class Distribution
      */
     private $slug;
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions", cascade={"persist"})
      * @ORM\JoinColumn(name="dataset_id", referencedColumnName="id")
      *
      * @var Dataset|null

@@ -65,8 +65,8 @@ export default class DistributionsDataTable extends Component {
             </Row>;
         }
 
-        return <Row className="FillHeight">
-        <Col sm={12} className="Page">
+        return <div className="FillHeight">
+        <div className="Page">
             <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDistributions && 'Loading')} ref={this.tableRef}>
                 <div className="DataTableWrapper">
                     <DataTable
@@ -117,7 +117,7 @@ export default class DistributionsDataTable extends Component {
                     />
                 </div>
             </div>
-        </Col>
-    </Row>;
+        </div>
+    </div>;
     }
 }

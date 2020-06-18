@@ -15,8 +15,8 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Exception\LanguageNotFound;
 use App\Message\Distribution\AddCSVDistributionContentCommand;
-use App\Message\Distribution\CreateDistributionCommand;
 use App\Message\Distribution\ClearDistributionContentCommand;
+use App\Message\Distribution\CreateDistributionCommand;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -27,6 +27,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function dump;
 
 /**
  * @Route("/api/dataset/{dataset}/distribution")

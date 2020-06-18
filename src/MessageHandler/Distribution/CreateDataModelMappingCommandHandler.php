@@ -17,6 +17,7 @@ use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
 {
@@ -37,13 +38,9 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
     }
 
     /**
-     * @param CreateDataModelMappingCommand $command
-     *
-     * @return Distribution
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws InvalidEntityType
-     * @throws MappingAlreadyExists
      */
     public function __invoke(CreateDataModelMappingCommand $command): DataModelMapping
     {
@@ -51,7 +48,7 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
         $distribution = $command->getDistribution()->getDistribution();
         $study = $distribution->getDataset()->getStudy();
 
-        if(! $this->security->isGranted('edit', $distribution)) {
+        if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
 
@@ -59,13 +56,13 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
 
         /** @var ValueNode|null $node */
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
-        if($node === null) {
+        if ($node === null) {
             throw new NotFound();
         }
 
         $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
 
-        if($contents->getMappingByNode($node) !== null) {
+        if ($contents->getMappingByNode($node) !== null) {
             $mapping = $contents->getMappingByNode($node);
             $mapping->setEntity($element);
         } else {

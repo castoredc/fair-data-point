@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Api\Request\Distribution;
 
-use App\Api\Request\GroupedApiRequest;
 use App\Api\Request\SingleApiRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 

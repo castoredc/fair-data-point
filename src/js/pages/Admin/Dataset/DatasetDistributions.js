@@ -10,16 +10,11 @@ export default class DatasetDistributions extends Component {
         const {catalog, dataset, history} = this.props;
 
         return <div className="SubPage">
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
-                        <LinkContainer to={'/admin/dataset/' + dataset.slug + '/distributions/add'}>
-                            <Button icon="add" className="AddButton">Add distribution</Button>
-                        </LinkContainer>
-                    </div>
-                </Col>
-            </Row>
+            <div className="ButtonBar Right">
+                <LinkContainer to={'/admin/dataset/' + dataset.slug + '/distributions/add'}>
+                    <Button icon="add" className="AddButton">Add distribution</Button>
+                </LinkContainer>
+            </div>
             <DistributionsDataTable
                 history={history}
                 catalog={catalog}

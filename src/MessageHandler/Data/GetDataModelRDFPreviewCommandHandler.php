@@ -92,7 +92,7 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 return '##Annotated value of ' . $node->getTitle() . '##';
             }
 
-            return '##Plain value of ' . $node->getTitle() . ' ('. $node->getDataType() .')##';
+            return '##Plain value of ' . $node->getTitle() . ' (' . $node->getDataType() . ')##';
         }
 
         return $this->getURI($node);

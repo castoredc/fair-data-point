@@ -70,7 +70,7 @@ class CastorEntityHelper
             $entity = $this->apiClient->getOptionGroup($study, $id);
         } elseif ($type->isField()) {
             $entity = $this->apiClient->getField($study, $id);
-        }else {
+        } else {
             throw new InvalidEntityType();
         }
 

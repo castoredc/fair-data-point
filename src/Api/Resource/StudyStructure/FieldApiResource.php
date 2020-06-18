@@ -35,8 +35,8 @@ class FieldApiResource implements ApiResource
                 'exportable' => $this->field->isExportable(),
                 'annotated' => $this->field->isExportableAnnotated(),
                 'plain' => $this->field->isExportablePlain(),
-                'dataTypes' => $this->field->getSupportedDataTypes()
-            ]
+                'dataTypes' => $this->field->getSupportedDataTypes(),
+            ],
         ];
     }
 }

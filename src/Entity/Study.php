@@ -18,7 +18,6 @@ use function count;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
- *
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  */

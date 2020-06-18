@@ -9,13 +9,14 @@ use App\Entity\Castor\Structure\MetadataPoint;
 use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
+use function in_array;
 
 /**
  * @ORM\Entity
  */
 class Field extends CastorEntity
 {
-    const EXPORTABLE = [
+    public const EXPORTABLE = [
         'numeric',
         'radio',
         'dropdown',
@@ -33,13 +34,13 @@ class Field extends CastorEntity
         'numberdate',
     ];
 
-    const EXPORTABLE_ANNOTATED = [
+    public const EXPORTABLE_ANNOTATED = [
         'radio',
         'dropdown',
         'checkbox',
     ];
 
-    const EXPORTABLE_PLAIN = [
+    public const EXPORTABLE_PLAIN = [
         'numeric',
         'radio',
         'dropdown',
@@ -57,7 +58,7 @@ class Field extends CastorEntity
         'numberdate',
     ];
 
-    const SUPPORTED_DATA_TYPES = [
+    public const SUPPORTED_DATA_TYPES = [
         'numeric' => XsdDataType::NUMBER_TYPES,
         'radio' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
         'dropdown' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
@@ -277,23 +278,23 @@ class Field extends CastorEntity
 
     public function isExportable(): bool
     {
-        return in_array($this->type, self::EXPORTABLE);
+        return in_array($this->type, self::EXPORTABLE, true);
     }
 
     public function isExportableAnnotated(): bool
     {
-        return in_array($this->type, self::EXPORTABLE_ANNOTATED);
+        return in_array($this->type, self::EXPORTABLE_ANNOTATED, true);
     }
 
     public function isExportablePlain(): bool
     {
-        return in_array($this->type, self::EXPORTABLE_PLAIN);
+        return in_array($this->type, self::EXPORTABLE_PLAIN, true);
     }
 
     /** @return string[] */
     public function getSupportedDataTypes(): array
     {
-        if(! $this->isExportable()) {
+        if (! $this->isExportable()) {
             return [];
         }
 

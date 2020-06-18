@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Message\Study;
 
 use App\Entity\Castor\CastorStudy;
-use App\Security\CastorUser;
 
 class GetFieldsForStepCommand
 {
@@ -14,7 +13,8 @@ class GetFieldsForStepCommand
     /** @var string */
     private $stepId;
 
-    public function __construct(CastorStudy $study, string $stepId) {
+    public function __construct(CastorStudy $study, string $stepId)
+    {
         $this->study = $study;
         $this->stepId = $stepId;
     }

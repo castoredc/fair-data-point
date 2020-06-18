@@ -172,7 +172,7 @@ export default class StudiesDataTable extends Component {
         }
 
         return <Row className="FillHeight">
-        <Col sm={12} className="Page">
+        <Col sm={overlay ? 12 : 9} className="Page">
             <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingStudies && 'Loading')} ref={this.tableRef}>
                 <div className="DataTableWrapper">
                     <DataTable

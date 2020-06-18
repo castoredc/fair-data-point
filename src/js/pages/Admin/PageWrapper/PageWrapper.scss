@@ -76,13 +76,7 @@
     }
   }
 
-  .LeftNav, .Back {
-    flex: 0 0 210px;
-    max-width: 210px;
-  }
-
   .LeftNav {
-    padding: 15px;
     font-weight: 700;
 
     hr {
@@ -120,11 +114,6 @@
     vertical-align: middle;
     display: flex;
     align-items: center;
-  }
-
-  .Page, .PageTitle {
-      flex: 1;
-      max-width: none;
   }
   
   .SubPage {

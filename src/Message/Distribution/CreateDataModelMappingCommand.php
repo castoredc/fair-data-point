@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
 use App\Entity\Data\RDF\RDFDistribution;
-use App\Entity\FAIRData\Distribution;
 
 class CreateDataModelMappingCommand
 {

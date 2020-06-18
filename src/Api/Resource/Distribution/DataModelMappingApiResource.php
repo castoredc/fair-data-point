@@ -5,15 +5,9 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Castor\CastorEntityApiResource;
-use App\Api\Resource\Data\DataModelApiResource;
 use App\Api\Resource\Data\NodeApiResource;
-use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\Data\CSV\CSVDistributionElementFieldId;
-use App\Entity\Data\CSV\CSVDistributionElementVariableName;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\RDF\DataModelMapping;
-use App\Entity\Data\RDF\RDFDistribution;
-use App\Entity\FAIRData\Distribution;
 
 class DataModelMappingApiResource implements ApiResource
 {
@@ -30,18 +24,19 @@ class DataModelMappingApiResource implements ApiResource
      */
     public function toArray(): array
     {
-
-        if($this->element instanceof DataModelMapping) {
+        if ($this->element instanceof DataModelMapping) {
             $node = $this->element->getNode();
             $element = $this->element->getEntity();
-        } else if($this->element instanceof ValueNode) {
+        } elseif ($this->element instanceof ValueNode) {
             $node = $this->element;
             $element = null;
+        } else {
+            return [];
         }
 
         return [
             'node' => (new NodeApiResource($node))->toArray(),
-            'element' => $element !== null ? (new CastorEntityApiResource($element))->toArray() : null
+            'element' => $element !== null ? (new CastorEntityApiResource($element))->toArray() : null,
         ];
     }
 }

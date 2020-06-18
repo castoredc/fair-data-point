@@ -31,7 +31,7 @@ class DistributionApiResource implements ApiResource
             'hasMetadata' => $this->distribution->hasMetadata(),
             'hasContents' => $this->distribution->hasContents(),
             'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
-            'study' => $this->distribution->getDataset()->getStudy() !== null ? $this->distribution->getDataset()->getStudy()->getId() : null
+            'study' => $this->distribution->getDataset()->getStudy() !== null ? $this->distribution->getDataset()->getStudy()->getId() : null,
         ];
 
         if ($this->distribution->hasMetadata()) {

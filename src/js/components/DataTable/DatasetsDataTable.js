@@ -116,7 +116,10 @@ export default class DatasetsDataTable extends Component {
             if(onClick) {
                 onClick(datasets[index]);
             } else {
-                history.push('/admin' + (catalog ? '/catalog/' + catalog.slug : '') + '/dataset/' + datasets[index].slug)
+                history.push({
+                    pathname: '/admin/dataset/' + datasets[index].slug,
+                    state: { catalog: catalog }
+                });
             }
         }
     };
@@ -132,8 +135,8 @@ export default class DatasetsDataTable extends Component {
             </Row>;
         }
 
-        return <Row className="FillHeight">
-        <Col sm={12} className="Page">
+        return <div className="FillHeight">
+        <div className="Page">
             <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDatasets && 'Loading')} ref={this.tableRef}>
                 <div className="DataTableWrapper">
                     <DataTable
@@ -191,7 +194,7 @@ export default class DatasetsDataTable extends Component {
                 />
 
             </div>
-        </Col>
-    </Row>;
+        </div>
+    </div>;
     }
 }

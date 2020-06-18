@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Entity\Castor\Record;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Message\Distribution\GetDataModelMappingCommand;
-use App\Message\Distribution\GetRecordCommand;
-use App\Model\Castor\ApiClient;
 use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function assert;
+use function count;
 
 class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 {
@@ -25,7 +24,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    /** @return mixed[] */
+    /** @return PaginatedResultCollection<ValueNode> */
     public function __invoke(GetDataModelMappingCommand $command): PaginatedResultCollection
     {
         $distribution = $command->getDistribution();
@@ -37,11 +36,11 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
         $valueNodes = $repository->findNodesByType($dataModal, NodeType::value());
         $results = [];
 
-        foreach($valueNodes as $valueNode) {
+        foreach ($valueNodes as $valueNode) {
             assert($valueNode instanceof ValueNode);
             $mapping = $distribution->getMappingByNode($valueNode);
 
-            $results[] = $mapping != null ? $mapping : $valueNode;
+            $results[] = $mapping ?? $valueNode;
         }
 
         return new PaginatedResultCollection($results, 1, count($results), count($results));

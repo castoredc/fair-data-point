@@ -8,6 +8,7 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
+use App\Exception\InvalidDistributionType;
 use App\Message\Distribution\CreateDistributionCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -33,7 +34,6 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
         $distribution->setLicense($license);
 
-
         if ($message->getType()->isRdf()) {
             /** @var DataModel|null $dataModel */
             $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
@@ -45,15 +45,15 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
             );
 
             $contents->setDataModel($dataModel);
-        }
-
-        if ($message->getType()->isCsv()) {
+        } elseif ($message->getType()->isCsv()) {
             $contents = new CSVDistribution(
                 $distribution,
                 $message->getAccessRights(),
                 false,
                 $message->getIncludeAllData()
             );
+        } else {
+            throw new InvalidDistributionType();
         }
 
         $this->em->persist($distribution);

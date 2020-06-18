@@ -250,7 +250,7 @@ class ApiClient
      */
     public function getField(CastorStudy $study, string $fieldId): Field
     {
-        $body = $this->request('/api/study/' . $study->getSourceId() . '/field/' . $fieldId. '?include=metadata');
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/field/' . $fieldId . '?include=metadata');
 
         return Field::fromData($body, $study);
     }

@@ -11,7 +11,6 @@ namespace App\Entity\Enum;
  * @method static static csv()
  * @method bool isRdf()
  * @method bool isCsv()
- *
  * @inheritDoc
  */
 class DistributionType extends Enum

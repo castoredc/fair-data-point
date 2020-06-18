@@ -13,6 +13,7 @@ use App\Model\Castor\ApiClient;
 use App\Security\CastorUser;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetFieldsForStepCommandHandler implements MessageHandlerInterface
 {

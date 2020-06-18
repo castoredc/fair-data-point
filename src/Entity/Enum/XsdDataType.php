@@ -69,10 +69,20 @@ class XsdDataType extends Enum
     public const BOOLEAN_TYPES = [self::BOOLEAN];
 
     public const ANY_TYPES = [
-        self::FLOAT, self::DOUBLE, self::DECIMAL, self::INTEGER,
-        self::DATE_TIME, self::DATE, self::TIME, self::G_DAY, self::G_MONTH, self::G_YEAR, self::G_YEAR_MONTH, self::G_MONTH_DAY,
+        self::FLOAT,
+        self::DOUBLE,
+        self::DECIMAL,
+        self::INTEGER,
+        self::DATE_TIME,
+        self::DATE,
+        self::TIME,
+        self::G_DAY,
+        self::G_MONTH,
+        self::G_YEAR,
+        self::G_YEAR_MONTH,
+        self::G_MONTH_DAY,
         self::STRING,
-        self::BOOLEAN
+        self::BOOLEAN,
     ];
 
     public function isNumberType(): bool
