@@ -8,7 +8,7 @@ import StudyListItem from "../ListItem/StudyListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import Filters from "../Filters";
-import DatasetMap from "../DatasetMap";
+import StudiesMap from "../Map/StudiesMap";
 import {Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 
@@ -203,7 +203,7 @@ export default class StudyList extends Component {
                         </div>}
 
                         {displayMap && <div className={classNames('Map', isLoadingMap && 'Loading')}>
-                            <DatasetMap datasets={map} />
+                            <StudiesMap studies={map} />
                         </div>}
                     </Col>
                     <Col md={4}

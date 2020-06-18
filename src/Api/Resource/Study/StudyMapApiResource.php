@@ -35,7 +35,7 @@ class StudyMapApiResource implements ApiResource
 
         return [
             'title' => $metadata->getBriefName(),
-            'relative_url' => $this->study->getSlug(),
+            'relativeUrl' => $this->study->getRelativeUrl(),
             'organization' => $this->organization->getName(),
             'city' => $this->organization->getCity(),
             'country' => $this->organization->getCountry()->getName(),

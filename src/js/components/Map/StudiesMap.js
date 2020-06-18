@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import {AttributionControl, Map, Marker, Popup, TileLayer} from "react-leaflet";
 import MarkerClusterGroup from 'react-leaflet-markercluster'
-import {getCenterFromDegrees, localizedText} from "../../util";
+import {getCenterFromDegrees} from "../../util";
 
-import './DatasetMap.scss';
+import './Map.scss';
 import {Link} from "react-router-dom";
 
-export default class DatasetMap extends Component {
+export default class StudiesMap extends Component {
     render() {
-        const { datasets } = this.props;
+        const { studies } = this.props;
 
-        const coordinates = datasets.map((dataset) => {
-            return [dataset.coordinates.lat, dataset.coordinates.long];
+        const coordinates = studies.map((study) => {
+            return [study.coordinates.lat, study.coordinates.long];
         });
 
         return <div className="DatasetMap">
@@ -26,15 +26,15 @@ export default class DatasetMap extends Component {
                 />
 
                 <MarkerClusterGroup>
-                    {datasets.map((dataset, index) => {
-                        return <Marker key={index} position={[dataset.coordinates.lat, dataset.coordinates.long]}>
+                    {studies.map((study, index) => {
+                        return <Marker key={index} position={[study.coordinates.lat, study.coordinates.long]}>
                             <Popup>
-                                <Link to={dataset.relativeUrl} className="PopupDatasetTitle" target="_blank">
-                                    <h3>{localizedText(dataset.title, 'en')}</h3>
+                                <Link to={study.relativeUrl} className="PopupDatasetTitle" target="_blank">
+                                    <h3>{study.title}</h3>
                                 </Link>
                                 <div className="PopupOrganization">
-                                    <strong>{dataset.organization}</strong><br />
-                                    {dataset.city}, {dataset.country}
+                                    <strong>{study.organization}</strong><br />
+                                    {study.city}, {study.country}
                                 </div>
                             </Popup>
                         </Marker>

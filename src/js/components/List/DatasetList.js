@@ -1,18 +1,11 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-
-import {Col, Row} from "react-bootstrap";
-import {classNames, localizedText} from "../../util";
-import {Sticky, StickyContainer} from 'react-sticky';
-import StudyListItem from "../ListItem/StudyListItem";
+import {localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import Filters from "../Filters";
-import DatasetMap from "../DatasetMap";
 import {Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import DatasetListItem from "../ListItem/DatasetListItem";
-import ListItem from "../ListItem";
 
 export default class DatasetList extends Component {
     constructor(props) {
