@@ -82,6 +82,7 @@ export default class FAIRDataPointMain extends Component {
             title={localizedText(fdp.title, 'en')}
             version={fdp.version}
             license={fdp.license}
+            breadcrumbs={{fdp: fdp}}
         >
             <Row>
                 <Col className="InformationCol">

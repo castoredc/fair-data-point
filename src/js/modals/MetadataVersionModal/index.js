@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import Modal from "react-bootstrap/Modal";
 import FormItem from "../../components/Form/FormItem";
 import {Button} from "@castoredc/matter";
 import RadioGroup from "../../components/Input/RadioGroup";
+import Modal from "../Modal";
 
 export default class MetadataVersionModal extends Component {
     constructor(props) {

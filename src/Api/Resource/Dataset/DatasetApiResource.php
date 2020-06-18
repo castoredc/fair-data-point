@@ -27,6 +27,7 @@ class DatasetApiResource implements ApiResource
             'slug' => $this->dataset->getSlug(),
             'hasMetadata' => $this->dataset->hasMetadata(),
             'published' => $this->dataset->isPublished(),
+            'study' => $this->dataset->getStudy() !== null ? $this->dataset->getStudy()->getId() : null,
         ];
 
         if ($this->dataset->hasMetadata()) {

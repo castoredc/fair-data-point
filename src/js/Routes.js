@@ -40,7 +40,7 @@ export default ({user}) =>
         <Route path="/study/:study" exact component={Study} />
 
         <Route path="/fdp/dataset/:dataset" exact component={Dataset} />
-        <Route path="/fdp/dataset/:dataset/:distribution" exact component={Distribution} />
+        <Route path="/fdp/dataset/:dataset/distribution/:distribution" exact component={Distribution} />
 
         /* Tools */
         <Route path="/tools/metadata-xml-parse" exact component={MetadataXmlParse} />

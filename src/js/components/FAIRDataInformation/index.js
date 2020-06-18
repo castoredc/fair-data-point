@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
-import {classNames} from "../../util";
+import {classNames, localizedText} from "../../util";
 import DocumentTitle from "../DocumentTitle";
 import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Logo from '../Logo';
 import Icon from '../Icon';
 import './FAIRDataInformation.scss';
+import Breadcrumbs from "../Breadcrumbs";
+import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 
 export default class FAIRDataInformation extends Component {
     render() {
-        const {embedded, className, title, badge, back, license, version, issued, modified, children} = this.props;
+        const {embedded, className, title, badge, breadcrumbs, license, version, issued, modified, children} = this.props;
+
         return <div className={classNames(className, 'TopLevelContainer', embedded && 'Embedded')}>
             <DocumentTitle title={title}/>
 
@@ -24,9 +27,6 @@ export default class FAIRDataInformation extends Component {
                 <Container>
                     <div className="InformationHeader">
                         <div className="InformationHeaderTop">
-                            {back && <Link to={back.link} className="InformationBack">
-                                <Icon type="arrowLeft" /> {back.text}
-                            </Link>}
                             <h1 className="Title">
                                 {title}
                                 {badge && <span className="InformationBadge">{badge}</span>}
@@ -34,6 +34,24 @@ export default class FAIRDataInformation extends Component {
                         </div>
                     </div>
                 </Container>
+                <Breadcrumbs>
+                    <Breadcrumb to="/fdp">
+                        FAIR Data Point
+                    </Breadcrumb>
+
+                    {breadcrumbs.catalog && <Breadcrumb to={breadcrumbs.catalog.relativeUrl}>
+                        {localizedText(breadcrumbs.catalog.metadata.title, 'en')}
+                    </Breadcrumb>}
+                    {breadcrumbs.study && <Breadcrumb to={`/study/${breadcrumbs.study.slug}`}>
+                        {breadcrumbs.study.metadata.briefName}
+                    </Breadcrumb>}
+                    {breadcrumbs.dataset && <Breadcrumb to={breadcrumbs.dataset.relativeUrl}>
+                        {localizedText(breadcrumbs.dataset.metadata.title, 'en')}
+                    </Breadcrumb>}
+                    {breadcrumbs.distribution && <Breadcrumb to={breadcrumbs.distribution.relativeUrl}>
+                        {localizedText(breadcrumbs.distribution.metadata.title, 'en')}
+                    </Breadcrumb>}
+                </Breadcrumbs>
             </div>}
             <div className="Information">
                 <Row className="InformationRow">

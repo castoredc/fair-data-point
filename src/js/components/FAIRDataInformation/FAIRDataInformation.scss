@@ -46,7 +46,7 @@
                     line-height: 1.33;
                     letter-spacing: normal;
                     color: $generic-white;
-                    margin-bottom: 18px;
+                    margin: 0;
                 }
 
 
@@ -127,12 +127,9 @@
                         font-size: 16px;
                         line-height: 1.5;
                         color: $neutral-300;
-
-                        &.HasChildren {
-                            margin-bottom: 35px;
-                            padding-bottom: 20px;
-                            border-bottom: 1px solid $neutral-30;
-                        }
+                        margin-bottom: 35px;
+                        padding-bottom: 20px;
+                        border-bottom: 1px solid $neutral-30;
                     }
 
                     h2 {

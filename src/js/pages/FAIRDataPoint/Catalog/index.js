@@ -90,7 +90,7 @@ export default class Catalog extends Component {
     };
 
     render() {
-        const { catalog, embedded, displayList, displayFilter } = this.state;
+        const { fdp, catalog, embedded, displayList, displayFilter } = this.state;
 
         if (this.state.isLoadingFDP || this.state.isLoadingCatalog) {
             return <LoadingScreen showLoading={true}/>;
@@ -102,12 +102,12 @@ export default class Catalog extends Component {
         return <FAIRDataInformation
             embedded={embedded}
             className="Catalog"
-            title={localizedText(catalog.title, 'en')}
-            version={catalog.version}
-            issued={catalog.issued}
-            modified={catalog.modified}
-            license={catalog.license}
-            back={{link: this.state.fdp.relativeUrl, text: localizedText(this.state.fdp.title, 'en')}}
+            title={localizedText(catalog.metadata.title, 'en')}
+            version={catalog.metadata.version.metadata}
+            issued={catalog.metadata.created}
+            modified={catalog.metadata.updated}
+            license={catalog.metadata.license}
+            breadcrumbs={{fdp: fdp, catalog: catalog}}
         >
             {(catalog.description && !embedded) && <Row>
                 <Col md={12} className="InformationCol">
@@ -135,6 +135,7 @@ export default class Catalog extends Component {
             </Row>
 
             <StudyList
+                fdp={fdp}
                 catalog={catalog}
                 embedded={embedded}
                 displayList={displayList}

@@ -29,7 +29,7 @@ use function time;
 class CSVDistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}/csv", name="distribution_csv")
+     * @Route("/fdp/{catalog}/{dataset}/{distribution}/distribution/csv", name="distribution_csv")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})

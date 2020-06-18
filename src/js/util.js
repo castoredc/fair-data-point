@@ -58,6 +58,10 @@ export const localizedText = (texts, language = 'en', paragraph = false) => {
 };
 
 export const isURL = (str) => {
+    if(typeof str !== 'string') {
+        return false;
+    }
+
     var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
         '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address

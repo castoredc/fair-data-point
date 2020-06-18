@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
-import {Link} from "react-router-dom";
 import './StudyListItem.scss'
 import {RecruitmentStatus} from "../MetadataItem/EnumMappings";
-import Tags from "../Tags";
+import ListItem from "./index";
 
-class StudyListItem extends Component {
+export default class StudyListItem extends Component {
     render() {
-        const { link, name, logo, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false}  = this.props;
+        const { link, name, fdp, catalog, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false}  = this.props;
 
         let badgeText = badge;
 
@@ -26,15 +25,19 @@ class StudyListItem extends Component {
             tags.push(intervention);
         }
 
-        return <Link to={link} className="StudyListItem" target={newWindow ? '_blank' : null}>
-            <span className="StudyListItemHeader">
-                <span className="StudyListItemName">{name}</span>
-                {badgeText && <span className="StudyListItemBadge">{badgeText}</span>}
-            </span>
-            <span className="StudyListItemDescription">{description}</span>
-            {tags.length > 0 && <Tags tags={tags} className="StudyListItemTags" />}
-        </Link>;
+        return <ListItem
+            title={name}
+            description={description}
+            badge={badgeText}
+            tags={tags}
+            link={newWindow ? link : {
+                pathname: link,
+                state: {
+                    fdp: fdp,
+                    catalog: catalog
+                }
+            }}
+            newWindow={newWindow}
+        />;
     }
 }
-
-export default StudyListItem

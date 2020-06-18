@@ -27,14 +27,14 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function dump;
 use function time;
+use function urlencode;
 
 class RDFDistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/dataset/{dataset}/{distribution}/rdf", name="distribution_rdf")
-     * @Route("/fdp/dataset/{dataset}/{distribution}/rdf/{record}", name="distribution_rdf_record")
+     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf", name="distribution_rdf")
+     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}", name="distribution_rdf_record")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
@@ -97,7 +97,11 @@ class RDFDistributionController extends FAIRDataController
             $e = $e->getPrevious();
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return $this->redirectToRoute('login', [
+                    'path' => urlencode($request->getUri()),
+                    'session_expired' => true,
+                    'dataset' => true,
+                ]);
             }
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
@@ -105,8 +109,6 @@ class RDFDistributionController extends FAIRDataController
             if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
-
-            dump($e);
 
             return new JsonResponse([], 500);
         }

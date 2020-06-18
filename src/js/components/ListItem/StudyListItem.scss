@@ -1,59 +1,7 @@
 @import '../../scss/colors';
 
-.StudyListItem {
-  display: block;
-  margin-bottom: 10px;
-  position: relative;
-  color: $neutral-90;
-  border-radius: 5px;
-  border: solid 1px $neutral-60;
-  background-color: $generic-white;
-  padding: 24px;
 
-  &:hover {
-    color: $neutral-90;
-    background: $neutral-20;
-    text-decoration: none;
-  }
 
-  span {
-    display: block;
-  }
-
-  .StudyListItemHeader {
-    padding-bottom: 24px;
-    overflow: hidden;;
-
-    .StudyListItemName {
-      font-family: 'Rubik', sans-serif;
-      font-weight: normal;
-      font-size: 20px;
-      line-height: 1.5;
-      color: $neutral-900;
-      float: left;
-    }
-
-    .StudyListItemBadge {
-      border-radius: 5px;
-      background-color: $blue-50;
-      padding: 6px 12px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 16px;
-      color: $cobalt;
-      float: right;
-    }
-  }
-
-  .StudyListItemDescription {
-    font-size: 14px;
-    line-height: 1.5;
-    color: $neutral-300;
-  }
-
-  .StudyListItemTags {
-    padding-top: 24px;
-  }
-}
 
 .AdminListItem {
   padding: 0;

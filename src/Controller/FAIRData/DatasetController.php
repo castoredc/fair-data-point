@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
-use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Graph\Resource\Dataset\DatasetGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -17,7 +16,7 @@ class DatasetController extends FAIRDataController
      * @Route("/fdp/dataset/{dataset}", name="dataset")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */
-    public function dataset(Catalog $catalog, Dataset $dataset, Request $request): Response
+    public function dataset(Dataset $dataset, Request $request): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 

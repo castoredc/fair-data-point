@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Api\Controller\Study;
 
 use App\Api\Request\Study\StudyApiRequest;
-use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Study;
@@ -31,7 +30,7 @@ class StudyApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $study);
 
-        return new JsonResponse((new StudyMetadataApiResource($study->getLatestMetadata()))->toArray());
+        return new JsonResponse((new StudyApiResource($study))->toArray());
     }
 
     /**

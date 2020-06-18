@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/dataset/{dataset}/{distribution}", name="distribution")
+     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}", name="distribution")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
