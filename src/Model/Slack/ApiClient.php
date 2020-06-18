@@ -35,7 +35,7 @@ class ApiClient
         }
     }
 
-    public function postStudyMetadataNotification(Study $study): void
+    public function postStudyMetadataNotification(Study $study, string $url): void
     {
         $metadata = $study->getLatestMetadata();
 
@@ -60,8 +60,6 @@ class ApiClient
 
         $updated = $study->getMetadata()->count() > 1 ? true : ($metadata->getUpdatedAt() !== null);
         $header = $updated ? 'The metadata for a study were edited' : 'A new study was added to the FAIR Data Point';
-
-        $url = $study->getSlug();
 
         $message = [
             'text' => $header,

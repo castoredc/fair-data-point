@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Enum\StudySource;
+use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\StudyMetadata;
@@ -21,7 +22,7 @@ use function count;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  */
-abstract class Study
+abstract class Study implements AccessibleEntity
 {
     use CreatedAndUpdated;
 
@@ -222,5 +223,10 @@ abstract class Study
     public function setSourceId(?string $sourceId): void
     {
         $this->sourceId = $sourceId;
+    }
+
+    public function getRelativeUrl(): string
+    {
+        return '/study/' . $this->slug;
     }
 }
