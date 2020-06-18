@@ -24,7 +24,6 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    /** @return PaginatedResultCollection<ValueNode> */
     public function __invoke(GetDataModelMappingCommand $command): PaginatedResultCollection
     {
         $distribution = $command->getDistribution();
