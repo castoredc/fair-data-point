@@ -59,12 +59,14 @@ class DistributionApiResource implements ApiResource
                 $distribution['downloadUrl'] = $contents->getRelativeUrl() . '/?download=1';
                 $distribution['type'] = 'rdf';
                 $distribution['dataModel'] = $contents->getDataModel()->getId();
+                $distribution['isCached'] = $contents->isCached();
             }
 
             if ($contents instanceof CSVDistribution) {
                 $distribution['downloadUrl'] = $contents->getRelativeUrl();
                 $distribution['type'] = 'csv';
                 $distribution['includeAllData'] = $contents->isIncludeAll();
+                $distribution['isCached'] = false;
             }
         }
 

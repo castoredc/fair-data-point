@@ -62,6 +62,7 @@ export default class Distribution extends Component {
 
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
+        const breadcrumbs = {...location.state, distribution: distribution};
 
         return <FAIRDataInformation
             embedded={embedded}
@@ -71,7 +72,7 @@ export default class Distribution extends Component {
             issued={distribution.metadata.issued}
             modified={distribution.metadata.modified}
             license={distribution.metadata.license}
-            breadcrumbs={{...location.state, distribution: distribution}}
+            breadcrumbs={breadcrumbs}
         >
             <Row>
                 <Col md={8} className="InformationCol">
@@ -83,6 +84,15 @@ export default class Distribution extends Component {
                         The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself.
                     </Alert>
                     }
+                    {distribution.isCached && <ListItem link={{
+                                                        pathname: distribution.relativeUrl + '/query',
+                                                        state: {...breadcrumbs}
+                                                        }}
+                                                        title="Query the data"
+                                                        description="Use SPARQL queries to extract specific information from this distribution."
+                                                        smallIcon={restricted && 'lock'}
+                    />}
+
                     {distribution.accessUrl && <ListItem link={distribution.accessUrl}
                               title="Access the data"
                               description="Get access to the distribution."
@@ -91,10 +101,10 @@ export default class Distribution extends Component {
                     />}
 
                     {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
-                              title="Download the data"
-                              description="Get a downloadable file for this distribution."
-                              smallIcon={restricted && 'lock'}
-                              newWindow
+                                                           title="Download the data"
+                                                           description="Get a downloadable file for this distribution."
+                                                           smallIcon={restricted && 'lock'}
+                                                           newWindow
                     />}
                 </Col>
                 <Col md={4}>

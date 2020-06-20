@@ -18,11 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RDFDistributionSPARQLController extends FAIRDataController
 {
-        /**
-         * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/sparql", name="distribution_sparql")
-         * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-         * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-         */
+    /**
+     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/sparql", name="distribution_sparql")
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
     public function rdfDistributionSparql(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
@@ -40,5 +40,22 @@ class RDFDistributionSPARQLController extends FAIRDataController
 
         $endpoint->go();
         exit;
+    }
+
+    /**
+     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/query", name="distribution_query")
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function rdfDistributionQuery(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('access_data', $distribution);
+        $contents = $distribution->getContents();
+
+        if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached()) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('react.html.twig');
     }
 }

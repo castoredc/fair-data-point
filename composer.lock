@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16bf6805853062a404d9e747e3c42c0d",
+    "content-hash": "a41fc2b001e895f6c2dca23e94e17b36",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -2622,16 +2622,16 @@
         },
         {
             "name": "semsol/arc2",
-            "version": "2.5.1",
+            "version": "2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/castoredc/arc2.git",
-                "reference": "7e46c171b1be2eec49b646487c5246ea57b4fea1"
+                "reference": "554088f64cd1936937af028740836d5cfa58ded3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/castoredc/arc2/zipball/7e46c171b1be2eec49b646487c5246ea57b4fea1",
-                "reference": "7e46c171b1be2eec49b646487c5246ea57b4fea1",
+                "url": "https://api.github.com/repos/castoredc/arc2/zipball/554088f64cd1936937af028740836d5cfa58ded3",
+                "reference": "554088f64cd1936937af028740836d5cfa58ded3",
                 "shasum": ""
             },
             "require": {
@@ -2699,9 +2699,9 @@
             ],
             "support": {
                 "issues": "https://github.com/semsol/arc2/issues",
-                "source": "https://github.com/castoredc/arc2/tree/2.5.1"
+                "source": "https://github.com/castoredc/arc2/tree/2.5.2"
             },
-            "time": "2020-06-18T14:40:37+00:00"
+            "time": "2020-06-20T15:58:41+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",

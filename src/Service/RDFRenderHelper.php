@@ -174,9 +174,10 @@ class RDFRenderHelper
 
                         $values[] = $annotation->getConcept()->getUrl()->getValue();
                     }
-
-                    // 'Plain' value
-                    $values[] = $this->transformValue($node->getDataType(), $fieldResult);
+                    else {
+                        // 'Plain' value
+                        $values[] = $this->transformValue($node->getDataType(), $fieldResult);
+                    }
                 }
             }
         } else {

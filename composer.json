@@ -16,7 +16,7 @@
         "knpuniversity/oauth2-client-bundle": "^1.32",
         "league/oauth2-client": "^2.3",
         "ml/json-ld": "^1.1",
-        "semsol/arc2": "^2.5",
+        "semsol/arc2": "^2.5.2",
         "sensio/framework-extra-bundle": "^5.5",
         "stof/doctrine-extensions-bundle": "^1.4",
         "symfony/console": "^5.0",

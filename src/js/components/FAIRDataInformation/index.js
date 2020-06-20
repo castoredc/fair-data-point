@@ -34,7 +34,7 @@ export default class FAIRDataInformation extends Component {
                         </div>
                     </div>
                 </Container>
-                <Breadcrumbs>
+                {breadcrumbs && <Breadcrumbs>
                     <Breadcrumb to="/fdp">
                         FAIR Data Point
                     </Breadcrumb>
@@ -51,7 +51,10 @@ export default class FAIRDataInformation extends Component {
                     {breadcrumbs.distribution && <Breadcrumb to={breadcrumbs.distribution.relativeUrl}>
                         {localizedText(breadcrumbs.distribution.metadata.title, 'en')}
                     </Breadcrumb>}
-                </Breadcrumbs>
+                    {breadcrumbs.query && <Breadcrumb to={breadcrumbs.distribution.relativeUrl + '/query'}>
+                        Query
+                    </Breadcrumb>}
+                </Breadcrumbs>}
             </div>}
             <div className="Information">
                 <Row className="InformationRow">

@@ -28,6 +28,7 @@
         "@castoredc/matter-icons": "^9.7.3",
         "@castoredc/matter-utils": "^9.7.3",
         "@material-ui/icons": "^4.9.1",
+        "@triply/yasgui": "^4.0.124",
         "axios": "^0.19.0",
         "babel-polyfill": "^6.26.0",
         "bootstrap": "^4.4.1",
@@ -57,7 +58,6 @@
         "react-text-mask": "^5.4.3",
         "react-toastify": "^5.5.0",
         "styled-components": "^4.4.0",
-        "styled-normalize": "^8.0.7",
-        "yasgui-yasqe": "^2.11.22"
+        "styled-normalize": "^8.0.7"
     }
 }

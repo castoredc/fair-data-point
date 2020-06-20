@@ -165,6 +165,8 @@ class GenerateRDFCommand extends Command
             $rdfDistributionContent->setLastImport($timeStamp);
             $this->em->persist($rdfDistributionContent);
             $this->em->flush();
+
+            $store->optimizeTables();
         }
 
         return 0;
