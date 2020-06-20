@@ -7,6 +7,7 @@ use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Version;
+use App\Security\ApiUser;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -77,6 +78,14 @@ class Distribution implements AccessibleEntity
      * @var Collection<DistributionMetadata>
      */
     private $metadata;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Security\ApiUser")
+     * @ORM\JoinColumn(name="user_api", referencedColumnName="id")
+     *
+     * @var ApiUser|null
+     */
+    private $apiUser;
 
     public function __construct(string $slug, Dataset $dataset)
     {
@@ -168,5 +177,10 @@ class Distribution implements AccessibleEntity
     public function setLicense(?License $license): void
     {
         $this->license = $license;
+    }
+
+    public function getApiUser(): ?ApiUser
+    {
+        return $this->apiUser;
     }
 }

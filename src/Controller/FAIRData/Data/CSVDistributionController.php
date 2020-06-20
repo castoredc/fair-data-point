@@ -48,7 +48,7 @@ class CSVDistributionController extends FAIRDataController
 
         try {
             /** @var HandledStamp $handledStamp */
-            $handledStamp = $bus->dispatch(new GetRecordsCommand($study))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
 
             /** @var Record[] $records */
             $records = $handledStamp->getResult();

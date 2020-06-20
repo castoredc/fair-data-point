@@ -70,11 +70,12 @@ class RecordDataCollection
         $this->reportData = $reportData;
     }
 
-    public function getFieldResultByFieldId(string $fieldId): ?FieldResult
+    /** @return FieldResult[]|null */
+    public function getFieldResultByFieldId(string $fieldId): ?array
     {
-        $study = $this->studyData->getFieldResultByFieldId($fieldId);
-        $survey = $this->surveyData->getFieldResultByFieldId($fieldId);
-        $report = $this->reportData->getFieldResultByFieldId($fieldId);
+        $study = $this->studyData->getFieldResultsByFieldId($fieldId);
+        $survey = $this->surveyData->getFieldResultsByFieldId($fieldId);
+        $report = $this->reportData->getFieldResultsByFieldId($fieldId);
 
         if ($study !== null) {
             return $study;

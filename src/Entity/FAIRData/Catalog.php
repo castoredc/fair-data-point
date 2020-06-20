@@ -6,7 +6,6 @@ namespace App\Entity\FAIRData;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
-use App\Security\ApiUser;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -75,14 +74,6 @@ class Catalog implements AccessibleEntity
      * @var bool
      */
     private $submissionAccessesData = false;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\ApiUser")
-     * @ORM\JoinColumn(name="user_api", referencedColumnName="id")
-     *
-     * @var ApiUser|null
-     */
-    private $apiUser;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog", fetch="EAGER")
@@ -230,11 +221,6 @@ class Catalog implements AccessibleEntity
     public function setSubmissionAccessesData(bool $submissionAccessesData): void
     {
         $this->submissionAccessesData = $submissionAccessesData;
-    }
-
-    public function getApiUser(): ?ApiUser
-    {
-        return $this->apiUser;
     }
 
     public function getLatestMetadata(): ?CatalogMetadata

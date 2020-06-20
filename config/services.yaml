@@ -45,10 +45,10 @@ services:
 
     App\Connection\DistributionService:
         arguments:
-            - '@doctrine.dbal.default_connection'
             - '%env(DB_HOST)%'
             - '%env(DB_CREATOR_USER)%'
             - '%env(DB_CREATOR_PASS)%'
+            - '%env(DB_PORT)%'
 
     App\Encryption\EncryptionService:
         arguments:

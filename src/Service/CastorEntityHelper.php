@@ -10,6 +10,7 @@ use App\Exception\InvalidEntityType;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
 use App\Repository\CastorEntityRepository;
+use App\Security\ApiUser;
 use App\Security\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -28,10 +29,19 @@ class CastorEntityHelper
         $this->em = $em;
         $this->apiClient = $apiClient;
 
+        if ($tokenStorage->getToken() === null) {
+            return;
+        }
+
         $user = $tokenStorage->getToken()->getUser();
         assert($user instanceof CastorUser);
 
         $this->apiClient->setUser($user);
+    }
+
+    public function useApiUser(ApiUser $user): void
+    {
+        $this->apiClient->useApiUser($user);
     }
 
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity

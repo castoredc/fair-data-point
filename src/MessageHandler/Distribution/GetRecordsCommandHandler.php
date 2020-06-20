@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
@@ -39,17 +40,26 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetRecordsCommand $command): array
     {
+        $distribution = $command->getDistribution();
+
+        $study = $distribution->getDataset()->getStudy();
+        assert($study instanceof CastorStudy);
+
         $user = $this->security->getUser();
         assert($user instanceof CastorUser);
 
-        // if ($message->getDistribution()->getContents()->getAccessRights() === DistributionAccessType::PUBLIC) {
-        //     $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
-        // } else {
-        //     $this->apiClient->setUser($message->getUser());
-        // }
+        if (! $this->security->isGranted('access_data', $distribution)) {
+            throw new NoAccessPermission();
+        }
 
-        $this->apiClient->setUser($user);
+        $apiUser = $distribution->getApiUser();
 
-        return $this->apiClient->getRecords($command->getStudy())->toArray();
+        if ($apiUser !== null) {
+            $this->apiClient->useApiUser($apiUser);
+        } else {
+            $this->apiClient->setUser($user);
+        }
+
+        return $this->apiClient->getRecords($study)->toArray();
     }
 }

@@ -20,6 +20,7 @@ use Exception;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 use function count;
+use function implode;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
@@ -47,7 +48,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         assert($dbStudy instanceof CastorStudy);
 
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
-            $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
+            $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser());
         } else {
             $this->apiClient->setUser($user);
         }
@@ -102,8 +103,19 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $data = [];
 
         foreach ($fields as $field) {
-            $result = $studyData->getFieldResultByFieldId($field->getId());
-            $value = $result !== null ? $result->getValue() : null;
+            $results = $studyData->getFieldResultsByFieldId($field->getId());
+
+            if ($results !== null) {
+                $values = [];
+
+                foreach ($results as $result) {
+                    $values[] = $result->getValue();
+                }
+
+                $value = implode(';', $values);
+            } else {
+                $value = null;
+            }
 
             $column = $columns[$field->getId()];
             $data[$column] = $value;

@@ -7,6 +7,7 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\AccessibleEntity;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,6 +33,20 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
      * @var Collection<DataModelMapping>
      */
     private $mappings;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $isCached = false;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=TRUE)
+     *
+     * @var DateTimeImmutable|null
+     */
+    private $lastImport;
 
     public function getDataModel(): DataModel
     {
@@ -66,5 +81,25 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         }
 
         return null;
+    }
+
+    public function isCached(): bool
+    {
+        return $this->isCached;
+    }
+
+    public function setIsCached(bool $isCached): void
+    {
+        $this->isCached = $isCached;
+    }
+
+    public function getLastImport(): ?DateTimeImmutable
+    {
+        return $this->lastImport;
+    }
+
+    public function setLastImport(?DateTimeImmutable $lastImport): void
+    {
+        $this->lastImport = $lastImport;
     }
 }

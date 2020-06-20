@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Entity\Castor\CastorStudy;
+use App\Entity\FAIRData\Distribution;
 
 class GetRecordsCommand
 {
-    /** @var CastorStudy */
-    private $study;
+    /** @var Distribution */
+    private $distribution;
 
-    public function __construct(CastorStudy $study)
+    public function __construct(Distribution $distribution)
     {
-        $this->study = $study;
+        $this->distribution = $distribution;
     }
 
-    public function getStudy(): CastorStudy
+    public function getDistribution(): Distribution
     {
-        return $this->study;
+        return $this->distribution;
     }
 }
