@@ -163,14 +163,14 @@ ul {
   display: flex;
   flex-flow: column;
   height: 100%;
+}
 
-  .DataTableWrapper {
-    flex: 1;
-    overflow: auto;
+.DataTableWrapper {
+  flex: 1;
+  overflow: auto;
 
-    & > div > div {
-      height: 100%;
-    }
+  & > div > div {
+    height: 100%;
   }
 }
 

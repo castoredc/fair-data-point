@@ -173,8 +173,7 @@ class RDFRenderHelper
                         assert($annotation instanceof Annotation);
 
                         $values[] = $annotation->getConcept()->getUrl()->getValue();
-                    }
-                    else {
+                    } else {
                         // 'Plain' value
                         $values[] = $this->transformValue($node->getDataType(), $fieldResult);
                     }

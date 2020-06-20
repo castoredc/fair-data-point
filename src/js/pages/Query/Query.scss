@@ -1,11 +1,68 @@
 @import '../../scss/colors';
 
 .Query {
+  height: 100vh;
+
+  .Information {
+    flex: 1;
+    overflow: hidden;
+    min-height: inherit;
+    padding: 0;
+
+    .InformationRow {
+      height: 100%;
+    }
+  }
+
   .Children {
     padding-top: 10px!important;
+
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    overflow: hidden;
   }
 
   .yasgui .controlbar {
     display: none;
+  }
+
+  .yasqe_queryButton {
+    display: none!important;
+  }
+
+  .CodeMirror {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+  }
+
+  .yasqe {
+    transition: all 0.8s ease;
+    overflow: hidden;
+    max-height: 100vh;
+    height: fit-content;
+    border-radius: 3px;
+  }
+
+  .QueryEditor.Hide {
+    .yasqe {
+      max-height: 0!important;
+    }
+  }
+
+  .QueryButtons {
+    margin-bottom: 10px;
+
+    .ResultCount {
+      line-height: 30px;
+    }
+
+    .ExecuteButton {
+      float: right;
+    }
+
+    .ShowHideButton {
+      border: 0;
+    }
   }
 }

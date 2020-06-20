@@ -51,7 +51,7 @@ export default class FAIRDataInformation extends Component {
                     {breadcrumbs.distribution && <Breadcrumb to={breadcrumbs.distribution.relativeUrl}>
                         {localizedText(breadcrumbs.distribution.metadata.title, 'en')}
                     </Breadcrumb>}
-                    {breadcrumbs.query && <Breadcrumb to={breadcrumbs.distribution.relativeUrl + '/query'}>
+                    {(breadcrumbs.query && breadcrumbs.distribution) && <Breadcrumb to={breadcrumbs.distribution.relativeUrl + '/query'}>
                         Query
                     </Breadcrumb>}
                 </Breadcrumbs>}

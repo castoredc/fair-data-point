@@ -38,7 +38,17 @@ class RDFDistributionSPARQLController extends FAIRDataController
         /** @var ARC2_StoreEndpoint $endpoint */
         $endpoint = $handledStamp->getResult();
 
-        $endpoint->go();
+        if ($request->get('query') === null) {
+            return $this->redirectToRoute('distribution_query', [
+                'dataset' => $dataset->getSlug(),
+                'distribution' => $distribution->getSlug(),
+            ]);
+        }
+
+        $endpoint->handleRequest();
+        $endpoint->sendHeaders();
+        echo $endpoint->getResult();
+
         exit;
     }
 

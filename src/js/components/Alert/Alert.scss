@@ -13,10 +13,6 @@
   .AlertIcon {
     float: left;
     margin-right: 10px;
-
-    path {
-      fill: $blue-400;
-    }
   }
 
   &::before {
@@ -29,7 +25,32 @@
     mix-blend-mode: multiply;
   }
 
-  &.AlertMessage-info::before {
-    background: $blue-400;
+  strong {
+    display: block;
+    font-weight: bold;
+  }
+
+  &.AlertMessage-info{
+    strong {
+      color: $blue-400;
+    }
+    &::before {
+      background: $blue-400;
+    }
+    .AlertIcon path {
+        fill: $blue-400;
+    }
+  }
+
+  &.AlertMessage-error {
+    strong {
+      color: $red-400;
+    }
+    &::before {
+      background: $red-400;
+    }
+    .AlertIcon path {
+      fill: $red-400;
+    }
   }
 }

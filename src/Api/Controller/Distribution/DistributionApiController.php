@@ -19,6 +19,7 @@ use App\Message\Distribution\ClearDistributionContentCommand;
 use App\Message\Distribution\CreateDistributionCommand;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
+use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
-use function dump;
 
 /**
  * @Route("/api/dataset/{dataset}/distribution")
@@ -39,7 +39,7 @@ class DistributionApiController extends ApiController
      * @Route("/{distribution}", methods={"GET"}, name="api_distribution")
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distribution(Dataset $dataset, Distribution $distribution): Response
+    public function distribution(Dataset $dataset, Distribution $distribution, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 
@@ -47,7 +47,7 @@ class DistributionApiController extends ApiController
             throw $this->createNotFoundException();
         }
 
-        return new JsonResponse((new DistributionApiResource($distribution))->toArray());
+        return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray());
     }
 
     /**
@@ -101,7 +101,7 @@ class DistributionApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_distribution_add")
      */
-    public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
+    public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
 
@@ -130,13 +130,11 @@ class DistributionApiController extends ApiController
                 $bus->dispatch(new CreateDistributionDatabaseCommand($distribution));
             }
 
-            return new JsonResponse((new DistributionApiResource($distribution))->toArray(), 200);
+            return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
-
-            dump($e);
 
             if ($e instanceof LanguageNotFound) {
                 return new JsonResponse($e->toArray(), 409);

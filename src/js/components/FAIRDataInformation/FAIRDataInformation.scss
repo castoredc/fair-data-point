@@ -1,6 +1,9 @@
 @import '../../scss/colors';
 
 .TopLevelContainer {
+    display: flex;
+    flex-flow: column;
+
     .Header {
         background: $azul;
         color: white;

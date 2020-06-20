@@ -7,15 +7,20 @@ use App\Api\Resource\ApiResource;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
+use App\Service\UriHelper;
 
 class DistributionApiResource implements ApiResource
 {
     /** @var Distribution */
     private $distribution;
 
-    public function __construct(Distribution $distribution)
+    /** @var UriHelper */
+    private $uriHelper;
+
+    public function __construct(Distribution $distribution, UriHelper $uriHelper)
     {
         $this->distribution = $distribution;
+        $this->uriHelper = $uriHelper;
     }
 
     /**
@@ -55,6 +60,7 @@ class DistributionApiResource implements ApiResource
             $distribution['accessRights'] = $contents->getAccessRights();
 
             if ($contents instanceof RDFDistribution) {
+                $distribution['fullUrl'] = $this->uriHelper->getUri($contents) . '/';
                 $distribution['accessUrl'] = $contents->getRelativeUrl();
                 $distribution['downloadUrl'] = $contents->getRelativeUrl() . '/?download=1';
                 $distribution['type'] = 'rdf';

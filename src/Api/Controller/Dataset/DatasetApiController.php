@@ -7,6 +7,7 @@ use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionsApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Dataset;
+use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,10 +30,10 @@ class DatasetApiController extends ApiController
      * @Route("/api/dataset/{dataset}/distribution", methods={"GET"}, name="api_dataset_distributions")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */
-    public function distributions(Dataset $dataset): Response
+    public function distributions(Dataset $dataset, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 
-        return new JsonResponse((new DistributionsApiResource($dataset->getDistributions()->toArray()))->toArray());
+        return new JsonResponse((new DistributionsApiResource($dataset->getDistributions()->toArray(), $uriHelper))->toArray());
     }
 }
