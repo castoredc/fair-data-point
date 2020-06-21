@@ -21,7 +21,7 @@
   .Select {
     width: 100%;
 
-    div {
+    & > div, & > div > div {
       max-width: 100%;
     }
   }
