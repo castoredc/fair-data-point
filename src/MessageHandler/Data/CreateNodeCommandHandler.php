@@ -10,26 +10,37 @@ use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;
+use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateNodeCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class CreateNodeCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     /**
      * @throws InvalidNodeType
      * @throws InvalidValueType
+     * @throws NoAccessPermission
      */
     public function __invoke(CreateNodeCommand $command): void
     {
+        if (! $this->security->isGranted('ROLE_ADMIN')) {
+            throw new NoAccessPermission();
+        }
+
         $dataModel = $command->getDataModel();
         $type = $command->getType();
 

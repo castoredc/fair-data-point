@@ -8,10 +8,12 @@ use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Data\DataModel\Triple;
 use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
+use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateTripleCommand;
 use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 use function assert;
 
 class CreateTripleCommandHandler implements MessageHandlerInterface
@@ -19,9 +21,13 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     /**
@@ -29,6 +35,10 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(CreateTripleCommand $command): void
     {
+        if (! $this->security->isGranted('ROLE_ADMIN')) {
+            throw new NoAccessPermission();
+        }
+
         $module = $command->getModule();
         $dataModel = $module->getDataModel();
 

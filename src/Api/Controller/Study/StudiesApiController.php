@@ -89,7 +89,7 @@ class StudiesApiController extends ApiController
      */
     public function addStudy(Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
             /** @var StudyApiRequest $parsed */

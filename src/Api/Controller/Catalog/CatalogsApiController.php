@@ -5,6 +5,7 @@ namespace App\Api\Controller\Catalog;
 
 use App\Api\Request\Catalog\CatalogApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
+use App\Api\Resource\Catalog\CatalogsApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
@@ -32,8 +33,9 @@ class CatalogsApiController extends ApiController
 
         /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        $catalogs = $handledStamp->getResult();
 
-        return new JsonResponse($handledStamp->getResult()->toArray());
+        return new JsonResponse((new CatalogsApiResource($catalogs))->toArray());
     }
 
     /**

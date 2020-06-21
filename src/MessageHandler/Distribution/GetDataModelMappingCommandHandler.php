@@ -7,10 +7,12 @@ use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
+use App\Exception\NoAccessPermission;
 use App\Message\Distribution\GetDataModelMappingCommand;
 use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 use function assert;
 use function count;
 
@@ -19,14 +21,23 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     public function __invoke(GetDataModelMappingCommand $command): PaginatedResultCollection
     {
         $distribution = $command->getDistribution();
+
+        if (! $this->security->isGranted('view', $distribution)) {
+            throw new NoAccessPermission();
+        }
+
         $dataModal = $distribution->getDataModel();
 
         /** @var NodeRepository $repository */

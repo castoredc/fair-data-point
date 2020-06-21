@@ -16,21 +16,40 @@ use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Triple;
 use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;
+use App\Exception\NoAccessPermission;
 use App\Message\Data\GetDataModelRDFPreviewCommand;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf_Graph;
 use EasyRdf_Literal;
 use EasyRdf_Namespace;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 use function assert;
 
 class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
+    {
+        $this->em = $em;
+        $this->security = $security;
+    }
+
     /**
      * @throws InvalidNodeType
      * @throws InvalidValueType
      */
     public function __invoke(GetDataModelRDFPreviewCommand $command): DataModelRDFPreviewApiResource
     {
+        if (! $this->security->isGranted('ROLE_ADMIN')) {
+            throw new NoAccessPermission();
+        }
+
         $modulePreviews = [];
 
         $fullGraph = new EasyRdf_Graph();

@@ -11,6 +11,7 @@ use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\Version;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 
 abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
 {
@@ -19,9 +20,13 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
     /** @var EntityManagerInterface */
     protected $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    protected $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     protected function updateVersionNumber(?Version $currentVersion, VersionType $versionUpdate): Version

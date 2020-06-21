@@ -8,6 +8,7 @@ use App\Entity\Terminology\Annotation;
 use App\Entity\Terminology\Ontology;
 use App\Entity\Terminology\OntologyConcept;
 use App\Exception\AnnotationAlreadyExists;
+use App\Exception\NoAccessPermission;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Message\Terminology\AddAnnotationCommand;
@@ -17,6 +18,7 @@ use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Castor\BioPortal\Model\Concept;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class AddAnnotationCommandHandler implements MessageHandlerInterface
 {
@@ -26,14 +28,24 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
     /** @var ApiWrapper  */
     private $bioPortalApiWrapper;
 
-    public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper, Security $security)
     {
         $this->em = $em;
         $this->bioPortalApiWrapper = $bioPortalApiWrapper;
+        $this->security = $security;
     }
 
     public function __invoke(AddAnnotationCommand $command): void
     {
+        $study = $command->getStudy();
+
+        if (! $this->security->isGranted('edit', $study)) {
+            throw new NoAccessPermission();
+        }
+
         $entity = $command->getEntity();
 
         /** @var Ontology|null $ontology */

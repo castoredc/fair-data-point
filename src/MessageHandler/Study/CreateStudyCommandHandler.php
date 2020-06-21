@@ -51,6 +51,10 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(CreateStudyCommand $command): Study
     {
+        if (! $this->security->isGranted('ROLE_ADMIN')) {
+            throw new NoAccessPermission();
+        }
+
         $source = $command->getSource();
 
         /** @var StudyRepository $repository */

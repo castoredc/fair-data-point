@@ -6,10 +6,12 @@ namespace App\MessageHandler\Data;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Iri;
+use App\Exception\NoAccessPermission;
 use App\Message\Data\UpdateTripleCommand;
 use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 use function assert;
 
 class UpdateTripleCommandHandler implements MessageHandlerInterface
@@ -17,13 +19,21 @@ class UpdateTripleCommandHandler implements MessageHandlerInterface
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     public function __invoke(UpdateTripleCommand $command): void
     {
+        if (! $this->security->isGranted('ROLE_ADMIN')) {
+            throw new NoAccessPermission();
+        }
+
         $triple = $command->getTriple();
         $dataModel = $triple->getModule()->getDataModel();
 

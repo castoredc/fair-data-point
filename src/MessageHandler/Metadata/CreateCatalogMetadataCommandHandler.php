@@ -5,6 +5,7 @@ namespace App\MessageHandler\Metadata;
 
 use App\Entity\Iri;
 use App\Entity\Metadata\CatalogMetadata;
+use App\Exception\NoAccessPermission;
 use App\Message\Metadata\CreateCatalogMetadataCommand;
 
 class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
@@ -12,6 +13,11 @@ class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
     public function __invoke(CreateCatalogMetadataCommand $command): void
     {
         $catalog = $command->getCatalog();
+
+        if (! $this->security->isGranted('edit', $catalog)) {
+            throw new NoAccessPermission();
+        }
+
         $metadata = new CatalogMetadata($catalog);
 
         $newVersion = $this->updateVersionNumber($catalog->getLatestMetadataVersion(), $command->getVersionUpdate());

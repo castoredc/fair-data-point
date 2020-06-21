@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Metadata;
 
 use App\Entity\Metadata\DistributionMetadata;
+use App\Exception\NoAccessPermission;
 use App\Message\Metadata\CreateDistributionMetadataCommand;
 
 class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHandler
@@ -11,6 +12,11 @@ class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHand
     public function __invoke(CreateDistributionMetadataCommand $command): void
     {
         $distribution = $command->getDistribution();
+
+        if (! $this->security->isGranted('edit', $distribution)) {
+            throw new NoAccessPermission();
+        }
+
         $metadata = new DistributionMetadata($distribution);
 
         $newVersion = $this->updateVersionNumber($distribution->getLatestMetadataVersion(), $command->getVersionUpdate());

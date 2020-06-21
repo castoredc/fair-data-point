@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Study;
 
 use App\Exception\CatalogNotExceptingSubmissions;
+use App\Exception\NoAccessPermission;
 use App\Message\Study\AddStudyToCatalogCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -27,6 +28,10 @@ class AddStudyToCatalogCommandHandler implements MessageHandlerInterface
     {
         if (! $command->getCatalog()->isAcceptingSubmissions() && ! $this->security->isGranted('ROLE_ADMIN')) {
             throw new CatalogNotExceptingSubmissions();
+        }
+
+        if (! $this->security->isGranted('edit', $command->getStudy())) {
+            throw new NoAccessPermission();
         }
 
         $command->getCatalog()->addStudy($command->getStudy());

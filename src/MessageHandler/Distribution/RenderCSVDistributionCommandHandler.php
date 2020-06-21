@@ -41,8 +41,15 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
      */
     public function __invoke(RenderCSVDistributionCommand $message): string
     {
+        $contents = $message->getDistribution();
+        $distribution = $contents->getDistribution();
+
         $user = $this->security->getUser();
         assert($user instanceof CastorUser);
+
+        if (! $this->security->isGranted('access_data', $distribution)) {
+            throw new NoAccessPermission();
+        }
 
         $dbStudy = $message->getDistribution()->getDistribution()->getDataset()->getStudy();
         assert($dbStudy instanceof CastorStudy);
