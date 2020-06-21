@@ -82,9 +82,12 @@ export default class DistributionsDataTable extends Component {
                             return [
                                 item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
                                 item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                                item.type ? item.type : '',
+                                item.type ? item.type.toUpperCase() : '',
                                 item.hasMetadata ? item.metadata.language : '',
                                 item.hasMetadata ? item.metadata.license : '',
+                                item.published ? {
+                                    type: 'view'
+                                } : undefined,
                             ];
                         })}
                         structure={{
@@ -112,7 +115,12 @@ export default class DistributionsDataTable extends Component {
                                 header:    'License',
                                 resizable: true,
                                 template:  'text',
-                            }
+                            },
+                            published: {
+                                header:    'Published',
+                                icon:      'view',
+                                template:  'icon'
+                            },
                         }}
                     />
                 </div>
