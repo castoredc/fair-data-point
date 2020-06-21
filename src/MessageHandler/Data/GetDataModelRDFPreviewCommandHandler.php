@@ -18,7 +18,6 @@ use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\GetDataModelRDFPreviewCommand;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf_Graph;
 use EasyRdf_Literal;
 use EasyRdf_Namespace;
@@ -28,15 +27,11 @@ use function assert;
 
 class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
     /** @var Security */
     private $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(Security $security)
     {
-        $this->em = $em;
         $this->security = $security;
     }
 
