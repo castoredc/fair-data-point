@@ -12,8 +12,10 @@ class ToastContent extends Component {
         if(icon) {
             displayIcon = icon;
         }
-        else if(type === 'error')
-        {
+        else if(type === 'success') {
+            displayIcon = 'tickCircledInverted';
+        }
+        else if(type === 'error') {
             displayIcon = 'errorCircled';
         }
 
