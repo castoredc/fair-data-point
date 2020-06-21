@@ -1,25 +1,82 @@
 @import '../../../scss/colors';
 
 .Admin {
-  .Header {
-    background: $azul;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
 
-    .navbar {
-      padding: 0;
+  .Main {
+    flex: 1;
+    overflow: auto;
+
+    .MainContainer.container {
+      height: 100%;
+    }
+
+    .PageContainer {
+      display: flex;
+      flex-flow: column;
+      height: 100%;
+      padding-bottom: 15px;
+    }
+
+    .FillHeight {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+
+      .Page {
+        height: 100%;
+        overflow: auto;
+      }
     }
   }
 
-  .LogoContainer, .MenuContainer {
-    padding: 6px 15px;
-  }
+  .Header {
+    background: $cobalt;
 
-  .LeftNav, .Back {
-    flex: 0 0 210px;
-    max-width: 210px;
+    .navbar {
+      padding: 8px 0;
+
+      .DropdownMenu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 1;
+        margin-top: 5px;
+      }
+
+      .nav-link {
+        margin-left: 5px;
+        transition-delay: 0s, 0s;
+        transition-duration: 0.2s, 0.2s;
+        transition-property: background, border-color;
+        transition-timing-function: ease, ease;
+        border: 1px solid transparent;
+        padding: 5px 10px;
+
+        &.active {
+          background: $azul;
+          border-color: $blue-100;
+        }
+
+        &:hover {
+          background: $azul;
+          border-color: $generic-white;
+        }
+
+        &:first-child {
+          margin-right: 0;
+        }
+      }
+      .navbar-nav {
+        position: relative;
+      }
+    }
   }
 
   .LeftNav {
-    padding: 15px;
     font-weight: 700;
 
     hr {
@@ -58,14 +115,12 @@
     display: flex;
     align-items: center;
   }
-
-  .Page, .PageTitle {
-      flex: 1;
-      max-width: none;
-  }
-
-  .Page {
-    padding: 15px;
+  
+  .SubPage {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
   }
 
   .PageHeader {
@@ -98,5 +153,17 @@
     path {
       fill: $generic-white;
     }
+  }
+
+  .AccountIcon, .DropdownIcon {
+    vertical-align: -3px;
+  }
+
+  .AccountIcon {
+    margin-right: 2px;
+  }
+
+  .DropdownIcon {
+    margin-left: 2px;
   }
 }

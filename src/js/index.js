@@ -2,13 +2,16 @@ import "babel-polyfill";
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {AppProvider} from '@castoredc/matter';
 
 import App from "./components/App";
 
 ReactDOM.render(
 <Router>
-<App />
+    <AppProvider>
+        <App />
+    </AppProvider>
 </Router>,
 document.getElementById('root')
 );

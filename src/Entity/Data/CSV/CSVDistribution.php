@@ -92,8 +92,8 @@ class CSVDistribution extends DistributionContents
         return false;
     }
 
-    public function getAccessUrl(): string
+    public function getRelativeUrl(): string
     {
-        return $this->getDistribution()->getAccessUrl() . '/csv';
+        return $this->getDistribution()->getRelativeUrl() . '/csv';
     }
 }

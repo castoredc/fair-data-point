@@ -3,28 +3,65 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Encryption\EncryptionService;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
+use App\Exception\ErrorFetchingCastorData;
+use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
+use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordCommand;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorUser;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetRecordCommandHandler implements MessageHandlerInterface
 {
     /** @var ApiClient */
     private $apiClient;
 
-    public function __construct(ApiClient $apiClient)
+    /** @var Security */
+    private $security;
+
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {
         $this->apiClient = $apiClient;
+        $this->security = $security;
+        $this->encryptionService = $encryptionService;
     }
 
     /**
-     * @return Record[]
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
      */
-    public function __invoke(GetRecordCommand $message): array
+    public function __invoke(GetRecordCommand $command): Record
     {
-        $this->apiClient->setUser($message->getUser());
+        $distribution = $command->getDistribution();
+        $study = $distribution->getDataset()->getStudy();
+        assert($study instanceof CastorStudy);
 
-        return [$this->apiClient->getRecord($message->getStudy(), $message->getRecordId())];
+        $user = $this->security->getUser();
+        assert($user instanceof CastorUser);
+
+        if (! $this->security->isGranted('access_data', $distribution)) {
+            throw new NoAccessPermission();
+        }
+
+        $apiUser = $distribution->getApiUser();
+
+        if ($apiUser !== null) {
+            $this->apiClient->useApiUser($apiUser, $this->encryptionService);
+        } else {
+            $this->apiClient->setUser($user);
+        }
+
+        return $this->apiClient->getRecord($study, $command->getRecordId());
     }
 }

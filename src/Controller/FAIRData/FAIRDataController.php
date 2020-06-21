@@ -3,12 +3,25 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
+use App\Service\UriHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use function in_array;
 
 abstract class FAIRDataController extends AbstractController
 {
+    /** @var UriHelper */
+    protected $uriHelper;
+
+    /** @var string */
+    protected $baseUri;
+
+    public function __construct(UriHelper $uriHelper)
+    {
+        $this->uriHelper = $uriHelper;
+        $this->baseUri = $uriHelper->getBaseUri();
+    }
+
     protected function acceptsHttp(Request $request): bool
     {
         if ($request->get('format') !== null) {

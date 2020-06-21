@@ -3,19 +3,18 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure\Step;
 
+use App\Entity\Castor\CastorEntity;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Form\Field;
-use App\Entity\Castor\Structure\StructureElement;
+use App\Entity\Enum\StructureType;
+use Doctrine\ORM\Mapping as ORM;
 use function ksort;
 
-abstract class Step
+/**
+ * @ORM\Entity
+ */
+abstract class Step extends CastorEntity
 {
-    /**
-     * Unique identifier of the Step (same as step_id)
-     *
-     * @var string|null
-     */
-    private $id;
-
     /**
      * the Step description
      *
@@ -40,25 +39,13 @@ abstract class Step
     /** @var Field[] */
     protected $fields;
 
-    /** @var StructureElement */
-    protected $parent;
-
-    public function __construct(?string $id, ?string $description, ?string $name, ?int $position)
+    public function __construct(string $id, CastorStudy $study, StructureType $structureType, ?string $description, string $name, ?int $position)
     {
-        $this->id = $id;
+        parent::__construct($id, $name, $study, $structureType);
+
         $this->description = $description;
         $this->name = $name;
         $this->position = $position;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function setId(?string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getDescription(): ?string
@@ -89,16 +76,6 @@ abstract class Step
     public function setPosition(?int $position): void
     {
         $this->position = $position;
-    }
-
-    public function getParent(): StructureElement
-    {
-        return $this->parent;
-    }
-
-    public function setParent(StructureElement $parent): void
-    {
-        $this->parent = $parent;
     }
 
     /**

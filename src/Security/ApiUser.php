@@ -18,7 +18,8 @@ class ApiUser
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="string", length=190)
+     * @ORM\Column(type="guid", length=190)
+     * @ORM\GeneratedValue(strategy="UUID")
      *
      * @var string
      */
@@ -53,6 +54,12 @@ class ApiUser
      */
     private $server;
 
+    public function __construct(string $emailAddress, ?CastorServer $server)
+    {
+        $this->emailAddress = $emailAddress;
+        $this->server = $server;
+    }
+
     public function getId(): string
     {
         return $this->id;
@@ -68,9 +75,9 @@ class ApiUser
         return $this->clientId;
     }
 
-    public function getDecryptedClientId(EncryptionService $encryptionService): string
+    public function getDecryptedClientId(EncryptionService $encryptionService): SensitiveDataString
     {
-        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientId))->exposeAsString();
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientId));
     }
 
     /**
@@ -92,9 +99,9 @@ class ApiUser
         return $this->clientSecret;
     }
 
-    public function getDecryptedClientSecret(EncryptionService $encryptionService): string
+    public function getDecryptedClientSecret(EncryptionService $encryptionService): SensitiveDataString
     {
-        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientSecret))->exposeAsString();
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientSecret));
     }
 
     /**

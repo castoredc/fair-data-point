@@ -13,7 +13,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class CatalogController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}", name="catalog")
+     * @Route("/fdp/{catalog}", name="redirect_old_catalog")
+     */
+    public function catalogRedirect(string $catalog, Request $request): Response
+    {
+        return $this->redirectToRoute('catalog', [
+            'catalog' => $catalog,
+            'embed' => $request->get('embed'),
+        ], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
+    /**
+     * @Route("/fdp/catalog/{catalog}", name="catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
     public function catalog(Catalog $catalog, Request $request): Response
@@ -24,14 +35,14 @@ class CatalogController extends FAIRDataController
             return $this->render(
                 'react.html.twig',
                 [
-                    'title' => $catalog->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $catalog->getDescription()->getTextByLanguageString('en')->getText(),
+                    'title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $catalog->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }
 
         return new Response(
-            (new CatalogGraphResource($catalog))->toGraph()->serialise('turtle'),
+            (new CatalogGraphResource($catalog))->toGraph($this->baseUri)->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

@@ -8,20 +8,17 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import FormItem from "../Form/FormItem";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
-import {CheckboxGroup} from "../Input/Checkbox";
+import CheckboxGroup from "../Input/CheckboxGroup";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {classNames} from "../../util";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Dropdown from "../Input/Dropdown";
 
 export default class Filters extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoadingFilters: true,
             isLoadingCountries: true,
-            hasLoadedFilters: false,
             hasLoadedCountries: false,
             data: {
                 search: '',
@@ -29,46 +26,82 @@ export default class Filters extends Component {
                 studyType: [],
                 methodType: []
             },
+            options: {
+                country: [],
+                studyType: [],
+                methodType: []
+            },
             countries: [],
-            filters: {}
         };
 
         this.timer = null;
     }
 
     componentDidMount() {
-        this.getFilters();
-        this.getCountries();
+        const { isLoading } = this.props;
+
+        if(! isLoading) {
+            this.parseOptions();
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { isLoading } = this.props;
+
+        if(! isLoading && prevProps.isLoading !== isLoading) {
+            this.parseOptions();
+        }
     }
 
-    getFilters = () => {
-        axios.get('/api/catalog/' + this.props.catalog + '/filters')
-            .then((response) => {
-                this.setState({
-                    filters: response.data,
-                    isLoadingFilters: false,
-                    hasLoadedFilters: true
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingFilters: false
-                });
+    parseOptions = () => {
+        const { filters } = this.props;
+        const { options } = this.state;
 
-                if(error.response && typeof error.response.data.error !== "undefined")
-                {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
-                }
-            });
+        const studyTypes = filters.studyType.map((studyType) => {
+            return {
+                value: studyType,
+                label: StudyType[studyType]
+            }
+        });
+
+        const methodTypes = filters.methodType.map((methodType) => {
+            return {
+                value: methodType,
+                label: MethodType[methodType]
+            }
+        });
+
+        this.setState({
+            options: {
+                ...options,
+                studyType: studyTypes,
+                methodType: methodTypes
+            },
+        }, () => {
+            this.getCountries();
+        });
     };
 
     getCountries = () => {
+        const { filters } = this.props;
+        const { options } = this.state;
+
         axios.get('/api/countries')
             .then((response) => {
+                const countries = response.data;
+
+                const countryOptions = filters.country.map((country) => {
+                    return {
+                        value: country,
+                        label: countries.filter(({value}) => value === country)[0].label,
+                    }
+                });
+
                 this.setState({
-                    countries: response.data,
+                    options: {
+                        ...options,
+                        country: countryOptions
+                    },
                     isLoadingCountries: false,
                     hasLoadedCountries: true
                 });
@@ -104,76 +137,37 @@ export default class Filters extends Component {
         }, 600);
     };
 
-    handleCheckboxChange = (item, event) => {
-        const { data } = this.state;
-        let selection  = data[item];
-        const index    = selection.indexOf(event.target.name);
-
-        if (index > -1 && ! event.target.value) {
-            selection.splice(index, 1);
-        }
-        else if (event.target.value) {
-            selection.push(event.target.name);
-        }
-
-        const newData = {
-            ...data,
-            [item]: selection
-        };
-
-        this.setState({
-            data: newData
+    handleSelectChange = (name, event) => {
+        this.handleChange({
+            target: {
+                name: name,
+                value: event.map((value) => {
+                    return value.value
+                })
+            }
         });
-
-        this.props.onFilter(newData);
     };
 
     render() {
-        const { style, className, overlay, hidden } = this.props;
+        const { style, className, overlay, sticky, hidden, filters, isLoading } = this.props;
+        const { isLoadingCountries, data, options } = this.state;
 
-        if(this.state.isLoadingFilters || this.state.isLoadingCountries)
+        if(isLoadingCountries || isLoading)
         {
             return <InlineLoader />;
         }
 
-        const showStudyType = this.state.filters.studyType.length > 0;
-        const showMethodType = this.state.filters.methodType.length > 0;
-        const showCountry = this.state.filters.country.length > 0;
+        const showStudyType = filters.studyType.length > 0;
+        const showMethodType = filters.methodType.length > 0;
+        const showCountry = filters.country.length > 0;
 
-        const showFilters = (this.state.filters.studyType.length + this.state.filters.methodType.length + this.state.filters.country.length) > 0;
-
-        const studyTypes = this.state.filters.studyType.map((studyType) => {
-            return {
-                name: studyType,
-                label: StudyType[studyType],
-                value: this.state.data.studyType.includes(studyType),
-                onChange: (e) => {this.handleCheckboxChange('studyType', e)}
-            }
-        });
-
-        const methodTypes = this.state.filters.methodType.map((methodType) => {
-            return {
-                name: methodType,
-                label: MethodType[methodType],
-                value: this.state.data.methodType.includes(methodType),
-                onChange: (e) => {this.handleCheckboxChange('methodType', e)}
-            }
-        });
-
-        const countries = this.state.filters.country.map((country) => {
-            return {
-                name: country,
-                label: this.state.countries.filter(({value}) => value === country)[0].label,
-                value: this.state.data.country.includes(country),
-                onChange: (e) => {this.handleCheckboxChange('country', e)}
-            }
-        });
+        const showFilters = (filters.studyType.length + filters.methodType.length + filters.country.length) > 0;
 
         if(hidden) {
             return null;
         }
 
-        return <div className={classNames('FilterForm', overlay && 'Overlay', className)} style={style}>
+        return <div className={classNames('FilterForm', overlay && 'Overlay', sticky && 'Sticky', className)} style={style}>
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={() => {}}
@@ -184,7 +178,7 @@ export default class Filters extends Component {
                     <Input
                         name="search"
                         onChange={this.handleChange}
-                        value={this.state.data.search}
+                        value={data.search}
                         placeholder="Search ..."
                     />
                 </div>
@@ -192,15 +186,30 @@ export default class Filters extends Component {
                     <h2>Filter</h2>
 
                     {showStudyType && <FormItem label="Type">
-                        <CheckboxGroup checkboxes={studyTypes} />
+                        <CheckboxGroup
+                            options={options.studyType}
+                            value={data.studyType}
+                            name="studyType"
+                            onChange={this.handleChange}
+                        />
                     </FormItem>}
 
                     {showMethodType && <FormItem label="Method">
-                        <CheckboxGroup checkboxes={methodTypes} />
+                        <CheckboxGroup
+                            options={options.methodType}
+                            value={data.methodType}
+                            name="methodType"
+                            onChange={this.handleChange}
+                        />
                     </FormItem>}
 
                     {showCountry && <FormItem label="Country">
-                        <CheckboxGroup checkboxes={countries} />
+                        <Dropdown
+                            isMulti
+                            options={options.country}
+                            name="country"
+                            onChange={(e) => {this.handleSelectChange('country', e)}}
+                        />
                     </FormItem>}
                 </div>}
             </ValidatorForm>

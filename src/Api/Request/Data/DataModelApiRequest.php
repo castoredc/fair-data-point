@@ -1,0 +1,39 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Api\Request\Data;
+
+use App\Api\Request\SingleApiRequest;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class DataModelApiRequest extends SingleApiRequest
+{
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     */
+    private $title;
+
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $description;
+
+    protected function parse(): void
+    {
+        $this->title = $this->getFromData('title');
+        $this->description = $this->getFromData('description');
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+}

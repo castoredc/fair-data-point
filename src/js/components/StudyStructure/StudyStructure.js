@@ -10,7 +10,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import FieldListItem from "../ListItem/FieldListItem";
 import Container from "react-bootstrap/Container";
-import {ValidatorForm} from "react-form-validator-core";
 
 export default class StudyStructure extends Component {
     constructor(props) {
@@ -36,7 +35,7 @@ export default class StudyStructure extends Component {
                 isLoadingFields: true,
             });
 
-            axios.get('/api/study/' + studyId + '/structure/step/' + step.id + '/fields')
+            axios.get('/api/castor/study/' + studyId + '/structure/step/' + step.id + '/fields')
                 .then((response) => {
                     this.setState({
                         fields:          response.data,
@@ -59,7 +58,7 @@ export default class StudyStructure extends Component {
     };
 
     render() {
-        const { contents, selectable, selection, onSelect } = this.props;
+        const { contents, selectable, selection, onSelect, dataFormat, dataType } = this.props;
         const { isLoadingFields, fields, selectedStep } = this.state;
 
         return <Row>
@@ -87,31 +86,27 @@ export default class StudyStructure extends Component {
             </Col>
             <Col sm={9}>
                 {isLoadingFields ? <InlineLoader /> : <div className="Fields">
-                    <ValidatorForm
-                        ref={node => (this.form = node)}
-                        onSubmit={() => {}}
-                    >
-                        <Container>
-                            {fields.map((field) => {
-                                const selected = selection.filter(({type, value}) => {
-                                    return (type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName)
-                                }).length > 0;
+                    {fields.map((field) => {
+                        const selected = selection.filter(({type, value}) => {
+                            return (type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName)
+                        }).length > 0;
 
-                                return <FieldListItem
-                                    selectable={selectable}
-                                    selected={selected}
-                                    onSelect={onSelect}
-                                    key={field.id}
-                                    id={field.id}
-                                    type={field.type}
-                                    label={field.label}
-                                    stepNumber={selectedStep.position}
-                                    number={field.number}
-                                    variableName={field.variableName}
-                                />;
-                            })}
-                        </Container>
-                    </ValidatorForm>
+                        return <FieldListItem
+                            selectable={selectable}
+                            selected={selected}
+                            onSelect={onSelect}
+                            key={field.id}
+                            id={field.id}
+                            type={field.type}
+                            label={field.label}
+                            stepNumber={selectedStep.position}
+                            number={field.number}
+                            variableName={field.variableName}
+                            exportable={field.exportable}
+                            dataFormat={dataFormat}
+                            dataType={dataType}
+                        />;
+                    })}
                 </div>}
             </Col>
         </Row>

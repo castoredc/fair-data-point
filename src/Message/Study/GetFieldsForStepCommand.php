@@ -3,31 +3,23 @@ declare(strict_types=1);
 
 namespace App\Message\Study;
 
-use App\Entity\Castor\Study;
-use App\Security\CastorUser;
+use App\Entity\Castor\CastorStudy;
 
 class GetFieldsForStepCommand
 {
-    /** @var Study */
+    /** @var CastorStudy */
     private $study;
 
     /** @var string */
     private $stepId;
 
-    /** @var CastorUser */
-    private $user;
-
-    public function __construct(
-        Study $study,
-        string $stepId,
-        CastorUser $user
-    ) {
+    public function __construct(CastorStudy $study, string $stepId)
+    {
         $this->study = $study;
         $this->stepId = $stepId;
-        $this->user = $user;
     }
 
-    public function getStudy(): Study
+    public function getStudy(): CastorStudy
     {
         return $this->study;
     }
@@ -35,10 +27,5 @@ class GetFieldsForStepCommand
     public function getStepId(): string
     {
         return $this->stepId;
-    }
-
-    public function getUser(): CastorUser
-    {
-        return $this->user;
     }
 }

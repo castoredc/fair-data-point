@@ -6,21 +6,15 @@ import LoadingScreen from "../../../components/LoadingScreen";
 import {classNames, localizedText} from "../../../util";
 import FAIRDataInformation from "../../../components/FAIRDataInformation";
 import queryString from "query-string";
-import {Sticky, StickyContainer} from 'react-sticky';
-import StudyListItem from "../../../components/ListItem/StudyListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import Filters from "../../../components/Filters";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
-import Pagination from 'react-bootstrap/Pagination'
-import DatasetMap from "../../../components/DatasetMap";
-import Icon from "../../../components/Icon";
+import StudyList from "../../../components/List/StudyList";
+import {Button, Stack} from "@castoredc/matter";
 
 export default class Catalog extends Component {
     constructor(props) {
         super(props);
+
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
@@ -29,23 +23,10 @@ export default class Catalog extends Component {
             hasLoadedFDP:       false,
             isLoadingCatalog:   true,
             hasLoadedCatalog:   false,
-            isLoadingDatasets:  true,
-            hasLoadedDatasets:  false,
-            isLoadingMap:       true,
-            hasLoadedMap:       false,
             fdp:                null,
             catalog:            null,
-            showDatasets:       false,
-            showMap:            false,
-            datasets:           [],
-            map:                [],
+            embedded:           embedded,
             displayList:        true,
-            displayFilter:      true,
-            filters:            {},
-            perPage:            embedded ? 5 : 10,
-            pages:              null,
-            page:               null,
-            embedded:           embedded
         };
 
         this.datasetsRef = React.createRef();
@@ -55,8 +36,6 @@ export default class Catalog extends Component {
         this.setState({ displayFilter: (window.innerWidth > 767) });
         this.getFDP();
         this.getCatalog();
-        this.getDatasets(false);
-        this.getMap(false);
     }
 
     getFDP = () => {
@@ -73,7 +52,7 @@ export default class Catalog extends Component {
                     isLoadingFDP: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the FAIR Data Point information';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the FAIR Data Point information';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -92,104 +71,9 @@ export default class Catalog extends Component {
                     isLoadingCatalog: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalog information';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalog information';
                 toast.error(<ToastContent type="error" message={message} />);
             });
-    };
-
-    getDatasets = (filters) => {
-        const { perPage } = this.state;
-
-        let newFilters = filters;
-
-        if(newFilters === false)
-        {
-            newFilters = {page: 1};
-        }
-        else
-        {
-            window.scrollTo(0, this.datasetsRef.current.offsetTop - 35);
-        }
-
-        newFilters['perPage'] = perPage;
-
-        this.setState({
-            isLoadingDatasets: true
-        });
-
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset', { params: newFilters })
-            .then((response) => {
-                this.setState({
-                    datasets: response.data.datasets,
-                    perPage: response.data.perPage,
-                    pages: response.data.pages,
-                    page: response.data.page,
-                    isLoadingDatasets: false,
-                    hasLoadedDatasets: true,
-                    showDatasets: (filters === false && response.data.datasets.length > 0 || filters !== false)
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingDatasets: false
-                });
-
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the datasets';
-                toast.error(<ToastContent type="error" message={message} />);
-            });
-    };
-
-    getMap = (filters) => {
-        this.setState({
-            isLoadingMap: true
-        });
-
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/map', { params: filters })
-            .then((response) => {
-                this.setState({
-                    map: response.data,
-                    isLoadingMap: false,
-                    hasLoadedMap: true,
-                    showMap: (filters === false && response.data.length > 0 || filters !== false)
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingMap: false
-                });
-
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the map';
-                toast.error(<ToastContent type="error" message={message} />);
-            });
-    };
-
-    handleFilter = (filters) => {
-        this.setState({ filters: filters });
-
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            event: 'FdpCatalogFilter',
-            data: {
-                catalog: this.props.match.params.catalog,
-                filters: filters
-            }
-        });
-
-        let newFilters = filters;
-        newFilters['page'] = 1;
-
-        this.getDatasets(newFilters);
-        this.getMap(filters);
-    };
-
-    changePage = (page) => {
-        const { filters } = this.state;
-        this.setState({ page: page });
-
-        let newFilters = filters;
-        newFilters['page'] = page;
-
-        this.getDatasets(newFilters);
     };
 
     changeView = (displayList) => {
@@ -205,123 +89,58 @@ export default class Catalog extends Component {
         });
     };
 
-    getPagination = () => {
-        const { page, pages } = this.state;
-
-        let items = [];
-
-        for (let number = 1; number <= pages; number++) {
-            items.push(
-                <Pagination.Item key={number} active={number === page} onClick={() => {this.changePage(number)}}>
-                    {number}
-                </Pagination.Item>,
-            );
-        }
-
-        return items;
-    };
-
     render() {
-        const { pages, embedded } = this.state;
-
-        const listWidth = this.state.displayList ? 8 : 12;
-        const headerWidth = this.state.displayList ? 5 : 4;
-        const buttonWidth = this.state.displayList ? 3 : 8;
+        const { fdp, catalog, embedded, displayList, displayFilter } = this.state;
 
         if (this.state.isLoadingFDP || this.state.isLoadingCatalog) {
             return <LoadingScreen showLoading={true}/>;
         }
 
-        if (embedded && 'parentIFrame' in window){
-            parentIFrame.size();
-        }
+        const headerWidth = displayList ? 5 : 4;
+        const buttonWidth = displayList ? 3 : 8;
 
         return <FAIRDataInformation
             embedded={embedded}
             className="Catalog"
-            title={localizedText(this.state.catalog.title, 'en')}
-            version={this.state.catalog.version}
-            issued={this.state.catalog.issued}
-            modified={this.state.catalog.modified}
-            license={this.state.catalog.license}
-            back={{link: this.state.fdp.relativeUrl, text: localizedText(this.state.fdp.title, 'en')}}
+            title={localizedText(catalog.metadata.title, 'en')}
+            version={catalog.metadata.version.metadata}
+            issued={catalog.metadata.created}
+            modified={catalog.metadata.updated}
+            license={catalog.metadata.license}
+            breadcrumbs={{fdp: fdp, catalog: catalog}}
         >
-            {(this.state.catalog.description && !embedded) && <Row>
+            {(catalog.description && !embedded) && <Row>
                 <Col md={12} className="InformationCol">
                     <div className={classNames('InformationDescription', (this.state.showDatasets && 'HasChildren'))}>
-                        {localizedText(this.state.catalog.description, 'en', true)}
+                        {localizedText(catalog.description, 'en', true)}
                     </div>
                 </Col>
             </Row>}
-            {!this.state.showDatasets && (this.state.isLoadingDatasets) && <Row>
-                <Col md={12}>
-                    <InlineLoader />
-                </Col>
-            </Row>}
-            {this.state.showDatasets && <div>
-                <Row className="DatasetsHeader" ref={this.datasetsRef}>
-                    <Col md={headerWidth} className="DatasetsHeaderTitle">
-                        <h2>Studies</h2>
-                    </Col>
-                    <Col md={buttonWidth} className="DatasetHeaderButtons">
-                        {this.state.showMap && <ButtonGroup>
-                            <Button variant="outline-primary" onClick={() => this.changeView(true)} active={this.state.displayList}>List</Button>
-                            <Button variant="outline-primary" onClick={() => this.changeView(false)} active={! this.state.displayList}>Map</Button>
-                        </ButtonGroup>}
-                        <ButtonGroup className={classNames('FilterButton', this.state.displayList && 'Hidden')}>
-                            <Button variant="outline-primary" onClick={this.toggleFilter} active={this.state.displayFilter}>
-                                <Icon type="filters" /> Filters
-                            </Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
-                <StickyContainer>
-                    <Row className="Datasets">
-                        <Col md={listWidth} className="InformationCol">
-                            {(this.state.isLoadingDatasets && this.state.displayList || this.state.isLoadingMap && ! this.state.displayList) && <InlineLoader overlay={true} />}
-                            {this.state.displayList ? <div className={classNames('Datasets', this.state.isLoadingDatasets && 'Loading')}>
-                                {this.state.datasets.length > 0 ? <div>
-                                    {this.state.datasets.map((item, index) => {
-                                        return <StudyListItem key={index}
-                                                              newWindow={embedded}
-                                                              link={item.relativeUrl}
-                                                              logo={item.logo}
-                                                              name={localizedText(item.title, 'en')}
-                                                              description={localizedText(item.shortDescription, 'en')}
-                                                              recruitmentStatus={item.recruitmentStatus}
-                                                              intervention={item.intervention}
-                                                              condition={item.condition}
-                                        />
-                                    })}
 
-                                    {pages > 1 && <div className="Pagination">
-                                        <Pagination>
-                                            {this.getPagination()}
-                                        </Pagination>
-                                    </div>}
-                                </div> : <div className="NoResults">No studies found.</div>}
-                            </div> : <div className={classNames('Map', this.state.isLoadingMap && 'Loading')}>
-                                <DatasetMap datasets={this.state.map} />
-                            </div>}
-                        </Col>
-                        <Col md={4}
-                             className={classNames('Filters',
-                                 ! this.state.displayList && 'StickyDisabled',
-                                 ! this.state.displayFilter && 'Hidden',
-                                 (! this.state.displayList && this.state.displayFilter) && 'Overlay')}>
-                            <Sticky>
-                                {({style, isSticky}) => (
-                                      <Filters className={classNames(isSticky && 'Sticky')}
-                                               style={style}
-                                               catalog={this.props.match.params.catalog}
-                                               onFilter={(filter) => this.handleFilter(filter)}
-                                      />
-                                )}
-                            </Sticky>
-                        </Col>
-                    </Row>
-                </StickyContainer>
-            </div>}
+            <Row className="DatasetsHeader" ref={this.datasetsRef}>
+                <Col md={headerWidth} className="DatasetsHeaderTitle">
+                    <h2>Studies</h2>
+                </Col>
+                <Col md={buttonWidth} className="DatasetHeaderButtons">
+                    <Stack className="ToggleButton">
+                        <Button buttonType={displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(true)} active={displayList}>List</Button>
+                        <Button buttonType={! displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(false)} active={!displayList}>Map</Button>
+                    </Stack>
+                    <div className={classNames('FilterButton', displayList && 'Hidden')}>
+                        <Button icon="filters" onClick={this.toggleFilter} isDropdown isOpen={displayFilter}>
+                            Filters
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
+
+            <StudyList
+                fdp={fdp}
+                catalog={catalog}
+                embedded={embedded}
+                displayList={displayList}
+                displayFilter={displayFilter}
+            />
         </FAIRDataInformation>;
     }
 }

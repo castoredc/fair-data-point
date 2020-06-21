@@ -15,41 +15,18 @@ export default class Distribution extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingDataset:       true,
-            hasLoadedDataset:       false,
             isLoadingDistribution:  true,
             hasLoadedDistribution:  false,
-            dataset:                null,
             distribution:           null
         };
     }
 
     componentDidMount() {
-        this.getDataset();
         this.getDistribution();
     }
 
-    getDataset = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
-            .then((response) => {
-                this.setState({
-                    dataset: response.data,
-                    isLoadingDataset: false,
-                    hasLoadedDataset: true
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingDataset: false
-                });
-
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
-                toast.error(<ToastContent type="error" message={message} />);
-            });
-    };
-
     getDistribution = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
+        axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
             .then((response) => {
                 this.setState({
                     distribution: response.data,
@@ -62,72 +39,78 @@ export default class Distribution extends Component {
                     isLoadingDistribution: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     render() {
-        if(this.state.isLoadingDataset || this.state.isLoadingDistribution)
+        const { distribution, isLoadingDistribution } = this.state;
+        const { location } = this.props;
+
+        if(isLoadingDistribution)
         {
             return <LoadingScreen showLoading={true}/>;
         }
 
         let restricted = false;
 
-        if(this.state.distribution.accessRights === 2 || this.state.distribution.accessRights === 3)
+        if(distribution.accessRights === 2 || distribution.accessRights === 3)
         {
             restricted = true;
         }
 
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
+        const breadcrumbs = {...location.state, distribution: distribution};
 
         return <FAIRDataInformation
             embedded={embedded}
-            className="Dataset"
-            title={localizedText(this.state.distribution.title, 'en')}
-            version={this.state.distribution.version}
-            issued={this.state.distribution.issued}
-            modified={this.state.distribution.modified}
-            license={this.state.distribution.license}
-            back={{link: this.state.dataset.relativeUrl, text: localizedText(this.state.dataset.title, 'en')}}
+            className="Distribution"
+            title={localizedText(distribution.metadata.title, 'en')}
+            version={distribution.metadata.version.metadata}
+            issued={distribution.metadata.issued}
+            modified={distribution.metadata.modified}
+            license={distribution.metadata.license}
+            breadcrumbs={breadcrumbs}
         >
             <Row>
                 <Col md={8} className="InformationCol">
-                    {this.state.distribution.description && <div className="InformationDescription">{localizedText(this.state.distribution.description, 'en', true)}</div>}
+                    {distribution.metadata.description && <div className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
 
                     {restricted && <Alert
                         variant="info"
-                        icon="lock"
-                        message="The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself."/>
+                        icon="lock">
+                        The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself.
+                    </Alert>
                     }
-                    {this.state.distribution.accessUrl && <ListItem link={this.state.distribution.accessUrl}
+                    {distribution.isCached && <ListItem link={{
+                                                        pathname: distribution.relativeUrl + '/query',
+                                                        state: {...breadcrumbs}
+                                                        }}
+                                                        title="Query the data"
+                                                        description="Use SPARQL queries to extract specific information from this distribution."
+                                                        smallIcon={restricted && 'lock'}
+                    />}
+
+                    {distribution.accessUrl && <ListItem link={distribution.accessUrl}
                               title="Access the data"
                               description="Get access to the distribution."
-                              smallIcon={restricted && 'lock'} />}
+                              smallIcon={restricted && 'lock'}
+                              newWindow
+                    />}
 
-                    {this.state.distribution.downloadUrl && <ListItem link={this.state.distribution.downloadUrl}
-                              title="Download the data"
-                              description="Get a downloadable file for this distribution."
-                              smallIcon={restricted && 'lock'} />}
+                    {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
+                                                           title="Download the data"
+                                                           description="Get a downloadable file for this distribution."
+                                                           smallIcon={restricted && 'lock'}
+                                                           newWindow
+                    />}
                 </Col>
                 <Col md={4}>
-                    {this.state.dataset.logo && <div className="InformationLogo">
-                        <img src={this.state.dataset.logo} alt={'Logo'}/>
-                    </div>}
-                    {/*{this.state.distribution.language && <MetadataItem label="Language" url={this.state.distribution.language.url} value={this.state.distribution.language.name} />}*/}
+                    {/*{distribution.metadata.language && <MetadataItem label="Language" url={distribution.metadata.language.url} value={distribution.metadata.language.name} />}*/}
                 </Col>
             </Row>
         </FAIRDataInformation>;
-
-        {/*{this.state.distribution.publishers.length > 0 && <div className="Publishers">*/}
-        {/*    {this.state.distribution.publishers.map((item, index) => {*/}
-        {/*        return <Contact key={index}*/}
-        {/*                        url={item.url}*/}
-        {/*                        type={item.type}*/}
-        {/*                        name={item.name} />}*/}
-        {/*    )}*/}
-        {/*</div>}*/}
     }
 }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
-use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Graph\Resource\Distribution\DistributionGraphResource;
@@ -15,16 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class DistributionController extends FAIRDataController
 {
     /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}", name="distribution")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}", name="distribution")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request): Response
+    public function distribution(Dataset $dataset, Distribution $distribution, Request $request): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution)) {
+        if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
         }
 
@@ -32,14 +30,14 @@ class DistributionController extends FAIRDataController
             return $this->render(
                 'react.html.twig',
                 [
-                    'title' => $distribution->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $distribution->getDescription()->getTextByLanguageString('en')->getText(),
+                    'title' => $distribution->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $distribution->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }
 
         return new Response(
-            (new DistributionGraphResource($distribution))->toGraph()->serialise('turtle'),
+            (new DistributionGraphResource($distribution))->toGraph($this->baseUri)->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 import DocumentTitle from "../../components/DocumentTitle";
 import './Login.scss';
-import Button from "react-bootstrap/Button";
 import queryString from 'query-string';
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -11,6 +10,7 @@ import LoadingScreen from "../../components/LoadingScreen";
 import {localizedText} from "../../util";
 import Logo from "../../components/Logo";
 import ListItem from "../../components/ListItem";
+import {Button} from "@castoredc/matter";
 
 export default class Login extends Component {
     constructor(props) {
@@ -33,7 +33,7 @@ export default class Login extends Component {
     }
 
     getServers = () => {
-        axios.get('/api/servers')
+        axios.get('/api/castor/servers')
             .then((response) => {
                 const params = queryString.parse(this.props.location.search);
                 const defaultServer = response.data.filter((server) => server.default)[0].id;
@@ -134,6 +134,7 @@ export default class Login extends Component {
                                                  leftIcon={'flag' + server.flag.toUpperCase()}
                                                  className="ServerListItem"
                                                  fill={false}
+                                                 customIcon={true}
                                 />
                             })}
                         </div>

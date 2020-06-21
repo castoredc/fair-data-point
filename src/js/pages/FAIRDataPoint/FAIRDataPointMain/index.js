@@ -41,7 +41,7 @@ export default class FAIRDataPointMain extends Component {
                     isLoadingFDP: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the FAIR Data Point information';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the FAIR Data Point information';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -60,16 +60,18 @@ export default class FAIRDataPointMain extends Component {
                     isLoadingCatalogs: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalogs';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalogs';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     render() {
+        const { fdp, catalogs, isLoadingFDP, isLoadingCatalogs } = this.state;
+        
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if(this.state.isLoadingFDP || this.state.isLoadingCatalogs)
+        if(isLoadingFDP || isLoadingCatalogs)
         {
             return <LoadingScreen showLoading={true}/>;
         }
@@ -77,29 +79,30 @@ export default class FAIRDataPointMain extends Component {
         return <FAIRDataInformation
             embedded={embedded}
             className="FAIRDataPoint"
-            title={localizedText(this.state.fdp.title, 'en')}
-            version={this.state.fdp.version}
-            license={this.state.fdp.license}
+            title={localizedText(fdp.title, 'en')}
+            version={fdp.version}
+            license={fdp.license}
+            breadcrumbs={{fdp: fdp}}
         >
             <Row>
                 <Col className="InformationCol">
-                    <h2>Catalogs</h2>
-                    <div className="Description">
-                        Catalogs are collections of datasets.
-                    </div>
-                    {this.state.catalogs.length > 0 ? this.state.catalogs.map((item, index) => {
+                    <h2>Collections</h2>
+                    {catalogs.length > 0 ? catalogs.map((item, index) => {
+                        if(item.hasMetadata === false) {
+                            return null;
+                        }
                         return <ListItem key={index}
                                          newWindow={embedded}
                                          link={item.relativeUrl}
-                                         title={localizedText(item.title, 'en')}
-                                         description={localizedText(item.description, 'en')} />}
-                    ) : <div className="NoResults">No catalogs found.</div>}
+                                         title={localizedText(item.metadata.title, 'en')}
+                                         description={localizedText(item.metadata.description, 'en')} />
+                    }) : <div className="NoResults">No catalogs found.</div>}
                 </Col>
             </Row>
         </FAIRDataInformation>;
 
-        // {this.state.fdp.publishers.length > 0 && <div className="Publishers">
-        //     {this.state.fdp.publishers.map((item, index) => {
+        // {fdp.publishers.length > 0 && <div className="Publishers">
+        //     {fdp.publishers.map((item, index) => {
         //         return <Contact key={index}
         //                         url={item.url}
         //                         type={item.type}

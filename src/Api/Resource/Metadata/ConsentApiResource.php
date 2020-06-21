@@ -22,11 +22,8 @@ class ConsentApiResource implements ApiResource
     public function toArray(): array
     {
         return [
-            'studyId' => $this->studyMetadata->getStudy()->getId(),
-            'consent' => [
-                'publish' => $this->studyMetadata->hasConsentPublish(),
-                'socialMedia' => $this->studyMetadata->hasConsentSocialMedia(),
-            ],
+            'publish' => $this->studyMetadata->hasConsentPublish(),
+            'socialMedia' => $this->studyMetadata->hasConsentSocialMedia(),
         ];
     }
 }

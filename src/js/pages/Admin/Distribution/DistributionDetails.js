@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import DistributionForm from "../../../components/Form/Admin/Distribution/DistributionForm";
+import DistributionForm from "../../../components/Form/Admin/DistributionForm";
 
 export default class DistributionDetails extends Component {
     render() {

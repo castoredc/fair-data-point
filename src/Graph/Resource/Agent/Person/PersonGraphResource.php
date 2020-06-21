@@ -21,7 +21,7 @@ class PersonGraphResource extends AgentGraphResource
 
     public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
     {
-        $url = $baseUrl . $this->person->getAccessUrl();
+        $url = $baseUrl . $this->person->getRelativeUrl();
         if ($this->person->getOrcid() !== null) {
             $url = $this->person->getOrcid()->getValue();
         }

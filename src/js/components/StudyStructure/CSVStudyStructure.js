@@ -2,16 +2,16 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import LoadingScreen from "../LoadingScreen";
 import Tab from "react-bootstrap/Tab";
 import StudyStructure from "./StudyStructure";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import {Redirect} from "react-router-dom";
 import InlineLoader from "../LoadingScreen/InlineLoader";
+import {ValidatorForm} from "react-form-validator-core";
+import {Button} from "@castoredc/matter";
 
 export default class CSVStudyStructure extends Component {
     constructor(props) {
@@ -37,7 +37,7 @@ export default class CSVStudyStructure extends Component {
             isLoadingStructure: true,
         });
 
-        axios.get('/api/study/' + studyId + '/structure/')
+        axios.get('/api/castor/study/' + studyId + '/structure/')
             .then((response) => {
                 this.setState({
                     structure:          response.data,
@@ -58,16 +58,16 @@ export default class CSVStudyStructure extends Component {
             });
     };
 
-    handleSelect = (event, id, variableName, selectValue) => {
+    handleSelect = (event, field, selectValue) => {
         if(event.target.tagName.toUpperCase() !== 'INPUT') {
             let { distributionContents } = this.state;
 
             distributionContents = distributionContents.filter(({type, value}) => {
-                return !((type === 'fieldId' && value === id) || (type === 'variableName' && value === variableName))
+                return !((type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName))
             });
 
             if (selectValue === true) {
-                distributionContents.push({type: 'fieldId', value: id});
+                distributionContents.push({type: 'fieldId', value: field.id});
             }
 
             this.setState({
@@ -84,7 +84,7 @@ export default class CSVStudyStructure extends Component {
             submitDisabled: true
         });
 
-        axios.post('/api/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution + '/contents', distributionContents)
+        axios.post('/api/dataset/' + dataset + '/distribution/' + distribution + '/contents', distributionContents)
             .then(() => {
                 this.setState({
                     isSaved: true,
@@ -92,7 +92,7 @@ export default class CSVStudyStructure extends Component {
                 });
             })
             .catch((error) => {
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while saving the distribution';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while saving the distribution';
                 toast.error(<ToastContent type="error" message={message}/>);
 
                 this.setState({
@@ -110,30 +110,33 @@ export default class CSVStudyStructure extends Component {
         }
 
         if (isSaved) {
-            return <Redirect push to={'/admin/catalog/' + catalog + '/dataset/' + dataset + '/distribution/' + distribution} />;
+            return <Redirect push to={'/admin/dataset/' + dataset + '/distribution/' + distribution} />;
         }
 
         return <div>
-            <Container>
-                <Tab.Container id="csv-study-structure" defaultActiveKey="study">
-                    <Row className="StudyStructureTabs">
-                        <Col sm={3} />
-                        <Col sm={9}>
-                            <Nav variant="tabs">
-                                <Nav.Item>
-                                    <Nav.Link eventKey="study" disabled={structure.study.length === 0}>Study</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link eventKey="report" disabled={structure.report.length === 0}>Reports</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link eventKey="survey" disabled={structure.survey.length === 0}>Surveys</Nav.Link>
-                                </Nav.Item>
-                            </Nav>
-                        </Col>
-                    </Row>
-                    <Row className="StudyStructureContents">
-                        <Col sm={12}>
+            <Tab.Container id="csv-study-structure" defaultActiveKey="study">
+                <Row className="TabTabs StudyStructureTabs">
+                    <Col sm={3} />
+                    <Col sm={9}>
+                        <Nav variant="tabs">
+                            <Nav.Item>
+                                <Nav.Link eventKey="study" disabled={structure.study.length === 0}>Study</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="report" disabled={structure.report.length === 0}>Reports</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="survey" disabled={structure.survey.length === 0}>Surveys</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                    </Col>
+                </Row>
+                <Row className="StudyStructureContents">
+                    <Col sm={12}>
+                        <ValidatorForm
+                            ref={node => (this.form = node)}
+                            onSubmit={this.saveDistribution}
+                        >
                             <Tab.Content>
                                 <Tab.Pane eventKey="study">
                                     {structure.study.length > 0 && <StudyStructure
@@ -152,18 +155,18 @@ export default class CSVStudyStructure extends Component {
                                         studyId={studyId} contents={structure.survey} />}
                                 </Tab.Pane>
                             </Tab.Content>
-                        </Col>
-                    </Row>
-                </Tab.Container>
-
-                <Row className="StudyStructureFooter">
-                    <Col sm={3} />
-                    <Col sm={9} className="SaveButton">
-                        <span className="FieldCount">{distributionContents.length} field{distributionContents.length !== 1 && 's'} selected</span>
-                        <Button onClick={this.saveDistribution} disabled={submitDisabled}>Save distribution</Button>
+                        </ValidatorForm>
                     </Col>
                 </Row>
-            </Container>
+            </Tab.Container>
+
+            <Row className="StudyStructureFooter">
+                <Col sm={3} />
+                <Col sm={9} className="SaveButton">
+                    <span className="FieldCount">{distributionContents.length} field{distributionContents.length !== 1 && 's'} selected</span>
+                    <Button onClick={this.saveDistribution} disabled={submitDisabled}>Save distribution</Button>
+                </Col>
+            </Row>
         </div>
     }
 

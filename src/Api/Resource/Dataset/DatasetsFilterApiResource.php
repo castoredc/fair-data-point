@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Resource\Dataset;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\StudyMetadataFilterApiResource;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Department;
-use function in_array;
-use function sort;
 
 class DatasetsFilterApiResource implements ApiResource
 {
@@ -27,60 +25,17 @@ class DatasetsFilterApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return $this->generateFilters();
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function generateFilters(): array
-    {
-        $filters = [
-            'country' => [],
-            'studyType' => [],
-            'methodType' => [],
-        ];
+        $metadata = [];
 
         foreach ($this->datasets as $dataset) {
-            $metadata = $dataset->getStudy()->getLatestMetadata();
-
-            if ($metadata === null) {
+            $study = $dataset->getStudy();
+            if (! $study->hasMetadata()) {
                 continue;
             }
 
-            foreach ($metadata->getCenters() as $center) {
-                if (! ($center instanceof Department)) {
-                    continue;
-                }
-
-                $filters = $this->addFilterItem($filters, 'country', $center->getOrganization()->getCountry()->getCode());
-            }
-
-            if ($metadata->getMethodType() !== null) {
-                $filters = $this->addFilterItem($filters, 'methodType', $metadata->getMethodType()->toString());
-            }
-
-            $filters = $this->addFilterItem($filters, 'studyType', $metadata->getType()->toString());
+            $metadata[] = $study->getLatestMetadata();
         }
 
-        sort($filters['country']);
-        sort($filters['studyType']);
-        sort($filters['methodType']);
-
-        return $filters;
-    }
-
-    /**
-     * @param array<mixed> $filters
-     *
-     * @return array<mixed>
-     */
-    private function addFilterItem(array $filters, string $key, string $item): array
-    {
-        if (! in_array($item, $filters[$key], true)) {
-            $filters[$key][] = $item;
-        }
-
-        return $filters;
+        return (new StudyMetadataFilterApiResource($metadata))->toArray();
     }
 }

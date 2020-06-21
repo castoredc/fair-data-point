@@ -21,7 +21,7 @@ class OrganizationGraphResource extends AgentGraphResource
 
     public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
     {
-        $url = $baseUrl . $this->organization->getAccessUrl();
+        $url = $baseUrl . $this->organization->getRelativeUrl();
         if ($this->organization->getHomepage() !== null) {
             $url = $this->organization->getHomepage()->getValue();
         }

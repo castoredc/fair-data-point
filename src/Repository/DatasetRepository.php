@@ -3,76 +3,29 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Castor\Study;
-use App\Entity\Enum\MethodType;
-use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Organization;
-use App\Entity\Metadata\StudyMetadata;
+use App\Entity\Metadata\DatasetMetadata;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 
 class DatasetRepository extends EntityRepository
 {
     /**
-     * @param StudyType[]|null  $studyType
-     * @param MethodType[]|null $methodType
-     * @param string[]|null     $country
+     * @param string[]|null $hideCatalogs
      *
-     * @return mixed
+     * @return Dataset[]
      */
-    public function findDatasets(Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?int $perPage, ?int $page, bool $admin)
+    public function findDatasets(?Catalog $catalog, ?array $hideCatalogs, ?int $perPage, ?int $page, bool $admin): array
     {
+        $qb = $this->createQueryBuilder('dataset')
+                   ->select('dataset');
+        $qb = $this->getDatasetQuery($qb, $catalog, $hideCatalogs, $admin);
+
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
-
-        $qb = $this->getEntityManager()->createQueryBuilder()
-                   ->select('dataset')
-                   ->from(Dataset::class, 'dataset')
-                   ->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-                   ->join(Study::class, 'study', Join::WITH, 'study.id = dataset.study')
-                   ->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
-                   ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
-                   ->setParameter('catalog_id', $catalog->getId())
-                   ->where('metadata2.id IS NULL');
-
-        if (! $admin) {
-            $qb->andWhere('dataset.isPublished = 1');
-        }
-
-        if ($search !== null) {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->like('metadata.briefName', ':search'),
-                $qb->expr()->like('metadata.briefSummary', ':search'),
-                $qb->expr()->like('metadata.summary', ':search')
-            ));
-            $qb->setParameter('search', '%' . $search . '%');
-        }
-
-        if ($studyType !== null) {
-            $qb->andWhere('metadata.type IN (:studyType)');
-            $qb->setParameter('studyType', $studyType);
-        }
-
-        if ($methodType !== null) {
-            $qb->andWhere('metadata.methodType IN (:methodType)');
-            $qb->setParameter('methodType', $methodType);
-        }
-
-        if ($country !== null) {
-            $qb->innerJoin('metadata.centers', 'agent')
-               ->join(Department::class, 'department', Join::WITH, 'agent.id = department.id')
-               ->join(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id')
-               ->andWhere('organization.country IN (:country)');
-
-            $qb->setParameter('country', $country);
-        }
-
-        $qb->orderBy('metadata.briefName', 'ASC');
-
         $qb->setFirstResult($firstResult);
 
         if ($perPage !== null) {
@@ -83,52 +36,14 @@ class DatasetRepository extends EntityRepository
     }
 
     /**
-     * @param StudyType[]|null  $studyType
-     * @param MethodType[]|null $methodType
-     * @param string[]|null     $country
+     * @param string[]|null $hideCatalogs
      */
-    public function countDatasets(Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country): int
+    public function countDatasets(?Catalog $catalog, ?array $hideCatalogs, bool $admin): int
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-                   ->select('count(dataset.id)')
-                   ->from(Dataset::class, 'dataset')
-                   ->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-                   ->join(Study::class, 'study', Join::WITH, 'study.id = dataset.study')
-                   ->join(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
-                   ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.created < metadata2.created')
-                   ->setParameter('catalog_id', $catalog->getId())
-                   ->where('metadata2.id IS NULL')
-                   ->andWhere('dataset.isPublished = 1');
+        $qb = $this->createQueryBuilder('dataset')
+                      ->select('count(dataset.id)');
 
-        if ($search !== null) {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->like('metadata.briefName', ':search'),
-                $qb->expr()->like('metadata.briefSummary', ':search'),
-                $qb->expr()->like('metadata.summary', ':search')
-            ));
-            $qb->setParameter('search', '%' . $search . '%');
-        }
-
-        if ($studyType !== null) {
-            $qb->andWhere('metadata.type IN (:studyType)');
-            $qb->setParameter('studyType', $studyType);
-        }
-
-        if ($methodType !== null) {
-            $qb->andWhere('metadata.methodType IN (:methodType)');
-            $qb->setParameter('methodType', $methodType);
-        }
-
-        if ($country !== null) {
-            $qb->innerJoin('metadata.centers', 'agent')
-               ->join(Department::class, 'department', Join::WITH, 'agent.id = department.id')
-               ->join(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id')
-               ->andWhere('organization.country IN (:country)');
-
-            $qb->setParameter('country', $country);
-        }
-
-        $qb->orderBy('metadata.briefName', 'ASC');
+        $qb = $this->getDatasetQuery($qb, $catalog, $hideCatalogs, $admin);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -137,5 +52,33 @@ class DatasetRepository extends EntityRepository
         } catch (NonUniqueResultException $e) {
             return 0;
         }
+    }
+
+    /**
+     * @param string[]|null $hideCatalogs
+     */
+    private function getDatasetQuery(QueryBuilder $qb, ?Catalog $catalog, ?array $hideCatalogs, bool $admin): QueryBuilder
+    {
+        if ($catalog !== null) {
+            $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
+                ->setParameter('catalog_id', $catalog->getId());
+        }
+
+        $qb->leftJoin(DatasetMetadata::class, 'metadata', Join::WITH, 'metadata.dataset = dataset.id')
+           ->leftJoin(DatasetMetadata::class, 'metadata2', Join::WITH, 'metadata2.dataset = dataset.id AND metadata.createdAt < metadata2.createdAt')
+           ->where('metadata2.id IS NULL');
+
+        if ($hideCatalogs !== null) {
+            $qb->andWhere(':catalog_ids NOT MEMBER OF dataset.catalogs')
+               ->setParameter('catalog_ids', $hideCatalogs);
+        }
+
+        if (! $admin) {
+            $qb->andWhere('dataset.isPublished = 1');
+        }
+
+        $qb->orderBy('metadata.title', 'ASC');
+
+        return $qb;
     }
 }

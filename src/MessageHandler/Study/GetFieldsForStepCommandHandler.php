@@ -10,16 +10,23 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Message\Study\GetFieldsForStepCommand;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorUser;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetFieldsForStepCommandHandler implements MessageHandlerInterface
 {
     /** @var ApiClient */
     private $apiClient;
 
-    public function __construct(ApiClient $apiClient)
+    /** @var Security */
+    private $security;
+
+    public function __construct(ApiClient $apiClient, Security $security)
     {
         $this->apiClient = $apiClient;
+        $this->security = $security;
     }
 
     /**
@@ -32,7 +39,9 @@ class GetFieldsForStepCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetFieldsForStepCommand $message): array
     {
-        $this->apiClient->setUser($message->getUser());
+        $user = $this->security->getUser();
+        assert($user instanceof CastorUser);
+        $this->apiClient->setUser($user);
 
         return $this->apiClient->getFieldByParent($message->getStudy(), $message->getStepId())->toArray();
     }

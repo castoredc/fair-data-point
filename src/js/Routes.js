@@ -11,12 +11,17 @@ import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
 import {PrivateRoute, ProtectedRoute} from "./components/Route";
 import AdminPageWrapper from "./pages/Admin/PageWrapper";
 import MetadataXmlParse from "./pages/Tools/MetadataXmlParse";
+import Study from "./pages/FAIRDataPoint/Study";
+import Query from "./pages/Query";
 
 axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    if (401 === error.response.status) {
-        window.location.href = '/login?path' + encodeURIComponent(window.location.pathname);
+    if (axios.isCancel(error)) {
+        return Promise.reject(error);
+    }
+    else if (401 === error.response.status) {
+        window.location.href = '/login?path=' + encodeURIComponent(window.location.pathname);
     } else {
         return Promise.reject(error);
     }
@@ -30,10 +35,14 @@ export default ({user}) =>
 
         /* FAIR Data Point */
         <Route path="/fdp" exact component={FAIRDataPointMain} />
-        {/*<Route path="/query" exact component={Query} />*/}
-        <Route path="/fdp/:catalog" exact component={Catalog} />
-        <Route path="/fdp/:catalog/:dataset" exact component={Dataset} />
-        <Route path="/fdp/:catalog/:dataset/:distribution" exact component={Distribution} />
+
+        <Route path="/fdp/catalog/:catalog" exact component={Catalog} />
+
+        <Route path="/study/:study" exact component={Study} />
+
+        <Route path="/fdp/dataset/:dataset" exact component={Dataset} />
+        <Route path="/fdp/dataset/:dataset/distribution/:distribution" exact component={Distribution} />
+        <Route path="/fdp/dataset/:dataset/distribution/:distribution/query" exact component={Query} />
 
         /* Tools */
         <Route path="/tools/metadata-xml-parse" exact component={MetadataXmlParse} />

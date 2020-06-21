@@ -3,25 +3,35 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Encryption\EncryptionService;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
-use App\Entity\FAIRData\LocalizedText;
-use App\Entity\FAIRData\LocalizedTextItem;
 use App\Exception\LanguageNotFound;
+use App\Exception\NoAccessPermission;
 use App\Message\Distribution\UpdateDistributionCommand;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Security\ApiUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class UpdateDistributionCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
     {
         $this->em = $em;
+        $this->security = $security;
+        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -29,26 +39,34 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(UpdateDistributionCommand $message): void
     {
-        /** @var Language|null $language */
-        $language = $this->em->getRepository(Language::class)->find($message->getLanguage());
+        $distribution = $message->getDistribution();
+        $dataset = $distribution->getDataset();
+        $study = $dataset->getStudy();
+        assert($study instanceof CastorStudy);
+
+        if (! $this->security->isGranted('edit', $distribution)) {
+            throw new NoAccessPermission();
+        }
+
+        if ($message->getApiUser() !== null && $message->getClientId() !== null && $message->getClientSecret() !== null) {
+            $apiUser = new ApiUser($message->getApiUser(), $study->getServer());
+            $apiUser->setDecryptedClientId($this->encryptionService, $message->getClientId()->exposeAsString());
+            $apiUser->setDecryptedClientSecret($this->encryptionService, $message->getClientSecret()->exposeAsString());
+
+            $this->em->persist($apiUser);
+
+            $distribution->setApiUser($apiUser);
+        }
 
         /** @var License|null $license */
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
 
-        if ($language === null) {
-            throw new LanguageNotFound();
-        }
-
-        $distribution = $message->getDistribution();
         $distribution->setSlug($message->getSlug());
-        $distribution->setTitle(new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getTitle(), $language)])));
-        $distribution->setVersion($message->getVersion());
-        $distribution->setDescription(new LocalizedText(new ArrayCollection([new LocalizedTextItem($message->getDescription(), $language)])));
-        $distribution->setLanguage($language);
         $distribution->setLicense($license);
 
         $contents = $distribution->getContents();
         $contents->setAccessRights($message->getAccessRights());
+        $contents->setIsPublished($message->isPublished());
 
         if ($contents instanceof CSVDistribution) {
             $contents->setIncludeAll($message->getIncludeAllData());

@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\RDF;
 
+use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
-use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\AccessibleEntity;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,72 +16,90 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution_rdf")
  */
-class RDFDistribution extends DistributionContents
+class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
     /**
-     * @ORM\OneToMany(targetEntity="RDFDistributionModule", mappedBy="distribution",cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="modules", referencedColumnName="id")
-     * @ORM\OrderBy({"order" = "ASC", "id" = "ASC"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel")
+     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var Collection<string, RDFDistributionModule>
+     * @var DataModel
      */
-    private $modules;
+    private $dataModel;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
-     * @var string
+     * @var Collection<DataModelMapping>
      */
-    private $prefix;
+    private $mappings;
 
-    /** @inheritDoc */
-    public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $isCached = false;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=TRUE)
+     *
+     * @var DateTimeImmutable|null
+     */
+    private $lastImport;
+
+    public function getDataModel(): DataModel
     {
-        parent::__construct($distribution, $accessRights, $isPublished);
-        $this->prefix = '';
+        return $this->dataModel;
+    }
+
+    public function setDataModel(DataModel $dataModel): void
+    {
+        $this->dataModel = $dataModel;
+    }
+
+    public function getRelativeUrl(): string
+    {
+        return $this->getDistribution()->getRelativeUrl() . '/rdf';
     }
 
     /**
-     * @return Collection<string, RDFDistributionModule>
+     * @return Collection<DataModelMapping>
      */
-    public function getModules(): Collection
+    public function getMappings(): Collection
     {
-        return $this->modules;
+        return $this->mappings;
     }
 
-    /**
-     * @param Collection<string, RDFDistributionModule> $modules
-     */
-    public function setModules(Collection $modules): void
+    public function getMappingByNode(ValueNode $node): ?DataModelMapping
     {
-        $this->modules = $modules;
-    }
-
-    public function getPrefix(): string
-    {
-        return $this->prefix;
-    }
-
-    public function setPrefix(string $prefix): void
-    {
-        $this->prefix = $prefix;
-    }
-
-    public function getRDFUrl(): string
-    {
-        return $this->getDistribution()->getAccessUrl() . '/rdf';
-    }
-
-    public function getTwig(): string
-    {
-        $twig = '';
-
-        foreach ($this->modules as $module) {
-            /** @var RDFDistributionModule $module */
-            $twig .= '# ' . $module->getTitle() . "\n\n";
-            $twig .= $module->getTwig() . "\n\n";
+        foreach ($this->mappings as $mapping) {
+            /** @var DataModelMapping $mapping */
+            if ($mapping->getNode() === $node) {
+                return $mapping;
+            }
         }
 
-        return $twig;
+        return null;
+    }
+
+    public function isCached(): bool
+    {
+        return $this->isCached;
+    }
+
+    public function setIsCached(bool $isCached): void
+    {
+        $this->isCached = $isCached;
+    }
+
+    public function getLastImport(): ?DateTimeImmutable
+    {
+        return $this->lastImport;
+    }
+
+    public function setLastImport(?DateTimeImmutable $lastImport): void
+    {
+        $this->lastImport = $lastImport;
     }
 }

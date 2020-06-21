@@ -20,13 +20,19 @@
 
   .Select {
     width: 100%;
+
+    & > div, & > div > div {
+      max-width: 100%;
+    }
   }
 
   .form-row {
     margin: 0;
   }
 
-
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .FormHeading {

@@ -20,3 +20,25 @@ export const MethodType = {
     'rct': 'RCT',
     'other': 'Other'
 };
+
+export const DataType = {
+    'float':      'Float (number)',
+    'double':     'Double (number)',
+    'decimal':    'Decimal (number)',
+    'integer':    'Integer (number)',
+    'dateTime':   'Date and time (date/time)',
+    'date':       'Date (date/time)',
+    'time':       'Time (date/time)',
+    'gDay':       'Day (date/time)',
+    'gMonth':     'Month (date/time)',
+    'gYear':      'Year (date/time)',
+    'gYearMonth': 'Year and month (date/time)',
+    'gMonthDay':  'Month and day (date/time)',
+    'string':     'String',
+    'boolean':    'Boolean',
+};
+
+export const ValueType = {
+    'plain':      'Plain',
+    'annotated':  'Annotated',
+};

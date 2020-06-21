@@ -4,16 +4,42 @@ declare(strict_types=1);
 namespace App\Entity\Terminology;
 
 use App\Entity\Iri;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="ontology")
+ */
 class Ontology
 {
-    /** @var string */
-    private $name;
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="guid", length=190)
+     * @ORM\GeneratedValue(strategy="UUID")
+     *
+     * @var string
+     */
+    private $id;
 
-    /** @var Iri */
+    /**
+     * @ORM\Column(type="iri")
+     *
+     * @var Iri
+     */
     private $url;
 
-    /** @var string */
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
     private $bioPortalId;
 
     public function __construct(string $name, Iri $url, string $bioPortalId)
@@ -21,6 +47,11 @@ class Ontology
         $this->name = $name;
         $this->url = $url;
         $this->bioPortalId = $bioPortalId;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getName(): string

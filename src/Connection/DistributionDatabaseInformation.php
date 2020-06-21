@@ -78,9 +78,9 @@ class DistributionDatabaseInformation
         return $this->username;
     }
 
-    public function getDecryptedUsername(EncryptionService $encryptionService): string
+    public function getDecryptedUsername(EncryptionService $encryptionService): SensitiveDataString
     {
-        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->username))->exposeAsString();
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->username));
     }
 
     public function getPassword(): string
@@ -88,9 +88,9 @@ class DistributionDatabaseInformation
         return $this->password;
     }
 
-    public function getDecryptedPassword(EncryptionService $encryptionService): string
+    public function getDecryptedPassword(EncryptionService $encryptionService): SensitiveDataString
     {
-        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->password))->exposeAsString();
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->password));
     }
 
     /**

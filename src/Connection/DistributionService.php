@@ -7,18 +7,22 @@ use App\Encryption\EncryptionService;
 use App\Exception\CouldNotConnectToMySqlServer;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
+use ARC2;
+use ARC2_Store;
+use ARC2_StoreEndpoint;
 use Doctrine\DBAL\Configuration as DBALConfiguration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Throwable;
+use function boolval;
 use function sprintf;
 
 class DistributionService
 {
-    /** @var Connection */
-    protected $connection;
+    public const CURRENT_STORE = 'current';
+    public const PREVIOUS_STORE = 'previous';
 
     /** @var string */
     private $host;
@@ -29,12 +33,15 @@ class DistributionService
     /** @var string */
     private $pass;
 
-    public function __construct(Connection $connection, string $host = '', string $user = '', string $pass = '')
+    /** @var int */
+    private $port;
+
+    public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306)
     {
-        $this->connection = $connection;
         $this->host = $host;
         $this->user = $user;
         $this->pass = $pass;
+        $this->port = $port;
     }
 
     /**
@@ -50,6 +57,7 @@ class DistributionService
             'user' => $this->user,
             'password' => $this->pass,
             'dbname' => null,
+            'port' => $this->port,
         ];
 
         try {
@@ -69,12 +77,66 @@ class DistributionService
         $params = [
             'driver' => 'pdo_mysql',
             'host' => $this->host,
-            'user' => $databaseInformation->getDecryptedUsername($encryptionService),
-            'password' => $databaseInformation->getDecryptedPassword($encryptionService),
+            'user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+            'password' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             'dbname' => $databaseInformation->getDatabase(),
+            'port' => $this->port,
         ];
 
         return DriverManager::getConnection($params, $config);
+    }
+
+    /**
+     * @throws DBALException
+     */
+    public function getArc2Store(string $store, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService, bool $setupStore = true): ARC2_Store
+    {
+        $params = [
+            'db_adapter' => 'pdo',
+            'db_pdo_protocol' => 'mysql',
+            'db_host' => $this->host . ':' . $this->port,
+            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
+            'db_name' => $databaseInformation->getDatabase(),
+            'store_name' => $store,
+        ];
+
+        $store = ARC2::getStore($params);
+
+        $store->createDBCon();
+
+        if ($setupStore && ! $store->isSetUp()) {
+            $store->setUp();
+        }
+
+        return $store;
+    }
+
+    /**
+     * @throws DBALException
+     */
+    public function getArc2Endpoint(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): ARC2_StoreEndpoint
+    {
+        $params = [
+            'db_adapter' => 'pdo',
+            'db_pdo_protocol' => 'mysql',
+            'db_host' => $this->host . ':' . $this->port,
+            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
+            'db_name' => $databaseInformation->getDatabase(),
+
+            'store_name' => self::CURRENT_STORE,
+
+            'endpoint_features' => [ 'select', 'construct', 'ask', 'describe' ],
+        ];
+
+        $endpoint = ARC2::getStoreEndpoint($params);
+
+        if (! $endpoint->isSetUp()) {
+            $endpoint->setUp(); /* create MySQL tables */
+        }
+
+        return $endpoint;
     }
 
     /**
@@ -84,6 +146,27 @@ class DistributionService
     {
         $manager = new MySqlSchemaManager($this->createCreatorConnection());
         $manager->createDatabase('`' . $databaseInformation->getDatabase() . '`');
+    }
+
+    public function duplicateArc2Store(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): ARC2_Store
+    {
+        $previousStore = $this->getArc2Store(self::PREVIOUS_STORE, $databaseInformation, $encryptionService, false);
+        $hasPreviousStore = boolval($previousStore->isSetUp());
+
+        $currentStore = $this->getArc2Store(self::CURRENT_STORE, $databaseInformation, $encryptionService, false);
+        $hasCurrentStore = boolval($currentStore->isSetUp());
+
+        if ($hasPreviousStore) {
+            $previousStore->drop();
+        }
+
+        if ($hasCurrentStore) {
+            $currentStore->replicateTo(self::PREVIOUS_STORE);
+        } else {
+            $currentStore->setUp();
+        }
+
+        return $currentStore;
     }
 
     /**
@@ -98,8 +181,8 @@ class DistributionService
         try {
             $sql = sprintf(
                 "CREATE USER '%s'@'%%' IDENTIFIED BY '%s'",
-                $databaseInformation->getDecryptedUsername($encryptionService),
-                $databaseInformation->getDecryptedPassword($encryptionService)
+                $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+                $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString()
             );
             $connection->exec($sql);
         } catch (Throwable $t) {
@@ -108,8 +191,8 @@ class DistributionService
 
         try {
             $connection->exec(
-                'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER, EXECUTE, LOCK TABLES
-                ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService) . '\'@\'%\';'
+                'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER, EXECUTE, LOCK TABLES, CREATE, DROP, CREATE TEMPORARY TABLES
+                ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString() . '\'@\'%\';'
             );
         } catch (Throwable $t) {
             throw new CouldNotCreateDatabase();

@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Encryption\EncryptedString;
+use App\Encryption\EncryptionService;
+use App\Encryption\SensitiveDataString;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Data\InstanceDataCollection;
 use App\Entity\Castor\Data\RecordData;
 use App\Entity\Castor\Data\RecordDataCollection;
@@ -10,6 +14,7 @@ use App\Entity\Castor\Data\ReportData;
 use App\Entity\Castor\Data\StudyData;
 use App\Entity\Castor\Data\SurveyData;
 use App\Entity\Castor\Form\Field;
+use App\Entity\Castor\Form\FieldOptionGroup;
 use App\Entity\Castor\Instances\ReportInstance;
 use App\Entity\Castor\Instances\SurveyPackageInstance;
 use App\Entity\Castor\Record;
@@ -22,7 +27,6 @@ use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
-use App\Entity\Castor\Study;
 use App\Entity\Castor\User;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
@@ -73,16 +77,19 @@ class ApiClient
         $this->server = $user->getServer();
     }
 
-    public function useApiUser(ApiUser $user): void
+    public function useApiUser(ApiUser $user, EncryptionService $encryptionService): void
     {
         $this->server = $user->getServer()->getUrl()->getValue();
-        $this->auth($user->getClientId(), $user->getClientSecret());
+        $this->auth(
+            $encryptionService->decrypt(EncryptedString::fromJsonString($user->getClientId())),
+            $encryptionService->decrypt(EncryptedString::fromJsonString($user->getClientSecret()))
+        );
     }
 
     /**
      * @throws ErrorFetchingCastorData
      */
-    public function auth(string $clientId, string $secret): void
+    public function auth(SensitiveDataString $clientId, SensitiveDataString $secret): void
     {
         try {
             $response = $this->client->request(
@@ -90,8 +97,8 @@ class ApiClient
                 $this->server . '/oauth/token',
                 [
                     'json' => [
-                        'client_id' => $clientId,
-                        'client_secret' => $secret,
+                        'client_id' => $clientId->exposeAsString(),
+                        'client_secret' => $secret->exposeAsString(),
                         'grant_type' => 'client_credentials',
                     ],
                 ]
@@ -151,16 +158,16 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getStudy(string $studyId): Study
+    public function getStudy(string $studyId): CastorStudy
     {
-        $study = Study::fromData($this->request('/api/study/' . $studyId));
+        $study = CastorStudy::fromData($this->request('/api/study/' . $studyId));
         $study->setFields($this->getFields($study));
 
         return $study;
     }
 
     /**
-     * @return Study[]
+     * @return CastorStudy[]
      *
      * @throws ErrorFetchingCastorData
      * @throws SessionTimedOut
@@ -173,14 +180,14 @@ class ApiClient
         $studies = $this->request('/api/study');
 
         foreach ($studies['_embedded']['study'] as $study) {
-            $return[] = Study::fromData($study);
+            $return[] = CastorStudy::fromData($study);
         }
 
         return $return;
     }
 
     /**
-     * @param Study[]|null $studies
+     * @param CastorStudy[]|null $studies
      *
      * @return array<string>
      *
@@ -198,7 +205,7 @@ class ApiClient
         $ids = [];
 
         foreach ($studies as $study) {
-            $ids[] = $study->getId();
+            $ids[] = $study->getSourceId();
         }
 
         return $ids;
@@ -223,17 +230,17 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getFields(Study $study): ArrayCollection
+    public function getFields(CastorStudy $study): ArrayCollection
     {
         $pages = 1;
         $fields = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/field?include=metadata&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/field?include=metadata|optiongroup&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['fields'] as $rawField) {
-                $field = Field::fromData($rawField);
+                $field = Field::fromData($rawField, $study);
                 $fields->set($field->getId(), $field);
             }
         }
@@ -243,11 +250,24 @@ class ApiClient
 
     /**
      * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
+    public function getField(CastorStudy $study, string $fieldId): Field
+    {
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/field/' . $fieldId . '?include=metadata');
+
+        return Field::fromData($body, $study);
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getFieldByParent(Study $study, string $parentId): ArrayCollection
+    public function getFieldByParent(CastorStudy $study, string $parentId): ArrayCollection
     {
         $fields = $this->getFields($study);
         $results = new ArrayCollection();
@@ -280,7 +300,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getPhasesAndSteps(Study $study, bool $includeFields = false): PhaseCollection
+    public function getPhasesAndSteps(CastorStudy $study, bool $includeFields = false): PhaseCollection
     {
         $phases = $this->getPhases($study);
         $steps = $this->getStudySteps($study, $includeFields);
@@ -299,16 +319,16 @@ class ApiClient
     /**
      * @throws Exception
      */
-    public function getPhases(Study $study): PhaseCollection
+    public function getPhases(CastorStudy $study): PhaseCollection
     {
         $pages = 1;
         $phases = new PhaseCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/phase?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/phase?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['phases'] as $phase) {
-                $phases->add(Phase::fromData($phase));
+                $phases->add(Phase::fromData($phase, $study));
             }
         }
 
@@ -321,16 +341,16 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getStudySteps(Study $study, bool $includeFields = false): ArrayCollection
+    public function getStudySteps(CastorStudy $study, bool $includeFields = false): ArrayCollection
     {
         $pages = 1;
         $steps = new ArrayCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/step?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/step?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['steps'] as $step) {
-                $newStep = StudyStep::fromData($step);
+                $newStep = StudyStep::fromData($step, $study);
 
                 if ($includeFields) {
                     $fields = $this->getFieldByParent($study, $step['step_id']);
@@ -350,16 +370,16 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getSurveys(Study $study, bool $includeFields = false): SurveyCollection
+    public function getSurveys(CastorStudy $study, bool $includeFields = false): SurveyCollection
     {
         $pages = 1;
         $surveys = new SurveyCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/survey?include=steps&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/survey?include=steps&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['surveys'] as $survey) {
-                $tempSurvey = Survey::fromData($survey);
+                $tempSurvey = Survey::fromData($survey, $study);
 
                 if ($includeFields) {
                     $steps = [];
@@ -385,20 +405,20 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getReports(Study $study, bool $includeFields = false): ReportCollection
+    public function getReports(CastorStudy $study, bool $includeFields = false): ReportCollection
     {
         $pages = 1;
         $reports = new ReportCollection();
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/report?page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/report?page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['reports'] as $report) {
-                $tempReport = Report::fromData($report);
-                $steps = $this->request('/api/study/' . $study->getId() . '/report/' . $report['report_id'] . '/report-step?page=' . $page . '&page_size=' . $this->pageSize);
+                $tempReport = Report::fromData($report, $study);
+                $steps = $this->request('/api/study/' . $study->getSourceId() . '/report/' . $report['report_id'] . '/report-step?page=' . $page . '&page_size=' . $this->pageSize);
 
                 foreach ($steps['_embedded']['report_steps'] as $step) {
-                    $newStep = ReportStep::fromData($step);
+                    $newStep = ReportStep::fromData($step, $study);
 
                     if ($includeFields) {
                         $fields = $this->getFieldByParent($study, $step['id']);
@@ -417,13 +437,51 @@ class ApiClient
 
     /**
      * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getOptionGroups(CastorStudy $study): CastorEntityCollection
+    {
+        /** @var CastorEntityCollection<FieldOptionGroup> $optionGroups */
+        $optionGroups = new CastorEntityCollection();
+
+        $pages = 1;
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/field-optiongroup?page=' . $page . '&page_size=' . $this->pageSize);
+            $pages = $body['page_count'];
+
+            foreach ($body['_embedded']['fieldOptionGroups'] as $optionGroup) {
+                $optionGroups->add(FieldOptionGroup::fromData($optionGroup, $study));
+            }
+        }
+
+        return $optionGroups;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
+    public function getOptionGroup(CastorStudy $study, string $optionGroupId): FieldOptionGroup
+    {
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/field-optiongroup/' . $optionGroupId);
+
+        return FieldOptionGroup::fromData($body, $study);
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
      * @throws SessionTimedOut
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecord(Study $study, string $recordId): Record
+    public function getRecord(CastorStudy $study, string $recordId): Record
     {
-        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $recordId);
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $recordId);
 
         return Record::fromData($body);
     }
@@ -434,13 +492,13 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecords(Study $study, bool $extractArchived = false): ArrayCollection
+    public function getRecords(CastorStudy $study, bool $extractArchived = false): ArrayCollection
     {
         $pages = 1;
         $records = new ArrayCollection();
 
         for ($page = 1; $page <= $pages; $page++) {
-            $body = $this->request('/api/study/' . $study->getId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize);
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/record?archived=' . ((int) $extractArchived) . '&page=' . $page . '&page_size=' . $this->pageSize);
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['records'] as $rawRecord) {
@@ -458,9 +516,9 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordStudyData(Study $study, Record $record): RecordData
+    private function getRecordStudyData(CastorStudy $study, Record $record): RecordData
     {
-        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/study');
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/data-point-collection/study');
 
         return StudyData::fromData($body['_embedded']['items'], $study, $record);
     }
@@ -471,12 +529,12 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordReportInstances(Study $study, Record $record): ArrayCollection
+    private function getRecordReportInstances(CastorStudy $study, Record $record): ArrayCollection
     {
         $reportInstances = new ArrayCollection();
 
         try {
-            $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/report-instance');
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/report-instance');
 
             foreach ($body['_embedded']['reportInstances'] as $rawReportInstance) {
                 $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
@@ -495,11 +553,11 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordSurveyPackageInstances(Study $study, Record $record): ArrayCollection
+    private function getRecordSurveyPackageInstances(CastorStudy $study, Record $record): ArrayCollection
     {
         $surveyPackageInstances = new ArrayCollection();
 
-        $body = $this->request('/api/study/' . $study->getId() . '/surveypackageinstance?record_id=' . $record->getId());
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/surveypackageinstance?record_id=' . $record->getId());
 
         foreach ($body['_embedded']['surveypackageinstance'] as $rawSurveyPackageInstance) {
             $surveyPackageInstance = SurveyPackageInstance::fromData($rawSurveyPackageInstance, $record);
@@ -515,14 +573,14 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordSurveyData(Study $study, Record $record): InstanceDataCollection
+    private function getRecordSurveyData(CastorStudy $study, Record $record): InstanceDataCollection
     {
         $surveyPackageInstances = $this->getRecordSurveyPackageInstances($study, $record);
         $surveyData = new SurveyData($record);
 
         foreach ($surveyPackageInstances as $surveyPackageInstance) {
             /** @var SurveyPackageInstance $surveyPackageInstance */
-            $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId());
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/data-point/survey/' . $surveyPackageInstance->getId());
             $surveyData->addSurveyPackageData($body['_embedded']['SurveyDataPoints'], $study, $surveyPackageInstance);
         }
 
@@ -535,10 +593,10 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function getRecordReportData(Study $study, Record $record): InstanceDataCollection
+    private function getRecordReportData(CastorStudy $study, Record $record): InstanceDataCollection
     {
         $reportInstances = $this->getRecordReportInstances($study, $record);
-        $body = $this->request('/api/study/' . $study->getId() . '/record/' . $record->getId() . '/data-point-collection/report-instance');
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $record->getId() . '/data-point-collection/report-instance');
 
         return ReportData::fromData($body['_embedded']['items'], $study, $record, $reportInstances);
     }
@@ -549,7 +607,7 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecordDataCollection(Study $study, Record $record): Record
+    public function getRecordDataCollection(CastorStudy $study, Record $record): Record
     {
         $dataCollection = new RecordDataCollection($record);
 
@@ -568,7 +626,7 @@ class ApiClient
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function getStructure(Study $study): StructureCollection
+    public function getStructure(CastorStudy $study): StructureCollection
     {
         $structure = new StructureCollection();
 

@@ -1,15 +1,23 @@
 import React, {Component} from 'react';
-import {classNames} from "../../util";
+import {classNames, localizedText} from "../../util";
 import DocumentTitle from "../DocumentTitle";
 import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Logo from '../Logo';
-import Icon from '../Icon';
 import './FAIRDataInformation.scss';
+import Breadcrumbs from "../Breadcrumbs";
+import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 
 export default class FAIRDataInformation extends Component {
     render() {
-        const {embedded, className, title, badge, back, license, version, issued, modified, children} = this.props;
+        const {embedded, className, title, badge, breadcrumbs, license, version, issued, modified, children} = this.props;
+
+        const catalog = breadcrumbs.catalog || null;
+        const study = breadcrumbs.study || null;
+        const dataset = breadcrumbs.dataset || null;
+        const distribution = breadcrumbs.distribution || null;
+        const query = breadcrumbs.query || null;
+
         return <div className={classNames(className, 'TopLevelContainer', embedded && 'Embedded')}>
             <DocumentTitle title={title}/>
 
@@ -24,9 +32,6 @@ export default class FAIRDataInformation extends Component {
                 <Container>
                     <div className="InformationHeader">
                         <div className="InformationHeaderTop">
-                            {back && <Link to={back.link} className="InformationBack">
-                                <Icon type="arrowLeft" /> {back.text}
-                            </Link>}
                             <h1 className="Title">
                                 {title}
                                 {badge && <span className="InformationBadge">{badge}</span>}
@@ -34,6 +39,62 @@ export default class FAIRDataInformation extends Component {
                         </div>
                     </div>
                 </Container>
+                {breadcrumbs && <Breadcrumbs>
+                    <Breadcrumb to="/fdp">
+                        FAIR Data Point
+                    </Breadcrumb>
+
+                    {breadcrumbs.catalog && <Breadcrumb to={{
+                        pathname: breadcrumbs.catalog.relativeUrl,
+                        state: {
+                            catalog: catalog,
+                        },
+                    }}>
+                        {localizedText(breadcrumbs.catalog.metadata.title, 'en')}
+                    </Breadcrumb>}
+                    {breadcrumbs.study && <Breadcrumb to={{
+                        pathname: `/study/${breadcrumbs.study.slug}`,
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                        },
+                    }}>
+                        {breadcrumbs.study.metadata.briefName}
+                    </Breadcrumb>}
+                    {breadcrumbs.dataset && <Breadcrumb to={{
+                        pathname: breadcrumbs.dataset.relativeUrl,
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                            dataset: dataset,
+                        },
+                    }}>
+                        {localizedText(breadcrumbs.dataset.metadata.title, 'en')}
+                    </Breadcrumb>}
+                    {breadcrumbs.distribution && <Breadcrumb to={{
+                        pathname: breadcrumbs.distribution.relativeUrl,
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                            dataset: dataset,
+                            distribution: distribution,
+                        },
+                    }}>
+                        {localizedText(breadcrumbs.distribution.metadata.title, 'en')}
+                    </Breadcrumb>}
+                    {(breadcrumbs.query && breadcrumbs.distribution) && <Breadcrumb to={{
+                        pathname: breadcrumbs.distribution.relativeUrl + '/query',
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                            dataset: dataset,
+                            distribution: distribution,
+                            query: query
+                        },
+                    }}>
+                        Query
+                    </Breadcrumb>}
+                </Breadcrumbs>}
             </div>}
             <div className="Information">
                 <Row className="InformationRow">

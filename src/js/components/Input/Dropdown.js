@@ -1,26 +1,134 @@
 import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
 import Form from 'react-bootstrap/Form'
-import Select from 'react-select'
+import AsyncSelect from 'react-select/async';
+import {ChoiceOption, Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
+
+import {components} from 'react-select';
 
 import './Input.scss'
 
 class Dropdown extends ValidatorComponent {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            ...this.state,
+            cachedOptions: []
+        };
+    }
+
+    loadOptions = (inputValue, callback) => {
+        const { loadOptions } = this.props;
+
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null
+        }
+
+        this.timeout = setTimeout(() => {
+            loadOptions(inputValue, (options) => {
+                this.setState({
+                    cachedOptions: options
+                });
+
+                callback(options);
+            });
+        }, 1000);
+    };
 
     render() {
-        const { errorMessages, serverError, validators, requiredError, validatorListener, type, mask, ...rest } = this.props;
+        const {   serverError,
+                  placeholder,
+                  isDisabled,
+                  options,
+                  value,
+                  width,
+                  async = false,
+                  onChange,
+                  isMulti = false,
+              } = this.props;
+        const { cachedOptions, isValid } = this.state;
+
+        let SelectComponent = null;
+
+        if(async) {
+            SelectComponent = <AsyncSelect
+                loadOptions={this.loadOptions}
+                options={cachedOptions}
+                openMenuOnClick={false}
+                ref={(r) => { this.input = r; }}
+                menuPosition="fixed"
+                menuPlacement="auto"
+                onChange={onChange}
+            />
+        } else if(isMulti) {
+            const CustomOption = props => (
+                <components.Option className="DropdownMultiOption" {...props}>
+                    <ChoiceOption
+                        labelText={props.data.label}
+                        checked={props.isSelected}
+                        onChange={() => undefined}
+                    />
+                </components.Option>
+            );
+
+            const MultiValue = ({ children, ...props }) => {
+                const value = props.getValue();
+
+                if (value.length === 1) {
+                    return  <div>{value[0].label}</div>;
+                }
+
+                if (value.length === options.length) {
+                    return props.index === 0 ? <div>All</div> : null;
+                }
+
+                return props.index === 0 ? <div>{value.length} selected</div> : null;
+            };
+
+            SelectComponent = <CastorDropdown
+                invalid={!isValid}
+                onChange={onChange}
+                value={value}
+                options={options}
+                placeholder={placeholder}
+                isDisabled={isDisabled}
+                width={width}
+                isMulti={true}
+                closeMenuOnSelect={false}
+                hideSelectedOptions={false}
+                isClearable={false}
+                menuPosition="fixed"
+                menuPlacement="auto"
+                components={{
+                    Option: CustomOption,
+                    MultiValue,
+                }}
+            />;
+        } else {
+            SelectComponent = <CastorDropdown
+                invalid={!isValid}
+                onChange={onChange}
+                value={value}
+                options={options}
+                placeholder={placeholder}
+                isDisabled={isDisabled}
+                width={width}
+                menuPosition="fixed"
+                menuPlacement="auto"
+            />;
+        }
 
         return (
-            <Form.Group className="Select" onClick={this.props.onClick}>
-                <Select
-                    {...rest}
-                    ref={(r) => { this.input = r; }}
-                />
+            <Form.Group className="Select" onClick={this.props.onClick}
+                        ref={(r) => { this.input = r; }}>
+                {SelectComponent}
                 {this.errorText()}
                 {serverError && serverError.map((errorText, index) => (
-                    <Form.Text key={index} className="InputError">
+                    <TextStyle key={index} variation="error">
                         {errorText}
-                    </Form.Text>
+                    </TextStyle>
                 ))}
             </Form.Group>
         );
@@ -34,9 +142,9 @@ class Dropdown extends ValidatorComponent {
         }
 
         return (
-            <Form.Text className="InputError">
+            <TextStyle variation="error">
                 {this.getErrorMessage()}
-            </Form.Text>
+            </TextStyle>
         );
     }
 }

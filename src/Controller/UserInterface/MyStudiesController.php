@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
-use App\Entity\Castor\Study;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\Study;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +22,7 @@ class MyStudiesController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Add study']
+            ['title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText() . ' | Add study']
         );
     }
 
@@ -41,7 +41,7 @@ class MyStudiesController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => $catalog->getTitle()->getTextByLanguageString('en')->getText() . ' | Add metadata']
+            ['title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText() . ' | Add metadata']
         );
     }
 }

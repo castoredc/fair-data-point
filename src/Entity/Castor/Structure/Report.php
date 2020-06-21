@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure;
 
+use App\Entity\Castor\CastorStudy;
+use App\Entity\Enum\StructureType;
+
 class Report extends StructureElement
 {
     /** @var string|null */
@@ -11,9 +14,9 @@ class Report extends StructureElement
     /** @var string|null */
     private $type;
 
-    public function __construct(?string $id, ?string $name, ?string $description, ?string $type)
+    public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, ?string $type)
     {
-        parent::__construct($id, $name);
+        parent::__construct($id, $study, StructureType::report(), $name);
 
         $this->description = $description;
         $this->type = $type;
@@ -42,10 +45,11 @@ class Report extends StructureElement
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data): Report
+    public static function fromData(array $data, CastorStudy $study): Report
     {
         return new Report(
-            $data['id'] ?? null,
+            $data['id'],
+            $study,
             $data['name'] ?? null,
             $data['description'] ?? null,
             $data['type'] ?? null

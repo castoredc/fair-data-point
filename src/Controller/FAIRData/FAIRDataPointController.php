@@ -38,7 +38,7 @@ class FAIRDataPointController extends FAIRDataController
         }
 
         return new Response(
-            (new FAIRDataPointGraphResource($fdp))->toGraph()->serialise('turtle'),
+            (new FAIRDataPointGraphResource($fdp))->toGraph($this->baseUri)->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

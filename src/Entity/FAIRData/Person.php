@@ -69,7 +69,7 @@ class Person extends Agent
         $this->orcid = $orcid;
     }
 
-    public function getAccessUrl(): string
+    public function getRelativeUrl(): string
     {
         return '/agent/person/' . $this->getSlug();
     }

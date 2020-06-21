@@ -4,22 +4,34 @@ declare(strict_types=1);
 namespace App\MessageHandler\Metadata;
 
 use App\Entity\Terminology\CodedText;
+use App\Exception\NoAccessPermission;
 use App\Message\Metadata\UpdateStudyMetadataCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     public function __invoke(UpdateStudyMetadataCommand $message): void
     {
+        $study = $message->getMetadata()->getStudy();
+
+        if (! $this->security->isGranted('edit', $study)) {
+            throw new NoAccessPermission();
+        }
+
         $condition = $message->getMetadata()->getCondition();
         $intervention = $message->getMetadata()->getIntervention();
 

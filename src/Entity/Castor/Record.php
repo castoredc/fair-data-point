@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Castor;
 
 use App\Entity\Castor\Data\RecordDataCollection;
+use DateTimeImmutable;
 
 class Record
 {
@@ -13,9 +14,17 @@ class Record
     /** @var RecordDataCollection */
     private $data;
 
-    public function __construct(string $recordId)
+    /** @var DateTimeImmutable */
+    private $createdOn;
+
+    /** @var DateTimeImmutable */
+    private $updatedOn;
+
+    public function __construct(string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
     {
         $this->recordId = $recordId;
+        $this->createdOn = $createdOn;
+        $this->updatedOn = $updatedOn;
     }
 
     public function getData(): RecordDataCollection
@@ -33,13 +42,25 @@ class Record
         return $this->recordId;
     }
 
+    public function getCreatedOn(): DateTimeImmutable
+    {
+        return $this->createdOn;
+    }
+
+    public function getUpdatedOn(): DateTimeImmutable
+    {
+        return $this->updatedOn;
+    }
+
     /**
      * @param array<mixed> $data
      */
     public static function fromData(array $data): Record
     {
         return new Record(
-            $data['record_id']
+            $data['record_id'],
+            DateTimeImmutable::__set_state($data['created_on']),
+            DateTimeImmutable::__set_state($data['updated_on']),
         );
     }
 }

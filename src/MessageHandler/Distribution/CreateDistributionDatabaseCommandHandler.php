@@ -10,10 +10,12 @@ use App\Exception\CouldNotConnectToMySqlServer;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
+use App\Exception\NoAccessPermission;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 use function bin2hex;
 use function random_bytes;
 
@@ -28,11 +30,15 @@ class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterfac
     /** @var EncryptionService */
     private $encryptionService;
 
-    public function __construct(EntityManagerInterface $em, DistributionService $distributionService, EncryptionService $encryptionService)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, DistributionService $distributionService, EncryptionService $encryptionService, Security $security)
     {
         $this->em = $em;
         $this->distributionService = $distributionService;
         $this->encryptionService = $encryptionService;
+        $this->security = $security;
     }
 
     /**
@@ -45,6 +51,10 @@ class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterfac
     public function __invoke(CreateDistributionDatabaseCommand $message): void
     {
         $distribution = $message->getDistribution();
+
+        if (! $this->security->isGranted('edit', $distribution)) {
+            throw new NoAccessPermission();
+        }
 
         $databaseInformation = new DistributionDatabaseInformation($distribution);
 

@@ -4,27 +4,23 @@ import axios from "axios/index";
 import {Col, Row} from "react-bootstrap";
 import {localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
-import Button from "react-bootstrap/Button";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import Icon from "../../../components/Icon";
 import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
-import {toast} from "react-toastify";
+import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
-import DatasetDistributions from "./DatasetDistributions";
-import AddDistribution from "./AddDistribution";
+import DatasetDistributions from "../Dataset/DatasetDistributions";
+import AddDistribution from "../Dataset/AddDistribution";
+import DatasetMetadata from "./DatasetMetadata";
 import DatasetDetails from "./DatasetDetails";
-import DatasetContacts from "./DatasetContacts";
-import DatasetOrganizations from "./DatasetOrganizations";
-import DatasetConsent from "./DatasetConsent";
+import {Button} from "@castoredc/matter";
 
 export default class Dataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoadingDataset:  true,
-            hasLoadedDataset:  false,
             dataset:           null,
             catalog:           props.match.params.catalog
         };
@@ -35,12 +31,11 @@ export default class Dataset extends Component {
     }
 
     getDataset = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
+        axios.get('/api/dataset/' + this.props.match.params.dataset)
             .then((response) => {
                 this.setState({
                     dataset: response.data,
-                    isLoadingDataset: false,
-                    hasLoadedDataset: true
+                    isLoadingDataset: false
                 });
             })
             .catch((error) => {
@@ -48,7 +43,7 @@ export default class Dataset extends Component {
                     isLoadingDataset: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the dataset';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
@@ -60,37 +55,33 @@ export default class Dataset extends Component {
         if(isLoadingDataset) {
             return <InlineLoader />;
         }
+        
+        const url = '/admin' + (catalog ? '/catalog/' + catalog : '');
 
         return <div className="PageContainer">
             <Row className="PageHeader">
                 <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/catalog/' + catalog + '/studies'}>
-                        <Button variant="link" className="BackButton">
-                            <Icon type="arrowLeft" /> Back to catalog
+                    {catalog && <LinkContainer to={url + '/studies'}>
+                        <Button buttonType="secondary" icon="arrowLeftChevron">
+                            Back to catalog
                         </Button>
-                    </LinkContainer>
+                    </LinkContainer>}
                 </Col>
                 <Col sm={10} className="PageTitle">
-                    <div>{dataset.hasMetadata && <h3>{localizedText(dataset.title, 'en')}</h3>}</div>
+                    <div><h3>{dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Dataset'}</h3></div>
                 </Col>
             </Row>
             <Row>
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug} exact={true}>
-                            <Nav.Link>Study</Nav.Link>
+                        <LinkContainer to={url + '/dataset/' + dataset.slug} exact={true}>
+                            <Nav.Link>Dataset</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/contacts'} exact={true}>
-                            <Nav.Link disabled={!dataset.hasMetadata}>Contacts</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/organizations'} exact={true}>
-                            <Nav.Link disabled={!dataset.hasMetadata}>Centers</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/consent'} exact={true}>
-                            <Nav.Link disabled={!dataset.hasMetadata}>Consent</Nav.Link>
+                        <LinkContainer to={url + '/dataset/' + dataset.slug + '/metadata'} exact={true}>
+                            <Nav.Link>Metadata</Nav.Link>
                         </LinkContainer>
                         <hr />
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
+                        <LinkContainer to={url + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
                             <Nav.Link disabled={!dataset.hasMetadata}>Available data</Nav.Link>
                         </LinkContainer>
                     </Nav>
@@ -99,16 +90,23 @@ export default class Dataset extends Component {
                     <Switch>
                         <Route path="/admin/catalog/:catalog/dataset/:dataset" exact
                                render={(props) => <DatasetDetails {...props} catalog={catalog} dataset={dataset} onSave={this.getDataset} />} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/contacts" exact
-                               render={(props) => <DatasetContacts {...props} catalog={catalog} dataset={dataset} />} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/organizations" exact
-                               render={(props) => <DatasetOrganizations {...props} catalog={catalog} dataset={dataset} />} />
-                        <Route path="/admin/catalog/:catalog/dataset/:dataset/consent" exact
-                               render={(props) => <DatasetConsent {...props} catalog={catalog} dataset={dataset} />} />
+                        <Route path="/admin/catalog/:catalog/dataset/:dataset/metadata" exact
+                               render={(props) => <DatasetMetadata {...props} catalog={catalog} dataset={dataset} onSave={this.getDataset} />} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distributions" exact
                                render={(props) => <DatasetDistributions {...props} catalog={catalog} dataset={dataset} />} />
                         <Route path="/admin/catalog/:catalog/dataset/:dataset/distributions/add" exact
                                render={(props) => <AddDistribution {...props} catalog={catalog} dataset={dataset} />} />
+
+                        <Route path="/admin/dataset/:dataset" exact
+                               render={(props) => <DatasetDetails {...props} dataset={dataset} onSave={this.getDataset} />} />
+                        <Route path="/admin/dataset/:dataset/metadata" exact
+                               render={(props) => <DatasetMetadata {...props} dataset={dataset} onSave={this.getDataset} />} />
+                        <Route path="/admin/dataset/:dataset/distributions" exact
+                               render={(props) => <DatasetDistributions {...props} dataset={dataset} />} />
+                        <Route path="/admin/dataset/:dataset/distributions/add" exact
+                               render={(props) => <AddDistribution {...props} dataset={dataset} />} />
+
+
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

@@ -3,21 +3,24 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Entity\Castor\Study;
-use App\Entity\Iri;
-use App\Security\CastorUser;
-use DateTime;
+use App\Entity\Metadata\DatasetMetadata;
+use App\Entity\Study;
+use App\Entity\Version;
+use App\Traits\CreatedAndUpdated;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use function count;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DatasetRepository")
  * @ORM\Table(name="dataset", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Dataset
+class Dataset implements AccessibleEntity
 {
+    use CreatedAndUpdated;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -34,25 +37,6 @@ class Dataset
      */
     private $slug;
 
-    /** @var Collection<string, Agent> */
-    private $publishers;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
-     * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     *
-     * @var Language|null
-     */
-    private $language;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     *
-     * @var License|null
-     */
-    private $license;
-
     /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="datasets",cascade={"persist"})
      *
@@ -61,35 +45,27 @@ class Dataset
     private $catalogs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset",cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset", cascade={"persist"})
      *
-     * @var Collection<string, Distribution>
+     * @var Collection<Distribution>
      */
     private $distributions;
 
     /**
-     * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $keyword;
-
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $landingPage;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Castor\Study",cascade={"persist"}, inversedBy="dataset")
-     * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets", fetch="EAGER")
+     * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=TRUE)
      *
      * @var Study|null
      */
     private $study;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DatasetMetadata", mappedBy="dataset", fetch="EAGER")
+     * @ORM\OrderBy({"createdAt" = "ASC"})
+     *
+     * @var Collection<DatasetMetadata>
+     */
+    private $metadata;
 
     /**
      * @ORM\Column(type="boolean")
@@ -98,49 +74,11 @@ class Dataset
      */
     private $isPublished = false;
 
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var DateTime $created
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime", nullable = true)
-     *
-     * @var DateTime|null $updated
-     */
-    protected $updated;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $createdBy
-     * @Gedmo\Blameable(on="create")
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $updatedBy
-     * @Gedmo\Blameable(on="update")
-     */
-    private $updatedBy;
-
-    /**
-     * @param Collection<string, Agent> $publishers
-     */
-    public function __construct(string $slug, Collection $publishers, Language $language, ?License $license, ?LocalizedText $keyword, ?Iri $landingPage)
+    public function __construct(string $slug)
     {
         $this->slug = $slug;
-        $this->publishers = $publishers;
-        $this->language = $language;
-        $this->license = $license;
-        $this->keyword = $keyword;
-        $this->landingPage = $landingPage;
+        $this->catalogs = new ArrayCollection();
+        $this->metadata = new ArrayCollection();
     }
 
     public function getId(): string
@@ -163,45 +101,9 @@ class Dataset
         $this->slug = $slug;
     }
 
-    /**
-     * @return Collection<string, Agent>
-     */
-    public function getPublishers(): Collection
-    {
-        return $this->publishers;
-    }
-
-    /**
-     * @param Collection<string, Agent> $publishers
-     */
-    public function setPublishers(Collection $publishers): void
-    {
-        $this->publishers = $publishers;
-    }
-
-    public function getLanguage(): Language
-    {
-        return $this->language;
-    }
-
-    public function setLanguage(Language $language): void
-    {
-        $this->language = $language;
-    }
-
-    public function getLicense(): ?License
-    {
-        return $this->license;
-    }
-
-    public function setLicense(?License $license): void
-    {
-        $this->license = $license;
-    }
-
-    /**
-     * @return Collection<string, Catalog>
-     */
+     /**
+      * @return Collection<string, Catalog>
+      */
     public function getCatalogs(): Collection
     {
         return $this->catalogs;
@@ -231,26 +133,6 @@ class Dataset
         $this->distributions = $distributions;
     }
 
-    public function getKeyword(): LocalizedText
-    {
-        return $this->keyword;
-    }
-
-    public function setKeyword(LocalizedText $keyword): void
-    {
-        $this->keyword = $keyword;
-    }
-
-    public function getLandingPage(): ?Iri
-    {
-        return $this->landingPage;
-    }
-
-    public function setLandingPage(?Iri $landingPage): void
-    {
-        $this->landingPage = $landingPage;
-    }
-
     public function getStudy(): ?Study
     {
         return $this->study;
@@ -266,37 +148,9 @@ class Dataset
         $this->distributions[] = $distribution;
     }
 
-    public function getAccessUrl(): string
-    {
-        $first = $this->catalogs->first();
-
-        if ($first === false) {
-            return '';
-        }
-
-        return $first->getAccessUrl() . '/' . $this->slug;
-    }
-
     public function getRelativeUrl(): string
     {
-        $first = $this->catalogs->first();
-
-        if ($first === false) {
-            return '';
-        }
-
-        return $first->getRelativeUrl() . '/' . $this->slug;
-    }
-
-    public function getBaseUrl(): string
-    {
-        $first = $this->catalogs->first();
-
-        if ($first === false) {
-            return '';
-        }
-
-        return $first->getBaseUrl();
+        return '/fdp/dataset/' . $this->slug;
     }
 
     public function isPublished(): bool
@@ -319,39 +173,23 @@ class Dataset
         return $this->distributions->contains($distribution);
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function onPrePersist(): void
+    public function getLatestMetadata(): ?DatasetMetadata
     {
-        $this->created = new DateTime('now');
+        return $this->metadata->isEmpty() ? null : $this->metadata->last();
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate(): void
+    public function getLatestMetadataVersion(): ?Version
     {
-        $this->updated = new DateTime('now');
+        return $this->metadata->isEmpty() ? null : $this->metadata->last()->getVersion();
     }
 
-    public function getCreated(): DateTime
+    public function hasMetadata(): bool
     {
-        return $this->created;
+        return count($this->metadata) > 0;
     }
 
-    public function getUpdated(): ?DateTime
+    public function addMetadata(DatasetMetadata $metadata): void
     {
-        return $this->updated;
-    }
-
-    public function getCreatedBy(): ?CastorUser
-    {
-        return $this->createdBy;
-    }
-
-    public function getUpdatedBy(): ?CastorUser
-    {
-        return $this->updatedBy;
+        $this->metadata->add($metadata);
     }
 }

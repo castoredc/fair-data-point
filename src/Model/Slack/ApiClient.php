@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Model\Slack;
 
-use App\Entity\Castor\Study;
+use App\Entity\Study;
 use GuzzleHttp\Client;
 use Throwable;
 use function array_unique;
@@ -35,10 +35,9 @@ class ApiClient
         }
     }
 
-    public function postStudyMetadataNotification(Study $study): void
+    public function postStudyMetadataNotification(Study $study, string $url): void
     {
         $metadata = $study->getLatestMetadata();
-        $dataset = $study->getDataset();
 
         $type = $metadata->getType()->toString();
         $method = $metadata->getMethodType() !== null ? $metadata->getMethodType()->toString() : 'N/A';
@@ -59,7 +58,7 @@ class ApiClient
         $organizations = count($organizationArray) > 0 ? implode(', ', array_unique($organizationArray)) : 'N/A';
         $countries = count($countryArray) > 0 ? implode(', ', array_unique($countryArray)) : 'N/A';
 
-        $updated = $study->getMetadata()->count() > 1 ? true : ($metadata->getUpdated() !== null);
+        $updated = $study->getMetadata()->count() > 1 ? true : ($metadata->getUpdatedAt() !== null);
         $header = $updated ? 'The metadata for a study were edited' : 'A new study was added to the FAIR Data Point';
 
         $message = [
@@ -69,7 +68,7 @@ class ApiClient
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => $header . ":\n*<" . $dataset->getAccessUrl() . '|' . $metadata->getBriefName() . '>*',
+                        'text' => $header . ":\n*<" . $url . '|' . $metadata->getBriefName() . '>*',
                     ],
                 ],
                 [

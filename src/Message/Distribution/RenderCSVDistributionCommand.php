@@ -6,7 +6,6 @@ namespace App\Message\Distribution;
 use App\Entity\Castor\Record;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\FAIRData\Catalog;
-use App\Security\CastorUser;
 
 class RenderCSVDistributionCommand
 {
@@ -19,18 +18,14 @@ class RenderCSVDistributionCommand
     /** @var Catalog */
     private $catalog;
 
-    /** @var CastorUser|null */
-    private $user;
-
     /**
      * @param Record[] $records
      */
-    public function __construct(array $records, CSVDistribution $distribution, Catalog $catalog, ?CastorUser $user)
+    public function __construct(array $records, CSVDistribution $distribution, Catalog $catalog)
     {
         $this->records = $records;
         $this->distribution = $distribution;
         $this->catalog = $catalog;
-        $this->user = $user;
     }
 
     /**
@@ -49,10 +44,5 @@ class RenderCSVDistributionCommand
     public function getCatalog(): Catalog
     {
         return $this->catalog;
-    }
-
-    public function getUser(): ?CastorUser
-    {
-        return $this->user;
     }
 }

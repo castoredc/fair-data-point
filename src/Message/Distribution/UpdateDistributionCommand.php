@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
+use App\Encryption\SensitiveDataString;
 use App\Entity\FAIRData\Distribution;
-use App\Security\CastorUser;
 
 class UpdateDistributionCommand
 {
@@ -15,18 +15,6 @@ class UpdateDistributionCommand
     private $slug;
 
     /** @var string */
-    private $title;
-
-    /** @var string */
-    private $version;
-
-    /** @var string */
-    private $description;
-
-    /** @var string */
-    private $language;
-
-    /** @var string */
     private $license;
 
     /** @var int */
@@ -35,31 +23,43 @@ class UpdateDistributionCommand
     /** @var bool|null */
     private $includeAllData;
 
-    /** @var CastorUser */
-    private $user;
+    /** @var string|null */
+    private $dataModel;
+
+    /** @var string|null */
+    private $apiUser;
+
+    /** @var SensitiveDataString|null */
+    private $clientId;
+
+    /** @var SensitiveDataString|null */
+    private $clientSecret;
+
+    /** @var bool */
+    private $published;
 
     public function __construct(
         Distribution $distribution,
         string $slug,
-        string $title,
-        string $version,
-        string $description,
-        string $language,
         string $license,
         int $accessRights,
         ?bool $includeAllData,
-        CastorUser $user
+        ?string $dataModel,
+        ?string $apiUser,
+        ?SensitiveDataString $clientId,
+        ?SensitiveDataString $clientSecret,
+        bool $published
     ) {
         $this->distribution = $distribution;
         $this->slug = $slug;
-        $this->title = $title;
-        $this->version = $version;
-        $this->description = $description;
-        $this->language = $language;
         $this->license = $license;
         $this->accessRights = $accessRights;
         $this->includeAllData = $includeAllData;
-        $this->user = $user;
+        $this->dataModel = $dataModel;
+        $this->apiUser = $apiUser;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->published = $published;
     }
 
     public function getDistribution(): Distribution
@@ -70,26 +70,6 @@ class UpdateDistributionCommand
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->language;
     }
 
     public function getLicense(): string
@@ -107,8 +87,28 @@ class UpdateDistributionCommand
         return $this->includeAllData;
     }
 
-    public function getUser(): CastorUser
+    public function getDataModel(): ?string
     {
-        return $this->user;
+        return $this->dataModel;
+    }
+
+    public function getApiUser(): ?string
+    {
+        return $this->apiUser;
+    }
+
+    public function getClientId(): ?SensitiveDataString
+    {
+        return $this->clientId;
+    }
+
+    public function getClientSecret(): ?SensitiveDataString
+    {
+        return $this->clientSecret;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published;
     }
 }

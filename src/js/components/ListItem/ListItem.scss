@@ -1,23 +1,27 @@
 @import '../../scss/colors';
 
 .ListItem {
-  color: $neutral-90;
-  border-radius: 3px;
   display: block;
-  padding: 16px;
   margin-bottom: 10px;
-  border: solid 1px $neutral-40;
-  background: $generic-white;
   position: relative;
+  color: $neutral-90;
+  border-radius: 5px;
+  border: solid 1px $neutral-60;
+  background-color: $generic-white;
+  padding: 24px;
+
+  &:hover {
+    color: $neutral-90;
+    background: $neutral-20;
+    text-decoration: none;
+  }
 
   span {
     display: block;
   }
 
   .ListItemSmallIcon {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+    margin-left: auto;
 
     path {
       fill: $neutral-90;
@@ -35,43 +39,62 @@
     }
   }
 
-  .ListItemTitle {
-    font-weight: 600;
-    font-size: 16px;
-    line-height: initial;
-    padding-bottom: 5px;
-    color: $neutral-800;
-  }
-  
-  &:hover {
-    color: $neutral-90;
-    background: $neutral-20;
-    text-decoration: none;
+  .ListItemHeader {
+    display: flex;
+    padding-bottom: 12px;
+    overflow: hidden;
 
     .ListItemTitle {
-      color: $neutral-800;
+      font-family: 'Rubik', sans-serif;
+      font-weight: normal;
+      font-size: 20px;
+      line-height: 1.5;
+      color: $neutral-900;
+    }
+
+    .ListItemBadge {
+      border-radius: 5px;
+      background-color: $blue-50;
+      padding: 6px 12px;
+      font-family: 'Rubik', sans-serif;
+      font-size: 16px;
+      color: $cobalt;
+      margin-left: auto;
     }
   }
 
-  &.Selectable {
-    border-color: $generic-white;
+  .ListItemDescription {
+    font-size: 14px;
+    line-height: 1.5;
+    color: $neutral-300;
+  }
+
+  .ListItemTags {
+    padding-top: 24px;
+  }
+}
+
+.ListItem.Selectable {
+  border-color: $generic-white;
+  font-size: 14px;
+  font-weight: normal;
+  padding: 16px;
+  border-radius: 3px;
+
+  .ListItemTitle {
     font-size: 14px;
     font-weight: normal;
+    color: $neutral-900;
+  }
+
+  &:hover, &.Active {
+    border-color: $blue-400;
+    color: $blue-400;
+    background: $generic-white;
+    box-shadow: 0 1px 3px 0 $shadow;
 
     .ListItemTitle {
-      font-size: 14px;
-      font-weight: normal;
-    }
-
-    &:hover, &.Active {
-      border-color: $blue-400;
       color: $blue-400;
-      background: $generic-white;
-      box-shadow: 0 1px 3px 0 $shadow;
-
-      .ListItemTitle {
-        color: $blue-400;
-      }
     }
   }
 }

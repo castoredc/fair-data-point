@@ -3,32 +3,20 @@ declare(strict_types=1);
 
 namespace App\Message\Study;
 
-use App\Entity\Castor\Study;
-use App\Security\CastorUser;
+use App\Entity\Castor\CastorStudy;
 
 class GetStudyStructureCommand
 {
-    /** @var Study */
+    /** @var CastorStudy */
     private $study;
 
-    /** @var CastorUser */
-    private $user;
-
-    public function __construct(
-        Study $study,
-        CastorUser $user
-    ) {
+    public function __construct(CastorStudy $study)
+    {
         $this->study = $study;
-        $this->user = $user;
     }
 
-    public function getStudy(): Study
+    public function getStudy(): CastorStudy
     {
         return $this->study;
-    }
-
-    public function getUser(): CastorUser
-    {
-        return $this->user;
     }
 }

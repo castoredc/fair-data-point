@@ -1,36 +1,55 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom";
-import Icon from "../Icon";
 import './ListItem.scss'
 import {classNames, isURL} from "../../util";
+import Tags from "../Tags";
+import {Icon} from "@castoredc/matter";
+import CustomIcon from "../Icon/CustomIcon";
 
 class ListItem extends Component {
     render() {
-        const { title, description, link, leftIcon, smallIcon, fill = true, newWindow = false, selectable = false, active = false, className, onClick = () => {}}  = this.props;
+        const {   title,
+                  description,
+                  link,
+                  leftIcon,
+                  customIcon = false,
+                  smallIcon,
+                  fill = true,
+                  newWindow = false,
+                  selectable = false,
+                  active = false,
+                  className,
+                  onClick = () => {},
+                  badge,
+                  tags = []
+              }  = this.props;
 
         if(selectable)
         {
             return <a href="#" className={classNames("ListItem", "Selectable", active && 'Active', className)} onClick={onClick}>
-                {leftIcon && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><Icon type={leftIcon} /></span>}
+                {(leftIcon && !customIcon) && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><Icon type={leftIcon} /></span>}
+                {(leftIcon && customIcon) && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><CustomIcon type={leftIcon} /></span>}
                 <span className="ListItemTitle">{title}</span>
                 <span className="ListItemDescription">{description}</span>
             </a>;
         }
+
+        const children = <span>
+            <span className="ListItemHeader">
+                <span className="ListItemTitle">{title}</span>
+                {smallIcon && <span className="ListItemSmallIcon"><Icon type={smallIcon} /></span>}
+                {badge && <span className="ListItemBadge">{badge}</span>}
+            </span>
+            <span className="ListItemDescription">{description}</span>
+            {tags.length > 0 && <Tags tags={tags} className="ListItemTags" />}
+        </span>;
 
         if(isURL(link) || newWindow)
         {
-            return <a href={link} target="_blank" className="ListItem">
-                {smallIcon && <span className="ListItemSmallIcon"><Icon type={smallIcon} /></span>}
-                <span className="ListItemTitle">{title}</span>
-                <span className="ListItemDescription">{description}</span>
-            </a>;
+            return <a href={link} target="_blank" className="ListItem">{children}</a>;
         }
 
-        return <Link to={link} className="ListItem" onClick={onClick}>
-            {smallIcon && <span className="ListItemSmallIcon"><Icon type={smallIcon} /></span>}
-            <span className="ListItemTitle">{title}</span>
-            <span className="ListItemDescription">{description}</span>
-        </Link>;
+        return <Link to={link} className="ListItem" onClick={onClick}>{children}</Link>;
     }
 }
 

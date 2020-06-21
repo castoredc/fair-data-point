@@ -59,7 +59,7 @@ abstract class Enum
 
     protected static function inflectConstantToMethodName(string $option): string
     {
-        return Inflector::camelize($option);
+        return lcfirst(str_replace([' ', '_', '-'], '', ucwords($option, ' _-')));
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class Enum
     public function isEqualTo(Enum $otherEnum): bool
     {
         /** @noinspection TypeUnsafeComparisonInspection,PhpNonStrictObjectEqualityInspection */
-        return $this === $otherEnum;
+        return $this == $otherEnum;
     }
 
     /**

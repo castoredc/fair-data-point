@@ -18,33 +18,34 @@ class CatalogGraphResource implements GraphResource
         $this->catalog = $catalog;
     }
 
-    public function toGraph(): EasyRdf_Graph
+    public function toGraph(string $baseUrl): EasyRdf_Graph
     {
         $graph = new EasyRdf_Graph();
-        $url = $this->catalog->getAccessUrl();
+        $url = $baseUrl . $this->catalog->getRelativeUrl();
+        $metadata = $this->catalog->getLatestMetadata();
 
         $graph->addResource($url, 'a', 'dcat:Catalog');
 
-        foreach ($this->catalog->getTitle()->getTexts() as $text) {
+        foreach ($metadata->getTitle()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
             $graph->addLiteral($url, 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
             $graph->addLiteral($url, 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addLiteral($url, 'dcterms:hasVersion', $this->catalog->getVersion());
+        $graph->addLiteral($url, 'dcterms:hasVersion', $metadata->getVersion());
 
-        foreach ($this->catalog->getDescription()->getTexts() as $text) {
+        foreach ($metadata->getDescription()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
             $graph->addLiteral($url, 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
         }
 
-        $graph->addResource($url, 'dcterms:language', $this->catalog->getLanguage()->getAccessUrl());
+        $graph->addResource($url, 'dcterms:language', $metadata->getLanguage()->getAccessUrl());
 
         foreach ($this->catalog->getDatasets(false) as $dataset) {
-            $graph->addResource($url, 'dcat:dataset', $dataset->getAccessUrl());
+            $graph->addResource($url, 'dcat:dataset', $baseUrl . $dataset->getRelativeUrl());
         }
 
-        $graph->addResource($url, 'dcterms:license', $this->catalog->getLicense()->getUrl()->getValue());
+        $graph->addResource($url, 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());
 
         return $graph;
     }

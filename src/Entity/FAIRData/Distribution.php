@@ -5,19 +5,24 @@ namespace App\Entity\FAIRData;
 
 use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
-use App\Security\CastorUser;
-use DateTime;
+use App\Entity\Metadata\DistributionMetadata;
+use App\Entity\Version;
+use App\Security\ApiUser;
+use App\Traits\CreatedAndUpdated;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use function count;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Distribution
+class Distribution implements AccessibleEntity
 {
+    use CreatedAndUpdated;
+
     public const TYPE_RDF = 'rdf';
     public const TYPE_CSV = 'csv';
 
@@ -36,53 +41,9 @@ class Distribution
      * @var string
      */
     private $slug;
-
-    /* DC terms */
-
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="title", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $title;
-
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $version;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="description", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
-     */
-    private $description;
-
-    /** @var Collection<string, Agent> */
-    private $publishers;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Language",cascade={"persist"})
-     * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     *
-     * @var Language|null
-     */
-    private $language;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     *
-     * @var License|null
-     */
-    private $license;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions", cascade={"persist"})
+     * @ORM\JoinColumn(name="dataset_id", referencedColumnName="id")
      *
      * @var Dataset|null
      */
@@ -103,60 +64,39 @@ class Distribution
     private $databaseInformation;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
+     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
      *
-     * @var DateTime $created
+     * @var License|null
      */
-    protected $created;
+    private $license;
 
     /**
-     * @ORM\Column(type="datetime", nullable = true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DistributionMetadata", mappedBy="distribution", fetch="EAGER")
+     * @ORM\OrderBy({"createdAt" = "ASC"})
      *
-     * @var DateTime|null $updated
+     * @var Collection<DistributionMetadata>
      */
-    protected $updated;
+    private $metadata;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Security\ApiUser")
+     * @ORM\JoinColumn(name="user_api", referencedColumnName="id")
      *
-     * @var CastorUser|null $createdBy
-     * @Gedmo\Blameable(on="create")
+     * @var ApiUser|null
      */
-    private $createdBy;
+    private $apiUser;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorUser")
-     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
-     *
-     * @var CastorUser|null $updatedBy
-     * @Gedmo\Blameable(on="update")
-     */
-    private $updatedBy;
-
-    /**
-     * @param Collection<string, Agent> $publishers
-     */
-    public function __construct(string $slug, LocalizedText $title, string $version, LocalizedText $description, Collection $publishers, Language $language, ?License $license, Dataset $dataset)
+    public function __construct(string $slug, Dataset $dataset)
     {
         $this->slug = $slug;
-        $this->title = $title;
-        $this->version = $version;
-        $this->description = $description;
-        $this->publishers = $publishers;
-        $this->language = $language;
-        $this->license = $license;
         $this->dataset = $dataset;
+        $this->metadata = new ArrayCollection();
     }
 
     public function getId(): string
     {
         return $this->id;
-    }
-
-    public function setId(string $id): void
-    {
-        $this->id = $id;
     }
 
     public function getSlug(): string
@@ -169,72 +109,6 @@ class Distribution
         $this->slug = $slug;
     }
 
-    public function getTitle(): LocalizedText
-    {
-        return $this->title;
-    }
-
-    public function setTitle(LocalizedText $title): void
-    {
-        $this->title = $title;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function setVersion(string $version): void
-    {
-        $this->version = $version;
-    }
-
-    public function getDescription(): LocalizedText
-    {
-        return $this->description;
-    }
-
-    public function setDescription(LocalizedText $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return Collection<string, Agent>
-     */
-    public function getPublishers(): Collection
-    {
-        return $this->publishers;
-    }
-
-    /**
-     * @param Collection<string, Agent> $publishers
-     */
-    public function setPublishers(Collection $publishers): void
-    {
-        $this->publishers = $publishers;
-    }
-
-    public function getLanguage(): Language
-    {
-        return $this->language;
-    }
-
-    public function setLanguage(Language $language): void
-    {
-        $this->language = $language;
-    }
-
-    public function getLicense(): License
-    {
-        return $this->license;
-    }
-
-    public function setLicense(License $license): void
-    {
-        $this->license = $license;
-    }
-
     public function getDataset(): Dataset
     {
         return $this->dataset;
@@ -245,19 +119,14 @@ class Distribution
         $this->dataset = $dataset;
     }
 
-    public function getAccessUrl(): string
-    {
-        return $this->dataset->getAccessUrl() . '/' . $this->slug;
-    }
-
     public function getRelativeUrl(): string
     {
-        return $this->dataset->getRelativeUrl() . '/' . $this->slug;
+        return $this->dataset->getRelativeUrl() . '/distribution/' . $this->slug;
     }
 
-    public function getBaseUrl(): string
+    public function hasContents(): bool
     {
-        return $this->dataset->getBaseUrl();
+        return $this->contents !== null;
     }
 
     public function getContents(): ?DistributionContents
@@ -280,39 +149,43 @@ class Distribution
         return $this->databaseInformation;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function onPrePersist(): void
+    public function getLatestMetadata(): ?DistributionMetadata
     {
-        $this->created = new DateTime('now');
+        return $this->metadata->isEmpty() ? null : $this->metadata->last();
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate(): void
+    public function getLatestMetadataVersion(): ?Version
     {
-        $this->updated = new DateTime('now');
+        return $this->metadata->isEmpty() ? null : $this->metadata->last()->getVersion();
     }
 
-    public function getCreated(): DateTime
+    public function hasMetadata(): bool
     {
-        return $this->created;
+        return count($this->metadata) > 0;
     }
 
-    public function getUpdated(): ?DateTime
+    public function addMetadata(DistributionMetadata $metadata): void
     {
-        return $this->updated;
+        $this->metadata->add($metadata);
     }
 
-    public function getCreatedBy(): ?CastorUser
+    public function getLicense(): ?License
     {
-        return $this->createdBy;
+        return $this->license;
     }
 
-    public function getUpdatedBy(): ?CastorUser
+    public function setLicense(?License $license): void
     {
-        return $this->updatedBy;
+        $this->license = $license;
+    }
+
+    public function getApiUser(): ?ApiUser
+    {
+        return $this->apiUser;
+    }
+
+    public function setApiUser(?ApiUser $apiUser): void
+    {
+        $this->apiUser = $apiUser;
     }
 }

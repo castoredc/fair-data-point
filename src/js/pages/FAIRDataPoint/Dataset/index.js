@@ -14,50 +14,28 @@ import Contacts from "../../../components/MetadataItem/Contacts";
 import Organizations from "../../../components/MetadataItem/Organizations";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
+import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 
 export default class Dataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingCatalog:       true,
-            hasLoadedCatalog:       false,
             isLoadingDataset:       true,
             hasLoadedDataset:       false,
             isLoadingDistributions: true,
             hasLoadedDistributions: false,
-            catalog:                null,
             dataset:                null,
             distributions:          []
         };
     }
 
     componentDidMount() {
-        this.getCatalog();
         this.getDataset();
         this.getDistributions();
     }
 
-    getCatalog = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog)
-            .then((response) => {
-                this.setState({
-                    catalog: response.data,
-                    isLoadingCatalog: false,
-                    hasLoadedCatalog: true
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingCatalog: false
-                });
-
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the catalog';
-                toast.error(<ToastContent type="error" message={message} />);
-            });
-    };
-
     getDataset = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset)
+        axios.get('/api/dataset/' + this.props.match.params.dataset)
             .then((response) => {
                 this.setState({
                     dataset: response.data,
@@ -70,13 +48,13 @@ export default class Dataset extends Component {
                     isLoadingDataset: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the dataset';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the dataset';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     getDistributions = () => {
-        axios.get('/api/catalog/' + this.props.match.params.catalog + '/dataset/' + this.props.match.params.dataset + '/distribution')
+        axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution')
             .then((response) => {
                 this.setState({
                     distributions: response.data,
@@ -89,93 +67,72 @@ export default class Dataset extends Component {
                     isLoadingDistributions: false
                 });
 
-                const message = (error.response && typeof error.response.data.message !== "undefined") ? error.response.data.message : 'An error occurred while loading the distributions';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distributions';
                 toast.error(<ToastContent type="error" message={message} />);
             });
     };
 
     render() {
+        const { dataset, distributions, isLoadingDataset, isLoadingDistributions } = this.state;
+        const { location } = this.props;
+        
         const params = queryString.parse(this.props.location.search);
         const embedded = (typeof params.embed !== 'undefined');
 
-        if(this.state.isLoadingCatalog || this.state.isLoadingDataset || this.state.isLoadingDistributions)
+        if(isLoadingDataset)
         {
             return <LoadingScreen showLoading={true}/>;
         }
 
-        let description = null;
-        let tags = [];
-        let badge = (this.state.dataset.recruitmentStatus ? RecruitmentStatus[this.state.dataset.recruitmentStatus] : null);
-
-        if(this.state.dataset.description !== null && this.state.dataset.description.text !== '')
-        {
-            description = this.state.dataset.description;
-        }
-        else if(this.state.dataset.shortDescription !== null)
-        {
-            description = this.state.dataset.shortDescription;
-        }
-
-        if(this.state.dataset.condition !== null && this.state.dataset.condition.text !== '')
-        {
-            tags.push(this.state.dataset.condition.text);
-        }
-        if(this.state.dataset.intervention !== null && this.state.dataset.intervention.text !== '')
-        {
-            tags.push(this.state.dataset.intervention.text);
-        }
-
+        const fdp = (location.state && 'fdp' in location.state) ? location.state.fdp : null;
+        const catalog = (location.state && 'catalog' in location.state) ? location.state.catalog : null;
+        const study = (location.state && 'study' in location.state) ? location.state.study : null;
+        const breadcrumbs = {fdp: fdp, catalog: catalog, dataset: dataset};
 
         return <FAIRDataInformation
             embedded={embedded}
             className="Dataset"
-            title={localizedText(this.state.dataset.title, 'en')}
-            version={this.state.dataset.version}
-            issued={this.state.dataset.issued}
-            modified={this.state.dataset.modified}
-            license={this.state.dataset.license}
-            badge={badge}
-            back={{link: this.state.catalog.relativeUrl, text: localizedText(this.state.catalog.title, 'en')}}
+            title={localizedText(dataset.metadata.title, 'en')}
+            version={dataset.metadata.version.metadata}
+            issued={dataset.metadata.issued}
+            modified={dataset.metadata.modified}
+            license={dataset.metadata.license}
+            breadcrumbs={breadcrumbs}
         >
             <Row>
                 <Col md={8} className="InformationCol">
-                    {tags.length > 0 && <div className="StudyTags"><Tags tags={tags} /></div>}
-                    {this.state.dataset.contactPoints.length > 0 && <Contacts contacts={this.state.dataset.contactPoints} />}
-                    {description && <div className="InformationDescription">{localizedText(description, 'en', true)}</div>}
+                    {dataset.metadata.description && <div className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>}
 
-                    {this.state.distributions.length > 0 && <div>
-                    <h2>Distributions</h2>
-                    <div className="Description">
-                        Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
-                    </div>
-                    {this.state.distributions.map((item, index) => {
-                        return <ListItem key={index}
-                                         newWindow={embedded}
-                                         link={item.relativeUrl}
-                                         title={localizedText(item.title, 'en')}
-                                         description={localizedText(item.description, 'en')}
-                                         smallIcon={(item.accessRights === 2 || item.accessRights === 3) && 'lock'}
-                        />}
-                    )}
-                </div>}
+                    {isLoadingDistributions ? <InlineLoader /> : distributions.length > 0 ? <div>
+                        <h2>Distributions</h2>
+                        <div className="Description">
+                            Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
+                        </div>
+                        {distributions.map((distribution) => {
+                            if(distribution.hasMetadata === false) {
+                                return null;
+                            }
+
+                            return <ListItem key={distribution.id}
+                                             newWindow={embedded}
+                                             link={{
+                                                 pathname: distribution.relativeUrl,
+                                                 state: {...breadcrumbs, study: study}
+                                             }}
+                                             title={localizedText(distribution.metadata.title, 'en')}
+                                             description={localizedText(distribution.metadata.description, 'en')}
+                                             smallIcon={(distribution.accessRights === 2 || distribution.accessRights === 3) && 'lock'}
+                            />}
+                        )}
+                    </div> : <div className="NoResults">This dataset does not have any associated distributions.</div>}
                 </Col>
                 <Col md={4}>
-                    {this.state.dataset.logo && <div className="InformationLogo">
-                        <img src={this.state.dataset.logo} alt={'Logo'}/>
-                    </div>}
-                    {this.state.dataset.studyType && <MetadataItem label="Type" value={StudyType[this.state.dataset.studyType]} />}
-                    {this.state.dataset.methodType && <MetadataItem label="Method" value={MethodType[this.state.dataset.methodType]} />}
-                    {this.state.dataset.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={this.state.dataset.estimatedEnrollment} />}
-                    {this.state.dataset.organizations.length > 0 && <Organizations organizations={this.state.dataset.organizations} />}
-
-                    {/*{this.state.dataset.language && <MetadataItem label="Language" url={this.state.dataset.language.url} value={this.state.dataset.language.name} />}*/}
-                    {this.state.dataset.landingPage && <MetadataItem label="Landing page" value={this.state.dataset.landingPage} />}
                 </Col>
             </Row>
         </FAIRDataInformation>;
 
         // {this.state.catalog.publishers.length > 0 && <div className="Publishers">
-        //     {this.state.dataset.publishers.map((item, index) => {
+        //     {dataset.metadata.publishers.map((item, index) => {
         //         return <Contact key={index}
         //                         url={item.url}
         //                         type={item.type}

@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Encryption\EncryptionService;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Study;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
@@ -13,19 +14,31 @@ use App\Exception\SessionTimedOut;
 use App\Message\Distribution\RenderCSVDistributionCommand;
 use App\MessageHandler\CSVCommandHandler;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorUser;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
+use Symfony\Component\Security\Core\Security;
+use function assert;
 use function count;
+use function implode;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
     /** @var ApiClient */
     private $apiClient;
 
-    public function __construct(ApiClient $apiClient)
+    /** @var Security */
+    private $security;
+
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {
         $this->apiClient = $apiClient;
+        $this->security = $security;
+        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -33,13 +46,26 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
      */
     public function __invoke(RenderCSVDistributionCommand $message): string
     {
-        if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
-            $this->apiClient->useApiUser($message->getCatalog()->getApiUser());
-        } else {
-            $this->apiClient->setUser($message->getUser());
+        $contents = $message->getDistribution();
+        $distribution = $contents->getDistribution();
+
+        $user = $this->security->getUser();
+        assert($user instanceof CastorUser);
+
+        if (! $this->security->isGranted('access_data', $distribution)) {
+            throw new NoAccessPermission();
         }
 
-        $study = $this->apiClient->getStudy($message->getDistribution()->getDistribution()->getDataset()->getStudy()->getId());
+        $dbStudy = $message->getDistribution()->getDistribution()->getDataset()->getStudy();
+        assert($dbStudy instanceof CastorStudy);
+
+        if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
+            $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
+        } else {
+            $this->apiClient->setUser($user);
+        }
+
+        $study = $this->apiClient->getStudy($dbStudy->getId());
         $studyFields = $this->apiClient->getPhasesAndSteps($study, true)->getFields();
         $slugify = new Slugify(['separator' => '_']);
 
@@ -54,7 +80,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             }
 
             $fields[] = $field;
-            $columns[$field->getId()] = $field->getVariableName() ?? $slugify->slugify($field->getLabel());
+            $columns[$field->getId()] = $field->getVariableName() ?? $slugify->slugify($field->getFieldLabel());
         }
 
         foreach ($message->getRecords() as $record) {
@@ -81,7 +107,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    private function renderRecord(array $fields, array $columns, Study $study, Record $record): array
+    private function renderRecord(array $fields, array $columns, CastorStudy $study, Record $record): array
     {
         $record = $this->apiClient->getRecordDataCollection($study, $record);
         $studyData = $record->getData()->getStudy();
@@ -89,8 +115,19 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $data = [];
 
         foreach ($fields as $field) {
-            $result = $studyData->getFieldResultByFieldId($field->getId());
-            $value = $result !== null ? $result->getValue() : null;
+            $results = $studyData->getFieldResultsByFieldId($field->getId());
+
+            if ($results !== null) {
+                $values = [];
+
+                foreach ($results as $result) {
+                    $values[] = $result->getValue();
+                }
+
+                $value = implode(';', $values);
+            } else {
+                $value = null;
+            }
 
             $column = $columns[$field->getId()];
             $data[$column] = $value;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Button from 'react-bootstrap/Button'
+import {Button, Stack} from "@castoredc/matter";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
@@ -13,11 +13,9 @@ import axios from "axios";
 import FormItem from "./FormItem";
 import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
-import FormHeading from "./FormHeading";
-import LoadingScreen from "../LoadingScreen";
-import Icon from "../Icon";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import Spinner from "react-bootstrap/Spinner";
+import Toggle from "../Toggle";
+import Container from "react-bootstrap/Container";
 
 export default class OrganizationsForm extends Component {
     constructor(props) {
@@ -25,27 +23,13 @@ export default class OrganizationsForm extends Component {
 
         this.state = {
             organizations: [
-                {
-                    name: '',
-                    country: '',
-                    city: '',
-                    department: '',
-                    additionalInformation: '',
-                    coordinatesLatitude: '',
-                    coordinatesLongitude: ''
-                }
+                defaultData
             ],
             countries: [],
             metadataSource: null,
             visitedFields: {},
             validation: [
-                {
-                    name: null,
-                    country: null,
-                    city: null,
-                    department: null,
-                    additionalInformation: null
-                }
+                defaultValidation
             ],
             isSaved: false,
             submitDisabled: false,
@@ -53,38 +37,28 @@ export default class OrganizationsForm extends Component {
         };
     }
 
-    handleNewOrganization = () => {
+    handleNewOrganization = (e) => {
+        e.preventDefault();
+
         this.form.isFormValid(false).then(valid => {
             if (valid) {
                 this.setState({
                     organizations: [
                         ...this.state.organizations,
-                        {
-                            name:                  '',
-                            country:               '',
-                            city:                  '',
-                            department:            '',
-                            additionalInformation: ''
-                        }
+                        defaultData
                     ],
                     validation:    [
                         ...this.state.validation,
-                        {
-                            name:                  null,
-                            country:               null,
-                            city:                  null,
-                            department:            null,
-                            additionalInformation: null
-                        }
+                        defaultValidation
                     ]
                 });
             }
         });
     };
 
-    removeOrganization = (index) => {
-
+    removeOrganization = (e, index) => {
         const { organizations, validation } = this.state;
+        e.preventDefault();
 
         organizations.splice(index, 1);
         validation.splice(index, 1);
@@ -123,13 +97,7 @@ export default class OrganizationsForm extends Component {
                 {
                     let validation = [];
                     for (let i = 0; i < response.data.length; i++) {
-                        validation.push({
-                            name: null,
-                            country: null,
-                            city: null,
-                            department: null,
-                            additionalInformation: null
-                        });
+                        validation.push(defaultValidation);
                     }
 
                     this.setState({
@@ -240,7 +208,7 @@ export default class OrganizationsForm extends Component {
 
     render() {
         const { catalog, studyId, admin = false } = this.props;
-        const { isSaved, isLoading, submitDisabled } = this.state;
+        const { organizations, validation, isSaved, isLoading, submitDisabled } = this.state;
 
         const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/details';
         const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/contacts';
@@ -263,113 +231,117 @@ export default class OrganizationsForm extends Component {
                 method="post"
             >
                 <div className="Organizations">
-                    {this.state.organizations.map((organization, index) => {
-                    return <Row key={index} className="Organization RepeatedBlock">
-                        <Col md={12}>
-                            <FormHeading label={'Organization ' + (index + 1)} />
-                            {index > 0 && <Button variant="link" className="RemoveButton" onClick={() => {this.removeOrganization(index)}}>Delete organization <Icon type="crossThick"/></Button>}
-                        </Col>
-                        <Col md={6}>
-                            <FormItem label="Name">
-                                <Input
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    name="name"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={organization.name}
-                                    serverError={this.state.validation[index].name}
-                                />
-                            </FormItem>
-                            <FormItem label="Department(s)">
-                                <Input
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    name="department"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={organization.department}
-                                    serverError={this.state.validation[index].department}
-                                />
-                            </FormItem>
-                            <FormItem label="City">
-                                <Input
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    name="city"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={organization.city}
-                                    serverError={this.state.validation[index].city}
-                                />
-                            </FormItem>
-                            <FormItem label="Country">
-                                <Dropdown
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={this.state.countries}
-                                    name="country"
-                                    onChange={(e) => {this.handleCountryChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={this.state.countries.filter(({value}) => value === organization.country)}
-                                    serverError={this.state.validation[index].country}
-                                />
-                            </FormItem>
-                        </Col>
-                        <Col md={6}>
-                            <FormItem label="Additional Information">
-                                <Input
-                                    name="additionalInformation"
-                                    onChange={(e) => {this.handleChange(index, e)}}
-                                    onBlur={this.handleFieldVisit}
-                                    value={organization.additionalInformation}
-                                    serverError={this.state.validation[index].additionalInformation}
-                                    as="textarea" rows="5"
-                                />
-                            </FormItem>
-                            {admin && <div>
-                                <FormItem label="Coordinates">
-                                    <Col md={6}>
-                                        <Input
-                                            name="coordinatesLatitude"
-                                            onChange={(e) => {this.handleChange(index, e)}}
-                                            onBlur={this.handleFieldVisit}
-                                            value={organization.coordinatesLatitude}
-                                            serverError={this.state.validation[index].coordinatesLatitude}
-                                        />
-                                    </Col>
-                                    <Col md={6}>
-                                        <Input
-                                            name="coordinatesLongitude"
-                                            onChange={(e) => {this.handleChange(index, e)}}
-                                            onBlur={this.handleFieldVisit}
-                                            value={organization.coordinatesLongitude}
-                                            serverError={this.state.validation[index].coordinatesLongitude}
-                                        />
-                                    </Col>
-                                </FormItem>
-                            </div>}
-                        </Col>
-                    </Row>;
+                    {organizations.map((organization, index) => {
+                        const title = 'Organization ' + (index + 1) + (organization.name.length > 0 ? ': ' + organization.name : '');
+
+                        return <Toggle key={index} title={title} expanded={organizations.length === (index + 1)}>
+                            <Container>
+                                <Row>
+                                        <Col md={6}>
+                                            <FormItem label="Name">
+                                                <Input
+                                                    validators={['required']}
+                                                    errorMessages={[required]}
+                                                    name="name"
+                                                    onChange={(e) => {this.handleChange(index, e)}}
+                                                    onBlur={this.handleFieldVisit}
+                                                    value={organization.name}
+                                                    serverError={validation[index].name}
+                                                />
+                                            </FormItem>
+                                            <FormItem label="Department(s)">
+                                                <Input
+                                                    validators={['required']}
+                                                    errorMessages={[required]}
+                                                    name="department"
+                                                    onChange={(e) => {this.handleChange(index, e)}}
+                                                    onBlur={this.handleFieldVisit}
+                                                    value={organization.department}
+                                                    serverError={validation[index].department}
+                                                />
+                                            </FormItem>
+                                            <FormItem label="City">
+                                                <Input
+                                                    validators={['required']}
+                                                    errorMessages={[required]}
+                                                    name="city"
+                                                    onChange={(e) => {this.handleChange(index, e)}}
+                                                    onBlur={this.handleFieldVisit}
+                                                    value={organization.city}
+                                                    serverError={validation[index].city}
+                                                />
+                                            </FormItem>
+                                            <FormItem label="Country">
+                                                <Dropdown
+                                                    validators={['required']}
+                                                    errorMessages={[required]}
+                                                    options={this.state.countries}
+                                                    name="country"
+                                                    onChange={(e) => {this.handleCountryChange(index, e)}}
+                                                    onBlur={this.handleFieldVisit}
+                                                    value={this.state.countries.filter(({value}) => value === organization.country)}
+                                                    serverError={validation[index].country}
+                                                />
+                                            </FormItem>
+                                        </Col>
+                                        <Col md={6}>
+                                            <FormItem label="Additional Information">
+                                                <Input
+                                                    name="additionalInformation"
+                                                    onChange={(e) => {this.handleChange(index, e)}}
+                                                    onBlur={this.handleFieldVisit}
+                                                    value={organization.additionalInformation}
+                                                    serverError={validation[index].additionalInformation}
+                                                    as="textarea" rows="5"
+                                                />
+                                            </FormItem>
+                                            {admin && <div>
+                                                <FormItem label="Coordinates">
+                                                    <Col md={6}>
+                                                        <Input
+                                                            name="coordinatesLatitude"
+                                                            onChange={(e) => {this.handleChange(index, e)}}
+                                                            onBlur={this.handleFieldVisit}
+                                                            value={organization.coordinatesLatitude}
+                                                            serverError={validation[index].coordinatesLatitude}
+                                                        />
+                                                    </Col>
+                                                    <Col md={6}>
+                                                        <Input
+                                                            name="coordinatesLongitude"
+                                                            onChange={(e) => {this.handleChange(index, e)}}
+                                                            onBlur={this.handleFieldVisit}
+                                                            value={organization.coordinatesLongitude}
+                                                            serverError={validation[index].coordinatesLongitude}
+                                                        />
+                                                    </Col>
+                                                </FormItem>
+                                            </div>}
+                                            {index > 0 && <Stack alignment="end" distribution="trailing">
+                                                <Button buttonType="danger" className="RemoveButton" icon="cross" onClick={(e) => {this.removeOrganization(e, index)}}>Delete organization</Button>
+                                            </Stack>}
+                                        </Col>
+                                    </Row>
+                            </Container>
+                        </Toggle>;
                 })}
                 </div>
                 <Row>
                     <Col md={12}>
-                        <Button variant="link" onClick={this.handleNewOrganization}>+ Add Another Organization</Button>
+                        <Button buttonType="secondary" icon="add" onClick={this.handleNewOrganization}>Add Another Organization</Button>
                     </Col>
                 </Row>
 
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
                         {!admin && <LinkContainer to={backUrl}>
-                            <Button variant="secondary">Back</Button>
+                            <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}
                     </Col>
                     <Col>
-                        {admin ? <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
-                            {isLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
+                        {admin ? <Button type="submit" disabled={this.state.submitDisabled}>
                             Save
-                        </Button> : <Button variant="primary" type="submit" disabled={this.state.submitDisabled}>
+                        </Button> : <Button type="submit" disabled={this.state.submitDisabled}>
                             Next
                         </Button>}
                     </Col>
@@ -379,3 +351,21 @@ export default class OrganizationsForm extends Component {
         );
     }
 }
+
+const defaultData = {
+    name: '',
+    country: '',
+    city: '',
+    department: '',
+    additionalInformation: '',
+    coordinatesLatitude: '',
+    coordinatesLongitude: ''
+};
+
+const defaultValidation = {
+    name: null,
+    country: null,
+    city: null,
+    department: null,
+    additionalInformation: null
+};

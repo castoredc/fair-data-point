@@ -6,23 +6,33 @@ namespace App\MessageHandler\Distribution;
 use App\Entity\Data\CSV\CSVDistributionElement;
 use App\Entity\Data\CSV\CSVDistributionElementFieldId;
 use App\Entity\Data\CSV\CSVDistributionElementVariableName;
+use App\Exception\NoAccessPermission;
 use App\Message\Distribution\AddCSVDistributionContentCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class AddCSVDistributionContentCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var Security */
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
     public function __invoke(AddCSVDistributionContentCommand $message): void
     {
         $distribution = $message->getDistribution();
+
+        if (! $this->security->isGranted('edit', $distribution)) {
+            throw new NoAccessPermission();
+        }
 
         if ($message->getType() === CSVDistributionElement::FIELD_ID) {
             $distribution->addElement(new CSVDistributionElementFieldId($message->getValue()));

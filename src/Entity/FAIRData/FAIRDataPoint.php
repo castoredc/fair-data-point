@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="fdp", indexes={@ORM\Index(name="iri", columns={"iri"})})
  */
-class FAIRDataPoint
+class FAIRDataPoint implements AccessibleEntity
 {
     /**
      * @ORM\Id
@@ -114,11 +114,6 @@ class FAIRDataPoint
     public function setIri(Iri $iri): void
     {
         $this->iri = $iri;
-    }
-
-    public function getAccessUrl(): string
-    {
-        return $this->iri . '/fdp';
     }
 
     public function getRelativeUrl(): string
