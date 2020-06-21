@@ -16,6 +16,7 @@ import Dropdown from "../Input/Dropdown";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import Toggle from "../Toggle";
 import Container from "react-bootstrap/Container";
+import {replaceAt} from "../../util";
 
 export default class OrganizationsForm extends Component {
     constructor(props) {
@@ -132,12 +133,19 @@ export default class OrganizationsForm extends Component {
     handleChange = (index, event, callback = (() => {})) => {
         const { organizations, validation } = this.state;
 
-        organizations[index][event.target.name] = event.target.value;
-        validation[index][event.target.name] = false;
+        const newOrganizations = replaceAt(organizations, index, {
+            ...organizations[index],
+            [event.target.name]: event.target.value
+        });
+
+        const newValidation = replaceAt(validation, index, {
+            ...validation[index],
+            [event.target.name]: false
+        });
 
         this.setState({
-            organizations: organizations,
-            validation: validation
+            organizations: newOrganizations,
+            validation: newValidation
         }, callback);
     };
 

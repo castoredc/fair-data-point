@@ -33,6 +33,8 @@ export default class StudyList extends Component {
             filterOptions:    [],
             appliedFilters:   {},
         };
+
+        this.wrapperRef = React.createRef();
     }
 
     componentDidMount() {
@@ -140,6 +142,7 @@ export default class StudyList extends Component {
             }
         }, () => {
             this.getStudies();
+            window.scrollTo(0, this.wrapperRef.current.offsetTop - 100);
         });
     };
 
@@ -154,6 +157,7 @@ export default class StudyList extends Component {
             }
         }, () => {
             this.getStudies();
+            window.scrollTo(0, this.wrapperRef.current.offsetTop - 100);
         });
     };
 
@@ -170,7 +174,7 @@ export default class StudyList extends Component {
         }
 
         return <StickyContainer>
-                <Row className="Datasets">
+                <Row className="Datasets" ref={this.wrapperRef}>
                     <Col md={listWidth} className="InformationCol">
                         {displayList && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
                             {studies.length > 0 ? <div>
@@ -211,7 +215,7 @@ export default class StudyList extends Component {
                              ! displayList && 'StickyDisabled',
                              ! displayFilter && 'Hidden',
                              (! displayList && displayFilter) && 'Overlay')}>
-                        {studies.length > 0 && <Sticky>
+                        <Sticky>
                             {({style, isSticky}) => (
                                 <Filters filters={filterOptions}
                                          isLoading={isLoadingFilters}
@@ -220,7 +224,7 @@ export default class StudyList extends Component {
                                          onFilter={(filter) => this.handleFilter(filter)}
                                  />
                             )}
-                        </Sticky>}
+                        </Sticky>
                     </Col>
                 </Row>
             </StickyContainer>;

@@ -99,7 +99,7 @@ class Dropdown extends ValidatorComponent {
                 closeMenuOnSelect={false}
                 hideSelectedOptions={false}
                 isClearable={false}
-                menuPosition="fixed"
+                // menuPosition="fixed"
                 menuPlacement="auto"
                 components={{
                     Option: CustomOption,
@@ -115,7 +115,7 @@ class Dropdown extends ValidatorComponent {
                 placeholder={placeholder}
                 isDisabled={isDisabled}
                 width={width}
-                menuPosition="fixed"
+                // menuPosition="fixed"
                 menuPlacement="auto"
             />;
         }

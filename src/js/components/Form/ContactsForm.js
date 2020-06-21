@@ -15,6 +15,7 @@ import Input from "../Input";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import Toggle from "../Toggle";
 import Container from "react-bootstrap/Container";
+import {replaceAt} from "../../util";
 
 export default class ContactsForm extends Component {
     constructor(props) {
@@ -124,12 +125,19 @@ export default class ContactsForm extends Component {
     handleChange = (index, event, callback = (() => {})) => {
         const { contacts, validation } = this.state;
 
-        contacts[index][event.target.name] = event.target.value;
-        validation[index][event.target.name] = false;
+        const newContacts = replaceAt(contacts, index, {
+            ...contacts[index],
+            [event.target.name]: event.target.value
+        });
+
+        const newValidation = replaceAt(validation, index, {
+            ...validation[index],
+            [event.target.name]: false
+        });
 
         this.setState({
-            contacts: contacts,
-            validation: validation
+            contacts: newContacts,
+            validation: newValidation
         }, callback);
     };
 

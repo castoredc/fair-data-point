@@ -43,6 +43,8 @@
     display: flex;
     padding-bottom: 12px;
     overflow: hidden;
+    align-items: flex-start;
+    align-content: flex-start;
 
     .ListItemTitle {
       font-family: 'Rubik', sans-serif;
@@ -50,6 +52,7 @@
       font-size: 20px;
       line-height: 1.5;
       color: $neutral-900;
+      flex: 1;
     }
 
     .ListItemBadge {
