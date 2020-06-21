@@ -69,7 +69,7 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
 
         /** @var CastorServerRepository $serverRepository */
         $serverRepository = $this->em->getRepository(CastorServer::class);
-        $server = $serverRepository->findBy(['url' => $user->getServer()]);
+        $server = $serverRepository->findOneBy(['url' => $user->getServer()]);
         assert($server instanceof CastorServer);
 
         $study = $this->apiClient->getStudy($command->getId());
