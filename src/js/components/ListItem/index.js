@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom";
-import Icon from "../Icon";
 import './ListItem.scss'
 import {classNames, isURL} from "../../util";
 import Tags from "../Tags";
+import {Icon} from "@castoredc/matter";
 
 class ListItem extends Component {
     render() {

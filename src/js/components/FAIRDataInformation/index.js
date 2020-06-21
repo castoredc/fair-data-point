@@ -13,6 +13,12 @@ export default class FAIRDataInformation extends Component {
     render() {
         const {embedded, className, title, badge, breadcrumbs, license, version, issued, modified, children} = this.props;
 
+        const catalog = breadcrumbs.catalog || null;
+        const study = breadcrumbs.study || null;
+        const dataset = breadcrumbs.dataset || null;
+        const distribution = breadcrumbs.distribution || null;
+        const query = breadcrumbs.query || null;
+
         return <div className={classNames(className, 'TopLevelContainer', embedded && 'Embedded')}>
             <DocumentTitle title={title}/>
 
@@ -39,19 +45,54 @@ export default class FAIRDataInformation extends Component {
                         FAIR Data Point
                     </Breadcrumb>
 
-                    {breadcrumbs.catalog && <Breadcrumb to={breadcrumbs.catalog.relativeUrl}>
+                    {breadcrumbs.catalog && <Breadcrumb to={{
+                        pathname: breadcrumbs.catalog.relativeUrl,
+                        state: {
+                            catalog: catalog,
+                        },
+                    }}>
                         {localizedText(breadcrumbs.catalog.metadata.title, 'en')}
                     </Breadcrumb>}
-                    {breadcrumbs.study && <Breadcrumb to={`/study/${breadcrumbs.study.slug}`}>
+                    {breadcrumbs.study && <Breadcrumb to={{
+                        pathname: `/study/${breadcrumbs.study.slug}`,
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                        },
+                    }}>
                         {breadcrumbs.study.metadata.briefName}
                     </Breadcrumb>}
-                    {breadcrumbs.dataset && <Breadcrumb to={breadcrumbs.dataset.relativeUrl}>
+                    {breadcrumbs.dataset && <Breadcrumb to={{
+                        pathname: breadcrumbs.dataset.relativeUrl,
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                            dataset: dataset,
+                        },
+                    }}>
                         {localizedText(breadcrumbs.dataset.metadata.title, 'en')}
                     </Breadcrumb>}
-                    {breadcrumbs.distribution && <Breadcrumb to={breadcrumbs.distribution.relativeUrl}>
+                    {breadcrumbs.distribution && <Breadcrumb to={{
+                        pathname: breadcrumbs.distribution.relativeUrl,
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                            dataset: dataset,
+                            distribution: distribution,
+                        },
+                    }}>
                         {localizedText(breadcrumbs.distribution.metadata.title, 'en')}
                     </Breadcrumb>}
-                    {(breadcrumbs.query && breadcrumbs.distribution) && <Breadcrumb to={breadcrumbs.distribution.relativeUrl + '/query'}>
+                    {(breadcrumbs.query && breadcrumbs.distribution) && <Breadcrumb to={{
+                        pathname: breadcrumbs.distribution.relativeUrl + '/query',
+                        state: {
+                            catalog: catalog,
+                            study: study,
+                            dataset: dataset,
+                            distribution: distribution,
+                            query: query
+                        },
+                    }}>
                         Query
                     </Breadcrumb>}
                 </Breadcrumbs>}
