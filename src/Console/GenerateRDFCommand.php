@@ -82,7 +82,8 @@ class GenerateRDFCommand extends Command
 
             $dbInformation = $distribution->getDatabaseInformation();
             $apiUser = $distribution->getApiUser();
-            $this->apiClient->useApiUser($apiUser);
+            $this->apiClient->useApiUser($apiUser, $this->encryptionService);
+            $this->entityHelper->useApiUser($apiUser);
 
             $study = $distribution->getDataset()->getStudy();
             assert($study instanceof CastorStudy);
@@ -102,11 +103,6 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
-
-            $apiUser = $distribution->getApiUser();
-            $this->apiClient->useApiUser($apiUser);
-            $this->entityHelper->useApiUser($apiUser);
-
             $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
 
             $dataModel = $rdfDistributionContent->getDataModel();

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\CastorEntityType;
@@ -24,10 +25,14 @@ class CastorEntityHelper
     /** @var ApiClient */
     private $apiClient;
 
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, TokenStorageInterface $tokenStorage)
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, TokenStorageInterface $tokenStorage, EncryptionService $encryptionService)
     {
         $this->em = $em;
         $this->apiClient = $apiClient;
+        $this->encryptionService = $encryptionService;
 
         if ($tokenStorage->getToken() === null) {
             return;
@@ -41,7 +46,7 @@ class CastorEntityHelper
 
     public function useApiUser(ApiUser $user): void
     {
-        $this->apiClient->useApiUser($user);
+        $this->apiClient->useApiUser($user, $this->encryptionService);
     }
 
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity

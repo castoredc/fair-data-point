@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
+use App\Encryption\SensitiveDataString;
 use App\Entity\Enum\DistributionType;
 use App\Entity\FAIRData\Dataset;
 
@@ -29,6 +30,15 @@ class CreateDistributionCommand
     /** @var string|null */
     private $dataModel;
 
+    /** @var string|null */
+    private $apiUser;
+
+    /** @var SensitiveDataString|null */
+    private $clientId;
+
+    /** @var SensitiveDataString|null */
+    private $clientSecret;
+
     public function __construct(
         DistributionType $type,
         string $slug,
@@ -36,7 +46,10 @@ class CreateDistributionCommand
         Dataset $dataset,
         int $accessRights,
         ?bool $includeAllData,
-        ?string $dataModel
+        ?string $dataModel,
+        ?string $apiUser,
+        ?SensitiveDataString $clientId,
+        ?SensitiveDataString $clientSecret
     ) {
         $this->type = $type;
         $this->slug = $slug;
@@ -45,6 +58,9 @@ class CreateDistributionCommand
         $this->accessRights = $accessRights;
         $this->includeAllData = $includeAllData;
         $this->dataModel = $dataModel;
+        $this->apiUser = $apiUser;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
     }
 
     public function getType(): DistributionType
@@ -80,5 +96,20 @@ class CreateDistributionCommand
     public function getDataModel(): ?string
     {
         return $this->dataModel;
+    }
+
+    public function getApiUser(): ?string
+    {
+        return $this->apiUser;
+    }
+
+    public function getClientId(): ?SensitiveDataString
+    {
+        return $this->clientId;
+    }
+
+    public function getClientSecret(): ?SensitiveDataString
+    {
+        return $this->clientSecret;
     }
 }

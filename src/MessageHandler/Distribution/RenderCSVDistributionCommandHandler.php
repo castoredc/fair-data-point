@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
@@ -30,10 +31,14 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
     /** @var Security */
     private $security;
 
-    public function __construct(ApiClient $apiClient, Security $security)
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {
         $this->apiClient = $apiClient;
         $this->security = $security;
+        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -55,7 +60,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         assert($dbStudy instanceof CastorStudy);
 
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
-            $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser());
+            $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
         } else {
             $this->apiClient->setUser($user);
         }

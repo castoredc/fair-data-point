@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Encryption\EncryptionService;
+use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\RDF\RDFDistribution;
@@ -11,9 +13,11 @@ use App\Entity\FAIRData\License;
 use App\Exception\InvalidDistributionType;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\CreateDistributionCommand;
+use App\Security\ApiUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class CreateDistributionCommandHandler implements MessageHandlerInterface
 {
@@ -23,26 +27,44 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
     /** @var Security */
     private $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security)
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
     {
         $this->em = $em;
         $this->security = $security;
+        $this->encryptionService = $encryptionService;
     }
 
     public function __invoke(CreateDistributionCommand $message): Distribution
     {
-        if (! $this->security->isGranted('edit', $message->getDataset())) {
+        $dataset = $message->getDataset();
+        $study = $dataset->getStudy();
+        assert($study instanceof CastorStudy);
+
+        if (! $this->security->isGranted('edit', $dataset)) {
             throw new NoAccessPermission();
         }
 
         $distribution = new Distribution(
             $message->getSlug(),
-            $message->getDataset()
+            $dataset
         );
 
         /** @var License|null $license */
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
         $distribution->setLicense($license);
+
+        if ($message->getApiUser() !== null && $message->getClientId() !== null && $message->getClientSecret() !== null) {
+            $apiUser = new ApiUser($message->getApiUser(), $study->getServer());
+            $apiUser->setDecryptedClientId($this->encryptionService, $message->getClientId()->exposeAsString());
+            $apiUser->setDecryptedClientSecret($this->encryptionService, $message->getClientSecret()->exposeAsString());
+
+            $this->em->persist($apiUser);
+
+            $distribution->setApiUser($apiUser);
+        }
 
         if ($message->getType()->isRdf()) {
             /** @var DataModel|null $dataModel */

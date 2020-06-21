@@ -183,4 +183,9 @@ class Distribution implements AccessibleEntity
     {
         return $this->apiUser;
     }
+
+    public function setApiUser(?ApiUser $apiUser): void
+    {
+        $this->apiUser = $apiUser;
+    }
 }

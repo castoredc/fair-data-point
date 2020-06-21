@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace App\Api\Request\Distribution;
 
 use App\Api\Request\SingleApiRequest;
+use App\Encryption\SensitiveDataString;
 use App\Entity\Enum\DistributionType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
+use function boolval;
 
 /**
  * @Assert\GroupSequenceProvider()
@@ -55,6 +57,31 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
      */
     private $dataModel;
 
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $apiUser;
+
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $clientId;
+
+    /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $clientSecret;
+
+    /**
+     * @var bool
+     * @Assert\NotNull()
+     * @Assert\Type("bool")
+     */
+    private $published;
+
     protected function parse(): void
     {
         $this->type = $this->getFromData('type');
@@ -63,6 +90,10 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
         $this->accessRights = (int) $this->getFromData('accessRights');
         $this->includeAllData = $this->getFromData('includeAllData');
         $this->dataModel = $this->getFromData('dataModel');
+        $this->apiUser = $this->getFromData('apiUser');
+        $this->clientId = $this->getFromData('clientId');
+        $this->clientSecret = $this->getFromData('clientSecret');
+        $this->published = boolval($this->getFromData('published'));
     }
 
     public function getType(): DistributionType
@@ -93,6 +124,26 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     public function getDataModel(): ?string
     {
         return $this->dataModel;
+    }
+
+    public function getApiUser(): ?string
+    {
+        return $this->apiUser;
+    }
+
+    public function getClientId(): ?SensitiveDataString
+    {
+        return $this->clientId !== null ? new SensitiveDataString($this->clientId) : null;
+    }
+
+    public function getClientSecret(): ?SensitiveDataString
+    {
+        return $this->clientSecret !== null ? new SensitiveDataString($this->clientSecret) : null;
+    }
+
+    public function getPublished(): bool
+    {
+        return $this->published;
     }
 
     /** @inheritDoc */

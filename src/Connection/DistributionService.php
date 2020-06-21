@@ -77,8 +77,8 @@ class DistributionService
         $params = [
             'driver' => 'pdo_mysql',
             'host' => $this->host,
-            'user' => $databaseInformation->getDecryptedUsername($encryptionService),
-            'password' => $databaseInformation->getDecryptedPassword($encryptionService),
+            'user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+            'password' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             'dbname' => $databaseInformation->getDatabase(),
             'port' => $this->port,
         ];
@@ -95,8 +95,8 @@ class DistributionService
             'db_adapter' => 'pdo',
             'db_pdo_protocol' => 'mysql',
             'db_host' => $this->host . ':' . $this->port,
-            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService),
-            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService),
+            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             'db_name' => $databaseInformation->getDatabase(),
             'store_name' => $store,
         ];
@@ -121,8 +121,8 @@ class DistributionService
             'db_adapter' => 'pdo',
             'db_pdo_protocol' => 'mysql',
             'db_host' => $this->host . ':' . $this->port,
-            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService),
-            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService),
+            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             'db_name' => $databaseInformation->getDatabase(),
 
             'store_name' => self::CURRENT_STORE,
@@ -181,8 +181,8 @@ class DistributionService
         try {
             $sql = sprintf(
                 "CREATE USER '%s'@'%%' IDENTIFIED BY '%s'",
-                $databaseInformation->getDecryptedUsername($encryptionService),
-                $databaseInformation->getDecryptedPassword($encryptionService)
+                $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
+                $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString()
             );
             $connection->exec($sql);
         } catch (Throwable $t) {
@@ -192,7 +192,7 @@ class DistributionService
         try {
             $connection->exec(
                 'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER, EXECUTE, LOCK TABLES, CREATE, DROP, CREATE TEMPORARY TABLES
-                ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService) . '\'@\'%\';'
+                ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString() . '\'@\'%\';'
             );
         } catch (Throwable $t) {
             throw new CouldNotCreateDatabase();

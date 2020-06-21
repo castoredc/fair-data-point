@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
+use App\Encryption\EncryptionService;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\RenderRDFDistributionCommand;
@@ -32,12 +33,16 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
     /** @var UriHelper */
     private $uriHelper;
 
-    public function __construct(ApiClient $apiClient, Security $security, CastorEntityHelper $entityHelper, UriHelper $uriHelper)
+    /** @var EncryptionService */
+    private $encryptionService;
+
+    public function __construct(ApiClient $apiClient, Security $security, CastorEntityHelper $entityHelper, UriHelper $uriHelper, EncryptionService $encryptionService)
     {
         $this->apiClient = $apiClient;
         $this->security = $security;
         $this->entityHelper = $entityHelper;
         $this->uriHelper = $uriHelper;
+        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -58,7 +63,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $apiUser = $distribution->getApiUser();
 
         if ($apiUser !== null) {
-            $this->apiClient->useApiUser($apiUser);
+            $this->apiClient->useApiUser($apiUser, $this->encryptionService);
             $this->entityHelper->useApiUser($apiUser);
         } else {
             $this->apiClient->setUser($user);

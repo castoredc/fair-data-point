@@ -14,6 +14,7 @@ import Dropdown from "../../Input/Dropdown";
 import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
 import {Button} from "@castoredc/matter";
+import FormHeading from "../FormHeading";
 
 export default class DistributionForm extends Component {
     constructor(props) {
@@ -30,6 +31,7 @@ export default class DistributionForm extends Component {
             dataModels:     [],
             distribution:   props.distribution ? props.distribution : null,
             update:         !!props.distribution,
+            showApiUser:    props.distribution ? ! props.distribution.hasApiUser : true
         };
     }
 
@@ -154,9 +156,15 @@ export default class DistributionForm extends Component {
         return false;
     };
 
+    showApiUser = () => {
+        this.setState({
+            showApiUser: true
+        });
+    };
+
     render() {
         const { dataset } = this.props;
-        const { data, validation, licenses, dataModels, isSaved, update, distribution, submitDisabled } = this.state;
+        const { data, validation, licenses, dataModels, isSaved, update, distribution, submitDisabled, showApiUser } = this.state;
 
         const required = "This field is required";
 
@@ -238,6 +246,62 @@ export default class DistributionForm extends Component {
                     />
                 </FormItem>
 
+                {distribution && <FormItem label="Publish distribution">
+                    <RadioGroup
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={[
+                            {
+                                label: 'Yes',
+                                value: true
+                            },
+                            {
+                                label: 'No',
+                                value: false
+                            }
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.published}
+                        variant="horizontal"
+                        name="published"
+                    />
+                </FormItem>}
+
+                <FormHeading label="Castor EDC API Credentials" />
+
+                {showApiUser ? <div>
+                    <FormItem label="Email address">
+                        <Input
+                            name="apiUser"
+                            onChange={this.handleChange}
+                            value={data.apiUser}
+                            serverError={validation.apiUser}
+                        />
+                    </FormItem>
+
+                    <FormItem label="Client ID">
+                        <Input
+                            name="clientId"
+                            onChange={this.handleChange}
+                            value={data.clientId}
+                            serverError={validation.clientId}
+                        />
+                    </FormItem>
+
+                    <FormItem label="Client Secret">
+                        <Input
+                            name="clientSecret"
+                            onChange={this.handleChange}
+                            value={data.clientSecret}
+                            serverError={validation.clientSecret}
+                        />
+                    </FormItem>
+                </div> : <div>
+                    <p>The API Credentials for this distribution are encrypted.</p>
+
+                    <Button buttonType="danger" onClick={this.showApiUser}>Change API Credentials</Button>
+                </div>}
+
                 <Row className="FullScreenSteppedFormButtons">
                     <Col>
                     </Col>
@@ -276,5 +340,9 @@ export const defaultData = {
     accessRights: null,
     includeAllData: null,
     dataModel: '',
-    license: null
+    license: null,
+    apiUser: '',
+    clientId: '',
+    clientSecret: '',
+    published: false
 };

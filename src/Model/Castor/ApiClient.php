@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
+use App\Encryption\EncryptedString;
+use App\Encryption\EncryptionService;
+use App\Encryption\SensitiveDataString;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Data\InstanceDataCollection;
 use App\Entity\Castor\Data\RecordData;
@@ -74,16 +77,19 @@ class ApiClient
         $this->server = $user->getServer();
     }
 
-    public function useApiUser(ApiUser $user): void
+    public function useApiUser(ApiUser $user, EncryptionService $encryptionService): void
     {
         $this->server = $user->getServer()->getUrl()->getValue();
-        $this->auth($user->getClientId(), $user->getClientSecret());
+        $this->auth(
+            $encryptionService->decrypt(EncryptedString::fromJsonString($user->getClientId())),
+            $encryptionService->decrypt(EncryptedString::fromJsonString($user->getClientSecret()))
+        );
     }
 
     /**
      * @throws ErrorFetchingCastorData
      */
-    public function auth(string $clientId, string $secret): void
+    public function auth(SensitiveDataString $clientId, SensitiveDataString $secret): void
     {
         try {
             $response = $this->client->request(
@@ -91,8 +97,8 @@ class ApiClient
                 $this->server . '/oauth/token',
                 [
                     'json' => [
-                        'client_id' => $clientId,
-                        'client_secret' => $secret,
+                        'client_id' => $clientId->exposeAsString(),
+                        'client_secret' => $secret->exposeAsString(),
                         'grant_type' => 'client_credentials',
                     ],
                 ]

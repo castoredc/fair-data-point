@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
+use App\Encryption\SensitiveDataString;
 use App\Entity\FAIRData\Distribution;
 
 class UpdateDistributionCommand
@@ -25,13 +26,29 @@ class UpdateDistributionCommand
     /** @var string|null */
     private $dataModel;
 
+    /** @var string|null */
+    private $apiUser;
+
+    /** @var SensitiveDataString|null */
+    private $clientId;
+
+    /** @var SensitiveDataString|null */
+    private $clientSecret;
+
+    /** @var bool */
+    private $published;
+
     public function __construct(
         Distribution $distribution,
         string $slug,
         string $license,
         int $accessRights,
         ?bool $includeAllData,
-        ?string $dataModel
+        ?string $dataModel,
+        ?string $apiUser,
+        ?SensitiveDataString $clientId,
+        ?SensitiveDataString $clientSecret,
+        bool $published
     ) {
         $this->distribution = $distribution;
         $this->slug = $slug;
@@ -39,6 +56,10 @@ class UpdateDistributionCommand
         $this->accessRights = $accessRights;
         $this->includeAllData = $includeAllData;
         $this->dataModel = $dataModel;
+        $this->apiUser = $apiUser;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->published = $published;
     }
 
     public function getDistribution(): Distribution
@@ -69,5 +90,25 @@ class UpdateDistributionCommand
     public function getDataModel(): ?string
     {
         return $this->dataModel;
+    }
+
+    public function getApiUser(): ?string
+    {
+        return $this->apiUser;
+    }
+
+    public function getClientId(): ?SensitiveDataString
+    {
+        return $this->clientId;
+    }
+
+    public function getClientSecret(): ?SensitiveDataString
+    {
+        return $this->clientSecret;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published;
     }
 }
