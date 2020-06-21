@@ -8,7 +8,7 @@ export default class CatalogSteppedForm extends Component {
         const {smallHeading, catalog, heading, description, currentStep, children} = this.props;
 
         return <FullScreenSteppedForm
-            brandText={localizedText(catalog.title, 'en')}
+            brandText={localizedText(catalog.metadata.title, 'en')}
             smallHeading={smallHeading}
             heading={heading}
             description={description}

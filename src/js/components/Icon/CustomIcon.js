@@ -13,9 +13,9 @@ export default ({
   onClick,
   role,
 }) => {
-  const Icon = icons[type];
+  const CustomIcon = icons[type];
   return (
-    <Icon
+    <CustomIcon
       className={classNames('Icon', className, type)}
       width={width}
       height={height}

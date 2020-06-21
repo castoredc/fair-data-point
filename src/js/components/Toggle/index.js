@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import Icon from '../Icon';
 import {classNames} from "../../util";
 import './Toggle.scss';
+import {Icon} from "@castoredc/matter";
 
 export default class Toggle extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ export default class Toggle extends Component {
                 {title}
 
                 <div className={classNames('ToggleArrow', expanded && 'Active')}>
-                    <Icon type="arrowDown" width={12} height={12} />
+                    <Icon type="arrowBottom" width={12} height={12} />
                 </div>
             </div>
             {expanded && <div className={classNames('ToggleContent', expanded && 'Active')}>

@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 import {localizedText} from "../../../util";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import LoadingScreen from "../../../components/LoadingScreen";
+import {Button} from "@castoredc/matter";
 
 export default class Finished extends Component {
     constructor(props) {
@@ -63,7 +63,7 @@ export default class Finished extends Component {
             heading="Thanks, all done!"
             description={description}
         >
-            <Button variant="primary" href={'/fdp/' + this.props.catalog.slug}>Visit the {localizedText(this.props.catalog.title, 'en')}</Button>
+            <Button variant="primary" href={'/fdp/' + this.props.catalog.slug}>Visit the {localizedText(this.props.catalog.metadata.title, 'en')}</Button>
         </CatalogSteppedForm>
     }
 }

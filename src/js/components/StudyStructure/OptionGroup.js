@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {Button, Col, Row} from "react-bootstrap";
-import Icon from '../Icon';
 import Annotations from "../Annotations";
 import Toggle from "../Toggle";
+import {Icon} from "@castoredc/matter";
 
 export default class OptionGroup extends Component {
     constructor(props) {

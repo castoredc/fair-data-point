@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import axios from "axios/index";
 
 import ListItem from "../../../components/ListItem";
-import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
@@ -11,6 +10,7 @@ import Col from "react-bootstrap/Col";
 import LoadingScreen from "../../../components/LoadingScreen";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 import {localizedText} from "../../../util";
+import {Button} from "@castoredc/matter";
 
 export default class AddStudy extends Component {
     constructor(props) {
@@ -21,7 +21,8 @@ export default class AddStudy extends Component {
             studies: {},
             isLoading: true,
             isSaved: false,
-            submitDisabled: true
+            submitDisabled: true,
+            study: null
         };
     }
 
@@ -63,12 +64,13 @@ export default class AddStudy extends Component {
             submitDisabled: true
         });
 
-        axios.post('/api/catalog/' + this.props.match.params.catalog + '/study/add', {
+        axios.post('/api/catalog/' + this.props.match.params.catalog + '/study/import', {
             studyId: this.state.selectedStudy
         })
         .then((response) => {
             this.setState({
-                isSaved: true
+                isSaved: true,
+                study: response.data
             });
         })
             .catch((error) => {
@@ -89,14 +91,16 @@ export default class AddStudy extends Component {
     };
 
     render() {
-        if(this.state.isLoading)
+        const { isLoading, isSaved, study } = this.state;
+
+        if(isLoading)
         {
             return <LoadingScreen showLoading={true}/>;
         }
 
-        if(this.state.isSaved)
+        if(isSaved)
         {
-            return <Redirect push to={'/my-studies/' + this.props.match.params.catalog + '/study/' + this.state.selectedStudy + '/metadata/details'} />;
+            return <Redirect push to={'/my-studies/' + this.props.match.params.catalog + '/study/' + study.id + '/metadata/details'} />;
         }
 
         return <CatalogSteppedForm
@@ -104,14 +108,14 @@ export default class AddStudy extends Component {
             currentStep={1}
             smallHeading="Step One"
             heading="Choose a Study"
-            description={'Please choose an item from your list of studies that you’d like to include in the ' + localizedText(this.props.catalog.title, 'en') + '.'}
+            description={'Please choose an item from your list of studies that you’d like to include in the ' + localizedText(this.props.catalog.metadata.title, 'en') + '.'}
         >
             {this.state.studies.length > 0 ? this.state.studies.map((study) => {
-                    return <ListItem key={study.id}
+                    return <ListItem key={study.sourceId}
                                      title={study.name}
                                      selectable={true}
-                                     active={this.state.selectedStudy === study.id}
-                                     onClick={() => {this.handleStudySelect(study.id)}}
+                                     active={this.state.selectedStudy === study.sourceId}
+                                     onClick={() => {this.handleStudySelect(study.sourceId)}}
                                      leftIcon="study"
                     />
                 }

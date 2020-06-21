@@ -134,6 +134,7 @@ export default class Login extends Component {
                                                  leftIcon={'flag' + server.flag.toUpperCase()}
                                                  className="ServerListItem"
                                                  fill={false}
+                                                 customIcon={true}
                                 />
                             })}
                         </div>

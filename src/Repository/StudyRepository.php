@@ -10,6 +10,7 @@ use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Department;
 use App\Entity\FAIRData\Organization;
 use App\Entity\Metadata\StudyMetadata;
+use App\Entity\Study;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -149,5 +150,13 @@ class StudyRepository extends EntityRepository
             'source' => $source,
             'sourceId' => $sourceId,
         ]) > 0;
+    }
+
+    public function findStudyBySourceAndId(StudySource $source, string $sourceId): ?Study
+    {
+        return $this->findOneBy([
+            'source' => $source,
+            'sourceId' => $sourceId,
+        ]);
     }
 }

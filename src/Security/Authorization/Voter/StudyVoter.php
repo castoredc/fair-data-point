@@ -70,6 +70,6 @@ class StudyVoter extends Voter
             return true;
         }
 
-        return in_array($study->getId(), $user->getStudies(), true);
+        return in_array($study->getSourceId(), $user->getStudies(), true);
     }
 }

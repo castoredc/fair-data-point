@@ -4,12 +4,15 @@ import './ListItem.scss'
 import {classNames, isURL} from "../../util";
 import Tags from "../Tags";
 import {Icon} from "@castoredc/matter";
+import CustomIcon from "../Icon/CustomIcon";
 
 class ListItem extends Component {
     render() {
         const {   title,
                   description,
-                  link, leftIcon,
+                  link,
+                  leftIcon,
+                  customIcon = false,
                   smallIcon,
                   fill = true,
                   newWindow = false,
@@ -24,7 +27,8 @@ class ListItem extends Component {
         if(selectable)
         {
             return <a href="#" className={classNames("ListItem", "Selectable", active && 'Active', className)} onClick={onClick}>
-                {leftIcon && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><Icon type={leftIcon} /></span>}
+                {(leftIcon && !customIcon) && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><Icon type={leftIcon} /></span>}
+                {(leftIcon && customIcon) && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><CustomIcon type={leftIcon} /></span>}
                 <span className="ListItemTitle">{title}</span>
                 <span className="ListItemDescription">{description}</span>
             </a>;

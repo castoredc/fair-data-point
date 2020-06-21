@@ -4,7 +4,6 @@ import DocumentTitle from "../DocumentTitle";
 import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Logo from '../Logo';
-import Icon from '../Icon';
 import './FAIRDataInformation.scss';
 import Breadcrumbs from "../Breadcrumbs";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
