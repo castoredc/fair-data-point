@@ -209,7 +209,6 @@ export default class Filters extends Component {
                             options={options.country}
                             name="country"
                             onChange={(e) => {this.handleSelectChange('country', e)}}
-                            width="fullWidth"
                         />
                     </FormItem>}
                 </div>}

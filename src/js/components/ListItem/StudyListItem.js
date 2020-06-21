@@ -5,7 +5,7 @@ import ListItem from "./index";
 
 export default class StudyListItem extends Component {
     render() {
-        const { link, name, fdp, catalog, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false}  = this.props;
+        const { link, name, fdp, catalog, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false} = this.props;
 
         let badgeText = badge;
 

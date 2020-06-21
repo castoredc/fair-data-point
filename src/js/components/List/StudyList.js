@@ -158,8 +158,8 @@ export default class StudyList extends Component {
     };
 
     render() {
-        const { embedded, isLoadingStudies, isLoadingMap, isLoadingFilters, filterOptions, pagination, studies, map } = this.state;
-        const { displayList, displayFilter, fdp, catalog } = this.props;
+        const { isLoadingStudies, isLoadingMap, isLoadingFilters, filterOptions, pagination, studies, map } = this.state;
+        const { embedded, displayList, displayFilter, fdp, catalog } = this.props;
 
         const displayMap = ! displayList;
         const listWidth = displayList ? 8 : 12;
