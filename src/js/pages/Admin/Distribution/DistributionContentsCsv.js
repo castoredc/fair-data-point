@@ -17,7 +17,7 @@ export default class DistributionContentsCsv extends Component {
             {distribution.includeAllData ? <div className="NoResults">
                 This distribution contains all fields.
             </div> : <CSVStudyStructure
-                studyId={distribution.study}
+                studyId={distribution.study.id}
                 distributionContents={contents}
                 catalog={catalog}
                 dataset={dataset}

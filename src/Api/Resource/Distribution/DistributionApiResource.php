@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
@@ -35,7 +36,7 @@ class DistributionApiResource implements ApiResource
             'hasMetadata' => $this->distribution->hasMetadata(),
             'hasContents' => $this->distribution->hasContents(),
             'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
-            'study' => $this->distribution->getDataset()->getStudy() !== null ? $this->distribution->getDataset()->getStudy()->getId() : null,
+            'study' => $this->distribution->getDataset()->getStudy() !== null ? (new StudyApiResource($this->distribution->getDataset()->getStudy()))->toArray() : null,
             'hasApiUser' => $this->distribution->getApiUser() !== null,
             'published' => $this->distribution->hasContents() ? $this->distribution->getContents()->isPublished() : false,
         ];

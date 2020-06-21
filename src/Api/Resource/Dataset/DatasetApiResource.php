@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Dataset;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\FAIRData\Dataset;
 
 class DatasetApiResource implements ApiResource
@@ -27,7 +28,7 @@ class DatasetApiResource implements ApiResource
             'slug' => $this->dataset->getSlug(),
             'hasMetadata' => $this->dataset->hasMetadata(),
             'published' => $this->dataset->isPublished(),
-            'study' => $this->dataset->getStudy() !== null ? $this->dataset->getStudy()->getId() : null,
+            'study' => $this->dataset->getStudy() !== null ? (new StudyApiResource($this->dataset->getStudy()))->toArray() : null,
         ];
 
         if ($this->dataset->hasMetadata()) {

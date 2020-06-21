@@ -1,0 +1,160 @@
+import React, {Component} from 'react';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import {ValidatorForm} from 'react-form-validator-core';
+
+import '../Form.scss'
+import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
+import ToastContent from "../../ToastContent";
+import axios from "axios";
+import FormItem from "./../FormItem";
+import Input from "../../Input";
+import RadioGroup from "../../Input/RadioGroup";
+import {mergeData} from "../../../util";
+import {Button, Icon} from "@castoredc/matter";
+import Form from 'react-bootstrap/Form'
+
+export default class DatasetForm extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            data:           props.dataset ? mergeData(defaultData, props.dataset) : defaultData,
+            validation:     {},
+            isSaved:        false,
+            submitDisabled: false,
+            dataset:        props.dataset ? props.dataset : null,
+            update:         !!props.dataset,
+            showApiUser:    props.dataset ? ! props.dataset.hasApiUser : true
+        };
+    }
+
+    handleChange = (event) => {
+        const { data } = this.state;
+        const newState = {
+            data: {
+                ...data,
+                [event.target.name]: event.target.value,
+            },
+            validation: {
+                [event.target.name]: false,
+            }
+        };
+        this.setState(newState);
+    };
+
+    handleSubmit = (event) => {
+        const { dataset } = this.props;
+        event.preventDefault();
+
+        const { data } = this.state;
+
+        if(this.form.isFormValid()) {
+            this.setState({
+                submitDisabled: true,
+                isLoading: true
+            });
+
+           axios.post('/api/dataset/' + dataset.slug, data)
+                .then((response) => {
+                    this.setState({
+                        isSaved: true,
+                        isLoading: false,
+                        submitDisabled: false
+                    });
+
+                    toast.success(<ToastContent type="success" message="The dataset details are saved successfully" />, {
+                        position: "top-right"
+                    });
+                })
+                .catch((error) => {
+                    if (error.response && error.response.status === 400) {
+                        this.setState({
+                            validation: error.response.data.fields
+                        });
+                    } else {
+                        toast.error(<ToastContent type="error" message="An error occurred"/>, {
+                            position: "top-center"
+                        });
+                    }
+                    this.setState({
+                        submitDisabled: false,
+                        isLoading: false
+                    });
+                });
+        }
+
+        return false;
+    };
+
+    render() {
+        const { data, validation, submitDisabled, dataset } = this.state;
+
+        const required = "This field is required";
+
+        return (
+            <ValidatorForm
+                ref={node => (this.form = node)}
+                onSubmit={this.handleSubmit}
+                method="post"
+            >
+                {dataset.study && <FormItem label="Study">
+                    <Form.Group className="Input">
+                        <Link to={`/admin/study/${dataset.study.id}`}>
+                            <Icon type="study" /> {dataset.study.hasMetadata ? dataset.study.metadata.briefName : dataset.study.name}
+                        </Link>
+                    </Form.Group>
+                </FormItem>}
+
+                <FormItem label="Slug">
+                    <Input
+                        validators={['required']}
+                        errorMessages={[required]}
+                        name="slug"
+                        onChange={this.handleChange}
+                        value={data.slug}
+                        serverError={validation.slug}
+                    />
+                </FormItem>
+
+                <FormItem label="Publish dataset">
+                    <RadioGroup
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={[
+                            {
+                                label: 'Yes',
+                                value: true
+                            },
+                            {
+                                label: 'No',
+                                value: false
+                            }
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.published}
+                        variant="horizontal"
+                        name="published"
+                    />
+                </FormItem>
+
+                <Row className="FullScreenSteppedFormButtons">
+                    <Col>
+                    </Col>
+                    <Col>
+                        <Button disabled={submitDisabled}>
+                            Update dataset
+                        </Button>
+                    </Col>
+                </Row>
+
+            </ValidatorForm>
+        );
+    }
+}
+
+export const defaultData = {
+    slug: '',
+    published: false
+};

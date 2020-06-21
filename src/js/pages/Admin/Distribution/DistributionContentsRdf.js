@@ -47,7 +47,7 @@ export default class DistributionContentsRdf extends Component {
             <DataModelMappingModal
                 dataset={dataset}
                 distribution={distribution}
-                studyId={distribution.study}
+                studyId={distribution.study.id}
                 show={showModal}
                 handleClose={this.closeModal}
                 mapping={selectedMapping}

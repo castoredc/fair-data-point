@@ -3,21 +3,31 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Dataset;
 
+use App\Api\Request\Dataset\DatasetApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionsApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Dataset;
+use App\Exception\ApiRequestParseError;
+use App\Message\Dataset\UpdateDatasetCommand;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function dump;
 
+/**
+ * @Route("/api/dataset/{dataset}", name="api_dataset")
+ * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+ */
 class DatasetApiController extends ApiController
 {
     /**
-     * @Route("/api/dataset/{dataset}", name="api_dataset")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @Route("", methods={"GET"}, name="api_dataset")
      */
     public function dataset(Dataset $dataset): Response
     {
@@ -27,8 +37,36 @@ class DatasetApiController extends ApiController
     }
 
     /**
-     * @Route("/api/dataset/{dataset}/distribution", methods={"GET"}, name="api_dataset_distributions")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @Route("", methods={"POST"}, name="api_dataset_update")
+     */
+    public function updateDataset(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $dataset);
+
+        try {
+            /** @var DatasetApiRequest $parsed */
+            $parsed = $this->parseRequest(DatasetApiRequest::class, $request);
+            $bus->dispatch(
+                new UpdateDatasetCommand(
+                    $dataset,
+                    $parsed->getSlug(),
+                    $parsed->getPublished()
+                )
+            );
+
+            return new JsonResponse([], 200);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+            dump($e);
+
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/distribution", methods={"GET"}, name="api_dataset_distributions")
      */
     public function distributions(Dataset $dataset, UriHelper $uriHelper): Response
     {
