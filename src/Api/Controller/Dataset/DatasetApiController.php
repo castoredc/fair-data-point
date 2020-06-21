@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use function dump;
 
 /**
  * @Route("/api/dataset/{dataset}", name="api_dataset")
@@ -58,9 +57,6 @@ class DatasetApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-            dump($e);
-
             return new JsonResponse([], 500);
         }
     }

@@ -15,8 +15,10 @@ use App\Service\UriHelper;
 use EasyRdf_Graph;
 use EasyRdf_Namespace;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use Throwable;
 use function assert;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
@@ -36,13 +38,23 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
     /** @var EncryptionService */
     private $encryptionService;
 
-    public function __construct(ApiClient $apiClient, Security $security, CastorEntityHelper $entityHelper, UriHelper $uriHelper, EncryptionService $encryptionService)
-    {
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(
+        ApiClient $apiClient,
+        Security $security,
+        CastorEntityHelper $entityHelper,
+        UriHelper $uriHelper,
+        EncryptionService $encryptionService,
+        LoggerInterface $logger
+    ) {
         $this->apiClient = $apiClient;
         $this->security = $security;
         $this->entityHelper = $entityHelper;
         $this->uriHelper = $uriHelper;
         $this->encryptionService = $encryptionService;
+        $this->logger = $logger;
     }
 
     /**
@@ -82,7 +94,17 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         }
 
         foreach ($command->getRecords() as $record) {
-            $graph = $helper->renderRecord($record, $graph);
+            try {
+                $graph = $helper->renderRecord($record, $graph);
+            } catch (Throwable $t) {
+                $this->logger->critical('An error occurred while rendering the record', [
+                    'exception' => $t,
+                    'Message' => $t->getMessage(),
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                    'RecordID' => $record->getId(),
+                ]);
+            }
         }
 
         return $graph;

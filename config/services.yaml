@@ -57,3 +57,9 @@ services:
     Castor\BioPortal\Api\ApiWrapper:
         arguments:
             - { apiKey: '%env(BIOPORTAL_API_KEY)%' }
+
+    custom_slack_handler:
+        class: App\Logging\SlackWebhookHandler
+        arguments:
+            - '%env(SLACK_DEBUG_WEBHOOK_URL)%'
+            - '%kernel.project_dir%'

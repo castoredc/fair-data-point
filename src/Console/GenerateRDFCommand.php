@@ -17,12 +17,15 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf_Graph;
 use EasyRdf_Namespace;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 use const DATE_ATOM;
 use function assert;
 use function count;
+use function get_class;
 use function sprintf;
 
 class GenerateRDFCommand extends Command
@@ -48,14 +51,25 @@ class GenerateRDFCommand extends Command
     /** @var EncryptionService */
     private $encryptionService;
 
-    public function __construct(ApiClient $apiClient, EntityManagerInterface $em, CastorEntityHelper $entityHelper, UriHelper $uriHelper, DistributionService $distributionService, EncryptionService $encryptionService)
-    {
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(
+        ApiClient $apiClient,
+        EntityManagerInterface $em,
+        CastorEntityHelper $entityHelper,
+        UriHelper $uriHelper,
+        DistributionService $distributionService,
+        EncryptionService $encryptionService,
+        LoggerInterface $logger
+    ) {
         $this->apiClient = $apiClient;
         $this->em = $em;
         $this->entityHelper = $entityHelper;
         $this->uriHelper = $uriHelper;
         $this->distributionService = $distributionService;
         $this->encryptionService = $encryptionService;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -114,7 +128,8 @@ class GenerateRDFCommand extends Command
             }
 
             $imported = [];
-            $notImported = [];
+            $errors = [];
+            $skipped = [];
 
             foreach ($records as $record) {
                 $import = false;
@@ -137,26 +152,46 @@ class GenerateRDFCommand extends Command
                 }
 
                 if ($import) {
-                    $graph = new EasyRdf_Graph();
+                    try {
+                        $graph = new EasyRdf_Graph();
 
-                    $output->writeln('    - Rendering record ' . $record->getId());
+                        $output->writeln('    - Rendering record ' . $record->getId());
 
-                    $graph = $helper->renderRecord($record, $graph);
-                    $turtle = $graph->serialise('turtle');
+                        $graph = $helper->renderRecord($record, $graph);
+                        $turtle = $graph->serialise('turtle');
 
-                    $output->writeln(sprintf('    - Saving record to <%s>', $recordGraphUri));
+                        $output->writeln(sprintf('    - Saving record to <%s>', $recordGraphUri));
 
-                    $store->insert($turtle, $recordGraphUri);
+                        $store->insert($turtle, $recordGraphUri);
 
-                    $imported[] = $record;
+                        $imported[] = $record;
+                    } catch (Throwable $t) {
+                        $output->writeln('    - An error occurred while rendering the record:');
+                        $output->writeln('      ' . get_class($t));
+
+                        if ($t->getMessage() !== '') {
+                            $output->writeln('      ' . $t->getMessage());
+                        }
+
+                        $this->logger->critical('An error occurred while rendering the record', [
+                            'exception' => $t,
+                            'Message' => $t->getMessage(),
+                            'Distribution' => $distribution->getSlug(),
+                            'DistributionID' => $distribution->getId(),
+                            'RecordID' => $record->getId(),
+                        ]);
+
+                        $errors[] = $record;
+                    }
                 } else {
-                    $notImported[] = $record;
+                    $skipped[] = $record;
                 }
             }
 
             $output->writeln(['', 'Import finished']);
             $output->writeln(sprintf('- %s record(s) imported', count($imported)));
-            $output->writeln(sprintf('- %s record(s) skipped', count($notImported)));
+            $output->writeln(sprintf('- %s record(s) not imported due to errors', count($errors)));
+            $output->writeln(sprintf('- %s record(s) skipped', count($skipped)));
 
             $rdfDistributionContent->setLastImport($timeStamp);
             $this->em->persist($rdfDistributionContent);
