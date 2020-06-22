@@ -166,15 +166,15 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             ];
         }
 
-        if ($stackTrace !== null) {
-            $blocks[] = [
-                'type' => 'section',
-                'text' => [
-                    'type' => 'mrkdwn',
-                    'text' => sprintf("*Stack trace*\n```%s```", $stackTrace),
-                ],
-            ];
-        }
+        // if ($stackTrace !== null) {
+        //     $blocks[] = [
+        //         'type' => 'section',
+        //         'text' => [
+        //             'type' => 'mrkdwn',
+        //             'text' => sprintf("*Stack trace*\n```%s```", $stackTrace),
+        //         ],
+        //     ];
+        // }
 
         return [
             'text' => $header,
