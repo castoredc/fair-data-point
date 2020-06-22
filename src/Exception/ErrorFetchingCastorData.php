@@ -7,16 +7,6 @@ use Exception;
 
 class ErrorFetchingCastorData extends Exception
 {
-    /** @var string */
-    protected $message;
-
-    public function __construct(string $message)
-    {
-        parent::__construct();
-
-        $this->message = $message;
-    }
-
     /**
      * @return array<mixed>
      */
