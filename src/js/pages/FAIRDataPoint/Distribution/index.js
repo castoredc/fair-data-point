@@ -91,6 +91,7 @@ export default class Distribution extends Component {
                                                         title="Query the data"
                                                         description="Use SPARQL queries to extract specific information from this distribution."
                                                         smallIcon={restricted && 'lock'}
+                                                        newWindow
                     />}
 
                     {distribution.accessUrl && <ListItem link={distribution.accessUrl}
