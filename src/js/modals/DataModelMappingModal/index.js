@@ -92,8 +92,8 @@ export default class DataModelMappingModal extends Component {
             {mapping && <Alert
                 variant="info"
                 icon="info">
-                {mapping.node.value.value === 'plain' && <span>Only fields that are supporting <strong>a plain {mapping.node.value.dataType} value</strong> can be selected.</span>}
-                {mapping.node.value.value === 'annotated' && <span>Only fields that are supporting <strong>an annotated value</strong> can be selected.</span>}
+                {mapping.node.value.value === 'plain' && <span>Only fields that are supporting <b>a plain {mapping.node.value.dataType} value</b> can be selected.</span>}
+                {mapping.node.value.value === 'annotated' && <span>Only fields that are supporting <b>an annotated value</b> can be selected.</span>}
             </Alert>}
             {hasLoadedStructure && <RDFStudyStructure
                 studyId={studyId}
