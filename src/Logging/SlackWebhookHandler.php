@@ -134,16 +134,6 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             ],
         ];
 
-        if ($previousException !== null) {
-            $blocks[] = [
-                'type' => 'section',
-                'text' => [
-                    'type' => 'mrkdwn',
-                    'text' => sprintf("*Previous message*\n%s", $previousException->getMessage()),
-                ],
-            ];
-        }
-
         $currentUser = '_Not logged in_';
 
         if ($this->security !== null && $this->security->getUser() !== null) {
