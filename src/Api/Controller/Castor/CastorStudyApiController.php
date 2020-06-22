@@ -45,6 +45,8 @@ class CastorStudyApiController extends ApiController
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
+            $this->logger->critical('An error occurred while loading the studies from Castor', ['exception' => $e]);
         }
 
         return new JsonResponse([], 500);

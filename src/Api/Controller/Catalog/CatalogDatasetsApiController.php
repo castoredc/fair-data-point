@@ -65,6 +65,12 @@ class CatalogDatasetsApiController extends ApiController
                 return new JsonResponse($e->toArray(), 403);
             }
 
+            $this->logger->critical('An error occurred while adding a dataset to a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

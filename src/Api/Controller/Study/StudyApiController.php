@@ -62,6 +62,12 @@ class StudyApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

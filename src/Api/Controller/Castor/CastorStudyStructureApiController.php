@@ -59,6 +59,12 @@ class CastorStudyStructureApiController extends ApiController
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
+
+            $this->logger->critical('An error occurred while getting the study structure', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
         }
 
         return new JsonResponse([], 500);
@@ -93,6 +99,13 @@ class CastorStudyStructureApiController extends ApiController
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
+
+            $this->logger->critical('An error occurred while getting the study structure step', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+                'Step' => $step,
+            ]);
         }
 
         return new JsonResponse([], 500);
@@ -130,6 +143,12 @@ class CastorStudyStructureApiController extends ApiController
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
+
+            $this->logger->critical('An error occurred while getting the option groups', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
         }
 
         return new JsonResponse([], 500);

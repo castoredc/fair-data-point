@@ -53,6 +53,8 @@ class TerminologyApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting concept suggestions', ['exception' => $e]);
+
             return new JsonResponse([], 500);
         }
     }

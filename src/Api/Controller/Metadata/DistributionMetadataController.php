@@ -48,6 +48,12 @@ class DistributionMetadataController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while adding metadata for a distribution', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

@@ -57,6 +57,12 @@ class DatasetApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating a dataset', [
+                'exception' => $e,
+                'Dataset' => $dataset->getSlug(),
+                'DatasetID' => $dataset->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

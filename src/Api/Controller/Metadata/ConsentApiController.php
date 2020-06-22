@@ -76,6 +76,12 @@ class ConsentApiController extends ApiController
                 return new JsonResponse([], 200);
             }
 
+            $this->logger->critical('An error occurred while updating consent information', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
             return new JsonResponse([$e->getMessage()], 500);
         }
     }

@@ -75,6 +75,12 @@ class AnnotationApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
+            $this->logger->critical('An error occurred while adding an annotation', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -7,6 +7,7 @@ use App\Api\Request\SingleApiRequest;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Model\Castor\ApiClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,10 +22,14 @@ abstract class ApiController extends AbstractController
     /** @var ValidatorInterface */
     protected $validator;
 
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator)
+    /** @var LoggerInterface */
+    protected $logger;
+
+    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger)
     {
         $this->apiClient = $apiClient;
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
     /**

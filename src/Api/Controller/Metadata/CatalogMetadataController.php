@@ -50,6 +50,12 @@ class CatalogMetadataController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while adding metadata for a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

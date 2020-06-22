@@ -53,6 +53,8 @@ class DataModelModuleApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while creating a data model module', ['exception' => $e]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -75,6 +77,11 @@ class DataModelModuleApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating a data model module', [
+                'exception' => $e,
+                'ModuleID' => $module->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -92,6 +99,11 @@ class DataModelModuleApiController extends ApiController
 
             return new JsonResponse([], 200);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while deleting a data model module', [
+                'exception' => $e,
+                'ModuleID' => $module->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

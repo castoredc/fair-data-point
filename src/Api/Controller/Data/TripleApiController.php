@@ -53,6 +53,8 @@ class TripleApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while adding a data model triple', ['exception' => $e]);
+
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,6 +77,11 @@ class TripleApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating a data model triple', [
+                'exception' => $e,
+                'TripleID' => $triple->getId(),
+            ]);
+
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -91,9 +98,12 @@ class TripleApiController extends ApiController
             $bus->dispatch(new DeleteTripleCommand($triple));
 
             return new JsonResponse([]);
-        } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while deleting a data model triple', [
+                'exception' => $e,
+                'TripleID' => $triple->getId(),
+            ]);
+
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
