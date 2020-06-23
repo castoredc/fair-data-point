@@ -42,3 +42,9 @@ export const ValueType = {
     'plain':      'Plain',
     'annotated':  'Annotated',
 };
+
+export const LoginViews = {
+    'generic': 'page',
+    'distribution': 'distribution',
+    'dataset': 'dataset'
+};
