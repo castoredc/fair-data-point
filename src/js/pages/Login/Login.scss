@@ -1,15 +1,15 @@
 @import '../../scss/colors';
 
 .Login {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translateY(-50%) translateX(-50%);
-  transform: translateY(-50%) translateX(-50%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: inherit;
 
   .LoginContainer {
-    width: 500px;
-    margin: auto;
+    max-width: 550px;
+    margin: 40px auto;
 
     .LoginLogo, .LoginButton, h1 {
       text-align: center;
@@ -41,6 +41,10 @@
       font-weight: 600;
       line-height: 1.57;
       margin-bottom: 32px;
+
+      p:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 
