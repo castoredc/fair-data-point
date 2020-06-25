@@ -13,7 +13,15 @@ export const getBreadCrumbs = (location, data) => {
             data: fdp,
             path: '/fdp',
             state: {fdp}
-        } : null,
+        } : {
+            type: 'fdp',
+            title: 'FAIR Data Point',
+            data: {
+                title: 'FAIR Data Point'
+            },
+            path: '/fdp',
+            state: {}
+        },
         catalog ? {
             type:  'catalog',
             title: catalog.hasMetadata ? catalog.metadata.title : 'Catalog',
@@ -45,7 +53,7 @@ export const getBreadCrumbs = (location, data) => {
         query ? {
             type: 'query',
             title: 'Query',
-            path: `${distribution.relativeUrl}/query`,
+            path: distribution ? `${distribution.relativeUrl}/query` : '/query',
             state: {fdp, catalog, study, dataset, query}
         } : null,
     ];

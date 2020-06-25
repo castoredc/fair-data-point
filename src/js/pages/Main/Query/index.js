@@ -102,21 +102,21 @@ export default class Query extends Component {
     createYasgui = () => {
         const {distribution} = this.state;
 
-        let config = {};
-
-        if (distribution) {
-            config['requestConfig'] = {
-                endpoint: window.location.origin + distribution.relativeUrl + '/sparql',
-            }
-        }
-
-        this.yasqe = new Yasqe(document.getElementById("query"), config);
-
-        this.yasqe.on("query", this.onQuery);
-        this.yasqe.on("queryResponse", this.onResponse);
-
         this.setState({
             isLoading: false
+        }, () => {
+            let config = {};
+
+            if (distribution) {
+                config['requestConfig'] = {
+                    endpoint: window.location.origin + distribution.relativeUrl + '/sparql',
+                }
+            }
+
+            this.yasqe = new Yasqe(document.getElementById("query"), config);
+
+            this.yasqe.on("query", this.onQuery);
+            this.yasqe.on("queryResponse", this.onResponse);
         });
     };
 
@@ -171,7 +171,7 @@ export default class Query extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, {distribution, query: true});
 
-        let title = (hasDistribution && !isLoading) ? `Query ${localizedText(distribution.metadata.title, 'en')}` : 'Query';
+        let title = (hasDistribution && !isLoading) ? localizedText(distribution.metadata.title, 'en') : 'Query';
         const executedWithoutErrors = (queryExecuted && !error);
 
         return <Layout

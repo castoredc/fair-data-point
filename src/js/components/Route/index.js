@@ -1,10 +1,10 @@
 import React from "react";
 import {Redirect, Route} from 'react-router-dom';
 
-export const PrivateRoute = ({ component: Component, path, user, ...rest }) => (
+export const PrivateRoute = ({ component: Component, path, user, embedded, ...rest }) => (
     <Route {...rest} render={(props) => (
         user !== null
-            ? <Component {...props} />
+            ? <Component {...props} user={user} embedded={embedded} />
             : <Redirect to={{
                 pathname: '/login',
                 search:   '?path=' + encodeURI(window.location.pathname)

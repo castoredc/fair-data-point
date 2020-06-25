@@ -27,7 +27,8 @@ export default class Main extends Component {
             <Route path="/fdp/dataset/:dataset" exact render={(props) => <Dataset {...props} embedded={embedded} user={user} />} />
 
             <Route path="/fdp/dataset/:dataset/distribution/:distribution" exact render={(props) => <Distribution {...props} embedded={embedded} user={user} />} />
-            <PrivateRoute path="/fdp/dataset/:dataset/distribution/:distribution/query" exact render={(props) => <Query {...props} embedded={embedded} user={user} />} />
+            
+            <PrivateRoute path="/fdp/dataset/:dataset/distribution/:distribution/query" exact component={Query} embedded={embedded} user={user} />
 
             /* Tools */
             <Route path="/tools/metadata-xml-parse" exact render={(props) => <MetadataXmlParse {...props} embedded={embedded} user={user} />} />
