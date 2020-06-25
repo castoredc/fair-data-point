@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, createRef} from 'react';
 import {classNames, localizedText} from "../../util";
 import DocumentTitle from "../DocumentTitle";
 import {Container, Row} from "react-bootstrap";
@@ -7,7 +7,8 @@ import '../../pages/Main/Main.scss';
 import Breadcrumbs from "../Breadcrumbs";
 import Col from "react-bootstrap/Col";
 import './Header.scss';
-import {Button, CastorLogo, Heading} from "@castoredc/matter";
+import {Button, CastorLogo, Heading, Menu} from "@castoredc/matter";
+import Nav from "react-bootstrap/Nav";
 
 export default class Header extends Component {
     constructor(props) {
@@ -17,7 +18,7 @@ export default class Header extends Component {
             mobile: null,
             smallHeader: false
         };
-    }
+    };
 
     componentDidMount() {
         window.addEventListener("resize", this.resize.bind(this));
@@ -41,9 +42,29 @@ export default class Header extends Component {
         this.setState({smallHeader: distanceY > shrinkOn});
     }
 
+    toggleMenu = () => {
+        const { showMenu } = this.state;
+
+        this.setState({
+            showMenu: !showMenu
+        });
+    };
+
     render() {
-        const { embedded, className, title, badge, location, data, breadcrumbs } = this.props;
-        const { mobile, smallHeader } = this.state;
+        const { embedded, className, title, badge, location, data, breadcrumbs, user } = this.props;
+        const { mobile, smallHeader, showMenu } = this.state;
+
+        const menu = <div className="DropdownMenu">
+            <Menu
+                items={[
+                    {
+                        destination: '/logout',
+                        icon: 'logOut',
+                        label: 'Log out'
+                    }
+                ]}
+            />
+        </div>;
 
         return <header className={classNames(className, embedded && 'Embedded', mobile ? 'Mobile' : 'Desktop')}>
             <DocumentTitle title={title}/>
@@ -52,13 +73,22 @@ export default class Header extends Component {
                 {! mobile && <div className={classNames('MainHeader', smallHeader && 'Small')}>
                     <Container>
                         <Row>
-                            <Col md={8} className="HeaderLogoCol">
+                            <Col md={4} className="HeaderLogoCol">
                                 <Link to="/fdp">
                                     <CastorLogo className="Logo" />
                                 </Link>
                             </Col>
-                            <Col md={4} className="HeaderUserCol">
-                                {/*<Button></Button>*/}
+                            <Col md={8} className="HeaderUserCol">
+                                {user ? <div>
+                                    <Button icon="account" onClick={this.toggleMenu} isDropdown isOpen={showMenu}>
+                                        {user.fullName}
+                                    </Button>
+
+                                    {showMenu && menu}
+
+                                </div> : <Link to={'/login?path=' + encodeURIComponent(window.location.pathname)}>
+                                    <Button icon="account">Log in</Button>
+                                </Link>}
                             </Col>
                         </Row>
                     </Container>
@@ -82,7 +112,12 @@ export default class Header extends Component {
                                 </Link>
                             </Col>
                             <Col className="HeaderUserCol">
-                                {/*<Button></Button>*/}
+                                {user ? <div>
+                                    <Button icon="account" iconDescription={user.fullName} onClick={this.toggleMenu}/>
+                                    {showMenu && menu}
+                                </div> : <Link to={'/login?path=' + encodeURIComponent(window.location.pathname)}>
+                                    <Button icon="account" iconDescription="Log in" />
+                                </Link>}
                             </Col>
                         </Row>
                     </Container>
