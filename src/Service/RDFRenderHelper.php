@@ -163,6 +163,11 @@ class RDFRenderHelper
                         assert($optionGroup instanceof FieldOptionGroup);
 
                         $option = $optionGroup->getOptionByValue($fieldResult->getValue());
+
+                        if ($option === null) {
+                            return null;
+                        }
+
                         $annotations = $option->getAnnotations();
 
                         if (count($annotations) === 0) {

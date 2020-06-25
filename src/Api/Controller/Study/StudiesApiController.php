@@ -68,6 +68,8 @@ class StudiesApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting the studies', ['exception' => $e]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -142,6 +144,8 @@ class StudiesApiController extends ApiController
             if ($e instanceof StudyAlreadyExists) {
                 return new JsonResponse($e->toArray(), 409);
             }
+
+            $this->logger->critical('An error occurred while adding a study', ['exception' => $e]);
 
             return new JsonResponse([], 500);
         }

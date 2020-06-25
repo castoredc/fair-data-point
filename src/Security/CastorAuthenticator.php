@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\Castor\CastorStudy;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Dataset;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -16,8 +18,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use function assert;
+use function http_build_query;
 use function strtr;
-use function urlencode;
 
 class CastorAuthenticator extends SocialAuthenticator
 {
@@ -123,8 +126,13 @@ class CastorAuthenticator extends SocialAuthenticator
     {
         $url = '/login';
 
+        $params = [
+            'path' => $request->getRequestUri(),
+        ];
+
         if ($request->attributes->has('catalog')) {
             $catalog = null;
+            $params['view'] = 'catalog';
 
             if ($request->attributes->get('catalog') instanceof Catalog) {
                 /** @var Catalog $catalog */
@@ -138,8 +146,34 @@ class CastorAuthenticator extends SocialAuthenticator
             }
         }
 
+        if ($request->attributes->has('dataset')) {
+            $dataset = null;
+            $params['view'] = 'dataset';
+
+            if ($request->attributes->get('dataset') instanceof Dataset) {
+                /** @var Dataset $dataset */
+                $dataset = $request->attributes->get('dataset');
+            } else {
+                $dataset = $this->em->getRepository(Dataset::class)->findOneBy(['slug' => $request->attributes->get('dataset')]);
+            }
+
+            $study = $dataset !== null ? $dataset->getStudy() : null;
+
+            if ($study !== null) {
+                assert($study instanceof CastorStudy);
+
+                $params['server'] = $study->getServer()->getId();
+                $params['serverLocked'] = true;
+            }
+        }
+
+        if ($request->attributes->has('distribution')) {
+            $dataset = null;
+            $params['view'] = 'distribution';
+        }
+
         return new RedirectResponse(
-            $url . '?path=' . urlencode($request->getRequestUri()), // might be the site, where users choose their oauth provider
+            $url . '?' . http_build_query($params),
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

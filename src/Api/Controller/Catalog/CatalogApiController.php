@@ -59,6 +59,12 @@ class CatalogApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating the catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -95,6 +101,12 @@ class CatalogApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting the datasets for a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -120,6 +132,12 @@ class CatalogApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting the map information for a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

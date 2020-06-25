@@ -110,6 +110,12 @@ class RdfDistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 404);
             }
 
+            $this->logger->critical('An error occurred while adding a mapping to an RDF distribution', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

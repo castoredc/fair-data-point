@@ -82,6 +82,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 
         $stackTrace = null;
         $message = $record['message'];
+        $previousException = null;
 
         if (array_key_exists('context', $record) && count($record['context']) > 0) {
             $exception = array_key_exists('exception', $record['context']) ? $record['context']['exception'] : null;
@@ -94,6 +95,11 @@ class SlackWebhookHandler extends AbstractProcessingHandler
                 if ($exception instanceof HandlerFailedException) {
                     $exception = $exception->getPrevious();
                     $exceptionClass .= "\n" . get_class($exception);
+                }
+
+                if ($exception->getPrevious() !== null) {
+                    $previousException = $exception->getPrevious();
+                    $exceptionClass .= sprintf("\n(%s)", get_class($previousException));
                 }
 
                 $stackTrace = $exception->getTraceAsString();
@@ -166,15 +172,15 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             ];
         }
 
-        if ($stackTrace !== null) {
-            $blocks[] = [
-                'type' => 'section',
-                'text' => [
-                    'type' => 'mrkdwn',
-                    'text' => sprintf("*Stack trace*\n```%s```", $stackTrace),
-                ],
-            ];
-        }
+        // if ($stackTrace !== null) {
+        //     $blocks[] = [
+        //         'type' => 'section',
+        //         'text' => [
+        //             'type' => 'mrkdwn',
+        //             'text' => sprintf("*Stack trace*\n```%s```", $stackTrace),
+        //         ],
+        //     ];
+        // }
 
         return [
             'text' => $header,

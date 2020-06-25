@@ -11,6 +11,7 @@ import {localizedText} from "../../util";
 import Logo from "../../components/Logo";
 import ListItem from "../../components/ListItem";
 import {Button} from "@castoredc/matter";
+import {LoginViews} from "../../components/MetadataItem/EnumMappings";
 
 export default class Login extends Component {
     constructor(props) {
@@ -20,7 +21,9 @@ export default class Login extends Component {
             servers: [],
             catalog: null,
             isLoading: true,
-            selectedServer: null
+            selectedServer: null,
+            serverLocked: true,
+            view: 'generic'
         };
     }
 
@@ -39,12 +42,16 @@ export default class Login extends Component {
                 const defaultServer = response.data.filter((server) => server.default)[0].id;
                 const serverIds = response.data.map((server) => server.id);
                 const urlParamServer = (typeof params.server !== 'undefined') ? parseInt(params.server) : null;
+                const serverLocked = (typeof params.serverLocked !== 'undefined') ? (params.serverLocked === '1') : false;
+                const view = (typeof params.view !== 'undefined') ? params.view : 'generic';
                 const selectedServer = (urlParamServer !== null && serverIds.includes(urlParamServer)) ? urlParamServer : defaultServer;
 
                 this.setState({
                     servers:   response.data,
                     isLoading: false,
-                    selectedServer: selectedServer
+                    selectedServer: selectedServer,
+                    serverLocked: serverLocked,
+                    view: view
                 });
             })
             .catch((error) => {
@@ -79,6 +86,8 @@ export default class Login extends Component {
     };
 
     render() {
+        const { serverLocked, view } = this.state;
+
         const params = queryString.parse(this.props.location.search);
         const loginUrl = '/connect/castor/' + this.state.selectedServer + (typeof params.path !== 'undefined' ? '?target_path=' + params.path : '');
 
@@ -88,6 +97,9 @@ export default class Login extends Component {
         }
 
         const brand = this.state.catalog !== null ? localizedText(this.state.catalog.name, 'en') : 'FAIR Data Point';
+
+        const viewName = LoginViews[view] || LoginViews['generic'];
+
 
         return (
             <div className="Login TopLevelContainer">
@@ -105,8 +117,8 @@ export default class Login extends Component {
                         <h1>{brand}</h1>
 
                         <div className="LoginText">
-                            <p>To enter your study in the {brand} you must be a registered Castor user.
-                                Please log in with your Castor EDC account and allow the application to access your information.</p>
+                            <p>To enter your study in the {brand} you must be a registered Castor EDC user.</p>
+                            <p>Please log in with your Castor EDC account and allow the application to access your information.</p>
                             {this.state.catalog.accessingData === false && <p>
                                 The application only accesses high-level information from your study and will not download nor upload any data to your study.
                             </p>}
@@ -115,12 +127,12 @@ export default class Login extends Component {
                         <h1>{brand}</h1>
 
                         <div className="LoginText">
-                            You need to be a registered Castor user in order to access this page.
-                            Please log in with your Castor EDC account and allow the application to access your information.
+                            <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>
+                            <p>Please log in with your Castor EDC account and allow the application to access your information.</p>
                         </div>
                     </div>}
 
-                    <div className="Servers">
+                    {! serverLocked && <div className="Servers">
                         <div className="ServerText">
                             My study is located on a Castor server in
                         </div>
@@ -138,7 +150,7 @@ export default class Login extends Component {
                                 />
                             })}
                         </div>
-                    </div>
+                    </div>}
 
 
                     <div className="LoginButton">

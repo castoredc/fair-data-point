@@ -61,6 +61,8 @@ class DataModelApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while creating a data model', ['exception' => $e]);
+
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

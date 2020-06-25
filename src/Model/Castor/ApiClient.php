@@ -139,11 +139,11 @@ class ApiClient
                 case 401:
                     throw new SessionTimedOut();
                 case 403:
-                    throw new NoAccessPermission();
+                    throw new NoAccessPermission($e->getMessage(), $e->getCode(), $e);
                 case 404:
-                    throw new NotFound();
+                    throw new NotFound($e->getMessage(), $e->getCode(), $e);
                 default:
-                    throw new ErrorFetchingCastorData($e->getMessage());
+                    throw new ErrorFetchingCastorData($e->getMessage(), $e->getCode(), $e);
             }
         } catch (Throwable $e) {
             throw new ErrorFetchingCastorData($e->getMessage());

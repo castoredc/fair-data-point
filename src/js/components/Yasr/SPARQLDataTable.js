@@ -79,7 +79,7 @@ export default class SPARQLDataTable extends Component {
     formatLiteral = (literalBinding) => {
         const { prefixes } = this.props;
 
-        let stringRepresentation = escape(literalBinding.value);
+        let stringRepresentation = literalBinding.value;
         if (literalBinding["xml:lang"]) {
             stringRepresentation = <span>{stringRepresentation} <sup>{literalBinding["xml:lang"]}</sup></span>;
         } else if (literalBinding.datatype) {

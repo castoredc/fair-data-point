@@ -57,6 +57,12 @@ class StudyDatasetApiController extends ApiController
 
             return new JsonResponse((new DatasetApiResource($dataset))->toArray());
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while creating a dataset for a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }

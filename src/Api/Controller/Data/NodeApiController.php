@@ -72,6 +72,8 @@ class NodeApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
+            $this->logger->critical('An error occurred while adding a data model node', ['exception' => $e]);
+
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

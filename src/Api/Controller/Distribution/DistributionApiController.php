@@ -94,6 +94,12 @@ class DistributionApiController extends ApiController
         } catch (GroupedApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while changing the distribution contents', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -143,6 +149,8 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 409);
             }
 
+            $this->logger->critical('An error occurred while adding a distribution', ['exception' => $e]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -182,6 +190,12 @@ class DistributionApiController extends ApiController
             if ($e instanceof LanguageNotFound) {
                 return new JsonResponse($e->toArray(), 409);
             }
+
+            $this->logger->critical('An error occurred while updating a distribution', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
 
             return new JsonResponse([], 500);
         }

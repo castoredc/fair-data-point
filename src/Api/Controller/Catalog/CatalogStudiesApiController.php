@@ -66,6 +66,12 @@ class CatalogStudiesApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting the studies for a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -118,6 +124,12 @@ class CatalogStudiesApiController extends ApiController
                 return new JsonResponse($e->toArray(), 403);
             }
 
+            $this->logger->critical('An error occurred while adding a study to a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -158,6 +170,12 @@ class CatalogStudiesApiController extends ApiController
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
+            $this->logger->critical('An error occurred while importing a study to a catalog', [
+                'exception' => $e,
+                'Catalog' => $catalog->getSlug(),
+                'CatalogID' => $catalog->getId(),
+            ]);
 
             return new JsonResponse([], 500);
         }

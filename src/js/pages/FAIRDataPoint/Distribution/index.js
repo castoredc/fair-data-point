@@ -84,13 +84,11 @@ export default class Distribution extends Component {
                         The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself.
                     </Alert>
                     }
-                    {distribution.isCached && <ListItem link={{
-                                                        pathname: distribution.relativeUrl + '/query',
-                                                        state: {...breadcrumbs}
-                                                        }}
+                    {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
                                                         title="Query the data"
                                                         description="Use SPARQL queries to extract specific information from this distribution."
                                                         smallIcon={restricted && 'lock'}
+                                                        newWindow
                     />}
 
                     {distribution.accessUrl && <ListItem link={distribution.accessUrl}

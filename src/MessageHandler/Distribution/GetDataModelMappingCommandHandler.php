@@ -34,7 +34,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
     {
         $distribution = $command->getDistribution();
 
-        if (! $this->security->isGranted('view', $distribution)) {
+        if (! $this->security->isGranted('view', $distribution->getDistribution())) {
             throw new NoAccessPermission();
         }
 
