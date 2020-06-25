@@ -28,9 +28,9 @@ export default ({user}) =>
         <Route path="/login/:catalogSlug" exact component={Login} />
 
         /* FAIR Data Point */
-        <Route path="/fdp" user={user} component={Main} />
-        <Route path="/study" user={user} component={Main} />
-        <Route path="/tools" user={user} component={Main} />
+        <Route path="/fdp" render={(props) => <Main {...props} user={user} />} />
+        <Route path="/study" render={(props) => <Main {...props} user={user} />} />
+        <Route path="/tools" render={(props) => <Main {...props} user={user} />} />
 
         /* My studies */
         {/*<PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />*/}
