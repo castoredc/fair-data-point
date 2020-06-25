@@ -5,7 +5,7 @@ import ListItem from "./index";
 
 export default class StudyListItem extends Component {
     render() {
-        const { link, name, fdp, catalog, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false} = this.props;
+        const { link, name, state, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false} = this.props;
 
         let badgeText = badge;
 
@@ -32,10 +32,7 @@ export default class StudyListItem extends Component {
             tags={tags}
             link={newWindow ? link : {
                 pathname: link,
-                state: {
-                    fdp: fdp,
-                    catalog: catalog
-                }
+                state: state
             }}
             newWindow={newWindow}
         />;

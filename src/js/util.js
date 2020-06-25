@@ -38,6 +38,10 @@ export const paragraphText = (text) => {
 };
 
 export const localizedText = (texts, language = 'en', paragraph = false) => {
+    if (typeof texts === 'string') {
+        return texts;
+    }
+
     if (texts === null || typeof texts === 'undefined') {
         return '';
     }

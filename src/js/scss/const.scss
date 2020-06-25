@@ -1,11 +1,13 @@
-$RootNavSize: 48px;
-$RootNavSizeExpanded: 128px;
-$SideNavSize: 208px;
-$NavHeaderDesktopHeight: 57px;
-$NavHeaderMobileHeight: 48px;
-$MarginsDesktop: 32px;
-$MarginsMobile: 24px;
-$RightPanelWidth: 208px;
-$PaginationHeightDesktop: 48px;
-$PaginationHeightMobile: 56px;
 $radius: 3px;
+
+$logoHeight: 24px;
+$logoWidth: 90px;
+
+$desktopHeaderPadding: 30px;
+$desktopHeaderHeight: (2 * $desktopHeaderPadding) + $logoHeight;
+
+$desktopHeaderPaddingSmall: 15px;
+$desktopHeaderHeightSmall: (2 * $desktopHeaderPaddingSmall) + $logoHeight;
+
+$mobileHeaderPadding: 15px;
+$mobileHeaderHeight: (2 * $mobileHeaderPadding) + 33px;

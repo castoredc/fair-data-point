@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 
 import ListItem from "../../../components/ListItem";
 import {Redirect} from "react-router-dom";

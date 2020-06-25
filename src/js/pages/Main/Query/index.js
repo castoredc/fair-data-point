@@ -1,19 +1,21 @@
 import React, {Component} from "react";
-import FAIRDataInformation from "../../components/FAIRDataInformation";
+import Header from "../../../components/Layout/Header";
 import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "../../components/ToastContent";
-import {classNames, localizedText} from "../../util";
-import LoadingScreen from "../../components/LoadingScreen";
+import {toast} from "react-toastify/index";
+import ToastContent from "../../../components/ToastContent";
+import {classNames, localizedText} from "../../../util";
 import Yasqe from "@triply/yasqe";
 import "@triply/yasgui/build/yasgui.min.css";
 import './Query.scss';
-import SPARQLDataTable from "../../components/Yasr/SPARQLDataTable";
-import Alert from "../../components/Alert";
-import InlineLoader from "../../components/LoadingScreen/InlineLoader";
+import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
+import Alert from "../../../components/Alert";
+import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Button} from "@castoredc/matter";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Layout from "../../../components/Layout";
+import MainBody from "../../../components/Layout/MainBody";
+import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
 
 export default class Query extends Component {
     constructor(props) {
@@ -164,60 +166,61 @@ export default class Query extends Component {
     };
 
     render() {
-        const {hasDistribution, isLoading, distribution, prefixes, columns, rows, queryExecuted, error, message, isExecutingQuery, showEditor, executionTime} = this.state;
-        const {location} = this.props;
+        const { hasDistribution, isLoading, distribution, prefixes, columns, rows, queryExecuted, error, message, isExecutingQuery, showEditor, executionTime } = this.state;
+        const { location, user, embedded } = this.props;
 
-        let title = 'Query';
+        const breadcrumbs = getBreadCrumbs(location, {distribution, query: true});
+
+        let title = (hasDistribution && !isLoading) ? `Query ${localizedText(distribution.metadata.title, 'en')}` : 'Query';
         const executedWithoutErrors = (queryExecuted && !error);
 
-        if (hasDistribution && !isLoading) {
-            title = `Query ${localizedText(distribution.metadata.title, 'en')}`
-        }
-
-        return <FAIRDataInformation
+        return <Layout
             className="Query"
             title={title}
-            breadcrumbs={{...location.state, distribution: distribution, query: true}}
+            isLoading={isLoading}
+            embedded={embedded}
         >
-            {isLoading && <LoadingScreen showLoading={true}/>}
+            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
-            <div className="QueryTools">
-                <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
-                <Row className="QueryButtons">
-                    <Col>
-                        {executedWithoutErrors && <div className="ResultCount"><strong>{rows.length}</strong> results in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds</div>}
-                    </Col>
-                    <Col>
-                        {executedWithoutErrors && <Button onClick={this.toggleEditor}
-                                                          buttonType="secondary"
-                                                          fullWidth
-                                                          isDropdown
-                                                          isOpen={showEditor}
-                                                          className="ShowHideButton"
-                        >
-                            {showEditor ? 'Hide' : 'Show'} query editor
-                        </Button>}
-                    </Col>
-                    <Col>
-                        <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">Run query</Button>
-                    </Col>
-                </Row>
-            </div>
-            {isExecutingQuery && <InlineLoader />}
+            <MainBody>
+                <div className="QueryTools">
+                    <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
+                    <Row className="QueryButtons">
+                        <Col>
+                            {executedWithoutErrors && <div className="ResultCount"><strong>{rows.length}</strong> results in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds</div>}
+                        </Col>
+                        <Col>
+                            {executedWithoutErrors && <Button onClick={this.toggleEditor}
+                                                              buttonType="secondary"
+                                                              fullWidth
+                                                              isDropdown
+                                                              isOpen={showEditor}
+                                                              className="ShowHideButton"
+                            >
+                                {showEditor ? 'Hide' : 'Show'} query editor
+                            </Button>}
+                        </Col>
+                        <Col>
+                            <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">Run query</Button>
+                        </Col>
+                    </Row>
+                </div>
+                {isExecutingQuery && <InlineLoader />}
 
-            {executedWithoutErrors && <SPARQLDataTable
-                vars={columns}
-                bindings={rows}
-                prefixes={prefixes}
-                fullUrl={distribution.fullUrl}
-            />}
+                {executedWithoutErrors && <SPARQLDataTable
+                    vars={columns}
+                    bindings={rows}
+                    prefixes={prefixes}
+                    fullUrl={distribution.fullUrl}
+                />}
 
 
-            {error && <Alert variant="error" icon="errorCircled">
-                <strong>An error occurred, please check your query and try again</strong>
-                {message}
-            </Alert>}
+                {error && <Alert variant="error" icon="errorCircled">
+                    <strong>An error occurred, please check your query and try again</strong>
+                    {message}
+                </Alert>}
+            </MainBody>
 
-        </FAIRDataInformation>;
+        </Layout>;
     }
 }

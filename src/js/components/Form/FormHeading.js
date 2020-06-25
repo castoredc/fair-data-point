@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Form from 'react-bootstrap/Form'
+import {Heading} from "@castoredc/matter";
 
 class FormHeading extends Component {
     render() {
@@ -7,7 +8,7 @@ class FormHeading extends Component {
         return (
             <div className="FormHeading">
                 <Form.Row>
-                    <h2>{label}</h2>
+                    <Heading type="Subsection">{label}</Heading>
                 </Form.Row>
             </div>
         );

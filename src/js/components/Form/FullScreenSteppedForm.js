@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import './FullScreenSteppedForm.scss'
 import {classNames} from "../../util";
 import Container from "react-bootstrap/Container";
-import Logo from './../Logo';
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import DocumentTitle from "../DocumentTitle";
+import {CastorLogo} from "@castoredc/matter";
 
 export default class FullScreenSteppedForm extends Component {
     getBreadCrumbs = () => {
@@ -33,7 +33,7 @@ export default class FullScreenSteppedForm extends Component {
                 <Col lg={6}>
                     <div className="FullScreenSteppedFormBrand">
                         <div className="FullScreenSteppedFormBrandLogo">
-                            <Logo/>
+                            <CastorLogo className="Logo" />
                         </div>
                         <div className="FullScreenSteppedFormBrandText">
                             {brandText}

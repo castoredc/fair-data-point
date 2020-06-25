@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 
 import {Col, Row} from "react-bootstrap";
 import {classNames} from "../../util";
@@ -163,7 +163,7 @@ export default class StudyList extends Component {
 
     render() {
         const { isLoadingStudies, isLoadingMap, isLoadingFilters, filterOptions, pagination, studies, map } = this.state;
-        const { embedded, displayList, displayFilter, fdp, catalog } = this.props;
+        const { embedded, displayList, displayFilter, state, catalog } = this.props;
 
         const displayMap = ! displayList;
         const listWidth = displayList ? 8 : 12;
@@ -184,7 +184,7 @@ export default class StudyList extends Component {
                                     }
                                     return <StudyListItem key={index}
                                                           newWindow={embedded}
-                                                          fdp={fdp}
+                                                          state={state}
                                                           catalog={catalog}
                                                           link={`/study/${item.slug}`}
                                                           name={item.metadata.briefName}

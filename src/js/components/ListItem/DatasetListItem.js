@@ -4,18 +4,14 @@ import ListItem from "./index";
 
 export default class DatasetListItem extends Component {
     render() {
-        const { link, name, fdp, catalog, study, description, newWindow = false}  = this.props;
+        const { link, name, state, description, newWindow = false}  = this.props;
 
         return <ListItem
             title={name}
             description={description}
             link={newWindow ? link : {
                 pathname: link,
-                state: {
-                    fdp: fdp,
-                    catalog: catalog,
-                    study: study
-                }
+                state: state
             }}
             newWindow={newWindow}
         />;

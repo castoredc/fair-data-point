@@ -1,7 +1,6 @@
 import React, {Component, createRef} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
 import {Container} from "react-bootstrap";
-import Logo from "../../../components/Logo";
 import './PageWrapper.scss';
 import NotFound from "../../NotFound";
 import Navbar from "react-bootstrap/Navbar";
@@ -11,7 +10,7 @@ import DataModels from "../Home/DataModels";
 import DataModel from "../DataModel";
 import {LinkContainer} from 'react-router-bootstrap'
 import Catalogs from "../Home/Catalogs";
-import {Icon, Menu} from "@castoredc/matter";
+import {CastorLogo, Icon, Menu} from "@castoredc/matter";
 import Studies from "../Home/Studies";
 import Catalog from "../Catalog";
 import Distribution from "../Distribution";
@@ -46,7 +45,7 @@ export default class PageWrapper extends Component {
                 <Container>
                     <Navbar bg="transparent" variant="dark" expand="lg">
                         <Navbar.Brand className="LogoContainer">
-                            <Logo />
+                            <CastorLogo className="Logo" />
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">

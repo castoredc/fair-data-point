@@ -81,10 +81,10 @@ class Dropdown extends ValidatorComponent {
                 }
 
                 if (value.length === options.length) {
-                    return props.index === 0 ? <div>All</div> : null;
+                    return props.Header === 0 ? <div>All</div> : null;
                 }
 
-                return props.index === 0 ? <div>{value.length} selected</div> : null;
+                return props.Header === 0 ? <div>{value.length} selected</div> : null;
             };
 
             SelectComponent = <CastorDropdown

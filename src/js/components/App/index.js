@@ -65,21 +65,19 @@ class App extends Component {
 
     render() {
         return (
-            <div>
-                <div className={this.state.isLoading ? 'App Loading' : 'App Loaded'}>
-                    <ToastContainer
-                        position="top-center"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnVisibilityChange
-                        draggable={false}
-                        pauseOnHover
-                    />
-                    {this.state.isLoading ? <LoadingScreen showLoading={true}/> : <Routes user={this.state.user} />}
-                </div>
+            <div className={this.state.isLoading ? 'App Loading' : 'App Loaded'}>
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnVisibilityChange
+                    draggable={false}
+                    pauseOnHover
+                />
+                {this.state.isLoading ? <LoadingScreen showLoading={true}/> : <Routes user={this.state.user} />}
             </div>
         );
     }

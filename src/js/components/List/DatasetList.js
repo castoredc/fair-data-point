@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 import {localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Pagination} from "@castoredc/matter";
+import {Heading, Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import DatasetListItem from "../ListItem/DatasetListItem";
 
@@ -93,7 +93,7 @@ export default class DatasetList extends Component {
 
     render() {
         const {embedded, pagination, datasets} = this.state;
-        const {fdp, catalog, study} = this.props;
+        const {fdp, catalog, study, state} = this.props;
 
         if (datasets === null) {
             return <InlineLoader/>;
@@ -101,7 +101,10 @@ export default class DatasetList extends Component {
 
         return <div className="Datasets">
             {datasets.length > 0 ? <div>
-                <h2>Datasets</h2>
+                <Heading type="Subsection">Datasets</Heading>
+                <div className="Description">
+                    Datasets are collections of data which are available for access or download in one or more representations.
+                </div>
 
                 {datasets.map((dataset) => {
                     if (dataset.hasMetadata === false) {
@@ -109,9 +112,7 @@ export default class DatasetList extends Component {
                     }
                     return <DatasetListItem key={dataset.id}
                                             newWindow={embedded}
-                                            fdp={fdp}
-                                            catalog={catalog}
-                                            study={study}
+                                            state={state}
                                             link={dataset.relativeUrl}
                                             name={localizedText(dataset.metadata.title, 'en')}
                                             description={localizedText(dataset.metadata.description, 'en')}
