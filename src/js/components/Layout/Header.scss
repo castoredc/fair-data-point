@@ -17,13 +17,13 @@ header {
 
     &.Mobile {
         .Spacing {
-            margin-top: $mobileHeaderHeight;
+            height: $mobileHeaderHeight;
             background: $azul;
         }
 
         &.Embedded {
             .Spacing {
-                margin-top: 0;
+                height: 0;
             }
         }
     }

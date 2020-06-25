@@ -43,7 +43,7 @@ export default class Catalog extends Component {
         const isMobile = window.innerWidth <= 767;
 
         this.setState({
-            displayFilter: mobile ? displayFilter : ! isMobile,
+            displayFilter: isMobile ? (mobile ? displayFilter : false) : true,
             mobile: isMobile
         });
     }
