@@ -103,6 +103,14 @@
         }
     }
 
+    .Datasets {
+        transition: all 0.3s ease;
+
+        .Loading {
+            opacity: 0.5;
+        }
+    }
+
     main {
         padding-bottom: 30px;
     }
