@@ -32,6 +32,14 @@ header {
 .Header {
     color: white;
 
+    .HeaderUserCol {
+        text-align: right;
+
+        .DropdownMenu {
+            margin-top: 5px;
+        }
+    }
+
     .MainHeader {
         padding-top: $desktopHeaderPadding;
         padding-bottom: $desktopHeaderPadding;
