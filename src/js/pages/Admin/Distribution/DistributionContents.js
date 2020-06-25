@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import CSVStudyStructure from "../../../components/StudyStructure/CSVStudyStructure";

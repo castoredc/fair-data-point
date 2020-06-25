@@ -8,9 +8,8 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import LoadingScreen from "../../components/LoadingScreen";
 import {localizedText} from "../../util";
-import Logo from "../../components/Logo";
 import ListItem from "../../components/ListItem";
-import {Button} from "@castoredc/matter";
+import {Button, CastorLogo} from "@castoredc/matter";
 import {LoginViews} from "../../components/MetadataItem/EnumMappings";
 
 export default class Login extends Component {
@@ -110,7 +109,7 @@ export default class Login extends Component {
                 <div className="LoginContainer">
 
                     <div className="LoginLogo">
-                        <Logo />
+                        <CastorLogo className="Logo" />
                     </div>
 
                     {this.state.catalog !== null ? <div className="LoginBrand">

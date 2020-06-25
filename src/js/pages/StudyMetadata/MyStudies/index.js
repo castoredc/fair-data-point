@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 
 import LoadingScreen from "../../../components/LoadingScreen";
 import DocumentTitle from "../../../components/DocumentTitle";

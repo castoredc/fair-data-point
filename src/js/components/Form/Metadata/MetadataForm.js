@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {toast} from "react-toastify/index";
 import ToastContent from "../../ToastContent";
-import axios from "axios/index";
+import axios from "axios";
 import FormItem from "../FormItem";
 import Dropdown from "../../Input/Dropdown";
 import LocalizedTextInput from "../../Input/LocalizedTextInput";

@@ -1,18 +1,12 @@
 import React from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
 import NotFound from "./pages/NotFound";
-import FAIRDataPointMain from "./pages/FAIRDataPoint/FAIRDataPointMain";
-import Catalog from "./pages/FAIRDataPoint/Catalog";
-import Dataset from "./pages/FAIRDataPoint/Dataset";
-import Distribution from "./pages/FAIRDataPoint/Distribution";
 import Login from "./pages/Login";
 import axios from "axios";
 import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
 import {PrivateRoute, ProtectedRoute} from "./components/Route";
 import AdminPageWrapper from "./pages/Admin/PageWrapper";
-import MetadataXmlParse from "./pages/Tools/MetadataXmlParse";
-import Study from "./pages/FAIRDataPoint/Study";
-import Query from "./pages/Query";
+import Main from "./pages/Main";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -34,18 +28,9 @@ export default ({user}) =>
         <Route path="/login/:catalogSlug" exact component={Login} />
 
         /* FAIR Data Point */
-        <Route path="/fdp" exact component={FAIRDataPointMain} />
-
-        <Route path="/fdp/catalog/:catalog" exact component={Catalog} />
-
-        <Route path="/study/:study" exact component={Study} />
-
-        <Route path="/fdp/dataset/:dataset" exact component={Dataset} />
-        <Route path="/fdp/dataset/:dataset/distribution/:distribution" exact component={Distribution} />
-        <Route path="/fdp/dataset/:dataset/distribution/:distribution/query" exact component={Query} />
-
-        /* Tools */
-        <Route path="/tools/metadata-xml-parse" exact component={MetadataXmlParse} />
+        <Route path="/fdp" render={(props) => <Main {...props} user={user} />} />
+        <Route path="/study" render={(props) => <Main {...props} user={user} />} />
+        <Route path="/tools" render={(props) => <Main {...props} user={user} />} />
 
         /* My studies */
         {/*<PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />*/}

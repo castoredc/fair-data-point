@@ -1,13 +1,15 @@
 import React, {Component} from "react";
-import axios from "axios/index";
-import LoadingScreen from "../../../components/LoadingScreen";
+import axios from "axios";
 import {localizedText} from "../../../util";
 import ListItem from "../../../components/ListItem";
-import FAIRDataInformation from "../../../components/FAIRDataInformation";
-import queryString from "query-string";
-import {toast} from "react-toastify";
+import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import {Col, Row} from "react-bootstrap";
+import Layout from "../../../components/Layout";
+import Header from "../../../components/Layout/Header";
+import MainBody from "../../../components/Layout/MainBody";
+import {Heading} from "@castoredc/matter";
+import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
 
 export default class FAIRDataPointMain extends Component {
     constructor(props) {
@@ -67,47 +69,46 @@ export default class FAIRDataPointMain extends Component {
 
     render() {
         const { fdp, catalogs, isLoadingFDP, isLoadingCatalogs } = this.state;
-        
-        const params = queryString.parse(this.props.location.search);
-        const embedded = (typeof params.embed !== 'undefined');
+        const { user, embedded, location } = this.props;
 
-        if(isLoadingFDP || isLoadingCatalogs)
-        {
-            return <LoadingScreen showLoading={true}/>;
-        }
+        const breadcrumbs = getBreadCrumbs(location, {fdp});
 
-        return <FAIRDataInformation
-            embedded={embedded}
+        const title = fdp ? localizedText(fdp.title, 'en') : null;
+
+        return <Layout
             className="FAIRDataPoint"
-            title={localizedText(fdp.title, 'en')}
-            version={fdp.version}
-            license={fdp.license}
-            breadcrumbs={{fdp: fdp}}
+            title={title}
+            isLoading={(isLoadingFDP || isLoadingCatalogs)}
+            embedded={embedded}
         >
-            <Row>
-                <Col className="InformationCol">
-                    <h2>Collections</h2>
-                    {catalogs.length > 0 ? catalogs.map((item, index) => {
-                        if(item.hasMetadata === false) {
-                            return null;
-                        }
-                        return <ListItem key={index}
-                                         newWindow={embedded}
-                                         link={item.relativeUrl}
-                                         title={localizedText(item.metadata.title, 'en')}
-                                         description={localizedText(item.metadata.description, 'en')} />
-                    }) : <div className="NoResults">No catalogs found.</div>}
-                </Col>
-            </Row>
-        </FAIRDataInformation>;
+            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
-        // {fdp.publishers.length > 0 && <div className="Publishers">
-        //     {fdp.publishers.map((item, index) => {
-        //         return <Contact key={index}
-        //                         url={item.url}
-        //                         type={item.type}
-        //                         name={item.name} />}
-        //     )}
-        // </div>}
+            <MainBody>
+                <Row>
+                    <Col md={8} className="InformationCol">
+                        {(fdp && fdp.description && !embedded) &&
+                            <div className="InformationDescription">
+                                {localizedText(fdp.description, 'en', true)}
+                            </div>}
+
+                        <Heading type="Subsection">Catalogs</Heading>
+                        <div className="Description">
+                            Catalogs are collections metadata about resources, such as studies or datasets.
+                        </div>
+
+                        {catalogs.length > 0 ? catalogs.map((item, index) => {
+                            if(item.hasMetadata === false) {
+                                return null;
+                            }
+                            return <ListItem key={index}
+                                             newWindow={embedded}
+                                             link={item.relativeUrl}
+                                             title={localizedText(item.metadata.title, 'en')}
+                                             description={localizedText(item.metadata.description, 'en')} />
+                        }) : <div className="NoResults">No catalogs found.</div>}
+                    </Col>
+                </Row>
+            </MainBody>
+        </Layout>;
     }
 }

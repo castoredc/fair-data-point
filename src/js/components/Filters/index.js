@@ -12,6 +12,7 @@ import CheckboxGroup from "../Input/CheckboxGroup";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {classNames} from "../../util";
 import Dropdown from "../Input/Dropdown";
+import {Heading} from "@castoredc/matter";
 
 export default class Filters extends Component {
     constructor(props) {
@@ -173,7 +174,7 @@ export default class Filters extends Component {
                 onSubmit={() => {}}
             >
                 <div className="FilterBlock">
-                    <h2>Search studies</h2>
+                    <Heading type="Subsection">Search studies</Heading>
 
                     <Input
                         name="search"
@@ -183,7 +184,7 @@ export default class Filters extends Component {
                     />
                 </div>
                 {showFilters > 0 && <div className="FilterBlock">
-                    <h2>Filter</h2>
+                    <Heading type="Subsection">Filter</Heading>
 
                     {showStudyType && <FormItem label="Type">
                         <CheckboxGroup

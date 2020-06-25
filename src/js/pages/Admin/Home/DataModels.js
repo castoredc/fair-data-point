@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";

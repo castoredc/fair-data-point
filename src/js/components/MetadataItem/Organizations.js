@@ -4,20 +4,7 @@ import './MetadataItem.scss'
 import MetadataItem from "./index";
 import {AttributionControl, Map, Marker, TileLayer} from "react-leaflet";
 import {getCenterFromDegrees} from "../../util";
-
-const Organization = ({name, department, country, city}) => {
-    return <div className="Organization">
-        <div className="Center">
-            {name}
-        </div>
-        {department && <div className="Department">
-            {department}
-        </div>}
-        <div className="Location">
-            {city}, {country}
-        </div>
-    </div>;
-};
+import Organization from "./Organization";
 
 class Organizations extends Component {
     render() {

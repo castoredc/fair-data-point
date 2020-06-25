@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios/index";
+import axios from "axios";
 
 import {Col, Row} from "react-bootstrap";
 import {classNames, localizedText} from "../../../util";

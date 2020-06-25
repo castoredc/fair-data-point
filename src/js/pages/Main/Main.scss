@@ -1,0 +1,115 @@
+@import '../../scss/colors';
+
+.MainApp {
+    &.Embedded .container {
+        max-width: initial;
+    }
+
+    .DatasetsHeader, .ResultsHeader {
+        margin-bottom: 16px;
+
+        h1 {
+            margin: 0;
+        }
+
+        .DatasetHeaderButtons, .ResultsHeaderButtons {
+            text-align: right;
+
+            & > div {
+                display: inline-block;
+                margin: 0;
+                overflow: hidden;
+            }
+        }
+    }
+
+    .FilterButton {
+        &.Hidden {
+            display: none !important;
+        }
+
+        button {
+            margin-left: 8px;
+        }
+    }
+
+    .Datasets {
+        position: relative;
+    }
+
+    .InformationDescription {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #616d82;
+        margin-bottom: 35px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eceef0;
+    }
+
+    .InformationCol h1 {
+        margin-bottom: 5px;
+    }
+
+    .Description {
+        margin-bottom: 15px;
+        color: $neutral-90;
+    }
+
+    .Department {
+        font-size: 12px;
+        color: #8c95a4;
+        border-radius: 5px;
+        border: solid 1px #b5bac4;
+        background-color: #ffffff;
+        padding: 4px 8px;
+        display: none;
+    }
+
+    .Department.Show {
+        display: inline-block;
+    }
+
+    .Contacts {
+        margin-bottom: 12px;
+    }
+
+    .Organization {
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .Center {
+            &.HasDepartment {
+                cursor: pointer;
+                -khtml-user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+
+            .ToggleArrow {
+                float: none;
+                display: inline-block;
+                margin-left: 3px;
+                width: 12px;
+                height: 12px;
+
+                svg {
+                    vertical-align: initial;
+                }
+            }
+        }
+    }
+
+    main {
+        padding-bottom: 30px;
+    }
+
+    @media (max-width: 767px) {
+        .DatasetsHeaderTitle {
+            display: none;
+        }
+    }
+}
