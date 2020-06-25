@@ -74,6 +74,12 @@
     }
 
     .Organization {
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
         .Center {
             &.HasDepartment {
                 cursor: pointer;
