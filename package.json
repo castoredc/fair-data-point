@@ -29,7 +29,6 @@
         "@castoredc/matter-utils": "^9.7.3",
         "@material-ui/icons": "^4.9.1",
         "@triply/yasgui": "^4.0.124",
-        "@triply/yasqe": "latest",
         "axios": "^0.19.0",
         "babel-polyfill": "^6.26.0",
         "bootstrap": "^4.4.1",

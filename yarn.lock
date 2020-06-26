@@ -896,14 +896,14 @@
     "@babel/plugin-transform-react-jsx-source" "^7.10.1"
     "@babel/plugin-transform-react-pure-annotations" "^7.10.1"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.0", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.0", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.6", "@babel/runtime@^7.9.2":
   version "7.10.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.2.tgz#d103f21f2602497d38348a32e008637d506db839"
   integrity sha512-6sF3uQw2ivImfVIl62RZ7MXhO2tap69WeWK57vAaimT6AZbE4FbqjdEJIN1UqoD6wI6B+1n9UiagafH1sxjOtg==
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
   version "7.10.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.3.tgz#670d002655a7c366540c67f6fd3342cd09500364"
   integrity sha512-RzGO0RLSdokm9Ipe/YD+7ww8X2Ro79qiXZF3HU9ljrM+qnJmH1Vqth+hbiQZy761LnMJTMitHDuKVYTk3k4dLw==
@@ -973,9 +973,9 @@
     lodash "^4.17.11"
 
 "@castoredc/matter@^9.7.3":
-  version "9.14.1"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter/9.14.1/d53329cf36af5d63e0ca71faaf4ce79ee612fe83db0afe78d677d9a70e952072#07ddcbc8323e83ba4f245aad2b4dbd54b09c721b"
-  integrity sha512-4mkf/EGfeZ4q3k5YHcZSKJYekMKzaPrdG5/v0fLTWTSOxGkWPO+uJVe5t+3C/r9UShIgRgWRHfBjiEs6NIERQw==
+  version "9.15.1"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter/9.15.1/d1f0e0389b9f65d4ef275820c4cb81786e238ed6a3fc887e8d13bbf7cc2837eb#6c92d74c757932ca98304635f1b3e6146584c374"
+  integrity sha512-mt9pDHMEbmVGDkN40HzfZejj+taa2QZvPHQEKqSQRDMq5r00QWKK0uQ1nHpsigmglCqcCbWduakl9LDq0UECEQ==
   dependencies:
     core-js "^3.6.4"
     lodash "^4.17.11"
@@ -1649,7 +1649,7 @@
     sortablejs "^1.10.2"
     superagent "5.2.1"
 
-"@triply/yasqe@^4.0.124", "@triply/yasqe@latest":
+"@triply/yasqe@^4.0.124":
   version "4.0.124"
   resolved "https://registry.yarnpkg.com/@triply/yasqe/-/yasqe-4.0.124.tgz#1e29d9fe9da17eced895c3e129848c8b238ba130"
   integrity sha512-c2o1z8povGZmzVxTvPDHXNYUqbuyxahv9EdYPHajmxK8T8SGiATZKnESbscONHiTeVWaA+TQkzh6uCz1WoIFhw==
