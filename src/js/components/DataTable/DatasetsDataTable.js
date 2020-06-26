@@ -16,7 +16,7 @@ export default class DatasetsDataTable extends Component {
             datasets:          [],
             pagination:       {
                 currentPage: 1,
-                start: 0,
+                start: 1,
                 perPage: 25,
                 totalResults: null,
                 totalPages: null

@@ -18,7 +18,7 @@ export default class StudiesDataTable extends Component {
             studies:          [],
             pagination:       {
                 currentPage: 1,
-                start: 0,
+                start: 1,
                 perPage: 25,
                 totalResults: null,
                 totalPages: null,
