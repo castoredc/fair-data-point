@@ -24,7 +24,7 @@ export default class StudyList extends Component {
             map:                null,
             pagination:       {
                 currentPage: 1,
-                start: 0,
+                start: 1,
                 perPage: props.embedded ? 5 : 10,
                 totalResults: null,
                 totalPages: null
@@ -201,6 +201,20 @@ export default class StudyList extends Component {
                                     pageLimit={pagination.perPage}
                                     start={pagination.start}
                                     totalItems={pagination.totalResults}
+                                    itemsPerPageOptions={[
+                                        {
+                                            label: '10',
+                                            value: '10'
+                                        },
+                                        {
+                                            label: '25',
+                                            value: '25'
+                                        },
+                                        {
+                                            label: '50',
+                                            value: '50'
+                                        }
+                                    ]}
                                 />
 
                             </div> : <div className="NoResults">No studies found.</div>}

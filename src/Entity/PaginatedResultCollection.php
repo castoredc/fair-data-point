@@ -54,7 +54,7 @@ class PaginatedResultCollection implements Countable, IteratorAggregate
 
     public function getStart(): int
     {
-        return ($this->currentPage - 1) * $this->perPage;
+        return ($this->currentPage - 1) * $this->perPage + 1;
     }
 
     public function getTotalResults(): int
