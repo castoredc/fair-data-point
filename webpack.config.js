@@ -12,7 +12,7 @@ Encore
     .cleanupOutputBeforeBuild(['public/build/'], (options) => {
         options.verbose = true;
         options.root = __dirname;
-        options.exclude = ['.htaccess', 'js.components.Layout.Header.js.php', 'static', 'bundles', 'lib'];
+        options.exclude = ['.htaccess', 'index.php', 'static', 'bundles', 'lib'];
     })
 
     // Render all final CSS and JS files with source maps to help debugging

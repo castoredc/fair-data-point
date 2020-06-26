@@ -51,10 +51,25 @@ header {
         top: 0;
         transition: all 0.3s ease;
 
+        button {
+            margin-top: -3px;
+        }
+
         &.Small {
             padding-top: $desktopHeaderPaddingSmall;
             padding-bottom: $desktopHeaderPaddingSmall;
             height: $desktopHeaderHeightSmall;
+
+            button {
+                background: none;
+                border-color: transparent;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: $cobalt;
+                    border-color: $cobalt;
+                }
+            }
         }
     }
 
