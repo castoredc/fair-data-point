@@ -16,7 +16,7 @@ class StudyContactApiRequest extends GroupedApiRequest
     private $firstName;
 
     /**
-     * @var string
+     * @var string|null
      * @Assert\Type("string")
      */
     private $middleName;
@@ -55,7 +55,7 @@ class StudyContactApiRequest extends GroupedApiRequest
         return $this->firstName;
     }
 
-    public function getMiddleName(): string
+    public function getMiddleName(): ?string
     {
         return $this->middleName;
     }
