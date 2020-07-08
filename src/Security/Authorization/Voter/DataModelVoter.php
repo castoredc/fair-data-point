@@ -36,6 +36,24 @@ class DataModelVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN');
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        if ($attribute !== self::VIEW) {
+            return false;
+        }
+
+        /** @var DataModel $dataModel */
+        $dataModel = $subject;
+        $distributions = $dataModel->getDistributions();
+
+        foreach ($distributions as $distribution) {
+            if ($this->security->isGranted('view', $distribution)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

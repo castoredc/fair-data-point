@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel;
 
 use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Enum\NodeType;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -71,6 +72,13 @@ class DataModel
      * @var Collection<Predicate>
      */
     private $predicates;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="dataModel")
+     *
+     * @var Collection<RDFDistribution>
+     */
+    private $distributions;
 
     public function __construct(string $title, ?string $description)
     {
@@ -220,5 +228,13 @@ class DataModel
     public function removeNode(Node $node): void
     {
         $this->nodes->removeElement($node);
+    }
+
+    /**
+     * @return Collection<RDFDistribution>
+     */
+    public function getDistributions(): Collection
+    {
+        return $this->distributions;
     }
 }
