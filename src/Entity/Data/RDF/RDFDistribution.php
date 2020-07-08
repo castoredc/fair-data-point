@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
      * @var DataModel
