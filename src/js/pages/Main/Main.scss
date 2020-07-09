@@ -5,6 +5,40 @@
         max-width: initial;
     }
 
+    .MainCol, .SideCol {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    @media (min-width: 768px) {
+        .MainCol {
+            flex: 0 0 65%;
+            max-width: 65%;
+
+            &.FullWidth {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .SideCol {
+            margin-left: 5%;
+            max-width: 30%;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .SideCol::before {
+            content: "";
+            display: block;
+            padding-top: 50px;
+            margin-top: 50px;
+            border-top: 1px solid $neutral-30;
+        }
+    }
+
     .DatasetsHeader, .ResultsHeader {
         margin-bottom: 16px;
 
@@ -44,10 +78,10 @@
         margin-bottom: 35px;
         padding-bottom: 20px;
         border-bottom: 1px solid #eceef0;
-    }
 
-    .InformationCol h1 {
-        margin-bottom: 5px;
+        .StudyTags {
+            margin-top: 18px;
+        }
     }
 
     .Description {
@@ -70,7 +104,7 @@
     }
 
     .Contacts {
-        margin-bottom: 12px;
+        margin-bottom: 18px;
     }
 
     .Organization {

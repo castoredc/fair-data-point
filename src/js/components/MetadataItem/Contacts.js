@@ -1,32 +1,34 @@
 import React, {Component} from 'react'
 
 import './MetadataItem.scss'
+import {Button} from "@castoredc/matter";
 
 const Contact = ({name, url, type, email}) => {
-    if(email)
-    {
-        url = 'mailto:' + email;
-    }
-    return <a href={url} className="Contact" target="_blank">
+    return <span className="Contact">
         {name}
-    </a>;
+    </span>;
 };
 
 class Contacts extends Component {
     render() {
-        const { contacts } = this.props;
-
-        const label = 'Contact' + (contacts.length > 1 ? 's' : '');
+        const {contacts} = this.props;
+        let emails = [];
 
         return <div className="Contacts">
-            <span>{label}: </span>
+            <span>By </span>
 
             {contacts.map((contact, index) => {
+                if (contact.email) {
+                    emails.push(contact.email);
+                }
+
                 return <span key={index}>
-                    <Contact name={contact.name} url={contact.url} type={contact.type} email={contact.email} />
+                    <Contact name={contact.name} url={contact.url} type={contact.type} email={contact.email}/>
                     {index !== (contacts.length - 1) && ', '}
                 </span>
             })}
+
+            {emails.length > 0 && <Button buttonType="contentOnly" icon="email" href={`mailto:${emails[0]}`}>Get in touch</Button>}
         </div>
     }
 }
