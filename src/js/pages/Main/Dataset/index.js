@@ -54,7 +54,9 @@ export default class Dataset extends Component {
         axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution')
             .then((response) => {
                 this.setState({
-                    distributions: response.data,
+                    distributions: response.data.filter((distribution) => {
+                        return distribution.hasMetadata
+                    }),
                     isLoadingDistributions: false,
                     hasLoadedDistributions: true
                 });
@@ -85,9 +87,9 @@ export default class Dataset extends Component {
         >
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
-            <MainBody>
+            <MainBody isLoading={isLoadingDataset}>
                 {dataset && <Row>
-                    <Col md={8} className="InformationCol">
+                    <div className="MainCol">
                         {dataset.metadata.description && <div className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>}
 
                         {isLoadingDistributions ? <InlineLoader /> : distributions.length > 0 ? <div>
@@ -96,10 +98,6 @@ export default class Dataset extends Component {
                                 Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
                             </div>
                             {distributions.map((distribution) => {
-                                if(distribution.hasMetadata === false) {
-                                    return null;
-                                }
-
                                 return <ListItem key={distribution.id}
                                                  newWindow={embedded}
                                                  link={{
@@ -112,8 +110,7 @@ export default class Dataset extends Component {
                                 />}
                             )}
                         </div> : <div className="NoResults">This dataset does not have any associated distributions.</div>}
-                    </Col>
-                    <Col md={4} />
+                    </div>
                 </Row>}
             </MainBody>
         </Layout>;

@@ -182,7 +182,7 @@ export default class Query extends Component {
         >
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
-            <MainBody>
+            <MainBody isLoading={isLoading}>
                 <div className="QueryTools">
                     <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
                     <Row className="QueryButtons">

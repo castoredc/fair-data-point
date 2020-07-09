@@ -105,9 +105,6 @@ export default class Catalog extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, {fdp, catalog});
 
-        const headerWidth = displayList ? 5 : 4;
-        const buttonWidth = displayList ? 3 : 8;
-
         const title = catalog ? localizedText(catalog.metadata.title, 'en') : null;
 
         const showFilterButton = mobile ? true : ! displayList;
@@ -120,30 +117,34 @@ export default class Catalog extends Component {
         >
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
-            <MainBody>
+            <MainBody isLoading={(isLoadingFDP || isLoadingCatalog)}>
                 {(catalog && catalog.metadata.description && !embedded) && <Row>
-                    <Col md={8} className="InformationCol">
+                    <div className="MainCol">
                         <div className="InformationDescription">
                             {localizedText(catalog.metadata.description, 'en', true)}
                         </div>
-                    </Col>
+                    </div>
                 </Row>}
 
-                <Row className="DatasetsHeader" ref={this.datasetsRef}>
-                    <Col md={headerWidth} className="DatasetsHeaderTitle">
-                        <Heading type="Subsection">Studies</Heading>
-                    </Col>
-                    <Col md={buttonWidth} className="DatasetHeaderButtons">
-                        <ButtonGroup className="ToggleButton">
-                            <Button buttonType={displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(true)} active={displayList}>List</Button>
-                            <Button buttonType={! displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(false)} active={!displayList}>Map</Button>
-                        </ButtonGroup>
-                        <div className={classNames('FilterButton', ! showFilterButton && 'Hidden')}>
-                            <Button icon="filters" onClick={this.toggleFilter} isDropdown isOpen={displayFilter}>
-                                Filters
-                            </Button>
-                        </div>
-                    </Col>
+                <Row ref={this.datasetsRef}>
+                    <div className={classNames('DatasetsHeader', 'MainCol', ! displayList && 'FullWidth')}>
+                        <Row>
+                            <Col className="DatasetsHeaderTitle">
+                                <Heading type="Subsection">Studies</Heading>
+                            </Col>
+                            <Col className="DatasetHeaderButtons">
+                                <ButtonGroup className="ToggleButton">
+                                    <Button buttonType={displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(true)} active={displayList}>List</Button>
+                                    <Button buttonType={! displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(false)} active={!displayList}>Map</Button>
+                                </ButtonGroup>
+                                <div className={classNames('FilterButton', ! showFilterButton && 'Hidden')}>
+                                    <Button icon="filters" onClick={this.toggleFilter} isDropdown isOpen={displayFilter}>
+                                        Filters
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
                 </Row>
 
                 <StudyList

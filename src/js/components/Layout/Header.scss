@@ -43,7 +43,7 @@ header {
     .MainHeader {
         padding-top: $desktopHeaderPadding;
         padding-bottom: $desktopHeaderPadding;
-        background: $azul;
+        background: $primary-main;
         position: fixed;
         width: 100%;
         z-index: 100;
@@ -53,28 +53,25 @@ header {
 
         button {
             margin-top: -3px;
+            background: none;
+            border-color: transparent;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: $cobalt;
+                border-color: $cobalt;
+            }
         }
 
         &.Small {
             padding-top: $desktopHeaderPaddingSmall;
             padding-bottom: $desktopHeaderPaddingSmall;
             height: $desktopHeaderHeightSmall;
-
-            button {
-                background: none;
-                border-color: transparent;
-                transition: all 0.3s ease;
-
-                &:hover {
-                    background: $cobalt;
-                    border-color: $cobalt;
-                }
-            }
         }
     }
 
     .MobileHeader {
-        background: $azul;
+        background: $primary-main;
         height: $mobileHeaderHeight;
         position: fixed;
         top: 0;
@@ -104,7 +101,17 @@ header {
 
 .InformationHeader {
     overflow: auto;
-    margin: 0;
+    margin: 40px 0 18px 0;
+
+    h1 {
+        color: $neutral-800;
+        font-size: 2.1rem;
+        line-height: 1.33;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 500;
+        margin: 0;
+        max-width: 64rem;
+    }
 
     .Title {
         font-size: 24px;
@@ -124,75 +131,8 @@ header {
         font-family: 'Rubik', sans-serif;
         font-size: 14px;
         color: $cobalt;
-        margin: 0 0 0 10px;
+        margin-bottom: 10px;
         display: inline-block;
         font-weight: normal;
     }
 }
-
-//.TopLevelContainer {
-//
-//
-//    .InformationRow {
-//        margin: 0;
-//
-//        .Children {
-//            padding-top: 40px;
-//            padding-bottom: 25px;
-//
-//            .InformationCol {
-//                .InformationDescription {
-//                    font-size: 16px;
-//                    line-height: 1.5;badge
-//                    color: $neutral-300;
-//                    margin-bottom: 35px;
-//                    padding-bottom: 20px;
-//                    border-bottom: 1px solid $neutral-30;
-//                }
-//
-//                h2 {
-//                    font-size: 16px;
-//                    line-height: 24px;
-//                    font-weight: 600;
-//                    margin-bottom: 5px;
-//                    color: $neutral-800;
-//                }
-//
-//                .Description {
-//                    margin-bottom: 15px;
-//                    color: $neutral-90;
-//                }
-//            }
-//
-//            .Loading {
-//                opacity: 0.5;
-//            }
-//
-//            .NoResults {
-//                text-align: center;
-//                padding: 50px 0;
-//                color: $neutral-80;
-//                font-size: 16px;
-//            }
-//        }
-//    }
-//
-//    .Footer {
-//        .container {
-//            border-top: 1px solid $neutral-30;
-//            padding-top: 40px;
-//        }
-//    }
-//
-//    .InformationBadge {
-//        border-radius: 5px;
-//        margin: 0 0 0 10px;
-//        border: 2px solid #ffffff;
-//        color: white;
-//        padding: 5px 10px;
-//        font-family: 'Rubik', sans-serif;
-//        font-size: 14px;
-//        font-weight: normal;
-//        display: inline-block;
-//    }
-//}
