@@ -73,7 +73,7 @@ export default class Distribution extends Component {
                     <div><h3>{distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Distribution'}</h3></div>
                 </Col>
             </Row>
-            <Row>
+            <Row className="FillHeight">
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
                         <LinkContainer to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug} exact={true}>

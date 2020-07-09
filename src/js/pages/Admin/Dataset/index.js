@@ -71,7 +71,7 @@ export default class Dataset extends Component {
                     <div><h3>{dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Dataset'}</h3></div>
                 </Col>
             </Row>
-            <Row>
+            <Row className="FillHeight">
                 <Col sm={2} className="LeftNav">
                     <Nav className="flex-column">
                         <LinkContainer to={url + '/dataset/' + dataset.slug} exact={true}>

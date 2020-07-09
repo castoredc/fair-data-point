@@ -7,10 +7,9 @@ import Dropdown from "../../Input/Dropdown";
 import LocalizedTextInput from "../../Input/LocalizedTextInput";
 import {ValidatorForm} from "react-form-validator-core";
 import MetadataVersionModal from "../../../modals/MetadataVersionModal";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import {Button} from "@castoredc/matter";
-import {mergeData} from "../../../util";
+import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
+import {localizedText, mergeData, replaceAt} from "../../../util";
+import PublisherModal from "../../../modals/PublisherModal";
 
 export default class MetadataForm extends Component {
     constructor(props) {
@@ -20,25 +19,31 @@ export default class MetadataForm extends Component {
 
         const mergedDefaultMetadata = {
             ...defaultData,
-            ...extendedDefaultData
+            ...extendedDefaultData,
         };
 
         this.state = {
-            data: props.object.hasMetadata ? mergeData(mergedDefaultMetadata, props.object.metadata) : mergedDefaultMetadata,
-            currentVersion : props.object.hasMetadata ? props.object.metadata.version.metadata : null,
-            validation: {},
-            isSaved: false,
-            submitDisabled: false,
-            isLoading: false,
-            showModal: false,
-            languages: [],
-            licenses: []
+            data:             props.object.hasMetadata ? mergeData(mergedDefaultMetadata, props.object.metadata) : mergedDefaultMetadata,
+            currentVersion:   props.object.hasMetadata ? props.object.metadata.version.metadata : null,
+            validation:       {},
+            isSaved:          false,
+            submitDisabled:   false,
+            isLoading:        false,
+            showModal:        {
+                save:      false,
+                publisher: false,
+            },
+            languages:        [],
+            licenses:         [],
+            countries:        [],
+            currentPublisher: null,
         };
     }
 
     componentDidMount() {
         this.getLanguages();
         this.getLicenses();
+        this.getCountries();
     }
 
     getLanguages = () => {
@@ -49,7 +54,7 @@ export default class MetadataForm extends Component {
                 });
             })
             .catch((error) => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastContent type="error" message="An error occurred"/>);
             });
     };
 
@@ -61,85 +66,158 @@ export default class MetadataForm extends Component {
                 });
             })
             .catch(() => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastContent type="error" message="An error occurred"/>);
             });
     };
 
-    openModal = () => {
+    getCountries = () => {
+        axios.get('/api/countries')
+            .then((response) => {
+                this.setState({
+                    countries: response.data,
+                });
+            })
+            .catch((error) => {
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
+                }
+            });
+    };
+
+    openModal = (type, id) => {
+        const {showModal} = this.state;
+
         this.setState({
-            showModal: true
+            showModal: {
+                ...showModal,
+                [type]: true,
+            },
+            currentPublisher: id,
         });
     };
 
-    closeModal = () => {
+    closeModal = (type) => {
+        const {showModal} = this.state;
+
         this.setState({
-            showModal: false
+            showModal: {
+                ...showModal,
+                [type]: false,
+            },
         });
     };
 
     handleChange = (event) => {
-        const { data } = this.state;
+        const {data} = this.state;
 
         this.setState({
-            data: {
+            data:       {
                 ...data,
                 [event.target.name]: event.target.value,
             },
             validation: {
                 [event.target.name]: false,
-            }
+            },
         });
     };
 
-    handleVersionUpdate = (versionType) => {
-        this.closeModal();
+    handlePublisherUpdate = (publisher) => {
+        const {data, currentPublisher} = this.state;
 
-        const { data } = this.state;
+        let publishers = data.publishers;
+
+        if (currentPublisher !== null) {
+            publishers = replaceAt(publishers, currentPublisher, publisher);
+        } else {
+            publishers.push(publisher);
+        }
 
         this.setState({
             data: {
                 ...data,
-                versionUpdate: versionType
-            }
+                publishers: publishers,
+            },
+        });
+
+        this.closeModal('publisher');
+    };
+
+    handlePublisherDelete = () => {
+        const {data, currentPublisher} = this.state;
+
+        let publishers = data.publishers;
+        publishers.splice(currentPublisher, 1);
+
+        this.setState({
+            data: {
+                ...data,
+                publishers: publishers,
+            },
+        });
+
+        this.closeModal('publisher');
+    };
+
+    handleVersionUpdate = (versionType) => {
+        this.closeModal('save');
+
+        const {data} = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                versionUpdate: versionType,
+            },
         }, () => {
             this.submitMetadata();
         });
     };
 
+    handleClick = (event, rowID, index) => {
+        const {data} = this.state;
+        const publishers = data.publishers;
+
+        if (typeof index !== "undefined" && publishers.length > 0) {
+            this.openModal('publisher', index);
+        }
+    };
+
     handleSubmit = (event) => {
         event.preventDefault();
 
-        if(this.form.isFormValid()) {
-            const { currentVersion } = this.state;
+        if (this.form.isFormValid()) {
+            const {currentVersion} = this.state;
 
-            if(currentVersion === null) {
+            if (currentVersion === null) {
                 this.handleVersionUpdate('major');
             } else {
-                this.openModal();
+                this.openModal('save');
             }
         }
     };
 
     submitMetadata = () => {
-        const { object, type, onSave } = this.props;
-        const { data } = this.state;
+        const {object, type, onSave} = this.props;
+        const {data} = this.state;
 
-        if(this.form.isFormValid()) {
+        if (this.form.isFormValid()) {
             this.setState({
                 submitDisabled: true,
-                isLoading: true
+                isLoading:      true,
             });
 
             axios.post('/api/metadata/' + type + '/' + object.id, data)
                 .then((response) => {
                     this.setState({
-                        isSaved: true,
-                        isLoading: false,
+                        isSaved:        true,
+                        isLoading:      false,
                         submitDisabled: false,
                     });
 
-                    toast.success(<ToastContent type="success" message="The metadata are saved successfully" />, {
-                        position: "top-right"
+                    toast.success(<ToastContent type="success" message="The metadata are saved successfully"/>, {
+                        position: "top-right",
                     });
 
                     onSave();
@@ -147,16 +225,16 @@ export default class MetadataForm extends Component {
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
                         this.setState({
-                            validation: error.response.data.fields
+                            validation: error.response.data.fields,
                         });
                     } else {
                         toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                            position: "top-center"
+                            position: "top-center",
                         });
                     }
                     this.setState({
                         submitDisabled: false,
-                        isLoading: false
+                        isLoading:      false,
                     });
                 });
         }
@@ -165,89 +243,167 @@ export default class MetadataForm extends Component {
     };
 
     render() {
-        const { data, validation, languages, licenses, submitDisabled, currentVersion, showModal } = this.state;
-        const { children } = this.props;
+        const {data, validation, languages, licenses, countries, submitDisabled, currentVersion, showModal, currentPublisher} = this.state;
+        const {children} = this.props;
 
         const required = "This field is required";
 
         return (
             <ValidatorForm
+                className="FullHeightForm"
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
                 <MetadataVersionModal
-                    show={showModal}
+                    show={showModal.save}
                     currentVersion={currentVersion}
-                    handleClose={this.closeModal}
+                    handleClose={() => {
+                        this.closeModal('save')
+                    }}
                     onSave={this.handleVersionUpdate}
                 />
-                <FormItem label="Title">
-                    <LocalizedTextInput
-                        validators={['required']}
-                        errorMessages={[required]}
-                        name="title"
-                        onChange={this.handleChange}
-                        value={data.title}
-                        serverError={validation.title}
-                        languages={languages}
-                    />
-                </FormItem>
-                <FormItem label="Description">
-                    <LocalizedTextInput
-                        validators={['required']}
-                        errorMessages={[required]}
-                        name="description"
-                        onChange={this.handleChange}
-                        value={data.description}
-                        serverError={validation.description}
-                        languages={languages}
-                        as="textarea"
-                        rows="8"
-                    />
-                </FormItem>
 
-                <FormItem label="Language">
-                    <Dropdown
-                        validators={['required']}
-                        errorMessages={[required]}
-                        options={languages}
-                        name="language"
-                        onChange={(e) => {this.handleChange({target: { name: 'language', value: e.value }})}}
-                        value={languages.filter(({value}) => value === data.language)}
-                        serverError={validation.language}
+                <PublisherModal
+                    show={showModal.publisher}
+                    handleClose={() => {
+                        this.closeModal('publisher')
+                    }}
+                    save={this.handlePublisherUpdate}
+                    deletePublisher={this.handlePublisherDelete}
+                    countries={countries}
+                    type={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined') ? data.publishers[currentPublisher].type : null}
+                    data={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined') ? data.publishers[currentPublisher] : null}
+                />
+
+                <div className="MetadataFormTabs">
+                    <Tabs
+                        tabs={{
+                            metadata:   {
+                                title:   'Metadata',
+                                content: <div>
+                                             <FormItem label="Title">
+                                                 <LocalizedTextInput
+                                                     validators={['required']}
+                                                     errorMessages={[required]}
+                                                     name="title"
+                                                     onChange={this.handleChange}
+                                                     value={data.title}
+                                                     serverError={validation.title}
+                                                     languages={languages}
+                                                 />
+                                             </FormItem>
+                                             <FormItem label="Description">
+                                                 <LocalizedTextInput
+                                                     validators={['required']}
+                                                     errorMessages={[required]}
+                                                     name="description"
+                                                     onChange={this.handleChange}
+                                                     value={data.description}
+                                                     serverError={validation.description}
+                                                     languages={languages}
+                                                     as="textarea"
+                                                     rows="8"
+                                                 />
+                                             </FormItem>
+
+                                             <FormItem label="Language">
+                                                 <Dropdown
+                                                     validators={['required']}
+                                                     errorMessages={[required]}
+                                                     options={languages}
+                                                     name="language"
+                                                     onChange={(e) => {
+                                                         this.handleChange({target: {name: 'language', value: e.value}})
+                                                     }}
+                                                     value={languages.filter(({value}) => value === data.language)}
+                                                     serverError={validation.language}
+                                                 />
+                                             </FormItem>
+
+                                             <FormItem label="License">
+                                                 <Dropdown
+                                                     options={licenses}
+                                                     name="license"
+                                                     onChange={(e) => {
+                                                         this.handleChange({target: {name: 'license', value: e.value}})
+                                                     }}
+                                                     value={licenses.filter(({value}) => value === data.license)}
+                                                     serverError={validation.license}
+                                                 />
+                                             </FormItem>
+
+                                             {children && children(this.handleChange, data, validation)}
+                                         </div>,
+                            },
+                            publishers: {
+                                title:   'Publishers',
+                                content: <div>
+                                             <Stack distribution="trailing">
+                                                 <Button icon="add" onClick={() => {
+                                                     this.openModal('publisher', null)
+                                                 }}>
+                                                     Add publisher
+                                                 </Button>
+                                             </Stack>
+
+                                             <div className="SelectableDataTable DataTableWrapper">
+                                                 <DataTable
+                                                     emptyTableMessage="No publishers found"
+                                                     highlightRowOnHover
+                                                     cellSpacing="default"
+                                                     onClick={this.handleClick}
+                                                     rows={data.publishers.map((publisher) => {
+                                                         let name = '';
+
+                                                         if (publisher.type === 'organization') {
+                                                             name = publisher.name;
+                                                         } else if (publisher.type === 'person') {
+                                                             name = [publisher.firstName, publisher.middleName, publisher.lastName].filter(Boolean).join(' ');
+                                                         }
+
+                                                         return [
+                                                             name,
+                                                             publisher.type.charAt(0).toUpperCase() + publisher.type.slice(1),
+                                                         ];
+                                                     })}
+                                                     structure={{
+                                                         title: {
+                                                             header:    'Name',
+                                                             resizable: true,
+                                                             template:  'text',
+                                                         },
+                                                         type:  {
+                                                             header:    'Type',
+                                                             resizable: true,
+                                                             template:  'text',
+                                                         },
+                                                     }}
+                                                 />
+                                             </div>
+                                         </div>,
+                            },
+                        }}
                     />
-                </FormItem>
+                </div>
 
-                <FormItem label="License">
-                    <Dropdown
-                        options={licenses}
-                        name="license"
-                        onChange={(e) => {this.handleChange({target: { name: 'license', value: e.value }})}}
-                        value={licenses.filter(({value}) => value === data.license)}
-                        serverError={validation.license}
-                    />
-                </FormItem>
-
-                {children && children(this.handleChange, data, validation)}
-
-                <Row className="FullScreenSteppedFormButtons">
-                    <Col />
-                    <Col>
+                <div className="MetadataFormButtons">
+                    <Stack distribution="trailing">
                         <Button type="submit" disabled={submitDisabled}>
                             Save
                         </Button>
-                    </Col>
-                </Row>
+                    </Stack>
+                </div>
             </ValidatorForm>
         );
     }
 }
 
 const defaultData = {
-    'title': null,
-    'description': null,
-    'language': null,
-    'license': null,
-    'versionUpdate': ''
+    'title':         null,
+    'description':   null,
+    'language':      null,
+    'license':       null,
+    'versionUpdate': '',
+    'publishers':    [],
 };

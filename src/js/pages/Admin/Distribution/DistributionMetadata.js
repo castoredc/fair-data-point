@@ -5,9 +5,7 @@ export default class DistributionMetadata extends Component {
     render() {
         const { distribution, onSave } = this.props;
 
-        return <div>
-            <DistributionMetadataForm distribution={distribution} onSave={onSave} />
-        </div>;
+        return <DistributionMetadataForm distribution={distribution} onSave={onSave} />;
     }
 
 }
