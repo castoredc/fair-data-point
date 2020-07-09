@@ -15,10 +15,6 @@ class Layout extends React.Component {
     render() {
         const { children, className, isLoading, embedded } = this.props;
 
-        if(isLoading) {
-            return <LoadingScreen showLoading={true}/>;
-        }
-
         return <div className={classNames('MainApp', className, embedded && 'Embedded')}>
             {children}
         </div>;

@@ -78,14 +78,14 @@ export default class FAIRDataPointMain extends Component {
         return <Layout
             className="FAIRDataPoint"
             title={title}
-            isLoading={(isLoadingFDP || isLoadingCatalogs)}
             embedded={embedded}
+            isLoading={(isLoadingFDP || isLoadingCatalogs)}
         >
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
-            <MainBody>
+            <MainBody isLoading={(isLoadingFDP || isLoadingCatalogs)}>
                 <Row>
-                    <Col md={8} className="InformationCol">
+                    <div className="MainCol">
                         {(fdp && fdp.description && !embedded) &&
                             <div className="InformationDescription">
                                 {localizedText(fdp.description, 'en', true)}
@@ -106,7 +106,7 @@ export default class FAIRDataPointMain extends Component {
                                              title={localizedText(item.metadata.title, 'en')}
                                              description={localizedText(item.metadata.description, 'en')} />
                         }) : <div className="NoResults">No catalogs found.</div>}
-                    </Col>
+                    </div>
                 </Row>
             </MainBody>
         </Layout>;

@@ -57,17 +57,22 @@ export default class Header extends Component {
         const menu = <div className="DropdownMenu">
             <Menu
                 items={[
+                    (user && user.isAdmin) && {
+                        destination: '/admin',
+                        icon: 'settings',
+                        label: 'Admin'
+                    },
                     {
                         destination: '/logout',
                         icon: 'logOut',
                         label: 'Log out'
-                    }
+                    },
                 ]}
             />
         </div>;
 
         return <header className={classNames(className, embedded && 'Embedded', mobile ? 'Mobile' : 'Desktop')}>
-            <DocumentTitle title={title}/>
+            {title && <DocumentTitle title={title}/>}
             {!embedded && <div className="Header">
                 <div className="Spacing" />
                 {! mobile && <div className={classNames('MainHeader', smallHeader && 'Small')}>
@@ -126,14 +131,12 @@ export default class Header extends Component {
             <div className="InformationHeader">
                 <Container className="Children">
                     <Row>
-                        <Col md={8}>
-                            <Heading type="Section" level="1">
+                        <div className="MainCol">
+                            {badge && <div><span className="InformationBadge">{badge}</span></div>}
+                            <h1>
                                 {title}
-                                {badge && <span className="InformationBadge">{badge}</span>}
-                            </Heading>
-                        </Col>
-                        <Col md={4}>
-                        </Col>
+                            </h1>
+                        </div>
                     </Row>
                 </Container>
             </div>
