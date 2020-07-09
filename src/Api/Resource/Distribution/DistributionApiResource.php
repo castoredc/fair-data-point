@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Distribution;
 
-use App\Api\Resource\Agent\Person\AgentsApiResource;
+use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\CSV\CSVDistribution;

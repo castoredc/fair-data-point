@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Resource\Agent\Person;
+namespace App\Api\Resource\Agent;
 
 use App\Api\Resource\Agent\Department\DepartmentApiResource;
 use App\Api\Resource\Agent\Organization\OrganizationApiResource;
