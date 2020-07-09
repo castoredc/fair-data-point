@@ -41,8 +41,9 @@ class CatalogMetadataController extends ApiController
                     $parsed->getLanguage(),
                     $parsed->getLicense(),
                     $parsed->getVersionUpdate(),
+                    $parsed->getPublishers(),
                     $parsed->getHomepage(),
-                    $parsed->getLogo()
+                    $parsed->getLogo(),
                 )
             );
 

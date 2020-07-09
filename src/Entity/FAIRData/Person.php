@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Person extends Agent
 {
+    public const TYPE = 'person';
+
     /**
      * @ORM\Column(type="string")
      *
@@ -58,7 +60,7 @@ class Person extends Agent
     {
         $slugify = new Slugify();
 
-        $fullName = $middleName !== null ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
+        $fullName = $middleName !== null && $middleName !== '' ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
         parent::__construct($slugify->slugify($fullName), $fullName);
 
         $this->firstName = $firstName;
@@ -67,6 +69,17 @@ class Person extends Agent
         $this->email = $email;
         $this->phoneNumber = $phoneNumber;
         $this->orcid = $orcid;
+    }
+
+    public function generateFullName(): void
+    {
+        if ($this->middleName !== null && $this->middleName !== '') {
+            $fullName = $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
+        } else {
+            $fullName = $this->firstName . ' ' . $this->lastName;
+        }
+
+        parent::setName($fullName);
     }
 
     public function getRelativeUrl(): string
@@ -132,5 +145,26 @@ class Person extends Agent
     public function setOrcid(?Iri $orcid): void
     {
         $this->orcid = $orcid;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromData(array $data, ?string $id): self
+    {
+        $person = new Person(
+            $data['firstName'],
+            $data['middleName'] ?? null,
+            $data['lastName'],
+            $data['email'],
+            $data['phonenumber'] ?? null,
+            isset($data['orcid']) ? new Iri($data['orcid']) : null
+        );
+
+        if ($id !== null) {
+            $person->setId($id);
+        }
+
+        return $person;
     }
 }

@@ -5,9 +5,7 @@ export default class CatalogMetadata extends Component {
     render() {
         const { catalog, onSave } = this.props;
 
-        return <div>
-            <CatalogMetadataForm catalog={catalog} onSave={onSave} />
-        </div>;
+        return <CatalogMetadataForm catalog={catalog} onSave={onSave} />;
     }
 
 }

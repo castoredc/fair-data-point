@@ -46,6 +46,16 @@ abstract class Agent
         return $this->id;
     }
 
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function hasId(): bool
+    {
+        return $this->id !== null;
+    }
+
     public function getSlug(): string
     {
         return $this->slug;

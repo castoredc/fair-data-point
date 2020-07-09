@@ -87,11 +87,20 @@ class Distribution implements AccessibleEntity
      */
     private $apiUser;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\JoinTable(name="distribution_contactpoint")
+     *
+     * @var Collection<Agent>
+     */
+    private $contactPoints;
+
     public function __construct(string $slug, Dataset $dataset)
     {
         $this->slug = $slug;
         $this->dataset = $dataset;
         $this->metadata = new ArrayCollection();
+        $this->contactPoints = new ArrayCollection();
     }
 
     public function getId(): string
@@ -187,5 +196,31 @@ class Distribution implements AccessibleEntity
     public function setApiUser(?ApiUser $apiUser): void
     {
         $this->apiUser = $apiUser;
+    }
+
+    /**
+     * @return Collection<Agent>
+     */
+    public function getContactPoints(): Collection
+    {
+        return $this->contactPoints;
+    }
+
+    /**
+     * @param Collection<Agent> $contactPoints
+     */
+    public function setContactPoints(Collection $contactPoints): void
+    {
+        $this->contactPoints = $contactPoints;
+    }
+
+    public function addContactPoint(Agent $contactPoint): void
+    {
+        $this->contactPoints->add($contactPoint);
+    }
+
+    public function removeContactPoint(Agent $contactPoint): void
+    {
+        $this->contactPoints->removeElement($contactPoint);
     }
 }

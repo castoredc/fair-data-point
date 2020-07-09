@@ -42,6 +42,8 @@ class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
             $metadata->setLogo(new Iri($command->getLogo()));
         }
 
+        $metadata->setPublishers($this->parsePublishers($command->getPublishers()));
+
         $catalog->addMetadata($metadata);
 
         $this->em->persist($catalog);

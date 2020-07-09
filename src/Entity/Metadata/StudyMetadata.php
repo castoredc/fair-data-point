@@ -16,6 +16,7 @@ use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -162,7 +163,7 @@ class StudyMetadata
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_contacts")
      *
-     * @var Agent[]|ArrayCollection
+     * @var Collection<Agent>
      */
     private $contacts;
 
@@ -170,7 +171,7 @@ class StudyMetadata
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_centers")
      *
-     * @var Agent[]|ArrayCollection
+     * @var Collection<Agent>
      */
     private $centers;
 
@@ -186,7 +187,6 @@ class StudyMetadata
         $this->study = $study;
         $this->centers = new ArrayCollection();
         $this->contacts = new ArrayCollection();
-
         $this->centers = new ArrayCollection();
     }
 
@@ -331,30 +331,35 @@ class StudyMetadata
     }
 
     /**
-     * @return Agent[]|ArrayCollection
+     * @return Collection<Agent>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
     /**
-     * @param Agent[]|ArrayCollection $contacts
+     * @param Collection<Agent> $contacts
      */
-    public function setContacts($contacts): void
+    public function setContacts(Collection $contacts): void
     {
         $this->contacts = $contacts;
     }
 
     public function addContact(Agent $contact): void
     {
-        $this->contacts[] = $contact;
+        $this->contacts->add($contact);
+    }
+
+    public function removeContact(Agent $contact): void
+    {
+        $this->contacts->removeElement($contact);
     }
 
     /**
-     * @return Agent[]|ArrayCollection
+     * @return Collection<Agent>
      */
-    public function getCenters()
+    public function getCenters(): Collection
     {
         return $this->centers;
     }

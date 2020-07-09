@@ -31,6 +31,8 @@ class OrganizationApiResource implements ApiResource
         }
 
         return [
+            'type' => 'organization',
+            'id' => $this->organization->getId(),
             'name' => $this->organization->getName(),
             'country' => $this->organization->getCountry()->getCode(),
             'city' => $this->organization->getCity(),

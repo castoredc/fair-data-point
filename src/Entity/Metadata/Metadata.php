@@ -73,7 +73,7 @@ abstract class Metadata
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
-     * @ORM\JoinTable(name="dataset_publishers")
+     * @ORM\JoinTable(name="metadata_publishers")
      *
      * @var Collection<Agent>
      */
