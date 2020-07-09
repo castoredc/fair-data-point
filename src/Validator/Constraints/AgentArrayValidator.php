@@ -115,7 +115,7 @@ class AgentArrayValidator extends ConstraintValidator
                 /** @var ConstraintViolation $violation */
                 $this->context->buildViolation($constraint->validationError)
                     ->setParameter('%number%', (string) $index)
-                    ->setParameter('%message%', $violation->getMessage())
+                    ->setParameter('%message%', (string) $violation->getMessage())
                               ->addViolation();
             }
         }

@@ -120,7 +120,7 @@ abstract class MetadataApiRequest extends SingleApiRequest
         $agents = [];
 
         foreach ($items as $item) {
-            $id = isset($item['id']) && $item['id'] !== null ? $item['id'] : null;
+            $id = $item['id'] ?? null;
 
             if ($item['type'] === Organization::TYPE) {
                 $agents[] = Organization::fromData($item, $id);

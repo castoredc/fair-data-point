@@ -5,6 +5,7 @@ namespace App\Api\Resource\Agent;
 
 use App\Api\Resource\Agent\Department\DepartmentApiResource;
 use App\Api\Resource\Agent\Organization\OrganizationApiResource;
+use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Department;

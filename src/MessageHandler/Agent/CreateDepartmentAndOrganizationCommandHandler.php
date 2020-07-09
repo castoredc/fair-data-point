@@ -44,11 +44,13 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
             $message->getOrganizationSlug(),
             $message->getName(),
             $message->getHomepage(),
-            $country,
+            $country->getCode(),
             $message->getCity(),
             $message->getCoordinatesLatitude(),
             $message->getCoordinatesLongitude()
         );
+
+        $organization->setCountry($country);
 
         $this->em->persist($organization);
 

@@ -19,7 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
 {
@@ -90,31 +89,28 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
                 /** @var Agent $newAgent */
                 $dbAgent = $repository->find($agent->getId());
 
-                if (($agent instanceof Department && $dbAgent instanceof Department) || ($agent instanceof Organization && $dbAgent instanceof Organization)) {
-                    if ($agent instanceof Department && $dbAgent instanceof Department) {
-                        assert($agent instanceof Department);
-                        $organization = $agent->getOrganization();
-                        $dbOrganization = $dbAgent->getOrganization();
+                if ($agent instanceof Department && $dbAgent instanceof Department) {
+                    $organization = $agent->getOrganization();
+                    $dbOrganization = $dbAgent->getOrganization();
 
-                        $dbAgent->setName($agent->getName());
-                        $dbAgent->setAdditionalInformation($agent->getAdditionalInformation());
+                    $dbAgent->setName($agent->getName());
+                    $dbAgent->setAdditionalInformation($agent->getAdditionalInformation());
 
-                        $dbOrganization->setName($organization->getName());
-                        $dbOrganization->setCountryCode($organization->getCountryCode());
-                        $dbOrganization->setHomepage($organization->getHomepage());
-                        $dbOrganization->setCity($organization->getCity());
-                        $dbOrganization->setCoordinatesLatitude($organization->getCoordinatesLatitude());
-                        $dbOrganization->setCoordinatesLongitude($organization->getCoordinatesLongitude());
+                    $dbOrganization->setName($organization->getName());
+                    $dbOrganization->setCountryCode($organization->getCountryCode());
+                    $dbOrganization->setHomepage($organization->getHomepage());
+                    $dbOrganization->setCity($organization->getCity());
+                    $dbOrganization->setCoordinatesLatitude($organization->getCoordinatesLatitude());
+                    $dbOrganization->setCoordinatesLongitude($organization->getCoordinatesLongitude());
 
-                        $dbAgent->setOrganization($dbOrganization);
-                    } else {
-                        $dbAgent->setName($agent->getName());
-                        $dbAgent->setCountryCode($agent->getCountryCode());
-                        $dbAgent->setHomepage($agent->getHomepage());
-                        $dbAgent->setCity($agent->getCity());
-                        $dbAgent->setCoordinatesLatitude($agent->getCoordinatesLatitude());
-                        $dbAgent->setCoordinatesLongitude($agent->getCoordinatesLongitude());
-                    }
+                    $dbAgent->setOrganization($dbOrganization);
+                } elseif ($agent instanceof Organization && $dbAgent instanceof Organization) {
+                    $dbAgent->setName($agent->getName());
+                    $dbAgent->setCountryCode($agent->getCountryCode());
+                    $dbAgent->setHomepage($agent->getHomepage());
+                    $dbAgent->setCity($agent->getCity());
+                    $dbAgent->setCoordinatesLatitude($agent->getCoordinatesLatitude());
+                    $dbAgent->setCoordinatesLongitude($agent->getCoordinatesLongitude());
                 } elseif ($agent instanceof Person && $dbAgent instanceof Person) {
                     $dbAgent->setFirstName($agent->getFirstName());
                     $dbAgent->setMiddleName($agent->getMiddleName());
@@ -132,11 +128,11 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
                 $newAgent = $agent;
             }
 
-            if ($agent instanceof Department && $agent->getCountryCode() !== null) {
-                $newAgent->getOrganization()->setCountry($this->getCountry($agent->getCountryCode()));
+            if ($agent instanceof Department && $newAgent instanceof Department && $agent->getOrganization()->getCountryCode() !== null) {
+                $newAgent->getOrganization()->setCountry($this->getCountry($agent->getOrganization()->getCountryCode()));
             }
 
-            if ($agent instanceof Organization && $agent->getCountryCode() !== null) {
+            if ($agent instanceof Organization && $newAgent instanceof Organization && $agent->getCountryCode() !== null) {
                 $newAgent->setCountry($this->getCountry($agent->getCountryCode()));
             }
 

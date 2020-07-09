@@ -60,7 +60,7 @@ class Person extends Agent
     {
         $slugify = new Slugify();
 
-        $fullName = $middleName !== null || $middleName !== '' ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
+        $fullName = $middleName !== null && $middleName !== '' ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
         parent::__construct($slugify->slugify($fullName), $fullName);
 
         $this->firstName = $firstName;
@@ -73,7 +73,7 @@ class Person extends Agent
 
     public function generateFullName(): void
     {
-        if ($this->middleName !== null || $this->middleName !== '') {
+        if ($this->middleName !== null && $this->middleName !== '') {
             $fullName = $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
         } else {
             $fullName = $this->firstName . ' ' . $this->lastName;
