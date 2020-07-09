@@ -49,4 +49,14 @@ class Department extends Agent
     {
         return $this->additionalInformation;
     }
+
+    public function setOrganization(?Organization $organization): void
+    {
+        $this->organization = $organization;
+    }
+
+    public function setAdditionalInformation(?string $additionalInformation): void
+    {
+        $this->additionalInformation = $additionalInformation;
+    }
 }

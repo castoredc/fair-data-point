@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Catalog;
 
+use App\Api\Resource\Agent\Person\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Catalog;
 
@@ -38,7 +39,7 @@ class CatalogApiResource implements ApiResource
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],
                 'description' => $metadata->getDescription()->toArray(),
-                'publishers' => [],
+                'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
                 'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
                 'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
                 'created' => $metadata->getCreatedAt(),

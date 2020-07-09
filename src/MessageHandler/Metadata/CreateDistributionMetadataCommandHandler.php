@@ -33,6 +33,8 @@ class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHand
             $metadata->setLicense($this->getLicense($command->getLicense()));
         }
 
+        $metadata->setPublishers($this->parsePublishers($command->getPublishers()));
+
         $distribution->addMetadata($metadata);
 
         $this->em->persist($distribution);

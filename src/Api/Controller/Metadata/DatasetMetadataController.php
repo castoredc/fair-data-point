@@ -40,7 +40,8 @@ class DatasetMetadataController extends ApiController
                     $parsed->getDescription(),
                     $parsed->getLanguage(),
                     $parsed->getLicense(),
-                    $parsed->getVersionUpdate()
+                    $parsed->getVersionUpdate(),
+                    $parsed->getPublishers()
                 )
             );
 

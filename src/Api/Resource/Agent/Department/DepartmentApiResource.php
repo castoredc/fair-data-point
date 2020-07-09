@@ -31,6 +31,8 @@ class DepartmentApiResource implements ApiResource
         }
 
         return [
+            'type' => 'department',
+            'id' => $this->department->getId(),
             'name' => $this->department->getOrganization()->getName(),
             'country' => $this->department->getOrganization()->getCountry()->getCode(),
             'city' => $this->department->getOrganization()->getCity(),
