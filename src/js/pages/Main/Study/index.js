@@ -4,7 +4,6 @@ import axios from "axios";
 import {Col, Row} from "react-bootstrap";
 import {paragraphText} from "../../../util";
 import MetadataItem from "../../../components/MetadataItem";
-import queryString from "query-string/index";
 import Header from "../../../components/Layout/Header";
 import {MethodType, RecruitmentStatus, StudyType} from "../../../components/MetadataItem/EnumMappings";
 import Tags from "../../../components/Tags";
@@ -80,9 +79,9 @@ export default class Study extends Component {
         >
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} badge={badge} />
 
-            <MainBody>
+            <MainBody isLoading={isLoadingStudy}>
                 {study && <Row>
-                    <Col md={8} className="InformationCol">
+                    <div className="MainCol">
                         {study.metadata.contacts.length > 0 && <Contacts contacts={study.metadata.contacts} />}
 
                         {(study.metadata.briefSummary || tags.length > 0) && <div className="InformationDescription">
@@ -91,8 +90,8 @@ export default class Study extends Component {
                         </div>}
 
                         <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
-                    </Col>
-                    <Col md={4}>
+                    </div>
+                    <div className="SideCol">
                         {study.metadata.logo && <div className="InformationLogo">
                             <img src={study.metadata.logo} alt={'Logo'}/>
                         </div>}
@@ -103,7 +102,7 @@ export default class Study extends Component {
 
                         {/*{study.language && <MetadataItem label="Language" url={study.language.url} value={study.language.name} />}*/}
                         {/*{study.landingPage && <MetadataItem label="Landing page" value={study.landingPage} />}*/}
-                    </Col>
+                    </div>
                 </Row>}
             </MainBody>
         </Layout>;

@@ -99,7 +99,7 @@ export default class MetadataXmlParse extends Component {
 
             <MainBody>
                 <Row className="justify-content-md-center">
-                    <Col className="InformationCol" md={6}>
+                    <Col className="MainCol" md={6}>
                         <Form>
                             <Form.File
                                 id="custom-file"

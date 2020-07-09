@@ -142,7 +142,7 @@ export default class StudyList extends Component {
             }
         }, () => {
             this.getStudies();
-            window.scrollTo(0, this.wrapperRef.current.offsetTop - 100);
+            window.scrollTo(0, this.wrapperRef.current.offsetTop - 130);
         });
     };
 
@@ -157,7 +157,7 @@ export default class StudyList extends Component {
             }
         }, () => {
             this.getStudies();
-            window.scrollTo(0, this.wrapperRef.current.offsetTop - 100);
+            window.scrollTo(0, this.wrapperRef.current.offsetTop - 130);
         });
     };
 
@@ -166,7 +166,6 @@ export default class StudyList extends Component {
         const { embedded, displayList, displayFilter, state, catalog } = this.props;
 
         const displayMap = ! displayList;
-        const listWidth = displayList ? 8 : 12;
 
         if(studies === null || map === null)
         {
@@ -175,7 +174,7 @@ export default class StudyList extends Component {
 
         return <StickyContainer>
                 <Row className="Datasets" ref={this.wrapperRef}>
-                    <Col md={listWidth} className="InformationCol">
+                    <div className={classNames('MainCol', displayMap && 'FullWidth')}>
                         {displayList && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
                             {studies.length > 0 ? <div>
                                 {studies.map((item, index) => {
@@ -223,9 +222,9 @@ export default class StudyList extends Component {
                         {displayMap && <div className={classNames('Map', isLoadingMap && 'Loading')}>
                             <StudiesMap studies={map} />
                         </div>}
-                    </Col>
-                    <Col md={4}
-                         className={classNames('Filters',
+                    </div>
+                    <div
+                         className={classNames('SideCol', 'Filters',
                              ! displayList && 'StickyDisabled',
                              ! displayFilter && 'Hidden',
                              (! displayList && displayFilter) && 'Overlay')}>
@@ -239,7 +238,7 @@ export default class StudyList extends Component {
                                  />
                             )}
                         </Sticky>
-                    </Col>
+                    </div>
                 </Row>
             </StickyContainer>;
     }

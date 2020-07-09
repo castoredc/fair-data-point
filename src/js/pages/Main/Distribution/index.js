@@ -62,9 +62,9 @@ export default class Distribution extends Component {
         >
             <Header user={user} breadcrumbs={breadcrumbs} title={title} />
 
-            <MainBody>
+            <MainBody isLoading={isLoadingDistribution}>
                 {distribution && <Row>
-                    <Col md={8} className="InformationCol">
+                    <div className="MainCol">
                         {distribution.metadata.description && <div className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
 
                         {restricted && <Alert
@@ -93,8 +93,7 @@ export default class Distribution extends Component {
                                                                smallIcon={restricted && 'lock'}
                                                                newWindow
                         />}
-                    </Col>
-                    <Col md={4} />
+                    </div>
                 </Row>}
             </MainBody>
         </Layout>;
