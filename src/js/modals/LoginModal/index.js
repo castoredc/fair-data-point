@@ -50,7 +50,7 @@ export default class LoginModal extends Component {
             show={show}
             handleClose={handleClose}
             className="LoginModal"
-            title="Login"
+            title="Log in"
             closeButton
         >
             {isLoading ? <InlineLoader /> : <LoginForm path={path} modal={true} server={server} serverLocked={!!server} servers={servers} view={view} />}
