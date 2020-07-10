@@ -82,7 +82,7 @@ export default class Login extends Component {
         const { serverLocked, view, servers, selectedServer, catalog } = this.state;
 
         const params = queryString.parse(this.props.location.search);
-        const path = typeof params.path !== 'undefined' ? '?target_path=' + params.path : '';
+        const path = typeof params.path !== 'undefined' ? params.path : '';
 
         if(this.state.isLoading)
         {

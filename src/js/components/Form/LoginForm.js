@@ -95,7 +95,7 @@ export default class LoginForm extends Component {
                 <div className="LoginButton">
                     <Button href={loginUrl} disabled={selectedServer === null}>
                         <CastorNest className="LoginButtonLogo" />
-                        Login with Castor
+                        Log in with Castor
                     </Button>
                 </div>
             </div>

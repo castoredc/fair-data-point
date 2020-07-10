@@ -20,7 +20,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/dataset/{dataset}", name="api_dataset")
+ * @Route("/api/dataset/{dataset}")
  * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
  */
 class DatasetApiController extends ApiController

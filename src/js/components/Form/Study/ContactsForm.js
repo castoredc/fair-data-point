@@ -4,18 +4,19 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
-import './Form.scss'
+import '../Form.scss'
 import {Redirect} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
 import {toast} from "react-toastify";
-import ToastContent from "../ToastContent";
+import ToastContent from "../../ToastContent";
 import axios from "axios";
-import FormItem from "./FormItem";
-import Input from "../Input";
-import InlineLoader from "../LoadingScreen/InlineLoader";
-import Toggle from "../Toggle";
+import FormItem from "../FormItem";
+import Input from "../../Input";
+import InlineLoader from "../../LoadingScreen/InlineLoader";
+import Toggle from "../../Toggle";
 import Container from "react-bootstrap/Container";
-import {replaceAt} from "../../util";
+import {replaceAt} from "../../../util";
+import PersonForm from "../Agent/PersonForm";
 
 export default class ContactsForm extends Component {
     constructor(props) {
@@ -109,45 +110,14 @@ export default class ContactsForm extends Component {
     };
 
     componentDidMount() {
-        ValidatorForm.addValidationRule('isOrcid', (value) => {
-            if(value === '' || value === null)
-            {
-                return true;
-            }
-
-            const regex = /^\d{4}(-)\d{4}(-)\d{4}(-)\d{3}[\dX]$/i;
-            return regex.test(value);
-        });
-
         this.getContacts();
     }
 
-    handleChange = (index, event, callback = (() => {})) => {
-        const { contacts, validation } = this.state;
-
-        const newContacts = replaceAt(contacts, index, {
-            ...contacts[index],
-            [event.target.name]: event.target.value
-        });
-
-        const newValidation = replaceAt(validation, index, {
-            ...validation[index],
-            [event.target.name]: false
-        });
+    handleDataChange = (index, data) => {
+        const { contacts } = this.state;
 
         this.setState({
-            contacts: newContacts,
-            validation: newValidation
-        }, callback);
-    };
-
-    handleFieldVisit = (event) => {
-        const { visitedFields } = this.state;
-        this.setState({
-            visitedFields: {
-                ...visitedFields,
-                [event.target.name]: true,
-            },
+            contacts: replaceAt(contacts, index, data),
         });
     };
 
@@ -201,13 +171,10 @@ export default class ContactsForm extends Component {
 
     render() {
         const { catalog, studyId, admin = false } = this.props;
-        const { contacts, validation, isSaved, isLoading, submitDisabled } = this.state;
+        const { contacts, isSaved, isLoading, submitDisabled } = this.state;
 
         const backUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
         const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/consent';
-
-        const required = "This field is required";
-        const invalid = "This value is invalid";
 
         if(isSaved && !admin)
         {
@@ -233,61 +200,7 @@ export default class ContactsForm extends Component {
                             <Container>
                                 <Row>
                                     <Col>
-                                        <FormItem label="First Name">
-                                            <Input
-                                                validators={['required']}
-                                                errorMessages={[required]}
-                                                name="firstName"
-                                                onChange={(e) => {this.handleChange(index, e)}}
-                                                onBlur={this.handleFieldVisit}
-                                                value={contact.firstName}
-                                                serverError={validation[index].firstName}
-                                            />
-                                        </FormItem>
-                                        <FormItem label="Middle Name">
-                                            <Input
-                                                name="middleName"
-                                                onChange={(e) => {this.handleChange(index, e)}}
-                                                onBlur={this.handleFieldVisit}
-                                                value={contact.middleName}
-                                                serverError={validation[index].middleName}
-                                            />
-                                        </FormItem>
-                                        <FormItem label="Last Name">
-                                            <Input
-                                                validators={['required']}
-                                                errorMessages={[required]}
-                                                name="lastName"
-                                                onChange={(e) => {this.handleChange(index, e)}}
-                                                onBlur={this.handleFieldVisit}
-                                                value={contact.lastName}
-                                                serverError={validation[index].lastName}
-                                            />
-                                        </FormItem>
-                                        <FormItem label="Email address">
-                                            <Input
-                                                validators={['required', 'isEmail']}
-                                                errorMessages={[required, invalid]}
-                                                name="email"
-                                                onChange={(e) => {this.handleChange(index, e)}}
-                                                onBlur={this.handleFieldVisit}
-                                                value={contact.email}
-                                                serverError={validation[index].email}
-                                            />
-                                        </FormItem>
-                                        <FormItem label="ORCID">
-                                            <Input
-                                                placeholder="0000-0000-0000-0000"
-                                                validators={['isOrcid']}
-                                                errorMessages={[invalid]}
-                                                name="orcid"
-                                                onChange={(e) => {this.handleChange(index, e)}}
-                                                onBlur={this.handleFieldVisit}
-                                                value={contact.orcid}
-                                                mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /[\dX]/]}
-                                                serverError={validation[index].orcid}
-                                            />
-                                        </FormItem>
+                                        <PersonForm data={contact} handleDataChange={(data) => {this.handleDataChange(index, data)}} />
                                     </Col>
                                     <Col>
                                         {index > 0 && <Stack alignment="end" distribution="trailing">
@@ -326,6 +239,7 @@ export default class ContactsForm extends Component {
 }
 
 const defaultData = {
+    id: null,
     firstName: '',
     middleName: '',
     lastName: '',

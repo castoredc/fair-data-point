@@ -26,7 +26,11 @@ class ListItem extends Component {
 
         if(selectable)
         {
-            return <a href="#" className={classNames("ListItem", "Selectable", active && 'Active', className)} onClick={onClick}>
+            return <a href="#" className={classNames("ListItem", "Selectable", active && 'Active', className)}
+                      onClick={(e) => {
+                          e.preventDefault();
+                          onClick(e);
+                      }}>
                 {(leftIcon && !customIcon) && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><Icon type={leftIcon} /></span>}
                 {(leftIcon && customIcon) && <span className={classNames('ListItemLeftIcon', fill && 'Fill')}><CustomIcon type={leftIcon} /></span>}
                 <span className="ListItemTitle">{title}</span>

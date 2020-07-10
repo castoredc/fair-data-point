@@ -5,7 +5,7 @@ header {
     &.Desktop {
         .Spacing {
             height: $desktopHeaderHeight;
-            background: $azul;
+            background: $primary-main;
         }
 
         &.Embedded {
@@ -18,7 +18,7 @@ header {
     &.Mobile {
         .Spacing {
             height: $mobileHeaderHeight;
-            background: $azul;
+            background: $primary-main;
         }
 
         &.Embedded {

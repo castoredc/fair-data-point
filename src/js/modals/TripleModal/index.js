@@ -49,16 +49,46 @@ export default class TripleModal extends Component {
     }
 
     handleChange = (event, callback = (() => {})) => {
-        const { data } = this.state;
+        const { data, validation } = this.state;
         this.setState({
             data: {
                 ...data,
                 [event.target.name]: event.target.value,
             },
             validation: {
+                ...validation,
                 [event.target.name]: false,
             }
         }, callback);
+    };
+
+    handlePredicateChange = (event) => {
+        const { data, validation } = this.state;
+        const {prefixes} = this.props;
+
+        let predicate = event.target.value;
+        const regex = /^([^:]*):(.*)/;
+        const matches = regex.exec(predicate);
+
+        if(matches !== null) {
+            const matchedPrefix = matches[1];
+            const foundPrefix = prefixes.find((prefix) => { return prefix.prefix === matchedPrefix});
+
+            if(typeof foundPrefix !== 'undefined') {
+                predicate = foundPrefix.uri + matches[2];
+            }
+        }
+
+        this.setState({
+            data: {
+                ...data,
+                predicateValue: predicate,
+            },
+            validation: {
+                ...validation,
+                predicateValue: false,
+            }
+        });
     };
 
     handleSubjectTypeChange = (event) => {
@@ -211,15 +241,16 @@ export default class TripleModal extends Component {
                         <Col md={12}>
                             <FormHeading label="Predicate" />
                         </Col>
-                        <Col md={6}>
+                        <Col md={12}>
                             <FormItem label="URI">
                                 <Input
                                     validators={['required', 'isUrl']}
                                     errorMessages={[required, validUrl]}
                                     name="predicateValue"
-                                    onChange={this.handleChange}
+                                    onChange={this.handlePredicateChange}
                                     value={data.predicateValue}
                                     serverError={validation.predicateValue}
+                                    width="100%"
                                 />
                             </FormItem>
                         </Col>

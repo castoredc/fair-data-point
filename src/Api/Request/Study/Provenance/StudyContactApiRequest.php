@@ -9,6 +9,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class StudyContactApiRequest extends GroupedApiRequest
 {
     /**
+     * @var string|null
+     * @Assert\Type("string")
+     */
+    private $id;
+
+    /**
      * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
@@ -43,11 +49,17 @@ class StudyContactApiRequest extends GroupedApiRequest
 
     protected function parse(): void
     {
+        $this->id = $this->getFromData('id');
         $this->firstName = $this->getFromData('firstName');
         $this->middleName = $this->getFromData('middleName');
         $this->lastName = $this->getFromData('lastName');
         $this->email = $this->getFromData('email');
         $this->orcid = $this->getFromData('orcid');
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 
     public function getFirstName(): string

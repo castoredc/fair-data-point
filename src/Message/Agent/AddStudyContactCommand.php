@@ -5,10 +5,13 @@ namespace App\Message\Agent;
 
 use App\Entity\Study;
 
-class CreatePersonCommand
+class AddStudyContactCommand
 {
     /** @var Study */
     private $study;
+
+    /** @var string|null */
+    private $id;
 
     /** @var string */
     private $firstName;
@@ -25,9 +28,10 @@ class CreatePersonCommand
     /** @var string|null */
     private $orcid;
 
-    public function __construct(Study $study, string $firstName, ?string $middleName, string $lastName, string $email, ?string $orcid)
+    public function __construct(Study $study, ?string $id, string $firstName, ?string $middleName, string $lastName, string $email, ?string $orcid)
     {
         $this->study = $study;
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->middleName = $middleName;
         $this->lastName = $lastName;
@@ -38,6 +42,11 @@ class CreatePersonCommand
     public function getStudy(): Study
     {
         return $this->study;
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 
     public function getFirstName(): string

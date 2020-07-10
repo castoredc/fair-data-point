@@ -28,6 +28,9 @@ export default class DataModelModules extends Component {
             isLoadingNodes:       true,
             hasLoadedNodes:       false,
             nodes:                [],
+            isLoadingPrefixes:    true,
+            hasLoadedPrefixes:    false,
+            prefixes:             [],
             currentModuleId:      null
         };
     }
@@ -35,6 +38,7 @@ export default class DataModelModules extends Component {
     componentDidMount() {
         this.getModules();
         this.getNodes();
+        this.getPrefixes();
     }
 
     getModules = () => {
@@ -90,6 +94,31 @@ export default class DataModelModules extends Component {
             });
     };
 
+    getPrefixes = () => {
+        const {dataModel} = this.props;
+
+        this.setState({
+            isLoadingPrefixes: true,
+        });
+
+        axios.get('/api/model/' + dataModel.id + '/prefix')
+            .then((response) => {
+                this.setState({
+                    prefixes:          response.data,
+                    isLoadingPrefixes: false,
+                    hasLoadedPrefixes: true,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingPrefixes: false,
+                });
+
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the prefixes';
+                toast.error(<ToastContent type="error" message={message}/>);
+            });
+    };
+    
     getOrderOptions = () => {
         const { modules, currentModuleId } = this.state;
 
@@ -191,9 +220,9 @@ export default class DataModelModules extends Component {
 
     render() {
         const { dataModel } = this.props;
-        const { showModal, hasLoadedModules, hasLoadedNodes, modules, nodes, currentModuleId, moduleModalData, tripleModalData } = this.state;
+        const { showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModuleId, moduleModalData, tripleModalData } = this.state;
 
-        if (!hasLoadedModules || !hasLoadedNodes) {
+        if (!hasLoadedModules || !hasLoadedNodes || !hasLoadedPrefixes) {
             return <InlineLoader />;
         }
 
@@ -217,6 +246,7 @@ export default class DataModelModules extends Component {
                 moduleId={currentModuleId}
                 nodes={nodes}
                 data={tripleModalData}
+                prefixes={prefixes}
             />
 
             <ConfirmModal

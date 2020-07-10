@@ -5,6 +5,7 @@ namespace App\MessageHandler\Metadata;
 
 use App\Entity\Metadata\StudyMetadata;
 use App\Entity\Terminology\CodedText;
+use App\Entity\Version;
 use App\Exception\NoAccessPermission;
 use App\Message\Metadata\CreateStudyMetadataCommand;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\Security\Core\Security;
 
 class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
 {
+    public const DEFAULT_VERSION_NUMBER = '1.0.0';
+
     /** @var EntityManagerInterface */
     private $em;
 
@@ -34,6 +37,8 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
         }
 
         $metadata = new StudyMetadata($study);
+
+        $metadata->setVersion(new Version(self::DEFAULT_VERSION_NUMBER));
 
         $metadata->setBriefName($message->getBriefName());
         $metadata->setScientificName($message->getScientificName());
