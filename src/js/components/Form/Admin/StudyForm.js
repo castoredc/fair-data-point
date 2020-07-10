@@ -235,7 +235,7 @@ export default class StudyForm extends Component {
                     <Col>
                     </Col>
                     <Col>
-                        <Button disabled={isLoading}>
+                        <Button type="submit" disabled={isLoading}>
                             Update study
                         </Button>
                     </Col>

@@ -11,6 +11,7 @@ import {localizedText} from "../../util";
 import ListItem from "../../components/ListItem";
 import {Button, CastorLogo} from "@castoredc/matter";
 import {LoginViews} from "../../components/MetadataItem/EnumMappings";
+import LoginForm from "../../components/Form/LoginForm";
 
 export default class Login extends Component {
     constructor(props) {
@@ -77,32 +78,20 @@ export default class Login extends Component {
             });
     };
 
-    handleServerSelect = (serverId) => {
-        this.setState({
-            selectedServer: serverId,
-            submitDisabled: false
-        })
-    };
-
     render() {
-        const { serverLocked, view } = this.state;
+        const { serverLocked, view, servers, selectedServer, catalog } = this.state;
 
         const params = queryString.parse(this.props.location.search);
-        const loginUrl = '/connect/castor/' + this.state.selectedServer + (typeof params.path !== 'undefined' ? '?target_path=' + params.path : '');
+        const path = typeof params.path !== 'undefined' ? '?target_path=' + params.path : '';
 
         if(this.state.isLoading)
         {
             return <LoadingScreen showLoading={true}/>;
         }
 
-        const brand = this.state.catalog !== null ? localizedText(this.state.catalog.name, 'en') : 'FAIR Data Point';
-
-        const viewName = LoginViews[view] || LoginViews['generic'];
-
-
         return (
             <div className="Login TopLevelContainer">
-                <DocumentTitle title={brand + ' | Log in'} />
+                <DocumentTitle title="FAIR Data Point | Log in" />
 
                 <div className="Skip"/>
 
@@ -112,49 +101,8 @@ export default class Login extends Component {
                         <CastorLogo className="Logo" />
                     </div>
 
-                    {this.state.catalog !== null ? <div className="LoginBrand">
-                        <h1>{brand}</h1>
+                    <LoginForm path={path} server={selectedServer} serverLocked={serverLocked} servers={servers} catalog={catalog} view={view} />
 
-                        <div className="LoginText">
-                            <p>To enter your study in the {brand} you must be a registered Castor EDC user.</p>
-                            <p>Please log in with your Castor EDC account and allow the application to access your information.</p>
-                            {this.state.catalog.accessingData === false && <p>
-                                The application only accesses high-level information from your study and will not download nor upload any data to your study.
-                            </p>}
-                        </div>
-                    </div> : <div>
-                        <h1>{brand}</h1>
-
-                        <div className="LoginText">
-                            <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>
-                            <p>Please log in with your Castor EDC account and allow the application to access your information.</p>
-                        </div>
-                    </div>}
-
-                    {! serverLocked && <div className="Servers">
-                        <div className="ServerText">
-                            My study is located on a Castor server in
-                        </div>
-                        <div className="ServersList">
-                            {this.state.servers.map((server) => {
-                                return <ListItem key={server.id}
-                                                 title={server.name}
-                                                 selectable={true}
-                                                 active={this.state.selectedServer === server.id}
-                                                 onClick={() => {this.handleServerSelect(server.id)}}
-                                                 leftIcon={'flag' + server.flag.toUpperCase()}
-                                                 className="ServerListItem"
-                                                 fill={false}
-                                                 customIcon={true}
-                                />
-                            })}
-                        </div>
-                    </div>}
-
-
-                    <div className="LoginButton">
-                        <Button href={loginUrl} disabled={this.state.selectedServer === null}>Proceed</Button>
-                    </div>
                 </div>
             </div>
         );

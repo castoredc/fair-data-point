@@ -16,9 +16,13 @@ export default class Distribution extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingDistribution:  true,
-            hasLoadedDistribution:  false,
-            distribution:           null
+            isLoadingDistribution: true,
+            hasLoadedDistribution: false,
+            distribution:          null,
+            showLoginModal:        false,
+            loginModalUrl:         null,
+            loginModalView:        null,
+            server:                null,
         };
     }
 
@@ -30,24 +34,51 @@ export default class Distribution extends Component {
         axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
             .then((response) => {
                 this.setState({
-                    distribution: response.data,
+                    distribution:          response.data,
                     isLoadingDistribution: false,
-                    hasLoadedDistribution: true
+                    hasLoadedDistribution: true,
                 });
             })
             .catch((error) => {
                 this.setState({
-                    isLoadingDistribution: false
+                    isLoadingDistribution: false,
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
+    checkIfLoggedIn = (e, url) => {
+        e.preventDefault();
+
+        const {user} = this.props;
+        const {distribution} = this.state;
+
+        if (user === null) {
+            this.setState({
+                showLoginModal: true,
+                loginModalUrl:  url,
+                loginModalView: 'distribution',
+                server:         distribution.study.sourceServer,
+            })
+        } else {
+            window.location.href = url;
+        }
+    };
+
+    closeModal = () => {
+        this.setState({
+            showLoginModal: false,
+            loginModalUrl:  null,
+            loginModalView: null,
+            server:         null,
+        })
+    };
+
     render() {
-        const { distribution, isLoadingDistribution } = this.state;
-        const { location, user, embedded } = this.props;
+        const {distribution, isLoadingDistribution, showLoginModal, loginModalUrl, loginModalView, server} = this.state;
+        const {location, user, embedded} = this.props;
 
         const breadcrumbs = getBreadCrumbs(location, {distribution});
 
@@ -60,17 +91,21 @@ export default class Distribution extends Component {
             isLoading={isLoadingDistribution}
             embedded={embedded}
         >
-            <Header user={user} breadcrumbs={breadcrumbs} title={title} />
+            <Header user={user} breadcrumbs={breadcrumbs} title={title} showLoginModal={showLoginModal}
+                    loginModalUrl={loginModalUrl} onModalClose={this.closeModal} loginModalView={loginModalView}
+                    loginModalServer={server}/>
 
             <MainBody isLoading={isLoadingDistribution}>
                 {distribution && <Row>
                     <div className="MainCol">
-                        {distribution.metadata.description && <div className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
+                        {distribution.metadata.description && <div
+                            className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
 
                         {restricted && <Alert
                             variant="info"
                             icon="lock">
-                            The access to this distribution is restricted. When you try to access the data, you will be redirected to Castor EDC to authenticate yourself.
+                            The access to this distribution is restricted. When you try to access the data, you will be
+                            redirected to Castor EDC to authenticate yourself.
                         </Alert>
                         }
                         {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
@@ -78,13 +113,19 @@ export default class Distribution extends Component {
                                                             description="Use SPARQL queries to extract specific information from this distribution."
                                                             smallIcon={restricted && 'lock'}
                                                             newWindow
+                                                            onClick={(e) => {
+                                                                this.checkIfLoggedIn(e, distribution.relativeUrl + '/query')
+                                                            }}
                         />}
 
                         {distribution.accessUrl && <ListItem link={distribution.accessUrl}
-                                  title="Access the data"
-                                  description="Get access to the distribution."
-                                  smallIcon={restricted && 'lock'}
-                                  newWindow
+                                                             title="Access the data"
+                                                             description="Get access to the distribution."
+                                                             smallIcon={restricted && 'lock'}
+                                                             newWindow
+                                                             onClick={(e) => {
+                                                                 this.checkIfLoggedIn(e, distribution.accessUrl)
+                                                             }}
                         />}
 
                         {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
@@ -92,6 +133,9 @@ export default class Distribution extends Component {
                                                                description="Get a downloadable file for this distribution."
                                                                smallIcon={restricted && 'lock'}
                                                                newWindow
+                                                               onClick={(e) => {
+                                                                   this.checkIfLoggedIn(e, distribution.downloadUrl)
+                                                               }}
                         />}
                     </div>
                 </Row>}
