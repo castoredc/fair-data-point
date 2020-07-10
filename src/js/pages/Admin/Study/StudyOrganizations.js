@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import OrganizationsForm from "../../../components/Form/OrganizationsForm";
+import OrganizationsForm from "../../../components/Form/Study/OrganizationsForm";
 import Container from "react-bootstrap/Container";
 
 export default class StudyOrganizations extends Component {

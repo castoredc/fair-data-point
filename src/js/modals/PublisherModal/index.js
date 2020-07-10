@@ -45,6 +45,7 @@ export default class PublisherModal extends Component {
     handleTypeChange = (event) => {
         this.setState({
             type: event.target.value,
+            data: defaultData
         });
     };
 
@@ -55,10 +56,10 @@ export default class PublisherModal extends Component {
     };
 
     handleSubmit = () => {
-        const {save} = this.props;
+        const {save, edit = false} = this.props;
         const {type, data} = this.state;
 
-        if (this.form.isFormValid()) {
+        if (this.form.isFormValid() && !edit) {
             save({
                 type: type,
                 ...data
@@ -67,20 +68,20 @@ export default class PublisherModal extends Component {
     };
 
     render() {
-        const {show, handleClose, countries, deletePublisher} = this.props;
+        const {show, handleClose, countries, deletePublisher, edit = false} = this.props;
         const {type, data, isLoading} = this.state;
 
         return <Modal
             show={show}
             handleClose={handleClose}
-            title={data.id ? 'Edit publisher' : 'Add publisher'}
+            title={edit ? `Edit publisher (${type})` : 'Add publisher'}
             closeButton
             footer={(
                 <Stack>
-                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
-                    {data.id ? 'Edit publisher' : 'Add publisher'}
-                </Button>
-                    {data.id && <ConfirmModal
+                    {(!edit || (edit && type === 'organization')) && <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                        {edit ? 'Edit publisher' : 'Add publisher'}
+                    </Button>}
+                    {edit && <ConfirmModal
                         title="Delete publisher"
                         action="Delete publisher"
                         variant="danger"
@@ -97,7 +98,7 @@ export default class PublisherModal extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <FormItem label="Type">
+                {! edit && <FormItem label="Type">
                     <RadioGroup
                         options={[
                             {
@@ -114,9 +115,9 @@ export default class PublisherModal extends Component {
                         name="type"
                         variant="horizontal"
                     />
-                </FormItem>
+                </FormItem>}
 
-                {type === 'person' && <PersonForm data={data} handleDataChange={this.handleDataChange}/>}
+                {type === 'person' && <PersonForm data={data} edit={edit} handleDataChange={this.handleDataChange}/>}
                 {type === 'organization' &&
                 <OrganizationForm data={data} handleDataChange={this.handleDataChange} countries={countries}/>}
             </ValidatorForm>

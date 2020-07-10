@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import ContactsForm from "../../../components/Form/ContactsForm";
+import ContactsForm from "../../../components/Form/Study/ContactsForm";
 import Container from "react-bootstrap/Container";
 
 export default class StudyContacts extends Component {
