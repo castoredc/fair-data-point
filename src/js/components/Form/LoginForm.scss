@@ -1,0 +1,35 @@
+@import '../../scss/colors';
+
+.LoginForm {
+  .LoginButton {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .Servers {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid $neutral-30;
+
+    .ServerText {
+      font-weight: 600;
+    }
+
+    .ServersList {
+      padding-top: 20px;
+    }
+  }
+
+  .LoginButton {
+    .LoginButtonLogo {
+      display: inline-block;
+      height: 1.6rem;
+      width: 1.6rem;
+      box-sizing: border-box;
+      color: currentColor;
+      fill: currentColor;
+      vertical-align: -0.3rem;
+      margin-right: 0.8rem;
+    }
+  }
+}
