@@ -112,13 +112,15 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
                     $dbAgent->setCoordinatesLatitude($agent->getCoordinatesLatitude());
                     $dbAgent->setCoordinatesLongitude($agent->getCoordinatesLongitude());
                 } elseif ($agent instanceof Person && $dbAgent instanceof Person) {
-                    $dbAgent->setFirstName($agent->getFirstName());
-                    $dbAgent->setMiddleName($agent->getMiddleName());
-                    $dbAgent->setLastName($agent->getLastName());
-                    $dbAgent->setEmail($agent->getEmail());
-                    $dbAgent->setOrcid($agent->getOrcid());
-                    $dbAgent->setPhoneNumber($agent->getPhoneNumber());
-                    $dbAgent->generateFullName();
+                    if ($this->security->isGranted('ROLE_ADMIN')) {
+                        $dbAgent->setFirstName($agent->getFirstName());
+                        $dbAgent->setMiddleName($agent->getMiddleName());
+                        $dbAgent->setLastName($agent->getLastName());
+                        $dbAgent->setEmail($agent->getEmail());
+                        $dbAgent->setOrcid($agent->getOrcid());
+                        $dbAgent->setPhoneNumber($agent->getPhoneNumber());
+                        $dbAgent->generateFullName();
+                    }
                 } else {
                     throw new InvalidAgentType();
                 }
