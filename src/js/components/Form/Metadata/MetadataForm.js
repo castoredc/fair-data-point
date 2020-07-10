@@ -106,6 +106,7 @@ export default class MetadataForm extends Component {
                 ...showModal,
                 [type]: false,
             },
+            currentPublisher: null
         });
     };
 
@@ -272,6 +273,7 @@ export default class MetadataForm extends Component {
                     save={this.handlePublisherUpdate}
                     deletePublisher={this.handlePublisherDelete}
                     countries={countries}
+                    edit={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined')}
                     type={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined') ? data.publishers[currentPublisher].type : null}
                     data={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined') ? data.publishers[currentPublisher] : null}
                 />

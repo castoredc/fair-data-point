@@ -6,7 +6,7 @@ import './Input.scss'
 
 export default class RadioGroup extends ValidatorComponent {
     render() {
-        const { value, options, onChange, name, variant } = this.props;
+        const { value, options, onChange, name, variant, readOnly } = this.props;
 
         return <Form.Group className="Input">
             <div
@@ -19,9 +19,10 @@ export default class RadioGroup extends ValidatorComponent {
                         labelText={option.label}
                         type="radio"
                         name={name}
-                        onChange={() => {onChange({target: { name: name, value: option.value}})}}
+                        onChange={readOnly ? null : () => {onChange({target: { name: name, value: option.value}})}}
                         value={option.value}
                         checked={value === option.value}
+                        readOnly={readOnly}
                     />
                 })}
                 {this.errorText()}

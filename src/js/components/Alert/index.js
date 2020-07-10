@@ -6,9 +6,9 @@ import {Icon} from "@castoredc/matter";
 
 class Alert extends Component {
     render() {
-        const { icon, children, variant} = this.props;
+        const { icon, children, variant, form} = this.props;
 
-        return <div className={classNames('AlertMessage', 'AlertMessage-' + variant)}>
+        return <div className={classNames('AlertMessage', 'AlertMessage-' + variant, form && 'AlertMessageForm')}>
             {icon && <div className="AlertIcon">
                 <Icon type={icon} />
             </div>}
