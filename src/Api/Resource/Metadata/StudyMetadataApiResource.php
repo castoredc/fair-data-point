@@ -58,6 +58,9 @@ class StudyMetadataApiResource implements ApiResource
             'logo' => $this->studyMetadata->getLogo() !== null ? $this->studyMetadata->getLogo()->getValue() : null,
             'contacts' => $contacts,
             'organizations' => $organizations,
+            'version' => [
+                'metadata' => $this->studyMetadata->getVersion()->getValue(),
+            ],
         ];
     }
 }
