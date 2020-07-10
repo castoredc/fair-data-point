@@ -54,7 +54,6 @@ export default class PersonForm extends Component {
         const {handleDataChange} = this.props;
 
         axios.get('/api/agent/person/email', {params: {email: email}}).then((response) => {
-            console.log(response.data);
             const newData = mergeData(defaultData, response.data);
 
             this.setState({
