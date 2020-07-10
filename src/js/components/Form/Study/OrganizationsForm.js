@@ -4,19 +4,19 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
-import './Form.scss'
+import '../Form.scss'
 import {Redirect} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
 import {toast} from "react-toastify";
-import ToastContent from "../ToastContent";
+import ToastContent from "../../ToastContent";
 import axios from "axios";
-import FormItem from "./FormItem";
-import Input from "../Input";
-import Dropdown from "../Input/Dropdown";
-import InlineLoader from "../LoadingScreen/InlineLoader";
-import Toggle from "../Toggle";
+import FormItem from "../FormItem";
+import Input from "../../Input";
+import Dropdown from "../../Input/Dropdown";
+import InlineLoader from "../../LoadingScreen/InlineLoader";
+import Toggle from "../../Toggle";
 import Container from "react-bootstrap/Container";
-import {replaceAt} from "../../util";
+import {replaceAt} from "../../../util";
 
 export default class OrganizationsForm extends Component {
     constructor(props) {

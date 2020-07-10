@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import OrganizationsForm from "../../../components/Form/OrganizationsForm";
+import OrganizationsForm from "../../../components/Form/Study/OrganizationsForm";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 
 export default class EditOrganizationDetails extends Component {

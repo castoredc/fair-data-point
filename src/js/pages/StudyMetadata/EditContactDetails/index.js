@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import ContactsForm from "../../../components/Form/ContactsForm";
+import ContactsForm from "../../../components/Form/Study/ContactsForm";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 
 export default class EditContactDetails extends Component {

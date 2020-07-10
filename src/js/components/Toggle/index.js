@@ -32,9 +32,9 @@ export default class Toggle extends Component {
                     <Icon type="arrowBottom" width={12} height={12} />
                 </div>
             </div>
-            {expanded && <div className={classNames('ToggleContent', expanded && 'Active')}>
+            <div className={classNames('ToggleContent', expanded && 'Active')}>
                 {children}
-            </div>}
+            </div>
         </div>;
     }
 }

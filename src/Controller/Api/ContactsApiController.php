@@ -6,7 +6,7 @@ namespace App\Controller\Api;
 use App\Api\Request\Study\Provenance\StudyContactApiRequest;
 use App\Entity\Study;
 use App\Exception\GroupedApiRequestParseError;
-use App\Message\Agent\CreatePersonCommand;
+use App\Message\Agent\AddStudyContactCommand;
 use App\Message\Study\Provenance\ClearStudyContactsCommand;
 use App\Message\Study\Provenance\GetStudyContactsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -56,8 +56,9 @@ class ContactsApiController extends ApiController
 
             foreach ($parsed as $item) {
                 $bus->dispatch(
-                    new CreatePersonCommand(
+                    new AddStudyContactCommand(
                         $study,
+                        $item->getId(),
                         $item->getFirstName(),
                         $item->getMiddleName(),
                         $item->getLastName(),
