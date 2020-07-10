@@ -46,7 +46,7 @@ class ListItem extends Component {
 
         if(isURL(link) || newWindow)
         {
-            return <a href={link} target="_blank" className="ListItem">{children}</a>;
+            return <a href={link} onClick={onClick} target="_blank" className="ListItem">{children}</a>;
         }
 
         return <Link to={link} className="ListItem" onClick={onClick}>{children}</Link>;

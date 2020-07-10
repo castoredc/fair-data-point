@@ -1,4 +1,4 @@
-import React, {Component, createRef} from 'react';
+import React, {Component} from 'react';
 import {classNames, localizedText} from "../../util";
 import DocumentTitle from "../DocumentTitle";
 import {Container, Row} from "react-bootstrap";
@@ -7,16 +7,20 @@ import '../../pages/Main/Main.scss';
 import Breadcrumbs from "../Breadcrumbs";
 import Col from "react-bootstrap/Col";
 import './Header.scss';
-import {Button, CastorLogo, Heading, Menu} from "@castoredc/matter";
-import Nav from "react-bootstrap/Nav";
+import {Button, CastorLogo, Menu} from "@castoredc/matter";
+import LoginModal from "../../modals/LoginModal";
 
 export default class Header extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            mobile: null,
-            smallHeader: false
+            mobile:        null,
+            smallHeader:   false,
+            showModal:     false,
+            loginModalUrl: null,
+            loginModalView: null,
+            loginModalServer:        null,
         };
     };
 
@@ -26,7 +30,36 @@ export default class Header extends Component {
         this.resize();
     }
 
-    componentWillUnmount(){
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {showLoginModal, loginModalUrl, loginModalView, loginModalServer} = this.props;
+        const {showModal} = this.state;
+
+        if (showModal !== showLoginModal && showLoginModal !== prevProps.showLoginModal) {
+            this.setState({
+                showModal: !!showLoginModal,
+            });
+        }
+
+        if (loginModalUrl !== prevProps.loginModalUrl) {
+            this.setState({
+                loginModalUrl: loginModalUrl,
+            });
+        }
+
+        if (loginModalView !== prevProps.loginModalView) {
+            this.setState({
+                loginModalView: loginModalView,
+            });
+        }
+
+        if (loginModalServer !== prevProps.loginModalServer) {
+            this.setState({
+                loginModalServer: loginModalServer,
+            });
+        }
+    }
+
+    componentWillUnmount() {
         window.removeEventListener('resize', this.resize.bind(this));
         window.removeEventListener('scroll', this.scroll.bind(this));
     }
@@ -43,44 +76,68 @@ export default class Header extends Component {
     }
 
     toggleMenu = () => {
-        const { showMenu } = this.state;
+        const {showMenu} = this.state;
 
         this.setState({
-            showMenu: !showMenu
+            showMenu: !showMenu,
+        });
+    };
+
+    openModal = (e) => {
+        e.preventDefault();
+
+        this.setState({
+            showModal: true,
+        });
+    };
+
+    closeModal = () => {
+        const {onModalClose = () => {}} = this.props;
+        this.setState({
+            showModal: false,
+        }, () => {
+            onModalClose();
         });
     };
 
     render() {
-        const { embedded, className, title, badge, location, data, breadcrumbs, user } = this.props;
-        const { mobile, smallHeader, showMenu } = this.state;
+        const {embedded, className, title, badge, location, data, breadcrumbs, user} = this.props;
+        const {mobile, smallHeader, showMenu, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
         const menu = <div className="DropdownMenu">
             <Menu
                 items={[
                     (user && user.isAdmin) && {
                         destination: '/admin',
-                        icon: 'settings',
-                        label: 'Admin'
+                        icon:        'settings',
+                        label:       'Admin',
                     },
                     {
                         destination: '/logout',
-                        icon: 'logOut',
-                        label: 'Log out'
+                        icon:        'logOut',
+                        label:       'Log out',
                     },
                 ]}
             />
         </div>;
 
         return <header className={classNames(className, embedded && 'Embedded', mobile ? 'Mobile' : 'Desktop')}>
+            <LoginModal
+                show={showModal}
+                handleClose={this.closeModal}
+                server={loginModalServer}
+                view={loginModalView}
+                path={encodeURIComponent(loginModalUrl ? loginModalUrl : window.location.pathname)}
+            />
             {title && <DocumentTitle title={title}/>}
             {!embedded && <div className="Header">
-                <div className="Spacing" />
-                {! mobile && <div className={classNames('MainHeader', smallHeader && 'Small')}>
+                <div className="Spacing"/>
+                {!mobile && <div className={classNames('MainHeader', smallHeader && 'Small')}>
                     <Container>
                         <Row>
                             <Col md={4} className="HeaderLogoCol">
                                 <Link to="/fdp">
-                                    <CastorLogo className="Logo" />
+                                    <CastorLogo className="Logo"/>
                                 </Link>
                             </Col>
                             <Col md={8} className="HeaderUserCol">
@@ -91,21 +148,24 @@ export default class Header extends Component {
 
                                     {showMenu && menu}
 
-                                </div> : <Link to={'/login?path=' + encodeURIComponent(window.location.pathname)}>
-                                    <Button icon="account">Log in</Button>
-                                </Link>}
+                                </div> : <Button target="_blank"
+                                                 href={'/login?path=' + encodeURIComponent(window.location.pathname)}
+                                                 icon="account"
+                                                 onClick={this.openModal}
+                                >Log in
+                                </Button>}
                             </Col>
                         </Row>
                     </Container>
                 </div>}
-                {(! mobile && breadcrumbs) && <Breadcrumbs breadcrumbs={breadcrumbs.crumbs} />}
+                {(!mobile && breadcrumbs) && <Breadcrumbs breadcrumbs={breadcrumbs.crumbs}/>}
                 {mobile && <div className="MobileHeader">
                     <Container>
                         <Row>
                             <Col className="HeaderBackCol">
                                 {(breadcrumbs && breadcrumbs.previous) && <Link to={{
                                     pathname: breadcrumbs.previous.path,
-                                    state: breadcrumbs.previous.state
+                                    state:    breadcrumbs.previous.state,
                                 }}><Button
                                     icon="arrowLeft"
                                     iconDescription={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}
@@ -113,16 +173,18 @@ export default class Header extends Component {
                             </Col>
                             <Col className="HeaderLogoCol">
                                 <Link to="/fdp">
-                                    <CastorLogo className="Logo" />
+                                    <CastorLogo className="Logo"/>
                                 </Link>
                             </Col>
                             <Col className="HeaderUserCol">
                                 {user ? <div>
                                     <Button icon="account" iconDescription={user.fullName} onClick={this.toggleMenu}/>
                                     {showMenu && menu}
-                                </div> : <Link to={'/login?path=' + encodeURIComponent(window.location.pathname)}>
-                                    <Button icon="account" iconDescription="Log in" />
-                                </Link>}
+                                </div> : <Button target="_blank"
+                                                 href={'/login?path=' + encodeURIComponent(window.location.pathname)}
+                                                 icon="account"
+                                                 onClick={this.openModal}
+                                                 iconDescription="Log in"/>}
                             </Col>
                         </Row>
                     </Container>
