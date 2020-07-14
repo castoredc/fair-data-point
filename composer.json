@@ -13,7 +13,7 @@
         "easyrdf/easyrdf": "^0.9.1",
         "fresh/doctrine-enum-bundle": "^7.0",
         "guzzlehttp/guzzle": "~6.5",
-        "knpuniversity/oauth2-client-bundle": "^1.32",
+        "knpuniversity/oauth2-client-bundle": "^2.1",
         "league/oauth2-client": "^2.3",
         "ml/json-ld": "^1.2",
         "semsol/arc2": "^2.5.2",
