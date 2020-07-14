@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Message\Terminology;
 
 use App\Entity\Castor\CastorEntity;
+use App\Entity\Enum\OntologyConceptType;
 use App\Entity\Study;
 
 class AddAnnotationCommand
@@ -20,12 +21,16 @@ class AddAnnotationCommand
     /** @var string */
     private $conceptCode;
 
-    public function __construct(Study $study, CastorEntity $entity, string $ontologyId, string $conceptCode)
+    /** @var OntologyConceptType */
+    private $conceptType;
+
+    public function __construct(Study $study, CastorEntity $entity, string $ontologyId, string $conceptCode, OntologyConceptType $conceptType)
     {
         $this->study = $study;
         $this->entity = $entity;
         $this->ontologyId = $ontologyId;
         $this->conceptCode = $conceptCode;
+        $this->conceptType = $conceptType;
     }
 
     public function getStudy(): Study
@@ -66,5 +71,10 @@ class AddAnnotationCommand
     public function setConceptCode(string $conceptCode): void
     {
         $this->conceptCode = $conceptCode;
+    }
+
+    public function getConceptType(): OntologyConceptType
+    {
+        return $this->conceptType;
     }
 }

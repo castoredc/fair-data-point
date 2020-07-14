@@ -11,10 +11,14 @@ class FindOntologyConceptsCommand
     /** @var string */
     private $query;
 
-    public function __construct(string $ontologyId, string $query)
+    /** @var bool */
+    private $includeIndividuals;
+
+    public function __construct(string $ontologyId, string $query, bool $includeIndividuals)
     {
         $this->ontologyId = $ontologyId;
         $this->query = $query;
+        $this->includeIndividuals = $includeIndividuals;
     }
 
     public function getOntologyId(): string
@@ -25,5 +29,10 @@ class FindOntologyConceptsCommand
     public function getQuery(): string
     {
         return $this->query;
+    }
+
+    public function includeIndividuals(): bool
+    {
+        return $this->includeIndividuals;
     }
 }

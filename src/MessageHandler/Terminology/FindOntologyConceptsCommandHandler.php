@@ -9,8 +9,10 @@ use App\Message\Terminology\FindOntologyConceptsCommand;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Castor\BioPortal\Model\Concept;
+use Castor\BioPortal\Model\Individual;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function array_merge;
 
 class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
 {
@@ -26,7 +28,7 @@ class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
         $this->bioPortalApiWrapper = $bioPortalApiWrapper;
     }
 
-    /** @return Concept[] */
+    /** @return (Concept|Individual)[] */
     public function __invoke(FindOntologyConceptsCommand $message): array
     {
         /** @var Ontology|null $ontology */
@@ -37,8 +39,14 @@ class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
         }
 
         $searchOptions = new SearchTermOptions([$ontology->getBioPortalId()], false, true, null, 10, null);
-        $results = $this->bioPortalApiWrapper->searchTerm($message->getQuery(), $searchOptions);
 
-        return $results->getCollection();
+        $results = $this->bioPortalApiWrapper->searchTerm($message->getQuery(), $searchOptions)->getCollection();
+
+        if ($message->includeIndividuals()) {
+            $individuals = $this->bioPortalApiWrapper->searchIndividual($message->getQuery(), $ontology->getBioPortalId());
+            $results = array_merge($results, $individuals);
+        }
+
+        return $results;
     }
 }
