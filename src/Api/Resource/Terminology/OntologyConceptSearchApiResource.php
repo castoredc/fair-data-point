@@ -5,13 +5,14 @@ namespace App\Api\Resource\Terminology;
 
 use App\Api\Resource\ApiResource;
 use Castor\BioPortal\Model\Concept;
+use Castor\BioPortal\Model\Individual;
 
 class OntologyConceptSearchApiResource implements ApiResource
 {
-    /** @var Concept[] */
+    /** @var (Concept|Individual)[] */
     private $concepts;
 
-    /** @param Concept[] $concepts */
+    /** @param (Concept|Individual)[] $concepts */
     public function __construct(array $concepts)
     {
         $this->concepts = $concepts;
@@ -25,10 +26,19 @@ class OntologyConceptSearchApiResource implements ApiResource
         $data = [];
 
         foreach ($this->concepts as $concept) {
-            $data[] = [
-                'value' => $concept->getNotation(),
-                'label' => $concept->getPrefLabel(),
-            ];
+            if ($concept instanceof Concept) {
+                $data[] = [
+                    'value' => $concept->getNotation(),
+                    'label' => $concept->getPrefLabel(),
+                    'type' => 'concept',
+                ];
+            } else {
+                $data[] = [
+                    'value' => $concept->getId()->getBase(),
+                    'label' => $concept->getLabel(),
+                    'type' => 'individual',
+                ];
+            }
         }
 
         return $data;

@@ -16,9 +16,11 @@ use App\Repository\OntologyConceptRepository;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Castor\BioPortal\Model\Concept;
+use Castor\BioPortal\Model\Individual;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function count;
 
 class AddAnnotationCommandHandler implements MessageHandlerInterface
 {
@@ -66,17 +68,30 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
                 throw new AnnotationAlreadyExists();
             }
         } else {
-            $searchOptions = new SearchTermOptions([$ontology->getBioPortalId()], true, false, null, 1, null);
-            $results = $this->bioPortalApiWrapper->searchTerm($command->getConceptCode(), $searchOptions);
+            if ($command->getConceptType()->isIndividual()) {
+                $results = $this->bioPortalApiWrapper->searchIndividual($command->getConceptCode(), $ontology->getBioPortalId());
 
-            if ($results->getTotalCount() === 0) {
-                throw new OntologyConceptNotFound();
+                if (count($results) === 0) {
+                    throw new OntologyConceptNotFound();
+                }
+
+                /** @var Individual $concept */
+                $concept = $results[0];
+
+                $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getId()->getBase(), $ontology, $concept->getLabel());
+            } elseif ($command->getConceptType()->isConcept()) {
+                $searchOptions = new SearchTermOptions([$ontology->getBioPortalId()], true, false, null, 1, null);
+                $results = $this->bioPortalApiWrapper->searchTerm($command->getConceptCode(), $searchOptions);
+
+                if ($results->getTotalCount() === 0) {
+                    throw new OntologyConceptNotFound();
+                }
+
+                /** @var Concept $concept */
+                $concept = $results->getCollection()[0];
+
+                $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getNotation(), $ontology, $concept->getPrefLabel());
             }
-
-            /** @var Concept $concept */
-            $concept = $results->getCollection()[0];
-
-            $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getNotation(), $ontology, $concept->getPrefLabel());
 
             $this->em->persist($dbConcept);
         }

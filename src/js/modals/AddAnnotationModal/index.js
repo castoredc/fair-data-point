@@ -7,6 +7,7 @@ import Dropdown from "../../components/Input/Dropdown";
 import FormItem from "../../components/Form/FormItem";
 import {Button} from "@castoredc/matter";
 import Modal from "../Modal";
+import CheckboxGroup from "../../components/Input/CheckboxGroup";
 
 export default class AddAnnotationModal extends Component {
     constructor(props) {
@@ -72,6 +73,7 @@ export default class AddAnnotationModal extends Component {
             params:      {
                 ontology: data.ontology.value,
                 query:    inputValue,
+                includeIndividuals: data.includeIndividuals
             },
         }).then((response) => {
             callback(response.data);
@@ -138,6 +140,7 @@ export default class AddAnnotationModal extends Component {
                 entityParent: entity.parent,
                 ontology:     data.ontology.value,
                 concept:      data.concept.value,
+                conceptType:  data.concept.type
             })
                 .then(() => {
                     this.setState({isLoading: false});
@@ -211,6 +214,13 @@ export default class AddAnnotationModal extends Component {
                         onChange={this.handleConceptChange}
                         isDisabled={data.ontology === null}
                     />
+
+                    <CheckboxGroup
+                        options={[{value: '1', label: 'Include individuals'}]}
+                        value={data.includeIndividuals}
+                        name="includeIndividuals"
+                        onChange={this.handleChange}
+                    />
                 </FormItem>
             </ValidatorForm>
         </Modal>
@@ -220,4 +230,5 @@ export default class AddAnnotationModal extends Component {
 const defaultData = {
     ontology: null,
     concept:  null,
+    includeIndividuals: []
 };

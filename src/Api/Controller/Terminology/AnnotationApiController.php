@@ -57,7 +57,7 @@ class AnnotationApiController extends ApiController
             /** @var CastorEntity $entity */
             $entity = $handledStamp->getResult();
 
-            $bus->dispatch(new AddAnnotationCommand($study, $entity, $parsed->getOntology(), $parsed->getConcept()));
+            $bus->dispatch(new AddAnnotationCommand($study, $entity, $parsed->getOntology(), $parsed->getConcept(), $parsed->getConceptType()));
 
             return new JsonResponse([], Response::HTTP_OK);
         } catch (ApiRequestParseError $e) {
