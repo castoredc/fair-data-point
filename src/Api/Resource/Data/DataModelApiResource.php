@@ -21,10 +21,18 @@ class DataModelApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $versions = [];
+
+        foreach($this->dataModel->getVersions() as $version)
+        {
+            $versions[] = (new DataModelVersionApiResource($version))->toArray();
+        }
+
         return [
             'id' => $this->dataModel->getId(),
             'title' => $this->dataModel->getTitle(),
             'description' => $this->dataModel->getDescription(),
+            'versions' => $versions
         ];
     }
 }

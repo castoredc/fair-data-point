@@ -6,8 +6,10 @@ namespace App\Api\Controller\Data;
 use App\Api\Request\Data\DataModelApiRequest;
 use App\Api\Resource\Data\DataModelApiResource;
 use App\Api\Resource\Data\DataModelsApiResource;
+use App\Api\Resource\Data\DataModelVersionApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateDataModelCommand;
 use App\Message\Data\GetDataModelRDFPreviewCommand;
@@ -79,14 +81,25 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}/rdf", name="api_model_rdf_preview")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     * @Route("/{model}/v/{version}", name="api_model_version")
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
      */
-    public function dataModelRDFPreview(DataModel $dataModel, MessageBusInterface $bus): Response
+    public function dataModelVersion(DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('view', $dataModel);
+        $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        $envelope = $bus->dispatch(new GetDataModelRDFPreviewCommand($dataModel));
+        return new JsonResponse((new DataModelVersionApiResource($dataModelVersion))->toArray());
+    }
+
+    /**
+     * @Route("/{model}/v/{version}/rdf", name="api_model_rdf_preview")
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
+     */
+    public function dataModelRDFPreview(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
+
+        $envelope = $bus->dispatch(new GetDataModelRDFPreviewCommand($dataModelVersion));
 
         /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);

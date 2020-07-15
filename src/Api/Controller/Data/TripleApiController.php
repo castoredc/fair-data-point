@@ -21,8 +21,8 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/model/{model}/module/{module}/triple")
- * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "model"}})
+ * @Route("/api/model/{model}/v/{version}/module/{module}/triple")
+ * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "version"}})
  */
 class TripleApiController extends ApiController
 {

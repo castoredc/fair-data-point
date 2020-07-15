@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataModel;
 
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -99,5 +100,24 @@ class DataModel
     public function getLatestVersion(): DataModelVersion
     {
         return $this->versions->last();
+    }
+
+    /**
+     * @return Collection<RDFDistribution>
+     */
+    public function getDistributions(): Collection
+    {
+        $return = [];
+
+        foreach($this->versions as $version) {
+            /** @var DataModelVersion $version */
+
+            foreach($version->getDistributions() as $distribution) {
+                /** @var RDFDistribution $distribution */
+                $return[$distribution->getId()] = $distribution;
+            }
+        }
+
+        return array_values($return);
     }
 }
