@@ -11,7 +11,6 @@ use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\License;
 use App\Exception\InvalidDataModelVersion;
-use App\Exception\InvalidDistributionType;
 use App\Exception\LanguageNotFound;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\UpdateDistributionCommand;
@@ -75,14 +74,14 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
 
         if ($contents instanceof CSVDistribution) {
             $contents->setIncludeAll($message->getIncludeAllData());
-        } elseif($contents instanceof RDFDistribution) {
+        } elseif ($contents instanceof RDFDistribution) {
             /** @var DataModel|null $dataModel */
             $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
 
             /** @var DataModelVersion|null $dataModelVersion */
             $dataModelVersion = $this->em->getRepository(DataModelVersion::class)->find($message->getDataModelVersion());
 
-            if($dataModel === null || $dataModelVersion === null || $dataModelVersion->getDataModel() !== $dataModel) {
+            if ($dataModel === null || $dataModelVersion === null || $dataModelVersion->getDataModel() !== $dataModel) {
                 throw new InvalidDataModelVersion();
             }
 
