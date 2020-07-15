@@ -71,7 +71,7 @@ export default class Query extends Component {
     getPrefixes = () => {
         const {distribution} = this.state;
 
-        axios.get('/api/model/' + distribution.dataModel + '/prefix')
+        axios.get('/api/model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/prefix')
             .then((response) => {
                 let prefixes = response.data.reduce(function (map, obj) {
                     map[obj.prefix] = obj.uri;

@@ -35,7 +35,7 @@ export default class DataModel extends Component {
         const { match } = this.props;
 
         this.setState({
-            isLoadingDataModels: true,
+            isLoadingDataModel: true,
         });
 
         axios.get('/api/model/' + match.params.model)
@@ -48,10 +48,10 @@ export default class DataModel extends Component {
             })
             .catch((error) => {
                 this.setState({
-                    isLoadingDataModels: false
+                    isLoadingDataModel: false
                 });
 
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data models';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data model';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };

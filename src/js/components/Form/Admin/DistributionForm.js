@@ -20,8 +20,19 @@ export default class DistributionForm extends Component {
     constructor(props) {
         super(props);
 
+        let data = props.distribution ? mergeData(defaultData, props.distribution) : defaultData;
+
+        console.log(data);
+
+        if(typeof data.dataModel === 'object' && data.dataModel !== '') {
+            data = {
+                ...data,
+                dataModel: data.dataModel.dataModel
+            };
+        }
+
         this.state = {
-            data:           props.distribution ? mergeData(defaultData, props.distribution) : defaultData,
+            data:           data,
             visitedFields:  {},
             validation:     {},
             isSaved:        false,

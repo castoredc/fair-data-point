@@ -50,13 +50,13 @@ export default class DataModelMappingModal extends Component {
     };
 
     handleSelect = (event, data, selected) => {
-        const { mapping, dataset, distribution, onSave } = this.props;
+        const { mapping, dataset, distribution, onSave, versionId } = this.props;
 
         this.setState({
             isLoading: true
         });
 
-        axios.post('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf', {
+        axios.post('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId, {
             node: mapping.node.id,
             element: data.id
         })
