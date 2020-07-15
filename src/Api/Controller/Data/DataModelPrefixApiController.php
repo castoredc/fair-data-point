@@ -65,7 +65,7 @@ class DataModelPrefixApiController extends ApiController
      */
     public function updatePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $prefix->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         if($prefix->getDataModel() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -96,7 +96,7 @@ class DataModelPrefixApiController extends ApiController
      */
     public function deletePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $prefix->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         if($prefix->getDataModel() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

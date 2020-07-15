@@ -25,6 +25,7 @@ class DataModelVersionApiResource implements ApiResource
         return [
             'id' => $this->dataModelVersion->getId(),
             'version' => $this->dataModelVersion->getVersion()->getValue(),
+            'dataModel' => $this->dataModelVersion->getDataModel()->getId()
         ];
     }
 }

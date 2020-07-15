@@ -20,39 +20,39 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/model/{model}/node")
- * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+ * @Route("/api/model/{model}/v/{version}/node")
+ * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
  */
 class NodeApiController extends ApiController
 {
     /**
      * @Route("", name="api_node")
      */
-    public function nodes(DataModelVersion $dataModel): Response
+    public function nodes(DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('view', $dataModel);
+        $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        return new JsonResponse((new NodesApiResource($dataModel))->toArray());
+        return new JsonResponse((new NodesApiResource($dataModelVersion))->toArray());
     }
 
     /**
      * @Route("/{type}", name="api_node_type")
      */
-    public function nodesByType(DataModelVersion $dataModel, string $type): Response
+    public function nodesByType(DataModelVersion $dataModelVersion, string $type): Response
     {
-        $this->denyAccessUnlessGranted('view', $dataModel);
+        $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
         $nodeType = NodeType::fromString($type);
 
-        return new JsonResponse((new NodesApiResource($dataModel, $nodeType))->toArray());
+        return new JsonResponse((new NodesApiResource($dataModelVersion, $nodeType))->toArray());
     }
 
     /**
      * @Route("/{type}/add", name="api_node_add")
      */
-    public function addNode(DataModelVersion $dataModel, string $type, Request $request, MessageBusInterface $bus): Response
+    public function addNode(DataModelVersion $dataModelVersion, string $type, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         $nodeType = NodeType::fromString($type);
 
@@ -60,7 +60,7 @@ class NodeApiController extends ApiController
             /** @var NodeApiRequest $parsed */
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
 
-            $bus->dispatch(new CreateNodeCommand($dataModel, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
+            $bus->dispatch(new CreateNodeCommand($dataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {

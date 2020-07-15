@@ -65,7 +65,7 @@ class DataModelModuleApiController extends ApiController
      */
     public function updateModule(DataModelVersion $dataModelVersion, DataModelModule $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         if($module->getDataModel() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -96,7 +96,7 @@ class DataModelModuleApiController extends ApiController
      */
     public function deleteModule(DataModelVersion $dataModelVersion, DataModelModule $module, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         if($module->getDataModel() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
