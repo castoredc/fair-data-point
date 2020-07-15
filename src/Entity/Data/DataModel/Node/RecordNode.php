@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataModel\Node;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RecordNode extends Node
 {
-    public function __construct(DataModel $dataModel)
+    public function __construct(DataModelVersion $dataModel)
     {
         parent::__construct($dataModel, 'Record', null);
     }

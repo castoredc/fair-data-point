@@ -6,7 +6,7 @@ namespace App\Api\Controller\Data;
 use App\Api\Request\Data\DataModelPrefixApiRequest;
 use App\Api\Resource\Data\DataModelPrefixesApiResource;
 use App\Controller\Api\ApiController;
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateDataModelPrefixCommand;
@@ -29,7 +29,7 @@ class DataModelPrefixApiController extends ApiController
     /**
      * @Route("", methods={"GET"}, name="api_model_prefixes")
      */
-    public function getPrefixes(DataModel $dataModel): Response
+    public function getPrefixes(DataModelVersion $dataModel): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
@@ -39,7 +39,7 @@ class DataModelPrefixApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_model_prefix_add")
      */
-    public function addPrefix(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function addPrefix(DataModelVersion $dataModel, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModel);
 

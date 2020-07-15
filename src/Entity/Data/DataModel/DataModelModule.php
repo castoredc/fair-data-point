@@ -40,10 +40,10 @@ class DataModelModule
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="modules",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="modules",cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var DataModel
+     * @var DataModelVersion
      */
     private $dataModel;
 
@@ -54,7 +54,7 @@ class DataModelModule
      */
     private $triples;
 
-    public function __construct(string $title, int $order, DataModel $dataModel)
+    public function __construct(string $title, int $order, DataModelVersion $dataModel)
     {
         $this->title = $title;
         $this->order = $order;
@@ -93,12 +93,12 @@ class DataModelModule
         $this->order = $order;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModel $dataModel): void
+    public function setDataModel(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

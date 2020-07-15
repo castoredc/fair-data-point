@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\MessageHandler\Data;
 
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\RecordNode;
+use App\Entity\Version;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateDataModelCommand;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +15,8 @@ use Symfony\Component\Security\Core\Security;
 
 class CreateDataModelCommandHandler implements MessageHandlerInterface
 {
+    public const DEFAULT_VERSION_NUMBER = '1.0.0';
+
     /** @var EntityManagerInterface */
     private $em;
 
@@ -33,10 +37,14 @@ class CreateDataModelCommandHandler implements MessageHandlerInterface
 
         $dataModel = new DataModel($command->getTitle(), $command->getDescription());
 
-        $recordNode = new RecordNode($dataModel);
-        $dataModel->addNode($recordNode);
+        $version = new DataModelVersion(new Version(self::DEFAULT_VERSION_NUMBER));
+        $dataModel->addVersion($version);
+
+        $recordNode = new RecordNode($version);
+        $version->addNode($recordNode);
 
         $this->em->persist($dataModel);
+        $this->em->persist($version);
         $this->em->persist($recordNode);
         $this->em->flush();
 

@@ -4,14 +4,14 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 
 class DataModelModulesApiResource implements ApiResource
 {
-    /** @var DataModel */
+    /** @var DataModelVersion */
     private $dataModel;
 
-    public function __construct(DataModel $dataModel)
+    public function __construct(DataModelVersion $dataModel)
     {
         $this->dataModel = $dataModel;
     }

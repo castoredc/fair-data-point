@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\RDF;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\AccessibleEntity;
@@ -19,10 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
 class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="distributions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var DataModel
+     * @var DataModelVersion
      */
     private $dataModel;
 
@@ -48,12 +48,12 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
      */
     private $lastImport;
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModel $dataModel): void
+    public function setDataModel(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

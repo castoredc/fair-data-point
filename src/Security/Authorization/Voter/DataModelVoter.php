@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -31,7 +31,7 @@ class DataModelVoter extends Voter
             return false;
         }
 
-        return $subject instanceof DataModel;
+        return $subject instanceof DataModelVersion;
     }
 
     /** @inheritDoc */
@@ -45,7 +45,7 @@ class DataModelVoter extends Voter
             return false;
         }
 
-        /** @var DataModel $dataModel */
+        /** @var DataModelVersion $dataModel */
         $dataModel = $subject;
         $distributions = $dataModel->getDistributions();
 

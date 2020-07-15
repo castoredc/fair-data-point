@@ -6,8 +6,8 @@ namespace App\Api\Controller\Data;
 use App\Api\Request\Data\DataModelModuleApiRequest;
 use App\Api\Resource\Data\DataModelModulesApiResource;
 use App\Controller\Api\ApiController;
-use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateDataModelModuleCommand;
 use App\Message\Data\DeleteDataModelModuleCommand;
@@ -29,7 +29,7 @@ class DataModelModuleApiController extends ApiController
     /**
      * @Route("", methods={"GET"}, name="api_model_modules")
      */
-    public function getModules(DataModel $dataModel): Response
+    public function getModules(DataModelVersion $dataModel): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
@@ -39,7 +39,7 @@ class DataModelModuleApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_model_module_add")
      */
-    public function addModule(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function addModule(DataModelVersion $dataModel, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModel);
 

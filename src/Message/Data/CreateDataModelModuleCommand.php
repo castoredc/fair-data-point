@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Message\Data;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 
 class CreateDataModelModuleCommand
 {
-    /** @var DataModel */
+    /** @var DataModelVersion */
     private $dataModel;
 
     /** @var string */
@@ -16,14 +16,14 @@ class CreateDataModelModuleCommand
     /** @var int */
     private $order;
 
-    public function __construct(DataModel $dataModel, string $title, int $order)
+    public function __construct(DataModelVersion $dataModel, string $title, int $order)
     {
         $this->dataModel = $dataModel;
         $this->title = $title;
         $this->order = $order;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }

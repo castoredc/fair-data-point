@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Message\Data;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 
 class GetDataModelRDFPreviewCommand
 {
-    /** @var DataModel */
+    /** @var DataModelVersion */
     private $dataModel;
 
-    public function __construct(DataModel $dataModel)
+    public function __construct(DataModelVersion $dataModel)
     {
         $this->dataModel = $dataModel;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }

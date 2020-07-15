@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Enum\NodeType;
@@ -12,7 +12,7 @@ use function assert;
 
 class NodeRepository extends EntityRepository
 {
-    public function findByModelAndId(DataModel $dataModel, string $nodeId): ?Node
+    public function findByModelAndId(DataModelVersion $dataModel, string $nodeId): ?Node
     {
         return $this->findOneBy([
             'dataModel' => $dataModel,
@@ -21,7 +21,7 @@ class NodeRepository extends EntityRepository
     }
 
     /** @return Node[] */
-    public function findNodesByType(DataModel $dataModel, NodeType $type): array
+    public function findNodesByType(DataModelVersion $dataModel, NodeType $type): array
     {
         return $this->createQueryBuilder('node')
                     ->select('node')
@@ -34,7 +34,7 @@ class NodeRepository extends EntityRepository
                     ->getResult();
     }
 
-    public function findRecordNodeForModel(DataModel $dataModel): ?RecordNode
+    public function findRecordNodeForModel(DataModelVersion $dataModel): ?RecordNode
     {
         $nodes = $this->findNodesByType($dataModel, NodeType::record());
         $node = $nodes[0];

@@ -6,7 +6,7 @@ namespace App\Api\Controller\Data;
 use App\Api\Request\Data\NodeApiRequest;
 use App\Api\Resource\Data\NodesApiResource;
 use App\Controller\Api\ApiController;
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidNodeType;
@@ -28,7 +28,7 @@ class NodeApiController extends ApiController
     /**
      * @Route("", name="api_node")
      */
-    public function nodes(DataModel $dataModel): Response
+    public function nodes(DataModelVersion $dataModel): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
@@ -38,7 +38,7 @@ class NodeApiController extends ApiController
     /**
      * @Route("/{type}", name="api_node_type")
      */
-    public function nodesByType(DataModel $dataModel, string $type): Response
+    public function nodesByType(DataModelVersion $dataModel, string $type): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
@@ -50,7 +50,7 @@ class NodeApiController extends ApiController
     /**
      * @Route("/{type}/add", name="api_node_add")
      */
-    public function addNode(DataModel $dataModel, string $type, Request $request, MessageBusInterface $bus): Response
+    public function addNode(DataModelVersion $dataModel, string $type, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModel);
 

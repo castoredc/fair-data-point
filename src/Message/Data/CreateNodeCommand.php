@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Message\Data;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\XsdDataType;
 
 class CreateNodeCommand
 {
-    /** @var DataModel */
+    /** @var DataModelVersion */
     private $dataModel;
 
     /** @var NodeType */
@@ -27,7 +27,7 @@ class CreateNodeCommand
     /** @var XsdDataType */
     private $dataType;
 
-    public function __construct(DataModel $dataModel, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType)
+    public function __construct(DataModelVersion $dataModel, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType)
     {
         $this->dataModel = $dataModel;
         $this->type = $type;
@@ -37,7 +37,7 @@ class CreateNodeCommand
         $this->dataType = $dataType;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
