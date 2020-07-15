@@ -49,6 +49,13 @@ class DataModel
      */
     private $versions;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="dataModel")
+     *
+     * @var Collection<RDFDistribution>
+     */
+    private $distributions;
+
     public function __construct(string $title, ?string $description)
     {
         $this->title = $title;
@@ -96,7 +103,6 @@ class DataModel
         $this->versions->add($version);
     }
 
-
     public function getLatestVersion(): DataModelVersion
     {
         return $this->versions->last();
@@ -107,17 +113,6 @@ class DataModel
      */
     public function getDistributions(): Collection
     {
-        $return = [];
-
-        foreach($this->versions as $version) {
-            /** @var DataModelVersion $version */
-
-            foreach($version->getDistributions() as $distribution) {
-                /** @var RDFDistribution $distribution */
-                $return[$distribution->getId()] = $distribution;
-            }
-        }
-
-        return array_values($return);
+        return $this->distributions;
     }
 }

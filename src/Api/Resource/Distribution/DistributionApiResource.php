@@ -5,7 +5,6 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
-use App\Api\Resource\Data\DataModelVersionApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\RDF\RDFDistribution;
@@ -69,7 +68,7 @@ class DistributionApiResource implements ApiResource
                 $distribution['accessUrl'] = $contents->getRelativeUrl();
                 $distribution['downloadUrl'] = $contents->getRelativeUrl() . '/?download=1';
                 $distribution['type'] = 'rdf';
-                $distribution['dataModel'] = (new DataModelVersionApiResource($contents->getDataModel()))->toArray();
+                $distribution['dataModel'] = $contents->getDataModel()->getId();
                 $distribution['isCached'] = $contents->isCached();
             }
 

@@ -45,6 +45,7 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
         $study = $distribution->getDataset()->getStudy();
+        $dataModelVersion = $command->getDataModelVersion();
 
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
@@ -60,11 +61,11 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
 
         $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
 
-        if ($contents->getMappingByNode($node) !== null) {
-            $mapping = $contents->getMappingByNode($node);
+        if ($contents->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
+            $mapping = $contents->getMappingByNodeAndVersion($node, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelMapping($contents, $node, $element);
+            $mapping = new DataModelMapping($contents, $node, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

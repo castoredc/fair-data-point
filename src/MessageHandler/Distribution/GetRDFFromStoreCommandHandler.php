@@ -51,7 +51,7 @@ class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        $dataModel = $command->getDistribution()->getDataModel();
+        $dataModel = $command->getDistribution()->getCurrentDataModelVersion();
         $prefixes = $dataModel->getPrefixes();
         $nameSpaces = [];
 

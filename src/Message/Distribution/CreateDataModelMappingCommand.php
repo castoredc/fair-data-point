@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
 
 class CreateDataModelMappingCommand
@@ -16,11 +17,15 @@ class CreateDataModelMappingCommand
     /** @var string */
     private $element;
 
-    public function __construct(RDFDistribution $distribution, string $node, string $element)
+    /** @var DataModelVersion */
+    private $dataModelVersion;
+
+    public function __construct(RDFDistribution $distribution, string $node, string $element, DataModelVersion $dataModelVersion)
     {
         $this->distribution = $distribution;
         $this->node = $node;
         $this->element = $element;
+        $this->dataModelVersion = $dataModelVersion;
     }
 
     public function getDistribution(): RDFDistribution
@@ -36,5 +41,10 @@ class CreateDataModelMappingCommand
     public function getElement(): string
     {
         return $this->element;
+    }
+
+    public function getDataModelVersion(): DataModelVersion
+    {
+        return $this->dataModelVersion;
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\RDF;
 
+use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
@@ -19,12 +20,20 @@ use Doctrine\ORM\Mapping as ORM;
 class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="distributions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
+     *
+     * @var DataModel
+     */
+    private $dataModel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="distributions")
+     * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
      *
      * @var DataModelVersion
      */
-    private $dataModel;
+    private $currentDataModelVersion;
 
     /**
      * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
@@ -48,12 +57,12 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
      */
     private $lastImport;
 
-    public function getDataModel(): DataModelVersion
+    public function getDataModel(): DataModel
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModelVersion $dataModel): void
+    public function setDataModel(DataModel $dataModel): void
     {
         $this->dataModel = $dataModel;
     }
@@ -71,11 +80,23 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         return $this->mappings;
     }
 
-    public function getMappingByNode(ValueNode $node): ?DataModelMapping
+    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelMapping
     {
         foreach ($this->mappings as $mapping) {
             /** @var DataModelMapping $mapping */
-            if ($mapping->getNode() === $node) {
+            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
+                return $mapping;
+            }
+        }
+
+        return null;
+    }
+
+    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelMapping
+    {
+        foreach ($this->mappings as $mapping) {
+            /** @var DataModelMapping $mapping */
+            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $this->currentDataModelVersion) {
                 return $mapping;
             }
         }
@@ -101,5 +122,19 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function setLastImport(?DateTimeImmutable $lastImport): void
     {
         $this->lastImport = $lastImport;
+    }
+
+    public function getCurrentDataModelVersion(): DataModelVersion
+    {
+        return $this->currentDataModelVersion;
+    }
+
+    public function setCurrentDataModelVersion(DataModelVersion $dataModelVersion): void
+    {
+        if ($dataModelVersion->getDataModel() !== $this->dataModel) {
+            return;
+        }
+
+        $this->currentDataModelVersion = $dataModelVersion;
     }
 }

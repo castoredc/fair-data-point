@@ -85,7 +85,7 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_model_version', [
             'dataModel' => $dataModel,
-            'version' => $dataModel->getLatestVersion()->getVersion()->getValue()
+            'version' => $dataModel->getLatestVersion()->getVersion()->getValue(),
         ]);
     }
 

@@ -7,6 +7,7 @@ use App\Api\Request\Distribution\DataModelMappingApiRequest;
 use App\Api\Resource\Distribution\DataModelMappingApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Controller\Api\ApiController;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\DataModelMapping;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
@@ -29,16 +30,17 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf")
+ * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}")
  * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
  * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+ * @ParamConverter("dataModelVersion", options={"mapping": {"version": "id"}})
  */
 class RdfDistributionApiController extends ApiController
 {
     /**
      * @Route("", methods={"GET"}, name="api_distribution_contents_rdf")
      */
-    public function distributionRdfContents(Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
+    public function distributionRdfContents(DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
 
@@ -52,7 +54,7 @@ class RdfDistributionApiController extends ApiController
             throw new InvalidDistributionType();
         }
 
-        $envelope = $bus->dispatch(new GetDataModelMappingCommand($contents));
+        $envelope = $bus->dispatch(new GetDataModelMappingCommand($contents, $dataModelVersion));
 
         /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
@@ -66,7 +68,7 @@ class RdfDistributionApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add")
      */
-    public function addMapping(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function addMapping(DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
 
@@ -84,7 +86,7 @@ class RdfDistributionApiController extends ApiController
             /** @var DataModelMappingApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelMappingApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new CreateDataModelMappingCommand($contents, $parsed->getNode(), $parsed->getElement()));
+            $envelope = $bus->dispatch(new CreateDataModelMappingCommand($contents, $parsed->getNode(), $parsed->getElement(), $dataModelVersion));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);

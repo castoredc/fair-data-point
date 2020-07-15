@@ -23,8 +23,7 @@ class DataModelApiResource implements ApiResource
     {
         $versions = [];
 
-        foreach($this->dataModel->getVersions() as $version)
-        {
+        foreach ($this->dataModel->getVersions() as $version) {
             $versions[] = (new DataModelVersionApiResource($version))->toArray();
         }
 
@@ -32,7 +31,7 @@ class DataModelApiResource implements ApiResource
             'id' => $this->dataModel->getId(),
             'title' => $this->dataModel->getTitle(),
             'description' => $this->dataModel->getDescription(),
-            'versions' => $versions
+            'versions' => $versions,
         ];
     }
 }

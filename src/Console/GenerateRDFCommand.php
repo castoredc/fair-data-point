@@ -119,7 +119,7 @@ class GenerateRDFCommand extends Command
             $output->writeln('');
             $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
 
-            $dataModel = $rdfDistributionContent->getDataModel();
+            $dataModel = $rdfDistributionContent->getCurrentDataModelVersion();
             $prefixes = $dataModel->getPrefixes();
 
             foreach ($prefixes as $prefix) {

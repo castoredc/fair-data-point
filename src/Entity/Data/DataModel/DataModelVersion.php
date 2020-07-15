@@ -61,7 +61,7 @@ class DataModelVersion
     private $predicates;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="dataModel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="currentDataModelVersion")
      *
      * @var Collection<RDFDistribution>
      */
@@ -209,14 +209,6 @@ class DataModelVersion
     public function removeNode(Node $node): void
     {
         $this->nodes->removeElement($node);
-    }
-
-    /**
-     * @return Collection<RDFDistribution>
-     */
-    public function getDistributions(): Collection
-    {
-        return $this->distributions;
     }
 
     public function getDataModel(): DataModel

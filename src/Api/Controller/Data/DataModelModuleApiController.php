@@ -67,7 +67,7 @@ class DataModelModuleApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
-        if($module->getDataModel() !== $dataModelVersion) {
+        if ($module->getDataModel() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 
@@ -98,7 +98,7 @@ class DataModelModuleApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
-        if($module->getDataModel() !== $dataModelVersion) {
+        if ($module->getDataModel() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 

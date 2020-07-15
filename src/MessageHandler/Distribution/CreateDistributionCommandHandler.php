@@ -7,7 +7,6 @@ use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
@@ -77,7 +76,8 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
                 false
             );
 
-            $contents->setDataModel($dataModel->getLatestVersion());
+            $contents->setDataModel($dataModel);
+            $contents->setCurrentDataModelVersion($dataModel->getLatestVersion());
         } elseif ($message->getType()->isCsv()) {
             $contents = new CSVDistribution(
                 $distribution,

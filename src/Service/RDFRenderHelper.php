@@ -81,7 +81,7 @@ class RDFRenderHelper
     {
         $record = $this->apiClient->getRecordDataCollection($this->study, $record);
 
-        $dataModel = $this->contents->getDataModel();
+        $dataModel = $this->contents->getCurrentDataModelVersion();
         $modules = $dataModel->getModules();
 
         foreach ($modules as $module) {
@@ -141,7 +141,7 @@ class RDFRenderHelper
         if ($node instanceof LiteralNode) {
             $values[] = $node->getValue();
         } elseif ($node instanceof ValueNode) {
-            $mapping = $this->contents->getMappingByNode($node);
+            $mapping = $this->contents->getMappingByNodeForCurrentVersion($node);
 
             if ($mapping === null) {
                 return null;

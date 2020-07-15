@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 
 class DataModelVersionApiResource implements ApiResource
@@ -25,7 +24,7 @@ class DataModelVersionApiResource implements ApiResource
         return [
             'id' => $this->dataModelVersion->getId(),
             'version' => $this->dataModelVersion->getVersion()->getValue(),
-            'dataModel' => $this->dataModelVersion->getDataModel()->getId()
+            'dataModel' => $this->dataModelVersion->getDataModel()->getId(),
         ];
     }
 }

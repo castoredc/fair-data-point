@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\RDF;
 
 use App\Entity\Castor\CastorEntity;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
@@ -44,11 +45,21 @@ class DataModelMapping
      */
     private $entity;
 
-    public function __construct(RDFDistribution $distribution, Node $node, CastorEntity $entity)
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion")
+     * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id")
+     *
+     * @var DataModelVersion
+     */
+    private $dataModelVersion;
+
+    public function __construct(RDFDistribution $distribution, Node $node, CastorEntity $entity, DataModelVersion $dataModelVersion)
     {
         $this->distribution = $distribution;
         $this->node = $node;
         $this->entity = $entity;
+        $this->dataModelVersion = $dataModelVersion;
     }
 
     public function getDistribution(): RDFDistribution
@@ -79,5 +90,10 @@ class DataModelMapping
     public function setEntity(CastorEntity $entity): void
     {
         $this->entity = $entity;
+    }
+
+    public function getDataModelVersion(): DataModelVersion
+    {
+        return $this->dataModelVersion;
     }
 }
