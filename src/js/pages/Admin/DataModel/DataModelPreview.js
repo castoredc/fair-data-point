@@ -23,13 +23,13 @@ export default class DataModelPreview extends Component {
     }
 
     getPreviews = () => {
-        const { dataModel } = this.props;
+        const { dataModel, version } = this.props;
 
         this.setState({
             isLoadingPreviews: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/rdf')
+        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/rdf')
             .then((response) => {
                 this.setState({
                     previews:          response.data,

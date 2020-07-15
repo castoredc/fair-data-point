@@ -72,7 +72,7 @@ export default class DataModelModuleModal extends Component {
 
     handleSubmit = () => {
         const {data} = this.state;
-        const {modelId, onSaved} = this.props;
+        const {modelId, versionId, onSaved} = this.props;
 
         if (this.form.isFormValid()) {
             this.setState({
@@ -80,7 +80,7 @@ export default class DataModelModuleModal extends Component {
                 isLoading:      true
             });
 
-            axios.post('/api/model/' + modelId + '/module' + (data.id ? '/' + data.id : ''), {
+            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module' + (data.id ? '/' + data.id : ''), {
                 title: data.title,
                 order: data.order,
             })
@@ -113,10 +113,10 @@ export default class DataModelModuleModal extends Component {
 
     handleDelete = (callback) => {
         const {data} = this.state;
-        const {modelId, onSaved} = this.props;
+        const {modelId, versionId, onSaved} = this.props;
 
         if (data.id) {
-            axios.delete('/api/model/' + modelId + '/module/' + data.id)
+            axios.delete('/api/model/' + modelId + '/v/' + versionId + '/module/' + data.id)
                 .then(() => {
                     callback();
                     onSaved();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\UserInterface;
 
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -76,13 +77,28 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/model/{model}", name="admin_model")
-     * @Route("/model/{model}/modules", name="admin_model_modules")
-     * @Route("/model/{model}/prefixes", name="admin_model_prefixes")
-     * @Route("/model/{model}/nodes", name="admin_model_nodes")
-     * @Route("/model/{model}/preview", name="admin_model_preview")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function adminModel(DataModel $dataModel): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->redirectToRoute('admin_model_version', [
+            'dataModel' => $dataModel,
+            'version' => $dataModel->getLatestVersion()->getVersion()->getValue()
+        ]);
+    }
+
+    /**
+     * @Route("/model/{model}/{version}", name="admin_model_version")
+     * @Route("/model/{model}/{version}/modules", name="admin_model_modules")
+     * @Route("/model/{model}/{version}/prefixes", name="admin_model_prefixes")
+     * @Route("/model/{model}/{version}/nodes", name="admin_model_nodes")
+     * @Route("/model/{model}/{version}/preview", name="admin_model_preview")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
+     */
+    public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 

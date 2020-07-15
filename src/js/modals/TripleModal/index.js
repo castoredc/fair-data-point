@@ -138,12 +138,12 @@ export default class TripleModal extends Component {
     };
 
     handleSubmit = () => {
-        const {modelId, moduleId, onSaved} = this.props;
+        const {modelId, versionId, moduleId, onSaved} = this.props;
         const {data} = this.state;
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
-            axios.post('/api/model/' + modelId + '/module/' + moduleId + '/triple' + (data.id ? '/' + data.id : ''), data)
+            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module/' + moduleId + '/triple' + (data.id ? '/' + data.id : ''), data)
                 .then((response) => {
                     this.setState({
                         isLoading: false,
