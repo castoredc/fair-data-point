@@ -102,6 +102,7 @@ export default class PageWrapper extends Component {
                         <Route path="/admin/study/:study" component={Study} />
 
                         <Route path="/admin/models" exact component={DataModels} />
+                        <Route path="/admin/model/:model/:version" component={DataModel} />
                         <Route path="/admin/model/:model" component={DataModel} />
                         <Route component={NotFound} />
                     </Switch>

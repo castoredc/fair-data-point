@@ -131,6 +131,12 @@ class DataModelVersion
         return $this->predicates;
     }
 
+    public function addPredicate(Predicate $predicate): void
+    {
+        $predicate->setDataModel($this);
+        $this->predicates->add($predicate);
+    }
+
     /**
      * @return Collection<DataModelModule>
      */
@@ -224,5 +230,10 @@ class DataModelVersion
     public function getVersion(): Version
     {
         return $this->version;
+    }
+
+    public function setVersion(Version $version): void
+    {
+        $this->version = $version;
     }
 }

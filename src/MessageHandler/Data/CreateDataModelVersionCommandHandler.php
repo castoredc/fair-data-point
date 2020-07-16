@@ -62,20 +62,9 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         $dataModel = $command->getDataModel();
         $latestVersion = $dataModel->getLatestVersion();
 
-        $newVersion = $this->duplicateVersion($latestVersion);
-        $versionNumber = $this->versionNumberHelper->getNewVersion($latestVersion->getVersion(), $command->getVersionType());
-        $newVersion->setVersion($versionNumber);
-
-        // $newVersion = $this->duplicateVersion($latestVersion, $command->getVersionType());
+        $newVersion = $this->duplicateVersion($latestVersion, $command->getVersionType());
 
         $dataModel->addVersion($newVersion);
-
-        // dump($newVersion);
-        // dump($dataModel->getVersions());
-        //
-        // dump((new DataModelVersionApiResource($latestVersion))->toArray());
-        // dump((new DataModelVersionApiResource($newVersion))->toArray());
-        // die();
 
         $this->em->persist($newVersion);
         $this->em->persist($dataModel);
@@ -86,130 +75,85 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
     }
 
     /**
+     * @param DataModelVersion $latestVersion
+     *
      * @return DataModelVersion
      */
-    private function duplicateVersion(DataModelVersion $latestVersion): DataModelVersion
+    private function duplicateVersion(DataModelVersion $latestVersion, VersionType $versionType): DataModelVersion
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
+        $versionNumber = $this->versionNumberHelper->getNewVersion($latestVersion->getVersion(), $versionType);
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'id'));
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'dataModel'));
-        $deepCopy->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher(DataModelVersion::class, 'distributions'));
+        $newVersion = new DataModelVersion($versionNumber);
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'createdAt'));
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'createdBy'));
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'updatedAt'));
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'updatedBy'));
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelVersion::class, 'version'));
+        // Add prefixes
+        foreach($latestVersion->getPrefixes() as $prefix) {
+            /** @var NamespacePrefix $prefix */
+            $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
+        }
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelModule::class, 'id'));
-        // $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(DataModelModule::class, 'dataModel'));
+        // Add nodes
+        $nodes = new ArrayCollection();
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(NamespacePrefix::class, 'id'));
-        // $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(NamespacePrefix::class, 'dataModel'));
+        foreach($latestVersion->getNodes() as $node) {
+            /** @var Node $node */
+            if ($node instanceof RecordNode) {
+                $newNode = new RecordNode($newVersion);
+            } elseif ($node instanceof InternalIriNode) {
+                $newNode = new InternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
+                $newNode->setSlug($node->getSlug());
+            } elseif ($node instanceof ExternalIriNode) {
+                $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
+                $newNode->setIri($node->getIri());
+            } elseif ($node instanceof LiteralNode) {
+                $newNode = new LiteralNode($newVersion, $node->getTitle(), $node->getDescription());
+                $newNode->setValue($node->getValue());
+                $newNode->setDataType($node->getDataType());
+            } elseif ($node instanceof ValueNode) {
+                $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
+                $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(Node::class, 'id'));
-        // $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(Node::class, 'dataModel'));
+                if (! $node->isAnnotatedValue()) {
+                    $newNode->setDataType($node->getDataType());
+                }
+            } else {
+                throw new InvalidNodeType();
+            }
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(Predicate::class, 'id'));
-        // $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(Predicate::class, 'dataModel'));
+            $nodes->set($node->getId(), $newNode);
+            $newVersion->addNode($newNode);
+        }
 
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(Triple::class, 'id'));
-        // $deepCopy->addFilter(new SetNullFilter(), new PropertyMatcher(Triple::class, 'dataModel'));
+        // Add predicates
+        $predicates = new ArrayCollection();
 
-        $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
+        foreach($latestVersion->getPredicates() as $predicate) {
+            /** @var Predicate $predicate */
+            $newPredicate = new Predicate($newVersion, $predicate->getIri());
 
-        $deepCopy->addFilter(new KeepFilter(), new PropertyNameMatcher('createdBy'));
-        $deepCopy->addFilter(new KeepFilter(), new PropertyNameMatcher('updatedBy'));
+            $predicates->set($predicate->getId(), $newPredicate);
+            $newVersion->addPredicate($newPredicate);
+        }
 
-        /** @var DataModelVersion $newVersion */
-        $newVersion = $deepCopy->copy($latestVersion);
+        // Add modules
+        foreach($latestVersion->getModules() as $module) {
+            /** @var DataModelModule $module */
+            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $newVersion);
+
+            foreach($module->getTriples() as $triple) {
+                /** @var Triple $triple */
+                $newTriple = new Triple(
+                    $newModule,
+                    $nodes->get($triple->getSubject()->getId()),
+                    $predicates->get($triple->getPredicate()->getId()),
+                    $nodes->get($triple->getObject()->getId())
+                );
+
+                $newModule->addTriple($newTriple);
+            }
+
+            $newVersion->addModule($newModule);
+        }
 
         return $newVersion;
     }
-
-    // /**
-    //  * @param DataModelVersion $latestVersion
-    //  *
-    //  * @return DataModelVersion
-    //  */
-    // private function duplicateVersion(DataModelVersion $latestVersion, VersionType $versionType): DataModelVersion
-    // {
-    //     $versionNumber = $this->versionNumberHelper->getNewVersion($latestVersion->getVersion(), $versionType);
-    //
-    //     $newVersion = new DataModelVersion($versionNumber);
-    //
-    //     // Add prefixes
-    //     foreach($latestVersion->getPrefixes() as $prefix) {
-    //         /** @var NamespacePrefix $prefix */
-    //         $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
-    //     }
-    //
-    //     // Add nodes
-    //     $nodes = new ArrayCollection();
-    //
-    //     foreach($latestVersion->getNodes() as $node) {
-    //         /** @var Node $node */
-    //         if ($node instanceof RecordNode) {
-    //             $newNode = new RecordNode($newVersion);
-    //         } elseif ($node instanceof InternalIriNode) {
-    //             $newNode = new InternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setSlug($node->getSlug());
-    //         } elseif ($node instanceof ExternalIriNode) {
-    //             $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setIri($node->getIri());
-    //         } elseif ($node instanceof LiteralNode) {
-    //             $newNode = new LiteralNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setValue($node->getValue());
-    //             $newNode->setDataType($node->getDataType());
-    //         } elseif ($node instanceof ValueNode) {
-    //             $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
-    //
-    //             if (! $node->isAnnotatedValue()) {
-    //                 $newNode->setDataType($node->getDataType());
-    //             }
-    //         } else {
-    //             throw new InvalidNodeType();
-    //         }
-    //
-    //         $nodes->set($node->getId(), $newNode);
-    //         $newVersion->addNode($newNode);
-    //     }
-    //
-    //     // Add nodes
-    //     $predicates = new ArrayCollection();
-    //
-    //     foreach($latestVersion->getNodes() as $node) {
-    //         /** @var Node $node */
-    //         if ($node instanceof RecordNode) {
-    //             $newNode = new RecordNode($newVersion);
-    //         } elseif ($node instanceof InternalIriNode) {
-    //             $newNode = new InternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setSlug($node->getSlug());
-    //         } elseif ($node instanceof ExternalIriNode) {
-    //             $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setIri($node->getIri());
-    //         } elseif ($node instanceof LiteralNode) {
-    //             $newNode = new LiteralNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setValue($node->getValue());
-    //             $newNode->setDataType($node->getDataType());
-    //         } elseif ($node instanceof ValueNode) {
-    //             $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
-    //             $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
-    //
-    //             if (! $node->isAnnotatedValue()) {
-    //                 $newNode->setDataType($node->getDataType());
-    //             }
-    //         } else {
-    //             throw new InvalidNodeType();
-    //         }
-    //
-    //         $nodes->set($node->getId(), $newNode);
-    //         $newVersion->addNode($newNode);
-    //     }
-    //
-    //     return $newVersion;
-    // }
 }

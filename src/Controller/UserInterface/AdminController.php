@@ -77,20 +77,20 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/model/{model}", name="admin_model")
+     * @Route("/model/{model}/versions", name="admin_model_versions")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function adminModel(DataModel $dataModel): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->redirectToRoute('admin_model_version', [
-            'dataModel' => $dataModel,
-            'version' => $dataModel->getLatestVersion()->getVersion()->getValue(),
-        ]);
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
     }
 
     /**
-     * @Route("/model/{model}/{version}", name="admin_model_version")
      * @Route("/model/{model}/{version}/modules", name="admin_model_modules")
      * @Route("/model/{model}/{version}/prefixes", name="admin_model_prefixes")
      * @Route("/model/{model}/{version}/nodes", name="admin_model_nodes")
