@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Data;
 
-use App\Api\Resource\Data\DataModelVersionApiResource;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\NamespacePrefix;
@@ -20,16 +19,6 @@ use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateDataModelVersionCommand;
 use App\Service\VersionNumberHelper;
-use DeepCopy\DeepCopy;
-use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
-use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
-use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
-use DeepCopy\Filter\KeepFilter;
-use DeepCopy\Filter\SetNullFilter;
-use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
-use DeepCopy\Matcher\PropertyMatcher;
-use DeepCopy\Matcher\PropertyNameMatcher;
-use DeepCopy\Matcher\PropertyTypeMatcher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -74,11 +63,6 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         return $newVersion;
     }
 
-    /**
-     * @param DataModelVersion $latestVersion
-     *
-     * @return DataModelVersion
-     */
     private function duplicateVersion(DataModelVersion $latestVersion, VersionType $versionType): DataModelVersion
     {
         $versionNumber = $this->versionNumberHelper->getNewVersion($latestVersion->getVersion(), $versionType);
@@ -86,7 +70,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         $newVersion = new DataModelVersion($versionNumber);
 
         // Add prefixes
-        foreach($latestVersion->getPrefixes() as $prefix) {
+        foreach ($latestVersion->getPrefixes() as $prefix) {
             /** @var NamespacePrefix $prefix */
             $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
         }
@@ -94,7 +78,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         // Add nodes
         $nodes = new ArrayCollection();
 
-        foreach($latestVersion->getNodes() as $node) {
+        foreach ($latestVersion->getNodes() as $node) {
             /** @var Node $node */
             if ($node instanceof RecordNode) {
                 $newNode = new RecordNode($newVersion);
@@ -126,7 +110,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         // Add predicates
         $predicates = new ArrayCollection();
 
-        foreach($latestVersion->getPredicates() as $predicate) {
+        foreach ($latestVersion->getPredicates() as $predicate) {
             /** @var Predicate $predicate */
             $newPredicate = new Predicate($newVersion, $predicate->getIri());
 
@@ -135,11 +119,11 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         }
 
         // Add modules
-        foreach($latestVersion->getModules() as $module) {
+        foreach ($latestVersion->getModules() as $module) {
             /** @var DataModelModule $module */
             $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $newVersion);
 
-            foreach($module->getTriples() as $triple) {
+            foreach ($module->getTriples() as $triple) {
                 /** @var Triple $triple */
                 $newTriple = new Triple(
                     $newModule,

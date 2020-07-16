@@ -116,7 +116,7 @@ class DataModelApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while creating a data model version', [
                 'exception' => $e,
-                'dataModel' => $dataModel->getId()
+                'dataModel' => $dataModel->getId(),
             ]);
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);

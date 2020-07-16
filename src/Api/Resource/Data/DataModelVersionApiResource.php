@@ -5,6 +5,7 @@ namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelVersion;
+use const DATE_ATOM;
 
 class DataModelVersionApiResource implements ApiResource
 {
