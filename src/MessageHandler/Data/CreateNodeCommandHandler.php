@@ -56,6 +56,7 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
             $node->setDataType($command->getDataType());
         } elseif ($type->isValue()) {
             $node = new ValueNode($dataModel, $command->getTitle(), $command->getDescription());
+            $node->setIsRepeated($command->isRepeated());
 
             if ($command->getValue() === 'annotated') {
                 $node->setIsAnnotatedValue(true);

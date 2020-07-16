@@ -33,6 +33,10 @@ class NodeApiResource implements ApiResource
                 'dataType' => $this->node->getDataType() !== null ? $this->node->getDataType()->toString() : null,
                 'value' => $this->node->getValue(),
             ];
+
+            if ($this->node instanceof ValueNode) {
+                $value['repeated'] = $this->node->isRepeated();
+            }
         }
 
         return [

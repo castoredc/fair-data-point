@@ -175,20 +175,44 @@ export default class AddNodeModal extends Component {
                         serverError={validation.value}
                     />
                 </FormItem>}
-                {type === 'value' && <FormItem label="Value">
-                    <RadioGroup
-                        validators={['required']}
-                        errorMessages={[required]}
-                        options={[
-                            { value: 'plain', label: 'Plain value' },
-                            { value: 'annotated', label: 'Annotated value' },
-                        ]}
-                        onChange={this.handleChange}
-                        value={data.value}
-                        serverError={validation.value}
-                        name="value"
-                    />
-                </FormItem>}
+                {type === 'value' && <>
+                    <FormItem label="Value">
+                        <RadioGroup
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={[
+                                { value: 'plain', label: 'Plain value' },
+                                { value: 'annotated', label: 'Annotated value' },
+                            ]}
+                            onChange={this.handleChange}
+                            value={data.value}
+                            serverError={validation.value}
+                            name="value"
+                            variant="horizontal"
+                        />
+                    </FormItem>
+                    <FormItem label="Repeated">
+                        <RadioGroup
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={[
+                                {
+                                    label: 'Yes',
+                                    value: true
+                                },
+                                {
+                                    label: 'No',
+                                    value: false
+                                }
+                            ]}
+                            onChange={this.handleChange}
+                            value={data.repeated}
+                            serverError={validation.repeated}
+                            name="repeated"
+                            variant="horizontal"
+                        />
+                    </FormItem>
+                </>}
                 {showDataTypes && <FormItem label="Data type">
                     <Dropdown
                         validators={['required']}
@@ -209,7 +233,8 @@ const defaultData = {
     title: '',
     description: '',
     value: '',
-    dataType: null
+    dataType: null,
+    repeated: false
 };
 
 const dataTypes = [
