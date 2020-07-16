@@ -55,11 +55,19 @@ class DataModelModule
      */
     private $triples;
 
-    public function __construct(string $title, int $order, DataModelVersion $dataModel)
+    /**
+     * @ORM\Column(type="boolean", options={"default":"0"})
+     *
+     * @var bool
+     */
+    private $isRepeated;
+
+    public function __construct(string $title, int $order, bool $isRepeated, DataModelVersion $dataModel)
     {
         $this->title = $title;
         $this->order = $order;
         $this->dataModel = $dataModel;
+        $this->isRepeated = $isRepeated;
 
         $this->triples = new ArrayCollection();
     }
@@ -128,5 +136,15 @@ class DataModelModule
     public function removeTriple(Triple $triple): void
     {
         $this->triples->removeElement($triple);
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->isRepeated;
+    }
+
+    public function setIsRepeated(bool $isRepeated): void
+    {
+        $this->isRepeated = $isRepeated;
     }
 }

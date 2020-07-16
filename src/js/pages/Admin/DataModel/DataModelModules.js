@@ -277,11 +277,12 @@ export default class DataModelModules extends Component {
                             key={element.id}
                             id={element.id}
                             title={element.title}
+                            repeated={element.repeated}
                             order={element.order}
                             groupedTriples={element.groupedTriples}
                             modelId={dataModel.id}
                             versionId={version}
-                            openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order})}
+                            openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order, repeated: element.repeated})}
                             openTripleModal={(tripleData) => this.openTripleModal(element.id, tripleData)}
                             openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element.id, tripleData)}
                         />;

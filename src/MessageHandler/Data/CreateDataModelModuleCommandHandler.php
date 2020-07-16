@@ -32,7 +32,7 @@ class CreateDataModelModuleCommandHandler implements MessageHandlerInterface
 
         $dataModel = $command->getDataModel();
 
-        $module = new DataModelModule($command->getTitle(), $command->getOrder(), $dataModel);
+        $module = new DataModelModule($command->getTitle(), $command->getOrder(), $command->isRepeated(), $dataModel);
         $dataModel->addModule($module);
 
         $this->em->persist($module);

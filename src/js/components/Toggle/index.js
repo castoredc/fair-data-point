@@ -21,12 +21,14 @@ export default class Toggle extends Component {
     };
 
     render() {
-        const { title, children } = this.props;
+        const { title, badge, children } = this.props;
         const { expanded } = this.state;
 
         return <div className={classNames('Toggle', expanded && 'Active')}>
             <div className="ToggleHeader" onClick={this.toggle} tabIndex="0" role="button">
                 {title}
+
+                {badge && <span className="ToggleBadge">{badge}</span>}
 
                 <div className={classNames('ToggleArrow', expanded && 'Active')}>
                     <Icon type="arrowBottom" width={12} height={12} />

@@ -6,7 +6,7 @@ import './Input.scss'
 
 export default class RadioGroup extends ValidatorComponent {
     render() {
-        const { value, options, onChange, name, variant, readOnly } = this.props;
+        const { value, options, onChange, name, variant, readOnly, serverError } = this.props;
 
         return <Form.Group className="Input">
             <div
@@ -26,6 +26,12 @@ export default class RadioGroup extends ValidatorComponent {
                     />
                 })}
                 {this.errorText()}
+
+                {serverError && serverError.map((errorText, index) => (
+                    <TextStyle key={index} variation="error">
+                        {errorText}
+                    </TextStyle>
+                ))}
             </div>
         </Form.Group>;
     }

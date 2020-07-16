@@ -25,6 +25,7 @@ class DataModelModuleApiResource implements ApiResource
             'id' => $this->module->getId(),
             'title' => $this->module->getTitle(),
             'order' => $this->module->getOrder(),
+            'repeated' => $this->module->isRepeated(),
             'groupedTriples' => (new GroupedTriplesApiResource($this->module))->toArray(),
         ];
     }

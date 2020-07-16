@@ -121,7 +121,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         // Add modules
         foreach ($latestVersion->getModules() as $module) {
             /** @var DataModelModule $module */
-            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $newVersion);
+            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $module->isRepeated(), $newVersion);
 
             foreach ($module->getTriples() as $triple) {
                 /** @var Triple $triple */
