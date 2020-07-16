@@ -85,6 +85,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
             } elseif ($node instanceof InternalIriNode) {
                 $newNode = new InternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setSlug($node->getSlug());
+                $newNode->setIsRepeated($node->isRepeated());
             } elseif ($node instanceof ExternalIriNode) {
                 $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIri($node->getIri());

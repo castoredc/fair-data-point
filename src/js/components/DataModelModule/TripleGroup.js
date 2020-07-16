@@ -4,7 +4,7 @@ import {ActionMenu, Icon} from "@castoredc/matter";
 
 export default class TripleGroup extends Component {
     render() {
-        const { id, type, title, description, value, predicates, openTripleModal, openRemoveTripleModal } = this.props;
+        const { id, type, title, repeated, value, predicates, openTripleModal, openRemoveTripleModal } = this.props;
 
         const newData = {
             subjectType: type,
@@ -13,7 +13,7 @@ export default class TripleGroup extends Component {
 
         return <Row className="DataModelTriple">
             <Col sm={4}>
-                {Node(title, type, value)}
+                {Node(title, type, value, repeated)}
             </Col>
             <Col sm={8}>
                 {predicates.map((predicate) => {
@@ -54,6 +54,7 @@ export class TriplePredicate extends Component {
                         title={object.title}
                         description={object.description}
                         value={object.value}
+                        repeated={object.repeated}
                         data={newData}
                         tripleId={object.tripleId}
                         openTripleModal={openTripleModal}
@@ -72,7 +73,7 @@ export class TripleObject extends Component {
     }
 
     render() {
-        const { tripleId, id, type, title, description, value, openTripleModal, data, openRemoveTripleModal } = this.props;
+        const { tripleId, id, type, title, repeated, value, openTripleModal, data, openRemoveTripleModal } = this.props;
 
         const newData = {
             ...data,
@@ -82,7 +83,7 @@ export class TripleObject extends Component {
         };
 
         return <div className="TripleObject">
-            {Node(title, type, value)}
+            {Node(title, type, value, repeated)}
 
             <div className="TripleActions" ref={this.ref}>
                 <ActionMenu
@@ -105,11 +106,11 @@ export class TripleObject extends Component {
     }
 }
 
-export const Node = (title, type, value) => {
+export const Node = (title, type, value, repeated) => {
     return <div>
         {title}
         {(type === "internal") && <div className="NodeInfo Slug">
-            <span>/{value}</span>
+            {repeated ? <span>/{value}/[instance_id]</span> : <span>/{value}</span>}
         </div>}
         {(type === "external") && <div className="NodeInfo PrefixedUri">
             <span>
@@ -120,6 +121,7 @@ export const Node = (title, type, value) => {
         {(type === "value") && <div className="NodeInfo Value">
             <span>
                 {value.value === 'annotated' ? 'Annotated value' : `Plain value (${value.dataType})`}
+                {repeated && ' - repeated'}
             </span>
         </div>}
         {(type === "literal") && <div className="NodeInfo Literal">

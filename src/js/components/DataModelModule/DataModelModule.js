@@ -35,9 +35,9 @@ export default class DataModelModule extends Component {
                                 id={element.id}
                                 type={element.type}
                                 title={element.title}
+                                repeated={element.repeated}
                                 description={element.description}
                                 value={element.value}
-                                repeated={repeated}
                                 predicates={element.predicates}
                                 openTripleModal={openTripleModal}
                                 openRemoveTripleModal={openRemoveTripleModal}

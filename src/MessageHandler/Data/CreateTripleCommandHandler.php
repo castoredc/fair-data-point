@@ -62,10 +62,10 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         }
         assert($object instanceof Node);
 
-        if($command->getObjectType()->isValue() && $module->isRepeated()) {
+        if ($command->getObjectType()->isValue() && $module->isRepeated()) {
             assert($object instanceof ValueNode);
 
-            if(! $object->isRepeated()) {
+            if (! $object->isRepeated()) {
                 throw new InvalidNodeType();
             }
         }

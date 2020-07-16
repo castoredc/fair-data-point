@@ -170,7 +170,7 @@ export default class TripleModal extends Component {
         const {nodes} = this.props;
 
         return nodes[type].map((node) => {
-            return { value: node.id, label: node.title, repeated: (type === 'value' ? node.value.repeated : undefined) };
+            return { value: node.id, label: node.title, repeated: node.repeated };
         });
     };
 
@@ -182,15 +182,25 @@ export default class TripleModal extends Component {
         const validUrl = "Please enter a valid URI";
 
         const subjectSelectable = (data.subjectType === 'internal' || data.subjectType === 'external');
-        const subjectOptions = subjectSelectable ? this.getOptions(data.subjectType) : [];
+        let subjectOptions = subjectSelectable ? this.getOptions(data.subjectType) : [];
         const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value');
         let objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
 
-        if(data.objectType === 'value' && module.repeated) {
+        if(module && data.objectType === 'value' && module.repeated) {
             objectOptions = objectOptions.filter((option) => {
-                console.log(option);
-                console.log(option.repeated);
                 return option.repeated;
+            })
+        }
+
+        if(module && data.objectType === 'internal' && ! module.repeated) {
+            objectOptions = objectOptions.filter((option) => {
+                return option.repeated === false;
+            })
+        }
+
+        if(module && data.subjectType === 'internal' && ! module.repeated) {
+            subjectOptions = subjectOptions.filter((option) => {
+                return option.repeated === false;
             })
         }
 

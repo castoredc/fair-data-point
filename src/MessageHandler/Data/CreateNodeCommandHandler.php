@@ -50,6 +50,7 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
         } elseif ($type->isInternalIri()) {
             $node = new InternalIriNode($dataModel, $command->getTitle(), $command->getDescription());
             $node->setSlug($command->getValue());
+            $node->setIsRepeated($command->isRepeated());
         } elseif ($type->isLiteral()) {
             $node = new LiteralNode($dataModel, $command->getTitle(), $command->getDescription());
             $node->setValue($command->getValue());

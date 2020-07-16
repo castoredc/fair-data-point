@@ -5,6 +5,7 @@ namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
+use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
@@ -33,10 +34,12 @@ class NodeApiResource implements ApiResource
                 'dataType' => $this->node->getDataType() !== null ? $this->node->getDataType()->toString() : null,
                 'value' => $this->node->getValue(),
             ];
+        }
 
-            if ($this->node instanceof ValueNode) {
-                $value['repeated'] = $this->node->isRepeated();
-            }
+        $repeated = false;
+
+        if ($this->node instanceof ValueNode || $this->node instanceof InternalIriNode) {
+            $repeated = $this->node->isRepeated();
         }
 
         return [
@@ -45,6 +48,7 @@ class NodeApiResource implements ApiResource
             'title' => $this->node->getTitle(),
             'description' => $this->node->getDescription(),
             'value' => $value,
+            'repeated' => $repeated,
         ];
     }
 }

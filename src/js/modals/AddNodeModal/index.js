@@ -109,6 +109,8 @@ export default class AddNodeModal extends Component {
 
         const showDataTypes = (type === 'literal' || (type === 'value' && data.value === 'plain'));
 
+        const showRepeated = (type === 'internal' || type === 'value');
+
         return <Modal
             show={show}
             handleClose={handleClose}
@@ -175,8 +177,7 @@ export default class AddNodeModal extends Component {
                         serverError={validation.value}
                     />
                 </FormItem>}
-                {type === 'value' && <>
-                    <FormItem label="Value">
+                {type === 'value' && <FormItem label="Value">
                         <RadioGroup
                             validators={['required']}
                             errorMessages={[required]}
@@ -190,29 +191,28 @@ export default class AddNodeModal extends Component {
                             name="value"
                             variant="horizontal"
                         />
-                    </FormItem>
-                    <FormItem label="Repeated">
-                        <RadioGroup
-                            validators={['required']}
-                            errorMessages={[required]}
-                            options={[
-                                {
-                                    label: 'Yes',
-                                    value: true
-                                },
-                                {
-                                    label: 'No',
-                                    value: false
-                                }
-                            ]}
-                            onChange={this.handleChange}
-                            value={data.repeated}
-                            serverError={validation.repeated}
-                            name="repeated"
-                            variant="horizontal"
-                        />
-                    </FormItem>
-                </>}
+                    </FormItem>}
+                {showRepeated && <FormItem label="Repeated">
+                    <RadioGroup
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={[
+                            {
+                                label: 'Yes',
+                                value: true
+                            },
+                            {
+                                label: 'No',
+                                value: false
+                            }
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.repeated}
+                        serverError={validation.repeated}
+                        name="repeated"
+                        variant="horizontal"
+                    />
+                </FormItem>}
                 {showDataTypes && <FormItem label="Data type">
                     <Dropdown
                         validators={['required']}

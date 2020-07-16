@@ -109,7 +109,13 @@ export default class DataModelNodes extends Component {
                                              emptyTableMessage="This data model does not have internal nodes"
                                              cellSpacing="default"
                                              rows={nodes.internal.map((item) => {
-                                                 return [item.title, item.value];
+                                                 return [
+                                                     item.title,
+                                                     item.value,
+                                                     item.repeated ? {
+                                                         type: 'tickSmall'
+                                                     } : undefined
+                                                 ];
                                              })}
                                              structure={{
                                                  id:    {
@@ -121,6 +127,11 @@ export default class DataModelNodes extends Component {
                                                      header:    'Slug',
                                                      resizable: true,
                                                      template:  'fixed',
+                                                 },
+                                                 repeated: {
+                                                     header:    'Repeated',
+                                                     resizable: true,
+                                                     template:  'icon',
                                                  },
                                              }}
                                          />
@@ -189,7 +200,7 @@ export default class DataModelNodes extends Component {
                                                      item.title,
                                                      item.value.value,
                                                      item.value.dataType,
-                                                     item.value.repeated ? {
+                                                     item.repeated ? {
                                                          type: 'tickSmall'
                                                      } : undefined
                                                  ];
