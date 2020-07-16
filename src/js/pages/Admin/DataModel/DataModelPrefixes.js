@@ -7,6 +7,7 @@ import {Col, Row} from "react-bootstrap";
 import {Button, DataTable} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
+import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 
 export default class DataModelPrefixes extends Component {
     constructor(props) {
@@ -28,13 +29,13 @@ export default class DataModelPrefixes extends Component {
     }
 
     getContents = () => {
-        const {dataModel} = this.props;
+        const { dataModel, version } = this.props;
 
         this.setState({
             isLoadingContents: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/prefix')
+        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/prefix')
             .then((response) => {
                 this.setState({
                     prefixes:          response.data,
@@ -81,10 +82,10 @@ export default class DataModelPrefixes extends Component {
     };
 
     removePrefix = () => {
-        const {dataModel} = this.props;
+        const {dataModel, version} = this.props;
         const {prefixModalData} = this.state;
 
-        axios.delete('/api/model/' + dataModel.id + '/prefix/' + prefixModalData.id)
+        axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/prefix/' + prefixModalData.id)
             .then(() => {
                 this.onSaved('remove');
             })
@@ -97,7 +98,7 @@ export default class DataModelPrefixes extends Component {
 
     render() {
         const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
-        const {dataModel} = this.props;
+        const {dataModel, version} = this.props;
 
         return <div className="SubPage">
             <DataModelPrefixModal
@@ -109,6 +110,7 @@ export default class DataModelPrefixes extends Component {
                     this.onSaved('add')
                 }}
                 modelId={dataModel.id}
+                versionId={version}
                 data={prefixModalData}
             />
 

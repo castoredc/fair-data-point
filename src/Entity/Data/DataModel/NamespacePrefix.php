@@ -40,10 +40,10 @@ class NamespacePrefix
     private $uri;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="prefixes",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="prefixes",cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var DataModel
+     * @var DataModelVersion
      */
     private $dataModel;
 
@@ -78,12 +78,12 @@ class NamespacePrefix
         $this->uri = $uri;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModel $dataModel): void
+    public function setDataModel(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

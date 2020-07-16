@@ -69,14 +69,14 @@ export default class AddNodeModal extends Component {
     };
 
     handleSubmit = () => {
-        const {type, modelId, onSaved} = this.props;
+        const {type, modelId, versionId, onSaved} = this.props;
         const {data} = this.state;
 
         if (this.form.isFormValid()) {
             if (this.form.isFormValid()) {
                 this.setState({isLoading: true});
 
-                axios.post('/api/model/' + modelId + '/node/' + type + '/add', data)
+                axios.post('/api/model/' + modelId + '/v/' + versionId + '/node/' + type + '/add', data)
                     .then((response) => {
                         this.setState({
                             isLoading: false,

@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Message\Data;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 
 class CreateDataModelPrefixCommand
 {
-    /** @var DataModel */
+    /** @var DataModelVersion */
     private $dataModel;
 
     /** @var string */
@@ -16,14 +16,14 @@ class CreateDataModelPrefixCommand
     /** @var string */
     private $uri;
 
-    public function __construct(DataModel $dataModel, string $prefix, string $uri)
+    public function __construct(DataModelVersion $dataModel, string $prefix, string $uri)
     {
         $this->dataModel = $dataModel;
         $this->prefix = $prefix;
         $this->uri = $uri;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }

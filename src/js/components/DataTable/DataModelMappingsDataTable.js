@@ -41,7 +41,7 @@ export default class DataModelMappingsDataTable extends Component {
 
     getMappings = () => {
         const { pagination, hasLoadedMappings } = this.state;
-        const { dataset, distribution } = this.props;
+        const { dataset, distribution, versionId } = this.props;
 
         this.setState({
             isLoadingMappings: true,
@@ -56,7 +56,7 @@ export default class DataModelMappingsDataTable extends Component {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
-        axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf', {params: filters})
+        axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId, {params: filters})
             .then((response) => {
                 this.setState({
                     mappings:          response.data.results,

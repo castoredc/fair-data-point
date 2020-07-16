@@ -6,6 +6,7 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Col, Row} from "react-bootstrap";
 import {Button, DataTable, Tabs} from "@castoredc/matter";
 import AddNodeModal from "../../../modals/AddNodeModal";
+import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 
 export default class DataModelNodes extends Component {
     constructor(props) {
@@ -24,13 +25,13 @@ export default class DataModelNodes extends Component {
     }
 
     getNodes = () => {
-        const { dataModel } = this.props;
+        const { dataModel, version } = this.props;
 
         this.setState({
             isLoadingNodes: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/node')
+        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/node')
             .then((response) => {
                 this.setState({
                     nodes:          response.data,
@@ -77,7 +78,7 @@ export default class DataModelNodes extends Component {
 
     render() {
         const {showModal, isLoadingNodes, nodes, selectedType} = this.state;
-        const {dataModel} = this.props;
+        const {dataModel, version} = this.props;
 
         return <div>
             <AddNodeModal
@@ -86,6 +87,7 @@ export default class DataModelNodes extends Component {
                 onSaved={this.onSaved}
                 type={selectedType}
                 modelId={dataModel.id}
+                versionId={version}
             />
             <Row>
                 <Col sm={6} />

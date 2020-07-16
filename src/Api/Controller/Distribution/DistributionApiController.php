@@ -174,6 +174,7 @@ class DistributionApiController extends ApiController
                     $parsed->getAccessRights(),
                     $parsed->getIncludeAllData(),
                     $parsed->getDataModel(),
+                    $parsed->getDataModelVersion(),
                     $parsed->getApiUser(),
                     $parsed->getClientId(),
                     $parsed->getClientSecret(),

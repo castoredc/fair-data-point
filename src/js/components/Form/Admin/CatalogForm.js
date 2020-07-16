@@ -162,12 +162,12 @@ export default class CatalogForm extends Component {
                     <Col>
                     </Col>
                     <Col>
-                         <Button disabled={submitDisabled}>
+                         <Button disabled={submitDisabled} type="submit">
                             Update catalog
                         </Button>
                     </Col>
                 </Row> : <footer>
-                    <Button disabled={submitDisabled}>
+                    <Button disabled={submitDisabled} type="submit">
                         Add catalog
                     </Button>
                 </footer>}

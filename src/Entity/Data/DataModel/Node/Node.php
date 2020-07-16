@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataModel\Node;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,10 +28,10 @@ abstract class Node
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="nodes",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="nodes", cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var DataModel
+     * @var DataModelVersion
      */
     private $dataModel;
 
@@ -49,7 +49,7 @@ abstract class Node
      */
     private $description;
 
-    public function __construct(DataModel $dataModel, string $title, ?string $description)
+    public function __construct(DataModelVersion $dataModel, string $title, ?string $description)
     {
         $this->dataModel = $dataModel;
         $this->title = $title;
@@ -61,12 +61,12 @@ abstract class Node
         return $this->id;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModel $dataModel): void
+    public function setDataModel(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

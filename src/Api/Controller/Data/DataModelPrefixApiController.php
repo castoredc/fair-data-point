@@ -6,7 +6,7 @@ namespace App\Api\Controller\Data;
 use App\Api\Request\Data\DataModelPrefixApiRequest;
 use App\Api\Resource\Data\DataModelPrefixesApiResource;
 use App\Controller\Api\ApiController;
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateDataModelPrefixCommand;
@@ -21,33 +21,33 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/model/{model}/prefix")
- * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+ * @Route("/api/model/{model}/v/{version}/prefix")
+ * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
  */
 class DataModelPrefixApiController extends ApiController
 {
     /**
      * @Route("", methods={"GET"}, name="api_model_prefixes")
      */
-    public function getPrefixes(DataModel $dataModel): Response
+    public function getPrefixes(DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('view', $dataModel);
+        $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        return new JsonResponse((new DataModelPrefixesApiResource($dataModel))->toArray(), 200);
+        return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray(), 200);
     }
 
     /**
      * @Route("", methods={"POST"}, name="api_model_prefix_add")
      */
-    public function addPrefix(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function addPrefix(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         try {
             /** @var DataModelPrefixApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
 
-            $bus->dispatch(new CreateDataModelPrefixCommand($dataModel, $parsed->getPrefix(), $parsed->getUri()));
+            $bus->dispatch(new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
@@ -61,11 +61,15 @@ class DataModelPrefixApiController extends ApiController
 
     /**
      * @Route("/{prefix}", methods={"POST"}, name="api_model_prefix_update")
-     * @ParamConverter("prefix", options={"mapping": {"prefix": "id", "dataModel": "model"}})
+     * @ParamConverter("prefix", options={"mapping": {"prefix": "id"}})
      */
-    public function updatePrefix(NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
+    public function updatePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $prefix->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+
+        if ($prefix->getDataModel() !== $dataModelVersion) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
 
         try {
             /** @var DataModelPrefixApiRequest $parsed */
@@ -88,11 +92,15 @@ class DataModelPrefixApiController extends ApiController
 
     /**
      * @Route("/{prefix}", methods={"DELETE"}, name="api_model_prefix_delete")
-     * @ParamConverter("prefix", options={"mapping": {"prefix": "id", "dataModel": "model"}})
+     * @ParamConverter("prefix", options={"mapping": {"prefix": "id"}})
      */
-    public function deletePrefix(NamespacePrefix $prefix, MessageBusInterface $bus): Response
+    public function deletePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $prefix->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+
+        if ($prefix->getDataModel() !== $dataModelVersion) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
 
         try {
             $bus->dispatch(new DeleteDataModelPrefixCommand($prefix));

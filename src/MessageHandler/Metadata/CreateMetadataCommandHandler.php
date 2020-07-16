@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Metadata;
 
-use App\Entity\Enum\VersionType;
 use App\Entity\FAIRData\Agent;
 use App\Entity\FAIRData\Country;
 use App\Entity\FAIRData\Department;
@@ -13,8 +12,8 @@ use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\FAIRData\Organization;
 use App\Entity\FAIRData\Person;
-use App\Entity\Version;
 use App\Exception\InvalidAgentType;
+use App\Service\VersionNumberHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -30,35 +29,14 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
     /** @var Security */
     protected $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security)
+    /** @var VersionNumberHelper */
+    protected $versionNumberHelper;
+
+    public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
     {
         $this->em = $em;
         $this->security = $security;
-    }
-
-    protected function updateVersionNumber(?Version $currentVersion, VersionType $versionUpdate): Version
-    {
-        if ($currentVersion === null) {
-            return new Version(self::DEFAULT_VERSION_NUMBER);
-        }
-
-        $version = new Version();
-
-        if ($versionUpdate->isMajor()) {
-            $version->setMajor($currentVersion->getMajor() + 1);
-            $version->setMinor(0);
-            $version->setPatch(0);
-        } elseif ($versionUpdate->isMinor()) {
-            $version->setMajor($currentVersion->getMajor());
-            $version->setMinor($currentVersion->getMinor() + 1);
-            $version->setPatch(0);
-        } elseif ($versionUpdate->isPatch()) {
-            $version->setMajor($currentVersion->getMajor());
-            $version->setMinor($currentVersion->getMinor());
-            $version->setPatch($currentVersion->getPatch() + 1);
-        }
-
-        return $version;
+        $this->versionNumberHelper = $versionNumberHelper;
     }
 
     protected function parseLocalizedText(?LocalizedText $localizedText): ?LocalizedText

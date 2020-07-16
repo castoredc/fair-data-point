@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel;
 
 use App\Traits\CreatedAndUpdated;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,10 +41,10 @@ class DataModelModule
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="modules",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="modules",cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var DataModel
+     * @var DataModelVersion
      */
     private $dataModel;
 
@@ -54,13 +55,13 @@ class DataModelModule
      */
     private $triples;
 
-    public function __construct(string $title, int $order, DataModel $dataModel)
+    public function __construct(string $title, int $order, DataModelVersion $dataModel)
     {
         $this->title = $title;
         $this->order = $order;
         $this->dataModel = $dataModel;
 
-        // $this->triples = new ArrayCollection();
+        $this->triples = new ArrayCollection();
     }
 
     public function getId(): string
@@ -93,12 +94,12 @@ class DataModelModule
         $this->order = $order;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModel $dataModel): void
+    public function setDataModel(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

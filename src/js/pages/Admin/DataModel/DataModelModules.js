@@ -42,13 +42,13 @@ export default class DataModelModules extends Component {
     }
 
     getModules = () => {
-        const { dataModel } = this.props;
+        const { dataModel, version } = this.props;
 
         this.setState({
             isLoadingModules: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/module')
+        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/module')
             .then((response) => {
                 this.setState({
                     modules:          response.data,
@@ -70,13 +70,13 @@ export default class DataModelModules extends Component {
     };
 
     getNodes = () => {
-        const { dataModel } = this.props;
+        const { dataModel, version } = this.props;
 
         this.setState({
             isLoadingNodes: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/node')
+        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/node')
             .then((response) => {
                 this.setState({
                     nodes:          response.data,
@@ -95,13 +95,13 @@ export default class DataModelModules extends Component {
     };
 
     getPrefixes = () => {
-        const {dataModel} = this.props;
+        const {dataModel, version} = this.props;
 
         this.setState({
             isLoadingPrefixes: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/prefix')
+        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/prefix')
             .then((response) => {
                 this.setState({
                     prefixes:          response.data,
@@ -203,10 +203,10 @@ export default class DataModelModules extends Component {
     };
 
     removeTriple = () => {
-        const { dataModel } = this.props;
+        const { dataModel, version } = this.props;
         const { currentModuleId, tripleModalData } = this.state;
 
-        axios.delete('/api/model/' + dataModel.id + '/module/' + currentModuleId + '/triple/' + tripleModalData.id )
+        axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/module/' + currentModuleId + '/triple/' + tripleModalData.id )
             .then(() => {
                 this.closeModal('removeTriple');
                 this.getModules();
@@ -219,7 +219,7 @@ export default class DataModelModules extends Component {
     };
 
     render() {
-        const { dataModel } = this.props;
+        const { dataModel, version } = this.props;
         const { showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModuleId, moduleModalData, tripleModalData } = this.state;
 
         if (!hasLoadedModules || !hasLoadedNodes || !hasLoadedPrefixes) {
@@ -235,6 +235,7 @@ export default class DataModelModules extends Component {
                 handleClose={() => { this.closeModal('module')}}
                 onSaved={this.onModuleSaved}
                 modelId={dataModel.id}
+                versionId={version}
                 data={moduleModalData}
             />
 
@@ -243,6 +244,7 @@ export default class DataModelModules extends Component {
                 handleClose={() => { this.closeModal('triple')}}
                 onSaved={this.onTripleSaved}
                 modelId={dataModel.id}
+                versionId={version}
                 moduleId={currentModuleId}
                 nodes={nodes}
                 data={tripleModalData}
@@ -278,6 +280,7 @@ export default class DataModelModules extends Component {
                             order={element.order}
                             groupedTriples={element.groupedTriples}
                             modelId={dataModel.id}
+                            versionId={version}
                             openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order})}
                             openTripleModal={(tripleData) => this.openTripleModal(element.id, tripleData)}
                             openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element.id, tripleData)}

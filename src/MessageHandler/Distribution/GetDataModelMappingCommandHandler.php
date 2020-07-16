@@ -38,17 +38,15 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        $dataModal = $distribution->getDataModel();
-
         /** @var NodeRepository $repository */
         $repository = $this->em->getRepository(Node::class);
 
-        $valueNodes = $repository->findNodesByType($dataModal, NodeType::value());
+        $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());
         $results = [];
 
         foreach ($valueNodes as $valueNode) {
             assert($valueNode instanceof ValueNode);
-            $mapping = $distribution->getMappingByNode($valueNode);
+            $mapping = $distribution->getMappingByNodeAndVersion($valueNode, $command->getDataModelVersion());
 
             $results[] = $mapping ?? $valueNode;
         }

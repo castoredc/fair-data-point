@@ -85,7 +85,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 
         $graph = new EasyRdf_Graph();
 
-        $dataModel = $contents->getDataModel();
+        $dataModel = $contents->getCurrentDataModelVersion();
         $prefixes = $dataModel->getPrefixes();
 
         foreach ($prefixes as $prefix) {

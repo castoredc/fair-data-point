@@ -26,10 +26,10 @@ class Predicate
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="predicates", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="predicates", cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
      *
-     * @var DataModel
+     * @var DataModelVersion
      */
     private $dataModel;
 
@@ -40,7 +40,7 @@ class Predicate
      */
     private $iri;
 
-    public function __construct(DataModel $dataModel, Iri $iri)
+    public function __construct(DataModelVersion $dataModel, Iri $iri)
     {
         $this->dataModel = $dataModel;
         $this->iri = $iri;
@@ -51,12 +51,12 @@ class Predicate
         return $this->id;
     }
 
-    public function getDataModel(): DataModel
+    public function getDataModel(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModel $dataModel): void
+    public function setDataModel(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

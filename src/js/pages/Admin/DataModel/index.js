@@ -5,24 +5,28 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import NotFound from "../../NotFound";
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, Redirect, generatePath} from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import {LinkContainer} from "react-router-bootstrap";
 import DataModelPrefixes from "./DataModelPrefixes";
 import DataModelModules from "./DataModelModules";
 import DataModelDetails from "./DataModelDetails";
 import DataModelNodes from "./DataModelNodes";
-import {Button} from "@castoredc/matter";
+import {Button, Dropdown as CastorDropdown} from "@castoredc/matter";
 import DataModelPreview from "./DataModelPreview";
+import FormItem from "../../../components/Form/FormItem";
+import DataModelVersions from "./DataModelVersions";
 
 export default class DataModel extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             isLoadingDataModel:  true,
             hasLoadedDataModel:  false,
             dataModel:           null,
-            showModal:           false
+            showModal:           false,
+            currentVersion:      null
         };
     }
 
@@ -30,27 +34,43 @@ export default class DataModel extends Component {
         this.getDataModel();
     }
 
+    componentDidUpdate(prevProps) {
+        const { match } = this.props;
+
+        if (match.params.version !== prevProps.match.params.version) {
+            this.getDataModel();
+        }
+    }
+
     getDataModel = () => {
         const { match } = this.props;
 
         this.setState({
-            isLoadingDataModels: true,
+            isLoadingDataModel: true,
         });
 
         axios.get('/api/model/' + match.params.model)
             .then((response) => {
+                const versions = response.data.versions.map((version) => {
+                    return {value: version.id, label: version.version};
+                });
+
+                const currentVersion = (match.params.version && match.params.version !== 'versions') ? match.params.version : versions.slice(-1)[0].label;
+
                 this.setState({
                     dataModel:          response.data,
                     isLoadingDataModel: false,
                     hasLoadedDataModel: true,
+                    versions:           versions,
+                    currentVersion:     versions.find(({label}) => label === currentVersion)
                 });
             })
             .catch((error) => {
                 this.setState({
-                    isLoadingDataModels: false
+                    isLoadingDataModel: false
                 });
 
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data models';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data model';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -67,9 +87,23 @@ export default class DataModel extends Component {
         });
     };
 
+    handleVersionChange = (version) => {
+        const { currentVersion, versions } = this.state;
+
+        const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + version + '/');
+
+        if(window.location.pathname !== newUrl) {
+            this.props.history.push(newUrl);
+        } else {
+            this.setState({
+                currentVersion: versions.find(({label}) => label === version)
+            });
+        }
+    };
+
     render() {
         const { match } = this.props;
-        const { dataModel, isLoadingDataModel, showModal } = this.state;
+        const { dataModel, isLoadingDataModel, versions, currentVersion } = this.state;
 
         if (isLoadingDataModel) {
             return <InlineLoader/>;
@@ -94,17 +128,35 @@ export default class DataModel extends Component {
                         <LinkContainer to={'/admin/model/' + dataModel.id} exact={true}>
                             <Nav.Link>Data model</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={'/admin/model/' + dataModel.id + '/modules'} exact={true}>
+                        <LinkContainer to={'/admin/model/' + dataModel.id + '/versions'} exact={true}>
+                            <Nav.Link>Versions</Nav.Link>
+                        </LinkContainer>
+
+                        <hr />
+
+                        <FormItem label="Version">
+                            <CastorDropdown
+                                onChange={(e) => {this.handleVersionChange(e.label)}}
+                                value={currentVersion}
+                                options={versions}
+                                menuPlacement="auto"
+                                width="fullWidth"
+                            />
+                        </FormItem>
+
+                        <hr />
+
+                        <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/modules'} exact={true}>
                             <Nav.Link>Modules</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={'/admin/model/' + dataModel.id + '/nodes'} exact={true}>
+                        <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/nodes'} exact={true}>
                             <Nav.Link>Nodes</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to={'/admin/model/' + dataModel.id + '/prefixes'} exact={true}>
+                        <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/prefixes'} exact={true}>
                             <Nav.Link>Prefixes</Nav.Link>
                         </LinkContainer>
                         <hr />
-                        <LinkContainer to={'/admin/model/' + dataModel.id + '/preview'} exact={true}>
+                        <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/preview'} exact={true}>
                             <Nav.Link>Preview</Nav.Link>
                         </LinkContainer>
                     </Nav>
@@ -112,15 +164,18 @@ export default class DataModel extends Component {
                 <Col sm={10} className="Page">
                     <Switch>
                         <Route path="/admin/model/:model" exact
-                               render={(props) => <DataModelDetails {...props} dataModel={dataModel} />} />
-                        <Route path="/admin/model/:model/modules" exact
-                               render={(props) => <DataModelModules {...props} dataModel={dataModel} />} />
-                        <Route path="/admin/model/:model/nodes" exact
-                               render={(props) => <DataModelNodes {...props} dataModel={dataModel} />} />
-                        <Route path="/admin/model/:model/prefixes" exact
-                               render={(props) => <DataModelPrefixes {...props} dataModel={dataModel} />} />
-                        <Route path="/admin/model/:model/preview" exact
-                               render={(props) => <DataModelPreview {...props} dataModel={dataModel} />} />
+                               render={(props) => <DataModelDetails {...props} dataModel={dataModel} version={currentVersion.value} />} />
+                        <Route path="/admin/model/:model/versions" exact
+                               render={(props) => <DataModelVersions {...props} getDataModel={this.getDataModel} dataModel={dataModel} version={currentVersion.value} />} />
+                        <Route path="/admin/model/:model/:version/modules" exact
+                               render={(props) => <DataModelModules {...props} dataModel={dataModel} version={currentVersion.value}  />} />
+                        <Route path="/admin/model/:model/:version/nodes" exact
+                               render={(props) => <DataModelNodes {...props} dataModel={dataModel} version={currentVersion.value} />} />
+                        <Route path="/admin/model/:model/:version/prefixes" exact
+                               render={(props) => <DataModelPrefixes {...props} dataModel={dataModel} version={currentVersion.value} />} />
+                        <Route path="/admin/model/:model/:version/preview" exact
+                               render={(props) => <DataModelPreview {...props} dataModel={dataModel} version={currentVersion.value} />} />
+
                         <Route component={NotFound} />
                     </Switch>
                 </Col>

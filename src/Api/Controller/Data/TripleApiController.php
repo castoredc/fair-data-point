@@ -21,8 +21,8 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/model/{model}/module/{module}/triple")
- * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "model"}})
+ * @Route("/api/model/{model}/v/{version}/module/{module}/triple")
+ * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "version"}})
  */
 class TripleApiController extends ApiController
 {
@@ -31,7 +31,7 @@ class TripleApiController extends ApiController
      */
     public function getTriples(DataModelModule $module): Response
     {
-        $this->denyAccessUnlessGranted('view', $module->getDataModel());
+        $this->denyAccessUnlessGranted('view', $module->getDataModel()->getDataModel());
 
         return new JsonResponse((new TriplesApiResource($module))->toArray(), 200);
     }
@@ -41,7 +41,7 @@ class TripleApiController extends ApiController
      */
     public function addTriple(DataModelModule $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         try {
             /** @var TripleApiRequest $parsed */
@@ -65,7 +65,7 @@ class TripleApiController extends ApiController
      */
     public function updateTriple(DataModelModule $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         try {
             /** @var TripleApiRequest $parsed */
@@ -92,7 +92,7 @@ class TripleApiController extends ApiController
      */
     public function deleteTriple(DataModelModule $module, Triple $triple, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         try {
             $bus->dispatch(new DeleteTripleCommand($triple));

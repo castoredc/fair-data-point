@@ -58,7 +58,7 @@ export default class DataModelPrefixModal extends Component {
     };
 
     handleSubmit = () => {
-        const { modelId, onSaved } = this.props;
+        const { modelId, versionId, onSaved } = this.props;
         const { data } = this.state;
 
         if (this.form.isFormValid()) {
@@ -67,7 +67,7 @@ export default class DataModelPrefixModal extends Component {
                 isLoading:      true
             });
 
-            axios.post('/api/model/' + modelId + '/prefix' + (data.id ? '/' + data.id : ''), {
+            axios.post('/api/model/' + modelId + '/v/' + versionId + '/prefix' + (data.id ? '/' + data.id : ''), {
                 prefix: data.prefix,
                 uri: data.uri,
             })

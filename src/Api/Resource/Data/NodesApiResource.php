@@ -4,18 +4,18 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 
 class NodesApiResource implements ApiResource
 {
-    /** @var DataModel */
+    /** @var DataModelVersion */
     private $dataModel;
 
     /** @var NodeType */
     private $type;
 
-    public function __construct(DataModel $dataModel, ?NodeType $type = null)
+    public function __construct(DataModelVersion $dataModel, ?NodeType $type = null)
     {
         $this->dataModel = $dataModel;
         $this->type = $type;

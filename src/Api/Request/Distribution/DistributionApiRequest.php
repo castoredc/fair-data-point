@@ -59,6 +59,13 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
 
     /**
      * @var string|null
+     * @Assert\NotBlank(groups = {"rdf"})
+     * @Assert\Type("string")
+     */
+    private $dataModelVersion;
+
+    /**
+     * @var string|null
      * @Assert\Type("string")
      */
     private $apiUser;
@@ -90,6 +97,7 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
         $this->accessRights = (int) $this->getFromData('accessRights');
         $this->includeAllData = $this->getFromData('includeAllData');
         $this->dataModel = $this->getFromData('dataModel');
+        $this->dataModelVersion = $this->getFromData('dataModelVersion');
         $this->apiUser = $this->getFromData('apiUser');
         $this->clientId = $this->getFromData('clientId');
         $this->clientSecret = $this->getFromData('clientSecret');
@@ -124,6 +132,11 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     public function getDataModel(): ?string
     {
         return $this->dataModel;
+    }
+
+    public function getDataModelVersion(): ?string
+    {
+        return $this->dataModelVersion;
     }
 
     public function getApiUser(): ?string

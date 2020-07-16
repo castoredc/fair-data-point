@@ -19,7 +19,7 @@ class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
 
         $metadata = new DatasetMetadata($dataset);
 
-        $newVersion = $this->updateVersionNumber($dataset->getLatestMetadataVersion(), $command->getVersionUpdate());
+        $newVersion = $this->versionNumberHelper->getNewVersion($dataset->getLatestMetadataVersion(), $command->getVersionUpdate());
         $metadata->setVersion($newVersion);
 
         $metadata->setTitle($this->parseLocalizedText($command->getTitle()));

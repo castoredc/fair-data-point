@@ -27,6 +27,9 @@ class UpdateDistributionCommand
     private $dataModel;
 
     /** @var string|null */
+    private $dataModelVersion;
+
+    /** @var string|null */
     private $apiUser;
 
     /** @var SensitiveDataString|null */
@@ -45,6 +48,7 @@ class UpdateDistributionCommand
         int $accessRights,
         ?bool $includeAllData,
         ?string $dataModel,
+        ?string $dataModelVersion,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
@@ -56,6 +60,7 @@ class UpdateDistributionCommand
         $this->accessRights = $accessRights;
         $this->includeAllData = $includeAllData;
         $this->dataModel = $dataModel;
+        $this->dataModelVersion = $dataModelVersion;
         $this->apiUser = $apiUser;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -90,6 +95,11 @@ class UpdateDistributionCommand
     public function getDataModel(): ?string
     {
         return $this->dataModel;
+    }
+
+    public function getDataModelVersion(): ?string
+    {
+        return $this->dataModelVersion;
     }
 
     public function getApiUser(): ?string

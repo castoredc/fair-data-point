@@ -15,13 +15,24 @@ import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
 import {Button} from "@castoredc/matter";
 import FormHeading from "../FormHeading";
+import InlineLoader from "../../LoadingScreen/InlineLoader";
 
 export default class DistributionForm extends Component {
     constructor(props) {
         super(props);
 
+        let data = props.distribution ? mergeData(defaultData, props.distribution) : defaultData;
+
+        if(typeof data.dataModel === 'object' && data.dataModel !== '') {
+            data = {
+                ...data,
+                dataModel: data.dataModel.dataModel,
+                dataModelVersion: data.dataModel.id
+            };
+        }
+
         this.state = {
-            data:           props.distribution ? mergeData(defaultData, props.distribution) : defaultData,
+            data:           data,
             visitedFields:  {},
             validation:     {},
             isSaved:        false,
@@ -29,6 +40,9 @@ export default class DistributionForm extends Component {
             languages:      [],
             licenses:       [],
             dataModels:     [],
+            hasLoadedLanguages: false,
+            hasLoadedLicenses: false,
+            hasLoadedDataModels: false,
             distribution:   props.distribution ? props.distribution : null,
             update:         !!props.distribution,
             showApiUser:    props.distribution ? ! props.distribution.hasApiUser : true
@@ -74,6 +88,7 @@ export default class DistributionForm extends Component {
             .then((response) => {
                 this.setState({
                     languages: response.data,
+                    hasLoadedLanguages: true
                 });
             })
             .catch((error) => {
@@ -86,6 +101,7 @@ export default class DistributionForm extends Component {
             .then((response) => {
                 this.setState({
                     licenses: response.data,
+                    hasLoadedLicenses: true
                 });
             })
             .catch(() => {
@@ -98,8 +114,13 @@ export default class DistributionForm extends Component {
             .then((response) => {
                 this.setState({
                     dataModels: response.data.map((dataModel) => {
-                        return { label: dataModel.title, value: dataModel.id }
+                        const versions = dataModel.versions.map((version) => {
+                            return {value: version.id, label: version.version};
+                        });
+
+                        return { label: dataModel.title, value: dataModel.id, versions: versions }
                     }),
+                    hasLoadedDataModels: true
                 });
             })
             .catch(() => {
@@ -164,7 +185,7 @@ export default class DistributionForm extends Component {
 
     render() {
         const { dataset } = this.props;
-        const { data, validation, licenses, dataModels, isSaved, update, distribution, submitDisabled, showApiUser } = this.state;
+        const { data, validation, licenses, dataModels, isSaved, update, distribution, submitDisabled, showApiUser, hasLoadedLanguages, hasLoadedLicenses, hasLoadedDataModels } = this.state;
 
         const required = "This field is required";
 
@@ -172,6 +193,12 @@ export default class DistributionForm extends Component {
         {
             return <Redirect push to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/metadata'} />;
         }
+
+        if (!hasLoadedLanguages || !hasLoadedLicenses || !hasLoadedDataModels) {
+            return <InlineLoader />;
+        }
+
+        const currentDataModel = dataModels.find(({value}) => value === data.dataModel);
 
         return (
             <ValidatorForm
@@ -199,17 +226,30 @@ export default class DistributionForm extends Component {
                     />
                 </FormItem>}
 
-                {data.type === 'rdf' && <FormItem label="Data model">
-                    <Dropdown
-                        validators={['required']}
-                        errorMessages={[required]}
-                        options={dataModels}
-                        name="dataModel"
-                        onChange={(e) => {this.handleChange({target: { name: 'dataModel', value: e.value }})}}
-                        value={dataModels.filter(({value}) => value === data.dataModel)}
-                        serverError={validation.dataModel}
-                    />
-                </FormItem>}
+                {data.type === 'rdf' && <>
+                    <FormItem label="Data model">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={dataModels}
+                            name="dataModel"
+                            onChange={(e) => {this.handleChange({target: { name: 'dataModel', value: e.value }})}}
+                            value={currentDataModel}
+                            serverError={validation.dataModel}
+                        />
+                    </FormItem>
+                    {distribution && <FormItem label="Data model version">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={currentDataModel.versions}
+                            name="dataModelVersion"
+                            onChange={(e) => {this.handleChange({target: { name: 'dataModelVersion', value: e.value }})}}
+                            value={currentDataModel.versions.filter(({value}) => value === data.dataModelVersion)}
+                            serverError={validation.dataModelVersion}
+                        />
+                    </FormItem>}
+                </>}
 
                 <FormItem label="Slug">
                     <Input
@@ -306,9 +346,9 @@ export default class DistributionForm extends Component {
                     <Col>
                     </Col>
                     <Col>
-                        {distribution ? <Button disabled={submitDisabled}>
+                        {distribution ? <Button disabled={submitDisabled} type="submit">
                             Update distribution
-                        </Button> : <Button disabled={submitDisabled}>
+                        </Button> : <Button disabled={submitDisabled} type="submit">
                             Add distribution
                         </Button>}
                     </Col>
@@ -340,6 +380,7 @@ export const defaultData = {
     accessRights: null,
     includeAllData: null,
     dataModel: '',
+    dataModelVersion: '',
     license: null,
     apiUser: '',
     clientId: '',

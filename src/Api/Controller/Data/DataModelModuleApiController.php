@@ -6,8 +6,8 @@ namespace App\Api\Controller\Data;
 use App\Api\Request\Data\DataModelModuleApiRequest;
 use App\Api\Resource\Data\DataModelModulesApiResource;
 use App\Controller\Api\ApiController;
-use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Message\Data\CreateDataModelModuleCommand;
 use App\Message\Data\DeleteDataModelModuleCommand;
@@ -21,33 +21,33 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/model/{model}/module")
- * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+ * @Route("/api/model/{model}/v/{version}/module")
+ * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
  */
 class DataModelModuleApiController extends ApiController
 {
     /**
      * @Route("", methods={"GET"}, name="api_model_modules")
      */
-    public function getModules(DataModel $dataModel): Response
+    public function getModules(DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('view', $dataModel);
+        $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        return new JsonResponse((new DataModelModulesApiResource($dataModel))->toArray(), 200);
+        return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray(), 200);
     }
 
     /**
      * @Route("", methods={"POST"}, name="api_model_module_add")
      */
-    public function addModule(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function addModule(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         try {
             /** @var DataModelModuleApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
 
-            $bus->dispatch(new CreateDataModelModuleCommand($dataModel, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(new CreateDataModelModuleCommand($dataModelVersion, $parsed->getTitle(), $parsed->getOrder()));
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
@@ -61,11 +61,15 @@ class DataModelModuleApiController extends ApiController
 
     /**
      * @Route("/{module}", methods={"POST"}, name="api_model_module_update")
-     * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "model"}})
+     * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
-    public function updateModule(DataModelModule $module, Request $request, MessageBusInterface $bus): Response
+    public function updateModule(DataModelVersion $dataModelVersion, DataModelModule $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+
+        if ($module->getDataModel() !== $dataModelVersion) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
 
         try {
             /** @var DataModelModuleApiRequest $parsed */
@@ -88,11 +92,15 @@ class DataModelModuleApiController extends ApiController
 
     /**
      * @Route("/{module}", methods={"DELETE"}, name="api_model_module_delete")
-     * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "model"}})
+     * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
-    public function deleteModule(DataModelModule $module, MessageBusInterface $bus): Response
+    public function deleteModule(DataModelVersion $dataModelVersion, DataModelModule $module, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+
+        if ($module->getDataModel() !== $dataModelVersion) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
 
         try {
             $bus->dispatch(new DeleteDataModelModuleCommand($module));

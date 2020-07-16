@@ -143,7 +143,7 @@ export default class DatasetForm extends Component {
                     <Col>
                     </Col>
                     <Col>
-                        <Button disabled={submitDisabled}>
+                        <Button disabled={submitDisabled} type="submit">
                             Update dataset
                         </Button>
                     </Col>

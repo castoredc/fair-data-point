@@ -151,7 +151,7 @@ export default class PersonForm extends Component {
                     icon="info"
                     form
                 >
-                    The details of this publisher can only be edited by {name}.
+                    The details of this person can only be edited by {name}.
                     Please contact {name} or Castor Support to update these details.
                 </Alert>}
 
@@ -160,7 +160,7 @@ export default class PersonForm extends Component {
                     icon="info"
                     form
                 >
-                    The details of this publisher were automatically populated.
+                    The details of this person were automatically populated.
                     Please contact {name} or Castor Support to update these details, if needed.
                 </Alert>}
 

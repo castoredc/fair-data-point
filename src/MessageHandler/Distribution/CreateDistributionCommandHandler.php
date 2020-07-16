@@ -77,6 +77,7 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
             );
 
             $contents->setDataModel($dataModel);
+            $contents->setCurrentDataModelVersion($dataModel->getLatestVersion());
         } elseif ($message->getType()->isCsv()) {
             $contents = new CSVDistribution(
                 $distribution,
