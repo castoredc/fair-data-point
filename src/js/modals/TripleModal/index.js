@@ -219,6 +219,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.subjectType}
                                     name="subjectType"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>
                         </Col>
@@ -233,6 +234,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.subjectValue}
                                     name="subjectValue"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>}
                         </Col>
@@ -270,6 +272,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.objectType}
                                     name="objectType"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>
                         </Col>
@@ -284,6 +287,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.objectValue}
                                     name="objectValue"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>}
                         </Col>

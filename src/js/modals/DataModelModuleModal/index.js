@@ -184,6 +184,7 @@ export default class DataModelModuleModal extends Component {
                         onBlur={this.handleFieldVisit}
                         value={orderOptions.filter(({value}) => value === data.order)}
                         serverError={validation.order}
+                        menuPosition="fixed"
                     />
                 </FormItem>
 

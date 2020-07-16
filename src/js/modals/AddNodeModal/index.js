@@ -222,6 +222,7 @@ export default class AddNodeModal extends Component {
                         value={dataTypes.find((dataType) => {return data.dataType === dataType.value})}
                         serverError={validation.dataType}
                         name="dataType"
+                        menuPosition="fixed"
                     />
                 </FormItem>}
             </ValidatorForm>

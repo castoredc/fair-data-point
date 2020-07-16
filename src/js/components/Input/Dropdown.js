@@ -47,6 +47,7 @@ class Dropdown extends ValidatorComponent {
                   async = false,
                   onChange,
                   isMulti = false,
+                  menuPosition,
               } = this.props;
         const { cachedOptions, isValid } = this.state;
 
@@ -99,7 +100,7 @@ class Dropdown extends ValidatorComponent {
                 closeMenuOnSelect={false}
                 hideSelectedOptions={false}
                 isClearable={false}
-                // menuPosition="fixed"
+                menuPosition={menuPosition}
                 menuPlacement="auto"
                 components={{
                     Option: CustomOption,
@@ -115,7 +116,7 @@ class Dropdown extends ValidatorComponent {
                 placeholder={placeholder}
                 isDisabled={isDisabled}
                 width={width}
-                // menuPosition="fixed"
+                menuPosition={menuPosition}
                 menuPlacement="auto"
             />;
         }
