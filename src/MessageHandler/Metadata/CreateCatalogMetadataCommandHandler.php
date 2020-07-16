@@ -20,7 +20,7 @@ class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
 
         $metadata = new CatalogMetadata($catalog);
 
-        $newVersion = $this->updateVersionNumber($catalog->getLatestMetadataVersion(), $command->getVersionUpdate());
+        $newVersion = $this->versionNumberHelper->getNewVersion($catalog->getLatestMetadataVersion(), $command->getVersionUpdate());
         $metadata->setVersion($newVersion);
 
         $metadata->setTitle($this->parseLocalizedText($command->getTitle()));

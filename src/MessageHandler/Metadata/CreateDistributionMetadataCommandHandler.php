@@ -19,7 +19,7 @@ class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHand
 
         $metadata = new DistributionMetadata($distribution);
 
-        $newVersion = $this->updateVersionNumber($distribution->getLatestMetadataVersion(), $command->getVersionUpdate());
+        $newVersion = $this->versionNumberHelper->getNewVersion($distribution->getLatestMetadataVersion(), $command->getVersionUpdate());
         $metadata->setVersion($newVersion);
 
         $metadata->setTitle($this->parseLocalizedText($command->getTitle()));
