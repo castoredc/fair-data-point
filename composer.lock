@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85a8d76368ffc6b7f8169e319e9c65c3",
+    "content-hash": "67fdf36f58327b48f5cd768a668539fa",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -115,17 +115,17 @@
         },
         {
             "name": "ciwit/bioportal-browser",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:castoredc/bioportal-browser.git",
-                "reference": "289e6cf100010c30c974159068f7d9c59b62ae0a"
+                "reference": "76e5e0e03c3d3021b774d94d6bd2d5c1c6d11f9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.ciwit.nl/dist/ciwit-bioportal-browser-289e6cf100010c30c974159068f7d9c59b62ae0a-zip-caece4.zip",
-                "reference": "289e6cf100010c30c974159068f7d9c59b62ae0a",
-                "shasum": "9ff67778a5edc45edc7401a3def6f7f48c57f297"
+                "url": "https://packages.ciwit.nl/dist/ciwit-bioportal-browser-76e5e0e03c3d3021b774d94d6bd2d5c1c6d11f9f-zip-02dfb3.zip",
+                "reference": "76e5e0e03c3d3021b774d94d6bd2d5c1c6d11f9f",
+                "shasum": "4234552d4b3041a2d744cac4594c0abd1e4727b9"
             },
             "require": {
                 "ext-json": "*",
@@ -159,9 +159,9 @@
             ],
             "description": "PHP Client for the Bioportal API",
             "support": {
-                "source": "https://github.com/castoredc/bioportal-browser/tree/master"
+                "source": "https://github.com/castoredc/bioportal-browser/tree/1.1.1"
             },
-            "time": "2020-07-14T13:34:17+00:00"
+            "time": "2020-07-15T06:44:28+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -2161,6 +2161,54 @@
                 "psr-3"
             ],
             "time": "2020-05-22T08:12:19+00:00"
+        },
+        {
+            "name": "myclabs/deep-copy",
+            "version": "1.10.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/DeepCopy.git",
+                "reference": "969b211f9a51aa1f6c01d1d2aef56d3bd91598e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/969b211f9a51aa1f6c01d1d2aef56d3bd91598e5",
+                "reference": "969b211f9a51aa1f6c01d1d2aef56d3bd91598e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "replace": {
+                "myclabs/deep-copy": "self.version"
+            },
+            "require-dev": {
+                "doctrine/collections": "^1.0",
+                "doctrine/common": "^2.6",
+                "phpunit/phpunit": "^7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                },
+                "files": [
+                    "src/DeepCopy/deep_copy.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Create deep copies (clones) of your objects",
+            "keywords": [
+                "clone",
+                "copy",
+                "duplicate",
+                "object",
+                "object graph"
+            ],
+            "time": "2020-06-29T13:22:24+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -7003,54 +7051,6 @@
                 "style"
             ],
             "time": "2019-03-15T12:45:47+00:00"
-        },
-        {
-            "name": "myclabs/deep-copy",
-            "version": "1.9.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "b2c28789e80a97badd14145fda39b545d83ca3ef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/b2c28789e80a97badd14145fda39b545d83ca3ef",
-                "reference": "b2c28789e80a97badd14145fda39b545d83ca3ef",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1"
-            },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
-            },
-            "require-dev": {
-                "doctrine/collections": "^1.0",
-                "doctrine/common": "^2.6",
-                "phpunit/phpunit": "^7.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
-                "files": [
-                    "src/DeepCopy/deep_copy.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Create deep copies (clones) of your objects",
-            "keywords": [
-                "clone",
-                "copy",
-                "duplicate",
-                "object",
-                "object graph"
-            ],
-            "time": "2020-01-17T21:11:47+00:00"
         },
         {
             "name": "phar-io/manifest",
