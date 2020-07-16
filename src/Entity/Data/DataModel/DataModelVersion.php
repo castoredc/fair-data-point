@@ -236,4 +236,12 @@ class DataModelVersion
     {
         $this->version = $version;
     }
+
+    /**
+     * @return Collection<RDFDistribution>
+     */
+    public function getDistributions(): Collection
+    {
+        return $this->distributions;
+    }
 }
