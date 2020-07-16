@@ -138,12 +138,12 @@ export default class TripleModal extends Component {
     };
 
     handleSubmit = () => {
-        const {modelId, versionId, moduleId, onSaved} = this.props;
+        const {modelId, versionId, module, onSaved} = this.props;
         const {data} = this.state;
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
-            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module/' + moduleId + '/triple' + (data.id ? '/' + data.id : ''), data)
+            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (data.id ? '/' + data.id : ''), data)
                 .then((response) => {
                     this.setState({
                         isLoading: false,
@@ -170,12 +170,12 @@ export default class TripleModal extends Component {
         const {nodes} = this.props;
 
         return nodes[type].map((node) => {
-            return { value: node.id, label: node.title };
+            return { value: node.id, label: node.title, repeated: (type === 'value' ? node.value.repeated : undefined) };
         });
     };
 
     render() {
-        const { show, handleClose } = this.props;
+        const { show, handleClose, module } = this.props;
         const { data, validation, isLoading } = this.state;
 
         const required = "This field is required";
@@ -184,7 +184,15 @@ export default class TripleModal extends Component {
         const subjectSelectable = (data.subjectType === 'internal' || data.subjectType === 'external');
         const subjectOptions = subjectSelectable ? this.getOptions(data.subjectType) : [];
         const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value');
-        const objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
+        let objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
+
+        if(data.objectType === 'value' && module.repeated) {
+            objectOptions = objectOptions.filter((option) => {
+                console.log(option);
+                console.log(option.repeated);
+                return option.repeated;
+            })
+        }
 
         return <Modal
             show={show}

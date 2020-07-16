@@ -31,7 +31,7 @@ export default class DataModelModules extends Component {
             isLoadingPrefixes:    true,
             hasLoadedPrefixes:    false,
             prefixes:             [],
-            currentModuleId:      null
+            currentModule:      null
         };
     }
 
@@ -120,7 +120,7 @@ export default class DataModelModules extends Component {
     };
     
     getOrderOptions = () => {
-        const { modules, currentModuleId } = this.state;
+        const { modules, currentModule } = this.state;
 
         let order = [{value: 1, label: 'At the beginning of the data model'}];
 
@@ -131,7 +131,7 @@ export default class DataModelModules extends Component {
         for (let i = 0; i < modules.length; i++) {
             const item = modules[i];
 
-            if(item.id !== currentModuleId) {
+            if(currentModule && item.id !== currentModule.id) {
                 const moduleNumber = (i + 1);
                 order.push({
                     value: (moduleNumber + 1),
@@ -167,25 +167,25 @@ export default class DataModelModules extends Component {
 
     openModuleModal = (moduleData) => {
         this.setState({
-            currentModuleId: moduleData ? moduleData.id : null,
+            currentModule: moduleData ? moduleData : null,
             moduleModalData: moduleData
         }, () => {
             this.openModal('module');
         });
     };
 
-    openTripleModal = (moduleId, tripleData) => {
+    openTripleModal = (module, tripleData) => {
         this.setState({
-            currentModuleId: moduleId,
+            currentModule: module,
             tripleModalData: tripleData
         }, () => {
             this.openModal('triple')
         });
     };
 
-    openRemoveTripleModal = (moduleId, tripleData) => {
+    openRemoveTripleModal = (module, tripleData) => {
         this.setState({
-            currentModuleId: moduleId,
+            currentModule: module,
             tripleModalData: tripleData
         }, () => {
             this.openModal('removeTriple')
@@ -204,9 +204,9 @@ export default class DataModelModules extends Component {
 
     removeTriple = () => {
         const { dataModel, version } = this.props;
-        const { currentModuleId, tripleModalData } = this.state;
+        const { currentModule, tripleModalData } = this.state;
 
-        axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/module/' + currentModuleId + '/triple/' + tripleModalData.id )
+        axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/module/' + currentModule.id + '/triple/' + tripleModalData.id )
             .then(() => {
                 this.closeModal('removeTriple');
                 this.getModules();
@@ -220,7 +220,7 @@ export default class DataModelModules extends Component {
 
     render() {
         const { dataModel, version } = this.props;
-        const { showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModuleId, moduleModalData, tripleModalData } = this.state;
+        const { showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModule, moduleModalData, tripleModalData } = this.state;
 
         if (!hasLoadedModules || !hasLoadedNodes || !hasLoadedPrefixes) {
             return <InlineLoader />;
@@ -245,7 +245,7 @@ export default class DataModelModules extends Component {
                 onSaved={this.onTripleSaved}
                 modelId={dataModel.id}
                 versionId={version}
-                moduleId={currentModuleId}
+                module={currentModule}
                 nodes={nodes}
                 data={tripleModalData}
                 prefixes={prefixes}
@@ -283,8 +283,8 @@ export default class DataModelModules extends Component {
                             modelId={dataModel.id}
                             versionId={version}
                             openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order, repeated: element.repeated})}
-                            openTripleModal={(tripleData) => this.openTripleModal(element.id, tripleData)}
-                            openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element.id, tripleData)}
+                            openTripleModal={(tripleData) => this.openTripleModal(element, tripleData)}
+                            openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element, tripleData)}
                         />;
                     })}
                 </Col>
