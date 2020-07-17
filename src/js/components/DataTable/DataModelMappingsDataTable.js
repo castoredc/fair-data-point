@@ -32,9 +32,9 @@ export default class DataModelMappingsDataTable extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { lastHandledMapping } = this.props;
+        const { lastHandledMapping, versionId } = this.props;
 
-        if(lastHandledMapping !== prevProps.lastHandledMapping) {
+        if(versionId !== prevProps.versionId || lastHandledMapping !== prevProps.lastHandledMapping) {
             this.getMappings();
         }
     }
@@ -129,6 +129,9 @@ export default class DataModelMappingsDataTable extends Component {
                                 item.node.title,
                                 ValueType[item.node.value.value],
                                 DataType[item.node.value.dataType],
+                                item.node.repeated ? {
+                                    type: 'tickSmall'
+                                } : undefined,
                                 item.element ? item.element.label : ''
                             ];
                         })}
@@ -147,6 +150,11 @@ export default class DataModelMappingsDataTable extends Component {
                                 header:    'Data type',
                                 resizable: true,
                                 template:  'text',
+                            },
+                            repeated: {
+                                header:    'Repeated',
+                                resizable: true,
+                                template:  'icon',
                             },
                             mappedElement: {
                                 header:    'Mapped field',

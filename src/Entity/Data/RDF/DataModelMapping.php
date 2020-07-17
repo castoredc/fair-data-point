@@ -13,13 +13,24 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="distribution_rdf_mappings")
  * @ORM\HasLifecycleCallbacks
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"node" = "DataModelNodeMapping", "module" = "DataModelModuleMapping"})
  */
-class DataModelMapping
+abstract class DataModelMapping
 {
     use CreatedAndUpdated;
 
     /**
      * @ORM\Id
+     * @ORM\Column(type="guid", length=190)
+     * @ORM\GeneratedValue(strategy="UUID")
+     *
+     * @var string
+     */
+    private $id;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="mappings",cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
      *
@@ -28,16 +39,6 @@ class DataModelMapping
     private $distribution;
 
     /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node")
-     * @ORM\JoinColumn(name="node", referencedColumnName="id", nullable=false)
-     *
-     * @var Node
-     */
-    private $node;
-
-    /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity")
      * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
      *
@@ -46,7 +47,6 @@ class DataModelMapping
     private $entity;
 
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion")
      * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id")
      *
@@ -54,12 +54,16 @@ class DataModelMapping
      */
     private $dataModelVersion;
 
-    public function __construct(RDFDistribution $distribution, Node $node, CastorEntity $entity, DataModelVersion $dataModelVersion)
+    public function __construct(RDFDistribution $distribution, CastorEntity $entity, DataModelVersion $dataModelVersion)
     {
         $this->distribution = $distribution;
-        $this->node = $node;
         $this->entity = $entity;
         $this->dataModelVersion = $dataModelVersion;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getDistribution(): RDFDistribution
@@ -70,16 +74,6 @@ class DataModelMapping
     public function setDistribution(RDFDistribution $distribution): void
     {
         $this->distribution = $distribution;
-    }
-
-    public function getNode(): Node
-    {
-        return $this->node;
-    }
-
-    public function setNode(Node $node): void
-    {
-        $this->node = $node;
     }
 
     public function getEntity(): CastorEntity

@@ -6,7 +6,9 @@ namespace App\MessageHandler\Distribution;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\RDF\DataModelMapping;
+use App\Entity\Data\RDF\DataModelNodeMapping;
 use App\Entity\Enum\CastorEntityType;
+use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
@@ -61,11 +63,15 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
 
         $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
 
+        if($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
+            throw new InvalidEntityType();
+        }
+
         if ($contents->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
             $mapping = $contents->getMappingByNodeAndVersion($node, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelMapping($contents, $node, $element, $dataModelVersion);
+            $mapping = new DataModelNodeMapping($contents, $node, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

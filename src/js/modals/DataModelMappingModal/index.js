@@ -81,6 +81,21 @@ export default class DataModelMappingModal extends Component {
         const { show, handleClose, studyId, mapping } = this.props;
         const { structure, hasLoadedStructure, isLoading } = this.state;
 
+        let valueDescription = '';
+        let fieldDescription = <span>fields</span>;
+
+        if(mapping) {
+            if (mapping.node.value.value === 'plain') {
+                valueDescription = 'a plain ' + mapping.node.value.dataType + ' value';
+            } else if (mapping.node.value.value === 'annotated') {
+                valueDescription = 'an annotated value';
+            }
+
+            if (mapping.node.repeated) {
+                fieldDescription = <span><b>repeated</b> fields</span>;
+            }
+        }
+
         return <Modal
             show={show}
             handleClose={handleClose}
@@ -92,8 +107,7 @@ export default class DataModelMappingModal extends Component {
             {mapping && <Alert
                 variant="info"
                 icon="info">
-                {mapping.node.value.value === 'plain' && <span>Only fields that are supporting <b>a plain {mapping.node.value.dataType} value</b> can be selected.</span>}
-                {mapping.node.value.value === 'annotated' && <span>Only fields that are supporting <b>an annotated value</b> can be selected.</span>}
+                <span>Only {fieldDescription} that are supporting <b>{valueDescription}</b> can be selected.</span>
             </Alert>}
             {hasLoadedStructure && <RDFStudyStructure
                 studyId={studyId}

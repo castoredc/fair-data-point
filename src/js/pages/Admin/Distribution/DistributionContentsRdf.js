@@ -33,13 +33,13 @@ export default class DistributionContentsRdf extends Component {
             isLoadingDataModel: true,
         });
 
-        axios.get('/api/model/' + distribution.dataModel )
+        axios.get('/api/model/' + distribution.dataModel.dataModel )
             .then((response) => {
                 this.setState({
                     dataModel:          response.data,
                     isLoadingDataModel: false,
                     hasLoadedDataModel: true,
-                    currentVersion:     response.data.versions.slice(-1)[0].id
+                    currentVersion:     distribution.dataModel.id
                 });
             })
             .catch((error) => {

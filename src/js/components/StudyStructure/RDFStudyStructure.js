@@ -25,14 +25,14 @@ export default class RDFStudyStructure extends Component {
         const { studyId, structure, mapping, onSelect } = this.props;
 
         return <Container>
-            <Tab.Container id="csv-study-structure" defaultActiveKey="study">
+            <Tab.Container id="csv-study-structure" defaultActiveKey={mapping.node.repeated ? 'report' : 'study'}>
                 <Row className="TabTabs StudyStructureTabs">
                     <Col sm={3} />
                     <Col sm={9}>
                         <Nav variant="tabs">
-                            <Nav.Item>
+                            {! mapping.node.repeated && <Nav.Item>
                                 <Nav.Link eventKey="study" disabled={structure.study.length === 0}>Study</Nav.Link>
-                            </Nav.Item>
+                            </Nav.Item> }
                             <Nav.Item>
                                 <Nav.Link eventKey="report" disabled={structure.report.length === 0}>Reports</Nav.Link>
                             </Nav.Item>
@@ -45,14 +45,14 @@ export default class RDFStudyStructure extends Component {
                 <Row className="StudyStructureContents">
                     <Col sm={12}>
                         <Tab.Content>
-                            <Tab.Pane eventKey="study">
+                            {! mapping.node.repeated && <Tab.Pane eventKey="study">
                                 {structure.study.length > 0 && <StudyStructure
                                     onSelect={onSelect} selection={[]}
                                     studyId={studyId} contents={structure.study}
                                     dataFormat={mapping.node.value.value}
                                     dataType={mapping.node.value.dataType}
                                 />}
-                            </Tab.Pane>
+                            </Tab.Pane>}
                             <Tab.Pane eventKey="report">
                                 {structure.report.length > 0 && <StudyStructure
                                     onSelect={onSelect} selection={[]}
