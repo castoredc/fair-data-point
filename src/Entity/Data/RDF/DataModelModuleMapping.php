@@ -17,7 +17,7 @@ class DataModelModuleMapping extends DataModelMapping
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelModule")
      * @ORM\JoinColumn(name="module", referencedColumnName="id")
      *
-     * @var DataModelModule
+     * @var DataModelModule|null
      */
     private $module;
 
@@ -28,7 +28,7 @@ class DataModelModuleMapping extends DataModelMapping
         $this->module = $module;
     }
 
-    public function getModule(): DataModelModule
+    public function getModule(): ?DataModelModule
     {
         return $this->module;
     }

@@ -89,9 +89,8 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     {
         $return = new ArrayCollection();
 
-        foreach($this->mappings as $mapping)
-        {
-            if(! $mapping instanceof DataModelNodeMapping) {
+        foreach ($this->mappings as $mapping) {
+            if (! $mapping instanceof DataModelNodeMapping) {
                 continue;
             }
 
@@ -108,9 +107,8 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     {
         $return = new ArrayCollection();
 
-        foreach($this->mappings as $mapping)
-        {
-            if(! $mapping instanceof DataModelModuleMapping) {
+        foreach ($this->mappings as $mapping) {
+            if (! $mapping instanceof DataModelModuleMapping) {
                 continue;
             }
 

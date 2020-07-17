@@ -40,7 +40,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 
         $results = [];
 
-        if($command->getType()->isNode()) {
+        if ($command->getType()->isNode()) {
             /** @var NodeRepository $repository */
             $repository = $this->em->getRepository(Node::class);
 
@@ -52,7 +52,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 
                 $results[] = $mapping ?? $valueNode;
             }
-        } elseif($command->getType()->isModule()) {
+        } elseif ($command->getType()->isModule()) {
             $repeatedModules = $command->getDataModelVersion()->getRepeatedModules();
 
             foreach ($repeatedModules as $repeatedModule) {

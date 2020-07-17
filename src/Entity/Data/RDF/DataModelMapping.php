@@ -5,7 +5,6 @@ namespace App\Entity\Data\RDF;
 
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Node\Node;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -48,7 +47,7 @@ abstract class DataModelMapping
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion")
-     * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id")
+     * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
      *
      * @var DataModelVersion
      */

@@ -152,10 +152,9 @@ class DataModelVersion
     {
         $return = new ArrayCollection();
 
-        foreach($this->modules as $module)
-        {
+        foreach ($this->modules as $module) {
             /** @var DataModelModule $module */
-            if(! $module->isRepeated()) {
+            if (! $module->isRepeated()) {
                 continue;
             }
 

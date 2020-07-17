@@ -7,8 +7,12 @@ use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\DataModelMappingType;
 use App\Entity\Enum\StructureType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
-class DataModelMappingApiRequest extends SingleApiRequest
+/**
+ * @Assert\GroupSequenceProvider()
+ */
+class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
      * @var string

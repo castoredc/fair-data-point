@@ -63,7 +63,7 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
 
         $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
 
-        if($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
+        if ($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
             throw new InvalidEntityType();
         }
 

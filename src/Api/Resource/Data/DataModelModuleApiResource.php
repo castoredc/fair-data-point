@@ -5,6 +5,7 @@ namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelModule;
+use function sprintf;
 
 class DataModelModuleApiResource implements ApiResource
 {

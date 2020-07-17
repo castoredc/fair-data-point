@@ -5,17 +5,13 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\RDF\DataModelMapping;
 use App\Entity\Data\RDF\DataModelModuleMapping;
-use App\Entity\Data\RDF\DataModelNodeMapping;
 use App\Entity\Enum\CastorEntityType;
-use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Message\Distribution\CreateDataModelModuleMappingCommand;
-use App\Message\Distribution\CreateDataModelNodeMappingCommand;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

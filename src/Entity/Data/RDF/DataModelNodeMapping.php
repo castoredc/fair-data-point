@@ -17,7 +17,7 @@ class DataModelNodeMapping extends DataModelMapping
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node")
      * @ORM\JoinColumn(name="node", referencedColumnName="id")
      *
-     * @var Node
+     * @var Node|null
      */
     private $node;
 
@@ -28,7 +28,7 @@ class DataModelNodeMapping extends DataModelMapping
         $this->node = $node;
     }
 
-    public function getNode(): Node
+    public function getNode(): ?Node
     {
         return $this->node;
     }

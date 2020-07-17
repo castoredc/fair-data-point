@@ -93,11 +93,11 @@ class RdfDistributionApiController extends ApiController
             /** @var DataModelMappingApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelMappingApiRequest::class, $request);
 
-            if($type->isNode()) {
+            if ($type->isNode()) {
                 $envelope = $bus->dispatch(
                     new CreateDataModelNodeMappingCommand($contents, $parsed->getNode(), $parsed->getElement(), $dataModelVersion)
                 );
-            } elseif($type->isModule()) {
+            } elseif ($type->isModule()) {
                 $envelope = $bus->dispatch(
                     new CreateDataModelModuleMappingCommand($contents, $parsed->getModule(), $parsed->getElement(), $parsed->getStructureType(), $dataModelVersion)
                 );
