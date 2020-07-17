@@ -131,7 +131,7 @@ export default class DataModelModules extends Component {
         for (let i = 0; i < modules.length; i++) {
             const item = modules[i];
 
-            if(currentModule && item.id !== currentModule.id) {
+            if(currentModule === null || (currentModule && item.id !== currentModule.id)) {
                 const moduleNumber = (i + 1);
                 order.push({
                     value: (moduleNumber + 1),

@@ -124,3 +124,7 @@ export const mergeData = (defaultData, newData) => {
         { ...a, [key]: (key in newData ? newData[key] : defaultData[key])}
         ), {});
 };
+
+export const ucfirst = (text) => {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+};

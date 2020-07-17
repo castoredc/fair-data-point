@@ -6,7 +6,6 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Col, Row} from "react-bootstrap";
 import {Button, DataTable, Tabs} from "@castoredc/matter";
 import AddNodeModal from "../../../modals/AddNodeModal";
-import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 
 export default class DataModelNodes extends Component {
     constructor(props) {

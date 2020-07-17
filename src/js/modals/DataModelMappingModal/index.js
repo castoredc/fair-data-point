@@ -6,6 +6,10 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Alert from "../../components/Alert";
+import RadioGroup from "../../components/Input/RadioGroup";
+import FormItem from "../../components/Form/FormItem";
+import StructureTypes from "../../components/StudyStructure/StructureTypes";
+import {Button} from "@castoredc/matter";
 
 export default class DataModelMappingModal extends Component {
     constructor(props) {
@@ -49,17 +53,19 @@ export default class DataModelMappingModal extends Component {
             });
     };
 
-    handleSelect = (event, data, selected) => {
-        const { mapping, dataset, distribution, onSave, versionId } = this.props;
+    handleSelect = (data) => {
+        const { mapping, dataset, distribution, onSave, versionId, type } = this.props;
 
         this.setState({
             isLoading: true
         });
 
-        axios.post('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId, {
-            node: mapping.node.id,
-            element: data.id
-        })
+        const newData = {
+            ...data,
+            type: type,
+        };
+
+        axios.post('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId + '/' + type, newData)
             .then((response) => {
                 this.setState({
                     isLoading: false
@@ -72,49 +78,72 @@ export default class DataModelMappingModal extends Component {
                     isLoading: false
                 });
 
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the mappings';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while saving the mapping';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     render() {
-        const { show, handleClose, studyId, mapping } = this.props;
-        const { structure, hasLoadedStructure, isLoading } = this.state;
+        const {show, handleClose, studyId, mapping, type} = this.props;
+        const {structure, hasLoadedStructure, isLoading} = this.state;
 
-        let valueDescription = '';
-        let fieldDescription = <span>fields</span>;
+        if (type === 'node') {
+            let valueDescription = '';
+            let fieldDescription = <span>fields</span>;
 
-        if(mapping) {
-            if (mapping.node.value.value === 'plain') {
-                valueDescription = 'a plain ' + mapping.node.value.dataType + ' value';
-            } else if (mapping.node.value.value === 'annotated') {
-                valueDescription = 'an annotated value';
+            if (mapping) {
+                if (mapping.node.value.value === 'plain') {
+                    valueDescription = 'a plain ' + mapping.node.value.dataType + ' value';
+                } else if (mapping.node.value.value === 'annotated') {
+                    valueDescription = 'an annotated value';
+                }
+
+                if (mapping.node.repeated) {
+                    fieldDescription = <span><b>repeated</b> fields</span>;
+                }
             }
 
-            if (mapping.node.repeated) {
-                fieldDescription = <span><b>repeated</b> fields</span>;
-            }
+            return <Modal
+                show={show}
+                handleClose={handleClose}
+                className="DataModelMappingModal"
+                title={mapping ? (mapping.element ? `Edit mapping for ${mapping.node.title}` : `Add mapping for ${mapping.node.title}`) : 'Add mapping'}
+                closeButton
+                isLoading={isLoading}
+            >
+                {mapping && <Alert
+                    variant="info"
+                    icon="info">
+                    <span>Only {fieldDescription} that are supporting <b>{valueDescription}</b> can be selected.</span>
+                </Alert>}
+                {hasLoadedStructure && <RDFStudyStructure
+                    studyId={studyId}
+                    mapping={mapping}
+                    structure={structure}
+                    onSelect={this.handleSelect}
+                />}
+            </Modal>
         }
 
-        return <Modal
-            show={show}
-            handleClose={handleClose}
-            className="DataModelMappingModal"
-            title={mapping ? (mapping.element ? `Edit mapping for ${mapping.node.title}` : `Add mapping for ${mapping.node.title}`) : 'Add mapping'}
-            closeButton
-            isLoading={isLoading}
-        >
-            {mapping && <Alert
-                variant="info"
-                icon="info">
-                <span>Only {fieldDescription} that are supporting <b>{valueDescription}</b> can be selected.</span>
-            </Alert>}
-            {hasLoadedStructure && <RDFStudyStructure
-                studyId={studyId}
-                mapping={mapping}
-                structure={structure}
-                onSelect={this.handleSelect}
-            />}
-        </Modal>
+        else if (type === 'module') {
+            return <Modal
+                show={show}
+                handleClose={handleClose}
+                className="DataModelModuleMappingModal"
+                title={mapping ? (mapping.element ? `Edit mapping for ${mapping.module.displayName}` : `Add mapping for ${mapping.module.displayName}`) : 'Add mapping'}
+                closeButton
+                isLoading={isLoading}
+            >
+                {hasLoadedStructure && <StructureTypes
+                    mapping={mapping}
+                    structure={structure}
+                    onSelect={this.handleSelect}
+                />}
+            </Modal>
+        }
+
+        else {
+            return null;
+        }
     }
 }

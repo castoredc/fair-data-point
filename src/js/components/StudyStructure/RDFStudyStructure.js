@@ -1,16 +1,10 @@
 import React, {Component} from 'react'
-import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "../ToastContent";
 import Tab from "react-bootstrap/Tab";
 import StudyStructure from "./StudyStructure";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import {Redirect} from "react-router-dom";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 
 export default class RDFStudyStructure extends Component {
     constructor(props) {
@@ -20,6 +14,15 @@ export default class RDFStudyStructure extends Component {
             isSaved:              false
         };
     }
+
+    handleSelect = (event, data, selected) => {
+        const { mapping, onSelect } = this.props;
+
+        onSelect({
+            node: mapping.node.id,
+            element: data.id
+        });
+    };
 
     render() {
         const { studyId, structure, mapping, onSelect } = this.props;
@@ -47,7 +50,7 @@ export default class RDFStudyStructure extends Component {
                         <Tab.Content>
                             {! mapping.node.repeated && <Tab.Pane eventKey="study">
                                 {structure.study.length > 0 && <StudyStructure
-                                    onSelect={onSelect} selection={[]}
+                                    onSelect={this.handleSelect} selection={[]}
                                     studyId={studyId} contents={structure.study}
                                     dataFormat={mapping.node.value.value}
                                     dataType={mapping.node.value.dataType}
@@ -55,7 +58,7 @@ export default class RDFStudyStructure extends Component {
                             </Tab.Pane>}
                             <Tab.Pane eventKey="report">
                                 {structure.report.length > 0 && <StudyStructure
-                                    onSelect={onSelect} selection={[]}
+                                    onSelect={this.handleSelect} selection={[]}
                                     studyId={studyId} contents={structure.report}
                                     dataFormat={mapping.node.value.value}
                                     dataType={mapping.node.value.dataType}
@@ -63,7 +66,7 @@ export default class RDFStudyStructure extends Component {
                             </Tab.Pane>
                             <Tab.Pane eventKey="survey">
                                 {structure.survey.length > 0 && <StudyStructure
-                                    onSelect={onSelect} selection={[]}
+                                    onSelect={this.handleSelect} selection={[]}
                                     studyId={studyId} contents={structure.survey}
                                     dataFormat={mapping.node.value.value}
                                     dataType={mapping.node.value.dataType}
