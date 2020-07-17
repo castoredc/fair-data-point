@@ -121,6 +121,8 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         }
 
         // Add modules
+        $modules = new ArrayCollection();
+
         foreach ($latestVersion->getModules() as $module) {
             /** @var DataModelModule $module */
             $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $module->isRepeated(), $newVersion);
@@ -137,8 +139,10 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
                 $newModule->addTriple($newTriple);
             }
 
-            $newVersion->addModule($newModule);
+            $modules->add($newModule);
         }
+
+        $newVersion->setModules($modules);
 
         return $newVersion;
     }

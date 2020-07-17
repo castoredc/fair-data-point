@@ -145,6 +145,14 @@ class DataModelVersion
         return $this->modules;
     }
 
+    /**
+     * @param Collection<DataModelModule> $modules
+     */
+    public function setModules(Collection $modules): void
+    {
+        $this->modules = $modules;
+    }
+
     public function addModule(DataModelModule $module): void
     {
         $newModuleOrder = $module->getOrder();
