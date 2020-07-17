@@ -25,7 +25,7 @@ class InternalIriNode extends Node
      *
      * @var bool
      */
-    private $isRepeated;
+    private $isRepeated = false;
 
     public function getSlug(): string
     {

@@ -60,7 +60,7 @@ class DataModelModule
      *
      * @var bool
      */
-    private $isRepeated;
+    private $isRepeated = false;
 
     public function __construct(string $title, int $order, bool $isRepeated, DataModelVersion $dataModel)
     {

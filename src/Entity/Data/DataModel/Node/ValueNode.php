@@ -33,7 +33,7 @@ class ValueNode extends Node
      *
      * @var bool
      */
-    private $isRepeated;
+    private $isRepeated = false;
 
     public function isAnnotatedValue(): bool
     {
