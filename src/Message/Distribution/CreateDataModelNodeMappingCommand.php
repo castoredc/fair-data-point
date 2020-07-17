@@ -5,8 +5,9 @@ namespace App\Message\Distribution;
 
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Enum\DataModelMappingType;
 
-class CreateDataModelMappingCommand
+class CreateDataModelNodeMappingCommand
 {
     /** @var RDFDistribution */
     private $distribution;

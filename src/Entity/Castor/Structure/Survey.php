@@ -6,7 +6,11 @@ namespace App\Entity\Castor\Structure;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Structure\Step\SurveyStep;
 use App\Entity\Enum\StructureType;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ */
 class Survey extends StructureElement
 {
     /** @var string|null */

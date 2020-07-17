@@ -146,6 +146,26 @@ class DataModelVersion
     }
 
     /**
+     * @return Collection<DataModelModule>
+     */
+    public function getRepeatedModules(): Collection
+    {
+        $return = new ArrayCollection();
+
+        foreach($this->modules as $module)
+        {
+            /** @var DataModelModule $module */
+            if(! $module->isRepeated()) {
+                continue;
+            }
+
+            $return->add($module);
+        }
+
+        return $return;
+    }
+
+    /**
      * @param Collection<DataModelModule> $modules
      */
     public function setModules(Collection $modules): void

@@ -24,6 +24,7 @@ class DataModelModuleApiResource implements ApiResource
         return [
             'id' => $this->module->getId(),
             'title' => $this->module->getTitle(),
+            'displayName' => sprintf('Module %d. %s', $this->module->getOrder(), $this->module->getTitle()),
             'order' => $this->module->getOrder(),
             'repeated' => $this->module->isRepeated(),
             'groupedTriples' => (new GroupedTriplesApiResource($this->module))->toArray(),

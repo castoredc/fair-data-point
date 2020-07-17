@@ -5,9 +5,13 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Castor\CastorEntityApiResource;
+use App\Api\Resource\Data\DataModelModuleApiResource;
 use App\Api\Resource\Data\NodeApiResource;
+use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\RDF\DataModelMapping;
+use App\Entity\Data\RDF\DataModelModuleMapping;
+use App\Entity\Data\RDF\DataModelNodeMapping;
 
 class DataModelMappingApiResource implements ApiResource
 {
@@ -24,19 +28,30 @@ class DataModelMappingApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        if ($this->element instanceof DataModelMapping) {
-            $node = $this->element->getNode();
-            $element = $this->element->getEntity();
-        } elseif ($this->element instanceof ValueNode) {
-            $node = $this->element;
-            $element = null;
-        } else {
-            return [];
+        $return = [];
+
+        if ($this->element instanceof DataModelNodeMapping || $this->element instanceof ValueNode) {
+            $return['type'] = 'node';
+
+            if ($this->element instanceof DataModelNodeMapping) {
+                $return['node'] = (new NodeApiResource($this->element->getNode()))->toArray();
+                $return['element'] = (new CastorEntityApiResource($this->element->getEntity()))->toArray();
+            } elseif ($this->element instanceof ValueNode) {
+                $return['node'] = (new NodeApiResource($this->element))->toArray();
+                $return['element'] = null;
+            }
+        } elseif ($this->element instanceof DataModelModuleMapping || $this->element instanceof DataModelModule) {
+            $return['type'] = 'module';
+
+            if ($this->element instanceof DataModelModuleMapping) {
+                $return['module'] = (new DataModelModuleApiResource($this->element->getModule()))->toArray();
+                $return['element'] = (new CastorEntityApiResource($this->element->getEntity()))->toArray();
+            } elseif ($this->element instanceof DataModelModule){
+                $return['module'] = (new DataModelModuleApiResource($this->element))->toArray();
+                $return['element'] = null;
+            }
         }
 
-        return [
-            'node' => (new NodeApiResource($node))->toArray(),
-            'element' => $element !== null ? (new CastorEntityApiResource($element))->toArray() : null,
-        ];
+        return $return;
     }
 }

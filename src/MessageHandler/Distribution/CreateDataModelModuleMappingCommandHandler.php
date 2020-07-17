@@ -4,22 +4,25 @@ declare(strict_types=1);
 namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\RDF\DataModelMapping;
+use App\Entity\Data\RDF\DataModelModuleMapping;
 use App\Entity\Data\RDF\DataModelNodeMapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Message\Distribution\CreateDataModelMappingCommand;
+use App\Message\Distribution\CreateDataModelModuleMappingCommand;
+use App\Message\Distribution\CreateDataModelNodeMappingCommand;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
+class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
@@ -42,7 +45,7 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
      * @throws NotFound
      * @throws InvalidEntityType
      */
-    public function __invoke(CreateDataModelMappingCommand $command): DataModelMapping
+    public function __invoke(CreateDataModelModuleMappingCommand $command): DataModelMapping
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
@@ -55,23 +58,20 @@ class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
 
         assert($study instanceof CastorStudy);
 
-        /** @var ValueNode|null $node */
-        $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
-        if ($node === null) {
+        /** @var DataModelModule|null $module */
+        $module = $this->em->getRepository(DataModelModule::class)->find($command->getModule());
+
+        if ($module === null || ! $module->isRepeated()) {
             throw new NotFound();
         }
 
-        $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
+        $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::fromString($command->getStructureType()->toString()), $command->getElement());
 
-        if($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
-            throw new InvalidEntityType();
-        }
-
-        if ($contents->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
-            $mapping = $contents->getMappingByNodeAndVersion($node, $dataModelVersion);
+        if ($contents->getMappingByModuleAndVersion($module, $dataModelVersion) !== null) {
+            $mapping = $contents->getMappingByModuleAndVersion($module, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelNodeMapping($contents, $node, $element, $dataModelVersion);
+            $mapping = new DataModelModuleMapping($contents, $module, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

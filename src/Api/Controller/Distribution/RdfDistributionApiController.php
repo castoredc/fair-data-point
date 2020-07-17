@@ -10,15 +10,18 @@ use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\DataModelMapping;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Enum\DataModelMappingType;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidDistributionType;
+use App\Exception\InvalidEntityType;
 use App\Exception\MappingAlreadyExists;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Message\Distribution\CreateDataModelMappingCommand;
+use App\Message\Distribution\CreateDataModelModuleMappingCommand;
+use App\Message\Distribution\CreateDataModelNodeMappingCommand;
 use App\Message\Distribution\GetDataModelMappingCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +33,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}")
+ * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}")
  * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
  * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
  * @ParamConverter("dataModelVersion", options={"mapping": {"version": "id"}})
@@ -40,7 +43,7 @@ class RdfDistributionApiController extends ApiController
     /**
      * @Route("", methods={"GET"}, name="api_distribution_contents_rdf")
      */
-    public function distributionRdfContents(DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
+    public function distributionRdfContents(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
 
@@ -54,7 +57,9 @@ class RdfDistributionApiController extends ApiController
             throw new InvalidDistributionType();
         }
 
-        $envelope = $bus->dispatch(new GetDataModelMappingCommand($contents, $dataModelVersion));
+        $type = DataModelMappingType::fromString($type);
+
+        $envelope = $bus->dispatch(new GetDataModelMappingCommand($contents, $dataModelVersion, $type));
 
         /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
@@ -68,7 +73,7 @@ class RdfDistributionApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add")
      */
-    public function addMapping(DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function addMapping(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
 
@@ -82,11 +87,23 @@ class RdfDistributionApiController extends ApiController
             throw new InvalidDistributionType();
         }
 
+        $type = DataModelMappingType::fromString($type);
+
         try {
             /** @var DataModelMappingApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelMappingApiRequest::class, $request);
 
-            $envelope = $bus->dispatch(new CreateDataModelMappingCommand($contents, $parsed->getNode(), $parsed->getElement(), $dataModelVersion));
+            if($type->isNode()) {
+                $envelope = $bus->dispatch(
+                    new CreateDataModelNodeMappingCommand($contents, $parsed->getNode(), $parsed->getElement(), $dataModelVersion)
+                );
+            } elseif($type->isModule()) {
+                $envelope = $bus->dispatch(
+                    new CreateDataModelModuleMappingCommand($contents, $parsed->getModule(), $parsed->getElement(), $parsed->getStructureType(), $dataModelVersion)
+                );
+            } else {
+                throw new InvalidEntityType();
+            }
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
