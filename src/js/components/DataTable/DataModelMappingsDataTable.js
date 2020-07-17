@@ -5,7 +5,7 @@ import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {DataTable, Pagination} from "@castoredc/matter";
-import {classNames} from "../../util";
+import {classNames, ucfirst} from "../../util";
 import {DataType, ValueType} from "../MetadataItem/EnumMappings";
 
 export default class DataModelMappingsDataTable extends Component {
@@ -28,18 +28,20 @@ export default class DataModelMappingsDataTable extends Component {
     }
 
     componentDidMount() {
-        this.getMappings();
+        const { type } = this.props;
+
+        this.getMappings(type);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { lastHandledMapping } = this.props;
+        const { lastHandledMapping, versionId, type } = this.props;
 
-        if(lastHandledMapping !== prevProps.lastHandledMapping) {
-            this.getMappings();
+        if(type !== prevProps.type || versionId !== prevProps.versionId || lastHandledMapping !== prevProps.lastHandledMapping) {
+            this.getMappings(type);
         }
     }
 
-    getMappings = () => {
+    getMappings = (type) => {
         const { pagination, hasLoadedMappings } = this.state;
         const { dataset, distribution, versionId } = this.props;
 
@@ -52,11 +54,11 @@ export default class DataModelMappingsDataTable extends Component {
             perPage: pagination.perPage
         };
 
-        if(hasLoadedMappings) {
-            window.scrollTo(0, this.tableRef.current.offsetTop - 35);
-        }
+        // if(hasLoadedMappings) {
+        //     window.scrollTo(0, this.tableRef.current.offsetTop - 35);
+        // }
 
-        axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId, {params: filters})
+        axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId + '/' + type, {params: filters})
             .then((response) => {
                 this.setState({
                     mappings:          response.data.results,
@@ -68,7 +70,7 @@ export default class DataModelMappingsDataTable extends Component {
                         totalPages: response.data.totalPages
                     },
                     isLoadingMappings: false,
-                    hasLoadedMappings: true,
+                    hasLoadedMappings: type,
                 });
             })
             .catch((error) => {
@@ -106,13 +108,44 @@ export default class DataModelMappingsDataTable extends Component {
 
     render() {
         const { mappings, isLoadingMappings, hasLoadedMappings, pagination } = this.state;
+        const { type } = this.props;
 
-        if(!hasLoadedMappings) {
+        if(!hasLoadedMappings || hasLoadedMappings !== type) {
             return <Row>
                 <Col>
                     <InlineLoader />
                 </Col>
             </Row>;
+        }
+
+        let rows = [];
+
+        if(type === 'node') {
+            rows = mappings.map((item) => {
+                return [
+                    ! item.element ? {
+                        type: 'errorCircledInverted'
+                    } : undefined,
+                    item.node.title,
+                    ValueType[item.node.value.value],
+                    DataType[item.node.value.dataType],
+                    item.node.repeated ? {
+                        type: 'tickSmall'
+                    } : undefined,
+                    item.element ? item.element.label : ''
+                ];
+            })
+        } else if(type === 'module') {
+            rows = mappings.map((item) => {
+                return [
+                    ! item.element ? {
+                        type: 'errorCircledInverted'
+                    } : undefined,
+                    item.module.displayName,
+                    item.element ? item.element.label : '',
+                    item.element ? ucfirst(item.element.structureType) : ''
+                ];
+            });
         }
 
         return <Row className="FillHeight">
@@ -124,36 +157,8 @@ export default class DataModelMappingsDataTable extends Component {
                         highlightRowOnHover
                         cellSpacing="default"
                         onClick={this.handleClick}
-                        rows={mappings.map((item) => {
-                            return [
-                                item.node.title,
-                                ValueType[item.node.value.value],
-                                DataType[item.node.value.dataType],
-                                item.element ? item.element.label : ''
-                            ];
-                        })}
-                        structure={{
-                            title: {
-                                header:    'Title',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            valueType: {
-                                header:    'Value type',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            dataType: {
-                                header:    'Data type',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            mappedElement: {
-                                header:    'Mapped field',
-                                resizable: true,
-                                template:  'text',
-                            },
-                        }}
+                        rows={rows}
+                        structure={structure[type]}
                     />
                 </div>
 
@@ -169,3 +174,60 @@ export default class DataModelMappingsDataTable extends Component {
     </Row>;
     }
 }
+
+const structure = {
+    node: {
+        mapped: {
+            header:    '',
+            resizable: true,
+            template:  'icon',
+        },
+        title: {
+            header:    'Title',
+            resizable: true,
+            template:  'text',
+        },
+        valueType: {
+            header:    'Value type',
+            resizable: true,
+            template:  'text',
+        },
+        dataType: {
+            header:    'Data type',
+            resizable: true,
+            template:  'text',
+        },
+        repeated: {
+            header:    'Repeated',
+            icon:      'copy',
+            template:  'icon',
+        },
+        mappedElement: {
+            header:    'Mapped field',
+            resizable: true,
+            template:  'text',
+        },
+    },
+    module: {
+        mapped: {
+            header:    '',
+            resizable: true,
+            template:  'icon',
+        },
+        title: {
+            header:    'Title',
+            resizable: true,
+            template:  'text',
+        },
+        mappedElement: {
+            header:    'Mapped',
+            resizable: true,
+            template:  'text',
+        },
+        mappedElementType: {
+            header:    'Type',
+            resizable: true,
+            template:  'text',
+        },
+    },
+};

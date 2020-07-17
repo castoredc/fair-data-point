@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Data;
 
 use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Data\DataModel\Triple;
 use App\Entity\Iri;
@@ -60,6 +61,14 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
             $object = $nodeRepository->findByModelAndId($dataModel, $command->getObjectValue());
         }
         assert($object instanceof Node);
+
+        if ($command->getObjectType()->isValue() && $module->isRepeated()) {
+            assert($object instanceof ValueNode);
+
+            if (! $object->isRepeated()) {
+                throw new InvalidNodeType();
+            }
+        }
 
         $triple = new Triple($module, $subject, $predicate, $object);
 

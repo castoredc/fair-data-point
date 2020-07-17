@@ -24,10 +24,13 @@ class CreateNodeCommand
     /** @var string */
     private $value;
 
-    /** @var XsdDataType */
+    /** @var XsdDataType|null */
     private $dataType;
 
-    public function __construct(DataModelVersion $dataModel, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType)
+    /** @var bool */
+    private $isRepeated;
+
+    public function __construct(DataModelVersion $dataModel, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType, ?bool $isRepeated)
     {
         $this->dataModel = $dataModel;
         $this->type = $type;
@@ -35,6 +38,7 @@ class CreateNodeCommand
         $this->description = $description;
         $this->value = $value;
         $this->dataType = $dataType;
+        $this->isRepeated = $isRepeated;
     }
 
     public function getDataModel(): DataModelVersion
@@ -62,8 +66,13 @@ class CreateNodeCommand
         return $this->value;
     }
 
-    public function getDataType(): XsdDataType
+    public function getDataType(): ?XsdDataType
     {
         return $this->dataType;
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->isRepeated;
     }
 }

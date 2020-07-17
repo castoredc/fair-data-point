@@ -47,7 +47,7 @@ class DataModelModuleApiController extends ApiController
             /** @var DataModelModuleApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
 
-            $bus->dispatch(new CreateDataModelModuleCommand($dataModelVersion, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(new CreateDataModelModuleCommand($dataModelVersion, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated()));
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
@@ -75,7 +75,7 @@ class DataModelModuleApiController extends ApiController
             /** @var DataModelModuleApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
 
-            $bus->dispatch(new UpdateDataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(new UpdateDataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated()));
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {

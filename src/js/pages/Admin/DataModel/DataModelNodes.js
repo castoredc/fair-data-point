@@ -6,7 +6,6 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Col, Row} from "react-bootstrap";
 import {Button, DataTable, Tabs} from "@castoredc/matter";
 import AddNodeModal from "../../../modals/AddNodeModal";
-import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 
 export default class DataModelNodes extends Component {
     constructor(props) {
@@ -109,7 +108,13 @@ export default class DataModelNodes extends Component {
                                              emptyTableMessage="This data model does not have internal nodes"
                                              cellSpacing="default"
                                              rows={nodes.internal.map((item) => {
-                                                 return [item.title, item.value];
+                                                 return [
+                                                     item.title,
+                                                     item.value,
+                                                     item.repeated ? {
+                                                         type: 'tickSmall'
+                                                     } : undefined
+                                                 ];
                                              })}
                                              structure={{
                                                  id:    {
@@ -121,6 +126,11 @@ export default class DataModelNodes extends Component {
                                                      header:    'Slug',
                                                      resizable: true,
                                                      template:  'fixed',
+                                                 },
+                                                 repeated: {
+                                                     header:    'Repeated',
+                                                     resizable: true,
+                                                     template:  'icon',
                                                  },
                                              }}
                                          />
@@ -185,7 +195,14 @@ export default class DataModelNodes extends Component {
                                              emptyTableMessage="This data model does not have value nodes"
                                              cellSpacing="default"
                                              rows={nodes.value.map((item) => {
-                                                 return [item.title, item.value.value, item.value.dataType];
+                                                 return [
+                                                     item.title,
+                                                     item.value.value,
+                                                     item.value.dataType,
+                                                     item.repeated ? {
+                                                         type: 'tickSmall'
+                                                     } : undefined
+                                                 ];
                                              })}
                                              structure={{
                                                  id:    {
@@ -202,6 +219,11 @@ export default class DataModelNodes extends Component {
                                                      header:    'Data type',
                                                      resizable: true,
                                                      template:  'fixed',
+                                                 },
+                                                 repeated: {
+                                                     header:    'Repeated',
+                                                     resizable: true,
+                                                     template:  'icon',
                                                  },
                                              }}
                                          />

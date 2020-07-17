@@ -85,6 +85,10 @@ class CastorEntityHelper
             $entity = $this->apiClient->getOptionGroup($study, $id);
         } elseif ($type->isField()) {
             $entity = $this->apiClient->getField($study, $id);
+        } elseif ($type->isReport()) {
+            $entity = $this->apiClient->getReport($study, $id);
+        } elseif ($type->isSurvey()) {
+            $entity = $this->apiClient->getSurvey($study, $id);
         } else {
             throw new InvalidEntityType();
         }

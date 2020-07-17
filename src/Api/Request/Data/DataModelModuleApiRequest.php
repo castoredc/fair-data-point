@@ -22,10 +22,18 @@ class DataModelModuleApiRequest extends SingleApiRequest
      */
     private $order;
 
+    /**
+     * @var bool
+     * @Assert\NotNull()
+     * @Assert\Type("bool")
+     */
+    private $repeated;
+
     protected function parse(): void
     {
         $this->title = $this->getFromData('title');
         $this->order = $this->getFromData('order');
+        $this->repeated = $this->getFromData('repeated');
     }
 
     public function getTitle(): string
@@ -36,5 +44,10 @@ class DataModelModuleApiRequest extends SingleApiRequest
     public function getOrder(): int
     {
         return $this->order;
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->repeated;
     }
 }

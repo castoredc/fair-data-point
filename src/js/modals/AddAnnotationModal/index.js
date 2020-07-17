@@ -201,6 +201,7 @@ export default class AddAnnotationModal extends Component {
                         name="ontology"
                         value={data.ontology}
                         onChange={this.handleOntologyChange}
+                        menuPosition="fixed"
                     />
                 </FormItem>
                 <FormItem label="Concept">
@@ -213,6 +214,7 @@ export default class AddAnnotationModal extends Component {
                         loadOptions={this.loadConcepts}
                         onChange={this.handleConceptChange}
                         isDisabled={data.ontology === null}
+                        menuPosition="fixed"
                     />
 
                     <CheckboxGroup

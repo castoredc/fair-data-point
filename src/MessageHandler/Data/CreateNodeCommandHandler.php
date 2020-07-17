@@ -50,12 +50,14 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
         } elseif ($type->isInternalIri()) {
             $node = new InternalIriNode($dataModel, $command->getTitle(), $command->getDescription());
             $node->setSlug($command->getValue());
+            $node->setIsRepeated($command->isRepeated());
         } elseif ($type->isLiteral()) {
             $node = new LiteralNode($dataModel, $command->getTitle(), $command->getDescription());
             $node->setValue($command->getValue());
             $node->setDataType($command->getDataType());
         } elseif ($type->isValue()) {
             $node = new ValueNode($dataModel, $command->getTitle(), $command->getDescription());
+            $node->setIsRepeated($command->isRepeated());
 
             if ($command->getValue() === 'annotated') {
                 $node->setIsAnnotatedValue(true);

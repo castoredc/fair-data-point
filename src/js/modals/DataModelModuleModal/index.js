@@ -6,10 +6,11 @@ import Dropdown from "../../components/Input/Dropdown";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import ConfirmModal from "../ConfirmModal";
 import {classNames} from "../../util";
 import Modal from "../Modal";
+import RadioGroup from "../../components/Input/RadioGroup";
 
 export default class DataModelModuleModal extends Component {
     constructor(props) {
@@ -80,10 +81,7 @@ export default class DataModelModuleModal extends Component {
                 isLoading:      true
             });
 
-            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module' + (data.id ? '/' + data.id : ''), {
-                title: data.title,
-                order: data.order,
-            })
+            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module' + (data.id ? '/' + data.id : ''), data)
                 .then(() => {
                     this.setState({
                         isSaved: true,
@@ -142,19 +140,21 @@ export default class DataModelModuleModal extends Component {
             closeButton
             footer={(
                 <div className={classNames(data.id && 'HasConfirmButton')}>
-                    {data.id && <ConfirmModal
-                        title="Delete module"
-                        action="Delete module"
-                        variant="danger"
-                        onConfirm={this.handleDelete}
-                        includeButton={true}
-                    >
-                        Are you sure you want to delete module <strong>{data.title}</strong>?<br />
-                        This will also delete all associated triples.
-                    </ConfirmModal>}
-                    <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
-                        {data.id ? 'Edit module' : 'Add module'}
-                    </Button>
+                    <Stack>
+                        {data.id && <ConfirmModal
+                            title="Delete module"
+                            action="Delete module"
+                            variant="danger"
+                            onConfirm={this.handleDelete}
+                            includeButton={true}
+                        >
+                            Are you sure you want to delete module <strong>{data.title}</strong>?<br />
+                            This will also delete all associated triples.
+                        </ConfirmModal>}
+                        <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                            {data.id ? 'Edit module' : 'Add module'}
+                        </Button>
+                    </Stack>
                 </div>
             )}
         >
@@ -184,6 +184,29 @@ export default class DataModelModuleModal extends Component {
                         onBlur={this.handleFieldVisit}
                         value={orderOptions.filter(({value}) => value === data.order)}
                         serverError={validation.order}
+                        menuPosition="fixed"
+                    />
+                </FormItem>
+
+                <FormItem label="Repeated">
+                    <RadioGroup
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={[
+                            {
+                                label: 'Yes',
+                                value: true
+                            },
+                            {
+                                label: 'No',
+                                value: false
+                            }
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.repeated}
+                        variant="horizontal"
+                        name="repeated"
+                        serverError={validation.repeated}
                     />
                 </FormItem>
             </ValidatorForm>
@@ -194,4 +217,5 @@ export default class DataModelModuleModal extends Component {
 const defaultData = {
     title: '',
     order: '',
+    repeated: false
 };

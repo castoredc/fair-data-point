@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace App\Entity\Data\RDF;
 
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\AccessibleEntity;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -80,10 +82,46 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         return $this->mappings;
     }
 
-    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelMapping
+    /**
+     * @return Collection<DataModelNodeMapping>
+     */
+    public function getNodeMappings(): Collection
     {
+        $return = new ArrayCollection();
+
         foreach ($this->mappings as $mapping) {
-            /** @var DataModelMapping $mapping */
+            if (! $mapping instanceof DataModelNodeMapping) {
+                continue;
+            }
+
+            $return->add($mapping);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return Collection<DataModelModuleMapping>
+     */
+    public function getModuleMappings(): Collection
+    {
+        $return = new ArrayCollection();
+
+        foreach ($this->mappings as $mapping) {
+            if (! $mapping instanceof DataModelModuleMapping) {
+                continue;
+            }
+
+            $return->add($mapping);
+        }
+
+        return $return;
+    }
+
+    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
+    {
+        foreach ($this->getNodeMappings() as $mapping) {
+            /** @var DataModelNodeMapping $mapping */
             if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
                 return $mapping;
             }
@@ -92,10 +130,22 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         return null;
     }
 
-    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelMapping
+    public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
     {
-        foreach ($this->mappings as $mapping) {
-            /** @var DataModelMapping $mapping */
+        foreach ($this->getModuleMappings() as $mapping) {
+            /** @var DataModelModuleMapping $mapping */
+            if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
+                return $mapping;
+            }
+        }
+
+        return null;
+    }
+
+    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
+    {
+        foreach ($this->getNodeMappings() as $mapping) {
+            /** @var DataModelNodeMapping $mapping */
             if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $this->currentDataModelVersion) {
                 return $mapping;
             }

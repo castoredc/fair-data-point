@@ -20,6 +20,13 @@ class InternalIriNode extends Node
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default":"0"})
+     *
+     * @var bool
+     */
+    private $isRepeated = false;
+
     public function getSlug(): string
     {
         return $this->slug;
@@ -38,5 +45,15 @@ class InternalIriNode extends Node
     public function getValue(): ?string
     {
         return $this->slug;
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->isRepeated;
+    }
+
+    public function setIsRepeated(bool $isRepeated): void
+    {
+        $this->isRepeated = $isRepeated;
     }
 }

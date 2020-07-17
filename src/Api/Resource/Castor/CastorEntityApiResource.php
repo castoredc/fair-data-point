@@ -24,7 +24,7 @@ class CastorEntityApiResource implements ApiResource
         return [
             'id' => $this->entity->getId(),
             'label' => $this->entity->getLabel(),
-            'structureType' => $this->entity->getStructureType(),
+            'structureType' => $this->entity->getStructureType() !== null ? $this->entity->getStructureType()->toString() : null,
         ];
     }
 }

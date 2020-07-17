@@ -36,6 +36,7 @@ class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
 
         $module->setTitle($command->getTitle());
         $module->setOrder($command->getOrder());
+        $module->setIsRepeated($command->isRepeated());
 
         $dataModel->addModule($module);
 

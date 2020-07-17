@@ -60,7 +60,7 @@ class NodeApiController extends ApiController
             /** @var NodeApiRequest $parsed */
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
 
-            $bus->dispatch(new CreateNodeCommand($dataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
+            $bus->dispatch(new CreateNodeCommand($dataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType(), $parsed->isRepeated()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {

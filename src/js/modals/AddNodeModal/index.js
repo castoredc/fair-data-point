@@ -109,6 +109,8 @@ export default class AddNodeModal extends Component {
 
         const showDataTypes = (type === 'literal' || (type === 'value' && data.value === 'plain'));
 
+        const showRepeated = (type === 'internal' || type === 'value');
+
         return <Modal
             show={show}
             handleClose={handleClose}
@@ -176,17 +178,39 @@ export default class AddNodeModal extends Component {
                     />
                 </FormItem>}
                 {type === 'value' && <FormItem label="Value">
+                        <RadioGroup
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={[
+                                { value: 'plain', label: 'Plain value' },
+                                { value: 'annotated', label: 'Annotated value' },
+                            ]}
+                            onChange={this.handleChange}
+                            value={data.value}
+                            serverError={validation.value}
+                            name="value"
+                            variant="horizontal"
+                        />
+                    </FormItem>}
+                {showRepeated && <FormItem label="Repeated">
                     <RadioGroup
                         validators={['required']}
                         errorMessages={[required]}
                         options={[
-                            { value: 'plain', label: 'Plain value' },
-                            { value: 'annotated', label: 'Annotated value' },
+                            {
+                                label: 'Yes',
+                                value: true
+                            },
+                            {
+                                label: 'No',
+                                value: false
+                            }
                         ]}
                         onChange={this.handleChange}
-                        value={data.value}
-                        serverError={validation.value}
-                        name="value"
+                        value={data.repeated}
+                        serverError={validation.repeated}
+                        name="repeated"
+                        variant="horizontal"
                     />
                 </FormItem>}
                 {showDataTypes && <FormItem label="Data type">
@@ -198,6 +222,7 @@ export default class AddNodeModal extends Component {
                         value={dataTypes.find((dataType) => {return data.dataType === dataType.value})}
                         serverError={validation.dataType}
                         name="dataType"
+                        menuPosition="fixed"
                     />
                 </FormItem>}
             </ValidatorForm>
@@ -209,7 +234,8 @@ const defaultData = {
     title: '',
     description: '',
     value: '',
-    dataType: null
+    dataType: null,
+    repeated: false
 };
 
 const dataTypes = [

@@ -16,11 +16,15 @@ class CreateDataModelModuleCommand
     /** @var int */
     private $order;
 
-    public function __construct(DataModelVersion $dataModel, string $title, int $order)
+    /** @var bool */
+    private $isRepeated;
+
+    public function __construct(DataModelVersion $dataModel, string $title, int $order, bool $isRepeated)
     {
         $this->dataModel = $dataModel;
         $this->title = $title;
         $this->order = $order;
+        $this->isRepeated = $isRepeated;
     }
 
     public function getDataModel(): DataModelVersion
@@ -36,5 +40,10 @@ class CreateDataModelModuleCommand
     public function getOrder(): int
     {
         return $this->order;
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->isRepeated;
     }
 }

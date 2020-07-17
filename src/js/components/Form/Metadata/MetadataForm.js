@@ -8,7 +8,7 @@ import LocalizedTextInput from "../../Input/LocalizedTextInput";
 import {ValidatorForm} from "react-form-validator-core";
 import MetadataVersionModal from "../../../modals/MetadataVersionModal";
 import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
-import {localizedText, mergeData, replaceAt} from "../../../util";
+import {localizedText, mergeData, replaceAt, ucfirst} from "../../../util";
 import PublisherModal from "../../../modals/PublisherModal";
 
 export default class MetadataForm extends Component {
@@ -366,7 +366,7 @@ export default class MetadataForm extends Component {
 
                                                          return [
                                                              name,
-                                                             publisher.type.charAt(0).toUpperCase() + publisher.type.slice(1),
+                                                             ucfirst(publisher.type)
                                                          ];
                                                      })}
                                                      structure={{

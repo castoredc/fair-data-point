@@ -85,6 +85,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
             } elseif ($node instanceof InternalIriNode) {
                 $newNode = new InternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setSlug($node->getSlug());
+                $newNode->setIsRepeated($node->isRepeated());
             } elseif ($node instanceof ExternalIriNode) {
                 $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIri($node->getIri());
@@ -98,6 +99,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 
                 if (! $node->isAnnotatedValue()) {
                     $newNode->setDataType($node->getDataType());
+                    $newNode->setIsRepeated($node->isRepeated());
                 }
             } else {
                 throw new InvalidNodeType();
@@ -119,9 +121,11 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         }
 
         // Add modules
+        $modules = new ArrayCollection();
+
         foreach ($latestVersion->getModules() as $module) {
             /** @var DataModelModule $module */
-            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $newVersion);
+            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $module->isRepeated(), $newVersion);
 
             foreach ($module->getTriples() as $triple) {
                 /** @var Triple $triple */
@@ -135,8 +139,10 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
                 $newModule->addTriple($newTriple);
             }
 
-            $newVersion->addModule($newModule);
+            $modules->add($newModule);
         }
+
+        $newVersion->setModules($modules);
 
         return $newVersion;
     }

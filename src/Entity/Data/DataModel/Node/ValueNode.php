@@ -28,6 +28,13 @@ class ValueNode extends Node
      */
     private $dataType;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default":"0"})
+     *
+     * @var bool
+     */
+    private $isRepeated = false;
+
     public function isAnnotatedValue(): bool
     {
         return $this->isAnnotatedValue;
@@ -56,5 +63,15 @@ class ValueNode extends Node
     public function setDataType(XsdDataType $dataType): void
     {
         $this->dataType = $dataType;
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->isRepeated;
+    }
+
+    public function setIsRepeated(bool $isRepeated): void
+    {
+        $this->isRepeated = $isRepeated;
     }
 }

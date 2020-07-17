@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  *     "field_option" = "App\Entity\Castor\Form\FieldOption",
  *     "field_option_group" = "App\Entity\Castor\Form\FieldOptionGroup",
  *     "structure_element" = "App\Entity\Castor\Structure\StructureElement",
+ *     "report" = "App\Entity\Castor\Structure\Report",
+ *     "survey" = "App\Entity\Castor\Structure\Survey",
  * })
  */
 abstract class CastorEntity

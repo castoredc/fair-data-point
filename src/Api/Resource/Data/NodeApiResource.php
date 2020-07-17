@@ -5,6 +5,7 @@ namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
+use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
@@ -35,12 +36,19 @@ class NodeApiResource implements ApiResource
             ];
         }
 
+        $repeated = false;
+
+        if ($this->node instanceof ValueNode || $this->node instanceof InternalIriNode) {
+            $repeated = $this->node->isRepeated();
+        }
+
         return [
             'id' => $this->node->getId(),
             'type' => $this->node->getType()->toString(),
             'title' => $this->node->getTitle(),
             'description' => $this->node->getDescription(),
             'value' => $value,
+            'repeated' => $repeated,
         ];
     }
 }

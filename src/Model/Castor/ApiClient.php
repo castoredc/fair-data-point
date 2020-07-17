@@ -401,6 +401,19 @@ class ApiClient
 
     /**
      * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
+    public function getSurvey(CastorStudy $study, string $surveyId): Survey
+    {
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/survey/' . $surveyId);
+
+        return Survey::fromData($body, $study);
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
@@ -433,6 +446,19 @@ class ApiClient
         }
 
         return $reports;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
+    public function getReport(CastorStudy $study, string $reportId): Report
+    {
+        $body = $this->request('/api/study/' . $study->getSourceId() . '/report/' . $reportId);
+
+        return Report::fromData($body, $study);
     }
 
     /**

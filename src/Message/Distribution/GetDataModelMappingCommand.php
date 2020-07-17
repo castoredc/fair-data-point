@@ -5,6 +5,7 @@ namespace App\Message\Distribution;
 
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Enum\DataModelMappingType;
 
 class GetDataModelMappingCommand
 {
@@ -14,10 +15,14 @@ class GetDataModelMappingCommand
     /** @var DataModelVersion */
     private $dataModelVersion;
 
-    public function __construct(RDFDistribution $distribution, DataModelVersion $dataModelVersion)
+    /** @var DataModelMappingType */
+    private $type;
+
+    public function __construct(RDFDistribution $distribution, DataModelVersion $dataModelVersion, DataModelMappingType $type)
     {
         $this->distribution = $distribution;
         $this->dataModelVersion = $dataModelVersion;
+        $this->type = $type;
     }
 
     public function getDistribution(): RDFDistribution
@@ -28,5 +33,10 @@ class GetDataModelMappingCommand
     public function getDataModelVersion(): DataModelVersion
     {
         return $this->dataModelVersion;
+    }
+
+    public function getType(): DataModelMappingType
+    {
+        return $this->type;
     }
 }

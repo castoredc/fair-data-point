@@ -7,10 +7,10 @@ import {Button, Stack} from "@castoredc/matter";
 
 export default class DataModelModule extends Component {
     render() {
-        const { title, order, groupedTriples, openModuleModal, openTripleModal, openRemoveTripleModal } = this.props;
+        const { title, order, repeated, groupedTriples, openModuleModal, openTripleModal, openRemoveTripleModal } = this.props;
 
         return <div className="DataModelModule">
-            <Toggle title={`Module ${order}. ${title}`}>
+            <Toggle title={`Module ${order}. ${title}`} badge={repeated && 'Repeated'}>
                 <div className="ButtonBar">
                     <Stack alignment="end" distribution="trailing">
                         <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
@@ -35,6 +35,7 @@ export default class DataModelModule extends Component {
                                 id={element.id}
                                 type={element.type}
                                 title={element.title}
+                                repeated={element.repeated}
                                 description={element.description}
                                 value={element.value}
                                 predicates={element.predicates}

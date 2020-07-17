@@ -58,6 +58,37 @@
     display: none;
   }
 
+  &.Inline {
+    .form-row {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    label {
+      margin-bottom: 0;
+    }
+
+    &.AlignLeft, &.AlignCenter, &.AlignRight {
+      display: flex;
+      align-items: center;
+    }
+
+    &.AlignLeft {
+      justify-content: flex-start;
+    }
+
+    &.AlignCenter {
+      justify-content: center;
+    }
+
+    &.AlignRight {
+      justify-content: flex-end;
+    }
+  }
+
   .Select {
     width: 100%;
 

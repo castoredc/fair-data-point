@@ -5,26 +5,31 @@ namespace App\Message\Distribution;
 
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Enum\StructureType;
 
-class CreateDataModelMappingCommand
+class CreateDataModelModuleMappingCommand
 {
     /** @var RDFDistribution */
     private $distribution;
 
     /** @var string */
-    private $node;
+    private $module;
 
     /** @var string */
     private $element;
 
+    /** @var StructureType */
+    private $structureType;
+
     /** @var DataModelVersion */
     private $dataModelVersion;
 
-    public function __construct(RDFDistribution $distribution, string $node, string $element, DataModelVersion $dataModelVersion)
+    public function __construct(RDFDistribution $distribution, string $module, string $element, StructureType $structureType, DataModelVersion $dataModelVersion)
     {
         $this->distribution = $distribution;
-        $this->node = $node;
+        $this->module = $module;
         $this->element = $element;
+        $this->structureType = $structureType;
         $this->dataModelVersion = $dataModelVersion;
     }
 
@@ -33,9 +38,14 @@ class CreateDataModelMappingCommand
         return $this->distribution;
     }
 
-    public function getNode(): string
+    public function getModule(): string
     {
-        return $this->node;
+        return $this->module;
+    }
+
+    public function getStructureType(): StructureType
+    {
+        return $this->structureType;
     }
 
     public function getElement(): string

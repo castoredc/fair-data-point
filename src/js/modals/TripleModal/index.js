@@ -138,12 +138,12 @@ export default class TripleModal extends Component {
     };
 
     handleSubmit = () => {
-        const {modelId, versionId, moduleId, onSaved} = this.props;
+        const {modelId, versionId, module, onSaved} = this.props;
         const {data} = this.state;
 
         if (this.form.isFormValid()) {
             this.setState({isLoading: true});
-            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module/' + moduleId + '/triple' + (data.id ? '/' + data.id : ''), data)
+            axios.post('/api/model/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (data.id ? '/' + data.id : ''), data)
                 .then((response) => {
                     this.setState({
                         isLoading: false,
@@ -170,21 +170,39 @@ export default class TripleModal extends Component {
         const {nodes} = this.props;
 
         return nodes[type].map((node) => {
-            return { value: node.id, label: node.title };
+            return { value: node.id, label: node.title, repeated: node.repeated };
         });
     };
 
     render() {
-        const { show, handleClose } = this.props;
+        const { show, handleClose, module } = this.props;
         const { data, validation, isLoading } = this.state;
 
         const required = "This field is required";
         const validUrl = "Please enter a valid URI";
 
         const subjectSelectable = (data.subjectType === 'internal' || data.subjectType === 'external');
-        const subjectOptions = subjectSelectable ? this.getOptions(data.subjectType) : [];
+        let subjectOptions = subjectSelectable ? this.getOptions(data.subjectType) : [];
         const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value');
-        const objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
+        let objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
+
+        if(module && data.objectType === 'value' && module.repeated) {
+            objectOptions = objectOptions.filter((option) => {
+                return option.repeated;
+            })
+        }
+
+        if(module && data.objectType === 'internal' && ! module.repeated) {
+            objectOptions = objectOptions.filter((option) => {
+                return option.repeated === false;
+            })
+        }
+
+        if(module && data.subjectType === 'internal' && ! module.repeated) {
+            subjectOptions = subjectOptions.filter((option) => {
+                return option.repeated === false;
+            })
+        }
 
         return <Modal
             show={show}
@@ -219,6 +237,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.subjectType}
                                     name="subjectType"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>
                         </Col>
@@ -233,6 +252,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.subjectValue}
                                     name="subjectValue"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>}
                         </Col>
@@ -270,6 +290,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.objectType}
                                     name="objectType"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>
                         </Col>
@@ -284,6 +305,7 @@ export default class TripleModal extends Component {
                                     serverError={validation.objectValue}
                                     name="objectValue"
                                     width="fullWidth"
+                                    menuPosition="fixed"
                                 />
                             </FormItem>}
                         </Col>

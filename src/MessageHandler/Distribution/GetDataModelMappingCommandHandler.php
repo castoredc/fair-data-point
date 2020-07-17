@@ -38,17 +38,28 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        /** @var NodeRepository $repository */
-        $repository = $this->em->getRepository(Node::class);
-
-        $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());
         $results = [];
 
-        foreach ($valueNodes as $valueNode) {
-            assert($valueNode instanceof ValueNode);
-            $mapping = $distribution->getMappingByNodeAndVersion($valueNode, $command->getDataModelVersion());
+        if ($command->getType()->isNode()) {
+            /** @var NodeRepository $repository */
+            $repository = $this->em->getRepository(Node::class);
 
-            $results[] = $mapping ?? $valueNode;
+            $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());
+
+            foreach ($valueNodes as $valueNode) {
+                assert($valueNode instanceof ValueNode);
+                $mapping = $distribution->getMappingByNodeAndVersion($valueNode, $command->getDataModelVersion());
+
+                $results[] = $mapping ?? $valueNode;
+            }
+        } elseif ($command->getType()->isModule()) {
+            $repeatedModules = $command->getDataModelVersion()->getRepeatedModules();
+
+            foreach ($repeatedModules as $repeatedModule) {
+                $mapping = $distribution->getMappingByModuleAndVersion($repeatedModule, $command->getDataModelVersion());
+
+                $results[] = $mapping ?? $repeatedModule;
+            }
         }
 
         return new PaginatedResultCollection($results, 1, count($results), count($results));

@@ -4,16 +4,43 @@ declare(strict_types=1);
 namespace App\Api\Request\Distribution;
 
 use App\Api\Request\SingleApiRequest;
+use App\Entity\Enum\DataModelMappingType;
+use App\Entity\Enum\StructureType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
-class DataModelMappingApiRequest extends SingleApiRequest
+/**
+ * @Assert\GroupSequenceProvider()
+ */
+class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
      * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
+    private $type;
+
+    /**
+     * @var string
+     * @Assert\NotBlank(groups = {"node"})
+     * @Assert\Type("string")
+     */
     private $node;
+
+    /**
+     * @var string
+     * @Assert\NotBlank(groups = {"module"})
+     * @Assert\Type("string")
+     */
+    private $structureType;
+
+    /**
+     * @var string
+     * @Assert\NotBlank(groups = {"module"})
+     * @Assert\Type("string")
+     */
+    private $module;
 
     /**
      * @var string
@@ -24,8 +51,16 @@ class DataModelMappingApiRequest extends SingleApiRequest
 
     protected function parse(): void
     {
+        $this->type = $this->getFromData('type');
         $this->node = $this->getFromData('node');
+        $this->structureType = $this->getFromData('structureType');
+        $this->module = $this->getFromData('module');
         $this->element = $this->getFromData('element');
+    }
+
+    public function getType(): DataModelMappingType
+    {
+        return DataModelMappingType::fromString($this->type);
     }
 
     public function getNode(): string
@@ -33,8 +68,27 @@ class DataModelMappingApiRequest extends SingleApiRequest
         return $this->node;
     }
 
+    public function getStructureType(): StructureType
+    {
+        return StructureType::fromString($this->structureType);
+    }
+
+    public function getModule(): string
+    {
+        return $this->module;
+    }
+
     public function getElement(): string
     {
         return $this->element;
+    }
+
+    /** @inheritDoc */
+    public function getGroupSequence()
+    {
+        return [
+            'DataModelMappingApiRequest',
+            $this->getType()->toString(),
+        ];
     }
 }
