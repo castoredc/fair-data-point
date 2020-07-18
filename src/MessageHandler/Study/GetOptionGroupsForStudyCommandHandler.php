@@ -31,6 +31,9 @@ class GetOptionGroupsForStudyCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetOptionGroupsForStudyCommand $command): CastorEntityCollection
     {
-        return $this->entityHelper->getEntitiesByType($command->getStudy(), CastorEntityType::fieldOptionGroup());
+        $optionGroups = $this->entityHelper->getEntitiesByType($command->getStudy(), CastorEntityType::fieldOptionGroup());
+        $optionGroups->orderByLabel();
+
+        return $optionGroups;
     }
 }
