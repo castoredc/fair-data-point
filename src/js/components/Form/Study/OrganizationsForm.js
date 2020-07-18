@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Stack} from "@castoredc/matter";
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
-
 import '../Form.scss'
 import {Redirect} from "react-router-dom";
 import {LinkContainer} from "react-router-bootstrap";
@@ -15,7 +12,6 @@ import Input from "../../Input";
 import Dropdown from "../../Input/Dropdown";
 import InlineLoader from "../../LoadingScreen/InlineLoader";
 import Toggle from "../../Toggle";
-import Container from "react-bootstrap/Container";
 import {replaceAt} from "../../../util";
 
 export default class OrganizationsForm extends Component {
@@ -243,80 +239,80 @@ export default class OrganizationsForm extends Component {
                             const title = 'Organization ' + (index + 1) + (organization.name.length > 0 ? ': ' + organization.name : '');
 
                             return <Toggle key={index} title={title} expanded={organizations.length === (index + 1)}>
-                                <Container>
-                                    <Row>
-                                        <Col md={6}>
-                                            <FormItem label="Name">
-                                                <Input
-                                                    validators={['required']}
-                                                    errorMessages={[required]}
-                                                    name="name"
-                                                    onChange={(e) => {
-                                                        this.handleChange(index, e)
-                                                    }}
-                                                    onBlur={this.handleFieldVisit}
-                                                    value={organization.name}
-                                                    serverError={validation[index].name}
-                                                />
-                                            </FormItem>
-                                            <FormItem label="Department(s)">
-                                                <Input
-                                                    validators={['required']}
-                                                    errorMessages={[required]}
-                                                    name="department"
-                                                    onChange={(e) => {
-                                                        this.handleChange(index, e)
-                                                    }}
-                                                    onBlur={this.handleFieldVisit}
-                                                    value={organization.department}
-                                                    serverError={validation[index].department}
-                                                />
-                                            </FormItem>
-                                            <FormItem label="City">
-                                                <Input
-                                                    validators={['required']}
-                                                    errorMessages={[required]}
-                                                    name="city"
-                                                    onChange={(e) => {
-                                                        this.handleChange(index, e)
-                                                    }}
-                                                    onBlur={this.handleFieldVisit}
-                                                    value={organization.city}
-                                                    serverError={validation[index].city}
-                                                />
-                                            </FormItem>
-                                            <FormItem label="Country">
-                                                <Dropdown
-                                                    validators={['required']}
-                                                    errorMessages={[required]}
-                                                    options={this.state.countries}
-                                                    name="country"
-                                                    onChange={(e) => {
-                                                        this.handleCountryChange(index, e)
-                                                    }}
-                                                    onBlur={this.handleFieldVisit}
-                                                    value={this.state.countries.filter(({value}) => value === organization.country)}
-                                                    serverError={validation[index].country}
-                                                    menuPosition="fixed"
-                                                />
-                                            </FormItem>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormItem label="Additional Information">
-                                                <Input
-                                                    name="additionalInformation"
-                                                    onChange={(e) => {
-                                                        this.handleChange(index, e)
-                                                    }}
-                                                    onBlur={this.handleFieldVisit}
-                                                    value={organization.additionalInformation}
-                                                    serverError={validation[index].additionalInformation}
-                                                    as="textarea" rows="5"
-                                                />
-                                            </FormItem>
-                                            {admin && <div>
-                                                <FormItem label="Coordinates">
-                                                    <Col md={6}>
+                                <Stack>
+                                    <div>
+                                        <FormItem label="Name">
+                                            <Input
+                                                validators={['required']}
+                                                errorMessages={[required]}
+                                                name="name"
+                                                onChange={(e) => {
+                                                    this.handleChange(index, e)
+                                                }}
+                                                onBlur={this.handleFieldVisit}
+                                                value={organization.name}
+                                                serverError={validation[index].name}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="Department(s)">
+                                            <Input
+                                                validators={['required']}
+                                                errorMessages={[required]}
+                                                name="department"
+                                                onChange={(e) => {
+                                                    this.handleChange(index, e)
+                                                }}
+                                                onBlur={this.handleFieldVisit}
+                                                value={organization.department}
+                                                serverError={validation[index].department}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="City">
+                                            <Input
+                                                validators={['required']}
+                                                errorMessages={[required]}
+                                                name="city"
+                                                onChange={(e) => {
+                                                    this.handleChange(index, e)
+                                                }}
+                                                onBlur={this.handleFieldVisit}
+                                                value={organization.city}
+                                                serverError={validation[index].city}
+                                            />
+                                        </FormItem>
+                                        <FormItem label="Country">
+                                            <Dropdown
+                                                validators={['required']}
+                                                errorMessages={[required]}
+                                                options={this.state.countries}
+                                                name="country"
+                                                onChange={(e) => {
+                                                    this.handleCountryChange(index, e)
+                                                }}
+                                                onBlur={this.handleFieldVisit}
+                                                value={this.state.countries.filter(({value}) => value === organization.country)}
+                                                serverError={validation[index].country}
+                                                menuPosition="fixed"
+                                            />
+                                        </FormItem>
+                                    </div>
+                                    <div>
+                                        <FormItem label="Additional Information">
+                                            <Input
+                                                name="additionalInformation"
+                                                onChange={(e) => {
+                                                    this.handleChange(index, e)
+                                                }}
+                                                onBlur={this.handleFieldVisit}
+                                                value={organization.additionalInformation}
+                                                serverError={validation[index].additionalInformation}
+                                                as="textarea" rows="5"
+                                            />
+                                        </FormItem>
+                                        {admin && <div>
+                                            <FormItem label="Coordinates">
+                                                <Stack>
+                                                    <FormItem label="Latitude">
                                                         <Input
                                                             name="coordinatesLatitude"
                                                             onChange={(e) => {
@@ -326,8 +322,8 @@ export default class OrganizationsForm extends Component {
                                                             value={organization.coordinatesLatitude}
                                                             serverError={validation[index].coordinatesLatitude}
                                                         />
-                                                    </Col>
-                                                    <Col md={6}>
+                                                    </FormItem>
+                                                    <FormItem label="Longitude">
                                                         <Input
                                                             name="coordinatesLongitude"
                                                             onChange={(e) => {
@@ -337,24 +333,25 @@ export default class OrganizationsForm extends Component {
                                                             value={organization.coordinatesLongitude}
                                                             serverError={validation[index].coordinatesLongitude}
                                                         />
-                                                    </Col>
-                                                </FormItem>
-                                            </div>}
-                                            {index > 0 && <Stack alignment="end" distribution="trailing">
-                                                <Button buttonType="danger" className="RemoveButton" icon="cross"
-                                                        onClick={(e) => {
-                                                            this.removeOrganization(e, index)
-                                                        }}>Delete organization</Button>
-                                            </Stack>}
-                                        </Col>
-                                    </Row>
-                                </Container>
+                                                    </FormItem>
+                                                </Stack>
+
+                                            </FormItem>
+                                        </div>}
+                                    </div>
+                                </Stack>
+                                {index > 0 && <Stack alignment="end" distribution="trailing">
+                                    <Button buttonType="danger" className="RemoveButton" icon="cross"
+                                            onClick={(e) => {
+                                                this.removeOrganization(e, index)
+                                            }}>Delete organization</Button>
+                                </Stack>}
                             </Toggle>;
                         })}
                     </div>
                     <Stack distribution="trailing" alignment="end">
                         <Button buttonType="secondary" icon="add" onClick={this.handleNewOrganization}>
-                            Add Another Organization
+                            Add another organization
                         </Button>
                     </Stack>
                 </div>

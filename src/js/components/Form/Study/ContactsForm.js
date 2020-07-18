@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {Button, Stack} from "@castoredc/matter";
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
 import '../Form.scss'
@@ -10,11 +8,8 @@ import {LinkContainer} from "react-router-bootstrap";
 import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
 import axios from "axios";
-import FormItem from "../FormItem";
-import Input from "../../Input";
 import InlineLoader from "../../LoadingScreen/InlineLoader";
 import Toggle from "../../Toggle";
-import Container from "react-bootstrap/Container";
 import {replaceAt} from "../../../util";
 import PersonForm from "../Agent/PersonForm";
 
@@ -196,29 +191,21 @@ export default class ContactsForm extends Component {
                             const title = 'Contact ' + (index + 1) + (name.length > 0 ? ': ' + name : '');
 
                             return <Toggle key={index} title={title} expanded={contacts.length === (index + 1)}>
-                                <Container>
-                                    <Row>
-                                        <Col>
-                                            <PersonForm data={contact} handleDataChange={(data) => {
-                                                this.handleDataChange(index, data)
-                                            }}/>
-                                        </Col>
-                                        <Col>
-                                            {index > 0 && <Stack alignment="end" distribution="trailing">
-                                                <Button buttonType="danger" className="RemoveButton" icon="cross"
-                                                        onClick={(e) => {
-                                                            this.removeContact(e, index)
-                                                        }}>Delete contact</Button>
-                                            </Stack>}
-                                        </Col>
-                                    </Row>
-                                </Container>
+                                <PersonForm data={contact} handleDataChange={(data) => {
+                                    this.handleDataChange(index, data)
+                                }}/>
+                                {index > 0 && <Stack alignment="end" distribution="trailing">
+                                    <Button buttonType="danger" className="RemoveButton" icon="cross"
+                                            onClick={(e) => {
+                                                this.removeContact(e, index)
+                                            }}>Delete contact</Button>
+                                </Stack>}
                             </Toggle>;
                         })}
                     </div>
                     <Stack distribution="trailing" alignment="end">
                         <Button buttonType="secondary" icon="add" onClick={this.handleNewContact}>
-                            Add Another Contact</Button>
+                            Add another contact</Button>
                     </Stack>
                 </div>
 
