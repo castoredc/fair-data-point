@@ -13,7 +13,7 @@ import Input from "../../Input";
 import Dropdown from "../../Input/Dropdown";
 import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import Modal from "../../../modals/Modal";
 
 export default class StudyForm extends Component {
@@ -24,14 +24,14 @@ export default class StudyForm extends Component {
         data['hasStudyId'] = data.sourceId !== '' ? true : '';
 
         this.state = {
-            data:           data,
-            validation:     {},
-            isSaved:        false,
-            isLoading:      false,
-            castorServers:  [],
-            study:          null,
-            catalog:        props.catalog ? props.catalog : null,
-            update:         !!props.study,
+            data:          data,
+            validation:    {},
+            isSaved:       false,
+            isLoading:     false,
+            castorServers: [],
+            study:         null,
+            catalog:       props.catalog ? props.catalog : null,
+            update:        !!props.study,
         };
     }
 
@@ -49,34 +49,35 @@ export default class StudyForm extends Component {
                 });
             })
             .catch((error) => {
-                toast.error(<ToastContent type="error" message="An error occurred while retrieving the Castor servers"/>);
+                toast.error(<ToastContent type="error"
+                                          message="An error occurred while retrieving the Castor servers"/>);
             });
     };
 
     handleChange = (event) => {
-        const { data } = this.state;
+        const {data} = this.state;
 
         let newData = {
             ...data,
             [event.target.name]: event.target.value,
         };
 
-        if(event.target.name === 'hasStudyId') {
+        if (event.target.name === 'hasStudyId') {
             newData.sourceId = '';
         }
 
         const newState = {
-            data: newData,
+            data:       newData,
             validation: {
                 [event.target.name]: false,
-            }
+            },
         };
         this.setState(newState);
     };
 
     handleSubmit = (event) => {
-        const { data, catalog } = this.state;
-        const { study } = this.props;
+        const {data, catalog} = this.state;
+        const {study} = this.props;
 
         event.preventDefault();
 
@@ -86,32 +87,33 @@ export default class StudyForm extends Component {
 
         const newData = {
             ...data,
-            catalog: catalog
+            catalog: catalog,
         };
 
-        if(this.form.isFormValid()) {
+        if (this.form.isFormValid()) {
             axios.post('/api/study' + (study ? '/' + study.id : ''), newData)
                 .then((response) => {
                     this.setState({
-                        isSaved: true,
-                        study: response.data,
-                        isLoading: false
+                        isSaved:   true,
+                        study:     response.data,
+                        isLoading: false,
                     });
 
                     if (study) {
-                        toast.success(<ToastContent type="success" message="The study details are saved successfully" />, {
-                            position: "top-right"
+                        toast.success(<ToastContent type="success"
+                                                    message="The study details are saved successfully"/>, {
+                            position: "top-right",
                         });
                     }
                 })
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
                         this.setState({
-                            validation: error.response.data.fields
+                            validation: error.response.data.fields,
                         });
                     } else {
                         toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                            position: "top-center"
+                            position: "top-center",
                         });
                     }
                     this.setState({
@@ -124,122 +126,123 @@ export default class StudyForm extends Component {
     };
 
     render() {
-        const { data, validation, castorServers, isSaved, update, study, isLoading } = this.state;
+        const {data, validation, castorServers, isSaved, update, study, isLoading} = this.state;
 
         const required = "This field is required";
 
-        if(isSaved && !update)
-        {
-            return <Redirect push to={'/admin/study/' + study.id + '/metadata'} />;
+        if (isSaved && !update) {
+            return <Redirect push to={'/admin/study/' + study.id + '/metadata'}/>;
         }
 
         return (
             <ValidatorForm
+                className="FullHeightForm"
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <FormItem label="Source">
-                    <RadioGroup
-                        options={[
-                            {
-                                label: 'Castor EDC',
-                                value: 'castor'
-                            },
-                        ]}
-                        onChange={this.handleChange}
-                        value={data.source}
-                        name="source"
-                    />
-                </FormItem>
-
-                <FormItem label="Name">
-                    <Input
-                        validators={['required']}
-                        errorMessages={[required]}
-                        name="name"
-                        onChange={this.handleChange}
-                        value={data.name}
-                        serverError={validation.name}
-                    />
-                </FormItem>
-                {data.source === 'castor' && <div>
-                    <FormItem label="Server">
-                        <Dropdown
-                            validators={['required']}
-                            errorMessages={[required]}
-                            options={castorServers}
-                            name="sourceServer"
-                            onChange={(e) => {this.handleChange({target: { name: 'sourceServer', value: e.value }})}}
-                            value={castorServers.filter(({value}) => value === data.sourceServer)}
-                            serverError={validation.order}
+                <div className="FormContent">
+                    <FormItem label="Source">
+                        <RadioGroup
+                            options={[
+                                {
+                                    label: 'Castor EDC',
+                                    value: 'castor',
+                                },
+                            ]}
+                            onChange={this.handleChange}
+                            value={data.source}
+                            name="source"
                         />
                     </FormItem>
 
-                    <FormItem label="Is the Study ID known?">
+                    <FormItem label="Name">
+                        <Input
+                            validators={['required']}
+                            errorMessages={[required]}
+                            name="name"
+                            onChange={this.handleChange}
+                            value={data.name}
+                            serverError={validation.name}
+                        />
+                    </FormItem>
+                    {data.source === 'castor' && <div>
+                        <FormItem label="Server">
+                            <Dropdown
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={castorServers}
+                                name="sourceServer"
+                                onChange={(e) => {
+                                    this.handleChange({target: {name: 'sourceServer', value: e.value}})
+                                }}
+                                value={castorServers.filter(({value}) => value === data.sourceServer)}
+                                serverError={validation.order}
+                            />
+                        </FormItem>
+
+                        <FormItem label="Is the Study ID known?">
+                            <RadioGroup
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={[
+                                    {
+                                        label: 'Yes',
+                                        value: true,
+                                    },
+                                    {
+                                        label: 'No',
+                                        value: false,
+                                    },
+                                ]}
+                                onChange={this.handleChange}
+                                value={data.hasStudyId}
+                                variant="horizontal"
+                                name="hasStudyId"
+                            />
+                        </FormItem>
+
+                        {data.hasStudyId && <FormItem label="Study ID">
+                            <Input
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="sourceId"
+                                onChange={this.handleChange}
+                                value={data.sourceId}
+                                serverError={validation.sourceId}
+                            />
+                        </FormItem>}
+                    </div>}
+
+                    {update && <FormItem label="Publish study">
                         <RadioGroup
                             validators={['required']}
                             errorMessages={[required]}
                             options={[
                                 {
                                     label: 'Yes',
-                                    value: true
+                                    value: true,
                                 },
                                 {
                                     label: 'No',
-                                    value: false
-                                }
+                                    value: false,
+                                },
                             ]}
                             onChange={this.handleChange}
-                            value={data.hasStudyId}
+                            value={data.published}
                             variant="horizontal"
-                            name="hasStudyId"
-                        />
-                    </FormItem>
-
-                    {data.hasStudyId && <FormItem label="Study ID">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="sourceId"
-                            onChange={this.handleChange}
-                            value={data.sourceId}
-                            serverError={validation.sourceId}
+                            name="published"
                         />
                     </FormItem>}
-                </div>}
+                </div>
 
-                {update && <FormItem label="Publish study">
-                    <RadioGroup
-                        validators={['required']}
-                        errorMessages={[required]}
-                        options={[
-                            {
-                                label: 'Yes',
-                                value: true
-                            },
-                            {
-                                label: 'No',
-                                value: false
-                            }
-                        ]}
-                        onChange={this.handleChange}
-                        value={data.published}
-                        variant="horizontal"
-                        name="published"
-                    />
-                </FormItem>}
-
-
-                {update ? <Row className="FullScreenSteppedFormButtons">
-                    <Col>
-                    </Col>
-                    <Col>
+                {update ? <div className="FormButtons">
+                    <Stack distribution="trailing">
                         <Button type="submit" disabled={isLoading}>
                             Update study
                         </Button>
-                    </Col>
-                </Row> : <footer>
+                    </Stack>
+                </div> : <footer>
                     <Button type="submit" disabled={isLoading}>
                         Add study
                     </Button>
@@ -251,10 +254,10 @@ export default class StudyForm extends Component {
 }
 
 export const defaultData = {
-    sourceId: '',
-    name: '',
-    source: 'castor',
+    sourceId:     '',
+    name:         '',
+    source:       'castor',
     sourceServer: '',
-    published: false,
-    slug: ''
+    published:    false,
+    slug:         '',
 };

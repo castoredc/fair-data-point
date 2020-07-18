@@ -3,19 +3,18 @@ import axios from "axios";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Col, Row} from "react-bootstrap";
-import {Button, DataTable, Tabs} from "@castoredc/matter";
+import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
 import AddNodeModal from "../../../modals/AddNodeModal";
 
 export default class DataModelNodes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:          false,
-            isLoadingNodes:     true,
-            hasLoadedNodes:     false,
-            nodes:              null,
-            selectedType:       'internal'
+            showModal:      false,
+            isLoadingNodes: true,
+            hasLoadedNodes: false,
+            nodes:          null,
+            selectedType:   'internal',
         };
     }
 
@@ -24,7 +23,7 @@ export default class DataModelNodes extends Component {
     }
 
     getNodes = () => {
-        const { dataModel, version } = this.props;
+        const {dataModel, version} = this.props;
 
         this.setState({
             isLoadingNodes: true,
@@ -48,22 +47,21 @@ export default class DataModelNodes extends Component {
             });
     };
 
-
     openModal = () => {
         this.setState({
-            showModal: true
+            showModal: true,
         });
     };
 
     closeModal = () => {
         this.setState({
-            showModal: false
+            showModal: false,
         });
     };
 
     onSaved = () => {
         this.setState({
-            showModal: false
+            showModal: false,
         });
 
         this.getNodes();
@@ -71,7 +69,7 @@ export default class DataModelNodes extends Component {
 
     changeTab = (tabIndex) => {
         this.setState({
-            selectedType: tabIndex
+            selectedType: tabIndex,
         });
     };
 
@@ -79,7 +77,11 @@ export default class DataModelNodes extends Component {
         const {showModal, isLoadingNodes, nodes, selectedType} = this.state;
         const {dataModel, version} = this.props;
 
-        return <div>
+        if (isLoadingNodes) {
+            return <InlineLoader/>;
+        }
+
+        return <div className="PageBody">
             <AddNodeModal
                 show={showModal}
                 handleClose={this.closeModal}
@@ -88,150 +90,147 @@ export default class DataModelNodes extends Component {
                 modelId={dataModel.id}
                 versionId={version}
             />
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
-                        <Button icon="add" onClick={this.openModal}>Add {selectedType} node</Button>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={12}>
-                    {isLoadingNodes ? <InlineLoader/> : <Tabs
-                        onChange={this.changeTab}
-                        selected={selectedType}
-                        tabs={{
-                            internal: {
-                                title: 'Internal',
-                                content: <DataTable
-                                             emptyTableMessage="This data model does not have internal nodes"
-                                             cellSpacing="default"
-                                             rows={nodes.internal.map((item) => {
-                                                 return [
-                                                     item.title,
-                                                     item.value,
-                                                     item.repeated ? {
-                                                         type: 'tickSmall'
-                                                     } : undefined
-                                                 ];
-                                             })}
-                                             structure={{
-                                                 id:    {
-                                                     header:    'Title',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 title: {
-                                                     header:    'Slug',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 repeated: {
-                                                     header:    'Repeated',
-                                                     resizable: true,
-                                                     template:  'icon',
-                                                 },
-                                             }}
-                                         />
-                            },
-                            external: {
-                                title: 'External',
-                                content: <DataTable
-                                             emptyTableMessage="This data model does not have external nodes"
-                                             cellSpacing="default"
-                                             rows={nodes.external.map((item) => {
-                                                 return [item.title, item.value.prefixedValue, item.value.value];
-                                             })}
-                                             structure={{
-                                                 id:    {
-                                                     header:    'Title',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 short: {
-                                                     header:    'Short',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 title: {
-                                                     header:    'URI',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                             }}
-                                         />
-                            },
-                            literal: {
-                                title: 'Literal',
-                                content: <DataTable
-                                             emptyTableMessage="This data model does not have literal nodes"
-                                             cellSpacing="default"
-                                             rows={nodes.literal.map((item) => {
-                                                 return [item.title, item.value, item.value.dataType];
-                                             })}
-                                             structure={{
-                                                 id:    {
-                                                     header:    'Title',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 type: {
-                                                     header:    'Value',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 dataType: {
-                                                     header:    'Data type',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                             }}
-                                         />
-                            },
-                            value: {
-                                title: 'Value',
-                                content: <DataTable
-                                             emptyTableMessage="This data model does not have value nodes"
-                                             cellSpacing="default"
-                                             rows={nodes.value.map((item) => {
-                                                 return [
-                                                     item.title,
-                                                     item.value.value,
-                                                     item.value.dataType,
-                                                     item.repeated ? {
-                                                         type: 'tickSmall'
-                                                     } : undefined
-                                                 ];
-                                             })}
-                                             structure={{
-                                                 id:    {
-                                                     header:    'Title',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 type: {
-                                                     header:    'Type of value',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 dataType: {
-                                                     header:    'Data type',
-                                                     resizable: true,
-                                                     template:  'fixed',
-                                                 },
-                                                 repeated: {
-                                                     header:    'Repeated',
-                                                     resizable: true,
-                                                     template:  'icon',
-                                                 },
-                                             }}
-                                         />
-                            }
-                        }}
-                    />}
-                </Col>
-            </Row>
+
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
+                    <Button icon="add" onClick={this.openModal}>Add {selectedType} node</Button>
+                </Stack>
+            </div>
+
+            <div className="PageTabs">
+                <Tabs
+                    onChange={this.changeTab}
+                    selected={selectedType}
+                    tabs={{
+                        internal: {
+                            title:   'Internal',
+                            content: <DataTable
+                                         emptyTableMessage="This data model does not have internal nodes"
+                                         cellSpacing="default"
+                                         rows={nodes.internal.map((item) => {
+                                             return [
+                                                 item.title,
+                                                 item.value,
+                                                 item.repeated ? {
+                                                     type: 'tickSmall',
+                                                 } : undefined,
+                                             ];
+                                         })}
+                                         structure={{
+                                             id:       {
+                                                 header:    'Title',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             title:    {
+                                                 header:    'Slug',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             repeated: {
+                                                 header:    'Repeated',
+                                                 resizable: true,
+                                                 template:  'icon',
+                                             },
+                                         }}
+                                     />,
+                        },
+                        external: {
+                            title:   'External',
+                            content: <DataTable
+                                         emptyTableMessage="This data model does not have external nodes"
+                                         cellSpacing="default"
+                                         rows={nodes.external.map((item) => {
+                                             return [item.title, item.value.prefixedValue, item.value.value];
+                                         })}
+                                         structure={{
+                                             id:    {
+                                                 header:    'Title',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             short: {
+                                                 header:    'Short',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             title: {
+                                                 header:    'URI',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                         }}
+                                     />,
+                        },
+                        literal:  {
+                            title:   'Literal',
+                            content: <DataTable
+                                         emptyTableMessage="This data model does not have literal nodes"
+                                         cellSpacing="default"
+                                         rows={nodes.literal.map((item) => {
+                                             return [item.title, item.value, item.value.dataType];
+                                         })}
+                                         structure={{
+                                             id:       {
+                                                 header:    'Title',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             type:     {
+                                                 header:    'Value',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             dataType: {
+                                                 header:    'Data type',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                         }}
+                                     />,
+                        },
+                        value:    {
+                            title:   'Value',
+                            content: <DataTable
+                                         emptyTableMessage="This data model does not have value nodes"
+                                         cellSpacing="default"
+                                         rows={nodes.value.map((item) => {
+                                             return [
+                                                 item.title,
+                                                 item.value.value,
+                                                 item.value.dataType,
+                                                 item.repeated ? {
+                                                     type: 'tickSmall',
+                                                 } : undefined,
+                                             ];
+                                         })}
+                                         structure={{
+                                             id:       {
+                                                 header:    'Title',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             type:     {
+                                                 header:    'Type of value',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             dataType: {
+                                                 header:    'Data type',
+                                                 resizable: true,
+                                                 template:  'fixed',
+                                             },
+                                             repeated: {
+                                                 header:    'Repeated',
+                                                 resizable: true,
+                                                 template:  'icon',
+                                             },
+                                         }}
+                                     />,
+                        },
+                    }}
+                />
+            </div>
         </div>;
     }
 }

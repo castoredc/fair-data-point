@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-
-import {Col, Row} from "react-bootstrap";
 import {localizedText} from "../../../util";
 import {LinkContainer} from "react-router-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
@@ -10,7 +8,7 @@ import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import CatalogStudies from "./CatalogStudies";
 import CatalogDetails from "./CatalogDetails";
-import {Button} from "@castoredc/matter";
+import {ViewHeader} from "@castoredc/matter";
 import CatalogDatasets from "./CatalogDatasets";
 import CatalogMetadata from "./CatalogMetadata";
 import CatalogAddStudy from "./CatalogAddStudy";
@@ -64,54 +62,44 @@ export default class Catalog extends Component {
         }
 
         return <div className="PageContainer">
-            <Row className="PageHeader">
-                <Col sm={2} className="Back">
-                    <LinkContainer to={'/admin/catalogs'}>
-                        <Button buttonType="secondary" icon="arrowLeftChevron">
-                            Back to catalogs
-                        </Button>
+            <div className="LeftNav">
+                <Nav className="flex-column">
+                    <LinkContainer to={'/admin/catalog/' + catalog.slug} exact={true}>
+                        <Nav.Link>Catalog</Nav.Link>
                     </LinkContainer>
-                </Col>
-                <Col sm={10} className="PageTitle">
-                    <div><h3>{catalog.hasMetadata && localizedText(catalog.metadata.title, 'en')}</h3></div>
-                </Col>
-            </Row>
-            <Row className="FillHeight">
-                <Col sm={2} className="LeftNav">
-                    <Nav className="flex-column">
-                        <LinkContainer to={'/admin/catalog/' + catalog.slug} exact={true}>
-                            <Nav.Link>Catalog</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/metadata'} exact={true}>
-                            <Nav.Link>Metadata</Nav.Link>
-                        </LinkContainer>
-                        <hr />
-                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/datasets'} exact={true}>
-                            <Nav.Link>Datasets</Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to={'/admin/catalog/' + catalog.slug + '/studies'} exact={true}>
-                            <Nav.Link>Studies</Nav.Link>
-                        </LinkContainer>
-                    </Nav>
-                </Col>
-                <Col sm={10} className="Page">
-                    <Switch>
-                        <Route path="/admin/catalog/:catalog" exact
-                               render={(props) => <CatalogDetails {...props} catalog={catalog} />} />
-                        <Route path="/admin/catalog/:catalog/metadata" exact
-                               render={(props) => <CatalogMetadata {...props} catalog={catalog} onSave={this.getCatalog} />} />
-                        <Route path="/admin/catalog/:catalog/studies/add" exact
-                               render={(props) => <CatalogAddStudy {...props} catalog={catalog} />} />
-                        <Route path="/admin/catalog/:catalog/studies" exact
-                               render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
-                        <Route path="/admin/catalog/:catalog/datasets" exact
-                               render={(props) => <CatalogDatasets {...props} catalog={catalog} />} />
-                        <Route path="/admin/catalog/:catalog/datasets/add" exact
-                               render={(props) => <CatalogAddDataset {...props} catalog={catalog} />} />
-                        <Route component={NotFound} />
-                    </Switch>
-                </Col>
-            </Row>
+                    <LinkContainer to={'/admin/catalog/' + catalog.slug + '/metadata'} exact={true}>
+                        <Nav.Link>Metadata</Nav.Link>
+                    </LinkContainer>
+                    <hr />
+                    <LinkContainer to={'/admin/catalog/' + catalog.slug + '/datasets'} exact={true}>
+                        <Nav.Link>Datasets</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to={'/admin/catalog/' + catalog.slug + '/studies'} exact={true}>
+                        <Nav.Link>Studies</Nav.Link>
+                    </LinkContainer>
+                </Nav>
+            </div>
+            <div className="Page">
+                <div className="PageTitle">
+                    {catalog.hasMetadata && <ViewHeader>{localizedText(catalog.metadata.title, 'en')}</ViewHeader>}
+                </div>
+
+                <Switch>
+                    <Route path="/admin/catalog/:catalog" exact
+                           render={(props) => <CatalogDetails {...props} catalog={catalog} />} />
+                    <Route path="/admin/catalog/:catalog/metadata" exact
+                           render={(props) => <CatalogMetadata {...props} catalog={catalog} onSave={this.getCatalog} />} />
+                    <Route path="/admin/catalog/:catalog/studies/add" exact
+                           render={(props) => <CatalogAddStudy {...props} catalog={catalog} />} />
+                    <Route path="/admin/catalog/:catalog/studies" exact
+                           render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
+                    <Route path="/admin/catalog/:catalog/datasets" exact
+                           render={(props) => <CatalogDatasets {...props} catalog={catalog} />} />
+                    <Route path="/admin/catalog/:catalog/datasets/add" exact
+                           render={(props) => <CatalogAddDataset {...props} catalog={catalog} />} />
+                    <Route component={NotFound} />
+                </Switch>
+            </div>
         </div>;
     }
 }

@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
-import {Col, Row} from "react-bootstrap";
-import {Button} from "@castoredc/matter";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
+import {Button, Stack} from "@castoredc/matter";
 import AddStudyModal from "../../../modals/AddStudyModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import axios from "axios";
@@ -13,7 +11,6 @@ export default class CatalogAddStudy extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            displayFilter: false,
             showModal: {
                 newStudy: false,
                 confirm: false
@@ -22,12 +19,6 @@ export default class CatalogAddStudy extends Component {
             addedStudy: null
         };
     }
-
-    toggleFilter = () => {
-        this.setState({
-            displayFilter: ! this.state.displayFilter
-        });
-    };
 
     openModal = (type) => {
         const {showModal} = this.state;
@@ -86,9 +77,9 @@ export default class CatalogAddStudy extends Component {
 
     render() {
         const { catalog } = this.props;
-        const { displayFilter, showModal, selectedStudy, addedStudy } = this.state;
+        const { showModal, selectedStudy, addedStudy } = this.state;
 
-        return <div className="SubPage">
+        return <div className="PageBody">
             <AddStudyModal
                 show={showModal.newStudy}
                 handleClose={() => {this.closeModal('newStudy')}}
@@ -106,26 +97,18 @@ export default class CatalogAddStudy extends Component {
                 Are you sure you want to add <strong>{selectedStudy.name}</strong> to this catalog?
             </ConfirmModal>}
 
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
-                        <Button icon="add" className="AddButton" onClick={() => {this.openModal('newStudy')}}>Create new study</Button>
 
-                        <ButtonGroup className="FilterButton">
-                            <Button icon="filters" buttonType="secondary" onClick={this.toggleFilter} active={displayFilter}>
-                                Filters
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                </Col>
-            </Row>
+
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
+                    <Button icon="add" className="AddButton" onClick={() => {this.openModal('newStudy')}}>Create new study</Button>
+                </Stack>
+            </div>
+
             <StudiesDataTable
                 onClick={this.handleStudyClick}
-                displayOverlay={displayFilter}
                 hideCatalog={catalog}
                 lastHandledStudy={addedStudy}
-                overlay
             />
         </div>;
     }

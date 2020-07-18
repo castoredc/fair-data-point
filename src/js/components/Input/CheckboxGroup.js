@@ -40,7 +40,7 @@ export default class CheckboxGroup extends Component {
           } = this.props;
 
         return (
-            <Form.Group className="CheckboxFormGroup" ref={(r) => { this.input = r; }}>
+            <div className="CheckboxFormGroup" ref={(r) => { this.input = r; }}>
                 {options.map((option) => {
                     return <ChoiceOption
                         key={option.value}
@@ -51,7 +51,7 @@ export default class CheckboxGroup extends Component {
                         checked={value.find((valueOption) => {return valueOption === option.value}) || false}
                     />
                 })}
-            </Form.Group>
+            </div>
         );
     }
 }

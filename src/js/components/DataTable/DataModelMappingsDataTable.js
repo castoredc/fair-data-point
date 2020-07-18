@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
@@ -111,11 +110,7 @@ export default class DataModelMappingsDataTable extends Component {
         const { type } = this.props;
 
         if(!hasLoadedMappings || hasLoadedMappings !== type) {
-            return <Row>
-                <Col>
-                    <InlineLoader />
-                </Col>
-            </Row>;
+            return <InlineLoader />;
         }
 
         let rows = [];
@@ -148,8 +143,7 @@ export default class DataModelMappingsDataTable extends Component {
             });
         }
 
-        return <Row className="FillHeight">
-        <Col sm={12} className="Page">
+        return <>
             <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingMappings && 'Loading')} ref={this.tableRef}>
                 <div className="DataTableWrapper">
                     <DataTable
@@ -170,8 +164,7 @@ export default class DataModelMappingsDataTable extends Component {
                     totalItems={pagination.totalResults}
                 />
             </div>
-        </Col>
-    </Row>;
+    </>;
     }
 }
 

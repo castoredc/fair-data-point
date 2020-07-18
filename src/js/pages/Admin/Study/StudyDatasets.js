@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import DatasetsDataTable from "../../../components/DataTable/DatasetsDataTable";
-import {Col, Row} from "react-bootstrap";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
@@ -49,15 +48,13 @@ export default class StudyDatasets extends Component {
             return <Redirect push to={'/admin/dataset/' + newDataset.slug} />;
         }
 
-        return <div className="SubPage">
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
+        return <div className="PageBody">
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
                         <Button icon="add" className="AddButton" disabled={isLoading} onClick={this.handleCreate}>New dataset</Button>
-                    </div>
-                </Col>
-            </Row>
+                </Stack>
+            </div>
+
             <DatasetsDataTable
                 history={history}
                 study={study}

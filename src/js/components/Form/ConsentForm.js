@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
@@ -156,11 +156,12 @@ export default class ConsentForm extends Component {
 
         return (
             <ValidatorForm
+                className="FullHeightForm"
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Col md={12}>
+                <div className="FormContent">
                     <FormItem label="Do you give permission to share high-level information about your study on a webpage to allow other researchers to find your project?">
                         <RadioGroup
                             options={[
@@ -197,22 +198,20 @@ export default class ConsentForm extends Component {
                             name="socialMedia"
                         />
                     </FormItem>
-                </Col>
+                </div>
 
-                <Row className="FullScreenSteppedFormButtons">
-                    <Col>
+                <div className="FormButtons">
+                    <Stack distribution={admin ? 'trailing' : 'equalSpacing'}>
                         {!admin && <LinkContainer to={backUrl}>
                             <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}
-                    </Col>
-                    <Col>
                         {admin ? <Button type="submit" disabled={submitDisabled}>
                             Save
                         </Button> : <Button type="submit" disabled={submitDisabled}>
                             Finish
                         </Button>}
-                    </Col>
-                </Row>
+                    </Stack>
+                </div>
 
             </ValidatorForm>
         );

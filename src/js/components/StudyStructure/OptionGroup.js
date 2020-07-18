@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import {Button, Col, Row} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import Annotations from "../Annotations";
-import Toggle from "../Toggle";
 import {Icon} from "@castoredc/matter";
 
 export default class OptionGroup extends Component {
@@ -13,65 +12,63 @@ export default class OptionGroup extends Component {
         };
     }
 
-    toggleModule = () => {
-        const { expanded } = this.state;
-
-        this.setState({
-            expanded: !expanded
-        });
-    };
-
     openModal = (modalType) => {
         this.setState({
             modalType: modalType,
-            showModal: true
+            showModal: true,
         });
     };
 
     closeModal = () => {
         this.setState({
-            showModal: false
+            showModal: false,
         });
     };
 
     render() {
-        const { id, name, studyId, options, openModal } = this.props;
-        const { expanded, showModal, modalType, newTriple } = this.state;
+        const {id, options, openModal} = this.props;
 
-        return <Toggle title={name}>
-            <div className="OptionGroupTable">
-                <Row className="OptionGroupTableHeader">
-                    <Col sm={3}>Option</Col>
-                    <Col sm={2}>Value</Col>
-                    <Col sm={6}>Annotations</Col>
-                    <Col sm={1}/>
-                </Row>
-                <div className="OptionGroupTableBody">
-                    {options.length === 0 ? <Col sm={12} className="NoResults">This option group does not contain options.</Col> : <div>
+        return <div className="OptionGroupTable LargeTable">
+            <div className="OptionGroupTableHeader TableHeader">
+                <div className="OptionGroupTableOption">Option</div>
+                <div className="OptionGroupTableValue">Value</div>
+                <div className="OptionGroupTableAnnotations">
+                    <div className="Annotation">
+                        <div className="OntologyName">Ontology</div>
+                        <div className="ConceptDisplayName">Display name</div>
+                        <div className="ConceptCode">Concept ID</div>
+                    </div>
+                </div>
+                <div className="OptionGroupTableButton"/>
+            </div>
+            <div className="OptionGroupTableBody TableBody">
+                {options.length === 0 ?
+                    <div className="NoResults">This option group does not contain options.</div> : <div>
                         {options.map((option) => {
                             const data = {
-                                type: "field_option",
-                                id: option.id,
-                                parent: id
+                                type:   "field_option",
+                                id:     option.id,
+                                parent: id,
                             };
 
-                            return <Row className="OptionGroupItem" key={option.id}>
-                                <Col sm={3}>{option.name}</Col>
-                                <Col sm={2}>{option.value}</Col>
-                                <Col sm={6}>
-                                    <Annotations annotations={option.annotations} />
-                                </Col>
-                                <Col sm={1}>
-                                    <Button variant="link" onClick={() => {openModal(data)}}>
-                                        <Icon type="add" />
+                            return <div className="OptionGroupItem" key={option.id}>
+                                <div className="OptionGroupTableOption">{option.name}</div>
+                                <div className="OptionGroupTableValue">{option.value}</div>
+                                <div className="OptionGroupTableAnnotations">
+                                    <Annotations annotations={option.annotations}/>
+                                </div>
+                                <div className="OptionGroupTableButton">
+                                    <Button variant="link" onClick={() => {
+                                        openModal(data)
+                                    }}>
+                                        <Icon type="add"/>
                                     </Button>
-                                </Col>
-                            </Row>;
+                                </div>
+                            </div>;
                         })}
                     </div>
-                    }
-                </div>
+                }
             </div>
-        </Toggle>;
+        </div>;
     }
 }

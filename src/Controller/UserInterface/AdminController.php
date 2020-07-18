@@ -64,6 +64,7 @@ class AdminController extends AbstractController
      * @Route("/catalogs", name="admin_catalogs")
      * @Route("/models", name="admin_models")
      * @Route("/studies", name="admin_studies")
+     * @Route("/datasets", name="admin_datasets")
      */
     public function adminModels(): Response
     {

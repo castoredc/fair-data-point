@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import axios from "axios";
 import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
 import {PrivateRoute, ProtectedRoute} from "./components/Route";
-import AdminPageWrapper from "./pages/Admin/PageWrapper";
+import Admin from "./pages/Admin";
 import Main from "./pages/Main";
 
 axios.interceptors.response.use(function (response) {
@@ -42,7 +42,7 @@ export default ({user}) =>
         <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={StudyMetadataWrapper} />
 
         /* Admin */
-        <ProtectedRoute path="/admin" user={user} component={AdminPageWrapper} />
+        <ProtectedRoute path="/admin" user={user} component={Admin} />
 
         <Route component={NotFound} />
     </Switch>;

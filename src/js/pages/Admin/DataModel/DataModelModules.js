@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import DataModelModuleModal from "../../../modals/DataModelModuleModal";
-import {Col, Row} from "react-bootstrap";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import './DataModelModules.scss';
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -10,6 +9,8 @@ import DataModelModule from "../../../components/DataModelModule/DataModelModule
 import ToastContent from "../../../components/ToastContent";
 import TripleModal from "../../../modals/TripleModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
+import SideTabs from "../../../components/SideTabs";
+import Toggle from "../../../components/Toggle";
 
 export default class DataModelModules extends Component {
     constructor(props) {
@@ -228,7 +229,7 @@ export default class DataModelModules extends Component {
 
         const orderOptions = this.getOrderOptions();
 
-        return <div>
+        return <div className="PageBody">
             <DataModelModuleModal
                 orderOptions={orderOptions}
                 show={showModal.module}
@@ -256,39 +257,41 @@ export default class DataModelModules extends Component {
                 action="Delete triple"
                 variant="danger"
                 onConfirm={this.removeTriple}
-                onCancel={this.hideDeleteModal}
+                onCancel={() => this.closeModal('removeTriple')}
                 show={showModal.removeTriple}
             >
                 Are you sure you want to delete this triple?
             </ConfirmModal>
 
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
-                        <Button icon="add" onClick={() => {this.openModuleModal(null)}}>Add module</Button>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={12}>
-                    {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : modules.map((element) => {
-                        return <DataModelModule
-                            key={element.id}
-                            id={element.id}
-                            title={element.title}
-                            repeated={element.repeated}
-                            order={element.order}
-                            groupedTriples={element.groupedTriples}
-                            modelId={dataModel.id}
-                            versionId={version}
-                            openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order, repeated: element.repeated})}
-                            openTripleModal={(tripleData) => this.openTripleModal(element, tripleData)}
-                            openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element, tripleData)}
-                        />;
-                    })}
-                </Col>
-            </Row>
+            {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
+                hasButtons
+                tabs={modules.map((element) => {
+                    return {
+                        title: `Module ${element.order}. ${element.title}`,
+                        badge: element.repeated && 'Repeated',
+                        content: <DataModelModule
+                                     key={element.id}
+                                     id={element.id}
+                                     title={element.title}
+                                     repeated={element.repeated}
+                                     order={element.order}
+                                     groupedTriples={element.groupedTriples}
+                                     modelId={dataModel.id}
+                                     versionId={version}
+                                     openAddModuleModal={() => {this.openModuleModal(null)}}
+                                     openModuleModal={() => this.openModuleModal({
+                                         id:       element.id,
+                                         title:    element.title,
+                                         order:    element.order,
+                                         repeated: element.repeated
+                                     })}
+                                     openTripleModal={(tripleData) => this.openTripleModal(element, tripleData)}
+                                     openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element, tripleData)}
+                                 />
+                    }
+                })}
+                />
+            }
         </div>;
     }
 }

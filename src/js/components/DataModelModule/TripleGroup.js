@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Col, Row} from "react-bootstrap";
 import {ActionMenu, Icon} from "@castoredc/matter";
 
 export default class TripleGroup extends Component {
@@ -11,11 +10,12 @@ export default class TripleGroup extends Component {
             subjectValue: id,
         };
 
-        return <Row className="DataModelTriple">
-            <Col sm={4}>
+        return <div className="DataModelTriple">
+            <div className="DataModelSubject">
                 {Node(title, type, value, repeated)}
-            </Col>
-            <Col sm={8}>
+            </div>
+
+            <div className="DataModelPredicateObjects">
                 {predicates.map((predicate) => {
                     return <TriplePredicate
                         key={predicate.id}
@@ -27,8 +27,8 @@ export default class TripleGroup extends Component {
                         openRemoveTripleModal={openRemoveTripleModal}
                     />;
                 })}
-            </Col>
-        </Row>;
+            </div>
+        </div>;
     }
 }
 
@@ -41,11 +41,12 @@ export class TriplePredicate extends Component {
             predicateValue: value.value,
         };
 
-        return <Row className="TriplePredicate">
-            <Col sm={6}>
+        return <div className="TriplePredicateObject">
+            <div className="DataModelPredicate">
                 {value.prefixedValue ? value.prefixedValue : value.value}
-            </Col>
-            <Col sm={6}>
+            </div>
+
+            <div className="DataModelObjects">
                 {objects.map((object) => {
                     return <TripleObject
                         key={object.id}
@@ -61,8 +62,8 @@ export class TriplePredicate extends Component {
                         openRemoveTripleModal={openRemoveTripleModal}
                     />;
                 })}
-            </Col>
-        </Row>;
+            </div>
+        </div>;
     }
 }
 
@@ -82,10 +83,10 @@ export class TripleObject extends Component {
             id: tripleId
         };
 
-        return <div className="TripleObject">
+        return <div className="DataModelObject">
             {Node(title, type, value, repeated)}
 
-            <div className="TripleActions" ref={this.ref}>
+            <div className="DataModelTripleActions" ref={this.ref}>
                 <ActionMenu
                     accessibleLabel="Contextual menu"
                     // container={this.ref.current}

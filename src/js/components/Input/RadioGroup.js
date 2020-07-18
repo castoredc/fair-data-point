@@ -8,7 +8,7 @@ export default class RadioGroup extends ValidatorComponent {
     render() {
         const { value, options, onChange, name, variant, readOnly, serverError } = this.props;
 
-        return <Form.Group className="Input">
+        return <div className="Input">
             <div
                 className={'RadioGroup'  + (variant === 'horizontal' ? ' Horizontal' : ' Vertical')}
                 ref={(r) => { this.input = r; }}
@@ -33,7 +33,7 @@ export default class RadioGroup extends ValidatorComponent {
                     </TextStyle>
                 ))}
             </div>
-        </Form.Group>;
+        </div>;
     }
 
 

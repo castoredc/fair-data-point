@@ -5,7 +5,7 @@ export default class DistributionDetails extends Component {
     render() {
         const { distribution, catalog, dataset } = this.props;
 
-        return <div>
+        return <div className="PageBody">
             <DistributionForm
                 catalog={catalog}
                 dataset={dataset}

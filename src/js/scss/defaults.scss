@@ -102,42 +102,8 @@ ul {
   padding: 50px 0;
   color: $neutral-80;
   font-size: 16px;
+  width: 100%;
 }
-
-
-.TabTabs {
-  &.row {
-    margin-bottom: 20px;
-  }
-
-  & > div {
-    border-bottom: 1px solid $neutral-40;
-  }
-
-  .nav-tabs {
-    border-bottom: 0;
-
-    .nav-link {
-      border: none;
-      border-radius: 0;
-      background: none;
-      padding: 5px 3px;
-      margin-right: 20px;
-      border-bottom: 2px solid transparent;
-      color: $neutral-300;
-
-      &.active {
-        border-bottom-color: $mid-blue;
-        color: $neutral-800;
-      }
-
-      &.disabled {
-        color: $neutral-60;
-      }
-    }
-  }
-}
-
 
 /* Design system overrides */
 

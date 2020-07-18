@@ -1,16 +1,15 @@
 import React, {Component} from "react";
 import ContactsForm from "../../../components/Form/Study/ContactsForm";
-import Container from "react-bootstrap/Container";
 
 export default class StudyContacts extends Component {
     render() {
         const { study } = this.props;
 
-        return <Container>
+        return <div className="PageBody">
             <ContactsForm
                 studyId={study.id}
                 admin={true}
             />
-        </Container>;
+        </div>;
     }
 }

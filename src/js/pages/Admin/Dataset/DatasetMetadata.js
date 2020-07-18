@@ -5,7 +5,9 @@ export default class DatasetMetadata extends Component {
     render() {
         const { dataset, onSave } = this.props;
 
-        return <DatasetMetadataForm dataset={dataset} onSave={onSave} />;
+        return <div className="PageBody">
+            <DatasetMetadataForm dataset={dataset} onSave={onSave} />
+        </div>;
     }
 
 }

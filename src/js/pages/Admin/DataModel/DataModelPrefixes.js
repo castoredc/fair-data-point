@@ -3,11 +3,9 @@ import axios from "axios";
 import {toast} from "react-toastify/index";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Col, Row} from "react-bootstrap";
-import {Button, DataTable} from "@castoredc/matter";
+import {Button, DataTable, Stack} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
-import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 
 export default class DataModelPrefixes extends Component {
     constructor(props) {
@@ -100,7 +98,7 @@ export default class DataModelPrefixes extends Component {
         const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
         const {dataModel, version} = this.props;
 
-        return <div className="SubPage">
+        return <div className="PageBody">
             <DataModelPrefixModal
                 show={showModal.add}
                 handleClose={() => {
@@ -127,65 +125,59 @@ export default class DataModelPrefixes extends Component {
                 Are you sure you want to delete prefix <strong>{prefixModalData.prefix}</strong>?
             </ConfirmModal>}
 
-            <Row>
-                <Col sm={6}/>
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
                         <Button icon="add" onClick={() => {
                             this.openModal('add', null)
                         }}>Add prefix</Button>
-                    </div>
-                </Col>
-            </Row>
-            <Row className="FillHeight">
-                <Col sm={12} className="Page">
-                    <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
-                        {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
-                                <DataTable
-                            anchorRight={1}
-                            emptyTableMessage="This data model does not have prefixes"
-                            cellSpacing="default"
-                            rows={prefixes.map((item) => {
-                                return [
-                                    item.prefix,
-                                    item.uri,
-                                    [
-                                        {
-                                            destination: () => {
-                                                this.openModal('add', {id: item.id, prefix: item.prefix, uri: item.uri})
-                                            },
-                                            label:       'Edit prefix',
+                </Stack>
+            </div>
+
+                <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
+                    {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
+                            <DataTable
+                        anchorRight={1}
+                        emptyTableMessage="This data model does not have prefixes"
+                        cellSpacing="default"
+                        rows={prefixes.map((item) => {
+                            return [
+                                item.prefix,
+                                item.uri,
+                                [
+                                    {
+                                        destination: () => {
+                                            this.openModal('add', {id: item.id, prefix: item.prefix, uri: item.uri})
                                         },
-                                        {
-                                            destination: () => {
-                                                this.openModal('remove', {id: item.id, prefix: item.prefix, uri: item.uri})
-                                            },
-                                            label:       'Delete prefix',
+                                        label:       'Edit prefix',
+                                    },
+                                    {
+                                        destination: () => {
+                                            this.openModal('remove', {id: item.id, prefix: item.prefix, uri: item.uri})
                                         },
-                                    ],
-                                ];
-                            })}
-                            structure={{
-                                id:      {
-                                    header:    'Prefix',
-                                    resizable: true,
-                                    template:  'fixed',
-                                },
-                                title:   {
-                                    header:    'URI',
-                                    resizable: true,
-                                    template:  'fixed',
-                                },
-                                actions: {
-                                    header:   '',
-                                    template: 'rowAction',
-                                },
-                            }}
-                        />
-                        </div>}
-                    </div>
-                </Col>
-            </Row>
+                                        label:       'Delete prefix',
+                                    },
+                                ],
+                            ];
+                        })}
+                        structure={{
+                            id:      {
+                                header:    'Prefix',
+                                resizable: true,
+                                template:  'fixed',
+                            },
+                            title:   {
+                                header:    'URI',
+                                resizable: true,
+                                template:  'fixed',
+                            },
+                            actions: {
+                                header:   '',
+                                template: 'rowAction',
+                            },
+                        }}
+                    />
+                    </div>}
+                </div>
         </div>;
     }
 }

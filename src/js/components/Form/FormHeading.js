@@ -7,9 +7,7 @@ class FormHeading extends Component {
         const {label} = this.props;
         return (
             <div className="FormHeading">
-                <Form.Row>
-                    <Heading type="Subsection">{label}</Heading>
-                </Form.Row>
+                <Heading type="Subsection">{label}</Heading>
             </div>
         );
     }

@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import {Col, Row} from "react-bootstrap";
-import {Button, DataTable} from "@castoredc/matter";
-import MetadataVersionModal from "../../../modals/MetadataVersionModal";
+import {Button, DataTable, Stack} from "@castoredc/matter";
 import DataModelVersionModal from "../../../modals/DataModelVersionModal";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -54,7 +52,7 @@ export default class DataModelVersions extends Component {
 
         const latestVersion = dataModel.versions.slice(-1)[0].version;
 
-        return <div>
+        return <div className="PageBody">
             <DataModelVersionModal
                 show={showModal}
                 latestVersion={latestVersion}
@@ -64,42 +62,36 @@ export default class DataModelVersions extends Component {
                 onSave={this.createNewVersion}
             />
 
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
                         <Button icon="add" onClick={this.openModal}>Create version</Button>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={12}>
-                    <DataTable
-                        emptyTableMessage="This data model does not have any versions"
-                        cellSpacing="default"
-                        rows={dataModel.versions.map((version) => {
-                            return [version.version, version.count.modules, version.count.nodes];
-                        })}
-                        structure={{
-                            version:    {
-                                header:    'Version',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                            moduleCount:    {
-                                header:    'Modules',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                            nodeCount:    {
-                                header:    'Nodes',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                        }}
-                    />
-                </Col>
-            </Row>
+                </Stack>
+            </div>
+
+            <DataTable
+                emptyTableMessage="This data model does not have any versions"
+                cellSpacing="default"
+                rows={dataModel.versions.map((version) => {
+                    return [version.version, version.count.modules, version.count.nodes];
+                })}
+                structure={{
+                    version:    {
+                        header:    'Version',
+                        resizable: true,
+                        template:  'fixed',
+                    },
+                    moduleCount:    {
+                        header:    'Modules',
+                        resizable: true,
+                        template:  'fixed',
+                    },
+                    nodeCount:    {
+                        header:    'Nodes',
+                        resizable: true,
+                        template:  'fixed',
+                    },
+                }}
+            />
         </div>;
     }
 

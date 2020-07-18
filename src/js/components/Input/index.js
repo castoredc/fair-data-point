@@ -11,12 +11,16 @@ class Input extends ValidatorComponent {
         const { errorMessages, serverError, validators, requiredError, validatorListener, mask, ...rest } = this.props;
         const { isValid } = this.state;
         return (
-            <Form.Group className="Input">
+            <div className="Input">
                 {mask ? <MaskedInput
                         mask={mask}
-                        className="form-control"
+                        className="MaskedInput"
                         {...rest}
                         ref={(r) => { this.input = r; }}
+                        invalid={!isValid}
+                        render={(ref, props) => (
+                            <TextInput forwardRef={ref} {...props} />
+                        )}
                     /> : <TextInput
                         {...rest}
                         invalid={!isValid}
@@ -29,7 +33,7 @@ class Input extends ValidatorComponent {
                         {errorText}
                     </TextStyle>
                 ))}
-            </Form.Group>
+            </div>
         );
     }
 

@@ -1,7 +1,4 @@
 import React, {Component} from "react";
-import {Col, Row} from "react-bootstrap";
-import {Button} from "@castoredc/matter";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -13,7 +10,6 @@ export default class CatalogAddDataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            displayFilter: false,
             showModal: {
                 newDataset: false,
                 confirm: false
@@ -22,12 +18,6 @@ export default class CatalogAddDataset extends Component {
             addedDataset: null
         };
     }
-
-    toggleFilter = () => {
-        this.setState({
-            displayFilter: ! this.state.displayFilter
-        });
-    };
 
     openModal = (type) => {
         const {showModal} = this.state;
@@ -86,9 +76,9 @@ export default class CatalogAddDataset extends Component {
 
     render() {
         const { catalog } = this.props;
-        const { displayFilter, showModal, selectedDataset, addedDataset } = this.state;
+        const { showModal, selectedDataset, addedDataset } = this.state;
 
-        return <div className="SubPage">
+        return <div className="PageBody">
             {selectedDataset && <ConfirmModal
                 title="Add dataset"
                 action="Add dataset"
@@ -100,24 +90,10 @@ export default class CatalogAddDataset extends Component {
                 Are you sure you want to add {selectedDataset.hasMetadata ? <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to this catalog?
             </ConfirmModal>}
 
-            <Row>
-                <Col sm={6} />
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
-                        <ButtonGroup className="FilterButton">
-                            <Button icon="filters" buttonType="secondary" onClick={this.toggleFilter} active={displayFilter}>
-                                Filters
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                </Col>
-            </Row>
             <DatasetsDataTable
                 onClick={this.handleDatasetClick}
-                displayOverlay={displayFilter}
                 hideCatalog={catalog}
                 lastHandledDataset={addedDataset}
-                overlay
             />
         </div>;
     }

@@ -10,6 +10,8 @@ use IteratorAggregate;
 use function array_key_exists;
 use function count;
 use function in_array;
+use function strcasecmp;
+use function usort;
 
 class CastorEntityCollection implements Countable, IteratorAggregate
 {
@@ -78,5 +80,12 @@ class CastorEntityCollection implements Countable, IteratorAggregate
         }
 
         return $newArray;
+    }
+
+    public function orderByLabel(): void
+    {
+        usort($this->entities, static function (CastorEntity $a, CastorEntity $b): int {
+            return strcasecmp($a->getLabel(), $b->getLabel());
+        });
     }
 }

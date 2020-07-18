@@ -1,6 +1,5 @@
 import React, {Component} from "react";
-import {Col, Row} from "react-bootstrap";
-import {Button} from "@castoredc/matter";
+import {Button, Stack, ViewHeader} from "@castoredc/matter";
 import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
 import AddStudyModal from "../../../modals/AddStudyModal";
 
@@ -34,22 +33,23 @@ export default class Studies extends Component {
                 handleClose={this.closeModal}
             />
 
-            <Row className="PageHeader">
-                <Col sm={12} className="PageTitle">
-                    <div><h3>Studies</h3></div>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={6}/>
-                <Col sm={6}>
-                    <div className="ButtonBar Right">
-                        <Button icon="add" onClick={this.openModal}>New study</Button>
+            <div className="Page">
+                <div className="PageTitle">
+                    <ViewHeader>Studies</ViewHeader>
+                </div>
+
+                <div className="PageBody">
+                    <div className="PageButtons">
+                        <Stack distribution="trailing" alignment="end">
+                            <Button icon="add" onClick={this.openModal}>New study</Button>
+                        </Stack>
                     </div>
-                </Col>
-            </Row>
-            <StudiesDataTable
-                history={history}
-            />
+
+                    <StudiesDataTable
+                        history={history}
+                    />
+                </div>
+            </div>
         </div>;
     }
 }

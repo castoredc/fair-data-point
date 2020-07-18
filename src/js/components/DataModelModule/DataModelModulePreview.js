@@ -1,15 +1,35 @@
 import React, {Component} from 'react'
-import Toggle from "../Toggle";
 import Highlight from "../Highlight";
+import {Tabs} from "@castoredc/matter";
 
 export default class DataModelModulePreview extends Component {
-    render() {
-        const { title, order, rdf } = this.props;
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedTab: 'rdf',
+        };
+    }
 
-        return <div className="DataModelModulePreview">
-            <Toggle title={`Module ${order}. ${title}`}>
-                <Highlight content={rdf} />
-            </Toggle>
-        </div>;
+    changeTab = (tabIndex) => {
+        this.setState({
+            selectedTab: tabIndex,
+        });
+    };
+
+    render() {
+        const {selectedTab} = this.state;
+        const {rdf} = this.props;
+
+        return <Tabs
+            onChange={this.changeTab}
+            selected={selectedTab}
+            tabs={{
+                rdf: {
+                    title:   'RDF',
+                    content: rdf !== '' ? <Highlight content={rdf}/> :
+                                 <div className="NoResults">There is no preview available.</div>,
+                },
+            }}
+        />;
     }
 }

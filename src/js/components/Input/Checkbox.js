@@ -14,7 +14,7 @@ export default class Checkbox extends ValidatorComponent {
         } = this.props;
 
         return (
-            <Form.Group className="CheckboxFormGroup">
+            <div className="CheckboxFormGroup">
                 <ChoiceOption
                     labelText={label}
                     type="checkbox"
@@ -22,7 +22,7 @@ export default class Checkbox extends ValidatorComponent {
                     checked={value}
                 />
                 {this.errorText()}
-            </Form.Group>
+            </div>
         );
     }
 
