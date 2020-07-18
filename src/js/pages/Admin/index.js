@@ -11,6 +11,7 @@ import Studies from "./Home/Studies";
 import Catalog from "./Catalog";
 import Distribution from "./Distribution";
 import Dataset from "./Dataset";
+import Datasets from "./Home/Datasets";
 
 export default class Admin extends Component {
     constructor(props) {
@@ -33,9 +34,6 @@ export default class Admin extends Component {
     };
 
     render() {
-        const {user} = this.props;
-        const {showMenu} = this.state;
-
         return <div className="Admin">
             <CastorBar
                 items={[
@@ -55,6 +53,22 @@ export default class Admin extends Component {
                                              strict: false,
                                          }) || matchPath(window.location.pathname, {
                                              path:   "/admin/catalog/:catalog",
+                                             exact:  false,
+                                             strict: false,
+                                         })
+                                     ),
+                    },
+                    {
+                        destination: <Link to={'/admin/datasets'}/>,
+                        icon:        'archive',
+                        label:       'Datasets',
+                        isCurrent:   (
+                                         matchPath(window.location.pathname, {
+                                             path:   "/admin/datasets",
+                                             exact:  true,
+                                             strict: false,
+                                         }) || matchPath(window.location.pathname, {
+                                             path:   "/admin/dataset/:dataset",
                                              exact:  false,
                                              strict: false,
                                          })
@@ -117,6 +131,7 @@ export default class Admin extends Component {
                     <Route path="/admin/catalogs" exact component={Catalogs}/>
                     <Route path="/admin/catalog/:catalog" component={Catalog}/>
 
+                    <Route path="/admin/datasets" component={Datasets}/>
                     <Route path="/admin/dataset/:dataset/distribution/:distribution" component={Distribution}/>
                     <Route path="/admin/dataset/:dataset" component={Dataset}/>
 
