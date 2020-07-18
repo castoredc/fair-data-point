@@ -14,9 +14,13 @@ class Input extends ValidatorComponent {
             <div className="Input">
                 {mask ? <MaskedInput
                         mask={mask}
-                        className="form-control"
+                        className="MaskedInput"
                         {...rest}
                         ref={(r) => { this.input = r; }}
+                        invalid={!isValid}
+                        render={(ref, props) => (
+                            <TextInput forwardRef={ref} {...props} />
+                        )}
                     /> : <TextInput
                         {...rest}
                         invalid={!isValid}
