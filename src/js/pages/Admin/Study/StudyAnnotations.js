@@ -60,17 +60,19 @@ export default class StudyAnnotations extends Component {
                 studyId={study.id}
             />
 
-            <Tabs
-                onChange={this.changeTab}
-                selected={selectedType}
-                tabs={{
-                    optionGroups: {
-                        title:   'Option Groups',
-                        content: <OptionGroups studyId={study.id} openModal={this.openModal} shouldUpdate={shouldUpdate}
-                                               onUpdate={this.onUpdate}/>,
-                    },
-                }}
-            />
+            <div className="PageTabs">
+                <Tabs
+                    onChange={this.changeTab}
+                    selected={selectedType}
+                    tabs={{
+                        optionGroups: {
+                            title:   'Option Groups',
+                            content: <OptionGroups studyId={study.id} openModal={this.openModal} shouldUpdate={shouldUpdate}
+                                                   onUpdate={this.onUpdate}/>,
+                        },
+                    }}
+                />
+            </div>
         </div>;
     }
 }

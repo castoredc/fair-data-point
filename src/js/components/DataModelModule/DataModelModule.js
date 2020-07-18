@@ -22,29 +22,31 @@ export default class DataModelModule extends Component {
                 </Stack>
             </div>
 
-            <div className="DataModelTableHeader">
-                <div>Subject</div>
-                <div>Predicate</div>
-                <div>Object</div>
-            </div>
+            <div className="DataModelTable LargeTable">
+                <div className="DataModelTableHeader TableHeader">
+                    <div>Subject</div>
+                    <div>Predicate</div>
+                    <div>Object</div>
+                </div>
 
-            {groupedTriples.length === 0 ? <div className="NoResults">This module does not contain triples.</div> :
-                <div className="DataModelTableBody">
-                    {groupedTriples.map((element) => {
-                        return <TripleGroup
-                            key={element.id}
-                            id={element.id}
-                            type={element.type}
-                            title={element.title}
-                            repeated={element.repeated}
-                            description={element.description}
-                            value={element.value}
-                            predicates={element.predicates}
-                            openTripleModal={openTripleModal}
-                            openRemoveTripleModal={openRemoveTripleModal}
-                        />;
-                    })}
-                </div>}
+                {groupedTriples.length === 0 ? <div className="NoResults">This module does not contain triples.</div> :
+                    <div className="DataModelTableBody TableBody">
+                        {groupedTriples.map((element) => {
+                            return <TripleGroup
+                                key={element.id}
+                                id={element.id}
+                                type={element.type}
+                                title={element.title}
+                                repeated={element.repeated}
+                                description={element.description}
+                                value={element.value}
+                                predicates={element.predicates}
+                                openTripleModal={openTripleModal}
+                                openRemoveTripleModal={openRemoveTripleModal}
+                            />;
+                        })}
+                    </div>}
+            </div>
         </div>;
     }
 }

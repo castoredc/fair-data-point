@@ -19,7 +19,7 @@
 
   .SideTabsNav {
     width: 210px;
-    overflow: hidden;
+    overflow: auto;
     flex: 0 0 210px;
     margin-right: 30px;
 
@@ -48,5 +48,6 @@
 
   .SideTabsContent {
     flex: 1;
+    overflow: auto;
   }
 }

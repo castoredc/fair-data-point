@@ -90,8 +90,37 @@
   }
 }
 
-.OptionGroups {
-  margin-top: 15px;
+.OptionGroupTable {
+  .OptionGroupTableHeader, .OptionGroupItem {
+    display: flex;
+    flex-wrap: wrap;
+
+    border-bottom: solid 1px $neutral-40;
+    width: 100%;
+
+    .OptionGroupTableOption, .OptionGroupTableValue, .OptionGroupTableAnnotations {
+      padding: 0 10px;
+    }
+
+    .OptionGroupTableOption {
+      width: 200px;
+      flex: 0 0 200px;
+    }
+
+    .OptionGroupTableValue {
+      width: 200px;
+      flex: 0 0 200px;
+    }
+
+    .OptionGroupTableAnnotations {
+      flex: 1;
+    }
+
+    .OptionGroupTableButton {
+      width: 60px;
+      flex: 0 0 60px;
+    }
+  }
 
   .OptionGroupTableHeader {
     font-weight: bold;
@@ -99,6 +128,7 @@
 
   .OptionGroupItem {
     padding-top: 10px;
+    padding-bottom: 10px;
 
     &:hover {
       background: $neutral-20;
@@ -111,12 +141,5 @@
 
   .OptionGroupItem, .OptionGroupTableHeader {
     color: $neutral-800;
-
-    &::after {
-      content: '';
-      border-bottom: solid 1px $neutral-40;
-      width: 100%;
-      margin: 10px 15px 0 15px;
-    }
   }
 }

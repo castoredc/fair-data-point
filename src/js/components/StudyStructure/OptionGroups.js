@@ -6,6 +6,8 @@ import Col from "react-bootstrap/Col";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import OptionGroup from "./OptionGroup";
 import './StudyStructure.scss';
+import SideTabs from "../SideTabs";
+import DataModelModulePreview from "../DataModelModule/DataModelModulePreview";
 
 export default class OptionGroups extends Component {
     constructor(props) {
@@ -66,11 +68,18 @@ export default class OptionGroups extends Component {
             return <InlineLoader />;
         }
 
-        return optionGroups.length === 0 ? <Col sm={12} className="NoResults">This study does not have option groups.</Col> : <div className="OptionGroups">
-                {optionGroups.map((optionGroup) => {
-                    return <OptionGroup key={optionGroup.id} id={optionGroup.id} name={optionGroup.name} options={optionGroup.options} openModal={openModal} />
-                })}
-            </div>
+        if(optionGroups.length === 0) {
+            return <div className="NoResults">This study does not have option groups.</div>
+        }
+
+        return <SideTabs
+            tabs={optionGroups.map((optionGroup) => {
+                return {
+                    title:   optionGroup.name,
+                    content: <OptionGroup key={optionGroup.id} id={optionGroup.id} name={optionGroup.name} options={optionGroup.options} openModal={openModal} />
+                }
+            })}
+        />
     }
 
 }

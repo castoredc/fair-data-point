@@ -2,11 +2,31 @@
 @import '../../scss/const';
 
 .Annotation {
-  .row {
-    margin: 0 -5px;
+  border-bottom: solid 1px $neutral-40;
+  padding: 10px 0;
+  display: flex;
 
-    & > div {
-      padding: 0 5px;
-    }
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .OntologyName {
+    width: 30%;
+    flex: 0 0 30%;
+  }
+
+  .ConceptDisplayName {
+    width: 40%;
+    flex: 0 0 40%;
+  }
+
+  .ConceptCode {
+    width: 30%;
+    flex: 0 0 30%;
   }
 }
