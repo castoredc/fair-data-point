@@ -24,24 +24,10 @@
   }
 }
 
-.FormContent, .FormTabs {
+.FormContent {
   height: 100%;
   flex: 1;
   overflow: auto;
-}
-
-.FormTabs {
-  & > div {
-    /* Matter Tabs */
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-
-    & > div[role=tabpanel] {
-      flex: 1;
-      overflow: auto;
-    }
-  }
 }
 
 .FormLoader {
@@ -49,12 +35,7 @@
 }
 
 .FormItem {
-  .FormLabel {
-    font-weight: bold;
-    //padding: 0 5px;
-  }
-
-  margin: 10px 0;
+  margin: 20px 0;
 
   &.Hidden, .Hidden {
     display: none;
@@ -101,10 +82,6 @@
     & > div, & > div > div {
       max-width: 100%;
     }
-  }
-
-  .form-row {
-    margin: 0;
   }
 
   &:first-child {

@@ -278,7 +278,7 @@ export default class MetadataForm extends Component {
                     data={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined') ? data.publishers[currentPublisher] : null}
                 />
 
-                <div className="FormTabs">
+                <div className="PageTabs">
                     <Tabs
                         tabs={{
                             metadata:   {
