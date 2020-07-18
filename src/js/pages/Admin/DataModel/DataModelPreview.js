@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Col, Row} from "react-bootstrap";
 import axios from "axios";
 import {toast} from "react-toastify";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
@@ -58,26 +57,22 @@ export default class DataModelPreview extends Component {
             return <InlineLoader />;
         }
 
-        return <div>
-            <Row>
-                <Col sm={12}>
-                    {previews.modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <div>
-                        <Toggle title="Full data model">
-                            <Highlight content={previews.full} />
-                        </Toggle>
+        return <div className="PageBody">
+            {previews.modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <div>
+                <Toggle title="Full data model">
+                    <Highlight content={previews.full} />
+                </Toggle>
 
-                        {previews.modules.map((element) => {
-                            return <DataModelModulePreview
-                                key={element.id}
-                                id={element.id}
-                                title={element.title}
-                                order={element.order}
-                                rdf={element.rdf}
-                            />;
-                        })}
-                    </div>}
-                </Col>
-            </Row>
+                {previews.modules.map((element) => {
+                    return <DataModelModulePreview
+                        key={element.id}
+                        id={element.id}
+                        title={element.title}
+                        order={element.order}
+                        rdf={element.rdf}
+                    />;
+                })}
+            </div>}
         </div>;
     }
 }

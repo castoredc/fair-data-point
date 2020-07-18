@@ -5,7 +5,7 @@ export default class CatalogDetails extends Component {
     render() {
         const { catalog } = this.props;
 
-        return <div>
+        return <div className="PageBody">
             <CatalogForm
                 catalog={catalog}
             />

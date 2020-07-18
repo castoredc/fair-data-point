@@ -8,6 +8,7 @@ import {DataTable, Pagination} from "@castoredc/matter";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import Filters from "../Filters";
 import {classNames} from "../../util";
+import './DataTable.scss';
 
 export default class StudiesDataTable extends Component {
     constructor(props) {
@@ -159,20 +160,15 @@ export default class StudiesDataTable extends Component {
 
     render() {
         const {studies, isLoadingStudies, hasLoadedStudies, hasLoadedFilters, filterOptions, pagination} = this.state;
-        const {overlay = false, displayOverlay = false} = this.props;
 
         const hasLoaded = (hasLoadedStudies && hasLoadedFilters);
 
         if(!hasLoaded) {
-            return <Row>
-                <Col>
-                    <InlineLoader />
-                </Col>
-            </Row>;
+            return <InlineLoader />;
         }
 
-        return <Row className="FillHeight">
-        <Col sm={overlay ? 12 : 9} className="Page">
+        return <div className="DataTableContainer">
+        <div className="TableCol">
             <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingStudies && 'Loading')} ref={this.tableRef}>
                 <div className="DataTableWrapper">
                     <DataTable
@@ -240,12 +236,12 @@ export default class StudiesDataTable extends Component {
                 />
 
             </div>
-        </Col>
-        <Col sm={overlay ? 4 : 3}  className={classNames('Filters', overlay && 'Overlay', (overlay && !displayOverlay) && 'Hidden')}>
+        </div>
+        <div className="Filters FilterCol">
             <Filters filters={filterOptions}
                      onFilter={(filter) => this.handleFilter(filter)}
             />
-        </Col>
-    </Row>;
+        </div>
+    </div>;
     }
 }

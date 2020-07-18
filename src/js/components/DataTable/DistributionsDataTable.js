@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
@@ -24,14 +23,14 @@ export default class DistributionsDataTable extends Component {
     }
 
     getDistributions = () => {
-        const { pagination, hasLoadedDistributions } = this.state;
-        const { dataset } = this.props;
+        const {pagination, hasLoadedDistributions} = this.state;
+        const {dataset} = this.props;
 
         this.setState({
             isLoadingDistributions: true,
         });
 
-        if(hasLoadedDistributions) {
+        if (hasLoadedDistributions) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
@@ -54,78 +53,72 @@ export default class DistributionsDataTable extends Component {
     };
 
     render() {
-        const { distributions, isLoadingDistributions, hasLoadedDistributions } = this.state;
-        const { history, catalog, dataset } = this.props;
+        const {distributions, isLoadingDistributions, hasLoadedDistributions} = this.state;
+        const {history, catalog, dataset} = this.props;
 
-        if(!hasLoadedDistributions) {
-            return <Row>
-                <Col>
-                    <InlineLoader />
-                </Col>
-            </Row>;
+        if (!hasLoadedDistributions) {
+            return <InlineLoader/>;
         }
 
-        return <div className="FillHeight">
-        <div className="Page">
-            <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDistributions && 'Loading')} ref={this.tableRef}>
-                <div className="DataTableWrapper">
-                    <DataTable
-                        emptyTableMessage="No distributions found"
-                        highlightRowOnHover
-                        cellSpacing="default"
-                        onClick={(event, rowID, index) => {
-                            if(typeof index !== "undefined") {
-                                history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distributions[index].slug)
-                            }
-                        }}
-                        rows={distributions.map((item) => {
-                            return [
-                                item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-                                item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                                item.type ? item.type.toUpperCase() : '',
-                                item.hasMetadata ? item.metadata.language : '',
-                                item.hasMetadata ? item.metadata.license : '',
-                                item.published ? {
-                                    type: 'view'
-                                } : undefined,
-                            ];
-                        })}
-                        structure={{
-                            title: {
-                                header:    'Title',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            description: {
-                                header:    'Description',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            type: {
-                                header:    'Type',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            language: {
-                                header:    'Language',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            license: {
-                                header:    'License',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            published: {
-                                header:    'Published',
-                                icon:      'view',
-                                template:  'icon'
-                            },
-                        }}
-                    />
-                </div>
+        return <div
+            className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDistributions && 'Loading')}
+            ref={this.tableRef}>
+            <div className="DataTableWrapper">
+                <DataTable
+                    emptyTableMessage="No distributions found"
+                    highlightRowOnHover
+                    cellSpacing="default"
+                    onClick={(event, rowID, index) => {
+                        if (typeof index !== "undefined") {
+                            history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distributions[index].slug)
+                        }
+                    }}
+                    rows={distributions.map((item) => {
+                        return [
+                            item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
+                            item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
+                            item.type ? item.type.toUpperCase() : '',
+                            item.hasMetadata ? item.metadata.language : '',
+                            item.hasMetadata ? item.metadata.license : '',
+                            item.published ? {
+                                type: 'view',
+                            } : undefined,
+                        ];
+                    })}
+                    structure={{
+                        title:       {
+                            header:    'Title',
+                            resizable: true,
+                            template:  'text',
+                        },
+                        description: {
+                            header:    'Description',
+                            resizable: true,
+                            template:  'text',
+                        },
+                        type:        {
+                            header:    'Type',
+                            resizable: true,
+                            template:  'text',
+                        },
+                        language:    {
+                            header:    'Language',
+                            resizable: true,
+                            template:  'text',
+                        },
+                        license:     {
+                            header:    'License',
+                            resizable: true,
+                            template:  'text',
+                        },
+                        published:   {
+                            header:   'Published',
+                            icon:     'view',
+                            template: 'icon',
+                        },
+                    }}
+                />
             </div>
-        </div>
-    </div>;
+        </div>;
     }
 }

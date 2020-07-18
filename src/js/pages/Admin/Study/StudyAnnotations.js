@@ -1,16 +1,16 @@
 import React, {Component} from "react";
-import Tab from "react-bootstrap/Tab";
-import Nav from "react-bootstrap/Nav";
 import OptionGroups from "../../../components/StudyStructure/OptionGroups";
 import AddAnnotationModal from "../../../modals/AddAnnotationModal";
+import {Tabs} from "@castoredc/matter";
 
 export default class StudyAnnotations extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false,
-            modalData: null,
-            shouldUpdate: true
+            showModal:    false,
+            modalData:    null,
+            shouldUpdate: true,
+            selectedType: 'optionGroups',
         };
     }
 
@@ -23,7 +23,7 @@ export default class StudyAnnotations extends Component {
 
     closeModal = () => {
         this.setState({
-            showModal: false
+            showModal: false,
         });
     };
 
@@ -31,21 +31,27 @@ export default class StudyAnnotations extends Component {
         this.closeModal();
 
         this.setState({
-            shouldUpdate: true
+            shouldUpdate: true,
         });
     };
 
     onUpdate = () => {
         this.setState({
-            shouldUpdate: false
+            shouldUpdate: false,
+        });
+    };
+
+    changeTab = (tabIndex) => {
+        this.setState({
+            selectedType: tabIndex,
         });
     };
 
     render() {
-        const { study } = this.props;
-        const { showModal, modalData, shouldUpdate } = this.state;
+        const {study} = this.props;
+        const {showModal, modalData, shouldUpdate, selectedType} = this.state;
 
-        return <div>
+        return <div className="PageBody">
             <AddAnnotationModal
                 show={showModal}
                 entity={modalData}
@@ -53,21 +59,18 @@ export default class StudyAnnotations extends Component {
                 onSaved={this.onSaved}
                 studyId={study.id}
             />
-            <Tab.Container id="DatasetAnnotations" defaultActiveKey="optionGroup">
-                <div className="TabTabs DatasetAnnotationsTabs">
-                    <Nav variant="tabs">
-                        <Nav.Item>
-                            <Nav.Link eventKey="optionGroup">Option Groups</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </div>
-                <Tab.Content>
-                    <Tab.Pane eventKey="optionGroup">
-                        <OptionGroups studyId={study.id} openModal={this.openModal} shouldUpdate={shouldUpdate} onUpdate={this.onUpdate} />
-                    </Tab.Pane>
-                </Tab.Content>
-            </Tab.Container>
 
+            <Tabs
+                onChange={this.changeTab}
+                selected={selectedType}
+                tabs={{
+                    optionGroups: {
+                        title:   'Option Groups',
+                        content: <OptionGroups studyId={study.id} openModal={this.openModal} shouldUpdate={shouldUpdate}
+                                               onUpdate={this.onUpdate}/>,
+                    },
+                }}
+            />
         </div>;
     }
 }

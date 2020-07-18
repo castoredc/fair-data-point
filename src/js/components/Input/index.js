@@ -11,7 +11,7 @@ class Input extends ValidatorComponent {
         const { errorMessages, serverError, validators, requiredError, validatorListener, mask, ...rest } = this.props;
         const { isValid } = this.state;
         return (
-            <Form.Group className="Input">
+            <div className="Input">
                 {mask ? <MaskedInput
                         mask={mask}
                         className="form-control"
@@ -29,7 +29,7 @@ class Input extends ValidatorComponent {
                         {errorText}
                     </TextStyle>
                 ))}
-            </Form.Group>
+            </div>
         );
     }
 

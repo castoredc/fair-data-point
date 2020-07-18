@@ -27,6 +27,10 @@
   color: $red-400;
 }
 
+.RadioGroup {
+  overflow: auto;
+}
+
 .RadioGroup.Horizontal div {
   float: left;
   margin-right: 20px;

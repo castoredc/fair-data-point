@@ -5,7 +5,7 @@ export default class CatalogDatasets extends Component {
     render() {
         const {catalog, history} = this.props;
 
-        return <div className="SubPage">
+        return <div className="PageBody">
             <DatasetsDataTable
                 history={history}
                 catalog={catalog}

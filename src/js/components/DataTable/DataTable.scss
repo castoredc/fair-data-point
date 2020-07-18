@@ -1,0 +1,18 @@
+.DataTableContainer {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 100%;
+  overflow: auto;
+
+  .TableCol {
+    flex: 1;
+    height: 100%;
+  }
+
+  .FilterCol {
+    width: 400px;
+    flex: 0 0 400px;
+    margin-left: 30px;
+    height: 100%;
+  }
+}

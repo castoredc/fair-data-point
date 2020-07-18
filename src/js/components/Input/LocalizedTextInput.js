@@ -37,7 +37,7 @@ export default class LocalizedTextInput extends Component {
         const { inputData } = this.state;
 
         return (
-            <Form.Group className="Input LocalizedTextInput">
+            <div className="Input LocalizedTextInput">
                 {inputData.map((localizedTextItem, index) => {
                     return <div key={`${name}-${index}`} className="LocalizedTextInputItem">
                         <div className="LocalizedTextInputText">
@@ -70,7 +70,7 @@ export default class LocalizedTextInput extends Component {
                         {errorText}
                     </TextStyle>
                 ))}
-            </Form.Group>
+            </div>
         );
     }
 }

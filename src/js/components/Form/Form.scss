@@ -11,7 +11,7 @@
   opacity: 0.5;
 }
 
-.MetadataFormButtons {
+.FormButtons {
   padding-top: 25px;
   margin-top: 25px;
   border-top: 1px solid $neutral-30;
@@ -24,11 +24,13 @@
   }
 }
 
-.MetadataFormTabs {
+.FormContent, .FormTabs {
   height: 100%;
   flex: 1;
   overflow: auto;
+}
 
+.FormTabs {
   & > div {
     /* Matter Tabs */
     height: 100%;
@@ -86,6 +88,10 @@
 
     &.AlignRight {
       justify-content: flex-end;
+    }
+
+    .FormItemContent {
+      overflow: auto;
     }
   }
 

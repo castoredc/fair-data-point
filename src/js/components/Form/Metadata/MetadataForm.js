@@ -278,7 +278,7 @@ export default class MetadataForm extends Component {
                     data={(currentPublisher !== null && typeof data.publishers[currentPublisher] !== 'undefined') ? data.publishers[currentPublisher] : null}
                 />
 
-                <div className="MetadataFormTabs">
+                <div className="FormTabs">
                     <Tabs
                         tabs={{
                             metadata:   {
@@ -389,7 +389,7 @@ export default class MetadataForm extends Component {
                     />
                 </div>
 
-                <div className="MetadataFormButtons">
+                <div className="FormButtons">
                     <Stack distribution="trailing">
                         <Button type="submit" disabled={submitDisabled}>
                             Save

@@ -5,7 +5,7 @@ export default class DatasetDetails extends Component {
     render() {
         const { dataset } = this.props;
 
-        return <div>
+        return <div className="PageBody">
             <DatasetForm
                 dataset={dataset}
             />

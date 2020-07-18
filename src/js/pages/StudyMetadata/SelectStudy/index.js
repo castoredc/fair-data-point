@@ -10,19 +10,20 @@ import Col from "react-bootstrap/Col";
 import LoadingScreen from "../../../components/LoadingScreen";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 import {localizedText} from "../../../util";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
+import {ValidatorForm} from "react-form-validator-core";
 
 export default class AddStudy extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedStudy: null,
-            studies: {},
-            isLoading: true,
-            isSaved: false,
+            selectedStudy:  null,
+            studies:        {},
+            isLoading:      true,
+            isSaved:        false,
             submitDisabled: true,
-            study: null
+            study:          null,
         };
     }
 
@@ -30,8 +31,8 @@ export default class AddStudy extends Component {
         axios.get('/api/castor/studies')
             .then((response) => {
                 this.setState({
-                    studies: response.data,
-                    isLoading: false
+                    studies:   response.data,
+                    isLoading: false,
                 });
             })
             .catch((error) => {
@@ -39,11 +40,10 @@ export default class AddStudy extends Component {
                     isLoading: false,
                 });
 
-                if(error.response && typeof error.response.data.error !== "undefined")
-                {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
                 }
             });
     };
@@ -54,53 +54,49 @@ export default class AddStudy extends Component {
 
     handleStudySelect = (studyId) => {
         this.setState({
-            selectedStudy: studyId,
-            submitDisabled: false
+            selectedStudy:  studyId,
+            submitDisabled: false,
         })
     };
 
     handleNext = () => {
         this.setState({
-            submitDisabled: true
+            submitDisabled: true,
         });
 
         axios.post('/api/catalog/' + this.props.match.params.catalog + '/study/import', {
-            studyId: this.state.selectedStudy
+            studyId: this.state.selectedStudy,
         })
-        .then((response) => {
-            this.setState({
-                isSaved: true,
-                study: response.data
-            });
-        })
+            .then((response) => {
+                this.setState({
+                    isSaved: true,
+                    study:   response.data,
+                });
+            })
             .catch((error) => {
-                if(error.response && error.response.status === 409)
-                {
+                if (error.response && error.response.status === 409) {
                     this.setState({
-                        isSaved: true
+                        isSaved: true,
                     });
-                }
-                else if(error.response && typeof error.response.data.error !== "undefined")
-                {
+                } else if (error.response && typeof error.response.data.error !== "undefined") {
                     this.setState({
-                        submitDisabled: false
+                        submitDisabled: false,
                     });
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 }
             })
     };
 
     render() {
-        const { isLoading, isSaved, study } = this.state;
+        const {isLoading, isSaved, study} = this.state;
 
-        if(isLoading)
-        {
+        if (isLoading) {
             return <LoadingScreen showLoading={true}/>;
         }
 
-        if(isSaved)
-        {
-            return <Redirect push to={'/my-studies/' + this.props.match.params.catalog + '/study/' + study.id + '/metadata/details'} />;
+        if (isSaved) {
+            return <Redirect push
+                             to={'/my-studies/' + this.props.match.params.catalog + '/study/' + study.id + '/metadata/details'}/>;
         }
 
         return <CatalogSteppedForm
@@ -110,23 +106,26 @@ export default class AddStudy extends Component {
             heading="Choose a Study"
             description={'Please choose an item from your list of studies that you’d like to include in the ' + localizedText(this.props.catalog.metadata.title, 'en') + '.'}
         >
-            {this.state.studies.length > 0 ? this.state.studies.map((study) => {
-                    return <ListItem key={study.sourceId}
-                                     title={study.name}
-                                     selectable={true}
-                                     active={this.state.selectedStudy === study.sourceId}
-                                     onClick={() => {this.handleStudySelect(study.sourceId)}}
-                                     leftIcon="study"
-                    />
-                }
-            ) : <div className="NoResults">No studies found.</div>}
+            <div className="FormContent">
+                {this.state.studies.length > 0 ? this.state.studies.map((study) => {
+                        return <ListItem key={study.sourceId}
+                                         title={study.name}
+                                         selectable={true}
+                                         active={this.state.selectedStudy === study.sourceId}
+                                         onClick={() => {
+                                             this.handleStudySelect(study.sourceId)
+                                         }}
+                                         leftIcon="study"
+                        />
+                    },
+                ) : <div className="NoResults">No studies found.</div>}
+            </div>
 
-            <Row className="FullScreenSteppedFormButtons">
-                <Col>&nbsp;</Col>
-                <Col>
+            <div className="FormButtons">
+                <Stack distribution="trailing">
                     <Button disabled={this.state.submitDisabled} onClick={this.handleNext}>Next</Button>
-                </Col>
-            </Row>
+                </Stack>
+            </div>
         </CatalogSteppedForm>;
     }
 }

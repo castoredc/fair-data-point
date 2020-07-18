@@ -122,7 +122,7 @@ class Dropdown extends ValidatorComponent {
         }
 
         return (
-            <Form.Group className="Select" onClick={this.props.onClick}
+            <div className="Select" onClick={this.props.onClick}
                         ref={(r) => { this.input = r; }}>
                 {SelectComponent}
                 {this.errorText()}
@@ -131,7 +131,7 @@ class Dropdown extends ValidatorComponent {
                         {errorText}
                     </TextStyle>
                 ))}
-            </Form.Group>
+            </div>
         );
     }
 
