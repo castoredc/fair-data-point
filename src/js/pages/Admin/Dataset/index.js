@@ -13,6 +13,7 @@ import AddDistribution from "../Dataset/AddDistribution";
 import DatasetMetadata from "./DatasetMetadata";
 import DatasetDetails from "./DatasetDetails";
 import {Button, ViewHeader} from "@castoredc/matter";
+import BackButton from "../../../components/BackButton";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -58,11 +59,7 @@ export default class Dataset extends Component {
         return <div className="PageContainer">
             <div className="LeftNav">
                 <div className="Back">
-                    {catalog && <LinkContainer to={url + '/studies'}>
-                        <Button buttonType="secondary" icon="arrowLeftChevron">
-                            Back to catalog
-                        </Button>
-                    </LinkContainer>}
+                    {catalog && <BackButton to={url + '/studies'}>Back to catalog</BackButton>}
                 </div>
 
                 <Nav className="flex-column">

@@ -1,0 +1,38 @@
+@import '../../scss/colors';
+
+.BackButton {
+  border-bottom: solid 1px $neutral-40;
+
+  button {
+    padding: 1.4rem 0 1.6rem;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    font-weight: 700;
+    color: $neutral-300;
+
+    &:hover {
+      color: $azul;
+    }
+
+    .circle {
+      display: inline-block;
+      border-radius: 20px;
+      width: 20px;
+      height: 20px;
+      padding: 5px 0 0 5px;
+      position: relative;
+      top: 6px;
+      margin: 0 10px;
+      background: $neutral-30;
+      fill: $neutral-90;
+
+      svg {
+        display: block;
+        height: 10px;
+        width: 10px;
+      }
+    }
+  }
+}

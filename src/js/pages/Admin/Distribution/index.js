@@ -12,6 +12,7 @@ import DistributionDetails from "./DistributionDetails";
 import DistributionContents from "./DistributionContents";
 import DistributionMetadata from "./DistributionMetadata";
 import {Button, ViewHeader} from "@castoredc/matter";
+import BackButton from "../../../components/BackButton";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -61,11 +62,7 @@ export default class Distribution extends Component {
         return <div className="PageContainer">
             <div className="LeftNav">
                 <div className="Back">
-                    <LinkContainer to={'/admin/dataset/' + dataset}>
-                        <Button buttonType="secondary" icon="arrowLeftChevron">
-                            Back to dataset
-                        </Button>
-                    </LinkContainer>
+                    <BackButton to={'/admin/dataset/' + dataset}>Back to dataset</BackButton>
                 </div>
 
                 <Nav className="flex-column">
