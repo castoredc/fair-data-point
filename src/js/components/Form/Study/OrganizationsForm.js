@@ -297,6 +297,7 @@ export default class OrganizationsForm extends Component {
                                                     onBlur={this.handleFieldVisit}
                                                     value={this.state.countries.filter(({value}) => value === organization.country)}
                                                     serverError={validation[index].country}
+                                                    menuPosition="fixed"
                                                 />
                                             </FormItem>
                                         </Col>
@@ -360,7 +361,7 @@ export default class OrganizationsForm extends Component {
 
 
                 <div className="FormButtons">
-                    <Stack distribution="trailing">
+                    <Stack distribution={admin ? 'trailing' : 'equalSpacing'}>
                         {!admin && <LinkContainer to={backUrl}>
                             <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}

@@ -379,7 +379,7 @@ export default class StudyDetailsForm extends Component {
                 </div>
 
                 <div className="FormButtons">
-                    <Stack distribution="trailing">
+                    <Stack distribution={admin ? 'trailing' : 'equalSpacing'}>
                         {!admin && <LinkContainer to={backUrl}>
                             <Button buttonType="secondary">Back</Button>
                         </LinkContainer>}
