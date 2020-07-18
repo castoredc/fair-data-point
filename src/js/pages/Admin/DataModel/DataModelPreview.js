@@ -3,9 +3,9 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ToastContent from "../../../components/ToastContent";
-import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";
-import Toggle from "../../../components/Toggle";
 import Highlight from "../../../components/Highlight";
+import SideTabs from "../../../components/SideTabs";
+import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";
 
 export default class DataModelPreview extends Component {
     constructor(props) {
@@ -50,29 +50,34 @@ export default class DataModelPreview extends Component {
     };
 
     render() {
-        const { dataModel } = this.props;
-        const { showModal, hasLoadedPreviews, previews } = this.state;
+        const { hasLoadedPreviews, previews } = this.state;
 
         if (!hasLoadedPreviews) {
             return <InlineLoader />;
         }
 
-        return <div className="PageBody">
-            {previews.modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <div>
-                <Toggle title="Full data model">
-                    <Highlight content={previews.full} />
-                </Toggle>
+        const tabs = previews.modules.map((element) => {
+            return {
+                title:   `Module ${element.order}. ${element.title}`,
+                badge:   element.repeated && 'Repeated',
+                content: <DataModelModulePreview rdf={element.rdf} />
+            }
+        });
 
-                {previews.modules.map((element) => {
-                    return <DataModelModulePreview
-                        key={element.id}
-                        id={element.id}
-                        title={element.title}
-                        order={element.order}
-                        rdf={element.rdf}
-                    />;
-                })}
-            </div>}
+        return <div className="PageBody">
+            {previews.modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
+                hasTabs
+                tabs={[
+                    {
+                        title: 'Full data model',
+                        content: <DataModelModulePreview rdf={previews.full} />
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    ...tabs
+                ]}
+            />}
         </div>;
     }
 }

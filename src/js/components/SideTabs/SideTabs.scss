@@ -1,0 +1,52 @@
+@import '../../scss/colors';
+
+.SideTabs {
+  display: flex;
+  height: 100%;
+  overflow: auto;
+
+  &.HasButtons {
+    .SideTabsNav {
+      margin-top: 50px;
+    }
+  }
+
+  &.HasTabs {
+    .SideTabsNav {
+      margin-top: 4.8rem;
+    }
+  }
+
+  .SideTabsNav {
+    width: 210px;
+    overflow: hidden;
+    flex: 0 0 210px;
+    margin-right: 30px;
+
+    .SideTabsNavItem {
+      display: block;
+      padding: 1rem;
+      color: $neutral-500;
+      border-radius: 3px;
+      margin-bottom: 4px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      width: 100%;
+      text-align: left;
+      background: none;
+
+      &.Active {
+        color: $azul;
+        border-color: $azul;
+      }
+
+      &:hover {
+        background: $neutral-30;
+      }
+    }
+  }
+
+  .SideTabsContent {
+    flex: 1;
+  }
+}

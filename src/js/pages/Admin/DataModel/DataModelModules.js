@@ -9,6 +9,8 @@ import DataModelModule from "../../../components/DataModelModule/DataModelModule
 import ToastContent from "../../../components/ToastContent";
 import TripleModal from "../../../modals/TripleModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
+import SideTabs from "../../../components/SideTabs";
+import Toggle from "../../../components/Toggle";
 
 export default class DataModelModules extends Component {
     constructor(props) {
@@ -261,27 +263,35 @@ export default class DataModelModules extends Component {
                 Are you sure you want to delete this triple?
             </ConfirmModal>
 
-            <div className="PageButtons">
-                <Stack distribution="trailing" alignment="end">
-                    <Button icon="add" onClick={() => {this.openModuleModal(null)}}>Add module</Button>
-                </Stack>
-            </div>
-
-            {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : modules.map((element) => {
-                return <DataModelModule
-                    key={element.id}
-                    id={element.id}
-                    title={element.title}
-                    repeated={element.repeated}
-                    order={element.order}
-                    groupedTriples={element.groupedTriples}
-                    modelId={dataModel.id}
-                    versionId={version}
-                    openModuleModal={() => this.openModuleModal({id: element.id, title: element.title, order: element.order, repeated: element.repeated})}
-                    openTripleModal={(tripleData) => this.openTripleModal(element, tripleData)}
-                    openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element, tripleData)}
-                />;
-            })}
+            {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
+                hasButtons
+                tabs={modules.map((element) => {
+                    return {
+                        title: `Module ${element.order}. ${element.title}`,
+                        badge: element.repeated && 'Repeated',
+                        content: <DataModelModule
+                                     key={element.id}
+                                     id={element.id}
+                                     title={element.title}
+                                     repeated={element.repeated}
+                                     order={element.order}
+                                     groupedTriples={element.groupedTriples}
+                                     modelId={dataModel.id}
+                                     versionId={version}
+                                     openAddModuleModal={() => {this.openModuleModal(null)}}
+                                     openModuleModal={() => this.openModuleModal({
+                                         id:       element.id,
+                                         title:    element.title,
+                                         order:    element.order,
+                                         repeated: element.repeated
+                                     })}
+                                     openTripleModal={(tripleData) => this.openTripleModal(element, tripleData)}
+                                     openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element, tripleData)}
+                                 />
+                    }
+                })}
+                />
+            }
         </div>;
     }
 }
