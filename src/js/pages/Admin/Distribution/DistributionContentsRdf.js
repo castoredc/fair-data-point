@@ -5,7 +5,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Dropdown as CastorDropdown, Tabs} from "@castoredc/matter";
+import {Dropdown as CastorDropdown, Stack, Tabs} from "@castoredc/matter";
 import FormItem from "../../../components/Form/FormItem";
 
 export default class DistributionContentsRdf extends Component {
@@ -99,7 +99,7 @@ export default class DistributionContentsRdf extends Component {
             return {value: version.id, label: label};
         });
 
-        return <div className="PageContainer">
+        return <div className="PageBody">
             <DataModelMappingModal
                 dataset={dataset}
                 distribution={distribution}
@@ -112,44 +112,50 @@ export default class DistributionContentsRdf extends Component {
                 type={selectedType}
             />
 
-            <FormItem label="Data model version" inline align="right">
-                <CastorDropdown
-                    onChange={(e) => {this.handleVersionChange(e.value)}}
-                    value={versions.find(({value}) => value === currentVersion)}
-                    options={versions}
-                    menuPlacement="auto"
-                    width="tiny"
-                />
-            </FormItem>
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
+                    <FormItem label="Data model version" inline align="right">
+                        <CastorDropdown
+                            onChange={(e) => {this.handleVersionChange(e.value)}}
+                            value={versions.find(({value}) => value === currentVersion)}
+                            options={versions}
+                            menuPlacement="auto"
+                            width="tiny"
+                        />
+                    </FormItem>
+                </Stack>
+            </div>
 
-            <Tabs
-                onChange={this.changeTab}
-                selected={selectedType}
-                tabs={{
-                    node: {
-                        title: 'Nodes',
-                        content: <DataModelMappingsDataTable
-                                     dataset={dataset}
-                                     distribution={distribution}
-                                     onClick={this.openModal}
-                                     lastHandledMapping={addedMapping}
-                                     versionId={currentVersion}
-                                     type="node"
-                                 />
-                    },
-                    module: {
-                        title: 'Modules',
-                        content: <DataModelMappingsDataTable
-                                     dataset={dataset}
-                                     distribution={distribution}
-                                     onClick={this.openModal}
-                                     lastHandledMapping={addedMapping}
-                                     versionId={currentVersion}
-                                     type="module"
-                                 />
-                    }
-                }}
-            />
+            <div className="PageTabs">
+                <Tabs
+                    onChange={this.changeTab}
+                    selected={selectedType}
+                    tabs={{
+                        node: {
+                            title: 'Nodes',
+                            content: <DataModelMappingsDataTable
+                                         dataset={dataset}
+                                         distribution={distribution}
+                                         onClick={this.openModal}
+                                         lastHandledMapping={addedMapping}
+                                         versionId={currentVersion}
+                                         type="node"
+                                     />
+                        },
+                        module: {
+                            title: 'Modules',
+                            content: <DataModelMappingsDataTable
+                                         dataset={dataset}
+                                         distribution={distribution}
+                                         onClick={this.openModal}
+                                         lastHandledMapping={addedMapping}
+                                         versionId={currentVersion}
+                                         type="module"
+                                     />
+                        }
+                    }}
+                />
+            </div>
         </div>;
     }
 }

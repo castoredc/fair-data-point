@@ -42,12 +42,8 @@
   }
 
   &.Inline {
-    .form-row {
+    .FormItemLabel {
       margin-right: 10px;
-
-      &:last-child {
-        margin-right: 0;
-      }
     }
 
     label {
