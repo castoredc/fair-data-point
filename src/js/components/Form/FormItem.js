@@ -19,9 +19,9 @@ class FormItem extends Component {
 
         return (
             <div className={classNames('FormItem', inline && alignClass, hidden && 'Hidden', inline && 'Inline', this.props.classNames)}>
-                <div className="FormItemLabel">
+                {label && <div className="FormItemLabel">
                     <FormLabel>{label}</FormLabel>
-                </div>
+                </div>}
                 <div className="FormItemContent">
                     {children}
                 </div>

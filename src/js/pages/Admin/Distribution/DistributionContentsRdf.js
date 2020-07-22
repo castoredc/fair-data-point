@@ -121,6 +121,7 @@ export default class DistributionContentsRdf extends Component {
                             options={versions}
                             menuPlacement="auto"
                             width="tiny"
+                            menuPosition="fixed"
                         />
                     </FormItem>
                 </Stack>

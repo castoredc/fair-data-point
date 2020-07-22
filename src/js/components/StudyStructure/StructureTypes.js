@@ -12,8 +12,8 @@ export default class StructureTypes extends Component {
 
         this.state = {
             data: {
-                type:    props.mapping ? props.mapping.element.structureType : null,
-                element: props.mapping ? props.mapping.element.id : null,
+                type:    (props.mapping && props.mapping.element) ? props.mapping.element.structureType : null,
+                element: (props.mapping && props.mapping.element) ? props.mapping.element.id : null,
             },
         };
     }
@@ -70,7 +70,7 @@ export default class StructureTypes extends Component {
         const {structure, mapping} = this.props;
         const {data} = this.state;
 
-        const structureItems = data.type !== '' ? structure[data.type] : [];
+        const structureItems = (data.type !== '' && data.type !== null) ? structure[data.type] : [];
 
         const options = structureItems.map((item) => {
             return {label: item.name, value: item.id};

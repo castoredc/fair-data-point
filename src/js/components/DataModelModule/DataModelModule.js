@@ -8,17 +8,22 @@ export default class DataModelModule extends Component {
 
         return <div className="DataModelModule">
             <div className="ButtonBar">
-                <Stack alignment="end" distribution="trailing">
+                <Stack
+                    alignment="normal"
+                    distribution="equalSpacing"
+                >
                     <Button icon="add" onClick={openAddModuleModal}>Add module</Button>
 
-                    <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
-                        Edit module
-                    </Button>
-                    <Button icon="add" onClick={() => {
-                        openTripleModal(null)
-                    }}>
-                        Add triple
-                    </Button>
+                    <Stack>
+                        <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
+                            Edit module
+                        </Button>
+                        <Button icon="add" onClick={() => {
+                            openTripleModal(null)
+                        }}>
+                            Add triple
+                        </Button>
+                    </Stack>
                 </Stack>
             </div>
 

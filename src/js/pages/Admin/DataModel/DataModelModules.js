@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import DataModelModuleModal from "../../../modals/DataModelModuleModal";
-import {Button, Stack} from "@castoredc/matter";
 import './DataModelModules.scss';
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -10,29 +9,28 @@ import ToastContent from "../../../components/ToastContent";
 import TripleModal from "../../../modals/TripleModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import SideTabs from "../../../components/SideTabs";
-import Toggle from "../../../components/Toggle";
 
 export default class DataModelModules extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: {
-                triple: false,
+            showModal:         {
+                triple:       false,
                 removeTriple: false,
-                module: false
+                module:       false,
             },
-            tripleModalData:      null,
-            moduleModalData:      null,
-            isLoadingModules:     true,
-            hasLoadedModules:     false,
-            modules:              [],
-            isLoadingNodes:       true,
-            hasLoadedNodes:       false,
-            nodes:                [],
-            isLoadingPrefixes:    true,
-            hasLoadedPrefixes:    false,
-            prefixes:             [],
-            currentModule:      null
+            tripleModalData:   null,
+            moduleModalData:   null,
+            isLoadingModules:  true,
+            hasLoadedModules:  false,
+            modules:           [],
+            isLoadingNodes:    true,
+            hasLoadedNodes:    false,
+            nodes:             [],
+            isLoadingPrefixes: true,
+            hasLoadedPrefixes: false,
+            prefixes:          [],
+            currentModule:     null,
         };
     }
 
@@ -43,7 +41,7 @@ export default class DataModelModules extends Component {
     }
 
     getModules = () => {
-        const { dataModel, version } = this.props;
+        const {dataModel, version} = this.props;
 
         this.setState({
             isLoadingModules: true,
@@ -71,7 +69,7 @@ export default class DataModelModules extends Component {
     };
 
     getNodes = () => {
-        const { dataModel, version } = this.props;
+        const {dataModel, version} = this.props;
 
         this.setState({
             isLoadingNodes: true,
@@ -119,9 +117,9 @@ export default class DataModelModules extends Component {
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
-    
+
     getOrderOptions = () => {
-        const { modules, currentModule } = this.state;
+        const {modules, currentModule} = this.state;
 
         let order = [{value: 1, label: 'At the beginning of the data model'}];
 
@@ -132,11 +130,11 @@ export default class DataModelModules extends Component {
         for (let i = 0; i < modules.length; i++) {
             const item = modules[i];
 
-            if(currentModule === null || (currentModule && item.id !== currentModule.id)) {
+            if (currentModule === null || (currentModule && item.id !== currentModule.id)) {
                 const moduleNumber = (i + 1);
                 order.push({
                     value: (moduleNumber + 1),
-                    label: 'After Module ' + moduleNumber + ' (' + item.title + ')'
+                    label: 'After Module ' + moduleNumber + ' (' + item.title + ')',
                 });
             }
         }
@@ -145,31 +143,31 @@ export default class DataModelModules extends Component {
     };
 
     openModal = (type) => {
-        const { showModal } = this.state;
+        const {showModal} = this.state;
 
         this.setState({
             showModal: {
                 ...showModal,
-                [type]: true
-            }
+                [type]: true,
+            },
         });
     };
 
     closeModal = (type) => {
-        const { showModal } = this.state;
+        const {showModal} = this.state;
 
         this.setState({
             showModal: {
                 ...showModal,
-                [type]: false
-            }
+                [type]: false,
+            },
         });
     };
 
     openModuleModal = (moduleData) => {
         this.setState({
-            currentModule: moduleData ? moduleData : null,
-            moduleModalData: moduleData
+            currentModule:   moduleData ? moduleData : null,
+            moduleModalData: moduleData,
         }, () => {
             this.openModal('module');
         });
@@ -177,8 +175,8 @@ export default class DataModelModules extends Component {
 
     openTripleModal = (module, tripleData) => {
         this.setState({
-            currentModule: module,
-            tripleModalData: tripleData
+            currentModule:   module,
+            tripleModalData: tripleData,
         }, () => {
             this.openModal('triple')
         });
@@ -186,8 +184,8 @@ export default class DataModelModules extends Component {
 
     openRemoveTripleModal = (module, tripleData) => {
         this.setState({
-            currentModule: module,
-            tripleModalData: tripleData
+            currentModule:   module,
+            tripleModalData: tripleData,
         }, () => {
             this.openModal('removeTriple')
         });
@@ -204,27 +202,27 @@ export default class DataModelModules extends Component {
     };
 
     removeTriple = () => {
-        const { dataModel, version } = this.props;
-        const { currentModule, tripleModalData } = this.state;
+        const {dataModel, version} = this.props;
+        const {currentModule, tripleModalData} = this.state;
 
-        axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/module/' + currentModule.id + '/triple/' + tripleModalData.id )
+        axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/module/' + currentModule.id + '/triple/' + tripleModalData.id)
             .then(() => {
                 this.closeModal('removeTriple');
                 this.getModules();
             })
             .catch((error) => {
                 toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                    position: "top-center"
+                    position: "top-center",
                 });
             });
     };
 
     render() {
-        const { dataModel, version } = this.props;
-        const { showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModule, moduleModalData, tripleModalData } = this.state;
+        const {dataModel, version} = this.props;
+        const {showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModule, moduleModalData, tripleModalData} = this.state;
 
         if (!hasLoadedModules || !hasLoadedNodes || !hasLoadedPrefixes) {
-            return <InlineLoader />;
+            return <InlineLoader/>;
         }
 
         const orderOptions = this.getOrderOptions();
@@ -233,16 +231,22 @@ export default class DataModelModules extends Component {
             <DataModelModuleModal
                 orderOptions={orderOptions}
                 show={showModal.module}
-                handleClose={() => { this.closeModal('module')}}
+                handleClose={() => {
+                    this.closeModal('module')
+                }}
                 onSaved={this.onModuleSaved}
                 modelId={dataModel.id}
                 versionId={version}
                 data={moduleModalData}
+                valueNodes={nodes.value}
+                prefixes={prefixes}
             />
 
             <TripleModal
                 show={showModal.triple}
-                handleClose={() => { this.closeModal('triple')}}
+                handleClose={() => {
+                    this.closeModal('triple')
+                }}
                 onSaved={this.onTripleSaved}
                 modelId={dataModel.id}
                 versionId={version}
@@ -266,9 +270,20 @@ export default class DataModelModules extends Component {
             {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
                 hasButtons
                 tabs={modules.map((element) => {
+                    let icons = [];
+
+                    if (element.repeated) {
+                        icons.push('copy');
+                    }
+
+                    if (element.dependent) {
+                        icons.push('decision');
+                    }
+
                     return {
-                        title: `Module ${element.order}. ${element.title}`,
-                        badge: element.repeated && 'Repeated',
+                        number:  element.order,
+                        title:   element.title,
+                        icons:   icons,
                         content: <DataModelModule
                                      key={element.id}
                                      id={element.id}
@@ -278,19 +293,23 @@ export default class DataModelModules extends Component {
                                      groupedTriples={element.groupedTriples}
                                      modelId={dataModel.id}
                                      versionId={version}
-                                     openAddModuleModal={() => {this.openModuleModal(null)}}
+                                     openAddModuleModal={() => {
+                                         this.openModuleModal(null)
+                                     }}
                                      openModuleModal={() => this.openModuleModal({
-                                         id:       element.id,
-                                         title:    element.title,
-                                         order:    element.order,
-                                         repeated: element.repeated
+                                         id:           element.id,
+                                         title:        element.title,
+                                         order:        element.order,
+                                         repeated:     element.repeated,
+                                         dependent:    element.dependent,
+                                         dependencies: element.dependencies,
                                      })}
                                      openTripleModal={(tripleData) => this.openTripleModal(element, tripleData)}
                                      openRemoveTripleModal={(tripleData) => this.openRemoveTripleModal(element, tripleData)}
-                                 />
+                                 />,
                     }
                 })}
-                />
+            />
             }
         </div>;
     }

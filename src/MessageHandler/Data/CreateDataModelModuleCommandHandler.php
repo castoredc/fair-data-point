@@ -4,7 +4,11 @@ declare(strict_types=1);
 namespace App\MessageHandler\Data;
 
 use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
+use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
 use App\Message\Data\CreateDataModelModuleCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -32,12 +36,38 @@ class CreateDataModelModuleCommandHandler implements MessageHandlerInterface
 
         $dataModel = $command->getDataModel();
 
-        $module = new DataModelModule($command->getTitle(), $command->getOrder(), $command->isRepeated(), $dataModel);
+        $module = new DataModelModule($command->getTitle(), $command->getOrder(), $command->isRepeated(), $command->isDependent(), $dataModel);
         $dataModel->addModule($module);
+
+        if ($command->isDependent()) {
+            $dependencies = $command->getDependencies();
+            $this->parseDependencies($dependencies);
+            $module->setDependencies($dependencies);
+
+            $this->em->persist($dependencies);
+        }
 
         $this->em->persist($module);
         $this->em->persist($dataModel);
 
         $this->em->flush();
+    }
+
+    private function parseDependencies(DataModelDependencyGroup $group): void
+    {
+        foreach ($group->getRules() as $rule) {
+            if ($rule instanceof DataModelDependencyGroup) {
+                $this->parseDependencies($rule);
+            } elseif ($rule instanceof DataModelDependencyRule) {
+                /** @var ValueNode|null $node */
+                $node = $this->em->getRepository(ValueNode::class)->find($rule->getNodeId());
+
+                if ($node === null) {
+                    throw new NotFound();
+                }
+
+                $rule->setNode($node);
+            }
+        }
     }
 }

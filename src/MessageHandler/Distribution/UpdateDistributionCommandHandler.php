@@ -85,6 +85,14 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
                 throw new InvalidDataModelVersion();
             }
 
+            if ($contents->getDataModel() !== $dataModel) {
+                // Switched data model, remove mappings
+                foreach ($contents->getMappings() as $mapping) {
+                    $this->em->remove($mapping);
+                }
+                $contents->getMappings()->clear();
+            }
+
             $contents->setDataModel($dataModel);
             $contents->setCurrentDataModelVersion($dataModelVersion);
         }

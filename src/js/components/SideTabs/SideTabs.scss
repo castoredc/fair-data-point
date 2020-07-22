@@ -24,7 +24,7 @@
     margin-right: 30px;
 
     .SideTabsNavItem {
-      display: block;
+      display: flex;
       padding: 1rem;
       color: $neutral-500;
       border-radius: 3px;
@@ -42,6 +42,27 @@
 
       &:hover {
         background: $neutral-30;
+      }
+
+      .SideTabsNavItemNumber {
+        margin-right: 5px;
+        font-size: 11px;
+        padding: 3px 5px;
+        border-radius: 2px;
+        background: $azul;
+        color: $generic-white;
+      }
+
+      .SideTabsNavItemBadge {
+        margin-left: 10px;
+        font-size: 11px;
+        padding: 3px 5px;
+        border-radius: 2px;
+        border: 1px solid currentColor;
+      }
+
+      .SideTabsNavItemIcons {
+        margin-left: auto;
       }
     }
   }
