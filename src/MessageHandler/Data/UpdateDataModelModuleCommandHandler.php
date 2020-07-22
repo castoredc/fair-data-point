@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Data;
 
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
+use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
 use App\Message\Data\UpdateDataModelModuleCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -30,6 +34,13 @@ class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
         }
 
         $module = $command->getModule();
+
+        if ($module->isDependent()) {
+            $dependencies = $module->getDependencies();
+            $module->setDependencies(null);
+            $this->em->remove($dependencies);
+        }
+
         $dataModel = $module->getDataModel();
 
         $dataModel->removeModule($module);
@@ -37,11 +48,38 @@ class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
         $module->setTitle($command->getTitle());
         $module->setOrder($command->getOrder());
         $module->setIsRepeated($command->isRepeated());
+        $module->setIsDependent($command->isDependent());
+
+        if ($command->isDependent()) {
+            $dependencies = $command->getDependencies();
+            $this->parseDependencies($dependencies);
+            $module->setDependencies($dependencies);
+
+            $this->em->persist($dependencies);
+        }
 
         $dataModel->addModule($module);
 
         $this->em->persist($module);
         $this->em->persist($module->getDataModel());
         $this->em->flush();
+    }
+
+    private function parseDependencies(DataModelDependencyGroup $group): void
+    {
+        foreach ($group->getRules() as $rule) {
+            if ($rule instanceof DataModelDependencyGroup) {
+                $this->parseDependencies($rule);
+            } elseif ($rule instanceof DataModelDependencyRule) {
+                /** @var ValueNode|null $node */
+                $node = $this->em->getRepository(ValueNode::class)->find($rule->getNodeId());
+
+                if ($node === null) {
+                    throw new NotFound();
+                }
+
+                $rule->setNode($node);
+            }
+        }
     }
 }

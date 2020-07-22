@@ -28,6 +28,8 @@ class DataModelModuleApiResource implements ApiResource
             'displayName' => sprintf('Module %d. %s', $this->module->getOrder(), $this->module->getTitle()),
             'order' => $this->module->getOrder(),
             'repeated' => $this->module->isRepeated(),
+            'dependent' => $this->module->isDependent(),
+            'dependencies' => $this->module->getDependencies() !== null ? (new DataModelDependencyApiResource($this->module->getDependencies()))->toArray() : null,
             'groupedTriples' => (new GroupedTriplesApiResource($this->module))->toArray(),
         ];
     }

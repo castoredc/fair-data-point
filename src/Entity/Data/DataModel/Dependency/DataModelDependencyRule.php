@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel\Dependency;
 
 use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\DependencyOperatorType;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,11 +15,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataModelDependencyRule extends DataModelDependency
 {
+    /** @var string */
+    private $nodeId;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\ValueNode", cascade={"persist"})
      * @ORM\JoinColumn(name="node", referencedColumnName="id", nullable=false)
      *
-     * @var Node
+     * @var ValueNode
      */
     private $node;
 
@@ -36,11 +40,20 @@ class DataModelDependencyRule extends DataModelDependency
      */
     private $value;
 
-    public function __construct(Node $node, DependencyOperatorType $operator, string $value)
+    public function __construct(DependencyOperatorType $operator, string $value)
     {
-        $this->node = $node;
         $this->operator = $operator;
         $this->value = $value;
+    }
+
+    public function getNodeId(): string
+    {
+        return $this->nodeId;
+    }
+
+    public function setNodeId(string $nodeId): void
+    {
+        $this->nodeId = $nodeId;
     }
 
     public function getNode(): Node
@@ -48,7 +61,7 @@ class DataModelDependencyRule extends DataModelDependency
         return $this->node;
     }
 
-    public function setNode(Node $node): void
+    public function setNode(ValueNode $node): void
     {
         $this->node = $node;
     }
@@ -71,5 +84,20 @@ class DataModelDependencyRule extends DataModelDependency
     public function setValue(string $value): void
     {
         $this->value = $value;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromData(array $data): self
+    {
+        $rule = new DataModelDependencyRule(
+            DependencyOperatorType::fromString($data['operator']),
+            $data['value']
+        );
+
+        $rule->setNodeId($data['field']);
+
+        return $rule;
     }
 }

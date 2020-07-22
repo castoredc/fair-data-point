@@ -26,8 +26,8 @@ class DataModelDependency
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DataModelDependencyGroup", inversedBy="rules", cascade={"persist"})
-     * @ORM\JoinColumn(name="group", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="DataModelDependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
      *
      * @var DataModelDependencyGroup|null
      */

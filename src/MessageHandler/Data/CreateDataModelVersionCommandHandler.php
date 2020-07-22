@@ -5,6 +5,8 @@ namespace App\MessageHandler\Data;
 
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
@@ -15,6 +17,7 @@ use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Data\DataModel\Triple;
 use App\Entity\Enum\VersionType;
+use App\Exception\InvalidEntityType;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateDataModelVersionCommand;
@@ -28,10 +31,8 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $em;
-
     /** @var Security */
     private $security;
-
     /** @var VersionNumberHelper */
     private $versionNumberHelper;
 
@@ -125,7 +126,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 
         foreach ($latestVersion->getModules() as $module) {
             /** @var DataModelModule $module */
-            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $module->isRepeated(), $newVersion);
+            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $module->isRepeated(), $module->isDependent(), $newVersion);
 
             foreach ($module->getTriples() as $triple) {
                 /** @var Triple $triple */
@@ -139,11 +140,42 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
                 $newModule->addTriple($newTriple);
             }
 
+            if ($module->isDependent() && $module->getDependencies() !== null) {
+                $dependency = $module->getDependencies();
+                $newDependency = $this->duplicateDependencies($dependency, $nodes);
+
+                $newModule->setDependencies($newDependency);
+            }
+
             $modules->add($newModule);
         }
 
         $newVersion->setModules($modules);
 
         return $newVersion;
+    }
+
+    /**
+     * @throws InvalidEntityType
+     */
+    private function duplicateDependencies(DataModelDependencyGroup $group, ArrayCollection $nodes): DataModelDependencyGroup
+    {
+        $newGroup = new DataModelDependencyGroup($group->getCombinator());
+
+        foreach ($group->getRules() as $rule) {
+            if ($rule instanceof DataModelDependencyGroup) {
+                $newRule = $this->duplicateDependencies($rule, $nodes);
+            } elseif ($rule instanceof DataModelDependencyRule) {
+                $newRule = new DataModelDependencyRule($rule->getOperator(), $rule->getValue());
+                $newRule->setNode($nodes->get($rule->getNode()->getId()));
+            } else {
+                throw new InvalidEntityType();
+            }
+
+            $newGroup->addRule($newRule);
+            $newRule->setGroup($newGroup);
+        }
+
+        return $newGroup;
     }
 }
