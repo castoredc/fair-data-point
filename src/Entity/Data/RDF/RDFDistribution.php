@@ -38,7 +38,7 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     private $currentDataModelVersion;
 
     /**
-     * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Collection<DataModelMapping>
