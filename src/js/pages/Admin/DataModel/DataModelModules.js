@@ -238,6 +238,8 @@ export default class DataModelModules extends Component {
                 modelId={dataModel.id}
                 versionId={version}
                 data={moduleModalData}
+                valueNodes={nodes.value}
+                prefixes={prefixes}
             />
 
             <TripleModal
@@ -266,9 +268,20 @@ export default class DataModelModules extends Component {
             {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
                 hasButtons
                 tabs={modules.map((element) => {
+                    let icons = [];
+
+                    if(element.repeated) {
+                        icons.push('refresh');
+                    }
+
+                    if(element.dependent) {
+                        icons.push('decision');
+                    }
+
                     return {
-                        title: `Module ${element.order}. ${element.title}`,
-                        badge: element.repeated && 'Repeated',
+                        number: element.order,
+                        title: element.title,
+                        icons: icons,
                         content: <DataModelModule
                                      key={element.id}
                                      id={element.id}

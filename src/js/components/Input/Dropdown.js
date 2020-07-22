@@ -53,6 +53,12 @@ class Dropdown extends ValidatorComponent {
 
         let SelectComponent = null;
 
+        let dropdownValue = value;
+
+        if(typeof dropdownValue !== 'object' && dropdownValue !== null) {
+            dropdownValue = options.find((option) => option.value === dropdownValue);
+        }
+
         if(async) {
             SelectComponent = <AsyncSelect
                 loadOptions={this.loadOptions}
@@ -111,7 +117,7 @@ class Dropdown extends ValidatorComponent {
             SelectComponent = <CastorDropdown
                 invalid={!isValid}
                 onChange={onChange}
-                value={value}
+                value={dropdownValue}
                 options={options}
                 placeholder={placeholder}
                 isDisabled={isDisabled}

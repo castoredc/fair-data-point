@@ -2,16 +2,17 @@ import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
 import Form from 'react-bootstrap/Form'
 import MaskedInput from 'react-text-mask'
+import {classNames} from '../../util';
 
 import './Input.scss'
 import {TextInput, TextStyle} from "@castoredc/matter";
 
 class Input extends ValidatorComponent {
     render() {
-        const { errorMessages, serverError, validators, requiredError, validatorListener, mask, ...rest } = this.props;
+        const { errorMessages, serverError, validators, requiredError, validatorListener, mask, className, ...rest } = this.props;
         const { isValid } = this.state;
         return (
-            <div className="Input">
+            <div className={classNames('Input', className)}>
                 {mask ? <MaskedInput
                         mask={mask}
                         className="MaskedInput"

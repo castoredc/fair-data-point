@@ -11,36 +11,38 @@ import ConfirmModal from "../ConfirmModal";
 import {classNames} from "../../util";
 import Modal from "../Modal";
 import RadioGroup from "../../components/Input/RadioGroup";
+import DependencyModal from "../DependencyModal";
 
 export default class DataModelModuleModal extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: this.handleNewData(),
-            validation: {},
-            isSaved: false,
-            submitDisabled: false,
-            isLoading: false
+            data:                this.handleNewData(),
+            validation:          {},
+            isSaved:             false,
+            submitDisabled:      false,
+            isLoading:           false,
+            showDependencyModal: false,
         };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { show, data } = this.props;
+        const {show, data} = this.props;
 
         if (show !== prevProps.show || data !== prevProps.data) {
             this.setState({
-                data: this.handleNewData()
+                data: this.handleNewData(),
             });
         }
     }
 
     handleNewData = () => {
-        const { data, orderOptions } = this.props;
+        const {data, orderOptions} = this.props;
 
         let newData = defaultData;
 
-        if(data !== null) {
+        if (data !== null) {
             newData = data;
         } else {
             newData.order = orderOptions.slice(-1)[0].value;
@@ -49,25 +51,16 @@ export default class DataModelModuleModal extends Component {
         return newData;
     };
 
-    handleChange = (event, callback = (() => {})) => {
-        const { data } = this.state;
+    handleChange = (event) => {
+        const {data} = this.state;
         this.setState({
-            data: {
+            data:       {
                 ...data,
                 [event.target.name]: event.target.value,
             },
             validation: {
                 [event.target.name]: false,
-            }
-        }, callback);
-    };
-
-    handleSelectChange = (name, event) => {
-        this.handleChange({
-            target: {
-                name: name,
-                value: event.value
-            }
+            },
         });
     };
 
@@ -78,14 +71,14 @@ export default class DataModelModuleModal extends Component {
         if (this.form.isFormValid()) {
             this.setState({
                 submitDisabled: true,
-                isLoading:      true
+                isLoading:      true,
             });
 
             axios.post('/api/model/' + modelId + '/v/' + versionId + '/module' + (data.id ? '/' + data.id : ''), data)
                 .then(() => {
                     this.setState({
-                        isSaved: true,
-                        isLoading: false,
+                        isSaved:        true,
+                        isLoading:      false,
                         submitDisabled: false,
                     });
 
@@ -94,16 +87,16 @@ export default class DataModelModuleModal extends Component {
                 .catch((error) => {
                     if (error.response && error.response.status === 400) {
                         this.setState({
-                            validation: error.response.data.fields
+                            validation: error.response.data.fields,
                         });
                     } else {
                         toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                            position: "top-center"
+                            position: "top-center",
                         });
                     }
                     this.setState({
                         submitDisabled: false,
-                        isLoading: false
+                        isLoading:      false,
                     });
                 });
         }
@@ -121,15 +114,39 @@ export default class DataModelModuleModal extends Component {
                 })
                 .catch((error) => {
                     toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                        position: "top-center"
+                        position: "top-center",
                     });
                 });
         }
     };
 
+    openDependencyModal = () => {
+        this.setState({
+            showDependencyModal: true,
+        });
+    };
+
+    closeDependencyModal = () => {
+        this.setState({
+            showDependencyModal: false,
+        });
+    };
+
+    handleDependenciesChange = (dependencies) => {
+        const {data} = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                dependencies: dependencies,
+            },
+            showDependencyModal: false,
+        });
+    };
+
     render() {
-        const { show, handleClose, orderOptions } = this.props;
-        const {data, validation, isLoading} = this.state;
+        const {show, handleClose, orderOptions, valueNodes, prefixes} = this.props;
+        const {data, validation, isLoading, showDependencyModal} = this.state;
 
         const required = "This field is required";
 
@@ -138,6 +155,7 @@ export default class DataModelModuleModal extends Component {
             handleClose={handleClose}
             title={data.id ? 'Edit module' : 'Add module'}
             closeButton
+            className={classNames('DataModelModuleFormModal', data.dependent && 'ShowDependencyEditor')}
             footer={(
                 <div className={classNames(data.id && 'HasConfirmButton')}>
                     <Stack>
@@ -148,7 +166,7 @@ export default class DataModelModuleModal extends Component {
                             onConfirm={this.handleDelete}
                             includeButton={true}
                         >
-                            Are you sure you want to delete module <strong>{data.title}</strong>?<br />
+                            Are you sure you want to delete module <strong>{data.title}</strong>?<br/>
                             This will also delete all associated triples.
                         </ConfirmModal>}
                         <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
@@ -158,6 +176,15 @@ export default class DataModelModuleModal extends Component {
                 </div>
             )}
         >
+            <DependencyModal
+                show={showDependencyModal}
+                handleClose={this.closeDependencyModal}
+                save={this.handleDependenciesChange}
+                valueNodes={valueNodes}
+                prefixes={prefixes}
+                dependencies={data.dependencies}
+            />
+
             <ValidatorForm
                 ref={node => (this.form = node)}
                 onSubmit={this.handleSubmit}
@@ -180,7 +207,9 @@ export default class DataModelModuleModal extends Component {
                         errorMessages={[required]}
                         options={orderOptions}
                         name="order"
-                        onChange={(e) => {this.handleSelectChange('order', e)}}
+                        onChange={(e) => {
+                            this.handleChange({target: {name: 'order', value: e.value}})
+                        }}
                         onBlur={this.handleFieldVisit}
                         value={orderOptions.filter(({value}) => value === data.order)}
                         serverError={validation.order}
@@ -195,12 +224,12 @@ export default class DataModelModuleModal extends Component {
                         options={[
                             {
                                 label: 'Yes',
-                                value: true
+                                value: true,
                             },
                             {
                                 label: 'No',
-                                value: false
-                            }
+                                value: false,
+                            },
                         ]}
                         onChange={this.handleChange}
                         value={data.repeated}
@@ -209,13 +238,45 @@ export default class DataModelModuleModal extends Component {
                         serverError={validation.repeated}
                     />
                 </FormItem>
+
+                <FormItem label="Dependent">
+                    <RadioGroup
+                        validators={['required']}
+                        errorMessages={[required]}
+                        options={[
+                            {
+                                label: 'Yes',
+                                value: true,
+                            },
+                            {
+                                label: 'No',
+                                value: false,
+                            },
+                        ]}
+                        onChange={this.handleChange}
+                        value={data.dependent}
+                        variant="horizontal"
+                        name="dependent"
+                        serverError={validation.dependent}
+                    />
+                </FormItem>
+
+                {data.dependent && <FormItem>
+                    <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">Edit dependencies</Button>
+                </FormItem>}
             </ValidatorForm>
         </Modal>
     }
 }
 
 const defaultData = {
-    title: '',
-    order: '',
-    repeated: false
+    title:        '',
+    order:        '',
+    repeated:     false,
+    dependent:    false,
+    dependencies: {
+        rules: [],
+        combinator: 'and',
+        not: false
+    },
 };
