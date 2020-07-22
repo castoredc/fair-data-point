@@ -273,7 +273,7 @@ export default class DataModelModules extends Component {
                     let icons = [];
 
                     if (element.repeated) {
-                        icons.push('refresh');
+                        icons.push('copy');
                     }
 
                     if (element.dependent) {
