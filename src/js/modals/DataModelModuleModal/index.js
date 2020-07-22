@@ -158,7 +158,10 @@ export default class DataModelModuleModal extends Component {
             className={classNames('DataModelModuleFormModal', data.dependent && 'ShowDependencyEditor')}
             footer={(
                 <div className={classNames(data.id && 'HasConfirmButton')}>
-                    <Stack>
+                    <Stack
+                        alignment="normal"
+                        distribution="equalSpacing"
+                    >
                         {data.id && <ConfirmModal
                             title="Delete module"
                             action="Delete module"
