@@ -15,7 +15,6 @@ use App\Exception\LanguageNotFound;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\UpdateDistributionCommand;
 use App\Security\ApiUser;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -86,10 +85,9 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
                 throw new InvalidDataModelVersion();
             }
 
-            if($contents->getDataModel() !== $dataModel) {
+            if ($contents->getDataModel() !== $dataModel) {
                 // Switched data model, remove mappings
-                foreach($contents->getMappings() as $mapping)
-                {
+                foreach ($contents->getMappings() as $mapping) {
                     $this->em->remove($mapping);
                 }
                 $contents->getMappings()->clear();
