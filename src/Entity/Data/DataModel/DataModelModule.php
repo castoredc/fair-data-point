@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataModel;
 
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -62,12 +63,28 @@ class DataModelModule
      */
     private $isRepeated = false;
 
-    public function __construct(string $title, int $order, bool $isRepeated, DataModelVersion $dataModel)
+    /**
+     * @ORM\Column(type="boolean", options={"default":"0"})
+     *
+     * @var bool
+     */
+    private $isDependent = false;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup", cascade={"persist"}, fetch = "EAGER")
+     * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
+     *
+     * @var DataModelDependencyGroup|null
+     */
+    private $dependencies;
+
+    public function __construct(string $title, int $order, bool $isRepeated, bool $isDependent, DataModelVersion $dataModel)
     {
         $this->title = $title;
         $this->order = $order;
         $this->dataModel = $dataModel;
         $this->isRepeated = $isRepeated;
+        $this->isDependent = $isDependent;
 
         $this->triples = new ArrayCollection();
     }
@@ -146,5 +163,25 @@ class DataModelModule
     public function setIsRepeated(bool $isRepeated): void
     {
         $this->isRepeated = $isRepeated;
+    }
+
+    public function isDependent(): bool
+    {
+        return $this->isDependent;
+    }
+
+    public function setIsDependent(bool $isDependent): void
+    {
+        $this->isDependent = $isDependent;
+    }
+
+    public function getDependencies(): ?DataModelDependencyGroup
+    {
+        return $this->dependencies;
+    }
+
+    public function setDependencies(?DataModelDependencyGroup $dependencies): void
+    {
+        $this->dependencies = $dependencies;
     }
 }

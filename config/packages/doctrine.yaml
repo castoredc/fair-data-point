@@ -22,6 +22,8 @@ doctrine:
             XsdDataType:  App\Type\XsdDataType
             version:  App\Type\VersionType
             StudySource: App\Type\StudySource
+            DependencyCombinatorType: App\Type\DependencyCombinatorType
+            DependencyOperatorType: App\Type\DependencyOperatorType
 
     orm:
         auto_generate_proxy_classes: true
