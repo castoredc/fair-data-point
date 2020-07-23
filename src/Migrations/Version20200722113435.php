@@ -35,7 +35,6 @@ final class Version20200722113435 extends AbstractMigration
         $this->addSql('CREATE UNIQUE INDEX UNIQ_B9356A66EA0F708D ON data_model_module (dependencies)');
         $this->addSql('ALTER TABLE data_model_node_literal CHANGE data_type data_type VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE data_model_node_value CHANGE data_type data_type VARCHAR(255) NOT NULL');
-        $this->addSql('ALTER TABLE distribution_rdf_mappings CHANGE data_model_version data_model_version CHAR(36) NOT NULL COMMENT \'(DC2Type:guid)\'');
     }
 
     public function down(Schema $schema): void
@@ -54,6 +53,5 @@ final class Version20200722113435 extends AbstractMigration
         $this->addSql('ALTER TABLE data_model_module DROP dependencies, DROP is_dependent');
         $this->addSql('ALTER TABLE data_model_node_literal CHANGE data_type data_type VARCHAR(255) CHARACTER SET utf8 NOT NULL COLLATE `utf8_general_ci`');
         $this->addSql('ALTER TABLE data_model_node_value CHANGE data_type data_type VARCHAR(255) CHARACTER SET utf8 NOT NULL COLLATE `utf8_general_ci`');
-        $this->addSql('ALTER TABLE distribution_rdf_mappings CHANGE data_model_version data_model_version CHAR(36) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_general_ci` COMMENT \'(DC2Type:guid)\'');
     }
 }
