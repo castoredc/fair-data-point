@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataModel\Dependency;
 
-use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\DependencyOperatorType;
 use Doctrine\ORM\Mapping as ORM;
@@ -56,7 +55,7 @@ class DataModelDependencyRule extends DataModelDependency
         $this->nodeId = $nodeId;
     }
 
-    public function getNode(): Node
+    public function getNode(): ValueNode
     {
         return $this->node;
     }

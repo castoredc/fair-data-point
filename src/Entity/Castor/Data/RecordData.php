@@ -32,8 +32,7 @@ abstract class RecordData
         return $field !== null ? $this->data->get($field->getId()) : null;
     }
 
-    /** @return FieldResult[]|null */
-    public function getFieldResultsByFieldId(string $fieldId): ?array
+    public function getFieldResultByFieldId(string $fieldId): ?FieldResult
     {
         return $this->data->get($fieldId);
     }
@@ -48,10 +47,7 @@ abstract class RecordData
         $this->fields[] = $fieldResult->getField();
         $fieldId = $fieldResult->getField()->getId();
 
-        $results = $this->data->containsKey($fieldId) ? $this->data->get($fieldId) : [];
-        $results[] = $fieldResult;
-
-        $this->data->set($fieldId, $results);
+        $this->data->set($fieldId, $fieldResult);
     }
 
     private function getFieldByVariableName(string $variableName): ?Field

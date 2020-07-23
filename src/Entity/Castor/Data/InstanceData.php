@@ -26,23 +26,8 @@ class InstanceData extends RecordData
         $this->data = new ArrayCollection();
     }
 
-    public function getFieldResultByVariableName(string $variableName): ?FieldResult
-    {
-        return $this->data->get($variableName);
-    }
-
-    public function getRecord(): Record
-    {
-        return $this->record;
-    }
-
     public function getInstance(): Instance
     {
         return $this->instance;
-    }
-
-    public function addData(FieldResult $fieldResult): void
-    {
-        $this->data->set($fieldResult->getField()->getVariableName(), $fieldResult);
     }
 }
