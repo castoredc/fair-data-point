@@ -7,6 +7,7 @@ use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\Dependency\DataModelDependency;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
+use function array_pop;
 
 class DataModelDependencyApiResource implements ApiResource
 {
@@ -23,6 +24,8 @@ class DataModelDependencyApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $description = [];
+
         $array = [
             'id' => $this->dependency->getId(),
             'group' => $this->dependency->getGroup() !== null ? $this->dependency->getGroup()->getId() : null,
@@ -33,13 +36,35 @@ class DataModelDependencyApiResource implements ApiResource
             $array['rules'] = [];
 
             foreach ($this->dependency->getRules() as $rule) {
-                $array['rules'][] = (new DataModelDependencyApiResource($rule))->toArray();
+                $newRules = (new DataModelDependencyApiResource($rule))->toArray();
+                $array['rules'][] = $newRules;
+
+                $description[] = [
+                    'type' => 'group',
+                    'rules' => $newRules['description'],
+                ];
+
+                $description[] = [
+                    'type' => 'combinator',
+                    'text' => $array['combinator'],
+                ];
             }
+
+            array_pop($description);
         } elseif ($this->dependency instanceof DataModelDependencyRule) {
             $array['field'] = $this->dependency->getNode()->getId();
             $array['operator'] = $this->dependency->getOperator()->toString();
             $array['value'] = $this->dependency->getValue();
+            $array['description'] = $this->dependency->getNode()->getTitle() . ' ' . $array['operator'] . ' ' . $array['value'];
+
+            $description[] = [
+                'type' => 'rule',
+                'text' => $array['description'],
+            ];
         }
+
+        // $array['description'] = implode(' ', $description);
+        $array['description'] = $description;
 
         return $array;
     }

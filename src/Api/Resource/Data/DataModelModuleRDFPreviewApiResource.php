@@ -25,11 +25,9 @@ class DataModelModuleRDFPreviewApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return [
-            'id' => $this->module->getId(),
-            'title' => $this->module->getTitle(),
-            'order' => $this->module->getOrder(),
-            'rdf' => $this->rdfPreview,
-        ];
+        $array = (new DataModelModuleApiResource($this->module))->toArray();
+        $array['rdf'] = $this->rdfPreview;
+
+        return $array;
     }
 }
