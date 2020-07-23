@@ -8,6 +8,8 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Structure\MetadataPoint;
 use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 use function boolval;
 use function in_array;
 
@@ -59,21 +61,21 @@ class Field extends CastorEntity
     ];
 
     public const SUPPORTED_DATA_TYPES = [
-        'numeric' => XsdDataType::NUMBER_TYPES,
-        'radio' => (XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES) + XsdDataType::BOOLEAN_TYPES,
-        'dropdown' => (XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES) + XsdDataType::BOOLEAN_TYPES,
-        'checkbox' => (XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES) + XsdDataType::BOOLEAN_TYPES,
-        'date' => XsdDataType::DATE_TIME_TYPES,
+        'numeric' => [XsdDataType::NUMBER_TYPES],
+        'radio' => [XsdDataType::NUMBER_TYPES, XsdDataType::STRING_TYPES, XsdDataType::BOOLEAN_TYPES],
+        'dropdown' => [XsdDataType::NUMBER_TYPES, XsdDataType::STRING_TYPES, XsdDataType::BOOLEAN_TYPES],
+        'checkbox' => [XsdDataType::NUMBER_TYPES, XsdDataType::STRING_TYPES, XsdDataType::BOOLEAN_TYPES],
+        'date' => [XsdDataType::DATE_TIME_TYPES],
         'year' => [XsdDataType::G_YEAR],
         'time' => [XsdDataType::TIME],
-        'calculation' => XsdDataType::ANY_TYPES,
-        'slider' => XsdDataType::NUMBER_TYPES,
-        'string' => XsdDataType::STRING_TYPES,
-        'textarea' => XsdDataType::STRING_TYPES,
-        'randomization' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
-        'grid' => XsdDataType::STRING_TYPES,
-        'datetime' => XsdDataType::DATE_TIME_TYPES,
-        'numberdate' => XsdDataType::NUMBER_TYPES + XsdDataType::DATE_TYPES,
+        'calculation' => [XsdDataType::ANY_TYPES],
+        'slider' => [XsdDataType::NUMBER_TYPES],
+        'string' => [XsdDataType::STRING_TYPES],
+        'textarea' => [XsdDataType::STRING_TYPES],
+        'randomization' => [XsdDataType::NUMBER_TYPES, XsdDataType::STRING_TYPES],
+        'grid' => [XsdDataType::STRING_TYPES],
+        'datetime' => [XsdDataType::DATE_TIME_TYPES],
+        'numberdate' => [XsdDataType::NUMBER_TYPES, XsdDataType::DATE_TYPES],
     ];
 
     /**
@@ -306,7 +308,14 @@ class Field extends CastorEntity
             return [];
         }
 
-        return self::SUPPORTED_DATA_TYPES[$this->type];
+        $it = new RecursiveIteratorIterator(new RecursiveArrayIterator(self::SUPPORTED_DATA_TYPES[$this->type]));
+        $types = [];
+
+        foreach ($it as $type) {
+            $types[] = $type;
+        }
+
+        return $types;
     }
 
     /**
