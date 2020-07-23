@@ -59,7 +59,6 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
 
     /**
      * @var string|null
-     * @Assert\NotBlank(groups = {"rdf"})
      * @Assert\Type("string")
      */
     private $dataModelVersion;
