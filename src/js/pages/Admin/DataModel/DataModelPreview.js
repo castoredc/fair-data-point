@@ -3,7 +3,6 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ToastContent from "../../../components/ToastContent";
-import Highlight from "../../../components/Highlight";
 import SideTabs from "../../../components/SideTabs";
 import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";
 
@@ -57,10 +56,21 @@ export default class DataModelPreview extends Component {
         }
 
         const tabs = previews.modules.map((element) => {
+            let icons = [];
+
+            if (element.repeated) {
+                icons.push('copy');
+            }
+
+            if (element.dependent) {
+                icons.push('decision');
+            }
+
             return {
-                title:   `Module ${element.order}. ${element.title}`,
-                badge:   element.repeated && 'Repeated',
-                content: <DataModelModulePreview rdf={element.rdf} />
+                number:  element.order,
+                title:   element.title,
+                icons:   icons,
+                content: <DataModelModulePreview repeated={element.repeated} dependent={element.dependent} dependencies={element.dependencies} rdf={element.rdf} />
             }
         });
 

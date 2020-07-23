@@ -91,3 +91,17 @@
     color: $slug;
   }
 }
+
+.DependencyDescription {
+  .DependencyGroup {
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: solid 1px $neutral-70;
+    margin: 4px;
+    display: inline-block;
+  }
+  .DependencyCombinator {
+    margin: 0 5px;
+    font-weight: 700;
+  }
+}

@@ -28,7 +28,7 @@ export default class SideTabs extends Component {
                     if(typeof tab.type !== 'undefined')
                     {
                         if(tab.type === 'separator') {
-                            return <hr />;
+                            return <hr key={`sidetabs-${index}`}/>;
                         }
                     }
                     else {
@@ -41,7 +41,7 @@ export default class SideTabs extends Component {
 
                             {tab.badge && <span className="SideTabsNavItemBadge">{tab.badge}</span>}
                             {(tab.icons && tab.icons.length > 0) && <span className="SideTabsNavItemIcons">
-                                {tab.icons.map((icon) => <Icon type={icon} width="12px" height="12px" />)}
+                                {tab.icons.map((icon, key) => <Icon type={icon} key={`sidetabs-icon-${index}`} width="12px" height="12px" />)}
                             </span>}
                         </button>
                     }
