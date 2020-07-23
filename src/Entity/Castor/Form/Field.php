@@ -60,9 +60,9 @@ class Field extends CastorEntity
 
     public const SUPPORTED_DATA_TYPES = [
         'numeric' => XsdDataType::NUMBER_TYPES,
-        'radio' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
-        'dropdown' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
-        'checkbox' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES,
+        'radio' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES + XsdDataType::BOOLEAN_TYPES,
+        'dropdown' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES + XsdDataType::BOOLEAN_TYPES,
+        'checkbox' => XsdDataType::NUMBER_TYPES + XsdDataType::STRING_TYPES + XsdDataType::BOOLEAN_TYPES,
         'date' => XsdDataType::DATE_TIME_TYPES,
         'year' => [XsdDataType::G_YEAR],
         'time' => [XsdDataType::TIME],
