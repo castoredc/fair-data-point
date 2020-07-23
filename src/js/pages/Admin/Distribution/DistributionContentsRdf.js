@@ -12,14 +12,14 @@ export default class DistributionContentsRdf extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:    false,
-            selectedMapping: null,
-            addedMapping: null,
+            showModal:          false,
+            selectedMapping:    null,
+            addedMapping:       null,
             isLoadingDataModel: true,
             hasLoadedDataModel: false,
-            currentVersion: null,
-            dataModel: null,
-            selectedType:       'node'
+            currentVersion:     null,
+            dataModel:          null,
+            selectedType:       'node',
         };
     }
 
@@ -28,24 +28,24 @@ export default class DistributionContentsRdf extends Component {
     }
 
     getDataModel = () => {
-        const { distribution } = this.props;
+        const {distribution} = this.props;
 
         this.setState({
             isLoadingDataModel: true,
         });
 
-        axios.get('/api/model/' + distribution.dataModel.dataModel )
+        axios.get('/api/model/' + distribution.dataModel.dataModel)
             .then((response) => {
                 this.setState({
                     dataModel:          response.data,
                     isLoadingDataModel: false,
                     hasLoadedDataModel: true,
-                    currentVersion:     distribution.dataModel.id
+                    currentVersion:     distribution.dataModel.id,
                 });
             })
             .catch((error) => {
                 this.setState({
-                    isLoadingDataModel: false
+                    isLoadingDataModel: false,
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the data model';
@@ -55,7 +55,7 @@ export default class DistributionContentsRdf extends Component {
 
     openModal = (mapping) => {
         this.setState({
-            showModal: true,
+            showModal:       true,
             selectedMapping: mapping,
         });
     };
@@ -68,7 +68,7 @@ export default class DistributionContentsRdf extends Component {
 
     onSave = (mapping) => {
         this.setState({
-            showModal: false,
+            showModal:    false,
             addedMapping: mapping,
         });
     };
@@ -81,7 +81,7 @@ export default class DistributionContentsRdf extends Component {
 
     changeTab = (tabIndex) => {
         this.setState({
-            selectedType: tabIndex,
+            selectedType:    tabIndex,
             selectedMapping: null,
         });
     };
@@ -115,14 +115,18 @@ export default class DistributionContentsRdf extends Component {
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
                     <FormItem label="Data model version" inline align="right">
-                        <CastorDropdown
-                            onChange={(e) => {this.handleVersionChange(e.value)}}
-                            value={versions.find(({value}) => value === currentVersion)}
-                            options={versions}
-                            menuPlacement="auto"
-                            width="tiny"
-                            menuPosition="fixed"
-                        />
+                        <div className="Select">
+                            <CastorDropdown
+                                onChange={(e) => {
+                                    this.handleVersionChange(e.value)
+                                }}
+                                value={versions.find(({value}) => value === currentVersion)}
+                                options={versions}
+                                menuPlacement="auto"
+                                width="tiny"
+                                menuPosition="fixed"
+                            />
+                        </div>
                     </FormItem>
                 </Stack>
             </div>
@@ -132,8 +136,8 @@ export default class DistributionContentsRdf extends Component {
                     onChange={this.changeTab}
                     selected={selectedType}
                     tabs={{
-                        node: {
-                            title: 'Nodes',
+                        node:   {
+                            title:   'Nodes',
                             content: <DataModelMappingsDataTable
                                          dataset={dataset}
                                          distribution={distribution}
@@ -141,10 +145,10 @@ export default class DistributionContentsRdf extends Component {
                                          lastHandledMapping={addedMapping}
                                          versionId={currentVersion}
                                          type="node"
-                                     />
+                                     />,
                         },
                         module: {
-                            title: 'Modules',
+                            title:   'Modules',
                             content: <DataModelMappingsDataTable
                                          dataset={dataset}
                                          distribution={distribution}
@@ -152,8 +156,8 @@ export default class DistributionContentsRdf extends Component {
                                          lastHandledMapping={addedMapping}
                                          versionId={currentVersion}
                                          type="module"
-                                     />
-                        }
+                                     />,
+                        },
                     }}
                 />
             </div>

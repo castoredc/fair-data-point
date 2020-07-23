@@ -21,7 +21,6 @@ use Exception;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 use function count;
-use function implode;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
@@ -115,16 +114,10 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $data = [];
 
         foreach ($fields as $field) {
-            $results = $studyData->getFieldResultsByFieldId($field->getId());
+            $result = $studyData->getFieldResultByFieldId($field->getId());
 
-            if ($results !== null) {
-                $values = [];
-
-                foreach ($results as $result) {
-                    $values[] = $result->getValue();
-                }
-
-                $value = implode(';', $values);
+            if ($result !== null) {
+                $value = $result->getValue();
             } else {
                 $value = null;
             }

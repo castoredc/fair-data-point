@@ -4,10 +4,16 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Castor\CastorStudy;
-use App\Entity\Castor\Data\FieldResult;
+use App\Entity\Castor\Data\InstanceData;
+use App\Entity\Castor\Data\RecordData;
 use App\Entity\Castor\Form\FieldOptionGroup;
+use App\Entity\Castor\Instances\Instance;
 use App\Entity\Castor\Record;
+use App\Entity\Castor\Structure\Report;
+use App\Entity\Castor\Structure\Survey;
 use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -17,6 +23,7 @@ use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Triple;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Enum\CastorEntityType;
+use App\Entity\Enum\DependencyOperatorType;
 use App\Entity\Enum\XsdDataType;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\Terminology\Annotation;
@@ -32,24 +39,21 @@ use EasyRdf_Literal;
 use function assert;
 use function boolval;
 use function count;
+use function floatval;
+use function in_array;
 
 class RDFRenderHelper
 {
     /** @var ApiClient */
     private $apiClient;
-
     /** @var CastorEntityHelper */
     private $entityHelper;
-
     /** @var CastorStudy */
     private $study;
-
     /** @var RDFDistribution */
     private $contents;
-
     /** @var UriHelper */
     private $uriHelper;
-
     /** @var CastorEntityCollection */
     private $optionGroups;
 
@@ -85,47 +89,51 @@ class RDFRenderHelper
         $modules = $dataModel->getModules();
 
         foreach ($modules as $module) {
-            /** @var DataModelModule $module */
-            $triples = $module->getTriples();
+            if ($module->isRepeated()) {
+                $mapping = $this->contents->getMappingByModuleForCurrentVersion($module);
 
-            foreach ($triples as $triple) {
-                /** @var Triple $triple */
-                $subject = $graph->resource($this->getURI($record, $triple->getSubject()));
-                $predicate = $triple->getPredicate()->getIri()->getValue();
-                $object = $triple->getObject();
-
-                $isLiteral = ($object instanceof LiteralNode || ($object instanceof ValueNode && ! $object->isAnnotatedValue()));
-
-                if ($isLiteral) {
-                    assert($object instanceof LiteralNode || $object instanceof ValueNode);
-
-                    $values = $this->getValue($record, $object);
-
-                    foreach ($values as $value) {
-                        $literal = new EasyRdf_Literal($value, null, 'xsd:' . $object->getDataType()->toString());
-                        $graph->addLiteral($subject, $predicate, $literal);
-                    }
-                } else {
-                    $values = $this->getValue($record, $object);
-
-                    foreach ($values as $value) {
-                        $graph->add($subject, $predicate, $graph->resource($value));
-                    }
+                if ($mapping === null) {
+                    continue;
                 }
+
+                $entity = $mapping->getEntity();
+
+                if ($entity instanceof Report) {
+                    $data = $record->getData()->getReport();
+                } elseif ($entity instanceof Survey) {
+                    $data = $record->getData()->getSurvey();
+                } else {
+                    continue;
+                }
+
+                $instances = $data->getInstances();
+
+                foreach ($instances as $instance) {
+                    /** @var Instance $instance */
+                    $this->renderModule($data->getInstanceData($instance), $graph, $module);
+                }
+            } else {
+                $data = $record->getData()->getStudy();
+                $this->renderModule($data, $graph, $module);
             }
         }
 
         return $graph;
     }
 
-    private function getURI(Record $record, Node $node): string
+    private function getURI(RecordData $data, Node $node): string
     {
         $uri = '';
+        $record = $data->getRecord();
 
         if ($node instanceof RecordNode) {
             $uri = $this->uriHelper->getUri($this->contents) . '/' . $record->getId();
         } elseif ($node instanceof InternalIriNode) {
             $uri = $this->uriHelper->getUri($this->contents) . '/' . $record->getId() . '/' . $node->getSlug();
+
+            if ($node->isRepeated() && $data instanceof InstanceData) {
+                $uri .= '/' . $data->getInstance()->getId();
+            }
         } elseif ($node instanceof ExternalIriNode) {
             $uri = $node->getIri()->getValue();
         }
@@ -133,67 +141,104 @@ class RDFRenderHelper
         return $uri;
     }
 
-    /** @return string[]|null */
-    private function getValue(Record $record, Node $node): ?array
+    private function renderModule(RecordData $data, EasyRdf_Graph $graph, DataModelModule $module): void
     {
-        $values = [];
-
-        if ($node instanceof LiteralNode) {
-            $values[] = $node->getValue();
-        } elseif ($node instanceof ValueNode) {
-            $mapping = $this->contents->getMappingByNodeForCurrentVersion($node);
-
-            if ($mapping === null) {
-                return null;
-            }
-
-            $entity = $mapping->getEntity();
-            $fieldResults = $record->getData()->getFieldResultByFieldId($entity->getId());
-
-            if ($fieldResults !== null) {
-                foreach ($fieldResults as $fieldResult) {
-                    if ($node->isAnnotatedValue()) {
-                        // Annotated value
-                        $optionGroup = $this->optionGroups->getById($fieldResult->getField()->getOptionGroupId());
-
-                        if ($optionGroup === null) {
-                            return null;
-                        }
-
-                        assert($optionGroup instanceof FieldOptionGroup);
-
-                        $option = $optionGroup->getOptionByValue($fieldResult->getValue());
-
-                        if ($option === null) {
-                            return null;
-                        }
-
-                        $annotations = $option->getAnnotations();
-
-                        if (count($annotations) === 0) {
-                            return null;
-                        }
-
-                        $annotation = $annotations->first();
-                        assert($annotation instanceof Annotation);
-
-                        $values[] = $annotation->getConcept()->getUrl()->getValue();
-                    } else {
-                        // 'Plain' value
-                        $values[] = $this->transformValue($node->getDataType(), $fieldResult);
-                    }
-                }
-            }
+        if ($module->isDependent()) {
+            $shouldRender = $this->parseDependencies($module->getDependencies(), $data);
         } else {
-            $values[] = $this->getURI($record, $node);
+            $shouldRender = true;
         }
 
-        return $values;
+        if (! $shouldRender) {
+            return;
+        }
+
+        /** @var DataModelModule $module */
+        $triples = $module->getTriples();
+
+        foreach ($triples as $triple) {
+            /** @var Triple $triple */
+            $subject = $graph->resource($this->getURI($data, $triple->getSubject()));
+            $predicate = $triple->getPredicate()->getIri()->getValue();
+            $object = $triple->getObject();
+
+            $isLiteral = ($object instanceof LiteralNode || ($object instanceof ValueNode && ! $object->isAnnotatedValue()));
+            $value = $this->getValue($data, $object);
+
+            if ($value === null) {
+                continue;
+            }
+
+            if ($isLiteral) {
+                assert($object instanceof LiteralNode || $object instanceof ValueNode);
+
+                $literal = new EasyRdf_Literal($value, null, 'xsd:' . $object->getDataType()->toString());
+                $graph->addLiteral($subject, $predicate, $literal);
+            } else {
+                $graph->add($subject, $predicate, $graph->resource($value));
+            }
+        }
     }
 
-    private function transformValue(XsdDataType $dataType, FieldResult $fieldResult): string
+    private function getValue(RecordData $data, Node $node): ?string
     {
-        $value = $fieldResult->getValue();
+        if ($node instanceof LiteralNode) {
+            return $node->getValue();
+        }
+
+        if (! ($node instanceof ValueNode)) {
+            return $this->getURI($data, $node);
+        }
+
+        $mapping = $this->contents->getMappingByNodeForCurrentVersion($node);
+
+        if ($mapping === null) {
+            return null;
+        }
+
+        $entity = $mapping->getEntity();
+        $fieldResult = $data->getFieldResultByFieldId($entity->getId());
+
+        if ($fieldResult !== null) {
+            if ($node->isAnnotatedValue()) {
+                // Annotated value
+                $optionGroup = $this->optionGroups->getById($fieldResult->getField()->getOptionGroupId());
+
+                if ($optionGroup === null) {
+                    return null;
+                }
+
+                assert($optionGroup instanceof FieldOptionGroup);
+                $option = $optionGroup->getOptionByValue($fieldResult->getValue());
+
+                if ($option === null) {
+                    return null;
+                }
+
+                $annotations = $option->getAnnotations();
+
+                if (count($annotations) === 0) {
+                    return null;
+                }
+
+                $annotation = $annotations->first();
+                assert($annotation instanceof Annotation);
+
+                return $annotation->getConcept()->getUrl()->getValue();
+            }
+
+            // 'Plain' value
+            return $this->transformValue($node->getDataType(), $fieldResult->getValue());
+        }
+
+        return null;
+    }
+
+    private function transformValue(?XsdDataType $dataType, string $value): string
+    {
+        if ($dataType === null) {
+            return $value;
+        }
 
         if ($dataType->isDateTimeType()) {
             $date = new DateTimeImmutable($value);
@@ -236,5 +281,95 @@ class RDFRenderHelper
         }
 
         return $value;
+    }
+
+    private function compareValue(DependencyOperatorType $operator, ?XsdDataType $dataType, ?string $value, string $compareTo): bool
+    {
+        if ($dataType === null) {
+            $dataType = XsdDataType::string();
+        }
+
+        if ($value === null) {
+            return $operator->isNull();
+        }
+
+        if ($dataType->isDateTimeType()) {
+            $value = new DateTimeImmutable($value);
+            $compareTo = new DateTimeImmutable($compareTo);
+        } elseif ($dataType->isNumberType()) {
+            $value = floatval($value);
+            $compareTo = floatval($compareTo);
+        } elseif ($dataType->isBooleanType()) {
+            $value = boolval($value);
+            $compareTo = boolval($compareTo);
+        }
+
+        if ($operator->isNull()) {
+            return false;
+        }
+
+        if ($operator->isNotNull()) {
+            return true;
+        }
+
+        if ($operator->isEqual()) {
+            return $value === $compareTo;
+        }
+
+        if ($operator->isNotEqual()) {
+            return $value !== $compareTo;
+        }
+
+        if ($operator->isSmallerThan()) {
+            return $value < $compareTo;
+        }
+
+        if ($operator->isSmallerThanOrEqualTo()) {
+            return $value <= $compareTo;
+        }
+
+        if ($operator->isGreaterThan()) {
+            return $value > $compareTo;
+        }
+
+        if ($operator->isGreaterThanOrEqualTo()) {
+            return $value >= $compareTo;
+        }
+
+        return false;
+    }
+
+    private function parseDependencies(DataModelDependencyGroup $group, RecordData $data): bool
+    {
+        $outcomes = [];
+        $combinator = $group->getCombinator();
+
+        foreach ($group->getRules() as $rule) {
+            if ($rule instanceof DataModelDependencyGroup) {
+                $outcomes[] = $this->parseDependencies($rule, $data);
+            } elseif ($rule instanceof DataModelDependencyRule) {
+                $node = $rule->getNode();
+                $operator = $rule->getOperator();
+                $compareValue = $this->transformValue($node->getDataType(), $rule->getValue());
+
+                $value = $this->getValue($data, $node);
+
+                if ($value === null && $data instanceof InstanceData) {
+                    $value = $this->getValue($data->getRecord()->getData()->getStudy(), $node);
+                }
+
+                $outcomes[] = $this->compareValue($operator, $node->getDataType(), $value, $compareValue);
+            }
+        }
+
+        if ($combinator->isAnd()) {
+            return ! in_array(false, $outcomes, true);
+        }
+
+        if ($combinator->isOr()) {
+            return in_array(true, $outcomes, true);
+        }
+
+        return false;
     }
 }

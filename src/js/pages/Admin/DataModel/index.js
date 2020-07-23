@@ -121,15 +121,17 @@ export default class DataModel extends Component {
                     <hr/>
 
                     <FormItem label="Version">
-                        <CastorDropdown
-                            onChange={(e) => {
-                                this.handleVersionChange(e.label)
-                            }}
-                            value={currentVersion}
-                            options={versions}
-                            menuPlacement="auto"
-                            width="fullWidth"
-                        />
+                        <div className="Select">
+                            <CastorDropdown
+                                onChange={(e) => {
+                                    this.handleVersionChange(e.label)
+                                }}
+                                value={currentVersion}
+                                options={versions}
+                                menuPlacement="auto"
+                                width="fullWidth"
+                            />
+                        </div>
                     </FormItem>
 
                     <hr/>
@@ -158,7 +160,7 @@ export default class DataModel extends Component {
                     <ViewHeader>{dataModel.title}</ViewHeader>
                 </div>
 
-                {isLoadingDataModel ? <InlineLoader /> : <Switch>
+                {isLoadingDataModel ? <InlineLoader/> : <Switch>
                     <Route path="/admin/model/:model" exact
                            render={(props) => <DataModelDetails {...props} dataModel={dataModel}
                                                                 version={currentVersion.value}/>}/>

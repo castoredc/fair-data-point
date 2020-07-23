@@ -120,6 +120,10 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
             $uri = '/##record_id##';
         } elseif ($node instanceof InternalIriNode) {
             $uri = '/##record_id##/' . $node->getSlug();
+
+            if ($node->isRepeated()) {
+                $uri .= '/##instance_id##';
+            }
         } elseif ($node instanceof ExternalIriNode) {
             $uri = $node->getIri()->getValue();
         }

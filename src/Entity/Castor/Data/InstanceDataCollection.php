@@ -13,11 +13,15 @@ abstract class InstanceDataCollection extends RecordData
     /** @var ArrayCollection<string, InstanceData> */
     private $data;
 
+    /** @var ArrayCollection<Instance> */
+    private $instances;
+
     public function __construct(Record $record)
     {
         parent::__construct($record);
 
         $this->data = new ArrayCollection();
+        $this->instances = new ArrayCollection();
     }
 
     public function getMostRecentInstance(): ?Instance
@@ -58,10 +62,21 @@ abstract class InstanceDataCollection extends RecordData
     {
         if (! $this->data->containsKey($instance->getId())) {
             $this->data->set($instance->getId(), new InstanceData($this->record, $instance));
+            $this->instances->add($instance);
         }
 
         /** @var InstanceData $instanceData */
         $instanceData = $this->data->get($instance->getId());
         $instanceData->addData($fieldResult);
+    }
+
+    public function getInstances(): ArrayCollection
+    {
+        return $this->instances;
+    }
+
+    public function getInstanceData(Instance $instance): ?InstanceData
+    {
+        return $this->data->get($instance->getId());
     }
 }

@@ -142,16 +142,14 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         return null;
     }
 
+    public function getMappingByModuleForCurrentVersion(DataModelModule $module): ?DataModelModuleMapping
+    {
+        return $this->getMappingByModuleAndVersion($module, $this->currentDataModelVersion);
+    }
+
     public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
     {
-        foreach ($this->getNodeMappings() as $mapping) {
-            /** @var DataModelNodeMapping $mapping */
-            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $this->currentDataModelVersion) {
-                return $mapping;
-            }
-        }
-
-        return null;
+        return $this->getMappingByNodeAndVersion($node, $this->currentDataModelVersion);
     }
 
     public function isCached(): bool

@@ -8,12 +8,16 @@
 
 .Variable, .Record {
   background: currentColor;
-  padding: 1px 5px;
-  margin-top: 2px;
-  display: inline-block;
-  border-radius: 3px;
 
   span {
     color: white;
   }
+}
+
+.Variable, .Record, .Instance {
+  padding: 0 4px;
+  margin-top: 2px;
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid currentColor;
 }
