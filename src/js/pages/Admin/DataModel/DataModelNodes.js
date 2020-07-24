@@ -168,7 +168,7 @@ export default class DataModelNodes extends Component {
                                          emptyTableMessage="This data model does not have literal nodes"
                                          cellSpacing="default"
                                          rows={nodes.literal.map((item) => {
-                                             return [item.title, item.value, item.value.dataType];
+                                             return [item.title, item.value.value, item.value.dataType];
                                          })}
                                          structure={{
                                              id:       {
