@@ -183,7 +183,7 @@ export default class TripleModal extends Component {
 
         const subjectSelectable = (data.subjectType === 'internal' || data.subjectType === 'external');
         let subjectOptions = subjectSelectable ? this.getOptions(data.subjectType) : [];
-        const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value');
+        const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value' || data.objectType === 'literal');
         let objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
 
         if(module && data.objectType === 'value' && module.repeated) {
