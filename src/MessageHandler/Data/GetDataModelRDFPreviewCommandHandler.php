@@ -98,6 +98,34 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
     private function getValue(Node $node): string
     {
         if ($node instanceof LiteralNode) {
+            if ($node->isPlaceholder()) {
+                $placeholderType = $node->getPlaceholderType();
+
+                if ($placeholderType->isRecordId()) {
+                    return '##Record ID##';
+                }
+
+                if ($placeholderType->isInstituteId()) {
+                    return '##Institute ID##';
+                }
+
+                if ($placeholderType->isInstituteName()) {
+                    return '##Insitute Name##';
+                }
+
+                if ($placeholderType->isInstituteAbbreviation()) {
+                    return '##Insitute Abbreviation##';
+                }
+
+                if ($placeholderType->isInstituteCode()) {
+                    return '##Insitute Code##';
+                }
+
+                if ($placeholderType->isInstituteCountryId()) {
+                    return '##Insitute Country ID##';
+                }
+            }
+
             return $node->getValue();
         }
 

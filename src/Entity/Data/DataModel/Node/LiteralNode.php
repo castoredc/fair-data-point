@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel\Node;
 
 use App\Entity\Enum\NodeType;
+use App\Entity\Enum\RecordDetailLiterals;
 use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -51,5 +52,15 @@ class LiteralNode extends Node
     public function setDataType(XsdDataType $dataType): void
     {
         $this->dataType = $dataType;
+    }
+
+    public function isPlaceholder(): bool
+    {
+        return RecordDetailLiterals::canBeConstructedFromString($this->value);
+    }
+
+    public function getPlaceholderType(): RecordDetailLiterals
+    {
+        return RecordDetailLiterals::fromString($this->value);
     }
 }

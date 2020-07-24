@@ -183,6 +183,15 @@ class RDFRenderHelper
     private function getValue(RecordData $data, Node $node): ?string
     {
         if ($node instanceof LiteralNode) {
+            if ($node->isPlaceholder()) {
+                $placeholderType = $node->getPlaceholderType();
+                $record = $data->getRecord();
+
+                if ($placeholderType->isRecordId()) {
+                    return $record->getId();
+                }
+            }
+
             return $node->getValue();
         }
 
