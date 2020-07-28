@@ -32,6 +32,7 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Factory\Castor\RecordFactory;
 use App\Security\ApiUser;
 use App\Security\CastorUser;
 use ArrayIterator;
@@ -51,15 +52,23 @@ class ApiClient
     /** @var Client */
     private $client;
 
-    /** @var ?string */
+    /** @var string */
     private $server;
 
     /** @var int */
     private $pageSize = 1000;
 
-    public function __construct(string $server = '')
+    /** @var RecordFactory */
+    private $recordFactory;
+
+    public function __construct(RecordFactory $recordFactory)
     {
         $this->client = new Client();
+        $this->recordFactory = $recordFactory;
+    }
+
+    public function setServer(string $server): void
+    {
         $this->server = $server;
     }
 
@@ -509,7 +518,7 @@ class ApiClient
     {
         $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $recordId);
 
-        return Record::fromData($body);
+        return $this->recordFactory->createFromCastorApiData($study, $body);
     }
 
     /**
@@ -528,7 +537,7 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['records'] as $rawRecord) {
-                $record = Record::fromData($rawRecord);
+                $record = $this->recordFactory->createFromCastorApiData($study, $rawRecord);
                 $records->set($record->getId(), $record);
             }
         }

@@ -30,15 +30,19 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
     /** @var EntityManagerInterface|null */
     private $em;
 
+    /** @var ApiClient|null */
+    private $apiClient;
+
     /**
      * @param array<mixed> $options
      * @param array<mixed> $collaborators
      */
-    public function __construct(array $options = [], array $collaborators = [], ?EntityManagerInterface $em = null)
+    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, array $options = [], array $collaborators = [])
     {
         parent::__construct($options, $collaborators);
 
         $this->em = $em;
+        $this->apiClient = $apiClient;
     }
 
     /**
@@ -119,10 +123,10 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
      */
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
-        $apiClient = new ApiClient($this->server);
-        $apiClient->setToken($token->getToken());
+        $this->apiClient->setServer($this->server);
+        $this->apiClient->setToken($token->getToken());
 
-        return CastorUser::fromData($apiClient->getUser(), $token->getToken(), $this->server);
+        return CastorUser::fromData($this->apiClient->getUser(), $token->getToken(), $this->server);
     }
 
     public function loadUserByUsername(string $username): UserInterface

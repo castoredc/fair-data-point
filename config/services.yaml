@@ -63,3 +63,9 @@ services:
         arguments:
             - '%env(SLACK_DEBUG_WEBHOOK_URL)%'
             - '%kernel.project_dir%'
+
+    App\Model\Castor\ApiClient:
+        autowire: true
+
+    knpu.oauth2.provider_factory:
+        class: App\Factory\Security\ProviderFactory

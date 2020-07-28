@@ -8,6 +8,9 @@ use DateTimeImmutable;
 
 class Record
 {
+    /** @var CastorStudy */
+    private $study;
+
     /** @var string */
     private $recordId;
 
@@ -20,11 +23,22 @@ class Record
     /** @var DateTimeImmutable */
     private $updatedOn;
 
-    public function __construct(string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
+    public function __construct(CastorStudy $study, string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
     {
+        $this->study = $study;
         $this->recordId = $recordId;
         $this->createdOn = $createdOn;
         $this->updatedOn = $updatedOn;
+    }
+
+    public function getRecordId(): string
+    {
+        return $this->recordId;
+    }
+
+    public function getStudy(): CastorStudy
+    {
+        return $this->study;
     }
 
     public function getData(): RecordDataCollection
@@ -50,17 +64,5 @@ class Record
     public function getUpdatedOn(): DateTimeImmutable
     {
         return $this->updatedOn;
-    }
-
-    /**
-     * @param array<mixed> $data
-     */
-    public static function fromData(array $data): Record
-    {
-        return new Record(
-            $data['record_id'],
-            DateTimeImmutable::__set_state($data['created_on']),
-            DateTimeImmutable::__set_state($data['updated_on']),
-        );
     }
 }
