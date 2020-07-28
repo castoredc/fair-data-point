@@ -21,7 +21,7 @@
         "sensio/framework-extra-bundle": "^5.5",
         "stof/doctrine-extensions-bundle": "^1.4",
         "symfony/console": "^5.0",
-        "symfony/flex": "^1.8.4",
+        "symfony/flex": "^1.9.1",
         "symfony/framework-bundle": "^5.0",
         "symfony/intl": "5.1.*",
         "symfony/maker-bundle": "^1.15",
