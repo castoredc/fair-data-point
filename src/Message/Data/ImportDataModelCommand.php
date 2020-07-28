@@ -1,0 +1,40 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Message\Data;
+
+use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Version;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+class ImportDataModelCommand
+{
+    /** @var DataModel */
+    private $dataModel;
+    /** @var UploadedFile */
+    private $file;
+    /** @var Version */
+    private $version;
+
+    public function __construct(DataModel $dataModel, UploadedFile $file, Version $version)
+    {
+        $this->dataModel = $dataModel;
+        $this->file = $file;
+        $this->version = $version;
+    }
+
+    public function getDataModel(): DataModel
+    {
+        return $this->dataModel;
+    }
+
+    public function getFile(): UploadedFile
+    {
+        return $this->file;
+    }
+
+    public function getVersion(): Version
+    {
+        return $this->version;
+    }
+}

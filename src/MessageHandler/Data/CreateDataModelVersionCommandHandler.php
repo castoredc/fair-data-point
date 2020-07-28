@@ -97,10 +97,10 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
             } elseif ($node instanceof ValueNode) {
                 $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
+                $newNode->setIsRepeated($node->isRepeated());
 
                 if (! $node->isAnnotatedValue()) {
                     $newNode->setDataType($node->getDataType());
-                    $newNode->setIsRepeated($node->isRepeated());
                 }
             } else {
                 throw new InvalidNodeType();

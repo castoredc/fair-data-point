@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Api\Request\SingleApiRequest;
+use App\Api\Request\ApiRequest;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Model\Castor\ApiClient;
@@ -35,7 +35,7 @@ abstract class ApiController extends AbstractController
     /**
      * @throws ApiRequestParseError
      */
-    protected function parseRequest(string $requestObject, Request $request, bool $multiple = false): SingleApiRequest
+    protected function parseRequest(string $requestObject, Request $request, bool $multiple = false): ApiRequest
     {
         $request = new $requestObject($request);
 

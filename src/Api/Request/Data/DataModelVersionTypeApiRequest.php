@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Api\Request\Data;
+
+use App\Api\Request\SingleApiRequest;
+use App\Entity\Enum\VersionType;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class DataModelVersionTypeApiRequest extends SingleApiRequest
+{
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     */
+    private $type;
+
+    protected function parse(): void
+    {
+        $this->type = $this->getFromData('type');
+    }
+
+    public function getVersionType(): VersionType
+    {
+        return VersionType::fromString($this->type);
+    }
+}
