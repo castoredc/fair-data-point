@@ -27,6 +27,7 @@ class DataModelVersionExportApiResource implements ApiResource
             'nodes' => (new NodesApiResource($this->dataModelVersion))->toArray(),
             'modules' => (new DataModelModulesApiResource($this->dataModelVersion, false))->toArray(),
             'prefixes' => (new DataModelPrefixesApiResource($this->dataModelVersion))->toArray(),
+            'predicates' => (new PredicatesApiResource($this->dataModelVersion))->toArray(),
         ];
     }
 }
