@@ -15,6 +15,7 @@ import {Dropdown as CastorDropdown, ViewHeader} from "@castoredc/matter";
 import DataModelPreview from "./DataModelPreview";
 import FormItem from "../../../components/Form/FormItem";
 import DataModelVersions from "./DataModelVersions";
+import DataModelImportExport from "./DataModelImportExport";
 
 export default class DataModel extends Component {
     constructor(props) {
@@ -136,6 +137,13 @@ export default class DataModel extends Component {
 
                     <hr/>
 
+                    <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/import-export'}
+                                   exact={true}>
+                        <Nav.Link>Import/Export</Nav.Link>
+                    </LinkContainer>
+
+                    <hr/>
+
                     <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/modules'}
                                    exact={true}>
                         <Nav.Link>Modules</Nav.Link>
@@ -148,7 +156,9 @@ export default class DataModel extends Component {
                                    exact={true}>
                         <Nav.Link>Prefixes</Nav.Link>
                     </LinkContainer>
+
                     <hr/>
+
                     <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/preview'}
                                    exact={true}>
                         <Nav.Link>Preview</Nav.Link>
@@ -180,6 +190,9 @@ export default class DataModel extends Component {
                     <Route path="/admin/model/:model/:version/preview" exact
                            render={(props) => <DataModelPreview {...props} dataModel={dataModel}
                                                                 version={currentVersion.value}/>}/>
+                    <Route path="/admin/model/:model/:version/import-export" exact
+                           render={(props) => <DataModelImportExport {...props} dataModel={dataModel}
+                                                                     version={currentVersion.value}/>}/>
 
                     <Route component={NotFound}/>
                 </Switch>}

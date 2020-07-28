@@ -8,6 +8,7 @@ use App\Api\Request\Data\DataModelVersionApiRequest;
 use App\Api\Resource\Data\DataModelApiResource;
 use App\Api\Resource\Data\DataModelsApiResource;
 use App\Api\Resource\Data\DataModelVersionApiResource;
+use App\Api\Resource\Data\DataModelVersionExportApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
@@ -16,14 +17,18 @@ use App\Message\Data\CreateDataModelCommand;
 use App\Message\Data\CreateDataModelVersionCommand;
 use App\Message\Data\GetDataModelRDFPreviewCommand;
 use App\Message\Data\GetDataModelsCommand;
+use Cocur\Slugify\Slugify;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use const JSON_PRETTY_PRINT;
+use function sprintf;
 
 /**
  * @Route("/api/model")
@@ -121,6 +126,26 @@ class DataModelApiController extends ApiController
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_model_version_export")
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
+     */
+    public function exportDataModelVersion(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+
+        $response = new JsonResponse((new DataModelVersionExportApiResource($dataModelVersion))->toArray());
+
+        $slugify = new Slugify();
+        $name = sprintf('%s - %s.json', $slugify->slugify($dataModelVersion->getDataModel()->getTitle()), $dataModelVersion->getVersion()->getValue());
+        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $name);
+
+        $response->setEncodingOptions(JSON_PRETTY_PRINT);
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     /**

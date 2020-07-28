@@ -96,6 +96,7 @@ class AdminController extends AbstractController
      * @Route("/model/{model}/{version}/prefixes", name="admin_model_prefixes")
      * @Route("/model/{model}/{version}/nodes", name="admin_model_nodes")
      * @Route("/model/{model}/{version}/preview", name="admin_model_preview")
+     * @Route("/model/{model}/{version}/import-export", name="admin_model_importexport")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
      */

@@ -11,9 +11,13 @@ class DataModelModulesApiResource implements ApiResource
     /** @var DataModelVersion */
     private $dataModel;
 
-    public function __construct(DataModelVersion $dataModel)
+    /** @var bool */
+    private $groupTriples;
+
+    public function __construct(DataModelVersion $dataModel, bool $groupTriples = true)
     {
         $this->dataModel = $dataModel;
+        $this->groupTriples = $groupTriples;
     }
 
     /**
@@ -24,7 +28,7 @@ class DataModelModulesApiResource implements ApiResource
         $data = [];
 
         foreach ($this->dataModel->getModules() as $module) {
-            $data[] = (new DataModelModuleApiResource($module))->toArray();
+            $data[] = (new DataModelModuleApiResource($module, $this->groupTriples))->toArray();
         }
 
         return $data;
