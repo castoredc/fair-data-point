@@ -128,3 +128,17 @@ export const mergeData = (defaultData, newData) => {
 export const ucfirst = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+export const downloadFile = (contents, filename) => {
+    if (!window.navigator.msSaveOrOpenBlob) {
+        const url = window.URL.createObjectURL(new Blob([contents]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+    } else {
+        // IE
+        const url = window.navigator.msSaveOrOpenBlob(new Blob([contents]), filename);
+    }
+};

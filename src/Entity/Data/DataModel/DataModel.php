@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel;
 
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -106,6 +107,18 @@ class DataModel
     public function getLatestVersion(): DataModelVersion
     {
         return $this->versions->last();
+    }
+
+    public function hasVersion(Version $version): bool
+    {
+        foreach ($this->versions as $dataModelVersion) {
+            /** @var DataModelVersion $dataModelVersion */
+            if ($dataModelVersion->getVersion() === $version) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -6,18 +6,14 @@ namespace App\Api\Resource\Data;
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelVersion;
 
-class DataModelModulesApiResource implements ApiResource
+class PredicatesApiResource implements ApiResource
 {
     /** @var DataModelVersion */
     private $dataModel;
 
-    /** @var bool */
-    private $groupTriples;
-
-    public function __construct(DataModelVersion $dataModel, bool $groupTriples = true)
+    public function __construct(DataModelVersion $dataModel)
     {
         $this->dataModel = $dataModel;
-        $this->groupTriples = $groupTriples;
     }
 
     /**
@@ -27,8 +23,8 @@ class DataModelModulesApiResource implements ApiResource
     {
         $data = [];
 
-        foreach ($this->dataModel->getModules() as $module) {
-            $data[] = (new DataModelModuleApiResource($module, $this->groupTriples))->toArray();
+        foreach ($this->dataModel->getPredicates() as $predicate) {
+            $data[] = (new PredicateApiResource($predicate))->toArray();
         }
 
         return $data;

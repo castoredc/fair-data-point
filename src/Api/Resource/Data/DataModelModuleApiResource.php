@@ -12,9 +12,13 @@ class DataModelModuleApiResource implements ApiResource
     /** @var DataModelModule */
     private $module;
 
-    public function __construct(DataModelModule $module)
+    /** @var bool */
+    private $groupTriples;
+
+    public function __construct(DataModelModule $module, bool $groupTriples = true)
     {
         $this->module = $module;
+        $this->groupTriples = $groupTriples;
     }
 
     /**
@@ -22,7 +26,7 @@ class DataModelModuleApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return [
+        $return = [
             'id' => $this->module->getId(),
             'title' => $this->module->getTitle(),
             'displayName' => sprintf('Module %d. %s', $this->module->getOrder(), $this->module->getTitle()),
@@ -30,7 +34,14 @@ class DataModelModuleApiResource implements ApiResource
             'repeated' => $this->module->isRepeated(),
             'dependent' => $this->module->isDependent(),
             'dependencies' => $this->module->getDependencies() !== null ? (new DataModelDependencyApiResource($this->module->getDependencies()))->toArray() : null,
-            'groupedTriples' => (new GroupedTriplesApiResource($this->module))->toArray(),
         ];
+
+        if ($this->groupTriples) {
+            $return['groupedTriples'] = (new GroupedTriplesApiResource($this->module))->toArray();
+        } else {
+            $return['triples'] = (new TriplesApiResource($this->module))->toArray();
+        }
+
+        return $return;
     }
 }
