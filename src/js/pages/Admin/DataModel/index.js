@@ -191,7 +191,7 @@ export default class DataModel extends Component {
                            render={(props) => <DataModelPreview {...props} dataModel={dataModel}
                                                                 version={currentVersion.value}/>}/>
                     <Route path="/admin/model/:model/:version/import-export" exact
-                           render={(props) => <DataModelImportExport {...props} dataModel={dataModel}
+                           render={(props) => <DataModelImportExport {...props} dataModel={dataModel} getDataModel={this.getDataModel}
                                                                      version={currentVersion.value}/>}/>
 
                     <Route component={NotFound}/>
