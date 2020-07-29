@@ -149,7 +149,7 @@ class Institute
     }
 
     /**
-     * @param Collection $records
+     * @param Collection<Record> $records
      */
     public function setRecords(Collection $records): void
     {

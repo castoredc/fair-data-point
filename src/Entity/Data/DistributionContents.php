@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Data;
 
+use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Distribution;
 use App\Traits\CreatedAndUpdated;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
@@ -50,11 +53,20 @@ abstract class DistributionContents
      */
     private $isPublished = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\Log\DistributionGenerationLog", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
+     *
+     * @var Collection<DistributionGenerationLog>
+     */
+    private $logs;
+
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
         $this->distribution = $distribution;
         $this->accessRights = $accessRights;
         $this->isPublished = $isPublished;
+        $this->logs = new ArrayCollection();
     }
 
     public function getId(): string
@@ -85,5 +97,18 @@ abstract class DistributionContents
     public function setIsPublished(bool $isPublished): void
     {
         $this->isPublished = $isPublished;
+    }
+
+    /**
+     * @return Collection<DistributionGenerationLog>
+     */
+    public function getLogs(): Collection
+    {
+        return $this->logs;
+    }
+
+    public function addLog(DistributionGenerationLog $log): void
+    {
+        $this->logs->add($log);
     }
 }
