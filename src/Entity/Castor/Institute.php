@@ -76,8 +76,8 @@ class Institute
         CastorStudy $study,
         string $id,
         string $name,
-        ?string $abbreviation,
-        string $code,
+        string $abbreviation,
+        ?string $code,
         int $countryId,
         bool $deleted
     ) {

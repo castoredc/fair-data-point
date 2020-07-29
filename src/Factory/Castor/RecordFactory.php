@@ -17,7 +17,7 @@ class RecordFactory
     {
         return new Record(
             $study,
-            $institutes->get($data['institute']['id']),
+            $institutes->get($data['_embedded']['institute']['id']),
             $data['record_id'],
             DateTimeImmutable::__set_state($data['created_on']),
             DateTimeImmutable::__set_state($data['updated_on'])
