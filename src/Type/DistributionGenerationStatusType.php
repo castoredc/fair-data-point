@@ -37,7 +37,7 @@ class DistributionGenerationStatusType extends Type
 
     public function getName(): string
     {
-        return 'StudyType';
+        return 'DistributionGenerationStatusType';
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

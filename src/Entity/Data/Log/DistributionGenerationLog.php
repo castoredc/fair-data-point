@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="log_generation_distribution")
+ * @ORM\HasLifecycleCallbacks
  */
 class DistributionGenerationLog
 {

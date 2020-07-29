@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CastorRecordRepository")
  * @ORM\Table(name="castor_record")
  */
 class Record
@@ -31,7 +31,7 @@ class Record
     private $study;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Institute", fetch="EAGER", inversedBy="records")
+     * @ORM\ManyToOne(targetEntity="Institute", fetch="EAGER", inversedBy="records",cascade={"persist"})
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(name="institute_id", referencedColumnName="id", nullable=FALSE),
      *      @ORM\JoinColumn(name="study_id", referencedColumnName="study_id", nullable=FALSE)
@@ -44,10 +44,18 @@ class Record
     /** @var RecordDataCollection */
     private $data;
 
-    /** @var DateTimeImmutable */
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     *
+     * @var DateTimeImmutable
+     */
     private $createdOn;
 
-    /** @var DateTimeImmutable */
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     *
+     * @var DateTimeImmutable
+     */
     private $updatedOn;
 
     public function __construct(CastorStudy $study, Institute $institute, string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
@@ -97,5 +105,20 @@ class Record
     public function getInstitute(): Institute
     {
         return $this->institute;
+    }
+
+    public function setInstitute(Institute $institute): void
+    {
+        $this->institute = $institute;
+    }
+
+    public function setCreatedOn(DateTimeImmutable $createdOn): void
+    {
+        $this->createdOn = $createdOn;
+    }
+
+    public function setUpdatedOn(DateTimeImmutable $updatedOn): void
+    {
+        $this->updatedOn = $updatedOn;
     }
 }

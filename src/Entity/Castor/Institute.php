@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CastorInstituteRepository")
  * @ORM\Table(name="castor_institute")
  */
 class Institute
@@ -110,7 +110,7 @@ class Institute
         return $this->abbreviation;
     }
 
-    public function getCode(): string
+    public function getCode(): ?string
     {
         return $this->code;
     }
@@ -120,7 +120,7 @@ class Institute
         return $this->countryId;
     }
 
-    public function getCountry(): Country
+    public function getCountry(): ?Country
     {
         return $this->country;
     }
@@ -154,5 +154,25 @@ class Institute
     public function setRecords(Collection $records): void
     {
         $this->records = $records;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setAbbreviation(string $abbreviation): void
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
+    public function setCode(?string $code): void
+    {
+        $this->code = $code;
+    }
+
+    public function setDeleted(bool $deleted): void
+    {
+        $this->deleted = $deleted;
     }
 }

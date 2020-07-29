@@ -6,6 +6,7 @@ namespace App\Entity\Data;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Distribution;
 use App\Traits\CreatedAndUpdated;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -59,7 +60,7 @@ abstract class DistributionContents
      *
      * @var Collection<DistributionGenerationLog>
      */
-    private $logs;
+    protected $logs;
 
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
@@ -110,5 +111,17 @@ abstract class DistributionContents
     public function addLog(DistributionGenerationLog $log): void
     {
         $this->logs->add($log);
+    }
+
+    public function getLastGenerationDate(): ?DateTimeImmutable
+    {
+        if ($this->logs->count() === 0) {
+            return null;
+        }
+
+        /** @var DistributionGenerationLog $firstLog */
+        $firstLog = $this->logs->first();
+
+        return $firstLog->getCreatedAt();
     }
 }
