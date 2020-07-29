@@ -5,10 +5,14 @@ namespace App\Api\Controller\Distribution;
 
 use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Request\Distribution\DistributionContentApiRequest;
+use App\Api\Request\Distribution\DistributionGenerationLogsFilterApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
+use App\Api\Resource\Distribution\DistributionGenerationLogApiResource;
+use App\Api\Resource\PaginatedApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
@@ -18,6 +22,7 @@ use App\Message\Distribution\AddCSVDistributionContentCommand;
 use App\Message\Distribution\ClearDistributionContentCommand;
 use App\Message\Distribution\CreateDistributionCommand;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
+use App\Message\Distribution\GetDistributionGenerationLogsCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -63,6 +68,55 @@ class DistributionApiController extends ApiController
         }
 
         return new JsonResponse((new DistributionContentApiResource($distribution))->toArray());
+    }
+
+    /**
+     * @Route("/{distribution}/log", methods={"GET"}, name="api_distribution_logs")
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function distributionGenerationLogs(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $distribution);
+        $contents = $distribution->getContents();
+
+        if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached()) {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            /** @var DistributionGenerationLogsFilterApiRequest $parsed */
+            $parsed = $this->parseRequest(DistributionGenerationLogsFilterApiRequest::class, $request);
+
+            $envelope = $bus->dispatch(
+                new GetDistributionGenerationLogsCommand(
+                    $distribution,
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
+
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            $results = $handledStamp->getResult();
+
+            return new JsonResponse((new PaginatedApiResource(DistributionGenerationLogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof LanguageNotFound) {
+                return new JsonResponse($e->toArray(), 409);
+            }
+            $this->logger->critical('An error occurred while getting the distribution generation logs', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
+            return new JsonResponse([], 500);
+        }
     }
 
     /**
