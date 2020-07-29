@@ -534,9 +534,11 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecords(CastorStudy $study, bool $extractArchived = false): ArrayCollection
+    public function getRecords(CastorStudy $study, ?ArrayCollection $institutes = null, bool $extractArchived = false): ArrayCollection
     {
-        $institutes = $this->getInstitutes($study);
+        if ($institutes === null) {
+            $institutes = $this->getInstitutes($study);
+        }
 
         $pages = 1;
         $records = new ArrayCollection();
