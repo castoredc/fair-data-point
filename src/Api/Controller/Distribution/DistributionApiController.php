@@ -9,9 +9,11 @@ use App\Api\Request\Distribution\DistributionGenerationLogsFilterApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationLogApiResource;
+use App\Api\Resource\Distribution\DistributionGenerationRecordLogApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Controller\Api\ApiController;
 use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -23,6 +25,7 @@ use App\Message\Distribution\ClearDistributionContentCommand;
 use App\Message\Distribution\CreateDistributionCommand;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use App\Message\Distribution\GetDistributionGenerationLogsCommand;
+use App\Message\Distribution\GetDistributionGenerationRecordLogsCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -106,13 +109,73 @@ class DistributionApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            if ($e instanceof LanguageNotFound) {
-                return new JsonResponse($e->toArray(), 409);
-            }
             $this->logger->critical('An error occurred while getting the distribution generation logs', [
                 'exception' => $e,
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),
+            ]);
+
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/{distribution}/log/{log}", methods={"GET"}, name="api_distribution_log")
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     * @ParamConverter("log", options={"mapping": {"log": "id"}})
+     */
+    public function distributionGenerationLog(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $distribution);
+
+        if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
+            throw $this->createNotFoundException();
+        }
+
+        return new JsonResponse((new DistributionGenerationLogApiResource($log))->toArray());
+    }
+
+    /**
+     * @Route("/{distribution}/log/{log}/records", methods={"GET"}, name="api_distribution_log_records")
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     * @ParamConverter("log", options={"mapping": {"log": "id"}})
+     */
+    public function distributionGenerationLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $distribution);
+
+        if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
+            throw $this->createNotFoundException();
+        }
+
+        try {
+            /** @var DistributionGenerationLogsFilterApiRequest $parsed */
+            $parsed = $this->parseRequest(DistributionGenerationLogsFilterApiRequest::class, $request);
+
+            $envelope = $bus->dispatch(
+                new GetDistributionGenerationRecordLogsCommand(
+                    $log,
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
+
+            /** @var HandledStamp $handledStamp */
+            $handledStamp = $envelope->last(HandledStamp::class);
+
+            $results = $handledStamp->getResult();
+
+            return new JsonResponse((new PaginatedApiResource(DistributionGenerationRecordLogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            $this->logger->critical('An error occurred while getting the distribution generation record logs', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+                'LogID' => $log->getId(),
             ]);
 
             return new JsonResponse([], 500);

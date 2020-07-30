@@ -3,26 +3,26 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\FAIRData\Distribution;
+use App\Entity\Data\Log\DistributionGenerationLog;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
-class DistributionGenerationLogRepository extends EntityRepository
+class DistributionGenerationRecordLogRepository extends EntityRepository
 {
     /**
      * @return mixed
      */
     public function findLogs(
-        ?Distribution $distribution,
+        DistributionGenerationLog $log,
         ?int $perPage,
         ?int $page,
         bool $admin
     ) {
-        $qb = $this->createQueryBuilder('log')->select('log');
-        $qb = $this->getLogQuery($qb, $distribution, $admin);
+        $qb = $this->createQueryBuilder('recordLog')->select('recordLog');
+        $qb = $this->getLogQuery($qb, $log, $admin);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -34,10 +34,10 @@ class DistributionGenerationLogRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countLogs(?Distribution $distribution, bool $admin): int
+    public function countLogs(DistributionGenerationLog $log, bool $admin): int
     {
-        $qb = $this->createQueryBuilder('log')->select('count(log.id)');
-        $qb = $this->getLogQuery($qb, $distribution, $admin);
+        $qb = $this->createQueryBuilder('recordLog')->select('count(recordLog.id)');
+        $qb = $this->getLogQuery($qb, $log, $admin);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -50,15 +50,11 @@ class DistributionGenerationLogRepository extends EntityRepository
 
     private function getLogQuery(
         QueryBuilder $qb,
-        ?Distribution $distribution,
+        DistributionGenerationLog $log,
         bool $admin
     ): QueryBuilder {
-        if ($distribution !== null) {
-            $qb->innerJoin('log.distribution', 'distribution', Join::WITH, 'distribution.id = :distribution_id')
-               ->setParameter('distribution_id', $distribution->getContents()->getId());
-        }
-
-        $qb->orderBy('log.createdAt', 'DESC');
+        $qb->innerJoin('recordLog.log', 'log', Join::WITH, 'log.id = :log_id')
+           ->setParameter('log_id', $log->getId());
 
         return $qb;
     }

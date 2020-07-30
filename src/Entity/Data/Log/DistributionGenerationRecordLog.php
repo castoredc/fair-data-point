@@ -9,7 +9,7 @@ use App\Traits\CreatedAt;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationRecordLogRepository")
  * @ORM\Table(name="log_generation_distribution_record")
  * @ORM\HasLifecycleCallbacks
  */
@@ -62,6 +62,7 @@ class DistributionGenerationRecordLog
     public function __construct(Record $record)
     {
         $this->record = $record;
+        $this->errors = [];
     }
 
     public function getId(): string
