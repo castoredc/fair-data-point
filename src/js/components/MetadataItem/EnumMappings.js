@@ -48,3 +48,10 @@ export const LoginViews = {
     'distribution': 'distribution',
     'dataset': 'dataset'
 };
+
+export const DistributionGenerationStatus = {
+    'not_updated': 'Not updated',
+    'success': 'Generated successfully',
+    'error': 'Not generated due to errors',
+    'partially': 'Generated, with errors',
+};

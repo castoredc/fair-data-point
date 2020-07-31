@@ -5,7 +5,7 @@ import {FormLabel} from "@castoredc/matter";
 
 class FormItem extends Component {
     render() {
-        const {label, children, hidden, inline, align} = this.props;
+        const {label, children, hidden, inline, align, className} = this.props;
 
         let alignClass = '';
 
@@ -18,7 +18,7 @@ class FormItem extends Component {
         }
 
         return (
-            <div className={classNames('FormItem', inline && alignClass, hidden && 'Hidden', inline && 'Inline', this.props.classNames)}>
+            <div className={classNames('FormItem', inline && alignClass, hidden && 'Hidden', inline && 'Inline', className)}>
                 {label && <div className="FormItemLabel">
                     <FormLabel>{label}</FormLabel>
                 </div>}
