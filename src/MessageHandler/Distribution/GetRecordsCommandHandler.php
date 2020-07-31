@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Exception\ErrorFetchingCastorData;
@@ -25,14 +24,10 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
     /** @var Security */
     private $security;
 
-    /** @var EncryptionService */
-    private $encryptionService;
-
-    public function __construct(CastorEntityHelper $entityHelper, Security $security, EncryptionService $encryptionService)
+    public function __construct(CastorEntityHelper $entityHelper, Security $security)
     {
         $this->entityHelper = $entityHelper;
         $this->security = $security;
-        $this->encryptionService = $encryptionService;
     }
 
     /**
