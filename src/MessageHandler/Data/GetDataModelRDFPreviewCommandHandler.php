@@ -110,19 +110,23 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 }
 
                 if ($placeholderType->isInstituteName()) {
-                    return '##Insitute Name##';
+                    return '##Institute Name##';
                 }
 
                 if ($placeholderType->isInstituteAbbreviation()) {
-                    return '##Insitute Abbreviation##';
+                    return '##Institute Abbreviation##';
                 }
 
                 if ($placeholderType->isInstituteCode()) {
-                    return '##Insitute Code##';
+                    return '##Institute Code##';
                 }
 
-                if ($placeholderType->isInstituteCountryId()) {
-                    return '##Insitute Country ID##';
+                if ($placeholderType->isInstituteCountryCode()) {
+                    return '##Institute Country Code##';
+                }
+
+                if ($placeholderType->isInstituteCountryName()) {
+                    return '##Institute Country Name##';
                 }
             }
 

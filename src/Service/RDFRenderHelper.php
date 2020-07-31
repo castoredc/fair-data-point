@@ -190,6 +190,30 @@ class RDFRenderHelper
                 if ($placeholderType->isRecordId()) {
                     return $record->getId();
                 }
+
+                if ($placeholderType->isInstituteId()) {
+                    return $record->getInstitute()->getId();
+                }
+
+                if ($placeholderType->isInstituteAbbreviation()) {
+                    return $record->getInstitute()->getAbbreviation();
+                }
+
+                if ($placeholderType->isInstituteCode()) {
+                    return $record->getInstitute()->getCode();
+                }
+
+                if ($placeholderType->isInstituteName()) {
+                    return $record->getInstitute()->getName();
+                }
+
+                if ($placeholderType->isInstituteCountryCode()) {
+                    return $record->getInstitute()->getCountry()->getCode();
+                }
+
+                if ($placeholderType->isInstituteCountryName()) {
+                    return $record->getInstitute()->getCountry()->getName();
+                }
             }
 
             return $node->getValue();
