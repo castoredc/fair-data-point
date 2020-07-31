@@ -9,12 +9,14 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Institute;
 use App\Entity\Castor\Record;
 use App\Entity\Enum\CastorEntityType;
+use App\Entity\FAIRData\Country;
 use App\Exception\InvalidEntityType;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
 use App\Repository\CastorEntityRepository;
 use App\Repository\CastorInstituteRepository;
 use App\Repository\CastorRecordRepository;
+use App\Repository\CountryRepository;
 use App\Security\ApiUser;
 use App\Security\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -184,6 +186,10 @@ class CastorEntityHelper
         /** @var CastorInstituteRepository $repository */
         $repository = $this->em->getRepository(Institute::class);
 
+        /** @var CountryRepository $countryRepository */
+        $countryRepository = $this->em->getRepository(Country::class);
+        $countries = $countryRepository->getAllCountriesWithCastorIds();
+
         $castorInstitutes = $this->apiClient->getInstitutes($study);
         $dbInstitutes = $repository->findByStudy($study);
 
@@ -205,6 +211,9 @@ class CastorEntityHelper
                 $dbInstitute->setCountryId($castorInstitute->getCountryId());
                 $dbInstitute->setDeleted($castorInstitute->isDeleted());
             }
+
+            $country = $countries->get($dbInstitute->getCountryId());
+            $dbInstitute->setCountry($country);
 
             $institutes->set($dbInstitute->getId(), $dbInstitute);
         }
