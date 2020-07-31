@@ -5,6 +5,7 @@ namespace App\Controller\UserInterface;
 
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -149,7 +150,7 @@ class AdminController extends AbstractController
      * @Route("/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
      * @Route("/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
      * @Route("/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
-     * @Route("/dataset/{dataset}/distribution/{distribution}/prefixes", name="admin_study_distribution_prefix")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/log", name="admin_study_distribution_log")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
@@ -158,6 +159,26 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         if (! $dataset->hasDistribution($distribution)) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Admin']
+        );
+    }
+
+    /**
+     * @Route("/dataset/{dataset}/distribution/{distribution}/log/{log}", name="admin_study_distribution_log_records")
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     * @ParamConverter("log", options={"mapping": {"log": "id"}})
+     */
+    public function adminDistributionLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
             throw $this->createNotFoundException();
         }
 

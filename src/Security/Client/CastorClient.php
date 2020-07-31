@@ -61,7 +61,7 @@ class CastorClient extends OAuth2Client
     /**
      * @inheritDoc
      */
-    public function getAccessToken()
+    public function getAccessToken(array $options = [])
     {
         $expectedState = $this->getSession()->get(self::OAUTH2_SESSION_STATE_KEY);
         $server = $this->getSession()->get(self::SESSION_SERVER_KEY);

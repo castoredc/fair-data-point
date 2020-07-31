@@ -8,7 +8,10 @@ use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\Data\Log\DistributionGenerationLog;
+use App\Entity\Data\Log\DistributionGenerationRecordLog;
 use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Enum\DistributionGenerationStatus;
 use App\Model\Castor\ApiClient;
 use App\Service\CastorEntityHelper;
 use App\Service\RDFRenderHelper;
@@ -32,25 +35,18 @@ class GenerateRDFCommand extends Command
 {
     /** @var string */
     protected static $defaultName = 'app:generate-rdf';
-
     /** @var ApiClient */
     private $apiClient;
-
     /** @var EntityManagerInterface */
     private $em;
-
     /** @var CastorEntityHelper */
     private $entityHelper;
-
     /** @var UriHelper */
     private $uriHelper;
-
     /** @var DistributionService */
     private $distributionService;
-
     /** @var EncryptionService */
     private $encryptionService;
-
     /** @var LoggerInterface */
     private $logger;
 
@@ -78,24 +74,40 @@ class GenerateRDFCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
-        $output->writeln([
-            'RDF Generator',
-            '============',
-            '',
-        ]);
+        $output->writeln(
+            [
+                'RDF Generator',
+                '============',
+                '',
+            ]
+        );
 
         /** @var RDFDistribution[] $rdfDistributionContents */
         $rdfDistributionContents = $this->em->getRepository(RDFDistribution::class)->findBy(['isCached' => true]);
 
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
+            $log = new DistributionGenerationLog($rdfDistributionContent);
 
             $output->writeln('== ' . $distribution->getSlug() . ' ==');
 
-            $lastImport = $rdfDistributionContent->getLastImport();
+            $lastImport = $rdfDistributionContent->getLastGenerationDate();
 
             $dbInformation = $distribution->getDatabaseInformation();
             $apiUser = $distribution->getApiUser();
+
+            if ($apiUser === null) {
+                $log->setStatus(DistributionGenerationStatus::error());
+
+                $log->addError(
+                    ['message' => 'There was no API user assigned to this distribution.']
+                );
+
+                $this->em->persist($log);
+                $this->em->flush();
+                continue;
+            }
+
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
             $this->entityHelper->useApiUser($apiUser);
 
@@ -103,7 +115,7 @@ class GenerateRDFCommand extends Command
             assert($study instanceof CastorStudy);
 
             /** @var Record[] $records */
-            $records = $this->apiClient->getRecords($study)->toArray();
+            $records = $this->entityHelper->getRecords($study)->toArray();
 
             $distributionUri = $this->uriHelper->getUri($rdfDistributionContent);
             $graphUri = $distributionUri . '/g';
@@ -132,6 +144,8 @@ class GenerateRDFCommand extends Command
             $skipped = [];
 
             foreach ($records as $record) {
+                $recordLog = new DistributionGenerationRecordLog($record);
+
                 $import = false;
                 $recordGraphUri = $graphUri . '/' . $record->getId();
 
@@ -165,6 +179,7 @@ class GenerateRDFCommand extends Command
                         $store->insert($turtle, $recordGraphUri);
 
                         $imported[] = $record;
+                        $recordLog->setStatus(DistributionGenerationStatus::success());
                     } catch (Throwable $t) {
                         $output->writeln('    - An error occurred while rendering the record:');
                         $output->writeln('      ' . get_class($t));
@@ -173,19 +188,36 @@ class GenerateRDFCommand extends Command
                             $output->writeln('      ' . $t->getMessage());
                         }
 
-                        $this->logger->critical('An error occurred while rendering the record', [
-                            'exception' => $t,
-                            'Message' => $t->getMessage(),
-                            'Distribution' => $distribution->getSlug(),
-                            'DistributionID' => $distribution->getId(),
-                            'RecordID' => $record->getId(),
-                        ]);
+                        $this->logger->critical(
+                            'An error occurred while rendering the record',
+                            [
+                                'exception' => $t,
+                                'Message' => $t->getMessage(),
+                                'Distribution' => $distribution->getSlug(),
+                                'DistributionID' => $distribution->getId(),
+                                'RecordID' => $record->getId(),
+                            ]
+                        );
 
                         $errors[] = $record;
+
+                        $recordLog->setStatus(DistributionGenerationStatus::error());
+
+                        $recordLog->addError(
+                            [
+                                'exception' => get_class($t),
+                                'message' => $t->getMessage(),
+                            ]
+                        );
                     }
                 } else {
                     $skipped[] = $record;
+
+                    $recordLog->setStatus(DistributionGenerationStatus::notUpdated());
                 }
+
+                $log->addRecord($recordLog);
+                $this->em->persist($recordLog);
             }
 
             $output->writeln(['', 'Import finished']);
@@ -193,11 +225,50 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf('- %s record(s) not imported due to errors', count($errors)));
             $output->writeln(sprintf('- %s record(s) skipped', count($skipped)));
 
-            $rdfDistributionContent->setLastImport($timeStamp);
+            if (count($imported) > 0 && count($errors) > 0) {
+                $log->setStatus(DistributionGenerationStatus::partially());
+            } elseif (count($errors) > 0) {
+                $log->setStatus(DistributionGenerationStatus::error());
+            } elseif (count($imported) > 0) {
+                $log->setStatus(DistributionGenerationStatus::success());
+            } else {
+                $log->setStatus(DistributionGenerationStatus::notUpdated());
+            }
+
+            if (count($imported) > 0) {
+                try {
+                    $store->optimizeTables();
+                } catch (Throwable $t) {
+                    $output->writeln('    - An error occurred while optimizing the triple store:');
+                    $output->writeln('      ' . get_class($t));
+
+                    if ($t->getMessage() !== '') {
+                        $output->writeln('      ' . $t->getMessage());
+                    }
+
+                    $this->logger->critical(
+                        'An error occurred while optimizing the triple store',
+                        [
+                            'exception' => $t,
+                            'Message' => $t->getMessage(),
+                            'Distribution' => $distribution->getSlug(),
+                            'DistributionID' => $distribution->getId(),
+                        ]
+                    );
+
+                    $log->addError(
+                        [
+                            'exception' => get_class($t),
+                            'message' => $t->getMessage(),
+                        ]
+                    );
+                }
+            }
+
+            $this->em->persist($log);
+
             $this->em->persist($rdfDistributionContent);
             $this->em->flush();
-
-            $store->optimizeTables();
         }
 
         return 0;

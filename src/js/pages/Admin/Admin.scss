@@ -132,4 +132,33 @@
       overflow: auto;
     }
   }
+
+  .RecordLogs {
+    display: flex;
+    height: 100%;
+
+    .RecordLogsDataTable {
+      flex: 1;
+    }
+
+    .RecordLogsDetails {
+      width: 300px;
+      margin-left: 30px;
+      padding-left: 30px;
+      border-left: 1px solid $neutral-40;
+      overflow: auto;
+    }
+  }
+
+  .ErrorLogItem {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $neutral-40;
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
 }

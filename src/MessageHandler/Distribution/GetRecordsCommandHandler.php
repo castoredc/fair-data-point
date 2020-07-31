@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Exception\ErrorFetchingCastorData;
@@ -11,28 +10,24 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Message\Distribution\GetRecordsCommand;
-use App\Model\Castor\ApiClient;
 use App\Security\CastorUser;
+use App\Service\CastorEntityHelper;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
 class GetRecordsCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
+    /** @var CastorEntityHelper */
+    private $entityHelper;
 
     /** @var Security */
     private $security;
 
-    /** @var EncryptionService */
-    private $encryptionService;
-
-    public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
+    public function __construct(CastorEntityHelper $entityHelper, Security $security)
     {
-        $this->apiClient = $apiClient;
+        $this->entityHelper = $entityHelper;
         $this->security = $security;
-        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -60,11 +55,9 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
         $apiUser = $distribution->getApiUser();
 
         if ($apiUser !== null) {
-            $this->apiClient->useApiUser($apiUser, $this->encryptionService);
-        } else {
-            $this->apiClient->setUser($user);
+            $this->entityHelper->useApiUser($apiUser);
         }
 
-        return $this->apiClient->getRecords($study)->toArray();
+        return $this->entityHelper->getRecords($study)->toArray();
     }
 }

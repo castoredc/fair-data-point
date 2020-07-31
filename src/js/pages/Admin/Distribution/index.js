@@ -11,8 +11,10 @@ import {Route, Switch} from "react-router-dom";
 import DistributionDetails from "./DistributionDetails";
 import DistributionContents from "./DistributionContents";
 import DistributionMetadata from "./DistributionMetadata";
-import {Button, ViewHeader} from "@castoredc/matter";
+import {ViewHeader} from "@castoredc/matter";
 import BackButton from "../../../components/BackButton";
+import DistributionLogs from "./DistributionLogs";
+import DistributionLog from "./DistributionLog";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -74,10 +76,26 @@ export default class Distribution extends Component {
                         <Nav.Link>Metadata</Nav.Link>
                     </LinkContainer>
                     <hr/>
+
+                    {distribution.type === 'rdf' && <>
+                        <LinkContainer
+                            to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents'}
+                            exact={true}>
+                            <Nav.Link>Mappings</Nav.Link>
+                        </LinkContainer>
+                        <hr />
+                        <LinkContainer
+                            to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log'}>
+                            <Nav.Link>Log</Nav.Link>
+                        </LinkContainer>
+                    </>}
+
+                    {distribution.type === 'csv' &&
                     <LinkContainer to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents'}
                                    exact={true}>
                         <Nav.Link>Contents</Nav.Link>
-                    </LinkContainer>
+                    </LinkContainer>}
+
                 </Nav>
             </div>
             <div className="Page">
@@ -96,6 +114,12 @@ export default class Distribution extends Component {
                     <Route path="/admin/dataset/:dataset/distribution/:distribution/contents" exact
                            render={(props) => <DistributionContents {...props} dataset={dataset}
                                                                     distribution={distribution}/>}/>
+                    <Route path="/admin/dataset/:dataset/distribution/:distribution/log/:log" exact
+                           render={(props) => <DistributionLog {...props} dataset={dataset}
+                                                                distribution={distribution}/>}/>
+                    <Route path="/admin/dataset/:dataset/distribution/:distribution/log" exact
+                           render={(props) => <DistributionLogs {...props} dataset={dataset}
+                                                                distribution={distribution}/>}/>
                     <Route component={NotFound}/>
                 </Switch>
             </div>
