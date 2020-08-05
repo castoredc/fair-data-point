@@ -15,7 +15,7 @@ export default class DistributionLogsDataTable extends Component {
             isLoadingLogs: true,
             hasLoadedLogs: false,
             logs:          [],
-            pagination:        {
+            pagination:    {
                 currentPage:  1,
                 start:        1,
                 perPage:      25,
@@ -60,7 +60,7 @@ export default class DistributionLogsDataTable extends Component {
             .then((response) => {
                 this.setState({
                     logs:          response.data.results,
-                    pagination:        {
+                    pagination:    {
                         currentPage:  response.data.currentPage,
                         perPage:      response.data.perPage,
                         start:        response.data.start,
@@ -122,7 +122,7 @@ export default class DistributionLogsDataTable extends Component {
                     cells: [
                         moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
                         <DistributionGenerationStatus status={log.status}/>,
-                        log.records.total
+                        log.records.total,
                     ],
                 }];
         }));

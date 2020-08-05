@@ -100,8 +100,7 @@ export default class DataModelMappingsDataTable extends Component {
         const {mappings} = this.state;
         const {onClick} = this.props;
 
-        if (typeof index !== "undefined" && mappings.length > 0)
-        {
+        if (typeof index !== "undefined" && mappings.length > 0) {
             const mapping = mappings.find((item) => item.id === rowID);
             onClick(mapping);
         }

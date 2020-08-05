@@ -265,7 +265,7 @@ export default class MetadataForm extends Component {
                         name,
                         ucfirst(publisher.type),
                     ],
-                }
+                },
             ];
         }));
 
