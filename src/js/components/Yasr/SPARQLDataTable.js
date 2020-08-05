@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AppProvider, DataTable, Icon} from "@castoredc/matter";
+import {DataTable} from "@castoredc/matter";
 
 export default class SPARQLDataTable extends Component {
     constructor(props) {
