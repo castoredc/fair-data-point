@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Catalog;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\CatalogApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesMapApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Message\Catalog\UpdateCatalogCommand;

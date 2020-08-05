@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\NodeApiRequest;
 use App\Api\Resource\Data\NodesApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;

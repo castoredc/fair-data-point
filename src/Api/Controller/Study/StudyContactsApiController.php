@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Study\Provenance\StudyContactApiRequest;
 use App\Entity\Study;
 use App\Exception\GroupedApiRequestParseError;
@@ -18,7 +19,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ContactsApiController extends ApiController
+class StudyContactsApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/contacts", methods={"GET"}, name="api_get_contacts")

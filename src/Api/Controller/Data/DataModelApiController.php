@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModelApiRequest;
 use App\Api\Request\Data\DataModelVersionApiRequest;
 use App\Api\Request\Data\DataModelVersionTypeApiRequest;
@@ -10,7 +11,6 @@ use App\Api\Resource\Data\DataModelApiResource;
 use App\Api\Resource\Data\DataModelsApiResource;
 use App\Api\Resource\Data\DataModelVersionApiResource;
 use App\Api\Resource\Data\DataModelVersionExportApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;

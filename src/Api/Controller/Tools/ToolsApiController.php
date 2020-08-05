@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Tools;
 
+use App\Api\Controller\ApiController;
 use App\Exception\NoFieldsFound;
 use App\Exception\NoMetadataTypesFound;
 use App\Message\Tools\MetadataXmlParseCommand;

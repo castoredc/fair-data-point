@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Castor;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\Security\CastorServersApiResource;
-use App\Controller\Api\ApiController;
 use App\Message\Security\GetCastorServersCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Terminology;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Terminology\OntologyConceptApiRequest;
 use App\Api\Resource\Terminology\OntologiesApiResource;
 use App\Api\Resource\Terminology\OntologyConceptSearchApiResource;
-use App\Controller\Api\ApiController;
 use App\Exception\ApiRequestParseError;
 use App\Message\Terminology\FindOntologyConceptsCommand;
 use App\Message\Terminology\GetOntologiesCommand;

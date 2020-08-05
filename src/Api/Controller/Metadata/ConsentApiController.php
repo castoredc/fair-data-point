@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Metadata;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\ConsentApiRequest;
 use App\Api\Resource\Metadata\ConsentApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Exception\StudyAlreadyHasDataset;

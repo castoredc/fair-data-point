@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Distribution;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Distribution\DataModelMappingApiRequest;
 use App\Api\Resource\Distribution\DataModelMappingApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\RDF\DataModelMapping;
 use App\Entity\Data\RDF\RDFDistribution;

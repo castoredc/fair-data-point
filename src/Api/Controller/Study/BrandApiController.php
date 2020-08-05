@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\Catalog\CatalogBrandApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

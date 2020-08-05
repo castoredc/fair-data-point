@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Castor;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\OptionGroupsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Castor\CastorStudy;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;

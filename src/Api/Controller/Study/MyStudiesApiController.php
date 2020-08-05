@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
-use App\Controller\Api\ApiController;
+use App\Api\Controller\ApiController;
 use App\Message\Study\FindStudiesByUserCommand;
 use App\Security\CastorUser;
 use Symfony\Component\HttpFoundation\JsonResponse;

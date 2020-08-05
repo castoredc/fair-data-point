@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Catalog;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\AddDatasetToCatalogApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;

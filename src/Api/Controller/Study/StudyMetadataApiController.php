@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataApiRequest;
 use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Entity\Metadata\StudyMetadata;
@@ -19,7 +20,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DetailsApiController extends ApiController
+class StudyMetadataApiController extends ApiController
 {
     /**
      * @Route("/api/study/{studyId}/metadata", methods={"GET"}, name="api_get_metadata")

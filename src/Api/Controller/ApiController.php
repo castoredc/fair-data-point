@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller\Api;
+namespace App\Api\Controller;
 
 use App\Api\Request\ApiRequest;
 use App\Exception\ApiRequestParseError;
