@@ -1,14 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Type;
+namespace App\Type\Enum;
 
-use App\Entity\Enum\StructureType as Enum;
+use App\Entity\Enum\Enum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-class StructureType extends Type
+abstract class EnumType extends Type
 {
+    /** @var string */
+    protected $name = '';
+
+    /** @var string */
+    protected $class = Enum::class;
+
     /** @inheritDoc */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
@@ -22,7 +28,7 @@ class StructureType extends Type
             return null;
         }
 
-        return Enum::fromString($value);
+        return $this->class::fromString($value);
     }
 
     /** @inheritDoc */
@@ -35,13 +41,13 @@ class StructureType extends Type
         return $value->toString();
     }
 
-    public function getName(): string
-    {
-        return 'StructureType';
-    }
-
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }

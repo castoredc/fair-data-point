@@ -13,17 +13,17 @@ doctrine:
         password: '%env(DB_DEFAULT_PASS)%'
         types:
             iri:  App\Type\IriType
-            StudyType:  App\Type\StudyType
             DistributionAccessType:  App\Type\DistributionAccessType
-            RecruitmentStatusType:  App\Type\RecruitmentStatusType
-            MethodType:  App\Type\MethodType
-            StructureType:  App\Type\StructureType
-            XsdDataType:  App\Type\XsdDataType
             version:  App\Type\VersionType
-            StudySource: App\Type\StudySource
-            DependencyCombinatorType: App\Type\DependencyCombinatorType
-            DependencyOperatorType: App\Type\DependencyOperatorType
-            DistributionGenerationStatusType: App\Type\DistributionGenerationStatusType
+            StudyType:  App\Type\Enum\StudyType
+            RecruitmentStatusType:  App\Type\Enum\RecruitmentStatusType
+            MethodType:  App\Type\Enum\MethodType
+            StructureType:  App\Type\Enum\StructureType
+            XsdDataType:  App\Type\Enum\XsdDataType
+            StudySource: App\Type\Enum\StudySource
+            DependencyCombinatorType: App\Type\Enum\DependencyCombinatorType
+            DependencyOperatorType: App\Type\Enum\DependencyOperatorType
+            DistributionGenerationStatusType: App\Type\Enum\DistributionGenerationStatusType
 
     orm:
         auto_generate_proxy_classes: true
