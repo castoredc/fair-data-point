@@ -56,6 +56,17 @@ export default class DataModels extends Component {
         });
     };
 
+    handleClick = (event, rowID, index) => {
+        const {dataModels} = this.state;
+        const {history} = this.props;
+
+        if (typeof index !== "undefined" && dataModels.length > 0) {
+            const dataModel = dataModels.find((item) => item.id === rowID);
+
+            history.push(`/admin/model/${dataModel.id}`)
+        }
+    };
+
     render() {
         const {dataModels, isLoadingDataModels, showModal} = this.state;
         const {history} = this.props;
@@ -63,6 +74,17 @@ export default class DataModels extends Component {
         if (isLoadingDataModels) {
             return <InlineLoader/>;
         }
+
+        const rows = new Map(dataModels.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.title,
+                    ],
+                },
+            ];
+        }));
 
         return <div className="PageContainer">
             <AddDataModelModal
@@ -87,12 +109,8 @@ export default class DataModels extends Component {
                                 emptyTableMessage="No data models found"
                                 highlightRowOnHover
                                 cellSpacing="default"
-                                onClick={(event, rowID, index) => {
-                                    history.push(`/admin/model/${dataModels[index].id}`)
-                                }}
-                                rows={dataModels.map((item) => {
-                                    return [item.title];
-                                })}
+                                onClick={this.handleClick}
+                                rows={rows}
                                 structure={{
                                     title: {
                                         header:    'Title',

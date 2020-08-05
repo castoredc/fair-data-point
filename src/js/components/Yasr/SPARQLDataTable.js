@@ -22,7 +22,7 @@ export default class SPARQLDataTable extends Component {
     getRows = () => {
         const { vars, bindings, prefixes } = this.props;
 
-        let rows = [];
+        let rows = new Map();
 
         for (let rowId = 0; rowId < bindings.length; rowId++) {
             const binding = bindings[rowId];
@@ -35,7 +35,7 @@ export default class SPARQLDataTable extends Component {
                     row.push("");
                 }
             }
-            rows.push(row);
+            rows.set(rowId, { cells: row });
         }
         return rows;
     };

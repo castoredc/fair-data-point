@@ -99,10 +99,11 @@ export default class DistributionRecordLogsDataTable extends Component {
 
     handleClick = (event, rowID, index) => {
         const {logs} = this.state;
-        const {dataset, distribution, history} = this.props;
 
         if (typeof index !== "undefined" && logs.length > 0) {
-            this.setState({selectedLog: index});
+            const log = logs.find((item) => item.id === rowID);
+
+            this.setState({selectedLog: log});
         }
     };
 
@@ -113,9 +114,20 @@ export default class DistributionRecordLogsDataTable extends Component {
             return <InlineLoader/>;
         }
 
-        const selectedLogItem = selectedLog !== null ? logs[selectedLog] : null;
+        const selectedLogItem = selectedLog !== null ? selectedLog : null;
         const selectedLogItemHasErrors = selectedLogItem !== null && (selectedLogItem.errors !== null && (Array.isArray(selectedLogItem.errors) && selectedLogItem.errors.length > 0));
 
+        const rows = new Map(logs.map((log) => {
+            return [
+                log.id,
+                {
+                    cells: [
+                        log.record.id,
+                        <DistributionGenerationStatus status={log.status}/>,
+                        moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
+                    ],
+                }];
+        }));
 
         return <div className="RecordLogs">
             <div
@@ -127,13 +139,7 @@ export default class DistributionRecordLogsDataTable extends Component {
                         highlightRowOnHover
                         cellSpacing="default"
                         onClick={this.handleClick}
-                        rows={logs.map((log) => {
-                            return [
-                                log.record.id,
-                                <DistributionGenerationStatus status={log.status}/>,
-                                moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
-                            ];
-                        })}
+                        rows={rows}
                         structure={{
                             title:       {
                                 header:    'Record',

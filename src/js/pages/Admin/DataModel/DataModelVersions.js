@@ -9,19 +9,19 @@ export default class DataModelVersions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:          false,
+            showModal: false,
         };
     }
 
     openModal = () => {
         this.setState({
-            showModal: true
+            showModal: true,
         });
     };
 
     closeModal = () => {
         this.setState({
-            showModal: false
+            showModal: false,
         });
     };
 
@@ -29,11 +29,11 @@ export default class DataModelVersions extends Component {
         const {dataModel, getDataModel} = this.props;
 
         axios.post('/api/model/' + dataModel.id + '/v', {
-            type: version
+            type: version,
         })
             .then((response) => {
-                toast.success(<ToastContent type="success" message="A new version was successfully created" />, {
-                    position: "top-right"
+                toast.success(<ToastContent type="success" message="A new version was successfully created"/>, {
+                    position: "top-right",
                 });
 
                 this.closeModal();
@@ -42,7 +42,7 @@ export default class DataModelVersions extends Component {
             })
             .catch((error) => {
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while creating a new version';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
@@ -51,6 +51,19 @@ export default class DataModelVersions extends Component {
         const {dataModel} = this.props;
 
         const latestVersion = dataModel.versions.slice(-1)[0].version;
+
+        const rows = new Map(dataModel.versions.map((version) => {
+            return [
+                version.id,
+                {
+                    cells: [
+                        version.version,
+                        version.count.modules,
+                        version.count.nodes,
+                    ],
+                },
+            ];
+        }));
 
         return <div className="PageBody">
             <DataModelVersionModal
@@ -64,28 +77,26 @@ export default class DataModelVersions extends Component {
 
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
-                        <Button icon="add" onClick={this.openModal}>Create version</Button>
+                    <Button icon="add" onClick={this.openModal}>Create version</Button>
                 </Stack>
             </div>
 
             <DataTable
                 emptyTableMessage="This data model does not have any versions"
                 cellSpacing="default"
-                rows={dataModel.versions.map((version) => {
-                    return [version.version, version.count.modules, version.count.nodes];
-                })}
+                rows={rows}
                 structure={{
-                    version:    {
+                    version:     {
                         header:    'Version',
                         resizable: true,
                         template:  'fixed',
                     },
-                    moduleCount:    {
+                    moduleCount: {
                         header:    'Modules',
                         resizable: true,
                         template:  'fixed',
                     },
-                    nodeCount:    {
+                    nodeCount:   {
                         header:    'Nodes',
                         resizable: true,
                         template:  'fixed',
