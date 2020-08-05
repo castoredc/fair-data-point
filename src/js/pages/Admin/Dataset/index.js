@@ -12,8 +12,9 @@ import DatasetDistributions from "../Dataset/DatasetDistributions";
 import AddDistribution from "../Dataset/AddDistribution";
 import DatasetMetadata from "./DatasetMetadata";
 import DatasetDetails from "./DatasetDetails";
-import {Button, ViewHeader} from "@castoredc/matter";
+import {ViewHeader} from "@castoredc/matter";
 import BackButton from "../../../components/BackButton";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -56,7 +57,11 @@ export default class Dataset extends Component {
 
         const url = '/admin' + (catalog ? '/catalog/' + catalog : '');
 
+        const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : null;
+
         return <div className="PageContainer">
+            <DocumentTitle title={'FDP Admin | Dataset' + (title ? ` | ${title}` : '')}/>
+
             <div className="LeftNav">
                 <div className="Back">
                     {catalog && <BackButton to={url + '/studies'}>Back to catalog</BackButton>}
@@ -77,7 +82,7 @@ export default class Dataset extends Component {
             </div>
             <div className="Page">
                 <div className="PageTitle">
-                    <ViewHeader>{dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Dataset'}</ViewHeader>
+                    <ViewHeader>{title ? title : 'Dataset'}</ViewHeader>
                 </div>
 
                 <Switch>

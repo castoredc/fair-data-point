@@ -13,13 +13,14 @@ import CatalogDatasets from "./CatalogDatasets";
 import CatalogMetadata from "./CatalogMetadata";
 import CatalogAddStudy from "./CatalogAddStudy";
 import CatalogAddDataset from "./CatalogAddDataset";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Catalog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingCatalog:  true,
-            catalog:           null,
+            isLoadingCatalog: true,
+            catalog:          null,
         };
     }
 
@@ -55,13 +56,17 @@ export default class Catalog extends Component {
     };
 
     render() {
-        const { catalog, isLoadingCatalog } = this.state;
+        const {catalog, isLoadingCatalog} = this.state;
 
-        if(isLoadingCatalog) {
-            return <InlineLoader />;
+        if (isLoadingCatalog) {
+            return <InlineLoader/>;
         }
 
+        const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : null;
+
         return <div className="PageContainer">
+            <DocumentTitle title={'FDP Admin | Catalog' + (title ? ` | ${title}` : '')}/>
+
             <div className="LeftNav">
                 <Nav className="flex-column">
                     <LinkContainer to={'/admin/catalog/' + catalog.slug} exact={true}>
@@ -70,7 +75,7 @@ export default class Catalog extends Component {
                     <LinkContainer to={'/admin/catalog/' + catalog.slug + '/metadata'} exact={true}>
                         <Nav.Link>Metadata</Nav.Link>
                     </LinkContainer>
-                    <hr />
+                    <hr/>
                     <LinkContainer to={'/admin/catalog/' + catalog.slug + '/datasets'} exact={true}>
                         <Nav.Link>Datasets</Nav.Link>
                     </LinkContainer>
@@ -81,23 +86,24 @@ export default class Catalog extends Component {
             </div>
             <div className="Page">
                 <div className="PageTitle">
-                    {catalog.hasMetadata && <ViewHeader>{localizedText(catalog.metadata.title, 'en')}</ViewHeader>}
+                    {title && <ViewHeader>{title}</ViewHeader>}
                 </div>
 
                 <Switch>
                     <Route path="/admin/catalog/:catalog" exact
-                           render={(props) => <CatalogDetails {...props} catalog={catalog} />} />
+                           render={(props) => <CatalogDetails {...props} catalog={catalog}/>}/>
                     <Route path="/admin/catalog/:catalog/metadata" exact
-                           render={(props) => <CatalogMetadata {...props} catalog={catalog} onSave={this.getCatalog} />} />
+                           render={(props) => <CatalogMetadata {...props} catalog={catalog}
+                                                               onSave={this.getCatalog}/>}/>
                     <Route path="/admin/catalog/:catalog/studies/add" exact
-                           render={(props) => <CatalogAddStudy {...props} catalog={catalog} />} />
+                           render={(props) => <CatalogAddStudy {...props} catalog={catalog}/>}/>
                     <Route path="/admin/catalog/:catalog/studies" exact
-                           render={(props) => <CatalogStudies {...props} catalog={catalog} />} />
+                           render={(props) => <CatalogStudies {...props} catalog={catalog}/>}/>
                     <Route path="/admin/catalog/:catalog/datasets" exact
-                           render={(props) => <CatalogDatasets {...props} catalog={catalog} />} />
+                           render={(props) => <CatalogDatasets {...props} catalog={catalog}/>}/>
                     <Route path="/admin/catalog/:catalog/datasets/add" exact
-                           render={(props) => <CatalogAddDataset {...props} catalog={catalog} />} />
-                    <Route component={NotFound} />
+                           render={(props) => <CatalogAddDataset {...props} catalog={catalog}/>}/>
+                    <Route component={NotFound}/>
                 </Switch>
             </div>
         </div>;

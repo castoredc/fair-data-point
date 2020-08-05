@@ -126,7 +126,7 @@ export default class Admin extends Component {
             />
             <div className="Main">
                 <Switch>
-                    <Redirect exact from="/admin" to="/admin/catalog"/>
+                    <Redirect exact from="/admin" to="/admin/catalogs"/>
 
                     <Route path="/admin/catalogs" exact component={Catalogs}/>
                     <Route path="/admin/catalog/:catalog" component={Catalog}/>

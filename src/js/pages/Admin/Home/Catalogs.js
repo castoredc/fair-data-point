@@ -6,6 +6,7 @@ import {Button, DataTable, Stack, ViewHeader} from "@castoredc/matter";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import AddCatalogModal from "../../../modals/AddCatalogModal";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Catalogs extends Component {
     constructor(props) {
@@ -77,6 +78,7 @@ export default class Catalogs extends Component {
         }));
 
         return <div className="PageContainer">
+            <DocumentTitle title="FDP Admin | Catalogs"/>
             <AddCatalogModal
                 show={showModal}
                 handleClose={this.closeModal}

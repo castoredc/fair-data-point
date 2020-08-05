@@ -15,6 +15,7 @@ import {ViewHeader} from "@castoredc/matter";
 import BackButton from "../../../components/BackButton";
 import DistributionLogs from "./DistributionLogs";
 import DistributionLog from "./DistributionLog";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -61,7 +62,11 @@ export default class Distribution extends Component {
             return <InlineLoader/>;
         }
 
+        const title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : null;
+
         return <div className="PageContainer">
+            <DocumentTitle title={'FDP Admin | Distribution' + (title ? ` | ${title}` : '')}/>
+
             <div className="LeftNav">
                 <div className="Back">
                     <BackButton to={'/admin/dataset/' + dataset}>Back to dataset</BackButton>
@@ -83,7 +88,7 @@ export default class Distribution extends Component {
                             exact={true}>
                             <Nav.Link>Mappings</Nav.Link>
                         </LinkContainer>
-                        <hr />
+                        <hr/>
                         <LinkContainer
                             to={'/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log'}>
                             <Nav.Link>Log</Nav.Link>
@@ -100,7 +105,7 @@ export default class Distribution extends Component {
             </div>
             <div className="Page">
                 <div className="PageTitle">
-                    <ViewHeader>{distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Distribution'}</ViewHeader>
+                    <ViewHeader>{title ? title : 'Distribution'}</ViewHeader>
                 </div>
 
                 <Switch>
@@ -116,7 +121,7 @@ export default class Distribution extends Component {
                                                                     distribution={distribution}/>}/>
                     <Route path="/admin/dataset/:dataset/distribution/:distribution/log/:log" exact
                            render={(props) => <DistributionLog {...props} dataset={dataset}
-                                                                distribution={distribution}/>}/>
+                                                               distribution={distribution}/>}/>
                     <Route path="/admin/dataset/:dataset/distribution/:distribution/log" exact
                            render={(props) => <DistributionLogs {...props} dataset={dataset}
                                                                 distribution={distribution}/>}/>

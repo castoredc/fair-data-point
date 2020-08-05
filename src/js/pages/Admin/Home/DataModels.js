@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, DataTable, Stack, ViewHeader} from "@castoredc/matter";
 import AddDataModelModal from "../../../modals/AddDataModelModal";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class DataModels extends Component {
     constructor(props) {
@@ -87,6 +88,7 @@ export default class DataModels extends Component {
         }));
 
         return <div className="PageContainer">
+            <DocumentTitle title="FDP Admin | Data Models" />
             <AddDataModelModal
                 show={showModal}
                 handleClose={this.closeModal}

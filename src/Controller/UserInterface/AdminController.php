@@ -41,7 +41,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('react.html.twig', ['title' => 'Admin']);
+        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }
 
     /**
@@ -58,7 +58,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('react.html.twig', ['title' => 'Admin']);
+        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }
 
     /**
@@ -73,7 +73,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -88,7 +88,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -107,7 +107,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -125,7 +125,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -142,7 +142,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -164,7 +164,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -184,7 +184,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 }
