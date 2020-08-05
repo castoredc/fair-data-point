@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AppProvider, DataTable, Icon} from "@castoredc/matter";
+import {DataTable} from "@castoredc/matter";
 
 export default class SPARQLDataTable extends Component {
     constructor(props) {
@@ -7,7 +7,7 @@ export default class SPARQLDataTable extends Component {
     }
 
     getColumns = () => {
-        const { vars } = this.props;
+        const {vars} = this.props;
 
         return vars.reduce(function (map, variable) {
             map[variable] = {
@@ -20,9 +20,9 @@ export default class SPARQLDataTable extends Component {
     };
 
     getRows = () => {
-        const { vars, bindings, prefixes } = this.props;
+        const {vars, bindings, prefixes} = this.props;
 
-        let rows = [];
+        let rows = new Map();
 
         for (let rowId = 0; rowId < bindings.length; rowId++) {
             const binding = bindings[rowId];
@@ -35,13 +35,13 @@ export default class SPARQLDataTable extends Component {
                     row.push("");
                 }
             }
-            rows.push(row);
+            rows.set(rowId, {cells: row});
         }
         return rows;
     };
 
     getUriLinkFromBinding = (binding) => {
-        const { prefixes, fullUrl } = this.props;
+        const {prefixes, fullUrl} = this.props;
 
         const href = binding.value;
         let visibleString = href;
@@ -62,7 +62,8 @@ export default class SPARQLDataTable extends Component {
             prefixed = true;
         }
 
-        return <span>{prefixed ? "" : "<"}<a className='iri' href={href} target="_blank">{visibleString}</a>{prefixed ? "" : ">"}</span>;
+        return <span>{prefixed ? "" : "<"}<a className='iri' href={href}
+                                             target="_blank">{visibleString}</a>{prefixed ? "" : ">"}</span>;
     };
 
     getCellContent = (bindings, sparqlVar) => {
@@ -77,7 +78,7 @@ export default class SPARQLDataTable extends Component {
     };
 
     formatLiteral = (literalBinding) => {
-        const { prefixes } = this.props;
+        const {prefixes} = this.props;
 
         let stringRepresentation = literalBinding.value;
         if (literalBinding["xml:lang"]) {
@@ -94,8 +95,8 @@ export default class SPARQLDataTable extends Component {
         const columns = this.getColumns();
 
         return <div className="QueryResults DataTableWrapper">
-                <DataTable structure={columns} rows={rows}/>
-            </div>;
+            <DataTable structure={columns} rows={rows}/>
+        </div>;
     }
 
 }

@@ -975,35 +975,38 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@castoredc/matter-fonts@^9.7.3":
-  version "9.7.3"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-fonts/9.7.3/93ac87ee7dbf1c465fc85e599da6dd9cbd856b80cb8f6c4f0d0a36e4afac9159#b8058d929c3759f8efb3bf8cd2b3fc9a171101c7"
-  integrity sha512-Gv6XsnZlCEOOAzi4fChH5edDtawLuhqVANn4USmEMumO1S2+Y6L9b8VK77xosxZ5B6/GWk47mnJ2iPsKnXIZzQ==
+"@castoredc/matter-fonts@^10.2.0":
+  version "10.2.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-fonts/10.2.0/96c9f77bc1cd3c0eb746d9598338535d4e33f44c296288c05453a4e459cb144c#f25218977f8bc8d13afe16dea2310b089ceda163"
+  integrity sha512-2F9MBGQFdHE5B8ydRNC79bolr7hJ6ENbnUk6f8ooDrtOOaghfGbYZ4R+djhV/Y+oU071WaaN8nvorTSn86GK1Q==
 
-"@castoredc/matter-icons@^9.7.3":
-  version "9.7.3"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-icons/9.7.3/f38d7282ba5254ea0bc5572d7d7c611bebd4eddae2dfb265cf2f2d411a2c3e0d#c692115fffa8c43d269a7cb1ea8d6600a9da2368"
-  integrity sha512-VZelPQzyIOH0vd7eilBs8L5d1vWfdsTrhQTYYS9OJ12zB8HVaalIdkT5rCtraO/mXvvb4CpY2ANxc8VC3gBmGg==
+"@castoredc/matter-icons@^10.2.0":
+  version "10.2.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-icons/10.2.0/553671b47a86b426e677bcd911d9d0c9b204be9988bc25481594b11038787f09#adb09a3a2b899d62f9c0264ab1849ac199ec7883"
+  integrity sha512-5hlKkvZy7Qe9F/nXbldToy+weN8nidmC0s1upiLp/+5EtCyn8M8dg32l0w2/lSY8f2aL7YM1ee1yKScWvILKjA==
 
-"@castoredc/matter-utils@^9.7.3":
-  version "9.7.3"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-utils/9.7.3/3f4f837c21bdeb3a35596959f39b377c17eab52bc017e261a79bb68fed09812b#ba3b0b6765afc6d53a924cb3d4e4bb34a767b1e6"
-  integrity sha512-nuqkswm1l6jeyPPvfcN0jqWcXk2tNzagzzo4JK31s+v7XLjsGMMqC3Kr5PZMc4En2GHXN8UMGi0u7q2aBNjEiA==
+"@castoredc/matter-utils@^10.2.0":
+  version "10.2.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-utils/10.2.0/40dc07f91eda1d2fd66ba2ae9d3fd2e2b1c40048c1b5c4c9b1c0d7920349d0a1#fed12dc7fad53787a3867fb5e7c6329532e905f2"
+  integrity sha512-kxBaBjKUMN6if+K4Fh91vHMU1gXAlYf+oDXRHp6wJ9cSDpLfRyse3iHDGJDfseuNyDpMtPsUT4zgE7CpFiDLwQ==
   dependencies:
-    "@storybook/addons" "^5.2.3"
-    "@storybook/react" "^5.2.3"
+    "@storybook/addons" "^5.3.19"
+    "@storybook/react" "^5.3.19"
     color "^3.1.2"
-    lodash "^4.17.11"
+    lodash "^4.17.19"
 
-"@castoredc/matter@^9.7.3":
-  version "9.18.4"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter/9.18.4/baab8ea4e66829ad9d09b05a436227f6897b62ed63a94398da81fb540068de56#976feec5adaf09383c5d749f7d6bcaf9d1308016"
-  integrity sha512-Iu9nMSuEE+CNDtVeRpsYkL9Jwkr1KlWobYjHPhC8NUsolikwZw3EMZ9rzqDIB1LAegabz7Bg0g09xgUNlB8awA==
+"@castoredc/matter@^10.2.0":
+  version "10.2.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter/10.2.0/986b85396c746a5e9a6d38452f986542eaa0f97a8e46a2d2e80dcef0ec07cf73#33a01375526894bbc56897a744067b1602931960"
+  integrity sha512-RR3WD2paB2Fu/uhFvutor7YfVy9PUf+pGan1TW+O4IAXwIOu4xbL/c6681TDD3N20jobIPglUx2zv2ntDdWvQg==
   dependencies:
-    core-js "^3.6.4"
-    lodash "^4.17.11"
+    "@castoredc/matter-fonts" "^10.2.0"
+    "@castoredc/matter-icons" "^10.2.0"
+    "@castoredc/matter-utils" "^10.2.0"
+    core-js "^3.6.5"
+    lodash "^4.17.19"
     react-beautiful-dnd "^13.0.0"
-    react-select "^3.0.8"
+    react-select "^3.1.0"
     styled-normalize "^8.0.6"
     webfontloader "^1.6.28"
 
@@ -1182,7 +1185,7 @@
     lodash "^4.17.15"
     lodash-es "^4.17.15"
 
-"@storybook/addons@5.3.19", "@storybook/addons@^5.2.3":
+"@storybook/addons@5.3.19", "@storybook/addons@^5.3.19":
   version "5.3.19"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-5.3.19.tgz#3a7010697afd6df9a41b8c8a7351d9a06ff490a4"
   integrity sha512-Ky/k22p6i6FVNvs1VhuFyGvYJdcp+FgXqFgnPyY/OXJW/vPDapdElpTpHJZLFI9I2FQBDcygBPU5RXkumQ+KUQ==
@@ -1401,7 +1404,7 @@
     pretty-hrtime "^1.0.3"
     regenerator-runtime "^0.13.3"
 
-"@storybook/react@^5.2.3":
+"@storybook/react@^5.3.19":
   version "5.3.19"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-5.3.19.tgz#ad7e7a5538399e2794cdb5a1b844a2b77c10bd09"
   integrity sha512-OBRUqol3YLQi/qE55x2pWkv4YpaAmmfj6/Km+7agx+og+oNQl0nnlXy7r27X/4j3ERczzURa5pJHtSjwiNaJNw==
@@ -4984,7 +4987,7 @@ core-js@^2.4.0, core-js@^2.5.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.0.0, core-js@^3.0.1, core-js@^3.0.4, core-js@^3.6.4:
+core-js@^3.0.0, core-js@^3.0.1, core-js@^3.0.4, core-js@^3.6.5:
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
   integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
@@ -8455,7 +8458,7 @@ lodash@^4.17.11, lodash@^4.17.13:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.17.tgz#d9018b3acc57a95c9dcf4a45c6b63b877b6c2d45"
   integrity sha512-/B2DjOphAoqi5BX4Gg2oh4UR0Gy/A7xYAMh3aSECEKzwS3eCDEpS0Cals1Ktvxwlal3bBJNc+5W9kNIcADdw5Q==
 
-lodash@^4.17.4:
+lodash@^4.17.19, lodash@^4.17.4:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
@@ -10779,7 +10782,7 @@ react-router@5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-select@^3.0.4, react-select@^3.0.8:
+react-select@^3.0.4, react-select@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.0.tgz#ab098720b2e9fe275047c993f0d0caf5ded17c27"
   integrity sha512-wBFVblBH1iuCBprtpyGtd1dGMadsG36W5/t2Aj8OE6WbByDg5jIFyT7X5gT+l0qmT5TqWhxX+VsKJvCEl2uL9g==

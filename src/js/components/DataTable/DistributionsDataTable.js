@@ -52,13 +52,40 @@ export default class DistributionsDataTable extends Component {
             });
     };
 
+    handleClick = (event, rowID, index) => {
+        const {distributions} = this.state;
+        const {history, dataset} = this.props;
+
+        if (typeof index !== "undefined" && distributions.length > 0) {
+            const distribution = distributions.find((item) => item.id === rowID);
+
+            history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distribution.slug)
+        }
+    };
+
     render() {
         const {distributions, isLoadingDistributions, hasLoadedDistributions} = this.state;
-        const {history, catalog, dataset} = this.props;
 
         if (!hasLoadedDistributions) {
             return <InlineLoader/>;
         }
+
+        const rows = new Map(distributions.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
+                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
+                        item.type ? item.type.toUpperCase() : '',
+                        item.hasMetadata ? item.metadata.language : '',
+                        item.hasMetadata ? item.metadata.license : '',
+                        item.published ? {
+                            type: 'view',
+                        } : undefined,
+                    ],
+                }];
+        }));
 
         return <div
             className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDistributions && 'Loading')}
@@ -68,23 +95,8 @@ export default class DistributionsDataTable extends Component {
                     emptyTableMessage="No distributions found"
                     highlightRowOnHover
                     cellSpacing="default"
-                    onClick={(event, rowID, index) => {
-                        if (typeof index !== "undefined") {
-                            history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distributions[index].slug)
-                        }
-                    }}
-                    rows={distributions.map((item) => {
-                        return [
-                            item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-                            item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                            item.type ? item.type.toUpperCase() : '',
-                            item.hasMetadata ? item.metadata.language : '',
-                            item.hasMetadata ? item.metadata.license : '',
-                            item.published ? {
-                                type: 'view',
-                            } : undefined,
-                        ];
-                    })}
+                    onClick={this.handleClick}
+                    rows={rows}
                     structure={{
                         title:       {
                             header:    'Title',

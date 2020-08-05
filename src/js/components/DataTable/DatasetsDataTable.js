@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Col, Row} from "react-bootstrap";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
@@ -113,11 +112,13 @@ export default class DatasetsDataTable extends Component {
         const {catalog, history, onClick} = this.props;
 
         if (typeof index !== "undefined" && datasets.length > 0) {
+            const dataset = datasets.find((item) => item.id === rowID);
+
             if (onClick) {
-                onClick(datasets[index]);
+                onClick(dataset);
             } else {
                 history.push({
-                    pathname: '/admin/dataset/' + datasets[index].slug,
+                    pathname: '/admin/dataset/' + dataset.slug,
                     state:    {catalog: catalog},
                 });
             }
@@ -131,6 +132,22 @@ export default class DatasetsDataTable extends Component {
             return <InlineLoader/>;
         }
 
+        const rows = new Map(datasets.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
+                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
+                        item.hasMetadata ? item.metadata.language : '',
+                        item.hasMetadata ? item.metadata.license : '',
+                        item.published ? {
+                            type: 'view',
+                        } : undefined,
+                    ],
+                }];
+        }));
+
         return <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDatasets && 'Loading')}
                     ref={this.tableRef}>
             <div className="DataTableWrapper">
@@ -139,17 +156,7 @@ export default class DatasetsDataTable extends Component {
                     highlightRowOnHover
                     cellSpacing="default"
                     onClick={this.handleClick}
-                    rows={datasets.map((item) => {
-                        return [
-                            item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-                            item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                            item.hasMetadata ? item.metadata.language : '',
-                            item.hasMetadata ? item.metadata.license : '',
-                            item.published ? {
-                                type: 'view',
-                            } : undefined,
-                        ];
-                    })}
+                    rows={rows}
                     structure={{
                         title:       {
                             header:    'Title',
