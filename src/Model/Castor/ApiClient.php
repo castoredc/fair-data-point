@@ -27,15 +27,15 @@ use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
-use App\Entity\Castor\User;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Factory\Castor\CastorUserFactory;
 use App\Factory\Castor\InstituteFactory;
 use App\Factory\Castor\RecordFactory;
 use App\Security\ApiUser;
-use App\Security\CastorUser;
+use App\Security\Providers\Castor\CastorUser;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
@@ -65,11 +65,15 @@ class ApiClient
     /** @var InstituteFactory */
     private $instituteFactory;
 
-    public function __construct(RecordFactory $recordFactory, InstituteFactory $instituteFactory)
+    /** @var CastorUserFactory */
+    private $castorUserFactory;
+
+    public function __construct(RecordFactory $recordFactory, InstituteFactory $instituteFactory, CastorUserFactory $castorUserFactory)
     {
         $this->client = new Client();
         $this->recordFactory = $recordFactory;
         $this->instituteFactory = $instituteFactory;
+        $this->castorUserFactory = $castorUserFactory;
     }
 
     public function setServer(string $server): void
@@ -231,11 +235,11 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getUser(): User
+    public function getUser(): CastorUser
     {
         $body = $this->request('/api/user');
 
-        return User::fromData($body['_embedded']['user'][0]);
+        return $this->castorUserFactory->createFromCastorApiData($body['_embedded']['user'][0]);
     }
 
     /**

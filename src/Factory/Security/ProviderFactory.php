@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Factory\Security;
 
 use App\Model\Castor\ApiClient;
-use App\Security\OAuth\Castor\CastorUserProvider;
+use App\Security\Providers\Castor\CastorUserProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

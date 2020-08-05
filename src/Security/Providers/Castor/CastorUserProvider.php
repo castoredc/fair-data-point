@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security\OAuth\Castor;
+namespace App\Security\Providers\Castor;
 
 use App\Exception\UserNotACastorUser;
 use App\Exception\UserNotFound;
 use App\Model\Castor\ApiClient;
 use App\Repository\CastorUserRepository;
-use App\Security\CastorUser;
+use App\Security\User as AppUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -20,6 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use function assert;
 
 class CastorUserProvider extends AbstractProvider implements UserProviderInterface
 {
@@ -127,7 +128,11 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
         $this->apiClient->setServer($this->server);
         $this->apiClient->setToken($token->getToken());
 
-        return CastorUser::fromData($this->apiClient->getUser(), $token->getToken(), $this->server);
+        $user = $this->apiClient->getUser();
+        $user->setToken($token->getToken());
+        $user->setServer($this->server);
+
+        return $user;
     }
 
     public function loadUserByUsername(string $username): UserInterface
@@ -143,18 +148,26 @@ class CastorUserProvider extends AbstractProvider implements UserProviderInterfa
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
-        if (! $user instanceof CastorUser) {
+        assert($user instanceof AppUser);
+
+        if (! $user->hasCastorUser()) {
             throw new UserNotACastorUser();
         }
 
+        $castorUser = $user->getCastorUser();
+
         /** @var CastorUserRepository $userRepository */
         $userRepository = $this->em->getRepository(CastorUser::class);
-        $dbUser = $userRepository->findUserByEmail($user->getEmailAddress());
-        $dbUser->setToken($user->getToken());
-        $dbUser->setServer($user->getServer());
-        $dbUser->setStudies($user->getStudies());
 
-        return $dbUser;
+        /** @var CastorUser $dbUser */
+        $dbUser = $userRepository->findUserByEmail($castorUser->getEmailAddress());
+
+        $user = $dbUser->getUser();
+        $user->getCastorUser()->setToken($castorUser->getToken());
+        $user->getCastorUser()->setServer($castorUser->getServer());
+        $user->getCastorUser()->setStudies($castorUser->getStudies());
+
+        return $user;
     }
 
     /**

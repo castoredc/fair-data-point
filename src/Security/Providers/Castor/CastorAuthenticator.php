@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security\OAuth\Castor;
+namespace App\Security\Providers\Castor;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -27,13 +27,10 @@ class CastorAuthenticator extends SocialAuthenticator
 {
     /** @var ClientRegistry */
     private $clientRegistry;
-
     /** @var EntityManagerInterface */
     private $em;
-
     /** @var RouterInterface */
     private $router;
-
     /** @var ApiClient */
     private $apiClient;
 
@@ -68,23 +65,37 @@ class CastorAuthenticator extends SocialAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         /** @var CastorUser $castorUser */
-        $castorUser = $this->getCastorClient()
-            ->fetchUserFromToken($credentials);
+        $castorUser = $this->getCastorClient()->fetchUserFromToken($credentials);
 
-        /** @var CastorUser|null $user */
-        $user = $this->em->getRepository(CastorUser::class)
-            ->findOneBy(['id' => $castorUser->getId()]);
+        /** @var CastorUser|null $dbUser */
+        $dbUser = $this->em->getRepository(CastorUser::class)->findOneBy(['id' => $castorUser->getId()]);
 
-        if ($user === null) {
-            $user = $castorUser;
+        if ($dbUser === null) {
+            // No Castor User found in database, create new User and attach Castor User to it
+            $user = new User(
+                $castorUser->getNameFirst(),
+                $castorUser->getNameMiddle(),
+                $castorUser->getNameLast(),
+                $castorUser->getEmailAddress()
+            );
+
+            $user->setCastorUser($castorUser);
         } else {
-            $user->setToken($castorUser->getToken());
-            $user->setServer($castorUser->getServer());
+            // Castor User Found, update user
+
+            $dbUser->setNameFirst($castorUser->getNameFirst());
+            $dbUser->setNameMiddle($castorUser->getNameMiddle());
+            $dbUser->setNameLast($castorUser->getNameLast());
+
+            $dbUser->setToken($castorUser->getToken());
+            $dbUser->setServer($castorUser->getServer());
+
+            $user = $dbUser->getUser();
         }
 
-        $this->apiClient->setUser($user);
+        $this->apiClient->setUser($user->getCastorUser());
 
-        $user->setStudies($this->apiClient->getStudyIds());
+        $user->getCastorUser()->setStudies($this->apiClient->getStudyIds());
 
         $this->em->persist($user);
         $this->em->flush();
@@ -94,8 +105,7 @@ class CastorAuthenticator extends SocialAuthenticator
 
     private function getCastorClient(): OAuth2ClientInterface
     {
-        return $this->clientRegistry
-            ->getClient('castor');
+        return $this->clientRegistry->getClient('castor');
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security\OAuth\Castor;
+namespace App\Security\Providers\Castor;
 
 use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
 use KnpU\OAuth2ClientBundle\Exception\InvalidStateException;

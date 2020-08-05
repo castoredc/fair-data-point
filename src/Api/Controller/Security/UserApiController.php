@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Controller\Security;
 
 use App\Api\Controller\ApiController;
-use App\Security\CastorUser;
+use App\Api\Resource\Security\UserApiResource;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,13 +17,13 @@ class UserApiController extends ApiController
      */
     public function user(): Response
     {
-        /** @var CastorUser|null $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         if ($user === null) {
             return new JsonResponse(null);
         }
 
-        return new JsonResponse($user->toArray());
+        return new JsonResponse((new UserApiResource($user))->toArray());
     }
 }
