@@ -15,6 +15,8 @@ import StudyAnnotations from "./StudyAnnotations";
 import {ViewHeader} from "@castoredc/matter";
 import StudyDatasets from "./StudyDatasets";
 import StudyMetadata from "./StudyMetadata";
+import {localizedText} from "../../../util";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Study extends Component {
     constructor(props) {
@@ -56,7 +58,11 @@ export default class Study extends Component {
             return <InlineLoader/>;
         }
 
+        const title = study.hasMetadata ? localizedText(study.metadata.briefName, 'en') : null;
+
         return <div className="PageContainer">
+            <DocumentTitle title={'FDP Admin | Study' + (title ? ` | ${title}` : '')}/>
+
             <div className="LeftNav">
                 <Nav className="flex-column">
                     <LinkContainer to={'/admin/study/' + study.id} exact={true}>
@@ -82,14 +88,11 @@ export default class Study extends Component {
                     <LinkContainer to={'/admin/study/' + study.id + '/annotations'} exact={true}>
                         <Nav.Link disabled={!study.hasMetadata}>Annotations</Nav.Link>
                     </LinkContainer>
-                    {/*<LinkContainer to={'/admin/catalog/' + catalog + '/study/' + study.slug + '/distributions'} exact={true}>*/}
-                    {/*    <Nav.Link disabled={!study.hasMetadata}>Available data</Nav.Link>*/}
-                    {/*</LinkContainer>*/}
                 </Nav>
             </div>
             <div className="Page">
                 <div className="PageTitle">
-                   {study.hasMetadata && <ViewHeader>{study.metadata.briefName}</ViewHeader>}
+                    {title && <ViewHeader>{title}</ViewHeader>}
                 </div>
 
                 <Switch>

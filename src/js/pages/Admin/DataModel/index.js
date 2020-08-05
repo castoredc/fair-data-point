@@ -16,6 +16,7 @@ import DataModelPreview from "./DataModelPreview";
 import FormItem from "../../../components/Form/FormItem";
 import DataModelVersions from "./DataModelVersions";
 import DataModelImportExport from "./DataModelImportExport";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class DataModel extends Component {
     constructor(props) {
@@ -110,6 +111,7 @@ export default class DataModel extends Component {
         }
 
         return <div className="PageContainer">
+            <DocumentTitle title={`FDP Admin | Data Model | ${dataModel.title}`}/>
             <div className="LeftNav">
                 <Nav className="flex-column">
                     <LinkContainer to={'/admin/model/' + dataModel.id} exact={true}>
@@ -191,7 +193,8 @@ export default class DataModel extends Component {
                            render={(props) => <DataModelPreview {...props} dataModel={dataModel}
                                                                 version={currentVersion.value}/>}/>
                     <Route path="/admin/model/:model/:version/import-export" exact
-                           render={(props) => <DataModelImportExport {...props} dataModel={dataModel} getDataModel={this.getDataModel}
+                           render={(props) => <DataModelImportExport {...props} dataModel={dataModel}
+                                                                     getDataModel={this.getDataModel}
                                                                      version={currentVersion.value}/>}/>
 
                     <Route component={NotFound}/>

@@ -1,15 +1,15 @@
 import React, {Component} from "react";
-import {Button, Stack, ViewHeader} from "@castoredc/matter";
-import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
-import AddStudyModal from "../../../modals/AddStudyModal";
+import {ViewHeader} from "@castoredc/matter";
 import DatasetsDataTable from "../../../components/DataTable/DatasetsDataTable";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Datasets extends Component {
     render() {
-        const { history } = this.props;
+        const {history} = this.props;
 
         return <div className="PageContainer">
             <div className="Page">
+                <DocumentTitle title="FDP Admin | Datasets"/>
                 <div className="PageTitle">
                     <ViewHeader>Datasets</ViewHeader>
                 </div>
