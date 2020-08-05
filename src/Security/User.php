@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Security\Providers\Castor\CastorUser;
-use App\Security\Providers\Orcid\OrcidUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_filter;
@@ -59,13 +58,13 @@ class User implements UserInterface
      * @var CastorUser|null
      */
     private $castorUser;
-    /**
-     * // * xORM\OneToOne(targetEntity="App\Security\Providers\Orcid\OrcidUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
-     * // * xORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
-     *
-     * @var OrcidUser|null
-     */
-    private $orcid;
+    // /**
+    //  * // * xORM\OneToOne(targetEntity="App\Security\Providers\Orcid\OrcidUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
+    //  * // * xORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
+    //  *
+    //  // * @var OrcidUser|null
+    //  */
+    // private $orcid;
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
@@ -193,18 +192,18 @@ class User implements UserInterface
         $this->castorUser = $castorUser;
     }
 
-    public function getOrcid(): ?OrcidUser
-    {
-        return $this->orcid;
-    }
-
-    public function hasOrcid(): bool
-    {
-        return $this->orcid !== null;
-    }
-
-    public function setOrcid(?OrcidUser $orcid): void
-    {
-        $this->orcid = $orcid;
-    }
+    // public function getOrcid(): ?OrcidUser
+    // {
+    //     return $this->orcid;
+    // }
+    //
+    // public function hasOrcid(): bool
+    // {
+    //     return $this->orcid !== null;
+    // }
+    //
+    // public function setOrcid(?OrcidUser $orcid): void
+    // {
+    //     $this->orcid = $orcid;
+    // }
 }

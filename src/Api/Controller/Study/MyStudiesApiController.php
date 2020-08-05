@@ -5,7 +5,7 @@ namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
 use App\Message\Study\FindStudiesByUserCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -24,7 +24,7 @@ class MyStudiesApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var CastorUser $user */
+        /** @var User $user */
         $user = $this->getUser();
         $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
 

@@ -6,9 +6,10 @@ namespace App\MessageHandler\Distribution;
 use App\Encryption\EncryptionService;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
@@ -66,7 +67,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $distribution = $contents->getDistribution();
 
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('access_data', $distribution)) {
             throw new NoAccessPermission();
@@ -78,7 +79,12 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
             $this->entityHelper->useApiUser($apiUser);
         } else {
-            $this->apiClient->setUser($user);
+            if (! $user->hasCastorUser()) {
+                throw new UserNotACastorUser();
+            }
+
+            $this->apiClient->setUser($user->getCastorUser());
+            $this->entityHelper->useUser($user->getCastorUser());
         }
 
         $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);

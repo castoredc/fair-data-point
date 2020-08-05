@@ -11,10 +11,11 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderCSVDistributionCommand;
 use App\MessageHandler\CSVCommandHandler;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
@@ -49,7 +50,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $distribution = $contents->getDistribution();
 
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('access_data', $distribution)) {
             throw new NoAccessPermission();
@@ -61,7 +62,11 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
         } else {
-            $this->apiClient->setUser($user);
+            if (! $user->hasCastorUser()) {
+                throw new UserNotACastorUser();
+            }
+
+            $this->apiClient->setUser($user->getCastorUser());
         }
 
         $study = $this->apiClient->getStudy($dbStudy->getId());

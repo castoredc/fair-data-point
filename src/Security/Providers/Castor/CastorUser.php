@@ -6,6 +6,7 @@ namespace App\Security\Providers\Castor;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use function in_array;
 use function strtolower;
 
 /**
@@ -158,6 +159,11 @@ class CastorUser implements ResourceOwnerInterface
     public function setUser(?User $user): void
     {
         $this->user = $user;
+    }
+
+    public function hasAccessToStudy(string $studyId): bool
+    {
+        return in_array($studyId, $this->studies, true);
     }
 
     /**

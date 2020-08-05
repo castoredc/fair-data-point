@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Logging;
 
 use App\Model\Slack\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -138,7 +138,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 
         if ($this->security !== null && $this->security->getUser() !== null) {
             $user = $this->security->getUser();
-            assert($user instanceof CastorUser);
+            assert($user instanceof User);
             $currentUser = $user->getId();
         }
 

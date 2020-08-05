@@ -15,7 +15,7 @@ use App\Exception\SessionTimedOut;
 use App\Message\Study\GetFieldsForStepCommand;
 use App\Message\Study\GetOptionGroupsForStudyCommand;
 use App\Message\Study\GetStudyStructureCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,11 +60,14 @@ class CastorStudyStructureApiController extends ApiController
                 return new JsonResponse($e->toArray(), 401);
             }
 
-            $this->logger->critical('An error occurred while getting the study structure', [
-                'exception' => $e,
-                'Study' => $study->getSlug(),
-                'StudyID' => $study->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the study structure',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                ]
+            );
         }
 
         return new JsonResponse([], 500);
@@ -100,12 +103,15 @@ class CastorStudyStructureApiController extends ApiController
                 return new JsonResponse($e->toArray(), 401);
             }
 
-            $this->logger->critical('An error occurred while getting the study structure step', [
-                'exception' => $e,
-                'Study' => $study->getSlug(),
-                'StudyID' => $study->getId(),
-                'Step' => $step,
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the study structure step',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                    'Step' => $step,
+                ]
+            );
         }
 
         return new JsonResponse([], 500);
@@ -118,7 +124,7 @@ class CastorStudyStructureApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        /** @var CastorUser|null $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         try {
@@ -144,11 +150,14 @@ class CastorStudyStructureApiController extends ApiController
                 return new JsonResponse($e->toArray(), 401);
             }
 
-            $this->logger->critical('An error occurred while getting the option groups', [
-                'exception' => $e,
-                'Study' => $study->getSlug(),
-                'StudyID' => $study->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the option groups',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                ]
+            );
         }
 
         return new JsonResponse([], 500);

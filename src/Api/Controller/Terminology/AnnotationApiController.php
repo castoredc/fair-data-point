@@ -15,7 +15,7 @@ use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Message\Castor\GetCastorEntityCommand;
 use App\Message\Terminology\AddAnnotationCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +40,7 @@ class AnnotationApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        /** @var CastorUser|null $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         try {
@@ -49,7 +49,7 @@ class AnnotationApiController extends ApiController
 
             assert($study instanceof CastorStudy);
 
-            $envelope = $bus->dispatch(new GetCastorEntityCommand($study, $user, $parsed->getEntityType(), $parsed->getEntityId(), $parsed->getEntityParent()));
+            $envelope = $bus->dispatch(new GetCastorEntityCommand($study, $parsed->getEntityType(), $parsed->getEntityId(), $parsed->getEntityParent()));
 
             /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
