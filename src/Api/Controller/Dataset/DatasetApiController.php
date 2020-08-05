@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Dataset;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Dataset\DatasetApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionsApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
 use App\Message\Dataset\UpdateDatasetCommand;

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Message\Dataset\CreateDatasetForStudyCommand;
 use App\Message\Dataset\GetDatasetsByStudyCommand;

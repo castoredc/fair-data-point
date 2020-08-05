@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Castor;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\Study\StudiesApiResource;
-use App\Controller\Api\ApiController;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Study\FindStudiesByUserCommand;

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Dataset;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Controller\Api\ApiController;
 use App\Exception\ApiRequestParseError;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;

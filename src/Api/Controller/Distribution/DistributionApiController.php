@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Distribution;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Request\Distribution\DistributionContentApiRequest;
 use App\Api\Request\Distribution\DistributionGenerationLogsFilterApiRequest;
@@ -11,7 +12,6 @@ use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationLogApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationRecordLogApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\Data\RDF\RDFDistribution;

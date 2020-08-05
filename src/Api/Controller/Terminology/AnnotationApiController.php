@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Terminology;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Terminology\AnnotationApiRequest;
-use App\Controller\Api\ApiController;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;

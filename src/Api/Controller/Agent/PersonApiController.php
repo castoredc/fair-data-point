@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Agent;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Agent\PersonApiRequest;
 use App\Api\Resource\Agent\Person\PersonApiResource;
-use App\Controller\Api\ApiController;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NotFound;
 use App\Message\Agent\GetPersonByEmailCommand;

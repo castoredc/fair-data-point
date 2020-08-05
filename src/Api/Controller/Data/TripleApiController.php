@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\TripleApiRequest;
 use App\Api\Resource\Data\TriplesApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Triple;
 use App\Exception\ApiRequestParseError;

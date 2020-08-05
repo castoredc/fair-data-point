@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Request\Study\StudyApiRequest;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;

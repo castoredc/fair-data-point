@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Study\StudyApiRequest;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Message\Study\UpdateStudyCommand;
