@@ -23,10 +23,10 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "@castoredc/matter": "^9.7.3",
-        "@castoredc/matter-fonts": "^9.7.3",
-        "@castoredc/matter-icons": "^9.7.3",
-        "@castoredc/matter-utils": "^9.7.3",
+        "@castoredc/matter": "^10.2.0",
+        "@castoredc/matter-fonts": "^10.2.0",
+        "@castoredc/matter-icons": "^10.2.0",
+        "@castoredc/matter-utils": "^10.2.0",
         "@material-ui/icons": "^4.9.1",
         "@triply/yasgui": "^4.0.124",
         "axios": "^0.19.0",
