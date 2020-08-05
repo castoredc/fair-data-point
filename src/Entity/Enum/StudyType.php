@@ -7,11 +7,10 @@ declare(strict_types=1);
 namespace App\Entity\Enum;
 
 /**
- * @ method static static interventional()
- * @ method static static observational()
- * @ method bool isInterventional()
- * @ method bool isObservational()
- *
+ * @method static static interventional()
+ * @method static static observational()
+ * @method bool isInterventional()
+ * @method bool isObservational()
  * @inheritDoc
  */
 class StudyType extends Enum
