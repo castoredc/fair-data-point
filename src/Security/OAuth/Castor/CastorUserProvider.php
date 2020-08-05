@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\OAuth\Castor;
 
 use App\Exception\UserNotACastorUser;
 use App\Exception\UserNotFound;
 use App\Model\Castor\ApiClient;
 use App\Repository\CastorUserRepository;
+use App\Security\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;

@@ -2,7 +2,7 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         castor:
-            id: App\Security\CastorUserProvider
+            id: App\Security\OAuth\Castor\CastorUserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,7 +16,7 @@ security:
                 invalidate_session: true
             guard:
                 authenticators:
-                    - App\Security\CastorAuthenticator
+                    - App\Security\OAuth\Castor\CastorAuthenticator
 
             # activate different ways to authenticate
 

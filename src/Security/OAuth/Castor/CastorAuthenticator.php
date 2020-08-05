@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\OAuth\Castor;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;

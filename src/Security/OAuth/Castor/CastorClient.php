@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security\Client;
+namespace App\Security\OAuth\Castor;
 
-use App\Security\CastorUserProvider;
 use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
 use KnpU\OAuth2ClientBundle\Exception\InvalidStateException;
 use KnpU\OAuth2ClientBundle\Exception\MissingAuthorizationCodeException;
