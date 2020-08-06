@@ -72,6 +72,6 @@ abstract class UserProvider extends AbstractProvider implements UserProviderInte
      */
     public function supportsClass(string $class): bool
     {
-        return AppUser::class === $class;
+        return $class === AppUser::class;
     }
 }
