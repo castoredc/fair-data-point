@@ -94,8 +94,10 @@ class User implements UserInterface
     {
         $roles = ['ROLE_USER'];
 
-        if ($this->emailAddress !== null) {
-            $domain = strrchr($this->emailAddress, '@');
+        if ($this->hasCastorUser()) {
+            $roles[] = ['ROLE_CASTOR_USER'];
+
+            $domain = strrchr($this->castorUser->getEmailAddress(), '@');
 
             if ($domain !== false) {
                 $domain = substr($domain, 1);
@@ -103,6 +105,10 @@ class User implements UserInterface
             if (isset($this::DOMAINS[$domain])) {
                 $roles = array_merge($roles, $this::DOMAINS[$domain]);
             }
+        }
+
+        if ($this->hasOrcid()) {
+            $roles[] = ['ROLE_ORCID_USER'];
         }
 
         return $roles;
