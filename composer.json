@@ -88,7 +88,7 @@
         "symfony": {
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
             "allow-contrib": false,
-            "require": "5.0.*"
+            "require": "5.1.*"
         }
     },
     "repositories": [
