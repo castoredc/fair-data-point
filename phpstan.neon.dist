@@ -8,7 +8,7 @@ parameters:
 		- tests
 	ignoreErrors:
 		-
-			message: '#Unsafe usage of new static().#'
+			message: '#Unsafe usage of new static\(\).#'
 			path: %currentWorkingDirectory%/src/Entity/Enum/*
 		-
 			message: '#should be covariant#'
