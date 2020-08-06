@@ -98,11 +98,16 @@ export default class DataModelMappingsDataTable extends Component {
 
     handleClick = (event, rowID, index) => {
         const {mappings} = this.state;
-        const {onClick} = this.props;
+        const {onClick, type} = this.props;
 
         if (typeof index !== "undefined" && mappings.length > 0) {
-            const mapping = mappings.find((item) => item.id === rowID);
-            onClick(mapping);
+            if(type === 'node') {
+                const mapping = mappings.find((item) => item.node.id === rowID);
+                onClick(mapping);
+            } else if(type === 'module') {
+                const mapping = mappings.find((item) => item.module.id === rowID);
+                onClick(mapping);
+            }
         }
     };
 
@@ -119,7 +124,7 @@ export default class DataModelMappingsDataTable extends Component {
         if (type === 'node') {
             rows = new Map(mappings.map((item) => {
                 return [
-                    item.id,
+                    item.node.id,
                     {
                         cells: [
                             !item.element ? {
@@ -139,7 +144,7 @@ export default class DataModelMappingsDataTable extends Component {
         } else if (type === 'module') {
             rows = new Map(mappings.map((item) => {
                 return [
-                    item.id,
+                    item.module.id,
                     {
                         cells: [
                             !item.element ? {
