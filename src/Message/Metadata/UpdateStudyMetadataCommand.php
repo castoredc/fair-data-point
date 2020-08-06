@@ -7,7 +7,6 @@ use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use App\Entity\Metadata\StudyMetadata;
-use App\Security\CastorUser;
 use DateTimeImmutable;
 
 class UpdateStudyMetadataCommand
@@ -51,9 +50,6 @@ class UpdateStudyMetadataCommand
     /** @var MethodType|null */
     private $methodType;
 
-    /** @var CastorUser */
-    private $user;
-
     public function __construct(
         StudyMetadata $metadata,
         string $briefName,
@@ -67,8 +63,7 @@ class UpdateStudyMetadataCommand
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         ?RecruitmentStatus $recruitmentStatus,
-        ?MethodType $methodType,
-        CastorUser $user
+        ?MethodType $methodType
     ) {
         $this->metadata = $metadata;
         $this->briefName = $briefName;
@@ -83,7 +78,6 @@ class UpdateStudyMetadataCommand
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
         $this->recruitmentStatus = $recruitmentStatus;
         $this->methodType = $methodType;
-        $this->user = $user;
     }
 
     public function getMetadata(): StudyMetadata
@@ -149,10 +143,5 @@ class UpdateStudyMetadataCommand
     public function getMethodType(): ?MethodType
     {
         return $this->methodType;
-    }
-
-    public function getUser(): CastorUser
-    {
-        return $this->user;
     }
 }

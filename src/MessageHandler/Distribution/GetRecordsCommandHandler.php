@@ -9,8 +9,9 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\GetRecordsCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -37,6 +38,7 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
+     * @throws UserNotACastorUser
      */
     public function __invoke(GetRecordsCommand $command): array
     {
@@ -46,7 +48,7 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
         assert($study instanceof CastorStudy);
 
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('access_data', $distribution)) {
             throw new NoAccessPermission();
@@ -56,6 +58,12 @@ class GetRecordsCommandHandler implements MessageHandlerInterface
 
         if ($apiUser !== null) {
             $this->entityHelper->useApiUser($apiUser);
+        } else {
+            if (! $user->hasCastorUser()) {
+                throw new UserNotACastorUser();
+            }
+
+            $this->entityHelper->useUser($user->getCastorUser());
         }
 
         return $this->entityHelper->getRecords($study)->toArray();

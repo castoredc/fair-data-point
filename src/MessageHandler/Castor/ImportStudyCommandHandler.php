@@ -11,12 +11,13 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
+use App\Exception\UserNotACastorUser;
 use App\Message\Castor\ImportStudyCommand;
 use App\Model\Castor\ApiClient;
 use App\Repository\CastorServerRepository;
 use App\Repository\StudyRepository;
 use App\Security\CastorServer;
-use App\Security\CastorUser;
+use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -46,13 +47,18 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
+     * @throws UserNotACastorUser
      */
     public function __invoke(ImportStudyCommand $command): Study
     {
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
-        $this->apiClient->setUser($user);
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->apiClient->setUser($user->getCastorUser());
 
         /** @var StudyRepository $studyRepository */
         $studyRepository = $this->em->getRepository(Study::class);
@@ -69,7 +75,7 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
 
         /** @var CastorServerRepository $serverRepository */
         $serverRepository = $this->em->getRepository(CastorServer::class);
-        $server = $serverRepository->findOneBy(['url' => $user->getServer()]);
+        $server = $serverRepository->findOneBy(['url' => $user->getCastorUser()->getServer()]);
         assert($server instanceof CastorServer);
 
         $study = $this->apiClient->getStudy($command->getId());

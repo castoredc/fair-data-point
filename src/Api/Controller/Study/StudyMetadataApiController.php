@@ -11,7 +11,6 @@ use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Message\Metadata\CreateStudyMetadataCommand;
 use App\Message\Metadata\UpdateStudyMetadataCommand;
-use App\Security\CastorUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,9 +29,6 @@ class StudyMetadataApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $study);
 
-        /** @var CastorUser $user */
-        $user = $this->getUser();
-
         if (! $study->hasMetadata()) {
             return new JsonResponse([]);
         }
@@ -47,9 +43,6 @@ class StudyMetadataApiController extends ApiController
     public function addMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
-
-        /** @var CastorUser $user */
-        $user = $this->getUser();
 
         try {
             /** @var StudyMetadataApiRequest $parsed */
@@ -69,8 +62,7 @@ class StudyMetadataApiController extends ApiController
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
-                    $parsed->getMethodType(),
-                    $user
+                    $parsed->getMethodType()
                 )
             );
 
@@ -90,9 +82,6 @@ class StudyMetadataApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $studyMetadata->getStudy());
 
-        /** @var CastorUser $user */
-        $user = $this->getUser();
-
         try {
             /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
@@ -111,8 +100,7 @@ class StudyMetadataApiController extends ApiController
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
-                    $parsed->getMethodType(),
-                    $user
+                    $parsed->getMethodType()
                 )
             );
 

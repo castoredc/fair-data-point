@@ -8,9 +8,10 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Exception\UserNotACastorUser;
 use App\Message\Study\GetStudyStructureCommand;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
@@ -34,12 +35,18 @@ class GetStudyStructureCommandHandler implements MessageHandlerInterface
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
+     * @throws UserNotACastorUser
      */
     public function __invoke(GetStudyStructureCommand $message): StructureCollection
     {
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
-        $this->apiClient->setUser($user);
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->apiClient->setUser($user->getCastorUser());
 
         return $this->apiClient->getStructure($message->getStudy());
     }

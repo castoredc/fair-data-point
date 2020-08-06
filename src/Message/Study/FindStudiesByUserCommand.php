@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Message\Study;
 
-use App\Security\CastorUser;
+use App\Security\User;
 
 class FindStudiesByUserCommand
 {
-    /** @var CastorUser */
+    /** @var User */
     private $user;
 
     /** @var bool */
@@ -16,14 +16,14 @@ class FindStudiesByUserCommand
     /** @var bool */
     private $hideExistingStudies;
 
-    public function __construct(CastorUser $user, bool $loadFromCastor, bool $hideExistingStudies = false)
+    public function __construct(User $user, bool $loadFromCastor, bool $hideExistingStudies = false)
     {
         $this->user = $user;
         $this->loadFromCastor = $loadFromCastor;
         $this->hideExistingStudies = $hideExistingStudies;
     }
 
-    public function getUser(): CastorUser
+    public function getUser(): User
     {
         return $this->user;
     }

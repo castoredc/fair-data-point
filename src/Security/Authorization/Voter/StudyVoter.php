@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\Study;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -15,7 +15,6 @@ class StudyVoter extends Voter
     public const VIEW = 'view';
     public const EDIT = 'edit';
     public const ACCESS_DATA = 'access_data';
-
     /** @var Security */
     private $security;
 
@@ -63,13 +62,19 @@ class StudyVoter extends Voter
     private function canEdit(Study $study, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (! $user instanceof CastorUser) {
+
+        if (! $user instanceof User) {
             return false;
         }
+
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        return in_array($study->getSourceId(), $user->getStudies(), true);
+        if (! $user->hasCastorUser()) {
+            return false;
+        }
+
+        return $user->getCastorUser()->hasAccessToStudy($study->getSourceId());
     }
 }

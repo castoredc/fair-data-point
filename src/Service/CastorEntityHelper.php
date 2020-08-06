@@ -11,6 +11,7 @@ use App\Entity\Castor\Record;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\FAIRData\Country;
 use App\Exception\InvalidEntityType;
+use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
 use App\Repository\CastorEntityRepository;
@@ -18,42 +19,38 @@ use App\Repository\CastorInstituteRepository;
 use App\Repository\CastorRecordRepository;
 use App\Repository\CountryRepository;
 use App\Security\ApiUser;
-use App\Security\CastorUser;
+use App\Security\Providers\Castor\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use function assert;
 
 class CastorEntityHelper
 {
     /** @var EntityManagerInterface */
     private $em;
-
     /** @var ApiClient */
     private $apiClient;
-
     /** @var EncryptionService */
     private $encryptionService;
 
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, TokenStorageInterface $tokenStorage, EncryptionService $encryptionService)
+    /**
+     * @throws UserNotACastorUser
+     */
+    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, EncryptionService $encryptionService)
     {
         $this->em = $em;
         $this->apiClient = $apiClient;
         $this->encryptionService = $encryptionService;
-
-        if ($tokenStorage->getToken() === null) {
-            return;
-        }
-
-        $user = $tokenStorage->getToken()->getUser();
-        assert($user instanceof CastorUser);
-
-        $this->apiClient->setUser($user);
     }
 
     public function useApiUser(ApiUser $user): void
     {
         $this->apiClient->useApiUser($user, $this->encryptionService);
+    }
+
+    public function useUser(CastorUser $user): void
+    {
+        $this->apiClient->setUser($user);
     }
 
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity

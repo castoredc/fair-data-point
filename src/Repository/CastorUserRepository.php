@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Exception\UserNotFound;
-use App\Security\CastorUser;
+use App\Security\Providers\Castor\CastorUser;
 use Doctrine\ORM\EntityRepository;
 
 class CastorUserRepository extends EntityRepository

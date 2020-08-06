@@ -11,7 +11,9 @@ use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\CreateDataModelModuleMappingCommand;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -40,6 +42,7 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws InvalidEntityType
+     * @throws UserNotACastorUser
      */
     public function __invoke(CreateDataModelModuleMappingCommand $command): DataModelMapping
     {
@@ -51,6 +54,15 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
+
+        $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->entityHelper->useUser($user->getCastorUser());
 
         assert($study instanceof CastorStudy);
 

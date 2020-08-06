@@ -13,7 +13,6 @@ class DatasetVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
-
     /** @var Security */
     private $security;
 

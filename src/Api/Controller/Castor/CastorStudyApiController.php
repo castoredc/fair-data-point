@@ -8,7 +8,7 @@ use App\Api\Resource\Study\StudiesApiResource;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use App\Message\Study\FindStudiesByUserCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ class CastorStudyApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var CastorUser $user */
+        /** @var User $user */
         $user = $this->getUser();
 
         try {

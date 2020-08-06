@@ -15,7 +15,6 @@ class DataModelVoter extends Voter
     public const VIEW = 'view';
     public const ADD = 'add';
     public const EDIT = 'edit';
-
     /** @var Security */
     private $security;
 

@@ -12,7 +12,9 @@ use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\CreateDataModelNodeMappingCommand;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -41,6 +43,7 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws InvalidEntityType
+     * @throws UserNotACastorUser
      */
     public function __invoke(CreateDataModelNodeMappingCommand $command): DataModelMapping
     {
@@ -52,6 +55,15 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
+
+        $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->entityHelper->useUser($user->getCastorUser());
 
         assert($study instanceof CastorStudy);
 

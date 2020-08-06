@@ -7,6 +7,7 @@ import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
 import {PrivateRoute, ProtectedRoute} from "./components/Route";
 import Admin from "./pages/Admin";
 import Main from "./pages/Main";
+import Wizard from "./pages/Wizard";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -43,6 +44,8 @@ export default ({user}) =>
 
         /* Admin */
         <ProtectedRoute path="/admin" user={user} component={Admin} />
+
+        <Route path="/wizard" render={(props) => <Wizard {...props} user={user} />} />
 
         <Route component={NotFound} />
     </Switch>;
