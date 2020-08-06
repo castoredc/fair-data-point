@@ -5,6 +5,8 @@ namespace App\Security\Providers\Castor;
 
 use App\Security\Providers\ProviderUser;
 use App\Security\User;
+use App\Traits\CreatedAt;
+use App\Traits\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use function in_array;
 use function strtolower;
@@ -12,9 +14,13 @@ use function strtolower;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CastorUserRepository")
  * @ORM\Table(name="castor_user")
+ * @ORM\HasLifecycleCallbacks
  */
 class CastorUser implements ProviderUser
 {
+    use CreatedAt;
+    use UpdatedAt;
+
     /**
      * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="castorUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")

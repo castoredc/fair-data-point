@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\Enum\NameOrigin;
 use App\Security\Providers\Castor\CastorUser;
 use App\Security\Providers\Orcid\OrcidUser;
+use App\Traits\CreatedAt;
+use App\Traits\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_filter;
@@ -17,9 +20,13 @@ use function substr;
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
+ * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface
 {
+    use CreatedAt;
+    use UpdatedAt;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -66,15 +73,22 @@ class User implements UserInterface
      * @var OrcidUser|null
      */
     private $orcid;
+    /**
+     * @ORM\Column(type="NameOriginType")
+     *
+     * @var NameOrigin
+     */
+    private $nameOrigin;
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
 
-    public function __construct(string $nameFirst, ?string $nameMiddle, string $nameLast, ?string $emailAddress)
+    public function __construct(string $nameFirst, ?string $nameMiddle, string $nameLast, NameOrigin $nameOrigin, ?string $emailAddress)
     {
         $this->nameFirst = $nameFirst;
         $this->nameMiddle = $nameMiddle;
         $this->nameLast = $nameLast;
+        $this->nameOrigin = $nameOrigin;
         $this->emailAddress = $emailAddress !== null ? strtolower($emailAddress) : null;
     }
 
@@ -84,7 +98,7 @@ class User implements UserInterface
             return false;
         }
 
-        return $this->id === $user->getId();
+        return $this->id === $user->getId() && $this->updatedAt === $user->getUpdatedAt();
     }
 
     /**
@@ -95,7 +109,7 @@ class User implements UserInterface
         $roles = ['ROLE_USER'];
 
         if ($this->hasCastorUser()) {
-            $roles[] = ['ROLE_CASTOR_USER'];
+            $roles[] = 'ROLE_CASTOR_USER';
 
             $domain = strrchr($this->castorUser->getEmailAddress(), '@');
 
@@ -108,7 +122,7 @@ class User implements UserInterface
         }
 
         if ($this->hasOrcid()) {
-            $roles[] = ['ROLE_ORCID_USER'];
+            $roles[] = 'ROLE_ORCID_USER';
         }
 
         return $roles;
@@ -226,5 +240,15 @@ class User implements UserInterface
     public function setOrcid(?OrcidUser $orcid): void
     {
         $this->orcid = $orcid;
+    }
+
+    public function getNameOrigin(): NameOrigin
+    {
+        return $this->nameOrigin;
+    }
+
+    public function setNameOrigin(NameOrigin $nameOrigin): void
+    {
+        $this->nameOrigin = $nameOrigin;
     }
 }

@@ -3,26 +3,20 @@ declare(strict_types=1);
 
 namespace App\Security\Providers\Orcid;
 
-use App\Exception\UserNotAnOrcidUser;
-use App\Exception\UserNotFound;
+use App\Security\Providers\UserProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\Security\Core\User\User;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class OrcidUserProvider extends AbstractProvider implements UserProviderInterface
+class OrcidUserProvider extends UserProvider implements UserProviderInterface
 {
     use BearerAuthorizationTrait;
 
     public const BASE_URL = 'https://orcid.org';
-    /** @var EntityManagerInterface|null */
-    private $em;
 
     /**
      * @param array<mixed> $options
@@ -30,7 +24,7 @@ class OrcidUserProvider extends AbstractProvider implements UserProviderInterfac
      */
     public function __construct(EntityManagerInterface $em, array $options = [], array $collaborators = [])
     {
-        parent::__construct($options, $collaborators);
+        parent::__construct($em, $options, $collaborators);
 
         $this->em = $em;
     }
@@ -100,39 +94,5 @@ class OrcidUserProvider extends AbstractProvider implements UserProviderInterfac
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
         return new OrcidUser($response['orcid'], $response['name'], $token->getToken());
-    }
-
-    public function loadUserByUsername(string $username): UserInterface
-    {
-        return new User(null, null);
-    }
-
-    /**
-     * @throws UserNotFound
-     * @throws UserNotAnOrcidUser
-     *
-     * @inheritDoc
-     */
-    public function refreshUser(UserInterface $user): UserInterface
-    {
-        if (! $user instanceof OrcidUser) {
-            return $user;
-        }
-
-        $userRepository = $this->em->getRepository(OrcidUser::class);
-
-        /** @var OrcidUser $dbUser */
-        $dbUser = $userRepository->find($user->getOrcid());
-        $dbUser->setToken($user->getToken());
-
-        return $dbUser->getUser();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function supportsClass(string $class): bool
-    {
-        return true;
     }
 }

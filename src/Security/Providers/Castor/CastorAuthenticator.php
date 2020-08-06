@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Security\Providers\Castor;
 
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Enum\NameOrigin;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Security\Providers\Authenticator;
@@ -86,6 +87,7 @@ class CastorAuthenticator extends Authenticator
             $castorUser->getNameFirst(),
             $castorUser->getNameMiddle(),
             $castorUser->getNameLast(),
+            NameOrigin::castor(),
             $castorUser->getEmailAddress()
         );
     }

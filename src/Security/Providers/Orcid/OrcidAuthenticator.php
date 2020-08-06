@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security\Providers\Orcid;
 
+use App\Entity\Enum\NameOrigin;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -57,6 +58,7 @@ class OrcidAuthenticator extends Authenticator
             // Orcid User Found, add token to user from DB
 
             $dbUser->setToken($orcidUser->getToken());
+            $dbUser->setName($orcidUser->getName());
             $user = $dbUser->getUser();
         }
 
@@ -72,7 +74,7 @@ class OrcidAuthenticator extends Authenticator
         $lastName = strpos($name, ' ') === false ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $firstName = trim(preg_replace('#' . $lastName . '#', '', $name));
 
-        return new User($firstName, null, $lastName, null);
+        return new User($firstName, null, $lastName, NameOrigin::orcid(), null);
     }
 
     private function getOrcidClient(): OAuth2ClientInterface

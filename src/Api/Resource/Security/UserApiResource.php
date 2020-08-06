@@ -28,7 +28,8 @@ class UserApiResource implements ApiResource
             'nameFirst' => $this->user->getNameFirst(),
             'nameMiddle' => $this->user->getNameMiddle(),
             'nameLast' => $this->user->getNameLast(),
-            'emailAddress' => $this->user->getEmailAddress(),
+            'emailAddress' => $this->user->getEmailAddress() !== '' ? $this->user->getEmailAddress() : null,
+            'nameOrigin' => $this->user->getNameOrigin()->toString(),
             'isAdmin' => in_array('ROLE_ADMIN', $this->user->getRoles(), true),
             'linkedAccounts' => [
                 'castor' => $this->user->hasCastorUser() ? $this->user->getCastorUser()->toArray() : false,

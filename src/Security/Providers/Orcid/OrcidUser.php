@@ -5,14 +5,20 @@ namespace App\Security\Providers\Orcid;
 
 use App\Security\Providers\ProviderUser;
 use App\Security\User;
+use App\Traits\CreatedAt;
+use App\Traits\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="orcid_user")
+ * @ORM\HasLifecycleCallbacks
  */
 class OrcidUser implements ProviderUser
 {
+    use CreatedAt;
+    use UpdatedAt;
+
     /**
      * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="orcid")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")

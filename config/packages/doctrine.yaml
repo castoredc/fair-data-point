@@ -24,6 +24,7 @@ doctrine:
             DependencyCombinatorType: App\Type\Enum\DependencyCombinatorType
             DependencyOperatorType: App\Type\Enum\DependencyOperatorType
             DistributionGenerationStatusType: App\Type\Enum\DistributionGenerationStatusType
+            NameOriginType: App\Type\Enum\NameOriginType
 
     orm:
         auto_generate_proxy_classes: true
