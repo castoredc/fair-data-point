@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Security\Providers\Castor\CastorUser;
+use App\Security\Providers\Orcid\OrcidUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_filter;
@@ -46,9 +47,9 @@ class User implements UserInterface
      */
     private $nameLast;
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @var string
+     * @var string|null
      */
     private $emailAddress;
     /**
@@ -58,23 +59,23 @@ class User implements UserInterface
      * @var CastorUser|null
      */
     private $castorUser;
-    // /**
-    //  * // * xORM\OneToOne(targetEntity="App\Security\Providers\Orcid\OrcidUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
-    //  * // * xORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
-    //  *
-    //  // * @var OrcidUser|null
-    //  */
-    // private $orcid;
+    /**
+     * @ORM\OneToOne(targetEntity="App\Security\Providers\Orcid\OrcidUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
+     * @ORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
+     *
+     * @var OrcidUser|null
+     */
+    private $orcid;
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
 
-    public function __construct(string $nameFirst, ?string $nameMiddle, string $nameLast, string $emailAddress)
+    public function __construct(string $nameFirst, ?string $nameMiddle, string $nameLast, ?string $emailAddress)
     {
         $this->nameFirst = $nameFirst;
         $this->nameMiddle = $nameMiddle;
         $this->nameLast = $nameLast;
-        $this->emailAddress = strtolower($emailAddress);
+        $this->emailAddress = $emailAddress !== null ? strtolower($emailAddress) : null;
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -93,13 +94,15 @@ class User implements UserInterface
     {
         $roles = ['ROLE_USER'];
 
-        $domain = strrchr($this->emailAddress, '@');
+        if ($this->emailAddress !== null) {
+            $domain = strrchr($this->emailAddress, '@');
 
-        if ($domain !== false) {
-            $domain = substr($domain, 1);
-        }
-        if (isset($this::DOMAINS[$domain])) {
-            $roles = array_merge($roles, $this::DOMAINS[$domain]);
+            if ($domain !== false) {
+                $domain = substr($domain, 1);
+            }
+            if (isset($this::DOMAINS[$domain])) {
+                $roles = array_merge($roles, $this::DOMAINS[$domain]);
+            }
         }
 
         return $roles;
@@ -117,7 +120,19 @@ class User implements UserInterface
 
     public function getUsername(): string
     {
-        return $this->emailAddress;
+        if ($this->emailAddress !== null) {
+            return $this->emailAddress;
+        }
+
+        if ($this->hasOrcid()) {
+            return $this->orcid->getOrcid();
+        }
+
+        if ($this->hasCastorUser()) {
+            return $this->castorUser->getEmailAddress();
+        }
+
+        return '';
     }
 
     public function eraseCredentials(): void
@@ -169,7 +184,7 @@ class User implements UserInterface
 
     public function getEmailAddress(): string
     {
-        return $this->emailAddress;
+        return $this->emailAddress ?? '';
     }
 
     public function setEmailAddress(string $emailAddress): void
@@ -192,18 +207,18 @@ class User implements UserInterface
         $this->castorUser = $castorUser;
     }
 
-    // public function getOrcid(): ?OrcidUser
-    // {
-    //     return $this->orcid;
-    // }
-    //
-    // public function hasOrcid(): bool
-    // {
-    //     return $this->orcid !== null;
-    // }
-    //
-    // public function setOrcid(?OrcidUser $orcid): void
-    // {
-    //     $this->orcid = $orcid;
-    // }
+    public function getOrcid(): ?OrcidUser
+    {
+        return $this->orcid;
+    }
+
+    public function hasOrcid(): bool
+    {
+        return $this->orcid !== null;
+    }
+
+    public function setOrcid(?OrcidUser $orcid): void
+    {
+        $this->orcid = $orcid;
+    }
 }

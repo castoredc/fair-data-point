@@ -5,6 +5,7 @@ namespace App\Factory\Security;
 
 use App\Model\Castor\ApiClient;
 use App\Security\Providers\Castor\CastorUserProvider;
+use App\Security\Providers\Orcid\OrcidUserProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -35,10 +36,14 @@ class ProviderFactory
      */
     public function createProvider(string $class, array $options, string $redirectUri, array $redirectParams = [], array $collaborators = []): UserProviderInterface
     {
-        if ($class === CastorUserProvider::class) {
-            $options['redirectUri'] = $this->generator->generate($redirectUri, $redirectParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        $options['redirectUri'] = $this->generator->generate($redirectUri, $redirectParams, UrlGeneratorInterface::ABSOLUTE_URL);
 
+        if ($class === CastorUserProvider::class) {
             return new CastorUserProvider($this->em, $this->apiClient, $options, $collaborators);
+        }
+
+        if ($class === OrcidUserProvider::class) {
+            return new OrcidUserProvider($this->em, $options, $collaborators);
         }
 
         throw new InvalidTypeException();

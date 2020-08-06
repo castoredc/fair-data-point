@@ -6,16 +6,12 @@ namespace App\Security\Providers\Castor;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Model\Castor\ApiClient;
+use App\Security\Providers\Authenticator;
 use App\Security\User;
-use Doctrine\ORM\EntityManagerInterface;
-use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
-use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -23,25 +19,8 @@ use function assert;
 use function http_build_query;
 use function strtr;
 
-class CastorAuthenticator extends SocialAuthenticator
+class CastorAuthenticator extends Authenticator
 {
-    /** @var ClientRegistry */
-    private $clientRegistry;
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var RouterInterface */
-    private $router;
-    /** @var ApiClient */
-    private $apiClient;
-
-    public function __construct(ApiClient $apiClient, ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router)
-    {
-        $this->apiClient = $apiClient;
-        $this->clientRegistry = $clientRegistry;
-        $this->em = $em;
-        $this->router = $router;
-    }
-
     /**
      * @inheritDoc
      */
@@ -70,16 +49,14 @@ class CastorAuthenticator extends SocialAuthenticator
         /** @var CastorUser|null $dbUser */
         $dbUser = $this->em->getRepository(CastorUser::class)->findOneBy(['id' => $castorUser->getId()]);
 
+        $this->detectIfEqualToLoggedInUser($dbUser);
+
         if ($dbUser === null) {
             // No Castor User found in database, create new User and attach Castor User to it
-            $user = new User(
-                $castorUser->getNameFirst(),
-                $castorUser->getNameMiddle(),
-                $castorUser->getNameLast(),
-                $castorUser->getEmailAddress()
-            );
 
+            $user = $this->currentUser ?? $this->createNewUser($castorUser);
             $user->setCastorUser($castorUser);
+            $castorUser->setUser($user);
         } else {
             // Castor User Found, update user
 
@@ -101,6 +78,16 @@ class CastorAuthenticator extends SocialAuthenticator
         $this->em->flush();
 
         return $user;
+    }
+
+    private function createNewUser(CastorUser $castorUser): User
+    {
+        return new User(
+            $castorUser->getNameFirst(),
+            $castorUser->getNameMiddle(),
+            $castorUser->getNameLast(),
+            $castorUser->getEmailAddress()
+        );
     }
 
     private function getCastorClient(): OAuth2ClientInterface

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Security\Providers\Castor;
 
+use App\Security\Providers\ProviderUser;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use function in_array;
 use function strtolower;
 
@@ -13,7 +13,7 @@ use function strtolower;
  * @ORM\Entity(repositoryClass="App\Repository\CastorUserRepository")
  * @ORM\Table(name="castor_user")
  */
-class CastorUser implements ResourceOwnerInterface
+class CastorUser implements ProviderUser
 {
     /**
      * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="castorUser")

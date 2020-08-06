@@ -17,6 +17,8 @@ security:
             guard:
                 authenticators:
                     - App\Security\Providers\Castor\CastorAuthenticator
+                    - App\Security\Providers\Orcid\OrcidAuthenticator
+                entry_point: App\Security\Providers\Castor\CastorAuthenticator
 
             # activate different ways to authenticate
 

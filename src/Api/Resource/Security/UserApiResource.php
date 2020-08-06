@@ -32,7 +32,7 @@ class UserApiResource implements ApiResource
             'isAdmin' => in_array('ROLE_ADMIN', $this->user->getRoles(), true),
             'linkedAccounts' => [
                 'castor' => $this->user->hasCastorUser() ? $this->user->getCastorUser()->toArray() : false,
-                // 'orcid' => $this->user->hasOrcid() ? $this->user->getOrcid()->toArray() : false,
+                'orcid' => $this->user->hasOrcid() ? $this->user->getOrcid()->toArray() : false,
             ],
         ];
     }
