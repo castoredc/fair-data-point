@@ -68,6 +68,7 @@ class UserWizardSubscriber implements EventSubscriberInterface
         return $user->getEmailAddress() === '';
     }
 
+    /** @inheritDoc */
     public static function getSubscribedEvents()
     {
         return [KernelEvents::CONTROLLER => 'onKernelController'];
