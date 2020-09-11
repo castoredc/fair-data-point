@@ -10,6 +10,7 @@
         "beberlei/assert": "^3.2",
         "ciwit/bioportal-browser": "^1.1.1",
         "cocur/slugify": "^4.0",
+        "czproject/git-php": "^3.18",
         "easyrdf/easyrdf": "^0.9.1",
         "fresh/doctrine-enum-bundle": "^7.1",
         "guzzlehttp/guzzle": "~6.5",
@@ -36,6 +37,7 @@
     },
     "require-dev": {
         "castor/coding-standard": "^3.1",
+        "easycorp/easy-deploy-bundle": "^1.0",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.40",
         "phpstan/phpstan-deprecation-rules": "^0.12.2",
