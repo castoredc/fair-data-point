@@ -264,6 +264,9 @@
     "roave/security-advisories": {
         "version": "dev-master"
     },
+    "sebastian/cli-parser": {
+        "version": "1.0.0"
+    },
     "sebastian/code-unit": {
         "version": "1.0.0"
     },
@@ -272,6 +275,9 @@
     },
     "sebastian/comparator": {
         "version": "3.0.2"
+    },
+    "sebastian/complexity": {
+        "version": "2.0.0"
     },
     "sebastian/diff": {
         "version": "3.0.2"
@@ -284,6 +290,9 @@
     },
     "sebastian/global-state": {
         "version": "3.0.0"
+    },
+    "sebastian/lines-of-code": {
+        "version": "1.0.0"
     },
     "sebastian/object-enumerator": {
         "version": "3.0.3"
@@ -342,6 +351,9 @@
             "./config/packages/stof_doctrine_extensions.yaml"
         ]
     },
+    "symfony/amqp-messenger": {
+        "version": "v5.1.3"
+    },
     "symfony/asset": {
         "version": "v4.2.8"
     },
@@ -366,8 +378,14 @@
     "symfony/dependency-injection": {
         "version": "v4.0.4"
     },
+    "symfony/deprecation-contracts": {
+        "version": "v2.1.3"
+    },
     "symfony/doctrine-bridge": {
         "version": "v4.1.12"
+    },
+    "symfony/doctrine-messenger": {
+        "version": "v5.1.3"
     },
     "symfony/dotenv": {
         "version": "v4.0.4"
@@ -462,11 +480,17 @@
     "symfony/polyfill-ctype": {
         "version": "v1.8.0"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.18.1"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.14.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.18.1"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.7.0"
@@ -482,6 +506,12 @@
     },
     "symfony/property-access": {
         "version": "v4.4.2"
+    },
+    "symfony/property-info": {
+        "version": "v5.1.3"
+    },
+    "symfony/redis-messenger": {
+        "version": "v5.1.3"
     },
     "symfony/routing": {
         "version": "4.0",
@@ -521,6 +551,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.3.4"
+    },
+    "symfony/string": {
+        "version": "v5.1.3"
     },
     "symfony/translation-contracts": {
         "version": "v1.1.6"

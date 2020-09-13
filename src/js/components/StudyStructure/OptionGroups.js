@@ -2,12 +2,10 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import Col from "react-bootstrap/Col";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import OptionGroup from "./OptionGroup";
 import './StudyStructure.scss';
 import SideTabs from "../SideTabs";
-import DataModelModulePreview from "../DataModelModule/DataModelModulePreview";
 
 export default class OptionGroups extends Component {
     constructor(props) {

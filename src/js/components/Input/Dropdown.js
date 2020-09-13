@@ -1,6 +1,5 @@
 import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
-import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async';
 import {ChoiceOption, Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
 

@@ -1,5 +1,5 @@
-import {Icon, Stack} from "@castoredc/matter";
-import React, {Fragment} from "react";
+import {Stack} from "@castoredc/matter";
+import React from "react";
 
 export const Rule = ({
                          id,

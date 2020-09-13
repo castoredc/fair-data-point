@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Form from 'react-bootstrap/Form'
 
 import './Input.scss'
 import {TextStyle} from "@castoredc/matter";

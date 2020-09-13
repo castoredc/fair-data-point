@@ -1,7 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {classNames} from "../../util";
-import LoadingScreen from "../LoadingScreen";
 
 class Layout extends React.Component {
     componentDidUpdate(prevProps) {

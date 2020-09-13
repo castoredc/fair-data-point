@@ -1,4 +1,4 @@
-import React from "react";
+import React, {cloneElement} from "react";
 
 export const by = key => (object, item) => {
     object[item[key]] = item;
@@ -142,3 +142,9 @@ export const downloadFile = (contents, filename) => {
         const url = window.navigator.msSaveOrOpenBlob(new Blob([contents]), filename);
     }
 };
+
+export const cloneIfComposite = (children, props) => {
+    return children && children.type && typeof children.type !== 'string'
+        ? cloneElement(children, props)
+        : children;
+}

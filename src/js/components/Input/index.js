@@ -1,6 +1,5 @@
 import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
-import Form from 'react-bootstrap/Form'
 import MaskedInput from 'react-text-mask'
 import {classNames} from '../../util';
 

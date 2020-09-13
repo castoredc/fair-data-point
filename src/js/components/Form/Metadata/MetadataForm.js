@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
 import axios from "axios";
 import FormItem from "../FormItem";

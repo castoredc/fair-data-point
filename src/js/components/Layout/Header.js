@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {classNames, localizedText} from "../../util";
 import DocumentTitle from "../DocumentTitle";
-import {Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import '../../pages/Main/Main.scss';
 import Breadcrumbs from "../Breadcrumbs";
-import Col from "react-bootstrap/Col";
 import './Header.scss';
-import {Button, CastorLogo, Menu} from "@castoredc/matter";
+import {Button, CastorLogo, Menu, Stack} from "@castoredc/matter";
 import LoginModal from "../../modals/LoginModal";
 
 export default class Header extends Component {
@@ -133,14 +131,14 @@ export default class Header extends Component {
             {!embedded && <div className="Header">
                 <div className="Spacing"/>
                 {!mobile && <div className={classNames('MainHeader', smallHeader && 'Small')}>
-                    <Container>
-                        <Row>
-                            <Col md={4} className="HeaderLogoCol">
+                    <div className="container">
+                        <Stack distribution="equalSpacing">
+                            <div className="HeaderLogoCol">
                                 <Link to="/fdp">
                                     <CastorLogo className="Logo"/>
                                 </Link>
-                            </Col>
-                            <Col md={8} className="HeaderUserCol">
+                            </div>
+                            <div className="HeaderUserCol">
                                 {user ? <div>
                                     <Button icon="account" onClick={this.toggleMenu} isDropdown isOpen={showMenu}>
                                         {user.fullName}
@@ -154,15 +152,15 @@ export default class Header extends Component {
                                                  onClick={this.openModal}
                                 >Log in
                                 </Button>}
-                            </Col>
-                        </Row>
-                    </Container>
+                            </div>
+                        </Stack>
+                    </div>
                 </div>}
                 {(!mobile && breadcrumbs) && <Breadcrumbs breadcrumbs={breadcrumbs.crumbs}/>}
                 {mobile && <div className="MobileHeader">
-                    <Container>
-                        <Row>
-                            <Col className="HeaderBackCol">
+                    <div className="container">
+                        <Stack distribution="equalSpacing">
+                            <div className="HeaderBackCol">
                                 {(breadcrumbs && breadcrumbs.previous) && <Link to={{
                                     pathname: breadcrumbs.previous.path,
                                     state:    breadcrumbs.previous.state,
@@ -170,13 +168,13 @@ export default class Header extends Component {
                                     icon="arrowLeft"
                                     iconDescription={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}
                                 /></Link>}
-                            </Col>
-                            <Col className="HeaderLogoCol">
+                            </div>
+                            <div className="HeaderLogoCol">
                                 <Link to="/fdp">
                                     <CastorLogo className="Logo"/>
                                 </Link>
-                            </Col>
-                            <Col className="HeaderUserCol">
+                            </div>
+                            <div className="HeaderUserCol">
                                 {user ? <div>
                                     <Button icon="account" iconDescription={user.fullName} onClick={this.toggleMenu}/>
                                     {showMenu && menu}
@@ -185,22 +183,20 @@ export default class Header extends Component {
                                                  icon="account"
                                                  onClick={this.openModal}
                                                  iconDescription="Log in"/>}
-                            </Col>
-                        </Row>
-                    </Container>
+                            </div>
+                        </Stack>
+                    </div>
                 </div>}
             </div>}
             <div className="InformationHeader">
-                <Container className="Children">
-                    <Row>
-                        <div className="MainCol">
-                            {badge && <div><span className="InformationBadge">{badge}</span></div>}
-                            <h1>
-                                {title}
-                            </h1>
-                        </div>
-                    </Row>
-                </Container>
+                <div className="container Children">
+                    <div className="MainCol">
+                        {badge && <div><span className="InformationBadge">{badge}</span></div>}
+                        <h1>
+                            {title}
+                        </h1>
+                    </div>
+                </div>
             </div>
         </header>;
     }

@@ -1,12 +1,10 @@
 import React, {Component} from "react";
 import axios from "axios";
-
-import {Col, Row} from "react-bootstrap";
 import {localizedText} from "../../../util";
 import ListItem from "../../../components/ListItem";
 import Alert from "../../../components/Alert";
 import Header from "../../../components/Layout/Header";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
@@ -18,11 +16,11 @@ export default class Distribution extends Component {
         this.state = {
             isLoadingDistribution: true,
             hasLoadedDistribution: false,
-            distribution:          null,
-            showLoginModal:        false,
-            loginModalUrl:         null,
-            loginModalView:        null,
-            server:                null,
+            distribution: null,
+            showLoginModal: false,
+            loginModalUrl: null,
+            loginModalView: null,
+            server: null,
         };
     }
 
@@ -34,7 +32,7 @@ export default class Distribution extends Component {
         axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
             .then((response) => {
                 this.setState({
-                    distribution:          response.data,
+                    distribution: response.data,
                     isLoadingDistribution: false,
                     hasLoadedDistribution: true,
                 });
@@ -58,9 +56,9 @@ export default class Distribution extends Component {
         if (user === null) {
             this.setState({
                 showLoginModal: true,
-                loginModalUrl:  url,
+                loginModalUrl: url,
                 loginModalView: 'distribution',
-                server:         distribution.study.sourceServer,
+                server: distribution.study.sourceServer,
             })
         } else {
             window.location.href = url;
@@ -70,9 +68,9 @@ export default class Distribution extends Component {
     closeModal = () => {
         this.setState({
             showLoginModal: false,
-            loginModalUrl:  null,
+            loginModalUrl: null,
             loginModalView: null,
-            server:         null,
+            server: null,
         })
     };
 
@@ -96,49 +94,47 @@ export default class Distribution extends Component {
                     loginModalServer={server}/>
 
             <MainBody isLoading={isLoadingDistribution}>
-                {distribution && <Row>
-                    <div className="MainCol">
-                        {distribution.metadata.description && <div
-                            className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
+                {distribution && <div className="MainCol">
+                    {distribution.metadata.description && <div
+                        className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
 
-                        {restricted && <Alert
-                            variant="info"
-                            icon="lock">
-                            The access to this distribution is restricted. When you try to access the data, you will be
-                            redirected to Castor EDC to authenticate yourself.
-                        </Alert>
-                        }
-                        {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
-                                                            title="Query the data"
-                                                            description="Use SPARQL queries to extract specific information from this distribution."
-                                                            smallIcon={restricted && 'lock'}
-                                                            newWindow
-                                                            onClick={(e) => {
-                                                                this.checkIfLoggedIn(e, distribution.relativeUrl + '/query')
-                                                            }}
-                        />}
+                    {restricted && <Alert
+                        variant="info"
+                        icon="lock">
+                        The access to this distribution is restricted. When you try to access the data, you will be
+                        redirected to Castor EDC to authenticate yourself.
+                    </Alert>
+                    }
+                    {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
+                                                        title="Query the data"
+                                                        description="Use SPARQL queries to extract specific information from this distribution."
+                                                        smallIcon={restricted && 'lock'}
+                                                        newWindow
+                                                        onClick={(e) => {
+                                                            this.checkIfLoggedIn(e, distribution.relativeUrl + '/query')
+                                                        }}
+                    />}
 
-                        {distribution.accessUrl && <ListItem link={distribution.accessUrl}
-                                                             title="Access the data"
-                                                             description="Get access to the distribution."
-                                                             smallIcon={restricted && 'lock'}
-                                                             newWindow
-                                                             onClick={(e) => {
-                                                                 this.checkIfLoggedIn(e, distribution.accessUrl)
-                                                             }}
-                        />}
+                    {distribution.accessUrl && <ListItem link={distribution.accessUrl}
+                                                         title="Access the data"
+                                                         description="Get access to the distribution."
+                                                         smallIcon={restricted && 'lock'}
+                                                         newWindow
+                                                         onClick={(e) => {
+                                                             this.checkIfLoggedIn(e, distribution.accessUrl)
+                                                         }}
+                    />}
 
-                        {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
-                                                               title="Download the data"
-                                                               description="Get a downloadable file for this distribution."
-                                                               smallIcon={restricted && 'lock'}
-                                                               newWindow
-                                                               onClick={(e) => {
-                                                                   this.checkIfLoggedIn(e, distribution.downloadUrl)
-                                                               }}
-                        />}
-                    </div>
-                </Row>}
+                    {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
+                                                           title="Download the data"
+                                                           description="Get a downloadable file for this distribution."
+                                                           smallIcon={restricted && 'lock'}
+                                                           newWindow
+                                                           onClick={(e) => {
+                                                               this.checkIfLoggedIn(e, distribution.downloadUrl)
+                                                           }}
+                    />}
+                </div>}
             </MainBody>
         </Layout>;
     }

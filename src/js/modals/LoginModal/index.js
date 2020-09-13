@@ -1,11 +1,7 @@
 import React, {Component} from 'react'
-import {ValidatorForm} from "react-form-validator-core";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
-import Dropdown from "../../components/Input/Dropdown";
-import FormItem from "../../components/Form/FormItem";
-import {Button} from "@castoredc/matter";
 import Modal from "../Modal";
 import LoginForm from "../../components/Form/LoginForm";
 import InlineLoader from "../../components/LoadingScreen/InlineLoader";

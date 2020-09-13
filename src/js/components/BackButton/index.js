@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './BackButton.scss';
-import {Button, Icon} from "@castoredc/matter";
+import {Icon} from "@castoredc/matter";
 import {LinkContainer} from "react-router-bootstrap";
 
 export default class BackButton extends Component {

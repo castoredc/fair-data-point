@@ -1,15 +1,31 @@
 @import '../../scss/colors';
 
-.StructureElements {
-  padding: 15px 20px;
-  border-radius: 4px;
-  background: $neutral-20;
+.StudyStructure {
+  display: flex;
+  overflow: auto;
+  height: 100%;
+}
+
+.StudyStructureNavigator {
+  width: 250px;
+  flex: 0 0 250px;
+  height: 100%;
+  overflow: auto;
+}
+
+.StudyStructureContents {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+  margin: 0 32px;
+  height: 100%;
 }
 
 .StructureElement {
-  padding-bottom: 15px;
   margin-bottom: 15px;
-  border-bottom: 1px solid $neutral-60;
+  border-radius: 3px;
+  overflow: hidden;
+  background: $neutral-20;
 
   &:last-child {
     padding-bottom: 0;
@@ -18,28 +34,37 @@
   }
 
   .StructureElementName {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 11px;
+    font-weight: 700;
+    padding: 10px 15px;
+    color: $generic-white;
+    background: $mid-blue;
   }
 
   .Steps {
+    margin: 3px 15px 10px 15px;
+
     .Step {
       display: block;
-      padding: 5px 0;
-      color: $neutral-300;
+      color: $neutral-500;
       text-decoration: none;
       text-align: left;
+      width: 100%;
+      border: none;
+      padding: 10px 0;
+      background: none;
+      position: relative;
+      font-weight: 700;
 
       &.active, &:hover {
-        color: $neutral-800;
-        font-weight: 700;
+        color: $azul;
       }
     }
   }
 }
 
 .Fields {
+  width: 100%;
+
   .FieldCheckbox {
     margin-right: 5px;
     min-width: 22px;
@@ -69,7 +94,7 @@
   }
 
   .FieldVariableName {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 11px;
     color: $neutral-90;
   }

@@ -5,13 +5,10 @@ import ListItem from "../../../components/ListItem";
 import {Redirect} from "react-router-dom";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import LoadingScreen from "../../../components/LoadingScreen";
 import CatalogSteppedForm from "../../../components/Form/CatalogSteppedForm";
 import {localizedText} from "../../../util";
 import {Button, Stack} from "@castoredc/matter";
-import {ValidatorForm} from "react-form-validator-core";
 
 export default class AddStudy extends Component {
     constructor(props) {

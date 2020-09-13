@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
 import '../Form.scss'
@@ -14,7 +12,6 @@ import Dropdown from "../../Input/Dropdown";
 import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
 import {Button, Stack} from "@castoredc/matter";
-import Modal from "../../../modals/Modal";
 
 export default class StudyForm extends Component {
     constructor(props) {

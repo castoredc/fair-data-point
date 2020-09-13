@@ -19,5 +19,6 @@ export const FieldIcons = {
     'grid' : 'grid',
     'datetime' : 'dateTime',
     'numberdate' : 'numberDate',
-    'add_report_button' : 'addReport'
+    'add_report_button' : 'addReport',
+    'add_survey_button' : 'surveys'
 };
