@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";

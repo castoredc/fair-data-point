@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios/index";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {DataTable, Heading, Pagination} from "@castoredc/matter/lib/matter.esm";
 import {classNames} from "../../util";

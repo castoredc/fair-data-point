@@ -6,10 +6,9 @@ import FormItem from "../../../components/Form/FormItem";
 import Input from "../../../components/Input";
 import {ValidatorForm} from "react-form-validator-core";
 import axios from "axios";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import queryString from "query-string";
-import {Redirect} from "react-router-dom";
 
 export default class Onboarding extends Component {
     constructor(props) {

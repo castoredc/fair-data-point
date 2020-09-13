@@ -1,21 +1,18 @@
 import React, {Component} from 'react';
-import {Container} from "react-bootstrap";
 import '../../pages/Main/Main.scss';
-import LoadingScreen from "../LoadingScreen";
 import InlineLoader from "../LoadingScreen/InlineLoader";
+import {classNames} from "../../util";
 
 export default class MainBody extends Component {
     render() {
-        const {children, isLoading} = this.props;
+        const {children, isLoading, className} = this.props;
 
         if(isLoading) {
             return <InlineLoader />;
         }
 
-        return <main>
-            <Container>
-                {children}
-            </Container>
+        return <main className={classNames('container', className)}>
+            {children}
         </main>;
     }
 }

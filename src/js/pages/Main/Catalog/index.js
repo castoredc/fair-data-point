@@ -1,12 +1,10 @@
 import React, {Component} from "react";
 import axios from "axios";
-
-import {Col, Row} from "react-bootstrap";
 import {classNames, localizedText} from "../../../util";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import StudyList from "../../../components/List/StudyList";
-import {Button, Heading, ButtonGroup} from "@castoredc/matter";
+import {Button, ButtonGroup, Heading, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import Header from "../../../components/Layout/Header";
 import MainBody from "../../../components/Layout/MainBody";
@@ -118,21 +116,18 @@ export default class Catalog extends Component {
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={(isLoadingFDP || isLoadingCatalog)}>
-                {(catalog && catalog.metadata.description && !embedded) && <Row>
-                    <div className="MainCol">
-                        <div className="InformationDescription">
-                            {localizedText(catalog.metadata.description, 'en', true)}
-                        </div>
+                {(catalog && catalog.metadata.description && !embedded) && <div className="MainCol">
+                    <div className="InformationDescription">
+                        {localizedText(catalog.metadata.description, 'en', true)}
                     </div>
-                </Row>}
+                </div>}
 
-                <Row ref={this.datasetsRef}>
-                    <div className={classNames('DatasetsHeader', 'MainCol', ! displayList && 'FullWidth')}>
-                        <Row>
-                            <Col className="DatasetsHeaderTitle">
+                    <div className={classNames('DatasetsHeader', 'MainCol', ! displayList && 'FullWidth')} ref={this.datasetsRef}>
+                        <Stack distribution="equalSpacing">
+                            <div className="DatasetsHeaderTitle">
                                 <Heading type="Subsection">Studies</Heading>
-                            </Col>
-                            <Col className="DatasetHeaderButtons">
+                            </div>
+                            <div className="DatasetHeaderButtons">
                                 <ButtonGroup className="ToggleButton">
                                     <Button buttonType={displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(true)} active={displayList}>List</Button>
                                     <Button buttonType={! displayList ? 'primary' : 'secondary'} onClick={() => this.changeView(false)} active={!displayList}>Map</Button>
@@ -142,10 +137,9 @@ export default class Catalog extends Component {
                                         Filters
                                     </Button>
                                 </div>
-                            </Col>
-                        </Row>
+                            </div>
+                        </Stack>
                     </div>
-                </Row>
 
                 <StudyList
                     state={breadcrumbs.current ? breadcrumbs.current.state : null}

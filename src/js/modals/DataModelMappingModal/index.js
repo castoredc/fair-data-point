@@ -6,10 +6,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Alert from "../../components/Alert";
-import RadioGroup from "../../components/Input/RadioGroup";
-import FormItem from "../../components/Form/FormItem";
 import StructureTypes from "../../components/StudyStructure/StructureTypes";
-import {Button} from "@castoredc/matter";
 
 export default class DataModelMappingModal extends Component {
     constructor(props) {

@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
-import {LinkContainer} from "react-router-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
 import CatalogStudies from "./CatalogStudies";
@@ -14,6 +12,7 @@ import CatalogMetadata from "./CatalogMetadata";
 import CatalogAddStudy from "./CatalogAddStudy";
 import CatalogAddDataset from "./CatalogAddDataset";
 import DocumentTitle from "../../../components/DocumentTitle";
+import SideBar from "../../../components/SideBar";
 
 export default class Catalog extends Component {
     constructor(props) {
@@ -57,6 +56,7 @@ export default class Catalog extends Component {
 
     render() {
         const {catalog, isLoadingCatalog} = this.state;
+        const {location} = this.props;
 
         if (isLoadingCatalog) {
             return <InlineLoader/>;
@@ -67,23 +67,39 @@ export default class Catalog extends Component {
         return <div className="PageContainer">
             <DocumentTitle title={'FDP Admin | Catalog' + (title ? ` | ${title}` : '')}/>
 
-            <div className="LeftNav">
-                <Nav className="flex-column">
-                    <LinkContainer to={'/admin/catalog/' + catalog.slug} exact={true}>
-                        <Nav.Link>Catalog</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/catalog/' + catalog.slug + '/metadata'} exact={true}>
-                        <Nav.Link>Metadata</Nav.Link>
-                    </LinkContainer>
-                    <hr/>
-                    <LinkContainer to={'/admin/catalog/' + catalog.slug + '/datasets'} exact={true}>
-                        <Nav.Link>Datasets</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/catalog/' + catalog.slug + '/studies'} exact={true}>
-                        <Nav.Link>Studies</Nav.Link>
-                    </LinkContainer>
-                </Nav>
-            </div>
+            <SideBar
+                location={location}
+                items={[
+                    {
+                        to: '/admin/catalog/' + catalog.slug,
+                        exact: true,
+                        title: 'Catalog',
+                        customIcon: 'catalog'
+                    },
+                    {
+                        to: '/admin/catalog/' + catalog.slug + '/metadata',
+                        exact: true,
+                        title: 'Metadata',
+                        customIcon: 'metadata'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: '/admin/catalog/' + catalog.slug + '/datasets',
+                        exact: true,
+                        title: 'Datasets',
+                        customIcon: 'dataset'
+                    },
+                    {
+                        to: '/admin/catalog/' + catalog.slug + '/studies',
+                        exact: true,
+                        title: 'Studies',
+                        icon: 'study'
+                    }
+                ]}
+            />
+
             <div className="Page">
                 <div className="PageTitle">
                     {title && <ViewHeader>{title}</ViewHeader>}

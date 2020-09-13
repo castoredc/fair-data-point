@@ -7,10 +7,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import LoadingScreen from "../../components/LoadingScreen";
-import {localizedText} from "../../util";
-import ListItem from "../../components/ListItem";
-import {Button, CastorLogo} from "@castoredc/matter";
-import {LoginViews} from "../../components/MetadataItem/EnumMappings";
+import {CastorLogo} from "@castoredc/matter";
 import LoginForm from "../../components/Form/LoginForm";
 
 export default class Login extends Component {

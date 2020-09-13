@@ -1,36 +1,33 @@
 import React, {Component} from 'react'
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import './StudyStructure.scss';
-import Button from "react-bootstrap/Button";
 import {classNames} from "../../util";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import FieldListItem from "../ListItem/FieldListItem";
-import Container from "react-bootstrap/Container";
+import ScrollShadow from "../ScrollShadow";
 
 export default class StudyStructure extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoadingFields: true,
-            fields:          [],
-            selectedStep:    null
+            fields: [],
+            selectedStep: null
         };
     }
 
     componentDidMount() {
-        const { contents } = this.props;
+        const {contents} = this.props;
         this.handleStepSwitch(contents[0].steps[0]);
     }
 
     handleStepSwitch = (step) => {
-        const { studyId } = this.props;
-        const { selectedStep } = this.state;
+        const {studyId} = this.props;
+        const {selectedStep} = this.state;
 
-        if(selectedStep === null || step.id !== selectedStep.id) {
+        if (selectedStep === null || step.id !== selectedStep.id) {
             this.setState({
                 isLoadingFields: true,
             });
@@ -38,9 +35,9 @@ export default class StudyStructure extends Component {
             axios.get('/api/castor/study/' + studyId + '/structure/step/' + step.id + '/fields')
                 .then((response) => {
                     this.setState({
-                        fields:          response.data,
+                        fields: response.data,
                         isLoadingFields: false,
-                        selectedStep:    step
+                        selectedStep: step
                     });
                 })
                 .catch((error) => {
@@ -58,35 +55,39 @@ export default class StudyStructure extends Component {
     };
 
     render() {
-        const { contents, selectable, selection, onSelect, dataFormat, dataType } = this.props;
-        const { isLoadingFields, fields, selectedStep } = this.state;
+        const {contents, selectable, selection, onSelect, dataFormat, dataType} = this.props;
+        const {isLoadingFields, fields, selectedStep} = this.state;
 
-        return <Row>
-            <Col sm={3}>
-                <div className="StructureElements">
-                    {contents.map((structureElement) => {
-                          return <div key={structureElement.id} className="StructureElement">
-                              <div className="StructureElementName">
-                                  {structureElement.name}
-                              </div>
-                              <div className="Steps">
-                                  {structureElement.steps.map((step) => {
-                                      const active = selectedStep !== null && selectedStep.id === step.id;
-                                      return <Button variant="link" key={step.id}
-                                                     className={classNames('Step', active && 'active')}
-                                                     onClick={() => {this.handleStepSwitch(step)}}
-                                                     >
-                                          {step.position}. {step.name}
-                                      </Button>;
-                                  })}
-                              </div>
-                          </div>;
-                    })}
-                </div>
-            </Col>
-            <Col sm={9}>
-                {isLoadingFields ? <InlineLoader /> : <div className="Fields">
-                    {fields.map((field) => {
+        return <div className="StudyStructure">
+            <div className="StudyStructureNavigator">
+                <ScrollShadow>
+                    <div className="StructureElements">
+                        {contents.map((structureElement) => {
+                            return <div key={structureElement.id} className="StructureElement">
+                                <div className="StructureElementName">
+                                    {structureElement.name}
+                                </div>
+                                <div className="Steps">
+                                    {structureElement.steps.map((step) => {
+                                        const active = selectedStep !== null && selectedStep.id === step.id;
+                                        return <button key={step.id}
+                                                       className={classNames('Step', active && 'active')}
+                                                       onClick={() => {
+                                                           this.handleStepSwitch(step)
+                                                       }}
+                                        >
+                                            {step.position}. {step.name}
+                                        </button>;
+                                    })}
+                                </div>
+                            </div>;
+                        })}
+                    </div>
+                </ScrollShadow>
+            </div>
+            <div className="StudyStructureContents">
+                <div className="Fields">
+                    {isLoadingFields ? <InlineLoader/> : fields.map((field) => {
                         const selected = selection.filter(({type, value}) => {
                             return (type === 'fieldId' && value === field.id) || (type === 'variableName' && value === field.variableName)
                         }).length > 0;
@@ -107,9 +108,9 @@ export default class StudyStructure extends Component {
                             dataType={dataType}
                         />;
                     })}
-                </div>}
-            </Col>
-        </Row>
+                </div>
+            </div>
+        </div>
     }
 
 }

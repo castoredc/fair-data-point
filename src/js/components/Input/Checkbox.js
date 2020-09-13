@@ -1,8 +1,7 @@
 import React from 'react';
 import {ValidatorComponent} from "react-form-validator-core";
-import Form from 'react-bootstrap/Form'
 import './Input.scss'
-import {ChoiceOption} from "@castoredc/matter";
+import {ChoiceOption, TextStyle} from "@castoredc/matter";
 
 export default class Checkbox extends ValidatorComponent {
     render() {
@@ -34,9 +33,9 @@ export default class Checkbox extends ValidatorComponent {
         }
 
         return (
-            <Form.Text className="InputError">
+            <TextStyle variation="error">
                 {this.getErrorMessage()}
-            </Form.Text>
+            </TextStyle>
         );
     }
 }

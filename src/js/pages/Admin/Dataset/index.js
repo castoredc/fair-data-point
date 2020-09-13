@@ -1,20 +1,18 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
-import {LinkContainer} from "react-router-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import DatasetDistributions from "../Dataset/DatasetDistributions";
 import AddDistribution from "../Dataset/AddDistribution";
 import DatasetMetadata from "./DatasetMetadata";
 import DatasetDetails from "./DatasetDetails";
 import {ViewHeader} from "@castoredc/matter";
-import BackButton from "../../../components/BackButton";
 import DocumentTitle from "../../../components/DocumentTitle";
+import SideBar from "../../../components/SideBar";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -50,6 +48,7 @@ export default class Dataset extends Component {
 
     render() {
         const {dataset, isLoadingDataset, catalog} = this.state;
+        const {location} = this.props;
 
         if (isLoadingDataset) {
             return <InlineLoader/>;
@@ -62,24 +61,37 @@ export default class Dataset extends Component {
         return <div className="PageContainer">
             <DocumentTitle title={'FDP Admin | Dataset' + (title ? ` | ${title}` : '')}/>
 
-            <div className="LeftNav">
-                <div className="Back">
-                    {catalog && <BackButton to={url + '/studies'}>Back to catalog</BackButton>}
-                </div>
+            <SideBar
+                back={catalog ? {
+                    to: url + '/studies',
+                    title: 'Back to catalog'
+                } : undefined}
+                location={location}
+                items={[
+                    {
+                        to: url + '/dataset/' + dataset.slug,
+                        exact: true,
+                        title: 'Dataset',
+                        customIcon: 'dataset'
+                    },
+                    {
+                        to: url + '/dataset/' + dataset.slug + '/metadata',
+                        exact: true,
+                        title: 'Metadata',
+                        customIcon: 'metadata'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: url + '/dataset/' + dataset.slug + '/distributions',
+                        exact: true,
+                        title: 'Distributions',
+                        customIcon: 'distribution'
+                    }
+                ]}
+            />
 
-                <Nav className="flex-column">
-                    <LinkContainer to={url + '/dataset/' + dataset.slug} exact={true}>
-                        <Nav.Link>Dataset</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={url + '/dataset/' + dataset.slug + '/metadata'} exact={true}>
-                        <Nav.Link>Metadata</Nav.Link>
-                    </LinkContainer>
-                    <hr/>
-                    <LinkContainer to={url + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
-                        <Nav.Link disabled={!dataset.hasMetadata}>Available data</Nav.Link>
-                    </LinkContainer>
-                </Nav>
-            </div>
             <div className="Page">
                 <div className="PageTitle">
                     <ViewHeader>{title ? title : 'Dataset'}</ViewHeader>

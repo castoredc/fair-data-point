@@ -2,9 +2,8 @@ import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
 import ListItem from "../../../components/ListItem";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Col, Row} from "react-bootstrap";
 import Layout from "../../../components/Layout";
 import Header from "../../../components/Layout/Header";
 import MainBody from "../../../components/Layout/MainBody";
@@ -84,30 +83,28 @@ export default class FAIRDataPointMain extends Component {
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={(isLoadingFDP || isLoadingCatalogs)}>
-                <Row>
-                    <div className="MainCol">
-                        {(fdp && fdp.description && !embedded) &&
-                            <div className="InformationDescription">
-                                {localizedText(fdp.description, 'en', true)}
-                            </div>}
+                <div className="MainCol">
+                    {(fdp && fdp.description && !embedded) &&
+                        <div className="InformationDescription">
+                            {localizedText(fdp.description, 'en', true)}
+                        </div>}
 
-                        <Heading type="Subsection">Catalogs</Heading>
-                        <div className="Description">
-                            Catalogs are collections metadata about resources, such as studies or datasets.
-                        </div>
-
-                        {catalogs.length > 0 ? catalogs.map((item, index) => {
-                            if(item.hasMetadata === false) {
-                                return null;
-                            }
-                            return <ListItem key={index}
-                                             newWindow={embedded}
-                                             link={item.relativeUrl}
-                                             title={localizedText(item.metadata.title, 'en')}
-                                             description={localizedText(item.metadata.description, 'en')} />
-                        }) : <div className="NoResults">No catalogs found.</div>}
+                    <Heading type="Subsection">Catalogs</Heading>
+                    <div className="Description">
+                        Catalogs are collections metadata about resources, such as studies or datasets.
                     </div>
-                </Row>
+
+                    {catalogs.length > 0 ? catalogs.map((item, index) => {
+                        if(item.hasMetadata === false) {
+                            return null;
+                        }
+                        return <ListItem key={index}
+                                         newWindow={embedded}
+                                         link={item.relativeUrl}
+                                         title={localizedText(item.metadata.title, 'en')}
+                                         description={localizedText(item.metadata.description, 'en')} />
+                    }) : <div className="NoResults">No catalogs found.</div>}
+                </div>
             </MainBody>
         </Layout>;
     }

@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import {Button} from "react-bootstrap";
 import Annotations from "../Annotations";
-import {Icon} from "@castoredc/matter";
+import {Button} from "@castoredc/matter";
 
 export default class OptionGroup extends Component {
     constructor(props) {
@@ -60,9 +59,7 @@ export default class OptionGroup extends Component {
                                 <div className="OptionGroupTableButton">
                                     <Button variant="link" onClick={() => {
                                         openModal(data)
-                                    }}>
-                                        <Icon type="add"/>
-                                    </Button>
+                                    }} icon="add" iconDescription="Add annotation" buttonType="secondary" />
                                 </div>
                             </div>;
                         })}

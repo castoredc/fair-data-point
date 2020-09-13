@@ -5,18 +5,16 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
-import Nav from "react-bootstrap/Nav";
-import {LinkContainer} from "react-router-bootstrap";
 import DataModelPrefixes from "./DataModelPrefixes";
 import DataModelModules from "./DataModelModules";
 import DataModelDetails from "./DataModelDetails";
 import DataModelNodes from "./DataModelNodes";
-import {Dropdown as CastorDropdown, ViewHeader} from "@castoredc/matter";
+import {ViewHeader} from "@castoredc/matter";
 import DataModelPreview from "./DataModelPreview";
-import FormItem from "../../../components/Form/FormItem";
 import DataModelVersions from "./DataModelVersions";
 import DataModelImportExport from "./DataModelImportExport";
 import DocumentTitle from "../../../components/DocumentTitle";
+import SideBar from "../../../components/SideBar";
 
 export default class DataModel extends Component {
     constructor(props) {
@@ -89,21 +87,22 @@ export default class DataModel extends Component {
     };
 
     handleVersionChange = (version) => {
-        const {currentVersion, versions} = this.state;
+        const {currentVersion} = this.state;
+        const newVersion = version.label;
 
-        const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + version + '/');
+        const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + newVersion + '/');
 
         if (window.location.pathname !== newUrl) {
             this.props.history.push(newUrl);
         } else {
             this.setState({
-                currentVersion: versions.find(({label}) => label === version),
+                currentVersion: version
             });
         }
     };
 
     render() {
-        const {match} = this.props;
+        const {location} = this.props;
         const {dataModel, isLoadingDataModel, versions, currentVersion} = this.state;
 
         if (!dataModel && isLoadingDataModel) {
@@ -112,61 +111,73 @@ export default class DataModel extends Component {
 
         return <div className="PageContainer">
             <DocumentTitle title={`FDP Admin | Data Model | ${dataModel.title}`}/>
-            <div className="LeftNav">
-                <Nav className="flex-column">
-                    <LinkContainer to={'/admin/model/' + dataModel.id} exact={true}>
-                        <Nav.Link>Data model</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/model/' + dataModel.id + '/versions'} exact={true}>
-                        <Nav.Link>Versions</Nav.Link>
-                    </LinkContainer>
 
-                    <hr/>
+            <SideBar
+                location={location}
+                onVersionChange={this.handleVersionChange}
+                items={[
+                    {
+                        to: '/admin/model/' + dataModel.id,
+                        exact: true,
+                        title: 'Data model',
+                        icon: 'structure'
+                    },
+                    {
+                        to: '/admin/model/' + dataModel.id + '/versions',
+                        exact: true,
+                        title: 'Versions',
+                        customIcon: 'versions'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        type: 'version',
+                        current: currentVersion,
+                        versions: versions
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: '/admin/model/' + dataModel.id + '/' + currentVersion.label + '/modules',
+                        exact: true,
+                        title: 'Modules',
+                        customIcon: 'modules'
+                    },
+                    {
+                        to: '/admin/model/' + dataModel.id + '/' + currentVersion.label + '/nodes',
+                        exact: true,
+                        title: 'Nodes',
+                        customIcon: 'node'
+                    },
+                    {
+                        to: '/admin/model/' + dataModel.id + '/' + currentVersion.label + '/prefixes',
+                        exact: true,
+                        title: 'Prefixes',
+                        customIcon: 'prefix'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: '/admin/model/' + dataModel.id + '/' + currentVersion.label + '/import-export',
+                        exact: true,
+                        title: 'Import/export',
+                        icon: 'upload'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: '/admin/model/' + dataModel.id + '/' + currentVersion.label + '/preview',
+                        exact: true,
+                        title: 'Preview',
+                        customIcon: 'preview'
+                    }
+                ]}
+            />
 
-                    <FormItem label="Version">
-                        <div className="Select">
-                            <CastorDropdown
-                                onChange={(e) => {
-                                    this.handleVersionChange(e.label)
-                                }}
-                                value={currentVersion}
-                                options={versions}
-                                menuPlacement="auto"
-                                width="fullWidth"
-                            />
-                        </div>
-                    </FormItem>
-
-                    <hr/>
-
-                    <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/import-export'}
-                                   exact={true}>
-                        <Nav.Link>Import/Export</Nav.Link>
-                    </LinkContainer>
-
-                    <hr/>
-
-                    <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/modules'}
-                                   exact={true}>
-                        <Nav.Link>Modules</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/nodes'}
-                                   exact={true}>
-                        <Nav.Link>Nodes</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/prefixes'}
-                                   exact={true}>
-                        <Nav.Link>Prefixes</Nav.Link>
-                    </LinkContainer>
-
-                    <hr/>
-
-                    <LinkContainer to={'/admin/model/' + dataModel.id + '/' + currentVersion.label + '/preview'}
-                                   exact={true}>
-                        <Nav.Link>Preview</Nav.Link>
-                    </LinkContainer>
-                </Nav>
-            </div>
             <div className="Page">
                 <div className="PageTitle">
                     <ViewHeader>{dataModel.title}</ViewHeader>
