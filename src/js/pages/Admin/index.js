@@ -12,6 +12,7 @@ import Catalog from "./Catalog";
 import Distribution from "./Distribution";
 import Dataset from "./Dataset";
 import Datasets from "./Home/Datasets";
+import CustomIcon from "../../components/Icon/CustomIcon";
 
 export default class Admin extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class Admin extends Component {
                     },
                     {
                         destination: <Link to={'/admin/catalogs'}/>,
-                        icon:        'folderClose',
+                        icon:        <CustomIcon type="catalog" />,
                         label:       'Catalogs',
                         isCurrent:   (
                                          matchPath(window.location.pathname, {
@@ -60,7 +61,7 @@ export default class Admin extends Component {
                     },
                     {
                         destination: <Link to={'/admin/datasets'}/>,
-                        icon:        'archive',
+                        icon:        <CustomIcon type="dataset" />,
                         label:       'Datasets',
                         isCurrent:   (
                                          matchPath(window.location.pathname, {
