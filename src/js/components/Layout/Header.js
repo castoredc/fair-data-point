@@ -102,20 +102,23 @@ export default class Header extends Component {
         const {embedded, className, title, badge, location, data, breadcrumbs, user} = this.props;
         const {mobile, smallHeader, showMenu, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
+        const adminMenuItems = [{
+            destination: '/admin',
+            icon:        'settings',
+            label:       'Admin',
+        }];
+
+        const defaultMenuItems = [{
+            destination: '/logout',
+            icon:        'logOut',
+            label:       'Log out',
+        }];
+
+        const menuItems = (user && user.isAdmin) ? [...adminMenuItems, ...defaultMenuItems] : defaultMenuItems;
+
         const menu = <div className="DropdownMenu">
             <Menu
-                items={[
-                    (user && user.isAdmin) && {
-                        destination: '/admin',
-                        icon:        'settings',
-                        label:       'Admin',
-                    },
-                    {
-                        destination: '/logout',
-                        icon:        'logOut',
-                        label:       'Log out',
-                    },
-                ]}
+                items={menuItems}
             />
         </div>;
 
