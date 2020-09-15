@@ -16,10 +16,10 @@ export default class Onboarding extends Component {
 
         this.state = {
             data:      {
-                firstName:  props.user.nameFirst ?? '',
-                middleName: props.user.nameMiddle ?? '',
-                lastName:   props.user.nameLast ?? '',
-                email:      props.user.emailAddress ?? '',
+                firstName:  props.user.details.firstName ?? '',
+                middleName: props.user.details.middleName ?? '',
+                lastName:   props.user.details.lastName ?? '',
+                email:      props.user.details.email ?? '',
             },
             isLoading: false,
             isSaved:   false,
@@ -103,7 +103,7 @@ export default class Onboarding extends Component {
             <header>
                 <h1>
                     <Emoji symbol="👋"/>&nbsp;
-                    Hi {user.nameFirst}!
+                    Hi {user.details.firstName}!
                 </h1>
                 <div className="Description">
                     Before you continue, please check your details below.
@@ -117,7 +117,7 @@ export default class Onboarding extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                {user.nameOrigin === 'orcid' && <>
+                {user.details.nameOrigin === 'orcid' && <>
                     <FormItem label="First Name">
                         <Input
                             validators={['required']}

@@ -141,7 +141,7 @@ export default class Header extends Component {
                             <div className="HeaderUserCol">
                                 {user ? <div>
                                     <Button icon="account" onClick={this.toggleMenu} isDropdown isOpen={showMenu}>
-                                        {user.fullName}
+                                        {user.details.fullName}
                                     </Button>
 
                                     {showMenu && menu}
@@ -176,7 +176,7 @@ export default class Header extends Component {
                             </div>
                             <div className="HeaderUserCol">
                                 {user ? <div>
-                                    <Button icon="account" iconDescription={user.fullName} onClick={this.toggleMenu}/>
+                                    <Button icon="account" iconDescription={user.details.fullName} onClick={this.toggleMenu}/>
                                     {showMenu && menu}
                                 </div> : <Button target="_blank"
                                                  href={'/login?path=' + encodeURIComponent(window.location.pathname)}
