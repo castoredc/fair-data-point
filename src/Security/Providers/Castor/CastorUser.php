@@ -169,7 +169,16 @@ class CastorUser implements ProviderUser
 
     public function hasAccessToStudy(string $studyId): bool
     {
+        if (! $this->isAuthenticated()) {
+            return false;
+        }
+
         return in_array($studyId, $this->studies, true);
+    }
+
+    public function isAuthenticated(): bool
+    {
+        return $this->token !== null;
     }
 
     /**
