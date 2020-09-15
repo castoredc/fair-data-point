@@ -26,3 +26,5 @@ yarn-error.log
 
 .npmrc
 bfg.jar
+.DS_Store
+public/.DS_Store
