@@ -29,18 +29,19 @@ class UpdateUserCommandHandler implements MessageHandlerInterface
         $user = $this->security->getUser();
         assert($user instanceof User);
 
-        if (! $user->getNameOrigin()->isOrcid()) {
+        if (! $user->hasOrcid() || ! $user->getPerson()->getNameOrigin()->isOrcid()) {
+            // We currently only allow people with an ORCID to change their details
             return;
         }
 
         /** @var User|null $dbUser */
         $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $user->getId()]);
 
-        $dbUser->setNameFirst($command->getFirstName());
-        $dbUser->setNameMiddle($command->getMiddleName());
-        $dbUser->setNameLast($command->getLastName());
-        $dbUser->setEmailAddress($command->getEmail());
-        $dbUser->setNameOrigin(NameOrigin::user());
+        $dbUser->getPerson()->setFirstName($command->getFirstName());
+        $dbUser->getPerson()->setMiddleName($command->getMiddleName());
+        $dbUser->getPerson()->setLastName($command->getLastName());
+        $dbUser->getPerson()->setEmail($command->getEmail());
+        $dbUser->getPerson()->setNameOrigin(NameOrigin::user());
 
         $this->em->persist($dbUser);
         $this->em->flush();

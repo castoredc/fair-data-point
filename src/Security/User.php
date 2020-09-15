@@ -3,18 +3,15 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\Enum\NameOrigin;
+use App\Entity\FAIRData\Person;
 use App\Security\Providers\Castor\CastorUser;
 use App\Security\Providers\Orcid\OrcidUser;
 use App\Traits\CreatedAt;
 use App\Traits\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function array_filter;
 use function array_merge;
-use function implode;
 use function strrchr;
-use function strtolower;
 use function substr;
 
 /**
@@ -36,29 +33,12 @@ class User implements UserInterface
      */
     private $id;
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Person", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
      *
-     * @var string
+     * @var Person|null
      */
-    private $nameFirst;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *
-     * @var string|null
-     */
-    private $nameMiddle;
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $nameLast;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *
-     * @var string|null
-     */
-    private $emailAddress;
+    private $person;
     /**
      * @ORM\OneToOne(targetEntity="App\Security\Providers\Castor\CastorUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
      * @ORM\JoinColumn(name="castor_user_id", referencedColumnName="id")
@@ -73,23 +53,13 @@ class User implements UserInterface
      * @var OrcidUser|null
      */
     private $orcid;
-    /**
-     * @ORM\Column(type="NameOriginType")
-     *
-     * @var NameOrigin
-     */
-    private $nameOrigin;
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
 
-    public function __construct(string $nameFirst, ?string $nameMiddle, string $nameLast, NameOrigin $nameOrigin, ?string $emailAddress)
+    public function __construct(?Person $person)
     {
-        $this->nameFirst = $nameFirst;
-        $this->nameMiddle = $nameMiddle;
-        $this->nameLast = $nameLast;
-        $this->nameOrigin = $nameOrigin;
-        $this->emailAddress = $emailAddress !== null ? strtolower($emailAddress) : null;
+        $this->person = $person;
     }
 
     public function isEqualTo(UserInterface $user): bool
@@ -140,10 +110,6 @@ class User implements UserInterface
 
     public function getUsername(): string
     {
-        if ($this->emailAddress !== null) {
-            return $this->emailAddress;
-        }
-
         if ($this->hasOrcid()) {
             return $this->orcid->getOrcid();
         }
@@ -155,6 +121,19 @@ class User implements UserInterface
         return '';
     }
 
+    public function getEmailAddress(): ?string
+    {
+        if ($this->getPerson() !== null) {
+            return $this->person->getEmail();
+        }
+
+        if ($this->hasCastorUser()) {
+            return $this->castorUser->getEmailAddress();
+        }
+
+        return null;
+    }
+
     public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
@@ -163,53 +142,6 @@ class User implements UserInterface
     public function getId(): string
     {
         return $this->id;
-    }
-
-    public function getFullName(): string
-    {
-        $names = array_filter([$this->nameFirst, $this->nameMiddle, $this->nameLast]);
-
-        return implode(' ', $names);
-    }
-
-    public function getNameFirst(): string
-    {
-        return $this->nameFirst;
-    }
-
-    public function setNameFirst(string $nameFirst): void
-    {
-        $this->nameFirst = $nameFirst;
-    }
-
-    public function getNameMiddle(): ?string
-    {
-        return $this->nameMiddle;
-    }
-
-    public function setNameMiddle(?string $nameMiddle): void
-    {
-        $this->nameMiddle = $nameMiddle;
-    }
-
-    public function getNameLast(): string
-    {
-        return $this->nameLast;
-    }
-
-    public function setNameLast(string $nameLast): void
-    {
-        $this->nameLast = $nameLast;
-    }
-
-    public function getEmailAddress(): string
-    {
-        return $this->emailAddress ?? '';
-    }
-
-    public function setEmailAddress(string $emailAddress): void
-    {
-        $this->emailAddress = $emailAddress;
     }
 
     public function hasCastorUser(): bool
@@ -242,13 +174,13 @@ class User implements UserInterface
         $this->orcid = $orcid;
     }
 
-    public function getNameOrigin(): NameOrigin
+    public function getPerson(): ?Person
     {
-        return $this->nameOrigin;
+        return $this->person;
     }
 
-    public function setNameOrigin(NameOrigin $nameOrigin): void
+    public function setPerson(?Person $person): void
     {
-        $this->nameOrigin = $nameOrigin;
+        $this->person = $person;
     }
 }
