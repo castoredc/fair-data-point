@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Agent;
 
+use App\Entity\Enum\NameOrigin;
 use App\Entity\FAIRData\Person;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermissionToStudy;
@@ -53,7 +54,8 @@ class AddStudyContactCommandHandler implements MessageHandlerInterface
                 $command->getLastName(),
                 $command->getEmail(),
                 null,
-                $command->getOrcid() !== null ? new Iri($command->getOrcid()) : null
+                $command->getOrcid() !== null ? new Iri($command->getOrcid()) : null,
+                NameOrigin::peer()
             );
         }
 

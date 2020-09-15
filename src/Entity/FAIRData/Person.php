@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\Enum\NameOrigin;
 use App\Entity\Iri;
+use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use function array_filter;
+use function implode;
+use function strtolower;
 
 /**
  * @ORM\Entity
@@ -36,9 +41,9 @@ class Person extends Agent
     private $lastName;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
-     * @var string
+     * @var string|null
      */
     private $email;
 
@@ -56,30 +61,44 @@ class Person extends Agent
      */
     private $orcid;
 
-    public function __construct(string $firstName, ?string $middleName, string $lastName, string $email, ?string $phoneNumber, ?Iri $orcid)
+    /**
+     * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="person")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *
+     * @var User|null
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="NameOriginType")
+     *
+     * @var NameOrigin
+     */
+    private $nameOrigin;
+
+    public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)
     {
-        $slugify = new Slugify();
-
-        $fullName = $middleName !== null && $middleName !== '' ? $firstName . ' ' . $middleName . ' ' . $lastName : $firstName . ' ' . $lastName;
-        parent::__construct($slugify->slugify($fullName), $fullName);
-
         $this->firstName = $firstName;
         $this->middleName = $middleName;
         $this->lastName = $lastName;
-        $this->email = $email;
+        $this->email = $email !== null ? strtolower($email) : null;
         $this->phoneNumber = $phoneNumber;
         $this->orcid = $orcid;
+        $this->nameOrigin = $nameOrigin;
+
+        $slugify = new Slugify();
+        $fullName = $this->getFullName();
+        parent::__construct($slugify->slugify($fullName), $fullName);
     }
 
-    public function generateFullName(): void
+    public function getFullName(): string
     {
-        if ($this->middleName !== null && $this->middleName !== '') {
-            $fullName = $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
-        } else {
-            $fullName = $this->firstName . ' ' . $this->lastName;
-        }
+        $names = array_filter([$this->firstName, $this->middleName, $this->lastName]);
 
+        $fullName = implode(' ', $names);
         parent::setName($fullName);
+
+        return $fullName;
     }
 
     public function getRelativeUrl(): string
@@ -147,6 +166,26 @@ class Person extends Agent
         $this->orcid = $orcid;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getNameOrigin(): NameOrigin
+    {
+        return $this->nameOrigin;
+    }
+
+    public function setNameOrigin(NameOrigin $nameOrigin): void
+    {
+        $this->nameOrigin = $nameOrigin;
+    }
+
     /**
      * @param array<mixed> $data
      */
@@ -158,7 +197,8 @@ class Person extends Agent
             $data['lastName'],
             $data['email'],
             $data['phonenumber'] ?? null,
-            isset($data['orcid']) ? new Iri($data['orcid']) : null
+            isset($data['orcid']) ? new Iri($data['orcid']) : null,
+            NameOrigin::peer()
         );
 
         if ($id !== null) {

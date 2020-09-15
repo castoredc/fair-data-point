@@ -14,16 +14,37 @@ export default class Onboarding extends Component {
     constructor(props) {
         super(props);
 
+
         this.state = {
-            data:      {
-                firstName:  props.user.nameFirst ?? '',
-                middleName: props.user.nameMiddle ?? '',
-                lastName:   props.user.nameLast ?? '',
-                email:      props.user.emailAddress ?? '',
-            },
+            data:      this.parseUserDetails(props.user),
             isLoading: false,
             isSaved:   false,
         };
+    }
+
+    parseUserDetails = (user) => {
+        let details = {
+            firstName:  '',
+            middleName: '',
+            lastName:   '',
+            email:      '',
+        }
+
+        if(typeof user.suggestions !== "undefined")
+        {
+            details.firstName = user.suggestions.firstName;
+            details.lastName = user.suggestions.lastName;
+        }
+
+        if(user.details !== null)
+        {
+            details.firstName = user.details.firstName;
+            details.middleName = user.details.middleName;
+            details.lastName = user.details.lastName;
+            details.email = user.details.email;
+        }
+
+        return details;
     }
 
     handleChange = (event) => {
@@ -86,7 +107,7 @@ export default class Onboarding extends Component {
         if (isSaved) {
             const params = queryString.parse(location.search);
 
-            window.location.href = (typeof params.origin !== 'undefined') ? params.origin : '/';
+            // window.location.href = (typeof params.origin !== 'undefined') ? params.origin : '/';
         }
 
         return <>
@@ -103,7 +124,7 @@ export default class Onboarding extends Component {
             <header>
                 <h1>
                     <Emoji symbol="👋"/>&nbsp;
-                    Hi {user.nameFirst}!
+                    Hi {data.firstName}!
                 </h1>
                 <div className="Description">
                     Before you continue, please check your details below.
@@ -117,7 +138,7 @@ export default class Onboarding extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                {user.nameOrigin === 'orcid' && <>
+                {user.wizards.details && <>
                     <FormItem label="First Name">
                         <Input
                             validators={['required']}
@@ -145,7 +166,7 @@ export default class Onboarding extends Component {
                     </FormItem>
                 </>}
 
-                <FormItem label="Email address">
+                {user.wizards.email && <FormItem label="Email address">
                     <Input
                         validators={['required', 'isEmail']}
                         errorMessages={[required, invalid]}
@@ -153,8 +174,7 @@ export default class Onboarding extends Component {
                         onChange={this.handleChange}
                         value={data.email}
                     />
-                </FormItem>
-
+                </FormItem>}
 
                 <div className="FormButtons">
                     <Stack distribution="trailing">

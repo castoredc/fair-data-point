@@ -97,7 +97,7 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
                         $dbAgent->setEmail($agent->getEmail());
                         $dbAgent->setOrcid($agent->getOrcid());
                         $dbAgent->setPhoneNumber($agent->getPhoneNumber());
-                        $dbAgent->generateFullName();
+                        $dbAgent->setName($dbAgent->getFullName());
                     }
                 } else {
                     throw new InvalidAgentType();
