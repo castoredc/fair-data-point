@@ -11,8 +11,11 @@ use App\Traits\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
+use function preg_replace;
+use function strpos;
 use function strrchr;
 use function substr;
+use function trim;
 
 /**
  * @ORM\Entity
@@ -132,6 +135,42 @@ class User implements UserInterface
         }
 
         return null;
+    }
+
+    public function shouldShowDetailsSuggestions(): bool
+    {
+        return $this->getEmailAddress() === null;
+    }
+
+    /** @return mixed[] */
+    public function getDetailsSuggestions(): array
+    {
+        $firstName = '';
+        $lastName = '';
+
+        if ($this->hasOrcid()) {
+            $name = trim($this->orcid->getName());
+            $lastName = strpos($name, ' ') === false ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+            $firstName = trim(preg_replace('#' . $lastName . '#', '', $name));
+        }
+
+        return [$firstName, $lastName];
+    }
+
+    /** @return mixed[] */
+    public function getWizards(): array
+    {
+        $wizards = [];
+
+        if ($this->getEmailAddress() === null) {
+            $wizards['email'] = true;
+        }
+
+        if ($this->getPerson() === null) {
+            $wizards['details'] = true;
+        }
+
+        return $wizards;
     }
 
     public function eraseCredentials(): void

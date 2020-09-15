@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Wizard;
 
+use App\Security\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function count;
 
 class UserOnboardingWizardController extends AbstractController
 {
@@ -15,6 +17,13 @@ class UserOnboardingWizardController extends AbstractController
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (count($user->getWizards()) === 0) {
+            return $this->redirectToRoute('fdp');
+        }
 
         return $this->render('react.html.twig');
     }

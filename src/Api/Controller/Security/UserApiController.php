@@ -50,7 +50,11 @@ class UserApiController extends ApiController
             throw new NotFoundHttpException();
         }
 
-        if (! $user->hasOrcid() || ! $user->getPerson()->getNameOrigin()->isOrcid()) {
+        if (! $user->hasOrcid()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if ($user->getPerson() !== null && ! $user->getPerson()->getNameOrigin()->isOrcid()) {
             throw new AccessDeniedHttpException();
         }
 

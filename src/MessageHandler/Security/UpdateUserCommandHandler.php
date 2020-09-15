@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\MessageHandler\Security;
 
 use App\Entity\Enum\NameOrigin;
+use App\Entity\FAIRData\Person;
+use App\Entity\Iri;
 use App\Message\Security\UpdateUserCommand;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,20 +31,36 @@ class UpdateUserCommandHandler implements MessageHandlerInterface
         $user = $this->security->getUser();
         assert($user instanceof User);
 
-        if (! $user->hasOrcid() || ! $user->getPerson()->getNameOrigin()->isOrcid()) {
-            // We currently only allow people with an ORCID to change their details
+        // We currently only allow people with an ORCID to change their details
+        if (! $user->hasOrcid()) {
+            return;
+        }
+
+        if ($user->getPerson() !== null && ! $user->getPerson()->getNameOrigin()->isOrcid()) {
             return;
         }
 
         /** @var User|null $dbUser */
         $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $user->getId()]);
+        $dbPerson = $dbUser->getPerson();
 
-        $dbUser->getPerson()->setFirstName($command->getFirstName());
-        $dbUser->getPerson()->setMiddleName($command->getMiddleName());
-        $dbUser->getPerson()->setLastName($command->getLastName());
-        $dbUser->getPerson()->setEmail($command->getEmail());
-        $dbUser->getPerson()->setNameOrigin(NameOrigin::user());
+        if ($dbPerson !== null) {
+            $dbPerson->setFirstName($command->getFirstName());
+            $dbPerson->setMiddleName($command->getMiddleName());
+            $dbPerson->setLastName($command->getLastName());
+            $dbPerson->setEmail($command->getEmail());
+            $dbPerson->setNameOrigin(NameOrigin::user());
 
+            $person = $dbPerson;
+        } else {
+            $orcid = $user->hasOrcid() ? new Iri($user->getOrcid()->getOrcid()) : null;
+            $person = new Person($command->getFirstName(), $command->getMiddleName(), $command->getLastName(), $command->getEmail(), null, $orcid, NameOrigin::user());
+        }
+
+        $dbUser->setPerson($person);
+        $person->setUser($dbUser);
+
+        $this->em->persist($person);
         $this->em->persist($dbUser);
         $this->em->flush();
     }

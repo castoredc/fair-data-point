@@ -23,7 +23,7 @@ class UserApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return [
+        $data = [
             'id' => $this->user->getId(),
             'details' => $this->user->getPerson() !== null ? (new PersonApiResource($this->user->getPerson()))->toArray() : null,
             'isAdmin' => in_array('ROLE_ADMIN', $this->user->getRoles(), true),
@@ -31,6 +31,18 @@ class UserApiResource implements ApiResource
                 'castor' => $this->user->hasCastorUser() ? $this->user->getCastorUser()->toArray() : false,
                 'orcid' => $this->user->hasOrcid() ? $this->user->getOrcid()->toArray() : false,
             ],
+            'wizards' => $this->user->getWizards(),
         ];
+
+        if ($this->user->shouldShowDetailsSuggestions()) {
+            $suggestions = $this->user->getDetailsSuggestions();
+
+            $data['suggestions'] = [
+                'firstName' => $suggestions[0],
+                'lastName' => $suggestions[1],
+            ];
+        }
+
+        return $data;
     }
 }

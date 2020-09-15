@@ -66,10 +66,6 @@ class OrcidAuthenticator extends Authenticator
 
     private function createNewUser(OrcidUser $orcidUser): User
     {
-//        $name = trim($orcidUser->getName());
-//        $lastName = strpos($name, ' ') === false ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-//        $firstName = trim(preg_replace('#' . $lastName . '#', '', $name));
-
         return new User(null);
     }
 
