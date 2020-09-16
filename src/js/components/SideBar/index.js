@@ -20,7 +20,7 @@ export default class SideBar extends Component {
             {back && <div className="Back">
                 <BackButton to={back.to}>{back.title}</BackButton>
             </div>}
-            <ScrollShadow>
+            <ScrollShadow className="SideBarScrollShadow">
                 <div className="SideBarNav">
                     {items.map((item, index) => {
                         if (typeof item.type !== 'undefined') {
