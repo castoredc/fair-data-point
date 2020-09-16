@@ -102,20 +102,23 @@ export default class Header extends Component {
         const {embedded, className, title, badge, location, data, breadcrumbs, user} = this.props;
         const {mobile, smallHeader, showMenu, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
+        const adminMenuItems = [{
+            destination: '/admin',
+            icon:        'settings',
+            label:       'Admin',
+        }];
+
+        const defaultMenuItems = [{
+            destination: '/logout',
+            icon:        'logOut',
+            label:       'Log out',
+        }];
+
+        const menuItems = (user && user.isAdmin) ? [...adminMenuItems, ...defaultMenuItems] : defaultMenuItems;
+
         const menu = <div className="DropdownMenu">
             <Menu
-                items={[
-                    (user && user.isAdmin) && {
-                        destination: '/admin',
-                        icon:        'settings',
-                        label:       'Admin',
-                    },
-                    {
-                        destination: '/logout',
-                        icon:        'logOut',
-                        label:       'Log out',
-                    },
-                ]}
+                items={menuItems}
             />
         </div>;
 
@@ -141,7 +144,7 @@ export default class Header extends Component {
                             <div className="HeaderUserCol">
                                 {user ? <div>
                                     <Button icon="account" onClick={this.toggleMenu} isDropdown isOpen={showMenu}>
-                                        {user.fullName}
+                                        {user.details.fullName}
                                     </Button>
 
                                     {showMenu && menu}
@@ -176,7 +179,7 @@ export default class Header extends Component {
                             </div>
                             <div className="HeaderUserCol">
                                 {user ? <div>
-                                    <Button icon="account" iconDescription={user.fullName} onClick={this.toggleMenu}/>
+                                    <Button icon="account" iconDescription={user.details.fullName} onClick={this.toggleMenu}/>
                                     {showMenu && menu}
                                 </div> : <Button target="_blank"
                                                  href={'/login?path=' + encodeURIComponent(window.location.pathname)}

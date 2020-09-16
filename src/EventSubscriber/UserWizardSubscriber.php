@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
+use function count;
 use function is_array;
 use function urlencode;
 
@@ -65,7 +66,7 @@ class UserWizardSubscriber implements EventSubscriberInterface
 
     private function shouldShowWizard(User $user): bool
     {
-        return $user->getEmailAddress() === '';
+        return count($user->getWizards()) > 0;
     }
 
     /** @inheritDoc */

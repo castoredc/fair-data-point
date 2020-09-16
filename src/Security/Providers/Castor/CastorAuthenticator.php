@@ -7,6 +7,7 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\NameOrigin;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Person;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -83,13 +84,22 @@ class CastorAuthenticator extends Authenticator
 
     private function createNewUser(CastorUser $castorUser): User
     {
-        return new User(
-            $castorUser->getNameFirst(),
-            $castorUser->getNameMiddle(),
-            $castorUser->getNameLast(),
-            NameOrigin::castor(),
-            $castorUser->getEmailAddress()
-        );
+        /** @var Person|null $person */
+        $person = $this->em->getRepository(Person::class)->findOneBy(['email' => $castorUser->getEmailAddress()]);
+
+        if ($person === null) {
+            $person = new Person(
+                $castorUser->getNameFirst(),
+                $castorUser->getNameMiddle(),
+                $castorUser->getNameLast(),
+                $castorUser->getEmailAddress(),
+                null,
+                null,
+                NameOrigin::castor()
+            );
+        }
+
+        return new User($person);
     }
 
     private function getCastorClient(): OAuth2ClientInterface
