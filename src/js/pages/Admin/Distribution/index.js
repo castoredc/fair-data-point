@@ -86,12 +86,14 @@ export default class Distribution extends Component {
                 {
                     to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents',
                     exact: true,
-                    title: 'Mappings'
+                    title: 'Mappings',
+                    icon: 'order'
                 },
                 {
                     to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log',
                     exact: true,
                     title: 'Log',
+                    icon: 'summary'
                 }
             );
         } else if(distribution.type === 'csv') {

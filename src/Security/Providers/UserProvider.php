@@ -57,9 +57,12 @@ abstract class UserProvider extends AbstractProvider implements UserProviderInte
             $castorUser = $user->getCastorUser();
             $dbCastorUser = $dbUser->getCastorUser();
 
-            $dbCastorUser->setToken($castorUser->getToken());
             $dbCastorUser->setServer($castorUser->getServer());
-            $dbCastorUser->setStudies($castorUser->getStudies());
+
+            if ($castorUser->isAuthenticated()) {
+                $dbCastorUser->setToken($castorUser->getToken());
+                $dbCastorUser->setStudies($castorUser->getStudies());
+            }
 
             $dbUser->setCastorUser($dbCastorUser);
         }

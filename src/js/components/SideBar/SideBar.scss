@@ -6,6 +6,8 @@
   flex: 0 0 208px;
   font-weight: 700;
   background: $pale-grey;
+  display: flex;
+  flex-direction: column;
 
   .SideBarNav {
     margin: 0 16px;

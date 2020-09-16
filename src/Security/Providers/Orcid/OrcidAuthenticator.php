@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Security\Providers\Orcid;
 
-use App\Entity\Enum\NameOrigin;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
@@ -13,9 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use function preg_replace;
-use function strpos;
-use function trim;
 
 class OrcidAuthenticator extends Authenticator
 {
@@ -70,11 +66,7 @@ class OrcidAuthenticator extends Authenticator
 
     private function createNewUser(OrcidUser $orcidUser): User
     {
-        $name = trim($orcidUser->getName());
-        $lastName = strpos($name, ' ') === false ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-        $firstName = trim(preg_replace('#' . $lastName . '#', '', $name));
-
-        return new User($firstName, null, $lastName, NameOrigin::orcid(), null);
+        return new User(null);
     }
 
     private function getOrcidClient(): OAuth2ClientInterface
