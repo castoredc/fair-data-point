@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, FileSelector, Heading} from "@castoredc/matter";
+import {Button, FileSelector, Heading, Stack} from "@castoredc/matter";
 import axios from "axios";
 import {downloadFile, isNumeric} from "../../../util";
 import {toast} from "react-toastify";
@@ -153,39 +153,37 @@ export default class DataModelImportExport extends Component {
         }
 
         return <div className="PageBody">
-            <div>
-                <Heading type="Subsection">Export model</Heading>
+            <Stack>
+                <div>
+                    <Heading type="Subsection">Import model</Heading>
+                    <ValidatorForm
+                        ref={node => (this.form = node)}
+                        onSubmit={this.import}
+                        method="post"
+                    >
+                        <FileSelector onChange={this.onFileChange} accept="application/json"/>
 
-                <Button onClick={this.export} icon="download" disabled={isExporting}>Export model</Button>
-            </div>
+                        <FormItem label="New version number">
+                            <Input
+                                validators={['required', 'isValidVersion', 'isNonExistentVersion']}
+                                errorMessages={[required, invalidVersion, versionExists]}
+                                name="version"
+                                onChange={this.handleChange}
+                                value={data.version}
+                            />
+                        </FormItem>
 
-            <hr/>
+                        <Button type="submit" icon="upload" disabled={(file === null || isImporting)}>
+                            Import model
+                        </Button>
+                    </ValidatorForm>
+                </div>
+                <div>
+                    <Heading type="Subsection">Export model</Heading>
 
-            <div>
-                <Heading type="Subsection">Import model</Heading>
-                <ValidatorForm
-                    ref={node => (this.form = node)}
-                    onSubmit={this.import}
-                    method="post"
-                >
-                    <FileSelector onChange={this.onFileChange} accept="application/json"/>
-
-                    <FormItem label="New version number">
-                        <Input
-                            validators={['required', 'isValidVersion', 'isNonExistentVersion']}
-                            errorMessages={[required, invalidVersion, versionExists]}
-                            name="version"
-                            onChange={this.handleChange}
-                            value={data.version}
-                        />
-                    </FormItem>
-
-                    <Button type="submit" icon="upload" disabled={(file === null || isImporting)}>
-                        Import model
-                    </Button>
-                </ValidatorForm>
-            </div>
-
+                    <Button onClick={this.export} icon="download" disabled={isExporting}>Export model</Button>
+                </div>
+            </Stack>
 
         </div>;
     }

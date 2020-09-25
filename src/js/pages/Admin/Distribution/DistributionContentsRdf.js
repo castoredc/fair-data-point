@@ -148,7 +148,7 @@ export default class DistributionContentsRdf extends Component {
                                      />,
                         },
                         module: {
-                            title:   'Modules',
+                            title:   'Groups',
                             content: <DataModelMappingsDataTable
                                          dataset={dataset}
                                          distribution={distribution}

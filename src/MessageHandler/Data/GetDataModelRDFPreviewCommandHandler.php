@@ -53,6 +53,8 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
         $modules = $dataModel->getModules();
         $prefixes = $dataModel->getPrefixes();
 
+        $dataModelTriples = [];
+
         foreach ($prefixes as $prefix) {
             /** @var NamespacePrefix $prefix */
             EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
@@ -87,12 +89,14 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                     $fullGraph->add($subjectInFullGraph, $predicateUri, $fullGraph->resource($this->getValue($object)));
                     $moduleGraph->add($subjectInModuleGraph, $predicateUri, $moduleGraph->resource($this->getValue($object)));
                 }
+
+                $dataModelTriples[] = $triple;
             }
 
             $modulePreviews[] = new DataModelModuleRDFPreviewApiResource($module, $moduleGraph->serialise('turtle'));
         }
 
-        return new DataModelRDFPreviewApiResource($modulePreviews, $fullGraph->serialise('turtle'));
+        return new DataModelRDFPreviewApiResource($dataModelTriples, $modulePreviews, $fullGraph->serialise('turtle'));
     }
 
     private function getValue(Node $node): string

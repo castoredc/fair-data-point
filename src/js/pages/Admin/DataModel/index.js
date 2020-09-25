@@ -142,7 +142,7 @@ export default class DataModel extends Component {
                     {
                         to: '/admin/model/' + dataModel.id + '/' + currentVersion.label + '/modules',
                         exact: true,
-                        title: 'Modules',
+                        title: 'Groups',
                         customIcon: 'modules'
                     },
                     {

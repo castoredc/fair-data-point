@@ -61,6 +61,12 @@
       flex: 1;
       overflow: auto;
 
+      .FullHeightPageTab {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
       & > div {
         /* Matter Tabs */
         height: 100%;

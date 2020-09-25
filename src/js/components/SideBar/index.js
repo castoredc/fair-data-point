@@ -29,7 +29,7 @@ export default class SideBar extends Component {
                             } else if (item.type === 'component') {
                                 return item.contents;
                             } else if (item.type === 'version') {
-                                return <FormItem label="Version" className="SideBarNavVersion">
+                                return <FormItem label="Version" className="SideBarNavVersion" key={`sitebar-item-${index}`}>
                                     <div className="Select">
                                         <CastorDropdown
                                             onChange={onVersionChange}
@@ -52,7 +52,7 @@ export default class SideBar extends Component {
                                 to={item.to}
                                 exact={item.exact}
                                 className={classNames('SideBarNavItem', item.active && 'Active', active && 'Active', item.disabled && 'Disabled')}
-                                key={`sidetabs-${index}`}>
+                                key={`sitebar-item-${index}`}>
                             <span className="SideBarNavItemIcon">
                                 {item.icon && <Icon type={item.icon}/>}
                                 {item.customIcon && <CustomIcon type={item.customIcon}/>}

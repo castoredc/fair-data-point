@@ -16,6 +16,9 @@
 
   hr {
     margin: 10px 0 14px 0;
+    border-color: $neutral-40;
+    border-style: solid;
+    border-top: 0;
   }
 
   .SideBarNavItem {
