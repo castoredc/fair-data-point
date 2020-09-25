@@ -61,14 +61,14 @@ export default class DataModelPreview extends Component {
             if (element.repeated) {
                 icons.push({
                     icon: 'copy',
-                    title: 'This module is repeated'
+                    title: 'This group is repeated'
                 });
             }
 
             if (element.dependent) {
                 icons.push({
                     icon: 'decision',
-                    title: 'This module is dependent'
+                    title: 'This group is dependent'
                 });
             }
 
