@@ -11,6 +11,47 @@
   opacity: 0.5;
 }
 
+.StudyLink {
+  border: 1px solid $neutral-50;
+  border-radius: 4px;
+  padding: 16px;
+  max-width: 40rem;
+  display: flex;
+
+  .StudyIcon {
+    margin-right: 16px;
+    margin-top: 5px;
+    
+    svg path {
+      fill: $neutral-300;
+    }
+  }
+
+  .StudyDetails {
+    flex: 1;
+  }
+
+  .StudyName {
+    margin-bottom: 10px;
+
+    dl {
+      margin: 0;
+
+      dt {
+        float: left;
+        width: 100px;
+        font-weight: 600;
+        margin: 0;
+        padding: 0 16px 0 0;
+      }
+      dd {
+        margin: 0;
+        padding: 0 0 8px;
+      }
+    }
+  }
+}
+
 .FormButtons {
   padding-top: 25px;
   margin-top: 25px;
