@@ -11,7 +11,7 @@ class Alert extends Component {
         return <div className={classNames('AlertMessage', 'AlertMessage-' + variant, form && 'AlertMessageForm')}>
             <div className="AlertMessageBorder" />
 
-            <Stack spacing="none">
+            <Stack spacing="none" wrap={false}>
                 {icon && <div className="AlertIcon">
                     <Icon type={icon}/>
                 </div>}
