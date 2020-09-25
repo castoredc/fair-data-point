@@ -153,7 +153,7 @@ export default class DataModelModuleModal extends Component {
         return <Modal
             show={show}
             handleClose={handleClose}
-            title={data.id ? 'Edit module' : 'Add module'}
+            title={data.id ? 'Edit group' : 'Add group'}
             closeButton
             className={classNames('DataModelModuleFormModal', data.dependent && 'ShowDependencyEditor')}
             footer={(
@@ -163,17 +163,17 @@ export default class DataModelModuleModal extends Component {
                         distribution="equalSpacing"
                     >
                         {data.id && <ConfirmModal
-                            title="Delete module"
-                            action="Delete module"
+                            title="Delete group"
+                            action="Delete group"
                             variant="danger"
                             onConfirm={this.handleDelete}
                             includeButton={true}
                         >
-                            Are you sure you want to delete module <strong>{data.title}</strong>?<br/>
+                            Are you sure you want to delete group <strong>{data.title}</strong>?<br/>
                             This will also delete all associated triples.
                         </ConfirmModal>}
                         <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
-                            {data.id ? 'Edit module' : 'Add module'}
+                            {data.id ? 'Edit group' : 'Add group'}
                         </Button>
                     </Stack>
                 </div>

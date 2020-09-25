@@ -59,28 +59,35 @@ export default class DataModelPreview extends Component {
             let icons = [];
 
             if (element.repeated) {
-                icons.push('copy');
+                icons.push({
+                    icon: 'copy',
+                    title: 'This module is repeated'
+                });
             }
 
             if (element.dependent) {
-                icons.push('decision');
+                icons.push({
+                    icon: 'decision',
+                    title: 'This module is dependent'
+                });
             }
 
             return {
                 number:  element.order,
                 title:   element.title,
                 icons:   icons,
-                content: <DataModelModulePreview repeated={element.repeated} dependent={element.dependent} dependencies={element.dependencies} rdf={element.rdf} />
+                content: <DataModelModulePreview repeated={element.repeated} dependent={element.dependent} dependencies={element.dependencies} rdf={element.rdf} visualization={element.visualization} />
             }
         });
 
         return <div className="PageBody">
             {previews.modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
                 hasTabs
+                title="Groups"
                 tabs={[
                     {
                         title: 'Full data model',
-                        content: <DataModelModulePreview rdf={previews.full} />
+                        content: <DataModelModulePreview rdf={previews.full} visualization={previews.visualization} />
                     },
                     {
                         type: 'separator'

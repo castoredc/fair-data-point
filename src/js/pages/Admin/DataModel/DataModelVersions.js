@@ -92,7 +92,7 @@ export default class DataModelVersions extends Component {
                         template:  'fixed',
                     },
                     moduleCount: {
-                        header:    'Modules',
+                        header:    'Groups',
                         resizable: true,
                         template:  'fixed',
                     },

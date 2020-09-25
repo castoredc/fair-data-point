@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {classNames} from "../../util";
 import './SideTabs.scss';
-import {Icon} from "@castoredc/matter";
+import {Icon, Stack, Tooltip} from "@castoredc/matter";
+import ScrollShadow from "../ScrollShadow";
 
 export default class SideTabs extends Component {
     constructor(props) {
@@ -19,33 +20,52 @@ export default class SideTabs extends Component {
     };
 
     render() {
-        const { tabs, hasButtons = false, hasTabs = false } = this.props;
-        const { activeTab } = this.state;
+        const {tabs, hasButtons = false, hasTabs = false, title, actions} = this.props;
+        const {activeTab} = this.state;
 
-        return <div className={classNames('SideTabs', hasButtons && 'HasButtons', hasTabs && 'HasTabs')}>
+        return <div
+            className={classNames('SideTabs', hasButtons && 'HasButtons', title && 'HasTitle', hasTabs && 'HasTabs')}>
             <div className="SideTabsNav">
-                {tabs.map((tab, index) => {
-                    if(typeof tab.type !== 'undefined')
-                    {
-                        if(tab.type === 'separator') {
-                            return <hr key={`sidetabs-${index}`}/>;
-                        }
-                    }
-                    else {
-                        return <button
-                            onClick={() => this.changeTab(index)}
-                            className={classNames('SideTabsNavItem', activeTab === index && 'Active')}
-                            key={`sidetabs-${index}`}>
-                            {tab.number && <span className="SideTabsNavItemNumber">{tab.number}</span>}
-                            {tab.title}
+                {(title || actions) && <div className="SideTabsHeader">
+                    <Stack distribution="equalSpacing">
+                        {title && <div className="SideTabsHeaderTitle">
+                            {title}
+                        </div>}
 
-                            {tab.badge && <span className="SideTabsNavItemBadge">{tab.badge}</span>}
-                            {(tab.icons && tab.icons.length > 0) && <span className="SideTabsNavItemIcons">
-                                {tab.icons.map((icon, key) => <Icon type={icon} key={`sidetabs-icon-${index}`} width="12px" height="12px" />)}
-                            </span>}
-                        </button>
-                    }
-                })}
+                        {actions && <div className="SideTabsHeaderActions">
+                            {actions}
+                        </div>}
+                    </Stack>
+                </div>}
+                <ScrollShadow className="SideTabsScrollable">
+                    {tabs.map((tab, index) => {
+                        if (typeof tab.type !== 'undefined') {
+                            if (tab.type === 'separator') {
+                                return <hr key={`sidetabs-${index}`}/>;
+                            }
+                        } else {
+                            return <button
+                                onClick={() => this.changeTab(index)}
+                                className={classNames('SideTabsNavItem', activeTab === index && 'Active')}
+                                key={`sidetabs-${index}`}>
+                                {tab.number && <span className="SideTabsNavItemNumber">{tab.number}</span>}
+                                <span className="SideTabsNavItemTitle">{tab.title}</span>
+
+                                {tab.badge && <span className="SideTabsNavItemBadge">{tab.badge}</span>}
+                                {(tab.icons && tab.icons.length > 0) && <span className="SideTabsNavItemIcons">
+                                    {tab.icons.map((icon, key) => <span className="SideTabsNavItemIcon"><Tooltip
+                                        content={icon.title}
+                                        hideOnBlur
+                                    >
+                                        <Icon type={icon.icon} key={`sidetabs-icon-${index}`} width="12px"
+                                              height="12px"/>
+                                    </Tooltip>
+                                    </span>)}
+                                </span>}
+                            </button>
+                        }
+                    })}
+                </ScrollShadow>
             </div>
             <div className="SideTabsContent">
                 {tabs[activeTab].content}

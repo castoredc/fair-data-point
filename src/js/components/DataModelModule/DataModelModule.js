@@ -8,22 +8,15 @@ export default class DataModelModule extends Component {
 
         return <div className="DataModelModule">
             <div className="ButtonBar">
-                <Stack
-                    alignment="normal"
-                    distribution="equalSpacing"
-                >
-                    <Button icon="add" onClick={openAddModuleModal}>Add module</Button>
-
-                    <Stack>
-                        <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
-                            Edit module
-                        </Button>
-                        <Button icon="add" onClick={() => {
-                            openTripleModal(null)
-                        }}>
-                            Add triple
-                        </Button>
-                    </Stack>
+                <Stack distribution="trailing">
+                    <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
+                        Edit group
+                    </Button>
+                    <Button icon="add" onClick={() => {
+                        openTripleModal(null)
+                    }}>
+                        Add triple
+                    </Button>
                 </Stack>
             </div>
 
@@ -34,7 +27,7 @@ export default class DataModelModule extends Component {
                     <div>Object</div>
                 </div>
 
-                {groupedTriples.length === 0 ? <div className="NoResults">This module does not contain triples.</div> :
+                {groupedTriples.length === 0 ? <div className="NoResults">This group does not contain triples.</div> :
                     <div className="DataModelTableBody TableBody">
                         {groupedTriples.map((element) => {
                             return <TripleGroup
