@@ -5,8 +5,6 @@ namespace App\Api\Resource\Data\Visualization;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\RecordNode;
-use App\Entity\Data\DataModel\Node\ValueNode;
 
 class VisualizationNodeApiResource implements ApiResource
 {

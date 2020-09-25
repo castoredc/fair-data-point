@@ -5,11 +5,6 @@ namespace App\Api\Resource\Data\Visualization;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\NamespacePrefix;
-use App\Entity\Data\DataModel\Node\ExternalIriNode;
-use App\Entity\Data\DataModel\Node\InternalIriNode;
-use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Triple;
 
 class VisualizationEdgeApiResource implements ApiResource
@@ -47,7 +42,7 @@ class VisualizationEdgeApiResource implements ApiResource
             'from' => $this->triple->getSubject()->getId(),
             'to' => $this->triple->getObject()->getId(),
             'label' => $prefixedValue,
-            'arrows' => 'to'
+            'arrows' => 'to',
         ];
     }
 }

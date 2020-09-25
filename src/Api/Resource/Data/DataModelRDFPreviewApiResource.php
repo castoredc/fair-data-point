@@ -6,8 +6,8 @@ namespace App\Api\Resource\Data;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Data\Visualization\VisualizationEdgeApiResource;
 use App\Api\Resource\Data\Visualization\VisualizationNodeApiResource;
-use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Triple;
+use function array_values;
 
 class DataModelRDFPreviewApiResource implements ApiResource
 {
@@ -21,7 +21,7 @@ class DataModelRDFPreviewApiResource implements ApiResource
     private $rdfPreview;
 
     /**
-     * @param Triple[] $triples
+     * @param Triple[]                               $triples
      * @param DataModelModuleRDFPreviewApiResource[] $modulePreviews
      */
     public function __construct(array $triples, array $modulePreviews, string $rdfPreview)
@@ -45,7 +45,7 @@ class DataModelRDFPreviewApiResource implements ApiResource
         $visualizationEdges = [];
         $visualizationNodes = [];
 
-        foreach($this->triples as $triple) {
+        foreach ($this->triples as $triple) {
             /** @var Triple $triple */
             $visualizationNodes[$triple->getSubject()->getId()] = (new VisualizationNodeApiResource($triple->getSubject()))->toArray();
             $visualizationNodes[$triple->getObject()->getId()] = (new VisualizationNodeApiResource($triple->getObject()))->toArray();
