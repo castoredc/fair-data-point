@@ -4,18 +4,29 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Data\Visualization\VisualizationEdgeApiResource;
+use App\Api\Resource\Data\Visualization\VisualizationNodeApiResource;
+use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataModel\Triple;
 
 class DataModelRDFPreviewApiResource implements ApiResource
 {
+    /** @var Triple[] */
+    private $triples;
+
     /** @var DataModelModuleRDFPreviewApiResource[] */
     private $modulePreviews;
 
     /** @var string */
     private $rdfPreview;
 
-    /** @param DataModelModuleRDFPreviewApiResource[] $modulePreviews */
-    public function __construct(array $modulePreviews, string $rdfPreview)
+    /**
+     * @param Triple[] $triples
+     * @param DataModelModuleRDFPreviewApiResource[] $modulePreviews
+     */
+    public function __construct(array $triples, array $modulePreviews, string $rdfPreview)
     {
+        $this->triples = $triples;
         $this->modulePreviews = $modulePreviews;
         $this->rdfPreview = $rdfPreview;
     }
@@ -31,9 +42,24 @@ class DataModelRDFPreviewApiResource implements ApiResource
             $data[] = $modulePreview->toArray();
         }
 
+        $visualizationEdges = [];
+        $visualizationNodes = [];
+
+        foreach($this->triples as $triple) {
+            /** @var Triple $triple */
+            $visualizationNodes[$triple->getSubject()->getId()] = (new VisualizationNodeApiResource($triple->getSubject()))->toArray();
+            $visualizationNodes[$triple->getObject()->getId()] = (new VisualizationNodeApiResource($triple->getObject()))->toArray();
+
+            $visualizationEdges[] = (new VisualizationEdgeApiResource($triple))->toArray();
+        }
+
         return [
             'modules' => $data,
             'full' => $this->rdfPreview,
+            'visualization' => [
+                'edges' => $visualizationEdges,
+                'nodes' => array_values($visualizationNodes),
+            ],
         ];
     }
 }
