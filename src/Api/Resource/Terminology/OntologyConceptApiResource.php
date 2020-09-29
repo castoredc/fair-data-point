@@ -8,8 +8,7 @@ use App\Entity\Terminology\OntologyConcept;
 
 class OntologyConceptApiResource implements ApiResource
 {
-    /** @var OntologyConcept */
-    private $concept;
+    private OntologyConcept $concept;
 
     public function __construct(OntologyConcept $concept)
     {

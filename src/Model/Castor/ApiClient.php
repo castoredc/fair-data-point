@@ -42,31 +42,25 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Throwable;
+use function assert;
 use function iterator_to_array;
 use function json_decode;
 
 class ApiClient
 {
-    /** @var string */
-    private $token = '';
+    private string $token = '';
 
-    /** @var Client */
-    private $client;
+    private Client $client;
 
-    /** @var string */
-    private $server;
+    private string $server;
 
-    /** @var int */
-    private $pageSize = 1000;
+    private int $pageSize = 1000;
 
-    /** @var RecordFactory */
-    private $recordFactory;
+    private RecordFactory $recordFactory;
 
-    /** @var InstituteFactory */
-    private $instituteFactory;
+    private InstituteFactory $instituteFactory;
 
-    /** @var CastorUserFactory */
-    private $castorUserFactory;
+    private CastorUserFactory $castorUserFactory;
 
     public function __construct(RecordFactory $recordFactory, InstituteFactory $instituteFactory, CastorUserFactory $castorUserFactory)
     {
@@ -298,8 +292,8 @@ class ApiClient
             $results->set($field->getId(), $field);
         }
 
-        /** @var ArrayIterator $iterator */
         $iterator = $results->getIterator();
+        assert($iterator instanceof ArrayIterator);
 
         $iterator->uasort(static function (Field $a, Field $b) {
             if ($a->getNumber() === $b->getNumber()) {
@@ -406,6 +400,7 @@ class ApiClient
                         $surveyStep->setFields($fields->toArray());
                         $steps[] = $surveyStep;
                     }
+
                     $tempSurvey->setSteps($steps);
                 }
 
@@ -458,6 +453,7 @@ class ApiClient
 
                     $tempReport->addStep($newStep);
                 }
+
                 $tempReport->setStepParent();
                 $reports->add($tempReport);
             }

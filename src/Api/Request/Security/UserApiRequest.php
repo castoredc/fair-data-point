@@ -9,31 +9,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $firstName;
+    private string $firstName;
+
+    /** @Assert\Type("string") */
+    private ?string $middleName = null;
 
     /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $middleName;
-
-    /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $lastName;
+    private string $lastName;
 
     /**
-     * @var string|null
      * @Assert\NotBlank()
      * @Assert\Email()
      */
-    private $email;
+    private ?string $email = null;
 
     protected function parse(): void
     {

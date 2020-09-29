@@ -7,17 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CatalogMetadataApiRequest extends MetadataApiRequest
 {
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $homepage;
+    /** @Assert\Type("string") */
+    private ?string $homepage = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $logo;
+    /** @Assert\Type("string") */
+    private ?string $logo = null;
 
     protected function parse(): void
     {

@@ -12,14 +12,13 @@ use App\Message\Data\UpdateDataModelModuleCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -71,8 +70,8 @@ class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
             if ($rule instanceof DataModelDependencyGroup) {
                 $this->parseDependencies($rule);
             } elseif ($rule instanceof DataModelDependencyRule) {
-                /** @var ValueNode|null $node */
                 $node = $this->em->getRepository(ValueNode::class)->find($rule->getNodeId());
+                assert($node instanceof ValueNode || $node === null);
 
                 if ($node === null) {
                     throw new NotFound();

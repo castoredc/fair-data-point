@@ -7,8 +7,6 @@ use App\Entity\Enum\NameOrigin;
 
 class NameOriginType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'NameOriginType';
-    /** @inheritDoc */
-    protected $class = NameOrigin::class;
+    protected string $name = 'NameOriginType';
+    protected string $class = NameOrigin::class;
 }

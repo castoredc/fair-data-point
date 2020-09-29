@@ -8,14 +8,11 @@ use DateTime;
 
 abstract class Instance
 {
-    /** @var string */
-    protected $id;
+    protected string $id;
 
-    /** @var Record */
-    protected $record;
+    protected Record $record;
 
-    /** @var DateTime */
-    protected $createdOn;
+    protected DateTime $createdOn;
 
     public function __construct(string $id, Record $record, DateTime $createdOn)
     {

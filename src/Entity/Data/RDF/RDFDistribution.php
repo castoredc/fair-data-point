@@ -12,6 +12,7 @@ use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 
 /**
  * @ORM\Entity
@@ -23,18 +24,14 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModel
      */
-    private $dataModel;
+    private DataModel $dataModel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $currentDataModelVersion;
+    private DataModelVersion $currentDataModelVersion;
 
     /**
      * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist", "remove"}, fetch="EAGER")
@@ -42,14 +39,10 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
      *
      * @var Collection<DataModelMapping>
      */
-    private $mappings;
+    private Collection $mappings;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $isCached = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $isCached = false;
 
     public function getDataModel(): DataModel
     {
@@ -113,7 +106,7 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
     {
         foreach ($this->getNodeMappings() as $mapping) {
-            /** @var DataModelNodeMapping $mapping */
+            assert($mapping instanceof DataModelNodeMapping);
             if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
                 return $mapping;
             }
@@ -125,7 +118,7 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
     {
         foreach ($this->getModuleMappings() as $mapping) {
-            /** @var DataModelModuleMapping $mapping */
+            assert($mapping instanceof DataModelModuleMapping);
             if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
                 return $mapping;
             }

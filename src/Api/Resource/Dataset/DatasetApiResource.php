@@ -10,8 +10,7 @@ use App\Entity\FAIRData\Dataset;
 
 class DatasetApiResource implements ApiResource
 {
-    /** @var Dataset */
-    private $dataset;
+    private Dataset $dataset;
 
     public function __construct(Dataset $dataset)
     {

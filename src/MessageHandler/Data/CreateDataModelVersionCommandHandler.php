@@ -26,15 +26,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
-    /** @var VersionNumberHelper */
-    private $versionNumberHelper;
+    private EntityManagerInterface $em;
+    private Security $security;
+    private VersionNumberHelper $versionNumberHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
     {
@@ -72,7 +70,8 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 
         // Add prefixes
         foreach ($latestVersion->getPrefixes() as $prefix) {
-            /** @var NamespacePrefix $prefix */
+            assert($prefix instanceof NamespacePrefix);
+
             $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
         }
 
@@ -80,7 +79,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         $nodes = new ArrayCollection();
 
         foreach ($latestVersion->getNodes() as $node) {
-            /** @var Node $node */
+            assert($node instanceof Node);
             if ($node instanceof RecordNode) {
                 $newNode = new RecordNode($newVersion);
             } elseif ($node instanceof InternalIriNode) {

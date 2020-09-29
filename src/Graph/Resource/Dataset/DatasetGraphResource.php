@@ -13,8 +13,7 @@ use EasyRdf_Graph;
 
 class DatasetGraphResource implements GraphResource
 {
-    /** @var Dataset */
-    private $dataset;
+    private Dataset $dataset;
 
     public function __construct(Dataset $dataset)
     {

@@ -11,35 +11,22 @@ use function boolval;
 class NodeApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $title;
+    private string $title;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $description;
+    /** @Assert\Type("string") */
+    private ?string $description = null;
 
-    /**
-     * @var string
-     * @Assert\Type("string")
-     */
-    private $value;
+    /** @Assert\Type("string") */
+    private string $value;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $dataType;
+    /** @Assert\Type("string") */
+    private ?string $dataType = null;
 
-    /**
-     * @var bool
-     * @Assert\Type("bool")
-     */
-    private $repeated;
+    /** @Assert\Type("bool") */
+    private bool $repeated;
 
     protected function parse(): void
     {

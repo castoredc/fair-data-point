@@ -12,7 +12,7 @@ use function sort;
 class StudyMetadataFilterApiResource implements ApiResource
 {
     /** @var StudyMetadata[] */
-    private $metadata;
+    private array $metadata;
 
     /**
      * @param StudyMetadata[] $metadata

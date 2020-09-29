@@ -8,8 +8,7 @@ use App\Entity\Castor\Structure\Step\Step;
 
 class StepApiResource implements ApiResource
 {
-    /** @var Step */
-    private $step;
+    private Step $step;
 
     public function __construct(Step $step)
     {

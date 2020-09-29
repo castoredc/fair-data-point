@@ -9,10 +9,9 @@ use App\Entity\Study;
 class StudiesApiResource implements ApiResource
 {
     /** @var Study[] */
-    private $studies;
+    private array $studies;
 
-    /** @var bool */
-    private $isAdmin;
+    private bool $isAdmin;
 
     /**
      * @param Study[] $studies

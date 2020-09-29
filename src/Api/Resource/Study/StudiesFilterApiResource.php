@@ -10,7 +10,7 @@ use App\Entity\Study;
 class StudiesFilterApiResource implements ApiResource
 {
     /** @var Study[] */
-    private $studies;
+    private array $studies;
 
     /**
      * @param Study[] $studies

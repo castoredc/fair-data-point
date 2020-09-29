@@ -22,14 +22,11 @@ use function assert;
 
 class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
     {
@@ -66,8 +63,8 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
 
         assert($study instanceof CastorStudy);
 
-        /** @var DataModelModule|null $module */
         $module = $this->em->getRepository(DataModelModule::class)->find($command->getModule());
+        assert($module instanceof DataModelModule || $module === null);
 
         if ($module === null || ! $module->isRepeated()) {
             throw new NotFound();

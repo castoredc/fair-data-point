@@ -7,6 +7,6 @@ use App\Exception\RenderableApiException;
 
 class NoFileSpecified extends RenderableApiException
 {
-    /** @var string */
+    /** @inheritDoc */
     protected $message = 'No file specified.';
 }

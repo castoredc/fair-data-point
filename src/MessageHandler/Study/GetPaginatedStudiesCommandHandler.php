@@ -10,14 +10,13 @@ use App\Repository\StudyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetPaginatedStudiesCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -27,8 +26,8 @@ class GetPaginatedStudiesCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetPaginatedStudiesCommand $message): PaginatedResultCollection
     {
-        /** @var StudyRepository $datasetRepository */
         $datasetRepository = $this->em->getRepository(Study::class);
+        assert($datasetRepository instanceof StudyRepository);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 

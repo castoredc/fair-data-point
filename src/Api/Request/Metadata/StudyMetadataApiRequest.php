@@ -13,79 +13,49 @@ use Symfony\Component\Validator\Constraints as Assert;
 class StudyMetadataApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $briefName;
+    private string $briefName;
+
+    /** @Assert\Type("string") */
+    private ?string $scientificName = null;
+
+    /** @Assert\Type("string") */
+    private string $briefSummary;
 
     /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $scientificName;
-
-    /**
-     * @var string
-     * @Assert\Type("string")
-     */
-    private $briefSummary;
-
-    /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $type;
+    private string $type;
+
+    /** @Assert\Type("string") */
+    private ?string $condition = null;
+
+    /** @Assert\Type("string") */
+    private ?string $intervention = null;
 
     /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $condition;
-
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $intervention;
-
-    /**
-     * @var int
      * @Assert\NotBlank()
      * @Assert\Type("integer")
      */
-    private $estimatedEnrollment;
+    private int $estimatedEnrollment;
 
-    /**
-     * @var string|null
-     * @Assert\Date()
-     */
-    private $estimatedStudyStartDate;
+    /** @Assert\Date() */
+    private ?string $estimatedStudyStartDate = null;
 
-    /**
-     * @var string|null
-     * @Assert\Date()
-     */
-    private $estimatedStudyCompletionDate;
+    /** @Assert\Date() */
+    private ?string $estimatedStudyCompletionDate = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $summary;
+    /** @Assert\Type("string") */
+    private ?string $summary = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $recruitmentStatus;
+    /** @Assert\Type("string") */
+    private ?string $recruitmentStatus = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $methodType;
+    /** @Assert\Type("string") */
+    private ?string $methodType = null;
 
     protected function parse(): void
     {

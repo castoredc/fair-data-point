@@ -12,11 +12,9 @@ use function implode;
 
 class ApiClient
 {
-    /** @var Client */
-    private $client;
+    private Client $client;
 
-    /** @var string */
-    private $webhookUrl;
+    private string $webhookUrl;
 
     public function __construct(string $webhookUrl = '')
     {

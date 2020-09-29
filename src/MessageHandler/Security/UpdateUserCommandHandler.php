@@ -15,10 +15,8 @@ use function assert;
 
 class UpdateUserCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
+    private EntityManagerInterface $em;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -40,8 +38,8 @@ class UpdateUserCommandHandler implements MessageHandlerInterface
             return;
         }
 
-        /** @var User|null $dbUser */
         $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $user->getId()]);
+        assert($dbUser instanceof User || $dbUser === null);
         $dbPerson = $dbUser->getPerson();
 
         if ($dbPerson !== null) {

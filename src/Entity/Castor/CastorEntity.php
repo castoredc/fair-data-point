@@ -10,6 +10,7 @@ use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CastorEntityRepository")
@@ -31,54 +32,36 @@ abstract class CastorEntity
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
-     *
-     * @var string
      */
-    protected $id;
+    protected string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
-     *
-     * @var CastorStudy|null
      */
-    protected $study;
+    protected ?CastorStudy $study = null;
 
-    /**
-     * @ORM\Column(type="StructureType", name="structure_type", nullable=true)
-     *
-     * @var StructureType|null
-     */
-    protected $structureType;
+    /** @ORM\Column(type="StructureType", name="structure_type", nullable=true) */
+    protected ?StructureType $structureType = null;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    protected $label;
+    /** @ORM\Column(type="string") */
+    protected string $label;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    protected $slug;
+    /** @ORM\Column(type="string") */
+    protected string $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Terminology\Annotation", mappedBy="entity", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<string, Annotation>
      */
-    protected $annotations;
+    protected Collection $annotations;
 
     /**
      * @ORM\ManyToOne(targetEntity="CastorEntity",cascade={"persist"})
      * @ORM\JoinColumn(name="parent", referencedColumnName="id")
-     *
-     * @var CastorEntity|null
      */
-    private $parent;
+    private ?CastorEntity $parent = null;
 
     public function __construct(string $id, string $label, CastorStudy $study, ?StructureType $structureType)
     {
@@ -141,7 +124,7 @@ abstract class CastorEntity
         $return = [];
 
         foreach ($this->annotations as $annotation) {
-            /** @var Annotation $annotation */
+            assert($annotation instanceof Annotation);
             if ($annotation->getConcept()->getOntology() !== $ontology) {
                 continue;
             }
@@ -155,7 +138,7 @@ abstract class CastorEntity
     public function hasAnnotation(OntologyConcept $ontologyConcept): bool
     {
         foreach ($this->annotations as $annotation) {
-            /** @var Annotation $annotation */
+            assert($annotation instanceof Annotation);
             if ($annotation->getConcept() === $ontologyConcept) {
                 return true;
             }

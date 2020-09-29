@@ -16,6 +16,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class CastorStudyApiController extends ApiController
 {
@@ -26,14 +27,14 @@ class CastorStudyApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var User $user */
         $user = $this->getUser();
+        assert($user instanceof User);
 
         try {
             $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, true, $request->get('hide') !== null));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new StudiesApiResource($handledStamp->getResult(), false))->toArray());
         } catch (HandlerFailedException $e) {
@@ -42,6 +43,7 @@ class CastorStudyApiController extends ApiController
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
+
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }

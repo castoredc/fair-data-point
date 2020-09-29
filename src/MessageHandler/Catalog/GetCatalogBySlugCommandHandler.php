@@ -10,14 +10,13 @@ use App\Message\Catalog\GetCatalogBySlugCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -27,8 +26,8 @@ class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetCatalogBySlugCommand $command): Catalog
     {
-        /** @var Catalog|null $catalog */
         $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $command->getSlug()]);
+        assert($catalog instanceof Catalog || $catalog === null);
 
         if ($catalog === null) {
             throw new CatalogNotFound();

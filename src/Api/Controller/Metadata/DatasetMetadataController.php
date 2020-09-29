@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/metadata/dataset/{dataset}")
@@ -30,8 +31,8 @@ class DatasetMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataset);
 
         try {
-            /** @var DatasetMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(DatasetMetadataApiRequest::class, $request);
+            assert($parsed instanceof DatasetMetadataApiRequest);
 
             $bus->dispatch(
                 new CreateDatasetMetadataCommand(

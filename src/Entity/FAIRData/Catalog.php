@@ -10,6 +10,7 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 use function count;
 
 /**
@@ -25,25 +26,17 @@ class Catalog implements AccessibleEntity
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $slug;
+    /** @ORM\Column(type="string") */
+    private string $slug;
 
     /**
      * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
-     *
-     * @var FAIRDataPoint|null
      */
-    private $fairDataPoint;
+    private ?FAIRDataPoint $fairDataPoint = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="Dataset", inversedBy="catalogs",cascade={"persist"})
@@ -51,7 +44,7 @@ class Catalog implements AccessibleEntity
      *
      * @var Collection<Dataset>
      */
-    private $datasets;
+    private Collection $datasets;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Study", inversedBy="catalogs", cascade={"persist"})
@@ -59,21 +52,13 @@ class Catalog implements AccessibleEntity
      *
      * @var Collection<Study>
      */
-    private $studies;
+    private Collection $studies;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $acceptSubmissions = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $acceptSubmissions = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $submissionAccessesData = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $submissionAccessesData = false;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog", fetch="EAGER")
@@ -81,7 +66,7 @@ class Catalog implements AccessibleEntity
      *
      * @var Collection<CatalogMetadata>
      */
-    private $metadata;
+    private Collection $metadata;
 
     public function __construct(string $slug)
     {
@@ -133,7 +118,7 @@ class Catalog implements AccessibleEntity
         $datasets = [];
 
         foreach ($this->datasets as $dataset) {
-            /** @var Dataset $dataset */
+            assert($dataset instanceof Dataset);
             if (! $dataset->isPublished()) {
                 continue;
             }
@@ -154,7 +139,7 @@ class Catalog implements AccessibleEntity
         $studies = [];
 
         foreach ($this->studies as $study) {
-            /** @var Study $study */
+            assert($study instanceof Study);
             if (! $study->isPublished()) {
                 continue;
             }

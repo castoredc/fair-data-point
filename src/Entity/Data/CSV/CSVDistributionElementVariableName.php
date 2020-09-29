@@ -10,12 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CSVDistributionElementVariableName extends CSVDistributionElement
 {
-    /**
-     * @ORM\Column(type="text")
-     *
-     * @var string
-     */
-    private $variableName;
+    /** @ORM\Column(type="text") */
+    private string $variableName;
 
     public function __construct(string $variableName)
     {

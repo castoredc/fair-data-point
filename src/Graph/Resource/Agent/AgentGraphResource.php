@@ -9,8 +9,7 @@ use EasyRdf_Graph;
 
 abstract class AgentGraphResource implements GraphResource
 {
-    /** @var Agent */
-    protected $agent;
+    protected Agent $agent;
 
     public function __construct(Agent $agent)
     {

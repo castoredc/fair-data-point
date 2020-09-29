@@ -21,10 +21,8 @@ class DistributionGenerationRecordLog
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Record", cascade={"persist"})
@@ -32,32 +30,24 @@ class DistributionGenerationRecordLog
      *     @ORM\JoinColumn(name="record", referencedColumnName="record_id", nullable=false),
      *     @ORM\JoinColumn(name="study", referencedColumnName="study_id", nullable=false)
      * })
-     *
-     * @var Record
      */
-    private $record;
+    private Record $record;
 
     /**
      * @ORM\ManyToOne(targetEntity="DistributionGenerationLog", inversedBy="records", cascade={"persist"})
      * @ORM\JoinColumn(name="log", referencedColumnName="id", nullable=false)
-     *
-     * @var DistributionGenerationLog
      */
-    private $log;
+    private DistributionGenerationLog $log;
 
-    /**
-     * @ORM\Column(type="DistributionGenerationStatusType")
-     *
-     * @var DistributionGenerationStatus
-     */
-    private $status;
+    /** @ORM\Column(type="DistributionGenerationStatusType") */
+    private DistributionGenerationStatus $status;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      *
      * @var mixed[]|null
      */
-    private $errors;
+    private ?array $errors = null;
 
     public function __construct(Record $record)
     {

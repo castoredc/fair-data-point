@@ -22,16 +22,14 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class CreateStudyCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
-    /** @var ApiClient */
-    private $apiClient;
+    private EntityManagerInterface $em;
+    private Security $security;
+    private ApiClient $apiClient;
 
     public function __construct(EntityManagerInterface $em, Security $security, ApiClient $apiClient)
     {
@@ -56,8 +54,8 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
 
         $source = $command->getSource();
 
-        /** @var StudyRepository $repository */
         $repository = $this->em->getRepository(Study::class);
+        assert($repository instanceof StudyRepository);
 
         if ($command->getSourceId() !== null && $repository->studyExists($source, $command->getSourceId())) {
             throw new StudyAlreadyExists();
@@ -98,11 +96,11 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
     {
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
-        /** @var CastorServerRepository $serverRepository */
         $serverRepository = $this->em->getRepository(CastorServer::class);
+        assert($serverRepository instanceof CastorServerRepository);
 
-        /** @var User $user */
         $user = $this->security->getUser();
+        assert($user instanceof User);
 
         if (! $user->hasCastorUser()) {
             throw new UserNotACastorUser();

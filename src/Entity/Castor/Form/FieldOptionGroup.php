@@ -13,17 +13,14 @@ use function boolval;
  */
 class FieldOptionGroup extends CastorEntity
 {
-    /** @var string|null */
-    private $name;
+    private ?string $name = null;
 
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
-    /** @var bool */
-    private $layout;
+    private bool $layout;
 
     /** @var FieldOption[]|null */
-    private $options;
+    private ?array $options = null;
 
     /**
      * @param FieldOption[]|null $options
@@ -153,6 +150,7 @@ class FieldOptionGroup extends CastorEntity
                 $options[] = FieldOption::fromData($option, $study);
             }
         }
+
         $group = new FieldOptionGroup(
             $data['id'],
             $study,

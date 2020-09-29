@@ -7,14 +7,13 @@ use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Iri;
+use function assert;
 
 class IriApiResource implements ApiResource
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /** @var Iri */
-    private $iri;
+    private Iri $iri;
 
     public function __construct(DataModelVersion $dataModel, Iri $iri)
     {
@@ -34,7 +33,7 @@ class IriApiResource implements ApiResource
         $prefixedValue = null;
 
         foreach ($prefixes as $prefix) {
-            /** @var NamespacePrefix $prefix */
+            assert($prefix instanceof NamespacePrefix);
             if ($prefix->getUri()->getValue() !== $iriPrefix) {
                 continue;
             }

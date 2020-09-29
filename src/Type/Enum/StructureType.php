@@ -7,9 +7,6 @@ use App\Entity\Enum\StructureType as Enum;
 
 class StructureType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'StructureType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'StructureType';
+    protected string $class = Enum::class;
 }

@@ -7,14 +7,11 @@ use App\Entity\Data\Log\DistributionGenerationLog;
 
 class GetDistributionGenerationRecordLogsCommand
 {
-    /** @var DistributionGenerationLog */
-    private $log;
+    private DistributionGenerationLog $log;
 
-    /** @var int */
-    private $perPage;
+    private int $perPage;
 
-    /** @var int */
-    private $page;
+    private int $page;
 
     public function __construct(DistributionGenerationLog $log, int $perPage, int $page)
     {

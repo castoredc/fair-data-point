@@ -10,12 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CSVDistributionElementFieldId extends CSVDistributionElement
 {
-    /**
-     * @ORM\Column(type="text")
-     *
-     * @var string
-     */
-    private $fieldId;
+    /** @ORM\Column(type="text") */
+    private string $fieldId;
 
     public function __construct(string $fieldId)
     {

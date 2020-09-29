@@ -8,8 +8,7 @@ use App\Entity\FAIRData\FAIRDataPoint;
 
 class FAIRDataPointApiResource implements ApiResource
 {
-    /** @var FAIRDataPoint */
-    private $fairDataPoint;
+    private FAIRDataPoint $fairDataPoint;
 
     public function __construct(FAIRDataPoint $fairDataPoint)
     {

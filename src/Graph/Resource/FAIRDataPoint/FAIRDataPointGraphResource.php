@@ -11,8 +11,7 @@ use EasyRdf_Graph;
 
 class FAIRDataPointGraphResource implements GraphResource
 {
-    /** @var FAIRDataPoint */
-    private $fairDataPoint;
+    private FAIRDataPoint $fairDataPoint;
 
     public function __construct(FAIRDataPoint $fairDataPoint)
     {

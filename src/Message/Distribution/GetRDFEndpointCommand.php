@@ -7,8 +7,7 @@ use App\Entity\Data\RDF\RDFDistribution;
 
 class GetRDFEndpointCommand
 {
-    /** @var RDFDistribution */
-    private $distribution;
+    private RDFDistribution $distribution;
 
     public function __construct(RDFDistribution $distribution)
     {

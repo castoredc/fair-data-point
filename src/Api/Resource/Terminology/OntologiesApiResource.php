@@ -9,7 +9,7 @@ use App\Entity\Terminology\Ontology;
 class OntologiesApiResource implements ApiResource
 {
     /** @var Ontology[] */
-    private $ontologies;
+    private array $ontologies;
 
     /**
      * @param Ontology[] $ontologies

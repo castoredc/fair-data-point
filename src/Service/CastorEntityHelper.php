@@ -26,12 +26,9 @@ use function assert;
 
 class CastorEntityHelper
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EntityManagerInterface $em;
+    private ApiClient $apiClient;
+    private EncryptionService $encryptionService;
 
     /**
      * @throws UserNotACastorUser
@@ -55,24 +52,24 @@ class CastorEntityHelper
 
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
+        assert($repository instanceof CastorEntityRepository);
 
         return $repository->findByIdAndStudy($study, $id);
     }
 
     public function getEntitiesFromDatabaseByType(CastorStudy $study, CastorEntityType $type): CastorEntityCollection
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
+        assert($repository instanceof CastorEntityRepository);
 
         return new CastorEntityCollection($repository->findByStudyAndType($study, $type->getClassName()));
     }
 
     public function getEntitiesFromDatabaseByParent(CastorStudy $study, CastorEntity $parent): CastorEntityCollection
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
+        assert($repository instanceof CastorEntityRepository);
 
         return new CastorEntityCollection($repository->findByStudyAndParent($study, $parent));
     }
@@ -147,8 +144,8 @@ class CastorEntityHelper
         // Entities from Castor are leading, since they contain more information
 
         foreach ($dbEntities as $dbEntity) {
-            /** @var CastorEntity|null $castorEntity */
             $castorEntity = $castorEntities->getById($dbEntity->getId());
+            assert($castorEntity instanceof CastorEntity || $castorEntity === null);
 
             if ($castorEntity === null) {
                 continue;
@@ -180,11 +177,11 @@ class CastorEntityHelper
     {
         $institutes = new ArrayCollection();
 
-        /** @var CastorInstituteRepository $repository */
         $repository = $this->em->getRepository(Institute::class);
+        assert($repository instanceof CastorInstituteRepository);
 
-        /** @var CountryRepository $countryRepository */
         $countryRepository = $this->em->getRepository(Country::class);
+        assert($countryRepository instanceof CountryRepository);
         $countries = $countryRepository->getAllCountriesWithCastorIds();
 
         $castorInstitutes = $this->apiClient->getInstitutes($study);
@@ -193,10 +190,8 @@ class CastorEntityHelper
         foreach ($castorInstitutes as $castorInstitute) {
             assert($castorInstitute instanceof Institute);
 
-            /**
-             * @var Institute|null $dbInstitute
-             */
             $dbInstitute = $dbInstitutes->get($castorInstitute->getId());
+            assert($dbInstitute instanceof Institute || $dbInstitute === null);
 
             if ($dbInstitute === null) {
                 $dbInstitute = $castorInstitute;
@@ -223,8 +218,8 @@ class CastorEntityHelper
         $institutes = $this->getInstitutes($study);
         $records = new ArrayCollection();
 
-        /** @var CastorRecordRepository $repository */
         $repository = $this->em->getRepository(Record::class);
+        assert($repository instanceof CastorRecordRepository);
 
         $castorRecords = $this->apiClient->getRecords($study, $institutes);
         $dbRecords = $repository->findByStudy($study);
@@ -232,10 +227,8 @@ class CastorEntityHelper
         foreach ($castorRecords as $castorRecord) {
             assert($castorRecord instanceof Record);
 
-            /**
-             * @var Record|null $dbRecord
-             */
             $dbRecord = $dbRecords->get($castorRecord->getId());
+            assert($dbRecord instanceof Record || $dbRecord === null);
 
             if ($dbRecord === null) {
                 $dbRecord = $castorRecord;

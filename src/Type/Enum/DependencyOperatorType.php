@@ -7,9 +7,6 @@ use App\Entity\Enum\DependencyOperatorType as Enum;
 
 class DependencyOperatorType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'DependencyOperatorType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'DependencyOperatorType';
+    protected string $class = Enum::class;
 }

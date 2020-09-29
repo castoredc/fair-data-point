@@ -8,38 +8,27 @@ use App\Entity\Study;
 
 class CreateDepartmentAndOrganizationCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var string|null */
-    private $organizationSlug;
+    private ?string $organizationSlug = null;
 
-    /** @var string|null */
-    private $departmentSlug;
+    private ?string $departmentSlug = null;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var Iri|null */
-    private $homepage;
+    private ?Iri $homepage = null;
 
-    /** @var string */
-    private $country;
+    private string $country;
 
-    /** @var string */
-    private $city;
+    private string $city;
 
-    /** @var string|null */
-    private $department;
+    private ?string $department = null;
 
-    /** @var string|null */
-    private $additionalInformation;
+    private ?string $additionalInformation = null;
 
-    /** @var string|null */
-    private $coordinatesLatitude;
+    private ?string $coordinatesLatitude = null;
 
-    /** @var string|null */
-    private $coordinatesLongitude;
+    private ?string $coordinatesLongitude = null;
 
     public function __construct(
         Study $study,

@@ -13,47 +13,38 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
 {
     public const DEFAULT_PER_PAGE = 25;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $search;
+    /** @Assert\Type("string") */
+    private ?string $search = null;
 
     /**
      * @var string[]|null
      * @Assert\Type("array")
      */
-    private $studyType;
+    private ?array $studyType = null;
 
     /**
      * @var string[]|null
      * @Assert\Type("array")
      */
-    private $methodType;
+    private ?array $methodType = null;
 
     /**
      * @var string[]|null
      * @AppAssert\CountryArray
      */
-    private $country;
+    private ?array $country = null;
 
-    /**
-     * @var int
-     * @Assert\Type("integer")
-     */
-    private $perPage;
+    /** @Assert\Type("integer") */
+    private int $perPage;
 
-    /**
-     * @var int
-     * @Assert\Type("integer")
-     */
-    private $page;
+    /** @Assert\Type("integer") */
+    private int $page;
 
     /**
      * @var string[]|null
      * @Assert\Type("array")
      */
-    private $hideCatalogs;
+    private ?array $hideCatalogs = null;
 
     protected function parse(): void
     {

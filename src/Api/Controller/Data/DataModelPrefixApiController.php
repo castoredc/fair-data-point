@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/model/{model}/v/{version}/prefix")
@@ -44,8 +45,8 @@ class DataModelPrefixApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         try {
-            /** @var DataModelPrefixApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
+            assert($parsed instanceof DataModelPrefixApiRequest);
 
             $bus->dispatch(new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
 
@@ -72,8 +73,8 @@ class DataModelPrefixApiController extends ApiController
         }
 
         try {
-            /** @var DataModelPrefixApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
+            assert($parsed instanceof DataModelPrefixApiRequest);
 
             $bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 

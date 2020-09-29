@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use function assert;
 
 class OrcidAuthenticator extends Authenticator
 {
@@ -36,11 +37,11 @@ class OrcidAuthenticator extends Authenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        /** @var OrcidUser $orcidUser */
         $orcidUser = $this->getOrcidClient()->fetchUserFromToken($credentials);
+        assert($orcidUser instanceof OrcidUser);
 
-        /** @var OrcidUser|null $dbUser */
         $dbUser = $this->em->getRepository(OrcidUser::class)->findOneBy(['orcid' => $orcidUser->getId()]);
+        assert($dbUser instanceof OrcidUser || $dbUser === null);
 
         $this->detectIfEqualToLoggedInUser($dbUser);
 

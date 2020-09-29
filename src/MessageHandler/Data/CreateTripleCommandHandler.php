@@ -19,11 +19,9 @@ use function assert;
 
 class CreateTripleCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -43,14 +41,15 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         $module = $command->getModule();
         $dataModel = $module->getDataModel();
 
-        /** @var NodeRepository $nodeRepository */
         $nodeRepository = $this->em->getRepository(Node::class);
+        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModel);
         } else {
             $subject = $nodeRepository->findByModelAndId($dataModel, $command->getSubjectValue());
         }
+
         assert($subject instanceof Node);
 
         $predicate = new Predicate($dataModel, new Iri($command->getPredicateValue()));
@@ -60,6 +59,7 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         } else {
             $object = $nodeRepository->findByModelAndId($dataModel, $command->getObjectValue());
         }
+
         assert($object instanceof Node);
 
         if ($command->getObjectType()->isValue() && $module->isRepeated()) {

@@ -17,24 +17,14 @@ class CatalogMetadata extends Metadata
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Catalog", inversedBy="metadata", fetch="EAGER")
      * @ORM\JoinColumn(name="catalog", referencedColumnName="id", nullable=FALSE)
-     *
-     * @var Catalog
      */
-    private $catalog;
+    private Catalog $catalog;
 
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $homepage;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $homepage = null;
 
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $logo;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $logo = null;
 
     public function __construct(Catalog $catalog)
     {

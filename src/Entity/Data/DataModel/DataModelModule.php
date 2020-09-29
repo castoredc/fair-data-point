@@ -22,61 +22,39 @@ class DataModelModule
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $title;
+    /** @ORM\Column(type="string") */
+    private string $title;
 
-    /**
-     * @ORM\Column(name="`order`", type="integer")
-     *
-     * @var int
-     */
-    private $order;
+    /** @ORM\Column(name="`order`", type="integer") */
+    private int $order;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="modules",cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
     /**
      * @ORM\OneToMany(targetEntity="Triple", mappedBy="module", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<string, Triple>
      */
-    private $triples;
+    private Collection $triples;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default":"0"})
-     *
-     * @var bool
-     */
-    private $isRepeated = false;
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isRepeated = false;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default":"0"})
-     *
-     * @var bool
-     */
-    private $isDependent = false;
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isDependent = false;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
-     *
-     * @var DataModelDependencyGroup|null
      */
-    private $dependencies;
+    private ?DataModelDependencyGroup $dependencies = null;
 
     public function __construct(string $title, int $order, bool $isRepeated, bool $isDependent, DataModelVersion $dataModel)
     {

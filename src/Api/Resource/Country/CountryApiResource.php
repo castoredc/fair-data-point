@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Country;
 
 class CountryApiResource implements ApiResource
 {
-    /** @var Country */
-    private $country;
+    private Country $country;
 
     public function __construct(Country $country)
     {

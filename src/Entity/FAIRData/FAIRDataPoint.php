@@ -18,68 +18,50 @@ class FAIRDataPoint implements AccessibleEntity
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="iri")
-     *
-     * @var Iri
-     */
-    private $iri;
+    /** @ORM\Column(type="iri") */
+    private Iri $iri;
 
     /* DC terms */
 
     /**
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
      */
-    private $title;
+    private ?LocalizedText $title = null;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $version;
+    /** @ORM\Column(type="string") */
+    private string $version;
 
     /**
      * @ORM\OneToOne(targetEntity="LocalizedText",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
      */
-    private $description;
+    private ?LocalizedText $description = null;
 
     /** @var Collection<string, Agent> */
-    private $publishers;
+    private Collection $publishers;
 
     /**
      * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     *
-     * @var Language|null
      */
-    private $language;
+    private ?Language $language = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="License",cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     *
-     * @var License|null
      */
-    private $license;
+    private ?License $license = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Catalog", mappedBy="fairDataPoint",cascade={"persist"}, fetch = "EAGER")
      *
      * @var Collection<string, Catalog>
      */
-    private $catalogs;
+    private Collection $catalogs;
 
     /**
      * @param Collection<string, Agent> $publishers

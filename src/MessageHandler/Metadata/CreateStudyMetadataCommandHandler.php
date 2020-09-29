@@ -16,11 +16,9 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';
 
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {

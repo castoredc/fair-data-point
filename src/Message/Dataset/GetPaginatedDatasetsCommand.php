@@ -9,29 +9,25 @@ use App\Entity\FAIRData\Catalog;
 
 class GetPaginatedDatasetsCommand
 {
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
-    /** @var string|null */
-    private $search;
+    private ?string $search = null;
 
     /** @var StudyType[]|null */
-    private $studyType;
+    private ?array $studyType = null;
 
     /** @var MethodType[]|null */
-    private $methodType;
+    private ?array $methodType = null;
 
     /** @var string[]|null */
-    private $country;
+    private ?array $country = null;
 
-    /** @var int */
-    private $perPage;
+    private int $perPage;
 
-    /** @var int */
-    private $page;
+    private int $page;
 
     /** @var string[]|null */
-    private $hideCatalogs;
+    private ?array $hideCatalogs = null;
 
     /**
      * @param StudyType[]|null  $studyType

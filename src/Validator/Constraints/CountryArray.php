@@ -10,6 +10,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class CountryArray extends Constraint
 {
-    /** @var string */
-    public $message = 'This list does not contain valid countries.';
+    public string $message = 'This list does not contain valid countries.';
 }

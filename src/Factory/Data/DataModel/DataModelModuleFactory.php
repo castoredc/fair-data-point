@@ -9,8 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class DataModelModuleFactory
 {
-    /** @var DataModelDependencyGroupFactory */
-    private $dataModelDependencyGroupFactory;
+    private DataModelDependencyGroupFactory $dataModelDependencyGroupFactory;
 
     public function __construct(DataModelDependencyGroupFactory $dataModelDependencyGroupFactory)
     {

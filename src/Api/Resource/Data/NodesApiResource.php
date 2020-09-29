@@ -9,11 +9,9 @@ use App\Entity\Enum\NodeType;
 
 class NodesApiResource implements ApiResource
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /** @var NodeType */
-    private $type;
+    private NodeType $type;
 
     public function __construct(DataModelVersion $dataModel, ?NodeType $type = null)
     {

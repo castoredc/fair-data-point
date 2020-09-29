@@ -16,19 +16,15 @@ class Record
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
-     *
-     * @var string
      */
-    private $recordId;
+    private string $recordId;
 
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="CastorStudy", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
-     *
-     * @var CastorStudy
      */
-    private $study;
+    private CastorStudy $study;
 
     /**
      * @ORM\ManyToOne(targetEntity="Institute", fetch="EAGER", inversedBy="records",cascade={"persist"})
@@ -36,27 +32,16 @@ class Record
      *      @ORM\JoinColumn(name="institute_id", referencedColumnName="id", nullable=FALSE),
      *      @ORM\JoinColumn(name="study_id", referencedColumnName="study_id", nullable=FALSE)
      * })
-     *
-     * @var Institute
      */
-    private $institute;
+    private Institute $institute;
 
-    /** @var RecordDataCollection */
-    private $data;
+    private RecordDataCollection $data;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
-     */
-    private $createdOn;
+    /** @ORM\Column(type="datetime_immutable") */
+    private DateTimeImmutable $createdOn;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     *
-     * @var DateTimeImmutable
-     */
-    private $updatedOn;
+    /** @ORM\Column(type="datetime_immutable") */
+    private DateTimeImmutable $updatedOn;
 
     public function __construct(CastorStudy $study, Institute $institute, string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
     {

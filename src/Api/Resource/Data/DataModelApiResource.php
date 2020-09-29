@@ -8,11 +8,9 @@ use App\Entity\Data\DataModel\DataModel;
 
 class DataModelApiResource implements ApiResource
 {
-    /** @var DataModel */
-    private $dataModel;
+    private DataModel $dataModel;
 
-    /** @var bool */
-    private $includeVersions;
+    private bool $includeVersions;
 
     public function __construct(DataModel $dataModel, bool $includeVersions = true)
     {

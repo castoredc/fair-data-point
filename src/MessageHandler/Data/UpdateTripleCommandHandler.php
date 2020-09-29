@@ -16,11 +16,9 @@ use function assert;
 
 class UpdateTripleCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -37,14 +35,15 @@ class UpdateTripleCommandHandler implements MessageHandlerInterface
         $triple = $command->getTriple();
         $dataModel = $triple->getModule()->getDataModel();
 
-        /** @var NodeRepository $nodeRepository */
         $nodeRepository = $this->em->getRepository(Node::class);
+        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModel);
         } else {
             $subject = $nodeRepository->findByModelAndId($dataModel, $command->getSubjectValue());
         }
+
         assert($subject instanceof Node);
 
         $predicate = new Predicate($dataModel, new Iri($command->getPredicateValue()));
@@ -54,6 +53,7 @@ class UpdateTripleCommandHandler implements MessageHandlerInterface
         } else {
             $object = $nodeRepository->findByModelAndId($dataModel, $command->getObjectValue());
         }
+
         assert($object instanceof Node);
 
         $triple->setSubject($subject);

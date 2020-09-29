@@ -9,7 +9,7 @@ use App\Entity\Study;
 class StudiesMapApiResource implements ApiResource
 {
     /** @var Study[] */
-    private $studies;
+    private array $studies;
 
     /**
      * @param Study[] $studies
@@ -30,6 +30,7 @@ class StudiesMapApiResource implements ApiResource
             if (! $study->hasMetadata()) {
                 continue;
             }
+
             foreach ($study->getLatestMetadata()->getOrganizations() as $organization) {
                 if (! $organization->hasCoordinates()) {
                     continue;

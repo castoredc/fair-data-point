@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Person;
 
 class PersonApiResource implements ApiResource
 {
-    /** @var Person */
-    private $person;
+    private Person $person;
 
     public function __construct(Person $person)
     {

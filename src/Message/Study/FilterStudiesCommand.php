@@ -9,20 +9,18 @@ use App\Entity\FAIRData\Catalog;
 
 class FilterStudiesCommand
 {
-    /** @var Catalog|null */
-    private $catalog;
+    private ?Catalog $catalog = null;
 
-    /** @var string|null */
-    private $search;
+    private ?string $search = null;
 
     /** @var StudyType[]|null */
-    private $studyType;
+    private ?array $studyType = null;
 
     /** @var MethodType[]|null */
-    private $methodType;
+    private ?array $methodType = null;
 
     /** @var string[]|null */
-    private $country;
+    private ?array $country = null;
 
     /**
      * @param StudyType[]|null  $studyType

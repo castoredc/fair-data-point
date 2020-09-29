@@ -8,23 +8,17 @@ use App\Entity\Enum\NodeType;
 
 class UpdateTripleCommand
 {
-    /** @var Triple */
-    private $triple;
+    private Triple $triple;
 
-    /** @var NodeType */
-    private $objectType;
+    private NodeType $objectType;
 
-    /** @var string|null */
-    private $objectValue;
+    private ?string $objectValue = null;
 
-    /** @var string|null */
-    private $predicateValue;
+    private ?string $predicateValue = null;
 
-    /** @var NodeType */
-    private $subjectType;
+    private NodeType $subjectType;
 
-    /** @var string|null */
-    private $subjectValue;
+    private ?string $subjectValue = null;
 
     public function __construct(
         Triple $triple,

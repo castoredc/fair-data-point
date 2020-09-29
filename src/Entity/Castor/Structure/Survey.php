@@ -13,8 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Survey extends StructureElement
 {
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
     /**
      * @param SurveyStep[] $surveySteps

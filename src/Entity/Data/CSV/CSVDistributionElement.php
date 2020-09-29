@@ -21,19 +21,15 @@ abstract class CSVDistributionElement
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="CSVDistribution", inversedBy="elements",cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
-     *
-     * @var CSVDistribution|null
      */
 
-    private $distribution;
+    private ?CSVDistribution $distribution = null;
 
     public function getId(): string
     {

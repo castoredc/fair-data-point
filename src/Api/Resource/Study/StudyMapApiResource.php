@@ -9,11 +9,9 @@ use App\Entity\Study;
 
 class StudyMapApiResource implements ApiResource
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var Organization */
-    private $organization;
+    private Organization $organization;
 
     public function __construct(Study $study, Organization $organization)
     {

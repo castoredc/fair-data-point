@@ -25,14 +25,11 @@ use function count;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
     public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {
@@ -78,7 +75,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $columns = ['record_id'];
 
         foreach ($studyFields as $field) {
-            /** @var Field $field */
+            assert($field instanceof Field);
             if (! $message->getDistribution()->isFieldIncluded($field)) {
                 continue;
             }
@@ -93,6 +90,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             if (count($recordData) <= 0) {
                 continue;
             }
+
             $recordData['record_id'] = $record->getId();
             $data[] = $recordData;
         }

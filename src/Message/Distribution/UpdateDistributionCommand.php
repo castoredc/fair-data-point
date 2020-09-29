@@ -8,38 +8,27 @@ use App\Entity\FAIRData\Distribution;
 
 class UpdateDistributionCommand
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
-    /** @var string */
-    private $slug;
+    private string $slug;
 
-    /** @var string */
-    private $license;
+    private string $license;
 
-    /** @var int */
-    private $accessRights;
+    private int $accessRights;
 
-    /** @var bool|null */
-    private $includeAllData;
+    private ?bool $includeAllData = null;
 
-    /** @var string|null */
-    private $dataModel;
+    private ?string $dataModel = null;
 
-    /** @var string|null */
-    private $dataModelVersion;
+    private ?string $dataModelVersion = null;
 
-    /** @var string|null */
-    private $apiUser;
+    private ?string $apiUser = null;
 
-    /** @var SensitiveDataString|null */
-    private $clientId;
+    private ?SensitiveDataString $clientId = null;
 
-    /** @var SensitiveDataString|null */
-    private $clientSecret;
+    private ?SensitiveDataString $clientSecret = null;
 
-    /** @var bool */
-    private $published;
+    private bool $published;
 
     public function __construct(
         Distribution $distribution,

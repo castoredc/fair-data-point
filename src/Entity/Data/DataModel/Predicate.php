@@ -20,25 +20,17 @@ class Predicate
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="predicates", cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /**
-     * @ORM\Column(type="iri", nullable=false)
-     *
-     * @var Iri
-     */
-    private $iri;
+    /** @ORM\Column(type="iri", nullable=false) */
+    private Iri $iri;
 
     public function __construct(DataModelVersion $dataModel, Iri $iri)
     {

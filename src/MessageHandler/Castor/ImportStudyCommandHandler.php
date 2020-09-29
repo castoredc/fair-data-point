@@ -25,14 +25,11 @@ use function assert;
 
 class ImportStudyCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
     public function __construct(EntityManagerInterface $em, Security $security, ApiClient $apiClient)
     {
@@ -60,8 +57,8 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
 
         $this->apiClient->setUser($user->getCastorUser());
 
-        /** @var StudyRepository $studyRepository */
         $studyRepository = $this->em->getRepository(Study::class);
+        assert($studyRepository instanceof StudyRepository);
 
         if ($studyRepository->studyExists(StudySource::castor(), $command->getId())) {
             $study = $studyRepository->findStudyBySourceAndId(StudySource::castor(), $command->getId());
@@ -73,8 +70,8 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
             return $study;
         }
 
-        /** @var CastorServerRepository $serverRepository */
         $serverRepository = $this->em->getRepository(CastorServer::class);
+        assert($serverRepository instanceof CastorServerRepository);
         $server = $serverRepository->findOneBy(['url' => $user->getCastorUser()->getServer()]);
         assert($server instanceof CastorServer);
 

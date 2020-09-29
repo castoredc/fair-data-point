@@ -12,8 +12,7 @@ use function substr_replace;
 
 class Iri
 {
-    /** @var string */
-    private $value;
+    private string $value;
 
     public function __construct(string $uri)
     {

@@ -12,8 +12,7 @@ use App\Entity\Data\DataModel\Node\ValueNode;
 
 class NodeApiResource implements ApiResource
 {
-    /** @var Node */
-    private $node;
+    private Node $node;
 
     public function __construct(Node $node)
     {

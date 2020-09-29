@@ -19,62 +19,32 @@ class Person extends Agent
 {
     public const TYPE = 'person';
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $firstName;
+    /** @ORM\Column(type="string") */
+    private string $firstName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string|null
-     */
-    private $middleName;
+    /** @ORM\Column(type="string", nullable=true) */
+    private ?string $middleName = null;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $lastName;
+    /** @ORM\Column(type="string") */
+    private string $lastName;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string|null
-     */
-    private $email;
+    /** @ORM\Column(type="string", nullable=true) */
+    private ?string $email = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string|null
-     */
-    private $phoneNumber;
+    /** @ORM\Column(type="string", nullable=true) */
+    private ?string $phoneNumber = null;
 
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $orcid;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $orcid = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="person")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *
-     * @var User|null
      */
-    private $user;
+    private ?User $user = null;
 
-    /**
-     * @ORM\Column(type="NameOriginType")
-     *
-     * @var NameOrigin
-     */
-    private $nameOrigin;
+    /** @ORM\Column(type="NameOriginType") */
+    private NameOrigin $nameOrigin;
 
     public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)
     {

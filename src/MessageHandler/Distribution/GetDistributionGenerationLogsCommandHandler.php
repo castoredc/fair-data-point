@@ -11,13 +11,12 @@ use App\Repository\DistributionGenerationLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetDistributionGenerationLogsCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
+    private EntityManagerInterface $em;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -35,8 +34,8 @@ class GetDistributionGenerationLogsCommandHandler implements MessageHandlerInter
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
-        /** @var DistributionGenerationLogRepository $repository */
         $repository = $this->em->getRepository(DistributionGenerationLog::class);
+        assert($repository instanceof DistributionGenerationLogRepository);
 
         $count = $repository->countLogs($distribution, $isAdmin);
         $logs = $repository->findLogs($distribution, $command->getPerPage(), $command->getPage(), $isAdmin);

@@ -7,9 +7,6 @@ use App\Entity\Enum\XsdDataType as Enum;
 
 class XsdDataType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'XsdTDataType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'XsdTDataType';
+    protected string $class = Enum::class;
 }

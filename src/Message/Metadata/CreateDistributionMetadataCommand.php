@@ -10,8 +10,7 @@ use App\Entity\FAIRData\LocalizedText;
 
 class CreateDistributionMetadataCommand extends CreateMetadataCommand
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
     /** @param Agent[] $publishers */
     public function __construct(

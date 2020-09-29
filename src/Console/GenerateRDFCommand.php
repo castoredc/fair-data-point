@@ -25,30 +25,23 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-use const DATE_ATOM;
 use function assert;
 use function count;
 use function get_class;
 use function sprintf;
+use const DATE_ATOM;
 
 class GenerateRDFCommand extends Command
 {
-    /** @var string */
+    /** @inheritDoc */
     protected static $defaultName = 'app:generate-rdf';
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var CastorEntityHelper */
-    private $entityHelper;
-    /** @var UriHelper */
-    private $uriHelper;
-    /** @var DistributionService */
-    private $distributionService;
-    /** @var EncryptionService */
-    private $encryptionService;
-    /** @var LoggerInterface */
-    private $logger;
+    private ApiClient $apiClient;
+    private EntityManagerInterface $em;
+    private CastorEntityHelper $entityHelper;
+    private UriHelper $uriHelper;
+    private DistributionService $distributionService;
+    private EncryptionService $encryptionService;
+    private LoggerInterface $logger;
 
     public function __construct(
         ApiClient $apiClient,
@@ -135,7 +128,7 @@ class GenerateRDFCommand extends Command
             $prefixes = $dataModel->getPrefixes();
 
             foreach ($prefixes as $prefix) {
-                /** @var NamespacePrefix $prefix */
+                assert($prefix instanceof NamespacePrefix);
                 EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
             }
 

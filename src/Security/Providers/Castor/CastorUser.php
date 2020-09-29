@@ -24,47 +24,25 @@ class CastorUser implements ProviderUser
     /**
      * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="castorUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *
-     * @var User|null
      */
-    private $user;
+    private ?User $user = null;
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
-     *
-     * @var string
      */
-    private $id;
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $nameFirst;
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *
-     * @var string|null
-     */
-    private $nameMiddle;
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $nameLast;
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $emailAddress;
-    /** @var string|null */
-    private $token;
-    /** @var string|null */
-    private $server;
+    private string $id;
+    /** @ORM\Column(type="string", length=255) */
+    private string $nameFirst;
+    /** @ORM\Column(type="string", length=255, nullable=true) */
+    private ?string $nameMiddle = null;
+    /** @ORM\Column(type="string", length=255) */
+    private string $nameLast;
+    /** @ORM\Column(type="string", length=255) */
+    private string $emailAddress;
+    private ?string $token = null;
+    private ?string $server = null;
     /** @var string[] */
-    private $studies;
+    private array $studies;
 
     public function __construct(string $id, string $nameFirst, ?string $nameMiddle, string $nameLast, string $emailAddress)
     {

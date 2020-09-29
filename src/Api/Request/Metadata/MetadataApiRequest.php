@@ -20,39 +20,34 @@ abstract class MetadataApiRequest extends SingleApiRequest
      * @var mixed[]|null
      * @AppAssert\LocalizedText
      */
-    private $title;
+    private ?array $title = null;
 
     /**
      * @var mixed[]|null
      * @AppAssert\LocalizedText
      */
-    private $description;
+    private ?array $description = null;
 
     /**
-     * @var string|null
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $language;
+    private ?string $language = null;
+
+    /** @Assert\Type("string") */
+    private ?string $license = null;
 
     /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $license;
-
-    /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $versionUpdate;
+    private string $versionUpdate;
 
     /**
      * @var mixed[]|null
      * @AppAssert\AgentArray
      */
-    private $publishers;
+    private ?array $publishers = null;
 
     protected function parse(): void
     {

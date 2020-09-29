@@ -5,8 +5,7 @@ namespace App\Api\Resource;
 
 abstract class RoleBasedApiResource implements ApiResource
 {
-    /** @var bool */
-    protected $isAdmin;
+    protected bool $isAdmin;
 
     public function isAdmin(): bool
     {

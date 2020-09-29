@@ -10,39 +10,28 @@ use Symfony\Component\Validator\Constraints as Assert;
 class StudyApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $source;
+    private string $source;
 
-    /** @var string|null */
-    private $sourceServer;
+    private ?string $sourceServer = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $sourceId;
+    /** @Assert\Type("string") */
+    private ?string $sourceId = null;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $catalog;
+    /** @Assert\Type("string") */
+    private ?string $catalog = null;
 
-    /** @var bool|null */
-    private $published;
+    private ?bool $published = null;
 
-    /** @var string|null */
-    private $slug;
+    private ?string $slug = null;
 
     protected function parse(): void
     {

@@ -23,16 +23,11 @@ use function http_build_query;
 
 abstract class Authenticator extends SocialAuthenticator
 {
-    /** @var ClientRegistry */
-    protected $clientRegistry;
-    /** @var EntityManagerInterface */
-    protected $em;
-    /** @var RouterInterface */
-    protected $router;
-    /** @var ApiClient */
-    protected $apiClient;
-    /** @var User|null */
-    protected $currentUser;
+    protected ClientRegistry $clientRegistry;
+    protected EntityManagerInterface $em;
+    protected RouterInterface $router;
+    protected ApiClient $apiClient;
+    protected ?User $currentUser = null;
 
     public function __construct(ApiClient $apiClient, ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router, Security $security)
     {
@@ -74,8 +69,8 @@ abstract class Authenticator extends SocialAuthenticator
             $params['view'] = 'catalog';
 
             if ($request->attributes->get('catalog') instanceof Catalog) {
-                /** @var Catalog $catalog */
                 $catalog = $request->attributes->get('catalog');
+                assert($catalog instanceof Catalog);
             } else {
                 $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $request->attributes->get('catalog')]);
             }
@@ -90,8 +85,8 @@ abstract class Authenticator extends SocialAuthenticator
             $params['view'] = 'dataset';
 
             if ($request->attributes->get('dataset') instanceof Dataset) {
-                /** @var Dataset $dataset */
                 $dataset = $request->attributes->get('dataset');
+                assert($dataset instanceof Dataset);
             } else {
                 $dataset = $this->em->getRepository(Dataset::class)->findOneBy(['slug' => $request->attributes->get('dataset')]);
             }

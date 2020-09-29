@@ -11,11 +11,11 @@ use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\RDF\DataModelModuleMapping;
 use App\Entity\Data\RDF\DataModelNodeMapping;
+use function assert;
 
 class DataModelMappingApiResource implements ApiResource
 {
-    /** @var object */
-    private $element;
+    private object $element;
 
     public function __construct(object $element)
     {
@@ -37,7 +37,7 @@ class DataModelMappingApiResource implements ApiResource
                 $return['node'] = (new NodeApiResource($element->getNode()))->toArray();
                 $return['element'] = (new CastorEntityApiResource($element->getEntity()))->toArray();
             } else {
-                /** @var ValueNode $element */
+                assert($element instanceof ValueNode);
                 $return['node'] = (new NodeApiResource($element))->toArray();
                 $return['element'] = null;
             }
@@ -48,7 +48,7 @@ class DataModelMappingApiResource implements ApiResource
                 $return['module'] = (new DataModelModuleApiResource($element->getModule()))->toArray();
                 $return['element'] = (new CastorEntityApiResource($element->getEntity()))->toArray();
             } else {
-                /** @var DataModelModule $element */
+                assert($element instanceof DataModelModule);
                 $return['module'] = (new DataModelModuleApiResource($element))->toArray();
                 $return['element'] = null;
             }

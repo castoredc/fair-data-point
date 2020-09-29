@@ -15,39 +15,34 @@ use Symfony\Component\Validator\GroupSequenceProviderInterface;
 class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var string
      * @Assert\NotBlank(groups = {"node"})
      * @Assert\Type("string")
      */
-    private $node;
+    private string $node;
 
     /**
-     * @var string
      * @Assert\NotBlank(groups = {"module"})
      * @Assert\Type("string")
      */
-    private $structureType;
+    private string $structureType;
 
     /**
-     * @var string
      * @Assert\NotBlank(groups = {"module"})
      * @Assert\Type("string")
      */
-    private $module;
+    private string $module;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $element;
+    private string $element;
 
     protected function parse(): void
     {

@@ -18,6 +18,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class StudyCentersApiController extends ApiController
 {
@@ -32,8 +33,8 @@ class StudyCentersApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new GetStudyCentersCommand($study));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse($handledStamp->getResult()->toArray());
         } catch (HandlerFailedException $e) {

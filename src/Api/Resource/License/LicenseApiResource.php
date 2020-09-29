@@ -8,8 +8,7 @@ use App\Entity\FAIRData\License;
 
 class LicenseApiResource implements ApiResource
 {
-    /** @var License */
-    private $license;
+    private License $license;
 
     public function __construct(License $license)
     {

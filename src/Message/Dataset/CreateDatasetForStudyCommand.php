@@ -7,8 +7,7 @@ use App\Entity\Study;
 
 class CreateDatasetForStudyCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
     public function __construct(Study $study)
     {

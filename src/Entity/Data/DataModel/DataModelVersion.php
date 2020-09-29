@@ -11,6 +11,7 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 use function is_a;
 
 /**
@@ -26,10 +27,8 @@ class DataModelVersion
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\OneToMany(targetEntity="DataModelModule", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
@@ -37,50 +36,44 @@ class DataModelVersion
      *
      * @var Collection<DataModelModule>
      */
-    private $modules;
+    private Collection $modules;
 
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<NamespacePrefix>
      */
-    private $prefixes;
+    private Collection $prefixes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModel\Node\Node", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<Node>
      */
-    private $nodes;
+    private Collection $nodes;
 
     /**
      * @ORM\OneToMany(targetEntity="Predicate", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<Predicate>
      */
-    private $predicates;
+    private Collection $predicates;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="currentDataModelVersion")
      *
      * @var Collection<RDFDistribution>
      */
-    private $distributions;
+    private Collection $distributions;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModel", inversedBy="versions",cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModel
      */
-    private $dataModel;
+    private DataModel $dataModel;
 
-    /**
-     * @ORM\Column(type="version")
-     *
-     * @var Version
-     */
-    private $version;
+    /** @ORM\Column(type="version") */
+    private Version $version;
 
     public function __construct(Version $version)
     {
@@ -153,7 +146,7 @@ class DataModelVersion
         $return = new ArrayCollection();
 
         foreach ($this->modules as $module) {
-            /** @var DataModelModule $module */
+            assert($module instanceof DataModelModule);
             if (! $module->isRepeated()) {
                 continue;
             }
@@ -180,7 +173,7 @@ class DataModelVersion
         $order = 1;
         foreach ($this->modules as $currentModule) {
             /** @var DataModelModule $currentModule */
-            $newOrder = $order >= $newModuleOrder ? ($order + 1) : $order;
+            $newOrder = $order >= $newModuleOrder ? $order + 1 : $order;
             $currentModule->setOrder($newOrder);
             $newModules->add($currentModule);
 

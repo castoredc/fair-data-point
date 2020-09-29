@@ -8,11 +8,9 @@ use App\Entity\FAIRData\Dataset;
 
 class AddDatasetToCatalogCommand
 {
-    /** @var Dataset */
-    private $dataset;
+    private Dataset $dataset;
 
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
     public function __construct(Dataset $dataset, Catalog $catalog)
     {

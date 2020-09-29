@@ -13,11 +13,9 @@ use Symfony\Component\Console\Question\Question;
 
 return new class extends DefaultDeployer
 {
-    /** @var GitRepository */
-    private $gitRepo;
+    private GitRepository $gitRepo;
 
-    /** @var QuestionHelper */
-    private $questionHelper;
+    private QuestionHelper $questionHelper;
 
     public function initialize(Context $context): void
     {
@@ -33,7 +31,6 @@ return new class extends DefaultDeployer
         }
     }
 
-    /** @inheritDoc */
     public function configure(): DefaultConfiguration
     {
         $this->questionHelper = new QuestionHelper();
@@ -91,8 +88,8 @@ return new class extends DefaultDeployer
 
     public function beforePublishing(): void
     {
-        /** @var Server $server */
         $server = $this->getServers()->findAll()[0];
+        assert($server instanceof Server);
         $projectDir = $server->get(Property::project_dir);
 
         $this->log('<h1>Building Ui</h1>');

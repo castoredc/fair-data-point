@@ -11,7 +11,7 @@ use Exception;
 class SurveyPackageInstance extends Instance
 {
     /** @var ArrayCollection<string, SurveyInstance> */
-    private $surveyInstances;
+    private ArrayCollection $surveyInstances;
 
     public function __construct(string $id, Record $record, DateTime $createdOn)
     {

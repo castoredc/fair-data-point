@@ -18,11 +18,9 @@ use function count;
 
 class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -41,8 +39,8 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
         $results = [];
 
         if ($command->getType()->isNode()) {
-            /** @var NodeRepository $repository */
             $repository = $this->em->getRepository(Node::class);
+            assert($repository instanceof NodeRepository);
 
             $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());
 

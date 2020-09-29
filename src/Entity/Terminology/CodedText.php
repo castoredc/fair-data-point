@@ -16,17 +16,11 @@ class CodedText
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $text;
+    /** @ORM\Column(type="string") */
+    private string $text;
 
     /** @var OntologyConcept[]|ArrayCollection */
     private $concepts;

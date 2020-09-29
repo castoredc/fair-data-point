@@ -17,27 +17,21 @@ abstract class Step extends CastorEntity
 {
     /**
      * the Step description
-     *
-     * @var string|null
      */
-    private $description;
+    private ?string $description = null;
 
     /**
      * the name of the Step
-     *
-     * @var string|null
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * The Steps&#39;s order within the study
-     *
-     * @var int|null
      */
-    private $position;
+    private ?int $position = null;
 
     /** @var Field[] */
-    protected $fields;
+    protected array $fields;
 
     public function __construct(string $id, CastorStudy $study, StructureType $structureType, ?string $description, string $name, ?int $position)
     {

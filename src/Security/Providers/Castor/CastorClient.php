@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use function assert;
 use function count;
 
 class CastorClient extends OAuth2Client
@@ -20,11 +21,9 @@ class CastorClient extends OAuth2Client
     public const OAUTH2_SESSION_STATE_KEY = 'knpu.oauth2_client_state';
     public const SESSION_SERVER_KEY = 'castor.server';
 
-    /** @var CastorUserProvider */
-    private $provider;
+    private CastorUserProvider $provider;
 
-    /** @var RequestStack */
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(CastorUserProvider $provider, RequestStack $requestStack)
     {
@@ -94,8 +93,8 @@ class CastorClient extends OAuth2Client
      */
     public function fetchUser(): ResourceOwnerInterface
     {
-        /** @var AccessToken $token */
         $token = $this->getAccessToken();
+        assert($token instanceof AccessToken);
 
         return $this->fetchUserFromToken($token);
     }

@@ -15,17 +15,11 @@ class Department extends Agent
     /**
      * @ORM\ManyToOne(targetEntity="Organization",cascade={"persist"}, inversedBy="departments")
      * @ORM\JoinColumn(name="organization", referencedColumnName="id")
-     *
-     * @var Organization|null
      */
-    private $organization;
+    private ?Organization $organization = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string|null
-     */
-    private $additionalInformation;
+    /** @ORM\Column(type="text", nullable=true) */
+    private ?string $additionalInformation = null;
 
     public function __construct(?string $slug, string $name, Organization $organization, ?string $additionalInformation)
     {
@@ -34,6 +28,7 @@ class Department extends Agent
         if ($slug === null) {
             $slug = $slugify->slugify($organization->getName() . ' ' . $name . ' ' . uniqid());
         }
+
         parent::__construct($slug, $name);
 
         $this->organization = $organization;

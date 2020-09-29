@@ -10,14 +10,13 @@ use App\Repository\DatasetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -27,8 +26,8 @@ class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetPaginatedDatasetsCommand $command): PaginatedResultCollection
     {
-        /** @var DatasetRepository $datasetRepository */
         $datasetRepository = $this->em->getRepository(Dataset::class);
+        assert($datasetRepository instanceof DatasetRepository);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
