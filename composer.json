@@ -37,7 +37,7 @@
         "symfony/dotenv": "^5.1"
     },
     "require-dev": {
-        "castor/coding-standard": "^3.1",
+        "castor/coding-standard": "^4.0.1",
         "easycorp/easy-deploy-bundle": "^1.0",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.40",
