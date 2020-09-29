@@ -23,6 +23,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/catalog/{catalog}")
@@ -48,8 +49,8 @@ class CatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $catalog);
 
         try {
-            /** @var CatalogApiRequest $parsed */
             $parsed = $this->parseRequest(CatalogApiRequest::class, $request);
+            assert($parsed instanceof CatalogApiRequest);
 
             $bus->dispatch(
                 new UpdateCatalogCommand($catalog, $parsed->getSlug(), $parsed->isAcceptSubmissions(), $parsed->isSubmissionAccessesData())
@@ -78,8 +79,8 @@ class CatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
                 $catalog,
@@ -92,8 +93,8 @@ class CatalogApiController extends ApiController
                 $parsed->getPage()
             ));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 
@@ -120,13 +121,13 @@ class CatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(new FilterStudiesCommand($catalog, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new StudiesMapApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {

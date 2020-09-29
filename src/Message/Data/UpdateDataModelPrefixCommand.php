@@ -7,14 +7,11 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 
 class UpdateDataModelPrefixCommand
 {
-    /** @var NamespacePrefix */
-    private $dataModelPrefix;
+    private NamespacePrefix $dataModelPrefix;
 
-    /** @var string */
-    private $prefix;
+    private string $prefix;
 
-    /** @var string */
-    private $uri;
+    private string $uri;
 
     public function __construct(NamespacePrefix $dataModelPrefix, string $prefix, string $uri)
     {

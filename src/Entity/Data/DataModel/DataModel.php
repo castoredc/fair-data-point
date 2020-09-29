@@ -23,24 +23,14 @@ class DataModel
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $title;
+    /** @ORM\Column(type="string") */
+    private string $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string|null
-     */
-    private $description;
+    /** @ORM\Column(type="text", nullable=true) */
+    private ?string $description = null;
 
     /**
      * @ORM\OneToMany(targetEntity="DataModelVersion", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
@@ -48,14 +38,14 @@ class DataModel
      *
      * @var Collection<DataModelVersion>
      */
-    private $versions;
+    private Collection $versions;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="dataModel")
      *
      * @var Collection<RDFDistribution>
      */
-    private $distributions;
+    private Collection $distributions;
 
     public function __construct(string $title, ?string $description)
     {
@@ -112,7 +102,6 @@ class DataModel
     public function hasVersion(Version $version): bool
     {
         foreach ($this->versions as $dataModelVersion) {
-            /** @var DataModelVersion $dataModelVersion */
             if ($dataModelVersion->getVersion() === $version) {
                 return true;
             }

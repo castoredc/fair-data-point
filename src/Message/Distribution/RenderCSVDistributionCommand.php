@@ -10,13 +10,11 @@ use App\Entity\FAIRData\Catalog;
 class RenderCSVDistributionCommand
 {
     /** @var Record[] */
-    private $records;
+    private array $records;
 
-    /** @var CSVDistribution */
-    private $distribution;
+    private CSVDistribution $distribution;
 
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
     /**
      * @param Record[] $records

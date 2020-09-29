@@ -7,9 +7,6 @@ use App\Entity\Enum\MethodType as Enum;
 
 class MethodType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'MethodType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'MethodType';
+    protected string $class = Enum::class;
 }

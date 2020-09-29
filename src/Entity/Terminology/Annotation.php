@@ -16,26 +16,20 @@ class Annotation
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity", inversedBy="annotations", cascade={"persist"})
      * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
-     *
-     * @var CastorEntity
      */
-    private $entity;
+    private CastorEntity $entity;
 
     /**
      * @ORM\ManyToOne(targetEntity="OntologyConcept",cascade={"persist"})
      * @ORM\JoinColumn(name="concept", referencedColumnName="id", nullable=false)
-     *
-     * @var OntologyConcept
      */
-    private $concept;
+    private OntologyConcept $concept;
 
     public function __construct(CastorEntity $entity, OntologyConcept $concept)
     {

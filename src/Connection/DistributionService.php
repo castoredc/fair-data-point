@@ -24,17 +24,13 @@ class DistributionService
     public const CURRENT_STORE = 'current';
     public const PREVIOUS_STORE = 'previous';
 
-    /** @var string */
-    private $host;
+    private string $host;
 
-    /** @var string */
-    private $user;
+    private string $user;
 
-    /** @var string */
-    private $pass;
+    private string $pass;
 
-    /** @var int */
-    private $port;
+    private int $port;
 
     public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306)
     {
@@ -184,13 +180,13 @@ class DistributionService
                 $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
                 $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString()
             );
-            $connection->exec($sql);
+            $connection->executeStatement($sql);
         } catch (Throwable $t) {
             throw new CouldNotCreateDatabaseUser();
         }
 
         try {
-            $connection->exec(
+            $connection->executeStatement(
                 'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER, EXECUTE, LOCK TABLES, CREATE, DROP, CREATE TEMPORARY TABLES
                 ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString() . '\'@\'%\';'
             );

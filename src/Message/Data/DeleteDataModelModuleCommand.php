@@ -7,8 +7,7 @@ use App\Entity\Data\DataModel\DataModelModule;
 
 class DeleteDataModelModuleCommand
 {
-    /** @var DataModelModule */
-    private $module;
+    private DataModelModule $module;
 
     public function __construct(DataModelModule $module)
     {

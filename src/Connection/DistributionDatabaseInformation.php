@@ -26,31 +26,17 @@ class DistributionDatabaseInformation
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="databaseInformation")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
-     *
-     * @var Distribution
      */
-    private $distribution;
+    private Distribution $distribution;
 
-    /**
-     * @ORM\Column(type="string", name="database_name")
-     *
-     * @var string
-     */
-    private $database;
+    /** @ORM\Column(type="string", name="database_name") */
+    private string $database;
 
-    /**
-     * @ORM\Column(type="string", name="user", type="text", length=65535, nullable=false)
-     *
-     * @var string
-     */
-    private $username;
+    /** @ORM\Column(type="string", name="user", type="text", length=65535, nullable=false) */
+    private string $username;
 
-    /**
-     * @ORM\Column(type="string", name="password", type="text", length=65535, nullable=false)
-     *
-     * @var string
-     */
-    private $password;
+    /** @ORM\Column(type="string", name="password", type="text", length=65535, nullable=false) */
+    private string $password;
 
     public function __construct(Distribution $distribution)
     {

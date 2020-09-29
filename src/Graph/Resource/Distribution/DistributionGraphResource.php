@@ -11,8 +11,7 @@ use EasyRdf_Graph;
 
 class DistributionGraphResource implements GraphResource
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
     public function __construct(Distribution $distribution)
     {

@@ -8,11 +8,9 @@ use App\Entity\Data\DataModel\DataModelVersion;
 
 class DataModelModulesApiResource implements ApiResource
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /** @var bool */
-    private $groupTriples;
+    private bool $groupTriples;
 
     public function __construct(DataModelVersion $dataModel, bool $groupTriples = true)
     {

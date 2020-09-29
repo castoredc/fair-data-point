@@ -5,8 +5,7 @@ namespace App\Message\Tools;
 
 class MetadataXmlParseCommand
 {
-    /** @var string */
-    private $xmlBody;
+    private string $xmlBody;
 
     public function __construct(string $xmlBody)
     {

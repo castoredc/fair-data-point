@@ -21,14 +21,11 @@ use function assert;
 
 class CreateDistributionCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
     public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
     {
@@ -52,7 +49,6 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
             $dataset
         );
 
-        /** @var License|null $license */
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
         $distribution->setLicense($license);
 
@@ -67,7 +63,6 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
         }
 
         if ($message->getType()->isRdf()) {
-            /** @var DataModel|null $dataModel */
             $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
 
             $contents = new RDFDistribution(

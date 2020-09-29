@@ -14,10 +14,6 @@ use App\Exception\InvalidEntityType;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
-use App\Repository\CastorEntityRepository;
-use App\Repository\CastorInstituteRepository;
-use App\Repository\CastorRecordRepository;
-use App\Repository\CountryRepository;
 use App\Security\ApiUser;
 use App\Security\Providers\Castor\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,12 +22,9 @@ use function assert;
 
 class CastorEntityHelper
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EntityManagerInterface $em;
+    private ApiClient $apiClient;
+    private EncryptionService $encryptionService;
 
     /**
      * @throws UserNotACastorUser
@@ -55,7 +48,6 @@ class CastorEntityHelper
 
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
 
         return $repository->findByIdAndStudy($study, $id);
@@ -63,7 +55,6 @@ class CastorEntityHelper
 
     public function getEntitiesFromDatabaseByType(CastorStudy $study, CastorEntityType $type): CastorEntityCollection
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
 
         return new CastorEntityCollection($repository->findByStudyAndType($study, $type->getClassName()));
@@ -71,7 +62,6 @@ class CastorEntityHelper
 
     public function getEntitiesFromDatabaseByParent(CastorStudy $study, CastorEntity $parent): CastorEntityCollection
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
 
         return new CastorEntityCollection($repository->findByStudyAndParent($study, $parent));
@@ -147,7 +137,6 @@ class CastorEntityHelper
         // Entities from Castor are leading, since they contain more information
 
         foreach ($dbEntities as $dbEntity) {
-            /** @var CastorEntity|null $castorEntity */
             $castorEntity = $castorEntities->getById($dbEntity->getId());
 
             if ($castorEntity === null) {
@@ -180,10 +169,8 @@ class CastorEntityHelper
     {
         $institutes = new ArrayCollection();
 
-        /** @var CastorInstituteRepository $repository */
         $repository = $this->em->getRepository(Institute::class);
 
-        /** @var CountryRepository $countryRepository */
         $countryRepository = $this->em->getRepository(Country::class);
         $countries = $countryRepository->getAllCountriesWithCastorIds();
 
@@ -193,10 +180,8 @@ class CastorEntityHelper
         foreach ($castorInstitutes as $castorInstitute) {
             assert($castorInstitute instanceof Institute);
 
-            /**
-             * @var Institute|null $dbInstitute
-             */
             $dbInstitute = $dbInstitutes->get($castorInstitute->getId());
+            assert($dbInstitute instanceof Institute || $dbInstitute === null);
 
             if ($dbInstitute === null) {
                 $dbInstitute = $castorInstitute;
@@ -223,7 +208,6 @@ class CastorEntityHelper
         $institutes = $this->getInstitutes($study);
         $records = new ArrayCollection();
 
-        /** @var CastorRecordRepository $repository */
         $repository = $this->em->getRepository(Record::class);
 
         $castorRecords = $this->apiClient->getRecords($study, $institutes);
@@ -232,10 +216,8 @@ class CastorEntityHelper
         foreach ($castorRecords as $castorRecord) {
             assert($castorRecord instanceof Record);
 
-            /**
-             * @var Record|null $dbRecord
-             */
             $dbRecord = $dbRecords->get($castorRecord->getId());
+            assert($dbRecord instanceof Record || $dbRecord === null);
 
             if ($dbRecord === null) {
                 $dbRecord = $castorRecord;

@@ -24,20 +24,13 @@ use function json_decode;
 
 class ImportDataModelCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
-    /** @var NamespacePrefixFactory */
-    private $namespacePrefixFactory;
-    /** @var NodeFactory */
-    private $nodeFactory;
-    /** @var PredicateFactory */
-    private $predicateFactory;
-    /** @var DataModelModuleFactory */
-    private $dataModelModuleFactory;
-    /** @var TripleFactory */
-    private $tripleFactory;
+    private EntityManagerInterface $em;
+    private Security $security;
+    private NamespacePrefixFactory $namespacePrefixFactory;
+    private NodeFactory $nodeFactory;
+    private PredicateFactory $predicateFactory;
+    private DataModelModuleFactory $dataModelModuleFactory;
+    private TripleFactory $tripleFactory;
 
     public function __construct(
         EntityManagerInterface $em,

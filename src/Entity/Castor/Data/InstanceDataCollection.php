@@ -7,14 +7,15 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Instances\Instance;
 use App\Entity\Castor\Record;
 use Doctrine\Common\Collections\ArrayCollection;
+use function assert;
 
 abstract class InstanceDataCollection extends RecordData
 {
     /** @var ArrayCollection<string, InstanceData> */
-    private $data;
+    private ArrayCollection $data;
 
     /** @var ArrayCollection<Instance> */
-    private $instances;
+    private ArrayCollection $instances;
 
     public function __construct(Record $record)
     {
@@ -27,11 +28,9 @@ abstract class InstanceDataCollection extends RecordData
     public function getMostRecentInstance(): ?Instance
     {
         if ($this->data->first() !== false) {
-            /** @var Instance $return */
             $return = $this->data->first()->getInstance();
 
             foreach ($this->data as $instance) {
-                /** @var InstanceData $instance */
                 if ($instance->getInstance()->getCreatedOn() <= $return->getCreatedOn()) {
                     continue;
                 }
@@ -65,8 +64,8 @@ abstract class InstanceDataCollection extends RecordData
             $this->instances->add($instance);
         }
 
-        /** @var InstanceData $instanceData */
         $instanceData = $this->data->get($instance->getId());
+        assert($instanceData instanceof InstanceData);
         $instanceData->addData($fieldResult);
     }
 

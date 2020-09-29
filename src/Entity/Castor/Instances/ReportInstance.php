@@ -9,23 +9,17 @@ use Exception;
 
 class ReportInstance extends Instance
 {
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $reportName;
+    private string $reportName;
 
-    /** @var string */
-    private $reportId;
+    private string $reportId;
 
-    /** @var string */
-    private $status;
+    private string $status;
 
-    /** @var string */
-    private $parentId;
+    private string $parentId;
 
-    /** @var string */
-    private $parentType;
+    private string $parentType;
 
     public function __construct(string $id, string $name, string $reportName, string $reportId, string $status, string $parentId, string $parentType, Record $record, DateTime $createdOn)
     {

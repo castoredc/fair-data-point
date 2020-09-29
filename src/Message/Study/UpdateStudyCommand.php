@@ -7,23 +7,17 @@ use App\Entity\Study;
 
 class UpdateStudyCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var string|null */
-    private $sourceId;
+    private ?string $sourceId = null;
 
-    /** @var string|null */
-    private $sourceServer;
+    private ?string $sourceServer = null;
 
-    /** @var string|null */
-    private $name;
+    private ?string $name = null;
 
-    /** @var string */
-    private $slug;
+    private string $slug;
 
-    /** @var bool */
-    private $published;
+    private bool $published;
 
     public function __construct(
         Study $study,

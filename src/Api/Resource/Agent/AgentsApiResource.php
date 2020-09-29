@@ -15,7 +15,7 @@ use App\Entity\FAIRData\Person;
 class AgentsApiResource implements ApiResource
 {
     /** @var Agent[] */
-    private $agents;
+    private array $agents;
 
     /**
      * @param Agent[] $agents

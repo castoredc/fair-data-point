@@ -13,8 +13,7 @@ use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
     public function __construct(Distribution $distribution)
     {

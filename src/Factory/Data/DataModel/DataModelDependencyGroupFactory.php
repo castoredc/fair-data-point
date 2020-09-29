@@ -11,8 +11,7 @@ use function array_key_exists;
 
 class DataModelDependencyGroupFactory
 {
-    /** @var DataModelDependencyRuleFactory */
-    private $dataModelDependencyRuleFactory;
+    private DataModelDependencyRuleFactory $dataModelDependencyRuleFactory;
 
     public function __construct(DataModelDependencyRuleFactory $dataModelDependencyRuleFactory)
     {

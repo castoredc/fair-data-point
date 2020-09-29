@@ -9,8 +9,7 @@ use App\Entity\Castor\Form\FieldOptionGroup;
 
 class OptionGroupApiResource implements ApiResource
 {
-    /** @var FieldOptionGroup */
-    private $optionGroup;
+    private FieldOptionGroup $optionGroup;
 
     public function __construct(FieldOptionGroup $optionGroup)
     {

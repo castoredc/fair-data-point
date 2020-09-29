@@ -18,6 +18,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/catalog")
@@ -31,8 +32,8 @@ class CatalogsApiController extends ApiController
     {
         $envelope = $bus->dispatch(new GetCatalogsCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
         $catalogs = $handledStamp->getResult();
 
         return new JsonResponse((new CatalogsApiResource($catalogs))->toArray());
@@ -46,18 +47,18 @@ class CatalogsApiController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            /** @var CatalogApiRequest $parsed */
             $parsed = $this->parseRequest(CatalogApiRequest::class, $request);
+            assert($parsed instanceof CatalogApiRequest);
 
             $envelope = $bus->dispatch(
                 new CreateCatalogCommand($parsed->getSlug(), $parsed->isAcceptSubmissions(), $parsed->isSubmissionAccessesData())
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Catalog $catalog */
             $catalog = $handledStamp->getResult();
+            assert($catalog instanceof Catalog);
 
             return new JsonResponse((new CatalogApiResource($catalog))->toArray(), 200);
         } catch (ApiRequestParseError $e) {

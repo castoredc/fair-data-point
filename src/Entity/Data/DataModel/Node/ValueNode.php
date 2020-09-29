@@ -14,26 +14,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ValueNode extends Node
 {
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $isAnnotatedValue = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $isAnnotatedValue = false;
 
-    /**
-     * @ORM\Column(type="XsdDataType")
-     *
-     * @var XsdDataType
-     */
-    private $dataType;
+    /** @ORM\Column(type="XsdDataType") */
+    private XsdDataType $dataType;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default":"0"})
-     *
-     * @var bool
-     */
-    private $isRepeated = false;
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isRepeated = false;
 
     public function isAnnotatedValue(): bool
     {

@@ -45,11 +45,11 @@ class CastorAuthenticator extends Authenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        /** @var CastorUser $castorUser */
         $castorUser = $this->getCastorClient()->fetchUserFromToken($credentials);
+        assert($castorUser instanceof CastorUser);
 
-        /** @var CastorUser|null $dbUser */
         $dbUser = $this->em->getRepository(CastorUser::class)->findOneBy(['id' => $castorUser->getId()]);
+        assert($dbUser instanceof CastorUser || $dbUser === null);
 
         $this->detectIfEqualToLoggedInUser($dbUser);
 
@@ -84,7 +84,6 @@ class CastorAuthenticator extends Authenticator
 
     private function createNewUser(CastorUser $castorUser): User
     {
-        /** @var Person|null $person */
         $person = $this->em->getRepository(Person::class)->findOneBy(['email' => $castorUser->getEmailAddress()]);
 
         if ($person === null) {
@@ -145,7 +144,6 @@ class CastorAuthenticator extends Authenticator
             $params['view'] = 'catalog';
 
             if ($request->attributes->get('catalog') instanceof Catalog) {
-                /** @var Catalog $catalog */
                 $catalog = $request->attributes->get('catalog');
             } else {
                 $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $request->attributes->get('catalog')]);
@@ -161,7 +159,6 @@ class CastorAuthenticator extends Authenticator
             $params['view'] = 'dataset';
 
             if ($request->attributes->get('dataset') instanceof Dataset) {
-                /** @var Dataset $dataset */
                 $dataset = $request->attributes->get('dataset');
             } else {
                 $dataset = $this->em->getRepository(Dataset::class)->findOneBy(['slug' => $request->attributes->get('dataset')]);

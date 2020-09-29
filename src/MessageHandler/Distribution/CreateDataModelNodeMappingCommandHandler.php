@@ -23,14 +23,11 @@ use function assert;
 
 class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
     {
@@ -67,7 +64,6 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
 
         assert($study instanceof CastorStudy);
 
-        /** @var ValueNode|null $node */
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
         if ($node === null) {
             throw new NotFound();

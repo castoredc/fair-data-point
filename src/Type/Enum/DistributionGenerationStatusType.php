@@ -7,9 +7,6 @@ use App\Entity\Enum\DistributionGenerationStatus as Enum;
 
 class DistributionGenerationStatusType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'DistributionGenerationStatusType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'DistributionGenerationStatusType';
+    protected string $class = Enum::class;
 }

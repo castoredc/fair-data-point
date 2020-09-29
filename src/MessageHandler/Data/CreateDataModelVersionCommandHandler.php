@@ -11,7 +11,6 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
@@ -29,12 +28,9 @@ use Symfony\Component\Security\Core\Security;
 
 class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
-    /** @var VersionNumberHelper */
-    private $versionNumberHelper;
+    private EntityManagerInterface $em;
+    private Security $security;
+    private VersionNumberHelper $versionNumberHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
     {
@@ -72,7 +68,6 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 
         // Add prefixes
         foreach ($latestVersion->getPrefixes() as $prefix) {
-            /** @var NamespacePrefix $prefix */
             $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
         }
 
@@ -80,7 +75,6 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         $nodes = new ArrayCollection();
 
         foreach ($latestVersion->getNodes() as $node) {
-            /** @var Node $node */
             if ($node instanceof RecordNode) {
                 $newNode = new RecordNode($newVersion);
             } elseif ($node instanceof InternalIriNode) {

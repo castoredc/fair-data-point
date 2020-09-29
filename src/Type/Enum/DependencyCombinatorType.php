@@ -7,9 +7,6 @@ use App\Entity\Enum\DependencyCombinatorType as Enum;
 
 class DependencyCombinatorType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'DependencyCombinatorType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'DependencyCombinatorType';
+    protected string $class = Enum::class;
 }

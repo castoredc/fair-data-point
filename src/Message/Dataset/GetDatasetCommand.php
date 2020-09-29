@@ -5,8 +5,7 @@ namespace App\Message\Dataset;
 
 class GetDatasetCommand
 {
-    /** @var string */
-    private $id;
+    private string $id;
 
     public function __construct(string $id)
     {

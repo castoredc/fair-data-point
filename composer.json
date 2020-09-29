@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
@@ -10,6 +10,7 @@
         "beberlei/assert": "^3.2",
         "ciwit/bioportal-browser": "^1.1.1",
         "cocur/slugify": "^4.0",
+        "czproject/git-php": "^3.18",
         "easyrdf/easyrdf": "^0.9.1",
         "fresh/doctrine-enum-bundle": "^7.1",
         "guzzlehttp/guzzle": "~6.5",
@@ -32,10 +33,12 @@
         "symfony/twig-bundle": "^5.1",
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "^5.1",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "symfony/dotenv": "^5.1"
     },
     "require-dev": {
-        "castor/coding-standard": "^3.1",
+        "castor/coding-standard": "^4.0.1",
+        "easycorp/easy-deploy-bundle": "^1.0",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.40",
         "phpstan/phpstan-deprecation-rules": "^0.12.2",
@@ -44,8 +47,7 @@
         "phpstan/phpstan-strict-rules": "^0.12.3",
         "phpstan/phpstan-symfony": "^0.12.6",
         "phpunit/phpunit": "^9.3",
-        "roave/security-advisories": "dev-master",
-        "symfony/dotenv": "^5.1"
+        "roave/security-advisories": "dev-master"
     },
     "config": {
         "preferred-install": {

@@ -16,10 +16,8 @@ class DistributionMetadata extends Metadata
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="metadata", fetch="EAGER")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=FALSE)
-     *
-     * @var Distribution
      */
-    private $distribution;
+    private Distribution $distribution;
 
     public function __construct(Distribution $distribution)
     {

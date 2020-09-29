@@ -7,8 +7,7 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 
 class DeleteDataModelPrefixCommand
 {
-    /** @var NamespacePrefix */
-    private $dataModelPrefix;
+    private NamespacePrefix $dataModelPrefix;
 
     public function __construct(NamespacePrefix $dataModelPrefix)
     {

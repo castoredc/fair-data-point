@@ -9,23 +9,18 @@ use App\Entity\FAIRData\LocalizedText;
 
 abstract class CreateMetadataCommand
 {
-    /** @var LocalizedText|null */
-    private $title;
+    private ?LocalizedText $title = null;
 
-    /** @var LocalizedText|null */
-    private $description;
+    private ?LocalizedText $description = null;
 
-    /** @var string|null */
-    private $language;
+    private ?string $language = null;
 
-    /** @var string|null */
-    private $license;
+    private ?string $license = null;
 
-    /** @var VersionType */
-    private $versionUpdate;
+    private VersionType $versionUpdate;
 
     /** @var Agent[] */
-    private $publishers;
+    private array $publishers;
 
     /** @param Agent[] $publishers */
     public function __construct(?LocalizedText $title, ?LocalizedText $description, ?string $language, ?string $license, VersionType $versionUpdate, array $publishers)

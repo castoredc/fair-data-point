@@ -20,32 +20,20 @@ class NamespacePrefix
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $prefix;
+    /** @ORM\Column(type="string") */
+    private string $prefix;
 
-    /**
-     * @ORM\Column(type="iri", nullable=false)
-     *
-     * @var Iri
-     */
-    private $uri;
+    /** @ORM\Column(type="iri", nullable=false) */
+    private Iri $uri;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="prefixes",cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
     public function __construct(string $prefix, Iri $uri)
     {

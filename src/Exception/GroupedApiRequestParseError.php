@@ -10,7 +10,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class GroupedApiRequestParseError extends Exception
 {
     /** @var ConstraintViolationListInterface[] */
-    private $violations = [];
+    private array $violations = [];
 
     /**
      * @param array<ConstraintViolationListInterface> $violations

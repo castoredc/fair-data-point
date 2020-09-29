@@ -9,48 +9,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 class StudyCenterApiRequest extends GroupedApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $name;
+    private string $name;
+
+    /** @Assert\Country() */
+    private string $country;
 
     /**
-     * @var string
-     * @Assert\Country()
-     */
-    private $country;
-
-    /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $city;
+    private string $city;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $department;
+    /** @Assert\Type("string") */
+    private ?string $department = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $additionalInformation;
+    /** @Assert\Type("string") */
+    private ?string $additionalInformation = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $coordinatesLatitude;
+    /** @Assert\Type("string") */
+    private ?string $coordinatesLatitude = null;
 
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $coordinatesLongitude;
+    /** @Assert\Type("string") */
+    private ?string $coordinatesLongitude = null;
 
     protected function parse(): void
     {

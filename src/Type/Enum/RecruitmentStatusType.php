@@ -7,9 +7,6 @@ use App\Entity\Enum\RecruitmentStatus as Enum;
 
 class RecruitmentStatusType extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'RecruitmentStatusType';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'RecruitmentStatusType';
+    protected string $class = Enum::class;
 }

@@ -8,8 +8,7 @@ use App\Security\CastorServer;
 
 class CastorServerApiResource implements ApiResource
 {
-    /** @var CastorServer */
-    private $server;
+    private CastorServer $server;
 
     public function __construct(CastorServer $server)
     {

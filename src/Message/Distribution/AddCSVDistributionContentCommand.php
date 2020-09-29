@@ -7,14 +7,11 @@ use App\Entity\Data\CSV\CSVDistribution;
 
 class AddCSVDistributionContentCommand
 {
-    /** @var CSVDistribution */
-    private $distribution;
+    private CSVDistribution $distribution;
 
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var string */
-    private $value;
+    private string $value;
 
     public function __construct(CSVDistribution $distribution, string $type, string $value)
     {

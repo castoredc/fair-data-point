@@ -35,8 +35,9 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
-use const JSON_PRETTY_PRINT;
+use function assert;
 use function sprintf;
+use const JSON_PRETTY_PRINT;
 
 /**
  * @Route("/api/model")
@@ -52,8 +53,8 @@ class DataModelApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetDataModelsCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse((new DataModelsApiResource($handledStamp->getResult()))->toArray());
     }
@@ -66,13 +67,13 @@ class DataModelApiController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            /** @var DataModelApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
+            assert($parsed instanceof DataModelApiRequest);
 
             $envelope = $bus->dispatch(new CreateDataModelCommand($parsed->getTitle(), $parsed->getDescription()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new DataModelApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
@@ -115,13 +116,13 @@ class DataModelApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModel);
 
         try {
-            /** @var DataModelVersionTypeApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelVersionTypeApiRequest::class, $request);
+            assert($parsed instanceof DataModelVersionTypeApiRequest);
 
             $envelope = $bus->dispatch(new CreateDataModelVersionCommand($dataModel, $parsed->getVersionType()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new DataModelVersionApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
@@ -144,21 +145,21 @@ class DataModelApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $dataModel);
 
-        /** @var UploadedFile|null $file */
         $file = $request->files->get('file');
+        assert($file instanceof UploadedFile || $file === null);
 
         try {
             if ($file === null) {
                 throw new NoFileSpecified();
             }
 
-            /** @var DataModelVersionApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelVersionApiRequest::class, $request);
+            assert($parsed instanceof DataModelVersionApiRequest);
 
             $envelope = $bus->dispatch(new ImportDataModelCommand($dataModel, $file, $parsed->getVersion()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new DataModelVersionApiResource($handledStamp->getResult()))->toArray());
         } catch (NoFileSpecified $e) {
@@ -211,8 +212,8 @@ class DataModelApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetDataModelRDFPreviewCommand($dataModelVersion));
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse($handledStamp->getResult()->toArray());
     }

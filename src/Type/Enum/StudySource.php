@@ -7,9 +7,6 @@ use App\Entity\Enum\StudySource as Enum;
 
 class StudySource extends EnumType
 {
-    /** @inheritDoc */
-    protected $name = 'StudySource';
-
-    /** @inheritDoc */
-    protected $class = Enum::class;
+    protected string $name = 'StudySource';
+    protected string $class = Enum::class;
 }

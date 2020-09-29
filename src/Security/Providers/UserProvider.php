@@ -17,11 +17,9 @@ abstract class UserProvider extends AbstractProvider implements UserProviderInte
 {
     use BearerAuthorizationTrait;
 
-    /** @var string */
-    protected $server;
+    protected string $server;
 
-    /** @var EntityManagerInterface|null */
-    protected $em;
+    protected ?EntityManagerInterface $em = null;
 
     /**
      * @param array<mixed> $options
@@ -50,8 +48,8 @@ abstract class UserProvider extends AbstractProvider implements UserProviderInte
 
         $userRepository = $this->em->getRepository(AppUser::class);
 
-        /** @var AppUser $dbUser */
         $dbUser = $userRepository->find($user->getId());
+        assert($dbUser instanceof AppUser);
 
         if ($user->hasCastorUser()) {
             $castorUser = $user->getCastorUser();
@@ -70,9 +68,6 @@ abstract class UserProvider extends AbstractProvider implements UserProviderInte
         return $dbUser;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function supportsClass(string $class): bool
     {
         return $class === AppUser::class;

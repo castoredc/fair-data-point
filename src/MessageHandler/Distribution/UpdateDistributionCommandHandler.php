@@ -22,14 +22,11 @@ use function assert;
 
 class UpdateDistributionCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
     public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
     {
@@ -62,7 +59,6 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
             $distribution->setApiUser($apiUser);
         }
 
-        /** @var License|null $license */
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
 
         $distribution->setSlug($message->getSlug());
@@ -75,10 +71,8 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
         if ($contents instanceof CSVDistribution) {
             $contents->setIncludeAll($message->getIncludeAllData());
         } elseif ($contents instanceof RDFDistribution) {
-            /** @var DataModel|null $dataModel */
             $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
 
-            /** @var DataModelVersion|null $dataModelVersion */
             $dataModelVersion = $this->em->getRepository(DataModelVersion::class)->find($message->getDataModelVersion());
 
             if ($dataModel === null || $dataModelVersion === null || $dataModelVersion->getDataModel() !== $dataModel) {
@@ -90,6 +84,7 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
                 foreach ($contents->getMappings() as $mapping) {
                     $this->em->remove($mapping);
                 }
+
                 $contents->getMappings()->clear();
             }
 

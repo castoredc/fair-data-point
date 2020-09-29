@@ -16,77 +16,58 @@ use function boolval;
 class DistributionApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Choice({ "rdf", "csv" })
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $slug;
+    private string $slug;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $license;
+    private string $license;
 
     /**
-     * @var int
      * @Assert\NotBlank()
      * @Assert\Type("integer")
      */
-    private $accessRights;
+    private int $accessRights;
 
     /**
-     * @var bool|null
      * @Assert\NotNull(groups = {"csv"})
      * @Assert\Type("bool")
      */
-    private $includeAllData;
+    private ?bool $includeAllData = null;
 
     /**
-     * @var string|null
      * @Assert\NotBlank(groups = {"rdf"})
      * @Assert\Type("string")
      */
-    private $dataModel;
+    private ?string $dataModel = null;
+
+    /** @Assert\Type("string") */
+    private ?string $dataModelVersion = null;
+
+    /** @Assert\Type("string") */
+    private ?string $apiUser = null;
+
+    /** @Assert\Type("string") */
+    private ?string $clientId = null;
+
+    /** @Assert\Type("string") */
+    private ?string $clientSecret = null;
 
     /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $dataModelVersion;
-
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $apiUser;
-
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $clientId;
-
-    /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $clientSecret;
-
-    /**
-     * @var bool
      * @Assert\NotNull()
      * @Assert\Type("bool")
      */
-    private $published;
+    private bool $published;
 
     protected function parse(): void
     {

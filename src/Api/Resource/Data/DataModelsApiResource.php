@@ -9,7 +9,7 @@ use App\Entity\Data\DataModel\DataModel;
 class DataModelsApiResource implements ApiResource
 {
     /** @var DataModel[] */
-    private $dataModels;
+    private array $dataModels;
 
     /**
      * @param DataModel[] $dataModels

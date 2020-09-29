@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class StudyMetadataApiController extends ApiController
 {
@@ -45,8 +46,8 @@ class StudyMetadataApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $study);
 
         try {
-            /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataApiRequest);
 
             $bus->dispatch(
                 new CreateStudyMetadataCommand(
@@ -83,8 +84,8 @@ class StudyMetadataApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $studyMetadata->getStudy());
 
         try {
-            /** @var StudyMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataApiRequest);
 
             $bus->dispatch(
                 new UpdateStudyMetadataCommand(

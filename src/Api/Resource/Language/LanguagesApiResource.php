@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Language;
 class LanguagesApiResource implements ApiResource
 {
     /** @var Language[] */
-    private $languages;
+    private array $languages;
 
     /**
      * @param Language[] $languages

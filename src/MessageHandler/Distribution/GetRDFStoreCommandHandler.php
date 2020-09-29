@@ -14,14 +14,11 @@ use Symfony\Component\Security\Core\Security;
 
 class GetRDFStoreCommandHandler implements MessageHandlerInterface
 {
-    /** @var DistributionService */
-    private $distributionService;
+    private DistributionService $distributionService;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(DistributionService $distributionService, EncryptionService $encryptionService, Security $security)
     {

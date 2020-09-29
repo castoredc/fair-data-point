@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Catalog;
 class CatalogsApiResource implements ApiResource
 {
     /** @var Catalog[] */
-    private $catalogs;
+    private array $catalogs;
 
     /**
      * @param Catalog[] $catalogs

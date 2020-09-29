@@ -16,27 +16,17 @@ class Organization extends Agent
 {
     public const TYPE = 'organization';
 
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $homepage;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $homepage = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Country",cascade={"persist"})
      * @ORM\JoinColumn(name="country", referencedColumnName="code")
-     *
-     * @var Country|null
      */
-    private $country;
+    private ?Country $country = null;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $city;
+    /** @ORM\Column(type="string") */
+    private string $city;
 
     /**
      * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"}, fetch="EAGER")
@@ -45,22 +35,13 @@ class Organization extends Agent
      */
     private $departments;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
-     *
-     * @var string|null
-     */
-    private $coordinatesLatitude;
+    /** @ORM\Column(type="decimal", precision=10, scale=8, nullable=true) */
+    private ?string $coordinatesLatitude = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=11, scale=8, nullable=true)
-     *
-     * @var string|null
-     */
-    private $coordinatesLongitude;
+    /** @ORM\Column(type="decimal", precision=11, scale=8, nullable=true) */
+    private ?string $coordinatesLongitude = null;
 
-    /** @var string|null */
-    private $countryCode;
+    private ?string $countryCode = null;
 
     public function __construct(?string $slug, string $name, ?Iri $homepage, ?string $countryCode, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
     {
@@ -69,6 +50,7 @@ class Organization extends Agent
         if ($slug === null) {
             $slug = $slugify->slugify($name . ' ' . uniqid());
         }
+
         parent::__construct($slug, $name);
 
         $this->homepage = $homepage;

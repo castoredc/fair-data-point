@@ -16,10 +16,8 @@ class DataModelNodeMapping extends DataModelMapping
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node")
      * @ORM\JoinColumn(name="node", referencedColumnName="id")
-     *
-     * @var Node|null
      */
-    private $node;
+    private ?Node $node = null;
 
     public function __construct(RDFDistribution $distribution, Node $node, CastorEntity $entity, DataModelVersion $dataModelVersion)
     {

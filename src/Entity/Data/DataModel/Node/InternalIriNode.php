@@ -13,19 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InternalIriNode extends Node
 {
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $slug;
+    /** @ORM\Column(type="string") */
+    private string $slug;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default":"0"})
-     *
-     * @var bool
-     */
-    private $isRepeated = false;
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isRepeated = false;
 
     public function getSlug(): string
     {

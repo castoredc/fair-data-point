@@ -1,4 +1,7 @@
 <?php
+/**
+ * @phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+ */
 declare(strict_types=1);
 
 namespace App\MessageHandler\Tools;

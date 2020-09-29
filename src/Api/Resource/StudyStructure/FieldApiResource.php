@@ -8,8 +8,7 @@ use App\Entity\Castor\Form\Field;
 
 class FieldApiResource implements ApiResource
 {
-    /** @var Field */
-    private $field;
+    private Field $field;
 
     public function __construct(Field $field)
     {

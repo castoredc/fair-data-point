@@ -5,14 +5,11 @@ namespace App\Message\Catalog;
 
 class CreateCatalogCommand
 {
-    /** @var string */
-    private $slug;
+    private string $slug;
 
-    /** @var bool */
-    private $acceptSubmissions;
+    private bool $acceptSubmissions;
 
-    /** @var bool|null */
-    private $submissionAccessesData;
+    private ?bool $submissionAccessesData = null;
 
     public function __construct(string $slug, bool $acceptSubmissions, ?bool $submissionAccessesData)
     {

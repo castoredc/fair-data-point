@@ -5,8 +5,7 @@ namespace App\Message\Study;
 
 class GetStudyCommand
 {
-    /** @var string */
-    private $id;
+    private string $id;
 
     public function __construct(string $id)
     {

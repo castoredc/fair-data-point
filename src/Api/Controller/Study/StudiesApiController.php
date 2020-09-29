@@ -30,6 +30,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study")
@@ -42,8 +43,8 @@ class StudiesApiController extends ApiController
     public function studies(Request $request, MessageBusInterface $bus): Response
     {
         try {
-            /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetPaginatedStudiesCommand(
@@ -58,8 +59,8 @@ class StudiesApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 
@@ -78,8 +79,8 @@ class StudiesApiController extends ApiController
      */
     public function studiesFilters(MessageBusInterface $bus): Response
     {
-        /** @var User|null $user */
         $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         try {
             $studies = $this->getStudies($user, $bus);
@@ -98,19 +99,19 @@ class StudiesApiController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            /** @var StudyApiRequest $parsed */
             $parsed = $this->parseRequest(StudyApiRequest::class, $request);
+            assert($parsed instanceof StudyApiRequest);
 
             $catalog = null;
 
             if ($parsed->getCatalog() !== null) {
                 $envelope = $bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
 
-                /** @var HandledStamp $handledStamp */
                 $handledStamp = $envelope->last(HandledStamp::class);
+                assert($handledStamp instanceof HandledStamp);
 
-                /** @var Catalog $catalog */
                 $catalog = $handledStamp->getResult();
+                assert($catalog instanceof Catalog);
 
                 $this->denyAccessUnlessGranted('add', $catalog);
             }
@@ -119,11 +120,11 @@ class StudiesApiController extends ApiController
                 new CreateStudyCommand($parsed->getSource(), $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), true)
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Study $study */
             $study = $handledStamp->getResult();
+            assert($study instanceof Study);
 
             if ($catalog !== null) {
                 $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
@@ -170,8 +171,8 @@ class StudiesApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetStudiesCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return $handledStamp->getResult();
     }

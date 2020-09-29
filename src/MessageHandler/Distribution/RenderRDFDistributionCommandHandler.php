@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\MessageHandler\Distribution;
 
 use App\Encryption\EncryptionService;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderRDFDistributionCommand;
@@ -24,23 +23,17 @@ use function assert;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
-    /** @var UriHelper */
-    private $uriHelper;
+    private UriHelper $uriHelper;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         ApiClient $apiClient,
@@ -95,7 +88,6 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $prefixes = $dataModel->getPrefixes();
 
         foreach ($prefixes as $prefix) {
-            /** @var NamespacePrefix $prefix */
             EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 

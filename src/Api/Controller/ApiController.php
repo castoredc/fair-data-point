@@ -16,14 +16,11 @@ use function json_decode;
 
 abstract class ApiController extends AbstractController
 {
-    /** @var ApiClient */
-    protected $apiClient;
+    protected ApiClient $apiClient;
 
-    /** @var ValidatorInterface */
-    protected $validator;
+    protected ValidatorInterface $validator;
 
-    /** @var LoggerInterface */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger)
     {

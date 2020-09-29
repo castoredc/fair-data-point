@@ -10,8 +10,7 @@ use EasyRdf_Graph;
 
 class CatalogGraphResource implements GraphResource
 {
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
     public function __construct(Catalog $catalog)
     {

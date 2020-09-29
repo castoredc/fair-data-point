@@ -30,46 +30,28 @@ class Distribution implements AccessibleEntity
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $slug;
+    /** @ORM\Column(type="string") */
+    private string $slug;
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions", cascade={"persist"})
      * @ORM\JoinColumn(name="dataset_id", referencedColumnName="id")
-     *
-     * @var Dataset|null
      */
-    private $dataset;
+    private ?Dataset $dataset = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents", mappedBy="distribution")
-     *
-     * @var DistributionContents|null
-     */
-    private $contents;
+    /** @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents", mappedBy="distribution") */
+    private ?DistributionContents $contents = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Connection\DistributionDatabaseInformation", mappedBy="distribution")
-     *
-     * @var DistributionDatabaseInformation|null
-     */
-    private $databaseInformation;
+    /** @ORM\OneToOne(targetEntity="App\Connection\DistributionDatabaseInformation", mappedBy="distribution") */
+    private ?DistributionDatabaseInformation $databaseInformation = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
      * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     *
-     * @var License|null
      */
-    private $license;
+    private ?License $license = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DistributionMetadata", mappedBy="distribution", fetch="EAGER")
@@ -77,15 +59,13 @@ class Distribution implements AccessibleEntity
      *
      * @var Collection<DistributionMetadata>
      */
-    private $metadata;
+    private Collection $metadata;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Security\ApiUser")
      * @ORM\JoinColumn(name="user_api", referencedColumnName="id")
-     *
-     * @var ApiUser|null
      */
-    private $apiUser;
+    private ?ApiUser $apiUser = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -93,7 +73,7 @@ class Distribution implements AccessibleEntity
      *
      * @var Collection<Agent>
      */
-    private $contactPoints;
+    private Collection $contactPoints;
 
     public function __construct(string $slug, Dataset $dataset)
     {

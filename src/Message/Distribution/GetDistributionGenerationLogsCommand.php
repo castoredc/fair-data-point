@@ -7,14 +7,11 @@ use App\Entity\FAIRData\Distribution;
 
 class GetDistributionGenerationLogsCommand
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
-    /** @var int */
-    private $perPage;
+    private int $perPage;
 
-    /** @var int */
-    private $page;
+    private int $page;
 
     public function __construct(Distribution $distribution, int $perPage, int $page)
     {

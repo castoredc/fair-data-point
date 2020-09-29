@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/model/{model}/v/{version}/module/{module}/triple")
@@ -44,8 +45,8 @@ class TripleApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         try {
-            /** @var TripleApiRequest $parsed */
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
+            assert($parsed instanceof TripleApiRequest);
 
             $bus->dispatch(new CreateTripleCommand($module, $parsed->getObjectType(), $parsed->getObjectValue(), $parsed->getPredicateValue(), $parsed->getSubjectType(), $parsed->getSubjectValue()));
 
@@ -68,8 +69,8 @@ class TripleApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
 
         try {
-            /** @var TripleApiRequest $parsed */
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
+            assert($parsed instanceof TripleApiRequest);
 
             $bus->dispatch(new UpdateTripleCommand($triple, $parsed->getObjectType(), $parsed->getObjectValue(), $parsed->getPredicateValue(), $parsed->getSubjectType(), $parsed->getSubjectValue()));
 

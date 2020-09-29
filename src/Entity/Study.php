@@ -30,38 +30,20 @@ abstract class Study implements AccessibleEntity
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     *
-     * @var string|null
-     */
-    private $sourceId;
+    /** @ORM\Column(type="string", length=255, nullable=TRUE) */
+    private ?string $sourceId = null;
 
-    /**
-     * @ORM\Column(type="StudySource", nullable=TRUE)
-     *
-     * @var StudySource|null
-     */
-    private $source;
+    /** @ORM\Column(type="StudySource", nullable=TRUE) */
+    private ?StudySource $source = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string", length=255) */
+    private string $name;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $slug;
+    /** @ORM\Column(type="string", length=255) */
+    private string $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study", cascade={"persist"}, fetch = "EAGER")
@@ -75,28 +57,20 @@ abstract class Study implements AccessibleEntity
      *
      * @var Collection<Dataset>
      */
-    private $datasets;
+    private Collection $datasets;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $enteredManually = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $enteredManually = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Catalog", mappedBy="studies", cascade={"persist"})
      *
      * @var Collection<Catalog>
      */
-    private $catalogs;
+    private Collection $catalogs;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $isPublished = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $isPublished = false;
 
     public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)
     {

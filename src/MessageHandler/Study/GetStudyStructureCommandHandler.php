@@ -18,11 +18,9 @@ use function assert;
 
 class GetStudyStructureCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(ApiClient $apiClient, Security $security)
     {

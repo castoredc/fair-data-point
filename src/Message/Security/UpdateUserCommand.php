@@ -5,14 +5,10 @@ namespace App\Message\Security;
 
 class UpdateUserCommand
 {
-    /** @var string */
-    private $firstName;
-    /** @var string|null */
-    private $middleName;
-    /** @var string */
-    private $lastName;
-    /** @var string */
-    private $email;
+    private string $firstName;
+    private ?string $middleName = null;
+    private string $lastName;
+    private string $email;
 
     public function __construct(string $firstName, ?string $middleName, string $lastName, string $email)
     {

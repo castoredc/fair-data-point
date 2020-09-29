@@ -14,11 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class StructureElement extends CastorEntity
 {
-    /** @var string|null */
-    protected $name;
+    protected ?string $name = null;
 
     /** @var Step[] */
-    protected $steps;
+    protected array $steps;
 
     public function __construct(string $id, CastorStudy $study, StructureType $structureType, string $name)
     {

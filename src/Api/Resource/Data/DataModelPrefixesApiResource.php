@@ -8,8 +8,7 @@ use App\Entity\Data\DataModel\DataModelVersion;
 
 class DataModelPrefixesApiResource implements ApiResource
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
     public function __construct(DataModelVersion $dataModel)
     {

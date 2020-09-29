@@ -19,11 +19,9 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
 {
     use BearerAuthorizationTrait;
 
-    /** @var string */
-    protected $server;
+    protected string $server;
 
-    /** @var ApiClient|null */
-    private $apiClient;
+    private ?ApiClient $apiClient = null;
 
     /**
      * @param array<mixed> $options
@@ -37,9 +35,6 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         $this->apiClient = $apiClient;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBaseAuthorizationUrl(): string
     {
         return '/oauth/authorize';
@@ -84,9 +79,6 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return $this->server . '/oauth/token';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
         return $this->server . '/api/user';

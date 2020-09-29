@@ -10,18 +10,16 @@ use function boolval;
 class ConsentApiRequest extends SingleApiRequest
 {
     /**
-     * @var bool
      * @Assert\NotNull()
      * @Assert\Type("boolean")
      */
-    private $publish;
+    private bool $publish;
 
     /**
-     * @var bool
      * @Assert\NotNull()
      * @Assert\Type("boolean")
      */
-    private $socialMedia;
+    private bool $socialMedia;
 
     protected function parse(): void
     {

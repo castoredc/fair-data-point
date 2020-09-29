@@ -10,7 +10,7 @@ use App\Model\Castor\CastorEntityCollection;
 class OptionGroupsApiResource implements ApiResource
 {
     /** @var CastorEntityCollection<FieldOptionGroup> */
-    private $optionGroups;
+    private CastorEntityCollection $optionGroups;
 
     public function __construct(CastorEntityCollection $optionGroups)
     {

@@ -10,8 +10,7 @@ use function in_array;
 
 class UserApiResource implements ApiResource
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     public function __construct(User $user)
     {

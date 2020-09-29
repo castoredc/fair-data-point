@@ -15,6 +15,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 use function file_get_contents;
 
 class ToolsApiController extends ApiController
@@ -24,8 +25,8 @@ class ToolsApiController extends ApiController
      */
     public function metadataXmlParse(Request $request, MessageBusInterface $bus): Response
     {
-        /** @var UploadedFile|null $file */
         $file = $request->files->get('xml');
+        assert($file instanceof UploadedFile || $file === null);
 
         if ($file === null) {
             return new JsonResponse(['error' => 'No file specified'], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -46,8 +47,8 @@ class ToolsApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new MetadataXmlParseCommand($xml));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse($handledStamp->getResult());
         } catch (HandlerFailedException $e) {

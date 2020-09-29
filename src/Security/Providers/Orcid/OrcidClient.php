@@ -17,11 +17,9 @@ class OrcidClient extends OAuth2Client
 {
     public const OAUTH2_SESSION_STATE_KEY = 'knpu.oauth2_client_state';
 
-    /** @var OrcidUserProvider */
-    private $provider;
+    private OrcidUserProvider $provider;
 
-    /** @var RequestStack */
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(OrcidUserProvider $provider, RequestStack $requestStack)
     {

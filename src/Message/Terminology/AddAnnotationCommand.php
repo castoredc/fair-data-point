@@ -9,20 +9,15 @@ use App\Entity\Study;
 
 class AddAnnotationCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var CastorEntity */
-    private $entity;
+    private CastorEntity $entity;
 
-    /** @var string */
-    private $ontologyId;
+    private string $ontologyId;
 
-    /** @var string */
-    private $conceptCode;
+    private string $conceptCode;
 
-    /** @var OntologyConceptType */
-    private $conceptType;
+    private OntologyConceptType $conceptType;
 
     public function __construct(Study $study, CastorEntity $entity, string $ontologyId, string $conceptCode, OntologyConceptType $conceptType)
     {

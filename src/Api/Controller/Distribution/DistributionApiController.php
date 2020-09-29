@@ -36,6 +36,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/dataset/{dataset}/distribution")
@@ -87,8 +88,8 @@ class DistributionApiController extends ApiController
         }
 
         try {
-            /** @var DistributionGenerationLogsFilterApiRequest $parsed */
             $parsed = $this->parseRequest(DistributionGenerationLogsFilterApiRequest::class, $request);
+            assert($parsed instanceof DistributionGenerationLogsFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetDistributionGenerationLogsCommand(
@@ -98,8 +99,8 @@ class DistributionApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 
@@ -149,8 +150,8 @@ class DistributionApiController extends ApiController
         }
 
         try {
-            /** @var DistributionGenerationLogsFilterApiRequest $parsed */
             $parsed = $this->parseRequest(DistributionGenerationLogsFilterApiRequest::class, $request);
+            assert($parsed instanceof DistributionGenerationLogsFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetDistributionGenerationRecordLogsCommand(
@@ -160,8 +161,8 @@ class DistributionApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 
@@ -229,8 +230,8 @@ class DistributionApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataset);
 
         try {
-            /** @var DistributionApiRequest $parsed */
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
+            assert($parsed instanceof DistributionApiRequest);
             $envelope = $bus->dispatch(
                 new CreateDistributionCommand(
                     $parsed->getType(),
@@ -246,11 +247,11 @@ class DistributionApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Distribution $distribution */
             $distribution = $handledStamp->getResult();
+            assert($distribution instanceof Distribution);
 
             if ($parsed->getType()->isRdf()) {
                 $bus->dispatch(new CreateDistributionDatabaseCommand($distribution));
@@ -281,8 +282,8 @@ class DistributionApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataset);
 
         try {
-            /** @var DistributionApiRequest $parsed */
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
+            assert($parsed instanceof DistributionApiRequest);
             $bus->dispatch(
                 new UpdateDistributionCommand(
                     $distribution,

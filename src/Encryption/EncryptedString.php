@@ -4,16 +4,14 @@ declare(strict_types=1);
 namespace App\Encryption;
 
 use JsonSerializable;
-use const JSON_THROW_ON_ERROR;
 use function json_decode;
+use const JSON_THROW_ON_ERROR;
 
 class EncryptedString implements JsonSerializable
 {
-    /** @var string */
-    private $cipherText;
+    private string $cipherText;
 
-    /** @var string */
-    private $nonce;
+    private string $nonce;
 
     public function __construct(string $cipherText, string $nonce)
     {

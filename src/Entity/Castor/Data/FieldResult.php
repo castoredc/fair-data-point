@@ -5,26 +5,20 @@ namespace App\Entity\Castor\Data;
 
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Structure\MetadataPoint;
 use DateTime;
 use Exception;
 
 class FieldResult
 {
-    /** @var Field */
-    private $field;
+    private Field $field;
 
-    /** @var string */
-    private $value;
+    private string $value;
 
-    /** @var string|null */
-    private $label;
+    private ?string $label = null;
 
-    /** @var DateTime|null */
-    private $updatedOn;
+    private ?DateTime $updatedOn = null;
 
-    /** @var Record */
-    private $record;
+    private Record $record;
 
     public function __construct(Field $field, string $value, ?string $label, ?DateTime $updatedOn, Record $record)
     {
@@ -83,7 +77,6 @@ class FieldResult
     public function getMetadata(): ?string
     {
         foreach ($this->field->getMetadata() as $metadataPoint) {
-            /** @var MetadataPoint $metadataPoint */
             if ($metadataPoint->getDescription() === $this->value) {
                 return $metadataPoint->getValue();
             }

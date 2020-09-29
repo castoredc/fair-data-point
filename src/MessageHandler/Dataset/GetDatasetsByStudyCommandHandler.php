@@ -11,8 +11,7 @@ use function count;
 
 class GetDatasetsByStudyCommandHandler implements MessageHandlerInterface
 {
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {

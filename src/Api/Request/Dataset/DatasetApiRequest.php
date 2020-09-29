@@ -10,18 +10,16 @@ use function boolval;
 class DatasetApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $slug;
+    private string $slug;
 
     /**
-     * @var bool
      * @Assert\NotNull()
      * @Assert\Type("bool")
      */
-    private $published;
+    private bool $published;
 
     protected function parse(): void
     {

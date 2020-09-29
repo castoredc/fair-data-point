@@ -9,6 +9,7 @@ use App\Type\DistributionAccessType;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class DistributionVoter extends Voter
@@ -16,8 +17,7 @@ class DistributionVoter extends Voter
     public const VIEW = 'view';
     public const EDIT = 'edit';
     public const ACCESS_DATA = 'access_data';
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -37,8 +37,8 @@ class DistributionVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        /** @var Distribution $distribution */
         $distribution = $subject;
+        assert($distribution instanceof Distribution);
 
         switch ($attribute) {
             case self::VIEW:

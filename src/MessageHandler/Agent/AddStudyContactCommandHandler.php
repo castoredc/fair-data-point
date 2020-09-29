@@ -16,11 +16,9 @@ use Symfony\Component\Security\Core\Security;
 
 class AddStudyContactCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -37,7 +35,6 @@ class AddStudyContactCommandHandler implements MessageHandlerInterface
         $repository = $this->em->getRepository(Person::class);
 
         if ($command->getId() !== null) {
-            /** @var Person|null $contact */
             $contact = $repository->find($command->getId());
 
             if ($contact === null) {

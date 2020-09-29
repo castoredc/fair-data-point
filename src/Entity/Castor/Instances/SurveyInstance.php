@@ -8,8 +8,7 @@ use DateTime;
 
 class SurveyInstance extends Instance
 {
-    /** @var SurveyPackageInstance */
-    private $surveyPackageInstance;
+    private SurveyPackageInstance $surveyPackageInstance;
 
     public function __construct(string $id, Record $record, DateTime $createdOn, SurveyPackageInstance $surveyPackageInstance)
     {

@@ -5,17 +5,13 @@ namespace App\Entity\Castor\Form;
 
 class FieldDependency
 {
-    /** @var string|null */
-    private $id;
+    private ?string $id = null;
 
-    /** @var string|null */
-    private $parentId;
+    private ?string $parentId = null;
 
-    /** @var string|null */
-    private $value;
+    private ?string $value = null;
 
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
     public function __construct(?string $id, ?string $parentId, ?string $value, ?string $description)
     {

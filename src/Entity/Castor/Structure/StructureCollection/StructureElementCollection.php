@@ -10,7 +10,7 @@ use function array_merge;
 abstract class StructureElementCollection
 {
     /** @var StructureElement[]|null */
-    protected $elements;
+    protected ?array $elements = null;
 
     public function add(StructureElement $element): void
     {

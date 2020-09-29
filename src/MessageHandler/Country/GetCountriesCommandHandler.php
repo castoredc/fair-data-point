@@ -11,8 +11,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class GetCountriesCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em)
     {

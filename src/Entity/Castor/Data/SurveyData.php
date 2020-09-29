@@ -15,7 +15,7 @@ use function explode;
 class SurveyData extends InstanceDataCollection
 {
     /** @var ArrayCollection<string, SurveyInstance> */
-    private $surveyInstances;
+    private ArrayCollection $surveyInstances;
 
     public function __construct(Record $record)
     {

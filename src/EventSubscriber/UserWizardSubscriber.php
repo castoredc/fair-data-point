@@ -19,10 +19,8 @@ use function urlencode;
 
 class UserWizardSubscriber implements EventSubscriberInterface
 {
-    /** @var Security */
-    private $security;
-    /** @var RouterInterface */
-    private $router;
+    private Security $security;
+    private RouterInterface $router;
 
     public function __construct(Security $security, RouterInterface $router)
     {

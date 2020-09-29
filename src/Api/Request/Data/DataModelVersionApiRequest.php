@@ -10,11 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class DataModelVersionApiRequest extends SingleFormApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $version;
+    private string $version;
 
     protected function parse(): void
     {

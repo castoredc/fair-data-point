@@ -9,20 +9,15 @@ use App\Entity\Enum\StructureType;
 
 class CreateDataModelModuleMappingCommand
 {
-    /** @var RDFDistribution */
-    private $distribution;
+    private RDFDistribution $distribution;
 
-    /** @var string */
-    private $module;
+    private string $module;
 
-    /** @var string */
-    private $element;
+    private string $element;
 
-    /** @var StructureType */
-    private $structureType;
+    private StructureType $structureType;
 
-    /** @var DataModelVersion */
-    private $dataModelVersion;
+    private DataModelVersion $dataModelVersion;
 
     public function __construct(RDFDistribution $distribution, string $module, string $element, StructureType $structureType, DataModelVersion $dataModelVersion)
     {

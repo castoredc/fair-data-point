@@ -16,24 +16,14 @@ abstract class Agent
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private ?string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $slug;
+    /** @ORM\Column(type="string") */
+    private string $slug;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string") */
+    private string $name;
 
     public function __construct(string $slug, string $name)
     {

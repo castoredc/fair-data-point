@@ -19,11 +19,9 @@ use function assert;
 
 class GetRecordsCommandHandler implements MessageHandlerInterface
 {
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(CastorEntityHelper $entityHelper, Security $security)
     {

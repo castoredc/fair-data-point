@@ -10,10 +10,9 @@ use App\Service\UriHelper;
 class DistributionsApiResource implements ApiResource
 {
     /** @var Distribution[] */
-    private $distributions;
+    private array $distributions;
 
-    /** @var UriHelper */
-    private $uriHelper;
+    private UriHelper $uriHelper;
 
     /**
      * @param Distribution[] $distributions

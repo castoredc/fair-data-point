@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class FAIRDataPointApiController extends ApiController
 {
@@ -21,8 +22,8 @@ class FAIRDataPointApiController extends ApiController
     {
         $envelope = $bus->dispatch(new GetFAIRDataPointCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse((new FAIRDataPointApiResource($handledStamp->getResult()))->toArray());
     }

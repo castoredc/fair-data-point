@@ -9,7 +9,7 @@ use App\Entity\FAIRData\License;
 class LicensesApiResource implements ApiResource
 {
     /** @var License[] */
-    private $licenses;
+    private array $licenses;
 
     /**
      * @param License[] $licenses

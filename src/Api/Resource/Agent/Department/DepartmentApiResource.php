@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Department;
 
 class DepartmentApiResource implements ApiResource
 {
-    /** @var Department */
-    private $department;
+    private Department $department;
 
     public function __construct(Department $department)
     {

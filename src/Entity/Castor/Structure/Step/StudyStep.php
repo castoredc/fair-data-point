@@ -8,8 +8,7 @@ use App\Entity\Enum\StructureType;
 
 class StudyStep extends Step
 {
-    /** @var string */
-    private $parentId;
+    private string $parentId;
 
     public function __construct(string $id, CastorStudy $study, ?string $stepDescription, ?string $stepName, ?int $stepOrder, string $parentId)
     {

@@ -8,8 +8,7 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 
 class DataModelPrefixApiResource implements ApiResource
 {
-    /** @var NamespacePrefix */
-    private $prefix;
+    private NamespacePrefix $prefix;
 
     public function __construct(NamespacePrefix $prefix)
     {

@@ -29,9 +29,6 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         $this->em = $em;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBaseAuthorizationUrl(): string
     {
         return '/oauth/authorize';
@@ -57,9 +54,6 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         return self::BASE_URL . '/oauth/token';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
         return '';

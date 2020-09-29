@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Country;
 class CountriesApiResource implements ApiResource
 {
     /** @var Country[] */
-    private $countries;
+    private array $countries;
 
     /**
      * @param Country[] $countries

@@ -7,6 +7,7 @@ use App\Security\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 use function count;
 
 class UserOnboardingWizardController extends AbstractController
@@ -18,8 +19,8 @@ class UserOnboardingWizardController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var User $user */
         $user = $this->getUser();
+        assert($user instanceof User);
 
         if (count($user->getWizards()) === 0) {
             return $this->redirectToRoute('fdp');

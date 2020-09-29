@@ -31,6 +31,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}")
@@ -61,11 +62,11 @@ class RdfDistributionApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetDataModelMappingCommand($contents, $dataModelVersion, $type));
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
-        /** @var PaginatedResultCollection $results */
         $results = $handledStamp->getResult();
+        assert($results instanceof PaginatedResultCollection);
 
         return new JsonResponse((new PaginatedApiResource(DataModelMappingApiResource::class, $results))->toArray());
     }
@@ -90,8 +91,8 @@ class RdfDistributionApiController extends ApiController
         $type = DataModelMappingType::fromString($type);
 
         try {
-            /** @var DataModelMappingApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelMappingApiRequest::class, $request);
+            assert($parsed instanceof DataModelMappingApiRequest);
 
             if ($type->isNode()) {
                 $envelope = $bus->dispatch(
@@ -105,11 +106,11 @@ class RdfDistributionApiController extends ApiController
                 throw new InvalidEntityType();
             }
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var DataModelMapping $result */
             $result = $handledStamp->getResult();
+            assert($result instanceof DataModelMapping);
 
             return new JsonResponse((new DataModelMappingApiResource($result))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
