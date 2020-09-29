@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
-use EasyCorp\Bundle\EasyDeployBundle\Deployer\DefaultDeployer;
 use Cz\Git\GitRepository;
+use EasyCorp\Bundle\EasyDeployBundle\Configuration\DefaultConfiguration;
 use EasyCorp\Bundle\EasyDeployBundle\Context;
+use EasyCorp\Bundle\EasyDeployBundle\Deployer\DefaultDeployer;
 use EasyCorp\Bundle\EasyDeployBundle\Server\Property;
 use EasyCorp\Bundle\EasyDeployBundle\Server\Server;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -11,9 +13,7 @@ use Symfony\Component\Console\Question\Question;
 
 return new class extends DefaultDeployer
 {
-    /**
-     * @var GitRepository
-     */
+    /** @var GitRepository */
     private $gitRepo;
 
     /** @var QuestionHelper */
@@ -25,13 +25,16 @@ return new class extends DefaultDeployer
 
         $question = new ConfirmationQuestion('Are you sure you want to deploy? [y/N] ', false);
 
-        if (!$this->ask($question)) {
+        $deploying = (bool) $this->ask($question);
+
+        if (! $deploying) {
             $this->log('<h1><fg=red>Not deploying</fg></h1>');
             exit;
         }
     }
 
-    public function configure()
+    /** @inheritDoc */
+    public function configure(): DefaultConfiguration
     {
         $this->questionHelper = new QuestionHelper();
         $this->gitRepo = new GitRepository($this->getContext()->getLocalProjectRootDir());
@@ -46,11 +49,10 @@ return new class extends DefaultDeployer
             ->deployDir('/srv/www/fdp.castoredc.dev')
             ->repositoryUrl(sprintf('git@github.com:%s.git', 'castoredc/fair-data-point'))
             ->repositoryBranch($branch)
-            ->composerInstallFlags('--prefer-dist --no-interaction --no-dev --no-scripts --quiet')
-        ;
+            ->composerInstallFlags('--prefer-dist --no-interaction --no-dev --no-scripts --quiet');
     }
 
-    public function beforeStartingDeploy()
+    public function beforeStartingDeploy(): void
     {
         $branchToDeploy = $this->getConfig('repositoryBranch');
 
@@ -80,14 +82,14 @@ return new class extends DefaultDeployer
 //        $this->gitRepo->pull();
     }
 
-    public function beforePreparing()
+    public function beforePreparing(): void
     {
         $this->log('<h2>Copy ENV files</h2>');
         $this->runRemote(sprintf('cp -RPp {{ deploy_dir }}/repo/.env {{ project_dir }}'));
         $this->runRemote(sprintf('cp -RPp {{ deploy_dir }}/.env.local {{ project_dir }}'));
     }
 
-    public function beforePublishing()
+    public function beforePublishing(): void
     {
         /** @var Server $server */
         $server = $this->getServers()->findAll()[0];
@@ -117,7 +119,7 @@ return new class extends DefaultDeployer
         $this->pushVersion($version);
     }
 
-    public function pushVersion($version): void
+    public function pushVersion(string $version): void
     {
         $this->runRemote(
             sprintf('cd {{ project_dir }} && echo "APP_VERSION=%s" > ./.env.prod.local', $version)
@@ -128,7 +130,7 @@ return new class extends DefaultDeployer
     {
         $pathParts = explode('/', $projectDir);
 
-        return end($pathParts);
+        return (string) end($pathParts);
     }
 
     private function handleMigrations(): void
@@ -137,6 +139,7 @@ return new class extends DefaultDeployer
         $this->runRemote('bin/console d:m:m --no-interaction --quiet');
     }
 
+    /** @return mixed */
     private function ask(Question $question)
     {
         return $this->questionHelper->ask($this->getContext()->getInput(), $this->getContext()->getOutput(), $question);

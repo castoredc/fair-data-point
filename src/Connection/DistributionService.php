@@ -184,13 +184,13 @@ class DistributionService
                 $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
                 $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString()
             );
-            $connection->exec($sql);
+            $connection->executeStatement($sql);
         } catch (Throwable $t) {
             throw new CouldNotCreateDatabaseUser();
         }
 
         try {
-            $connection->exec(
+            $connection->executeStatement(
                 'GRANT SELECT, INSERT, UPDATE, DELETE, TRIGGER, EXECUTE, LOCK TABLES, CREATE, DROP, CREATE TEMPORARY TABLES
                 ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString() . '\'@\'%\';'
             );

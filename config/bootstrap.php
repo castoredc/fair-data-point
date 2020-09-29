@@ -1,4 +1,7 @@
 <?php
+/**
+ * @phpcs:ignoreFile
+ */
 
 use Symfony\Component\Dotenv\Dotenv;
 
