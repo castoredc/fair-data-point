@@ -11,7 +11,7 @@ class NodesApiResource implements ApiResource
 {
     private DataModelVersion $dataModel;
 
-    private NodeType $type;
+    private ?NodeType $type;
 
     public function __construct(DataModelVersion $dataModel, ?NodeType $type = null)
     {

@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\Visualization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Triple;
-use function assert;
 
 class VisualizationEdgeApiResource implements ApiResource
 {
@@ -30,7 +28,6 @@ class VisualizationEdgeApiResource implements ApiResource
         $prefixedValue = $predicateIri->getBase();
 
         foreach ($prefixes as $prefix) {
-            assert($prefix instanceof NamespacePrefix);
             if ($prefix->getUri()->getValue() !== $iriPrefix) {
                 continue;
             }

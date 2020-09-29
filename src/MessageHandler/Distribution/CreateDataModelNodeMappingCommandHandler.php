@@ -65,7 +65,6 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
         assert($study instanceof CastorStudy);
 
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
-        assert($node instanceof ValueNode || $node === null);
         if ($node === null) {
             throw new NotFound();
         }

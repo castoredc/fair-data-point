@@ -64,7 +64,6 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
         assert($study instanceof CastorStudy);
 
         $module = $this->em->getRepository(DataModelModule::class)->find($command->getModule());
-        assert($module instanceof DataModelModule || $module === null);
 
         if ($module === null || ! $module->isRepeated()) {
             throw new NotFound();

@@ -29,10 +29,8 @@ abstract class InstanceDataCollection extends RecordData
     {
         if ($this->data->first() !== false) {
             $return = $this->data->first()->getInstance();
-            assert($return instanceof Instance);
 
             foreach ($this->data as $instance) {
-                assert($instance instanceof InstanceData);
                 if ($instance->getInstance()->getCreatedOn() <= $return->getCreatedOn()) {
                     continue;
                 }

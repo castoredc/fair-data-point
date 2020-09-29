@@ -147,7 +147,6 @@ class RDFRenderHelper
             return;
         }
 
-        assert($module instanceof DataModelModule);
         $triples = $module->getTriples();
 
         foreach ($triples as $triple) {

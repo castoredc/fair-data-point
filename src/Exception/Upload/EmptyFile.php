@@ -7,6 +7,8 @@ use App\Exception\RenderableApiException;
 
 class EmptyFile extends RenderableApiException
 {
-    /** @inheritDoc */
-    protected $message = 'The uploaded file is empty.';
+    public function __construct()
+    {
+        parent::__construct('The uploaded file is empty.');
+    }
 }

@@ -9,7 +9,6 @@ use App\Traits\CreatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationLogRepository")
@@ -85,7 +84,6 @@ class DistributionGenerationLog
         $count = 0;
 
         foreach ($this->records as $record) {
-            assert($record instanceof DistributionGenerationRecordLog);
             if (! $record->getStatus()->isEqualTo($status)) {
                 continue;
             }

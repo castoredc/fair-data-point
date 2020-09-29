@@ -9,7 +9,6 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 
 /**
  * @ORM\Entity
@@ -103,7 +102,6 @@ class DataModel
     public function hasVersion(Version $version): bool
     {
         foreach ($this->versions as $dataModelVersion) {
-            assert($dataModelVersion instanceof DataModelVersion);
             if ($dataModelVersion->getVersion() === $version) {
                 return true;
             }

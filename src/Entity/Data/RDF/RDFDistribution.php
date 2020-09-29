@@ -12,7 +12,6 @@ use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 
 /**
  * @ORM\Entity
@@ -106,7 +105,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
     {
         foreach ($this->getNodeMappings() as $mapping) {
-            assert($mapping instanceof DataModelNodeMapping);
             if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
                 return $mapping;
             }
@@ -118,7 +116,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
     {
         foreach ($this->getModuleMappings() as $mapping) {
-            assert($mapping instanceof DataModelModuleMapping);
             if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
                 return $mapping;
             }

@@ -5,9 +5,7 @@ namespace App\Api\Resource\Data;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Iri;
-use function assert;
 
 class IriApiResource implements ApiResource
 {
@@ -33,7 +31,6 @@ class IriApiResource implements ApiResource
         $prefixedValue = null;
 
         foreach ($prefixes as $prefix) {
-            assert($prefix instanceof NamespacePrefix);
             if ($prefix->getUri()->getValue() !== $iriPrefix) {
                 continue;
             }

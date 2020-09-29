@@ -48,7 +48,6 @@
         "phpstan/phpstan-symfony": "^0.12.6",
         "phpunit/phpunit": "^9.3",
         "roave/security-advisories": "dev-master",
-        "slevomat/coding-standard": "~6.0"
     },
     "config": {
         "preferred-install": {

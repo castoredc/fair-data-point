@@ -7,11 +7,9 @@ use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\GetDistributionGenerationLogsCommand;
-use App\Repository\DistributionGenerationLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class GetDistributionGenerationLogsCommandHandler implements MessageHandlerInterface
 {
@@ -35,7 +33,6 @@ class GetDistributionGenerationLogsCommandHandler implements MessageHandlerInter
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
         $repository = $this->em->getRepository(DistributionGenerationLog::class);
-        assert($repository instanceof DistributionGenerationLogRepository);
 
         $count = $repository->countLogs($distribution, $isAdmin);
         $logs = $repository->findLogs($distribution, $command->getPerPage(), $command->getPage(), $isAdmin);

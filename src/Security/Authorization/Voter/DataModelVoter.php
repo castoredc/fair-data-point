@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\RDF\RDFDistribution;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -49,7 +48,6 @@ class DataModelVoter extends Voter
         $distributions = $dataModel->getDistributions();
 
         foreach ($distributions as $distribution) {
-            assert($distribution instanceof RDFDistribution);
             if ($this->security->isGranted('view', $distribution->getDistribution())) {
                 return true;
             }

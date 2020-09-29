@@ -6,11 +6,9 @@ namespace App\MessageHandler\Dataset;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\PaginatedResultCollection;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
-use App\Repository\DatasetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
 {
@@ -27,7 +25,6 @@ class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
     public function __invoke(GetPaginatedDatasetsCommand $command): PaginatedResultCollection
     {
         $datasetRepository = $this->em->getRepository(Dataset::class);
-        assert($datasetRepository instanceof DatasetRepository);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 

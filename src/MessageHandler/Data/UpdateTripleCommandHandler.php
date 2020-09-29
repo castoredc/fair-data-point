@@ -8,7 +8,6 @@ use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\UpdateTripleCommand;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -36,7 +35,6 @@ class UpdateTripleCommandHandler implements MessageHandlerInterface
         $dataModel = $triple->getModule()->getDataModel();
 
         $nodeRepository = $this->em->getRepository(Node::class);
-        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModel);

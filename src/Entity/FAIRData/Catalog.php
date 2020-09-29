@@ -10,7 +10,6 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 use function count;
 
 /**
@@ -118,7 +117,6 @@ class Catalog implements AccessibleEntity
         $datasets = [];
 
         foreach ($this->datasets as $dataset) {
-            assert($dataset instanceof Dataset);
             if (! $dataset->isPublished()) {
                 continue;
             }
@@ -139,7 +137,6 @@ class Catalog implements AccessibleEntity
         $studies = [];
 
         foreach ($this->studies as $study) {
-            assert($study instanceof Study);
             if (! $study->isPublished()) {
                 continue;
             }

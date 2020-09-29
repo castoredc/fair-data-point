@@ -10,7 +10,6 @@ use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CastorEntityRepository")
@@ -124,7 +123,6 @@ abstract class CastorEntity
         $return = [];
 
         foreach ($this->annotations as $annotation) {
-            assert($annotation instanceof Annotation);
             if ($annotation->getConcept()->getOntology() !== $ontology) {
                 continue;
             }
@@ -138,7 +136,6 @@ abstract class CastorEntity
     public function hasAnnotation(OntologyConcept $ontologyConcept): bool
     {
         foreach ($this->annotations as $annotation) {
-            assert($annotation instanceof Annotation);
             if ($annotation->getConcept() === $ontologyConcept) {
                 return true;
             }

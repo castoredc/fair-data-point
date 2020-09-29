@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\MessageHandler\Distribution;
 
 use App\Encryption\EncryptionService;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderRDFDistributionCommand;
@@ -89,7 +88,6 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $prefixes = $dataModel->getPrefixes();
 
         foreach ($prefixes as $prefix) {
-            assert($prefix instanceof NamespacePrefix);
             EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 

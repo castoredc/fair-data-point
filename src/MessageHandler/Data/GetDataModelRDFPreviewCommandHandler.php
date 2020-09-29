@@ -5,8 +5,6 @@ namespace App\MessageHandler\Data;
 
 use App\Api\Resource\Data\DataModelModuleRDFPreviewApiResource;
 use App\Api\Resource\Data\DataModelRDFPreviewApiResource;
-use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -55,14 +53,12 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
         $dataModelTriples = [];
 
         foreach ($prefixes as $prefix) {
-            assert($prefix instanceof NamespacePrefix);
             EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 
         foreach ($modules as $module) {
             $moduleGraph = new EasyRdf_Graph();
 
-            assert($module instanceof DataModelModule);
             $triples = $module->getTriples();
 
             foreach ($triples as $triple) {

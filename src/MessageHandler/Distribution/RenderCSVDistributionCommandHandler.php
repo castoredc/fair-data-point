@@ -75,7 +75,6 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $columns = ['record_id'];
 
         foreach ($studyFields as $field) {
-            assert($field instanceof Field);
             if (! $message->getDistribution()->isFieldIncluded($field)) {
                 continue;
             }

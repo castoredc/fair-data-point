@@ -10,7 +10,6 @@ use App\Connection\DistributionService;
 use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\Data\Log\DistributionGenerationRecordLog;
 use App\Entity\Data\RDF\RDFDistribution;
@@ -132,7 +131,6 @@ class GenerateRDFCommand extends Command
             $prefixes = $dataModel->getPrefixes();
 
             foreach ($prefixes as $prefix) {
-                assert($prefix instanceof NamespacePrefix);
                 EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
             }
 

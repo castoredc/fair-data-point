@@ -14,10 +14,6 @@ use App\Exception\InvalidEntityType;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
-use App\Repository\CastorEntityRepository;
-use App\Repository\CastorInstituteRepository;
-use App\Repository\CastorRecordRepository;
-use App\Repository\CountryRepository;
 use App\Security\ApiUser;
 use App\Security\Providers\Castor\CastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -53,7 +49,6 @@ class CastorEntityHelper
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity
     {
         $repository = $this->em->getRepository(CastorEntity::class);
-        assert($repository instanceof CastorEntityRepository);
 
         return $repository->findByIdAndStudy($study, $id);
     }
@@ -61,7 +56,6 @@ class CastorEntityHelper
     public function getEntitiesFromDatabaseByType(CastorStudy $study, CastorEntityType $type): CastorEntityCollection
     {
         $repository = $this->em->getRepository(CastorEntity::class);
-        assert($repository instanceof CastorEntityRepository);
 
         return new CastorEntityCollection($repository->findByStudyAndType($study, $type->getClassName()));
     }
@@ -69,7 +63,6 @@ class CastorEntityHelper
     public function getEntitiesFromDatabaseByParent(CastorStudy $study, CastorEntity $parent): CastorEntityCollection
     {
         $repository = $this->em->getRepository(CastorEntity::class);
-        assert($repository instanceof CastorEntityRepository);
 
         return new CastorEntityCollection($repository->findByStudyAndParent($study, $parent));
     }
@@ -145,7 +138,6 @@ class CastorEntityHelper
 
         foreach ($dbEntities as $dbEntity) {
             $castorEntity = $castorEntities->getById($dbEntity->getId());
-            assert($castorEntity instanceof CastorEntity || $castorEntity === null);
 
             if ($castorEntity === null) {
                 continue;
@@ -178,10 +170,8 @@ class CastorEntityHelper
         $institutes = new ArrayCollection();
 
         $repository = $this->em->getRepository(Institute::class);
-        assert($repository instanceof CastorInstituteRepository);
 
         $countryRepository = $this->em->getRepository(Country::class);
-        assert($countryRepository instanceof CountryRepository);
         $countries = $countryRepository->getAllCountriesWithCastorIds();
 
         $castorInstitutes = $this->apiClient->getInstitutes($study);
@@ -219,7 +209,6 @@ class CastorEntityHelper
         $records = new ArrayCollection();
 
         $repository = $this->em->getRepository(Record::class);
-        assert($repository instanceof CastorRecordRepository);
 
         $castorRecords = $this->apiClient->getRecords($study, $institutes);
         $dbRecords = $repository->findByStudy($study);

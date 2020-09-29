@@ -70,7 +70,6 @@ abstract class Authenticator extends SocialAuthenticator
 
             if ($request->attributes->get('catalog') instanceof Catalog) {
                 $catalog = $request->attributes->get('catalog');
-                assert($catalog instanceof Catalog);
             } else {
                 $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $request->attributes->get('catalog')]);
             }
@@ -86,7 +85,6 @@ abstract class Authenticator extends SocialAuthenticator
 
             if ($request->attributes->get('dataset') instanceof Dataset) {
                 $dataset = $request->attributes->get('dataset');
-                assert($dataset instanceof Dataset);
             } else {
                 $dataset = $this->em->getRepository(Dataset::class)->findOneBy(['slug' => $request->attributes->get('dataset')]);
             }

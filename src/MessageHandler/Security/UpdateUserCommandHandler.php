@@ -39,7 +39,6 @@ class UpdateUserCommandHandler implements MessageHandlerInterface
         }
 
         $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $user->getId()]);
-        assert($dbUser instanceof User || $dbUser === null);
         $dbPerson = $dbUser->getPerson();
 
         if ($dbPerson !== null) {

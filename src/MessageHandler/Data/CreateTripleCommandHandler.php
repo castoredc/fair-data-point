@@ -11,7 +11,6 @@ use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateTripleCommand;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -42,7 +41,6 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         $dataModel = $module->getDataModel();
 
         $nodeRepository = $this->em->getRepository(Node::class);
-        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModel);

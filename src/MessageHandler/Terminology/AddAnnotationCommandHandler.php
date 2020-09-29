@@ -12,15 +12,11 @@ use App\Exception\NoAccessPermission;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Message\Terminology\AddAnnotationCommand;
-use App\Repository\OntologyConceptRepository;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
-use Castor\BioPortal\Model\Concept;
-use Castor\BioPortal\Model\Individual;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 use function count;
 
 class AddAnnotationCommandHandler implements MessageHandlerInterface
@@ -49,17 +45,13 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
         $entity = $command->getEntity();
 
         $ontology = $this->em->getRepository(Ontology::class)->find($command->getOntologyId());
-        assert($ontology instanceof Ontology || $ontology === null);
 
         if ($ontology === null) {
             throw new OntologyNotFound();
         }
 
         $ontologyConceptRepository = $this->em->getRepository(OntologyConcept::class);
-        assert($ontologyConceptRepository instanceof OntologyConceptRepository);
-
         $dbConcept = $ontologyConceptRepository->findByOntologyAndCode($ontology, $command->getConceptCode());
-        assert($dbConcept instanceof OntologyConcept || $dbConcept === null);
 
         if ($dbConcept !== null) {
             if ($entity->hasAnnotation($dbConcept)) {
@@ -74,7 +66,6 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
                 }
 
                 $concept = $results[0];
-                assert($concept instanceof Individual);
 
                 $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getId()->getBase(), $ontology, $concept->getLabel());
             } elseif ($command->getConceptType()->isConcept()) {
@@ -86,7 +77,6 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
                 }
 
                 $concept = $results->getCollection()[0];
-                assert($concept instanceof Concept);
 
                 $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getNotation(), $ontology, $concept->getPrefLabel());
             }

@@ -11,7 +11,6 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
@@ -26,7 +25,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 {
@@ -70,8 +68,6 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 
         // Add prefixes
         foreach ($latestVersion->getPrefixes() as $prefix) {
-            assert($prefix instanceof NamespacePrefix);
-
             $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
         }
 
@@ -79,7 +75,6 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         $nodes = new ArrayCollection();
 
         foreach ($latestVersion->getNodes() as $node) {
-            assert($node instanceof Node);
             if ($node instanceof RecordNode) {
                 $newNode = new RecordNode($newVersion);
             } elseif ($node instanceof InternalIriNode) {

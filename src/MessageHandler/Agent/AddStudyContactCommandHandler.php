@@ -13,7 +13,6 @@ use App\Message\Agent\AddStudyContactCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class AddStudyContactCommandHandler implements MessageHandlerInterface
 {
@@ -37,7 +36,6 @@ class AddStudyContactCommandHandler implements MessageHandlerInterface
 
         if ($command->getId() !== null) {
             $contact = $repository->find($command->getId());
-            assert($contact instanceof Person || $contact === null);
 
             if ($contact === null) {
                 throw new NotFound();

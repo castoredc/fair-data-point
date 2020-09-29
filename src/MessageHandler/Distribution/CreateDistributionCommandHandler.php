@@ -50,7 +50,6 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
         );
 
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
-        assert($license instanceof License || $license === null);
         $distribution->setLicense($license);
 
         if ($message->getApiUser() !== null && $message->getClientId() !== null && $message->getClientSecret() !== null) {
@@ -65,7 +64,6 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
 
         if ($message->getType()->isRdf()) {
             $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
-            assert($dataModel instanceof DataModel || $dataModel === null);
 
             $contents = new RDFDistribution(
                 $distribution,

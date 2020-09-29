@@ -13,7 +13,6 @@ use App\Message\Data\CreateDataModelModuleCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class CreateDataModelModuleCommandHandler implements MessageHandlerInterface
 {
@@ -59,7 +58,6 @@ class CreateDataModelModuleCommandHandler implements MessageHandlerInterface
                 $this->parseDependencies($rule);
             } elseif ($rule instanceof DataModelDependencyRule) {
                 $node = $this->em->getRepository(ValueNode::class)->find($rule->getNodeId());
-                assert($node instanceof ValueNode || $node === null);
 
                 if ($node === null) {
                     throw new NotFound();

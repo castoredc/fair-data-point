@@ -9,7 +9,6 @@ use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\GetDataModelMappingCommand;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -40,7 +39,6 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 
         if ($command->getType()->isNode()) {
             $repository = $this->em->getRepository(Node::class);
-            assert($repository instanceof NodeRepository);
 
             $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());
 

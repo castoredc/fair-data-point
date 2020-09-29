@@ -14,8 +14,6 @@ use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
 use App\Message\Study\CreateStudyCommand;
 use App\Model\Castor\ApiClient;
-use App\Repository\CastorServerRepository;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
@@ -55,7 +53,6 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
         $source = $command->getSource();
 
         $repository = $this->em->getRepository(Study::class);
-        assert($repository instanceof StudyRepository);
 
         if ($command->getSourceId() !== null && $repository->studyExists($source, $command->getSourceId())) {
             throw new StudyAlreadyExists();
@@ -97,7 +94,6 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
         $serverRepository = $this->em->getRepository(CastorServer::class);
-        assert($serverRepository instanceof CastorServerRepository);
 
         $user = $this->security->getUser();
         assert($user instanceof User);

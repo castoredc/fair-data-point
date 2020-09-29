@@ -13,7 +13,6 @@ use Castor\BioPortal\Model\Individual;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use function array_merge;
-use function assert;
 
 class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
 {
@@ -31,7 +30,6 @@ class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
     public function __invoke(FindOntologyConceptsCommand $message): array
     {
         $ontology = $this->em->getRepository(Ontology::class)->find($message->getOntologyId());
-        assert($ontology instanceof Ontology || $ontology === null);
 
         if ($ontology === null) {
             throw new OntologyNotFound();

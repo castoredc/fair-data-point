@@ -60,7 +60,6 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
         }
 
         $license = $this->em->getRepository(License::class)->find($message->getLicense());
-        assert($license instanceof License || $license === null);
 
         $distribution->setSlug($message->getSlug());
         $distribution->setLicense($license);
@@ -73,10 +72,8 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
             $contents->setIncludeAll($message->getIncludeAllData());
         } elseif ($contents instanceof RDFDistribution) {
             $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
-            assert($dataModel instanceof DataModel || $dataModel === null);
 
             $dataModelVersion = $this->em->getRepository(DataModelVersion::class)->find($message->getDataModelVersion());
-            assert($dataModelVersion instanceof DataModelVersion || $dataModelVersion === null);
 
             if ($dataModel === null || $dataModelVersion === null || $dataModelVersion->getDataModel() !== $dataModel) {
                 throw new InvalidDataModelVersion();

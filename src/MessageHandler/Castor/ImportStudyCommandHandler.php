@@ -14,8 +14,6 @@ use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
 use App\Message\Castor\ImportStudyCommand;
 use App\Model\Castor\ApiClient;
-use App\Repository\CastorServerRepository;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,7 +56,6 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
         $this->apiClient->setUser($user->getCastorUser());
 
         $studyRepository = $this->em->getRepository(Study::class);
-        assert($studyRepository instanceof StudyRepository);
 
         if ($studyRepository->studyExists(StudySource::castor(), $command->getId())) {
             $study = $studyRepository->findStudyBySourceAndId(StudySource::castor(), $command->getId());
@@ -71,7 +68,6 @@ class ImportStudyCommandHandler implements MessageHandlerInterface
         }
 
         $serverRepository = $this->em->getRepository(CastorServer::class);
-        assert($serverRepository instanceof CastorServerRepository);
         $server = $serverRepository->findOneBy(['url' => $user->getCastorUser()->getServer()]);
         assert($server instanceof CastorServer);
 

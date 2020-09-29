@@ -11,7 +11,6 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 use function is_a;
 
 /**
@@ -146,7 +145,6 @@ class DataModelVersion
         $return = new ArrayCollection();
 
         foreach ($this->modules as $module) {
-            assert($module instanceof DataModelModule);
             if (! $module->isRepeated()) {
                 continue;
             }

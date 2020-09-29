@@ -5,7 +5,6 @@ namespace App\Entity\FAIRData;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 
 /**
  * @ORM\Entity
@@ -85,7 +84,6 @@ class LocalizedText
     public function getTextByLanguageString(string $language): ?LocalizedTextItem
     {
         foreach ($this->texts as $text) {
-            assert($text instanceof LocalizedTextItem);
             if ($text->getLanguage()->getCode() === $language) {
                 return $text;
             }

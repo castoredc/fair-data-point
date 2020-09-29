@@ -5,10 +5,8 @@ namespace App\Entity\Castor\Data;
 
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
-use App\Entity\Castor\Structure\MetadataPoint;
 use DateTime;
 use Exception;
-use function assert;
 
 class FieldResult
 {
@@ -79,7 +77,6 @@ class FieldResult
     public function getMetadata(): ?string
     {
         foreach ($this->field->getMetadata() as $metadataPoint) {
-            assert($metadataPoint instanceof MetadataPoint);
             if ($metadataPoint->getDescription() === $this->value) {
                 return $metadataPoint->getValue();
             }

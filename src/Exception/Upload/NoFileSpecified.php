@@ -7,6 +7,8 @@ use App\Exception\RenderableApiException;
 
 class NoFileSpecified extends RenderableApiException
 {
-    /** @inheritDoc */
-    protected $message = 'No file specified.';
+    public function __construct()
+    {
+        parent::__construct('No file specified.');
+    }
 }

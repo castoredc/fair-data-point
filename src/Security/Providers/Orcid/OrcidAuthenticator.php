@@ -41,9 +41,6 @@ class OrcidAuthenticator extends Authenticator
         assert($orcidUser instanceof OrcidUser);
 
         $dbUser = $this->em->getRepository(OrcidUser::class)->findOneBy(['orcid' => $orcidUser->getId()]);
-        assert($dbUser instanceof OrcidUser || $dbUser === null);
-
-        $this->detectIfEqualToLoggedInUser($dbUser);
 
         if ($dbUser === null) {
             // No Orcid User found in database, create new User and attach Castor User to it
@@ -52,6 +49,8 @@ class OrcidAuthenticator extends Authenticator
             $user->setOrcid($orcidUser);
             $orcidUser->setUser($user);
         } else {
+            $this->detectIfEqualToLoggedInUser($dbUser);
+
             // Orcid User Found, add token to user from DB
 
             $dbUser->setToken($orcidUser->getToken());
