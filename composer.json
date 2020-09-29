@@ -47,7 +47,7 @@
         "phpstan/phpstan-strict-rules": "^0.12.3",
         "phpstan/phpstan-symfony": "^0.12.6",
         "phpunit/phpunit": "^9.3",
-        "roave/security-advisories": "dev-master",
+        "roave/security-advisories": "dev-master"
     },
     "config": {
         "preferred-install": {
