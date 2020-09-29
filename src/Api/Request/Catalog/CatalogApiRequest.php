@@ -9,24 +9,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CatalogApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $slug;
+    private string $slug;
 
     /**
-     * @var bool
      * @Assert\NotNull
      * @Assert\Type("bool")
      */
-    private $acceptSubmissions;
+    private bool $acceptSubmissions;
 
-    /**
-     * @var bool|null
-     * @Assert\Type("bool")
-     */
-    private $submissionAccessesData;
+    /** @Assert\Type("bool") */
+    private ?bool $submissionAccessesData = null;
 
     protected function parse(): void
     {

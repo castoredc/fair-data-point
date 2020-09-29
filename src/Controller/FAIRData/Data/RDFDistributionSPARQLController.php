@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class RDFDistributionSPARQLController extends FAIRDataController
 {
@@ -32,11 +33,11 @@ class RDFDistributionSPARQLController extends FAIRDataController
             throw $this->createNotFoundException();
         }
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $bus->dispatch(new GetRDFEndpointCommand($contents))->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
-        /** @var ARC2_StoreEndpoint $endpoint */
         $endpoint = $handledStamp->getResult();
+        assert($endpoint instanceof ARC2_StoreEndpoint);
 
         if ($request->get('query') === null) {
             return $this->redirectToRoute('distribution_query', [

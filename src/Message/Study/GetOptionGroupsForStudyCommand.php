@@ -7,8 +7,7 @@ use App\Entity\Castor\CastorStudy;
 
 class GetOptionGroupsForStudyCommand
 {
-    /** @var CastorStudy */
-    private $study;
+    private CastorStudy $study;
 
     public function __construct(CastorStudy $study)
     {

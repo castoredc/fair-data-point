@@ -14,30 +14,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataModelDependencyRule extends DataModelDependency
 {
-    /** @var string */
-    private $nodeId;
+    private string $nodeId;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\ValueNode", cascade={"persist"})
      * @ORM\JoinColumn(name="node", referencedColumnName="id", nullable=false)
-     *
-     * @var ValueNode
      */
-    private $node;
+    private ValueNode $node;
 
-    /**
-     * @ORM\Column(type="DependencyOperatorType")
-     *
-     * @var DependencyOperatorType
-     */
-    private $operator;
+    /** @ORM\Column(type="DependencyOperatorType") */
+    private DependencyOperatorType $operator;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $value;
+    /** @ORM\Column(type="string") */
+    private string $value;
 
     public function __construct(DependencyOperatorType $operator, string $value)
     {

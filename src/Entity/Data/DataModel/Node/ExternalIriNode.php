@@ -14,12 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ExternalIriNode extends Node
 {
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $iri;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $iri = null;
 
     public function getIri(): ?Iri
     {

@@ -11,45 +11,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AnnotationApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $entityType;
+    private string $entityType;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $entityId;
+    private string $entityId;
+
+    /** @Assert\Type("string") */
+    private ?string $entityParent = null;
 
     /**
-     * @var string|null
-     * @Assert\Type("string")
-     */
-    private $entityParent;
-
-    /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $ontology;
+    private string $ontology;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $concept;
+    private string $concept;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $conceptType;
+    private string $conceptType;
 
     protected function parse(): void
     {

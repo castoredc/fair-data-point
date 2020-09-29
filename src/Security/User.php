@@ -31,31 +31,23 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Person", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
-     *
-     * @var Person|null
      */
-    private $person;
+    private ?Person $person = null;
     /**
      * @ORM\OneToOne(targetEntity="App\Security\Providers\Castor\CastorUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
      * @ORM\JoinColumn(name="castor_user_id", referencedColumnName="id")
-     *
-     * @var CastorUser|null
      */
-    private $castorUser;
+    private ?CastorUser $castorUser = null;
     /**
      * @ORM\OneToOne(targetEntity="App\Security\Providers\Orcid\OrcidUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
      * @ORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
-     *
-     * @var OrcidUser|null
      */
-    private $orcid;
+    private ?OrcidUser $orcid = null;
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
@@ -89,6 +81,7 @@ class User implements UserInterface
             if ($domain !== false) {
                 $domain = substr($domain, 1);
             }
+
             if (isset($this::DOMAINS[$domain])) {
                 $roles = array_merge($roles, $this::DOMAINS[$domain]);
             }

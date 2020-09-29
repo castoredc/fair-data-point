@@ -10,7 +10,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class ApiRequestParseError extends Exception
 {
     /** @var ConstraintViolationListInterface<ConstraintViolation> */
-    private $violations;
+    private ConstraintViolationListInterface $violations;
 
     /**
      * @param ConstraintViolationListInterface<ConstraintViolation>|null $violations

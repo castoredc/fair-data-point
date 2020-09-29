@@ -7,14 +7,12 @@ use App\Entity\PaginatedResultCollection;
 
 class PaginatedApiResource implements ApiResource
 {
-    /** @var string */
-    private $apiResourceType;
+    private string $apiResourceType;
 
     /** @var PaginatedResultCollection<mixed> */
-    private $results;
+    private PaginatedResultCollection $results;
 
-    /** @var bool */
-    private $isAdmin;
+    private bool $isAdmin;
 
     public function __construct(string $apiResourceType, PaginatedResultCollection $results, bool $isAdmin = false)
     {

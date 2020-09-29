@@ -8,8 +8,7 @@ use App\Entity\Terminology\Annotation;
 
 class AnnotationApiResource implements ApiResource
 {
-    /** @var Annotation */
-    private $annotation;
+    private Annotation $annotation;
 
     public function __construct(Annotation $annotation)
     {

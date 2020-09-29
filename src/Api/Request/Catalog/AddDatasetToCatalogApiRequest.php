@@ -9,11 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AddDatasetToCatalogApiRequest extends SingleApiRequest
 {
     /**
-     * @var string|null
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $datasetId;
+    private ?string $datasetId = null;
 
     protected function parse(): void
     {

@@ -11,10 +11,9 @@ trait CreatedBy
      * @ORM\ManyToOne(targetEntity="App\Security\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      *
-     * @var User|null
      * @Gedmo\Mapping\Annotation\Blameable(on="create")
      */
-    private $createdBy;
+    private ?User $createdBy = null;
 
     public function getCreatedBy(): ?User
     {

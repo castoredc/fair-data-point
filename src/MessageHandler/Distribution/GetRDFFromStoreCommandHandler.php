@@ -20,17 +20,13 @@ use function sprintf;
 
 class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
 {
-    /** @var DistributionService */
-    private $distributionService;
+    private DistributionService $distributionService;
 
-    /** @var UriHelper */
-    private $uriHelper;
+    private UriHelper $uriHelper;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(DistributionService $distributionService, UriHelper $uriHelper, EncryptionService $encryptionService, Security $security)
     {

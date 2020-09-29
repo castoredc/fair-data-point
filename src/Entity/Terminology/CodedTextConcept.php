@@ -5,14 +5,11 @@ namespace App\Entity\Terminology;
 
 class CodedTextConcept
 {
-    /** @var OntologyConcept */
-    private $ontologyConcept;
+    private OntologyConcept $ontologyConcept;
 
-    /** @var int */
-    private $positionFrom;
+    private int $positionFrom;
 
-    /** @var int */
-    private $positionTo;
+    private int $positionTo;
 
     public function __construct(OntologyConcept $ontologyConcept, int $positionFrom, int $positionTo)
     {

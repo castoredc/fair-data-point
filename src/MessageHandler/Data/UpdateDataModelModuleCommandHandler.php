@@ -15,11 +15,9 @@ use Symfony\Component\Security\Core\Security;
 
 class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -71,7 +69,6 @@ class UpdateDataModelModuleCommandHandler implements MessageHandlerInterface
             if ($rule instanceof DataModelDependencyGroup) {
                 $this->parseDependencies($rule);
             } elseif ($rule instanceof DataModelDependencyRule) {
-                /** @var ValueNode|null $node */
                 $node = $this->em->getRepository(ValueNode::class)->find($rule->getNodeId());
 
                 if ($node === null) {

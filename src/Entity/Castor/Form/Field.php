@@ -80,74 +80,54 @@ class Field extends CastorEntity
 
     /**
      * The Field type
-     *
-     * @var string|null
      */
-    private $type;
+    private ?string $type = null;
     /**
      * The Field label
-     *
-     * @var string|null
      */
-    private $fieldLabel;
+    private ?string $fieldLabel = null;
 
     /**
      * The Field&#39;s position within a step
-     *
-     * @var float|null
      */
-    private $number;
+    private ?float $number = null;
 
     /**
      * The Field&#39;s variable name
-     *
-     * @var string|null
      */
-    private $variableName;
+    private ?string $variableName = null;
 
     /**
      * If enabled, it makes the field required (cannot be left empty)
-     *
-     * @var bool|null
      */
-    private $required;
+    private ?bool $required = null;
 
     /**
      * If enabled, it hides the field in data-entry
-     *
-     * @var bool|null
      */
-    private $hidden;
+    private ?bool $hidden = null;
 
     /**
      * Information about the field. It is show during data-entry
-     *
-     * @var string|null
      */
-    private $info;
+    private ?string $info = null;
 
     /**
      * The field&#39;s measurement unit
-     *
-     * @var string|null
      */
-    private $units;
+    private ?string $units = null;
 
     /**
      * The field&#39;s parent id
-     *
-     * @var string|null
      */
-    private $parentId;
+    private ?string $parentId = null;
 
-    /** @var FieldOptionGroup|null */
-    private $optionGroup;
+    private ?FieldOptionGroup $optionGroup = null;
 
-    /** @var string|null */
-    private $optionGroupId;
+    private ?string $optionGroupId = null;
 
     /** @var array<MetadataPoint> */
-    private $metadata;
+    private array $metadata;
 
     public function __construct(string $id, CastorStudy $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?string $optionGroupId)
     {

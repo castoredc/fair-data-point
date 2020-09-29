@@ -22,25 +22,16 @@ class OrcidUser implements ProviderUser
     /**
      * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="orcid")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *
-     * @var User|null
      */
-    private $user;
+    private ?User $user = null;
     /**
      * @ORM\Id
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $orcid;
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $name;
-    /** @var string|null */
-    private $token;
+    private string $orcid;
+    /** @ORM\Column(type="string", length=255) */
+    private string $name;
+    private ?string $token = null;
 
     public function __construct(string $orcid, string $name, ?string $token)
     {

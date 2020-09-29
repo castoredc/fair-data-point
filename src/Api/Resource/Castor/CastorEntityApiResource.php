@@ -8,8 +8,7 @@ use App\Entity\Castor\CastorEntity;
 
 class CastorEntityApiResource implements ApiResource
 {
-    /** @var CastorEntity */
-    private $entity;
+    private CastorEntity $entity;
 
     public function __construct(CastorEntity $entity)
     {

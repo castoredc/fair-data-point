@@ -12,38 +12,34 @@ use function count;
 class DataModelModuleApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $title;
+    private string $title;
 
     /**
-     * @var int
      * @Assert\NotBlank()
      * @Assert\Type("int")
      */
-    private $order;
+    private int $order;
 
     /**
-     * @var bool
      * @Assert\NotNull()
      * @Assert\Type("bool")
      */
-    private $repeated;
+    private bool $repeated;
 
     /**
-     * @var bool
      * @Assert\NotNull()
      * @Assert\Type("bool")
      */
-    private $dependent;
+    private bool $dependent;
 
     /**
      * @var mixed[]|null
      * @Assert\NotBlank(groups = {"dependent"})
      */
-    private $dependencies;
+    private ?array $dependencies = null;
 
     protected function parse(): void
     {

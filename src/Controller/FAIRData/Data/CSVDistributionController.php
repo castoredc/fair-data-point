@@ -47,14 +47,14 @@ class CSVDistributionController extends FAIRDataController
         assert($study instanceof CastorStudy);
 
         try {
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             /** @var Record[] $records */
             $records = $handledStamp->getResult();
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
             $csv = $handledStamp->getResult();
 
             $response = new Response($csv);
@@ -71,6 +71,7 @@ class CSVDistributionController extends FAIRDataController
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
+
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }

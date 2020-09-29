@@ -8,8 +8,7 @@ use App\Entity\Data\DataModel\Node\Node;
 
 class VisualizationNodeApiResource implements ApiResource
 {
-    /** @var Node */
-    private $node;
+    private Node $node;
 
     public function __construct(Node $node)
     {

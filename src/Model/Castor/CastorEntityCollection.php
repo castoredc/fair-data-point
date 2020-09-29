@@ -20,7 +20,7 @@ class CastorEntityCollection implements Countable, IteratorAggregate
      *
      * @var CastorEntity[]
      */
-    private $entities;
+    private array $entities;
 
     /**
      * @param CastorEntity[]|null $entities

@@ -44,18 +44,12 @@ use function in_array;
 
 class RDFRenderHelper
 {
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var CastorEntityHelper */
-    private $entityHelper;
-    /** @var CastorStudy */
-    private $study;
-    /** @var RDFDistribution */
-    private $contents;
-    /** @var UriHelper */
-    private $uriHelper;
-    /** @var CastorEntityCollection */
-    private $optionGroups;
+    private ApiClient $apiClient;
+    private CastorEntityHelper $entityHelper;
+    private CastorStudy $study;
+    private RDFDistribution $contents;
+    private UriHelper $uriHelper;
+    private CastorEntityCollection $optionGroups;
 
     public function __construct(Distribution $distribution, ApiClient $apiClient, CastorEntityHelper $entityHelper, UriHelper $uriHelper)
     {
@@ -153,7 +147,6 @@ class RDFRenderHelper
             return;
         }
 
-        /** @var DataModelModule $module */
         $triples = $module->getTriples();
 
         foreach ($triples as $triple) {

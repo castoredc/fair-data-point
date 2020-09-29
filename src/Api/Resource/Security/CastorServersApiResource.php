@@ -9,7 +9,7 @@ use App\Security\CastorServer;
 class CastorServersApiResource implements ApiResource
 {
     /** @var CastorServer[] */
-    private $servers;
+    private array $servers;
 
     /**
      * @param CastorServer[] $servers

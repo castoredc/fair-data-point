@@ -9,16 +9,13 @@ use App\Entity\FAIRData\Dataset;
 class PaginatedDatasetsApiResource implements ApiResource
 {
     /** @var Dataset[] */
-    private $datasets;
+    private array $datasets;
 
-    /** @var int */
-    private $perPage;
+    private int $perPage;
 
-    /** @var int */
-    private $page;
+    private int $page;
 
-    /** @var int */
-    private $pages;
+    private int $pages;
 
     /**
      * @param Dataset[] $datasets

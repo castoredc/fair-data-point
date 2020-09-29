@@ -7,14 +7,11 @@ use App\Security\User;
 
 class FindStudiesByUserCommand
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
-    /** @var bool */
-    private $loadFromCastor;
+    private bool $loadFromCastor;
 
-    /** @var bool */
-    private $hideExistingStudies;
+    private bool $hideExistingStudies;
 
     public function __construct(User $user, bool $loadFromCastor, bool $hideExistingStudies = false)
     {

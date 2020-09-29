@@ -9,14 +9,11 @@ use App\Entity\Enum\DataModelMappingType;
 
 class GetDataModelMappingCommand
 {
-    /** @var RDFDistribution */
-    private $distribution;
+    private RDFDistribution $distribution;
 
-    /** @var DataModelVersion */
-    private $dataModelVersion;
+    private DataModelVersion $dataModelVersion;
 
-    /** @var DataModelMappingType */
-    private $type;
+    private DataModelMappingType $type;
 
     public function __construct(RDFDistribution $distribution, DataModelVersion $dataModelVersion, DataModelMappingType $type)
     {

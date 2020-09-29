@@ -10,15 +10,11 @@ use Symfony\Component\Validator\Constraint;
  */
 class AgentArray extends Constraint
 {
-    /** @var string */
-    public $message = 'This list does not contain valid agents.';
+    public string $message = 'This list does not contain valid agents.';
 
-    /** @var string */
-    public $noTypeMessage = 'Please specify the type of agent.';
+    public string $noTypeMessage = 'Please specify the type of agent.';
 
-    /** @var string */
-    public $invalidTypeMessage = 'This agent is of an invalid type.';
+    public string $invalidTypeMessage = 'This agent is of an invalid type.';
 
-    /** @var string */
-    public $validationError = 'Agent %number%: %message%';
+    public string $validationError = 'Agent %number%: %message%';
 }

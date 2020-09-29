@@ -10,7 +10,7 @@ use Castor\BioPortal\Model\Individual;
 class OntologyConceptSearchApiResource implements ApiResource
 {
     /** @var (Concept|Individual)[] */
-    private $concepts;
+    private array $concepts;
 
     /** @param (Concept|Individual)[] $concepts */
     public function __construct(array $concepts)

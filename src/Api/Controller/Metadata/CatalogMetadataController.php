@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/metadata/catalog/{catalog}")
@@ -30,8 +31,8 @@ class CatalogMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $catalog);
 
         try {
-            /** @var CatalogMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(CatalogMetadataApiRequest::class, $request);
+            assert($parsed instanceof CatalogMetadataApiRequest);
 
             $bus->dispatch(
                 new CreateCatalogMetadataCommand(

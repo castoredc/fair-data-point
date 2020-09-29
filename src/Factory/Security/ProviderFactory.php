@@ -13,14 +13,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ProviderFactory
 {
-    /** @var UrlGeneratorInterface */
-    private $generator;
+    private UrlGeneratorInterface $generator;
 
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
     public function __construct(UrlGeneratorInterface $generator, EntityManagerInterface $em, ApiClient $apiClient)
     {

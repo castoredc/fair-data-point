@@ -7,14 +7,11 @@ use App\Entity\Study;
 
 class UpdateConsentCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var bool */
-    private $publish;
+    private bool $publish;
 
-    /** @var bool */
-    private $socialMedia;
+    private bool $socialMedia;
 
     public function __construct(Study $study, bool $publish, bool $socialMedia)
     {

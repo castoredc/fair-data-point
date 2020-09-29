@@ -14,11 +14,9 @@ use App\Service\UriHelper;
 
 class DistributionApiResource implements ApiResource
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
-    /** @var UriHelper */
-    private $uriHelper;
+    private UriHelper $uriHelper;
 
     public function __construct(Distribution $distribution, UriHelper $uriHelper)
     {

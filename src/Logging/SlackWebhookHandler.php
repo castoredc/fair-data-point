@@ -24,14 +24,11 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     public const COLOR_WARNING = 'warning';
     public const COLOR_GOOD = 'good';
 
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security|null */
-    private $security;
+    private ?Security $security = null;
 
-    /** @var string */
-    private $rootPath;
+    private string $rootPath;
 
     public function __construct(
         string $webhookUrl = '',

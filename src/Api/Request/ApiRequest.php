@@ -11,10 +11,10 @@ use function trim;
 abstract class ApiRequest
 {
     /** @var array<mixed> */
-    protected $data = [];
+    protected array $data = [];
 
     /** @var ParameterBag<mixed> */
-    protected $query;
+    protected ParameterBag $query;
 
     /**
      * phpcs:disable

@@ -5,14 +5,11 @@ namespace App\Message\Terminology;
 
 class FindOntologyConceptsCommand
 {
-    /** @var string */
-    private $ontologyId;
+    private string $ontologyId;
 
-    /** @var string */
-    private $query;
+    private string $query;
 
-    /** @var bool */
-    private $includeIndividuals;
+    private bool $includeIndividuals;
 
     public function __construct(string $ontologyId, string $query, bool $includeIndividuals)
     {

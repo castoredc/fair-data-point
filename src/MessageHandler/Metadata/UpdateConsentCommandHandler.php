@@ -13,17 +13,13 @@ use Symfony\Component\Security\Core\Security;
 
 class UpdateConsentCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var SlackApiClient  */
-    private $slackApiClient;
+    private SlackApiClient $slackApiClient;
 
-    /** @var UriHelper  */
-    private $uriHelper;
+    private UriHelper $uriHelper;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, SlackApiClient $slackApiClient, UriHelper $uriHelper, Security $security)
     {

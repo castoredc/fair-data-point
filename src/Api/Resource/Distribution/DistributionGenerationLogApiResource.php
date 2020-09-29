@@ -9,8 +9,7 @@ use const DATE_ATOM;
 
 class DistributionGenerationLogApiResource implements ApiResource
 {
-    /** @var DistributionGenerationLog */
-    private $log;
+    private DistributionGenerationLog $log;
 
     public function __construct(DistributionGenerationLog $log)
     {

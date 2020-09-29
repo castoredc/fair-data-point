@@ -10,14 +10,13 @@ use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetStudiesCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -35,8 +34,8 @@ class GetStudiesCommandHandler implements MessageHandlerInterface
         if ($this->security->isGranted('ROLE_ADMIN')) {
             $dbStudies = $this->em->getRepository(Study::class)->findAll();
         } else {
-            /** @var User $user */
             $user = $this->security->getUser();
+            assert($user instanceof User);
 
             if (! $user->hasCastorUser()) {
                 throw new UserNotACastorUser();

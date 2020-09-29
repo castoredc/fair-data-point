@@ -8,17 +8,13 @@ use App\Entity\Data\RDF\RDFDistribution;
 
 class CreateDataModelNodeMappingCommand
 {
-    /** @var RDFDistribution */
-    private $distribution;
+    private RDFDistribution $distribution;
 
-    /** @var string */
-    private $node;
+    private string $node;
 
-    /** @var string */
-    private $element;
+    private string $element;
 
-    /** @var DataModelVersion */
-    private $dataModelVersion;
+    private DataModelVersion $dataModelVersion;
 
     public function __construct(RDFDistribution $distribution, string $node, string $element, DataModelVersion $dataModelVersion)
     {

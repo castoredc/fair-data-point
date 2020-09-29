@@ -8,11 +8,9 @@ use App\Entity\Castor\Record;
 
 class InstanceData extends RecordData
 {
-    /** @var Record */
-    protected $record;
+    protected Record $record;
 
-    /** @var Instance */
-    protected $instance;
+    protected Instance $instance;
 
     public function __construct(Record $record, Instance $instance)
     {

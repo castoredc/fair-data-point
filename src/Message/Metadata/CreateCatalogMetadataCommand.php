@@ -10,14 +10,11 @@ use App\Entity\FAIRData\LocalizedText;
 
 class CreateCatalogMetadataCommand extends CreateMetadataCommand
 {
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
-    /** @var string|null */
-    private $homepage;
+    private ?string $homepage = null;
 
-    /** @var string|null */
-    private $logo;
+    private ?string $logo = null;
 
     /** @param Agent[] $publishers */
     public function __construct(

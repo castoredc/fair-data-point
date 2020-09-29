@@ -8,8 +8,7 @@ use App\Entity\Data\DataModel\Predicate;
 
 class PredicateApiResource implements ApiResource
 {
-    /** @var Predicate */
-    private $predicate;
+    private Predicate $predicate;
 
     public function __construct(Predicate $predicate)
     {

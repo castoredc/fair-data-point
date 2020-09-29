@@ -10,11 +10,9 @@ use function in_array;
 
 abstract class FAIRDataController extends AbstractController
 {
-    /** @var UriHelper */
-    protected $uriHelper;
+    protected UriHelper $uriHelper;
 
-    /** @var string */
-    protected $baseUri;
+    protected string $baseUri;
 
     public function __construct(UriHelper $uriHelper)
     {

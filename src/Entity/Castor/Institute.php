@@ -16,61 +16,41 @@ class Institute
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
-     *
-     * @var CastorStudy
      */
-    private $study;
+    private CastorStudy $study;
 
-    /**
-     * @ORM\Column(name="institute_name", type="string", length=1000, nullable=false)
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(name="institute_name", type="string", length=1000, nullable=false) */
+    private string $name;
 
-    /**
-     * @ORM\Column(name="abbreviation", type="string", length=1000, nullable=false)
-     *
-     * @var string
-     */
-    private $abbreviation;
+    /** @ORM\Column(name="abbreviation", type="string", length=1000, nullable=false) */
+    private string $abbreviation;
 
-    /**
-     * @ORM\Column(name="code", type="string", length=3, nullable=true)
-     *
-     * @var string|null
-     */
-    private $code;
+    /** @ORM\Column(name="code", type="string", length=3, nullable=true) */
+    private ?string $code = null;
 
-    /** @var int */
-    private $countryId;
+    private int $countryId;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Country",cascade={"persist"})
      * @ORM\JoinColumn(name="country", referencedColumnName="code")
-     *
-     * @var Country|null
      */
-    private $country;
+    private ?Country $country = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Record", mappedBy="institute")
      *
      * @var Collection<Record>
      */
-    private $records;
+    private Collection $records;
 
-    /** @var bool */
-    private $deleted = false;
+    private bool $deleted = false;
 
     public function __construct(
         CastorStudy $study,

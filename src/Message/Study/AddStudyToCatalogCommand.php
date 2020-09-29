@@ -8,11 +8,9 @@ use App\Entity\Study;
 
 class AddStudyToCatalogCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
     public function __construct(Study $study, Catalog $catalog)
     {

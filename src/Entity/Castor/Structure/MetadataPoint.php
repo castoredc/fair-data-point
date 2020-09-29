@@ -5,14 +5,11 @@ namespace App\Entity\Castor\Structure;
 
 class MetadataPoint
 {
-    /** @var string */
-    private $id;
+    private string $id;
 
-    /** @var string */
-    private $value;
+    private string $value;
 
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
     public function __construct(string $id, string $value, ?string $description)
     {

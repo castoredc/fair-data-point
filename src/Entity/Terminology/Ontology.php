@@ -16,31 +16,17 @@ class Ontology
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="iri")
-     *
-     * @var Iri
-     */
-    private $url;
+    /** @ORM\Column(type="iri") */
+    private Iri $url;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string") */
+    private string $name;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $bioPortalId;
+    /** @ORM\Column(type="string") */
+    private string $bioPortalId;
 
     public function __construct(string $name, Iri $url, string $bioPortalId)
     {

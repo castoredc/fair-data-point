@@ -11,10 +11,9 @@ trait UpdatedBy
      * @ORM\ManyToOne(targetEntity="App\Security\User")
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id")
      *
-     * @var User|null
      * @Gedmo\Mapping\Annotation\Blameable(on="update")
      */
-    private $updatedBy;
+    private ?User $updatedBy = null;
 
     public function getUpdatedBy(): User
     {

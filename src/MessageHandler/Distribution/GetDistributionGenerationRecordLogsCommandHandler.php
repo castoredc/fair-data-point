@@ -7,17 +7,14 @@ use App\Entity\Data\Log\DistributionGenerationRecordLog;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\GetDistributionGenerationRecordLogsCommand;
-use App\Repository\DistributionGenerationRecordLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 
 class GetDistributionGenerationRecordLogsCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-    /** @var Security */
-    private $security;
+    private EntityManagerInterface $em;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -36,7 +33,6 @@ class GetDistributionGenerationRecordLogsCommandHandler implements MessageHandle
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
-        /** @var DistributionGenerationRecordLogRepository $repository */
         $repository = $this->em->getRepository(DistributionGenerationRecordLog::class);
 
         $count = $repository->countLogs($log, $isAdmin);

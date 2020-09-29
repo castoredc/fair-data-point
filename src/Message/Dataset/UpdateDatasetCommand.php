@@ -7,14 +7,11 @@ use App\Entity\FAIRData\Dataset;
 
 class UpdateDatasetCommand
 {
-    /** @var Dataset */
-    private $dataset;
+    private Dataset $dataset;
 
-    /** @var string */
-    private $slug;
+    private string $slug;
 
-    /** @var bool */
-    private $published;
+    private bool $published;
 
     public function __construct(Dataset $dataset, string $slug, bool $published)
     {

@@ -7,20 +7,15 @@ use App\Entity\Enum\StudySource;
 
 class CreateStudyCommand
 {
-    /** @var StudySource */
-    private $source;
+    private StudySource $source;
 
-    /** @var string|null */
-    private $sourceId;
+    private ?string $sourceId = null;
 
-    /** @var string|null */
-    private $sourceServer;
+    private ?string $sourceServer = null;
 
-    /** @var string|null */
-    private $name;
+    private ?string $name = null;
 
-    /** @var bool */
-    private $manuallyEntered;
+    private bool $manuallyEntered;
 
     public function __construct(
         StudySource $source,

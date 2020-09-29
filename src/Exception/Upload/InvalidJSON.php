@@ -7,6 +7,8 @@ use App\Exception\RenderableApiException;
 
 class InvalidJSON extends RenderableApiException
 {
-    /** @var string */
-    protected $message = 'Cannot parse the JSON.';
+    public function __construct()
+    {
+        parent::__construct('Cannot parse the JSON.');
+    }
 }

@@ -7,14 +7,14 @@ use App\Entity\FAIRData\Dataset;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class DatasetVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -38,8 +38,8 @@ class DatasetVoter extends Voter
             return true;
         }
 
-        /** @var Dataset $dataset */
         $dataset = $subject;
+        assert($dataset instanceof Dataset);
 
         switch ($attribute) {
             case self::VIEW:

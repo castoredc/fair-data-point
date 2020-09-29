@@ -7,11 +7,9 @@ use App\Entity\FAIRData\Distribution;
 
 class GetRecordCommand
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
-    /** @var string */
-    private $recordId;
+    private string $recordId;
 
     public function __construct(Distribution $distribution, string $recordId)
     {

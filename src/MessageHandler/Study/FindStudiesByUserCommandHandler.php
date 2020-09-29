@@ -12,11 +12,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
     public function __construct(EntityManagerInterface $em, ApiClient $apiClient)
     {
@@ -66,6 +64,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 
             return $studies;
         }
+
         if ($message->getLoadFromCastor() && ! $message->getHideExistingStudies()) {
             return $castorStudies;
         }

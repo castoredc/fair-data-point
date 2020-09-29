@@ -11,8 +11,7 @@ use function array_pop;
 
 class DataModelDependencyApiResource implements ApiResource
 {
-    /** @var DataModelDependency */
-    private $dependency;
+    private DataModelDependency $dependency;
 
     public function __construct(DataModelDependency $dependency)
     {

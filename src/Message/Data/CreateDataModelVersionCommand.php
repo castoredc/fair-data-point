@@ -8,11 +8,9 @@ use App\Entity\Enum\VersionType;
 
 class CreateDataModelVersionCommand
 {
-    /** @var DataModel */
-    private $dataModel;
+    private DataModel $dataModel;
 
-    /** @var VersionType */
-    private $versionType;
+    private VersionType $versionType;
 
     public function __construct(DataModel $dataModel, VersionType $versionType)
     {

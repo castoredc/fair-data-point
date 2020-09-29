@@ -6,18 +6,15 @@ namespace App\MessageHandler\Dataset;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\PaginatedResultCollection;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
-use App\Repository\DatasetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 
 class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -27,7 +24,6 @@ class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetPaginatedDatasetsCommand $command): PaginatedResultCollection
     {
-        /** @var DatasetRepository $datasetRepository */
         $datasetRepository = $this->em->getRepository(Dataset::class);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');

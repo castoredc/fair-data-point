@@ -8,23 +8,17 @@ use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
 
 class CreateDataModelModuleCommand
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /** @var string */
-    private $title;
+    private string $title;
 
-    /** @var int */
-    private $order;
+    private int $order;
 
-    /** @var bool */
-    private $isRepeated;
+    private bool $isRepeated;
 
-    /** @var bool */
-    private $isDependent;
+    private bool $isDependent;
 
-    /** @var DataModelDependencyGroup|null */
-    private $dependencies;
+    private ?DataModelDependencyGroup $dependencies = null;
 
     public function __construct(DataModelVersion $dataModel, string $title, int $order, bool $isRepeated, bool $isDependent, ?DataModelDependencyGroup $dependencies)
     {

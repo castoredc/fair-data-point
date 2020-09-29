@@ -9,7 +9,6 @@ use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\GetDataModelMappingCommand;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -18,11 +17,9 @@ use function count;
 
 class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -41,7 +38,6 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
         $results = [];
 
         if ($command->getType()->isNode()) {
-            /** @var NodeRepository $repository */
             $repository = $this->em->getRepository(Node::class);
 
             $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());

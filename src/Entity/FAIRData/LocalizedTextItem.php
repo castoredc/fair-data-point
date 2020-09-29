@@ -15,36 +15,25 @@ class LocalizedTextItem
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="LocalizedText", inversedBy="texts",cascade={"persist"})
      * @ORM\JoinColumn(name="parent", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
      */
-    private $parent;
+    private ?LocalizedText $parent = null;
 
-    /**
-     * @ORM\Column(type="text")
-     *
-     * @var string
-     */
-    private $text;
+    /** @ORM\Column(type="text") */
+    private string $text;
 
     /**
      * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     *
-     * @var Language|null
      */
-    private $language;
+    private ?Language $language = null;
 
-    /** @var string */
-    private $languageCode;
+    private string $languageCode;
 
     public function __construct(string $text)
     {

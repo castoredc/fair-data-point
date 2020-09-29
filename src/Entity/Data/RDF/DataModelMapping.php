@@ -24,34 +24,26 @@ abstract class DataModelMapping
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="mappings",cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
-     *
-     * @var RDFDistribution
      */
-    private $distribution;
+    private RDFDistribution $distribution;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity")
      * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
-     *
-     * @var CastorEntity
      */
-    private $entity;
+    private CastorEntity $entity;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion")
      * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $dataModelVersion;
+    private DataModelVersion $dataModelVersion;
 
     public function __construct(RDFDistribution $distribution, CastorEntity $entity, DataModelVersion $dataModelVersion)
     {

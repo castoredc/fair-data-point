@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/user")
@@ -28,8 +29,8 @@ class UserApiController extends ApiController
      */
     public function user(): Response
     {
-        /** @var User|null $user */
         $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         if ($user === null) {
             return new JsonResponse(null);
@@ -43,8 +44,8 @@ class UserApiController extends ApiController
      */
     public function updateUser(Request $request, MessageBusInterface $bus): Response
     {
-        /** @var User|null $user */
         $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         if ($user === null) {
             throw new NotFoundHttpException();
@@ -59,8 +60,8 @@ class UserApiController extends ApiController
         }
 
         try {
-            /** @var UserApiRequest $parsed */
             $parsed = $this->parseRequest(UserApiRequest::class, $request);
+            assert($parsed instanceof UserApiRequest);
             $bus->dispatch(
                 new UpdateUserCommand($parsed->getFirstName(), $parsed->getMiddleName(), $parsed->getLastName(), $parsed->getEmail())
             );

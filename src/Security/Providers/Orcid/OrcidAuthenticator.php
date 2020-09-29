@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use function assert;
 
 class OrcidAuthenticator extends Authenticator
 {
@@ -36,13 +37,10 @@ class OrcidAuthenticator extends Authenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        /** @var OrcidUser $orcidUser */
         $orcidUser = $this->getOrcidClient()->fetchUserFromToken($credentials);
+        assert($orcidUser instanceof OrcidUser);
 
-        /** @var OrcidUser|null $dbUser */
         $dbUser = $this->em->getRepository(OrcidUser::class)->findOneBy(['orcid' => $orcidUser->getId()]);
-
-        $this->detectIfEqualToLoggedInUser($dbUser);
 
         if ($dbUser === null) {
             // No Orcid User found in database, create new User and attach Castor User to it
@@ -51,6 +49,8 @@ class OrcidAuthenticator extends Authenticator
             $user->setOrcid($orcidUser);
             $orcidUser->setUser($user);
         } else {
+            $this->detectIfEqualToLoggedInUser($dbUser);
+
             // Orcid User Found, add token to user from DB
 
             $dbUser->setToken($orcidUser->getToken());

@@ -19,7 +19,7 @@ class Country
      *
      * Two-letter country abbreviation
      */
-    private $code;
+    private string $code;
 
     /**
      * @ORM\Column(type="string")
@@ -28,7 +28,7 @@ class Country
      *
      * Unique identifier of the Country in Castor
      */
-    private $castorCountryId;
+    private string $castorCountryId;
 
     /**
      * @ORM\Column(type="string")
@@ -37,7 +37,7 @@ class Country
      *
      * Three-letter country abbreviation
      */
-    private $abbreviation;
+    private string $abbreviation;
 
     /**
      * @ORM\Column(type="string")
@@ -46,14 +46,10 @@ class Country
      *
      * Top level domain name for country
      */
-    private $tld;
+    private string $tld;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string") */
+    private string $name;
 
     public function getCode(): string
     {

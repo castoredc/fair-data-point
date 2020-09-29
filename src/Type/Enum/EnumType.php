@@ -9,11 +9,8 @@ use Doctrine\DBAL\Types\Type;
 
 abstract class EnumType extends Type
 {
-    /** @var string */
-    protected $name = '';
-
-    /** @var string */
-    protected $class = Enum::class;
+    protected string $name = '';
+    protected string $class = Enum::class;
 
     /** @inheritDoc */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string

@@ -8,8 +8,7 @@ use App\Entity\Data\DataModel\DataModelModule;
 
 class TriplesApiResource implements ApiResource
 {
-    /** @var DataModelModule */
-    private $module;
+    private DataModelModule $module;
 
     public function __construct(DataModelModule $module)
     {

@@ -4,13 +4,11 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\Visualization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Triple;
 
 class VisualizationEdgeApiResource implements ApiResource
 {
-    /** @var Triple */
-    private $triple;
+    private Triple $triple;
 
     public function __construct(Triple $triple)
     {
@@ -30,7 +28,6 @@ class VisualizationEdgeApiResource implements ApiResource
         $prefixedValue = $predicateIri->getBase();
 
         foreach ($prefixes as $prefix) {
-            /** @var NamespacePrefix $prefix */
             if ($prefix->getUri()->getValue() !== $iriPrefix) {
                 continue;
             }

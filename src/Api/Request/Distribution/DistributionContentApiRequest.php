@@ -9,18 +9,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class DistributionContentApiRequest extends GroupedApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $value;
+    private string $value;
 
     protected function parse(): void
     {

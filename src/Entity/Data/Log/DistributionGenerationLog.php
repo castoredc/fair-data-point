@@ -23,39 +23,31 @@ class DistributionGenerationLog
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents", inversedBy="logs", cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
-     *
-     * @var DistributionContents
      */
-    private $distribution;
+    private DistributionContents $distribution;
 
     /**
      * @ORM\OneToMany(targetEntity="DistributionGenerationRecordLog", mappedBy="log", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<DistributionGenerationRecordLog>
      */
-    private $records;
+    private Collection $records;
 
-    /**
-     * @ORM\Column(type="DistributionGenerationStatusType")
-     *
-     * @var DistributionGenerationStatus
-     */
-    private $status;
+    /** @ORM\Column(type="DistributionGenerationStatusType") */
+    private DistributionGenerationStatus $status;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      *
      * @var mixed[]|null
      */
-    private $errors;
+    private ?array $errors = null;
 
     public function __construct(DistributionContents $distribution)
     {
@@ -92,7 +84,6 @@ class DistributionGenerationLog
         $count = 0;
 
         foreach ($this->records as $record) {
-            /** @var DistributionGenerationRecordLog $record */
             if (! $record->getStatus()->isEqualTo($status)) {
                 continue;
             }

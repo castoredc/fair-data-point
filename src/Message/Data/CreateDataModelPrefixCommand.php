@@ -7,14 +7,11 @@ use App\Entity\Data\DataModel\DataModelVersion;
 
 class CreateDataModelPrefixCommand
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /** @var string */
-    private $prefix;
+    private string $prefix;
 
-    /** @var string */
-    private $uri;
+    private string $uri;
 
     public function __construct(DataModelVersion $dataModel, string $prefix, string $uri)
     {

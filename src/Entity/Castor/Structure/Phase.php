@@ -10,11 +10,9 @@ use function uasort;
 
 class Phase extends StructureElement
 {
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
-    /** @var int|null */
-    private $position;
+    private ?int $position = null;
 
     public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, ?int $position)
     {

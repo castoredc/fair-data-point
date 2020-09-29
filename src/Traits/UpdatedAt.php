@@ -9,12 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait UpdatedAt
 {
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     *
-     * @var DateTime|null
-     */
-    private $updatedAt;
+    /** @ORM\Column(type="datetime", nullable=true) */
+    private ?DateTime $updatedAt = null;
 
     public function getUpdatedAt(): ?DateTime
     {

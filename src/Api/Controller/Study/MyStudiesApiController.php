@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study")
@@ -24,12 +25,12 @@ class MyStudiesApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var User $user */
         $user = $this->getUser();
+        assert($user instanceof User);
         $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse($handledStamp->getResult());
     }

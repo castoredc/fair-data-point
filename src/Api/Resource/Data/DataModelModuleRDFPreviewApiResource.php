@@ -12,11 +12,9 @@ use function array_values;
 
 class DataModelModuleRDFPreviewApiResource implements ApiResource
 {
-    /** @var DataModelModule */
-    private $module;
+    private DataModelModule $module;
 
-    /** @var string */
-    private $rdfPreview;
+    private string $rdfPreview;
 
     public function __construct(DataModelModule $module, string $rdfPreview)
     {

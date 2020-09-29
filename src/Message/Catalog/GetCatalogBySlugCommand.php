@@ -5,8 +5,7 @@ namespace App\Message\Catalog;
 
 class GetCatalogBySlugCommand
 {
-    /** @var string */
-    private $slug;
+    private string $slug;
 
     public function __construct(string $slug)
     {

@@ -5,11 +5,9 @@ namespace App\Message\Data;
 
 class CreateDataModelCommand
 {
-    /** @var string */
-    private $title;
+    private string $title;
 
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
     public function __construct(string $title, ?string $description)
     {

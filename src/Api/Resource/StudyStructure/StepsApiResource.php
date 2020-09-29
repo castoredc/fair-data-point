@@ -9,7 +9,7 @@ use App\Entity\Castor\Structure\Step\Step;
 class StepsApiResource implements ApiResource
 {
     /** @var Step[] */
-    private $steps;
+    private array $steps;
 
     /**
      * @param Step[] $steps

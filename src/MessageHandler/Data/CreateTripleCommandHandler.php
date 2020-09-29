@@ -11,7 +11,6 @@ use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\CreateTripleCommand;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -19,11 +18,9 @@ use function assert;
 
 class CreateTripleCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -43,7 +40,6 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         $module = $command->getModule();
         $dataModel = $module->getDataModel();
 
-        /** @var NodeRepository $nodeRepository */
         $nodeRepository = $this->em->getRepository(Node::class);
 
         if ($command->getSubjectType()->isRecord()) {
@@ -51,6 +47,7 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         } else {
             $subject = $nodeRepository->findByModelAndId($dataModel, $command->getSubjectValue());
         }
+
         assert($subject instanceof Node);
 
         $predicate = new Predicate($dataModel, new Iri($command->getPredicateValue()));
@@ -60,6 +57,7 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         } else {
             $object = $nodeRepository->findByModelAndId($dataModel, $command->getObjectValue());
         }
+
         assert($object instanceof Node);
 
         if ($command->getObjectType()->isValue() && $module->isRepeated()) {

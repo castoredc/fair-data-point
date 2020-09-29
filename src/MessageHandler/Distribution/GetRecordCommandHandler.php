@@ -20,12 +20,9 @@ use function assert;
 
 class GetRecordCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var Security */
-    private $security;
-    /** @var EncryptionService */
-    private $encryptionService;
+    private ApiClient $apiClient;
+    private Security $security;
+    private EncryptionService $encryptionService;
 
     public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {

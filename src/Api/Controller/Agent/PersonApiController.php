@@ -16,6 +16,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/agent/person")
@@ -30,12 +31,12 @@ class PersonApiController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         try {
-            /** @var PersonApiRequest $parsed */
             $parsed = $this->parseRequest(PersonApiRequest::class, $request);
+            assert($parsed instanceof PersonApiRequest);
             $envelope = $bus->dispatch(new GetPersonByEmailCommand($parsed->getEmail()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new PersonApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {

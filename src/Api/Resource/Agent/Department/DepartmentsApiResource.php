@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Department;
 class DepartmentsApiResource implements ApiResource
 {
     /** @var Department[] */
-    private $departments;
+    private array $departments;
 
     /**
      * @param Department[] $departments

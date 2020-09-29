@@ -10,6 +10,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class LocalizedText extends Constraint
 {
-    /** @var string */
-    public $message = 'This text does not follow the [text, language] format.';
+    public string $message = 'This text does not follow the [text, language] format.';
 }

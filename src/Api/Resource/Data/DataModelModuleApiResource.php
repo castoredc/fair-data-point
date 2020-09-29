@@ -9,11 +9,9 @@ use function sprintf;
 
 class DataModelModuleApiResource implements ApiResource
 {
-    /** @var DataModelModule */
-    private $module;
+    private DataModelModule $module;
 
-    /** @var bool */
-    private $groupTriples;
+    private bool $groupTriples;
 
     public function __construct(DataModelModule $module, bool $groupTriples = true)
     {

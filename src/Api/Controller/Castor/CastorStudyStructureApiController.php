@@ -23,6 +23,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/castor/study/{study}")
@@ -40,8 +41,8 @@ class CastorStudyStructureApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new GetStudyStructureCommand($study));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new StudyStructureApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
@@ -50,12 +51,15 @@ class CastorStudyStructureApiController extends ApiController
             if ($e instanceof ErrorFetchingCastorData) {
                 return new JsonResponse($e->toArray(), 500);
             }
+
             if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
             if ($e instanceof NotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
+
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
@@ -83,8 +87,8 @@ class CastorStudyStructureApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new GetFieldsForStepCommand($study, $step));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new FieldsApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
@@ -93,12 +97,15 @@ class CastorStudyStructureApiController extends ApiController
             if ($e instanceof ErrorFetchingCastorData) {
                 return new JsonResponse($e->toArray(), 500);
             }
+
             if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
             if ($e instanceof NotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
+
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }
@@ -124,14 +131,14 @@ class CastorStudyStructureApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        /** @var User|null $user */
         $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         try {
             $envelope = $bus->dispatch(new GetOptionGroupsForStudyCommand($study));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new OptionGroupsApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
@@ -140,12 +147,15 @@ class CastorStudyStructureApiController extends ApiController
             if ($e instanceof ErrorFetchingCastorData) {
                 return new JsonResponse($e->toArray(), 500);
             }
+
             if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
             if ($e instanceof NotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
+
             if ($e instanceof SessionTimedOut) {
                 return new JsonResponse($e->toArray(), 401);
             }

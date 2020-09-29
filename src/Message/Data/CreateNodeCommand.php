@@ -9,26 +9,19 @@ use App\Entity\Enum\XsdDataType;
 
 class CreateNodeCommand
 {
-    /** @var DataModelVersion */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /** @var NodeType */
-    private $type;
+    private NodeType $type;
 
-    /** @var string */
-    private $title;
+    private string $title;
 
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
-    /** @var string */
-    private $value;
+    private string $value;
 
-    /** @var XsdDataType|null */
-    private $dataType;
+    private ?XsdDataType $dataType = null;
 
-    /** @var bool */
-    private $isRepeated;
+    private bool $isRepeated;
 
     public function __construct(DataModelVersion $dataModel, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType, ?bool $isRepeated)
     {
