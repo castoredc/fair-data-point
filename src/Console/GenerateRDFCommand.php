@@ -1,4 +1,7 @@
 <?php
+/**
+ * @phpcs:disable SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+ */
 declare(strict_types=1);
 
 namespace App\Console;
@@ -33,8 +36,9 @@ use const DATE_ATOM;
 
 class GenerateRDFCommand extends Command
 {
-    /** @inheritDoc */
+    /** @phpcs:ignore */
     protected static $defaultName = 'app:generate-rdf';
+
     private ApiClient $apiClient;
     private EntityManagerInterface $em;
     private CastorEntityHelper $entityHelper;

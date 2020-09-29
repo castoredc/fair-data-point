@@ -14,7 +14,7 @@ class DistributionAccessType extends AbstractEnumType
     /**
      * @inheritDoc
      * @var string[]
-    */
+     */
     protected static $choices = [
         self::PUBLIC => 'Public',
         self::STUDY_USERS => 'Users with access to the study',
