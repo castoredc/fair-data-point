@@ -141,6 +141,9 @@
             "./config/packages/knpu_oauth2_client.yaml"
         ]
     },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.1.1"
+    },
     "league/oauth2-client": {
         "version": "2.3.0"
     },
@@ -175,7 +178,7 @@
         "version": "2.0.1"
     },
     "php": {
-        "version": "7.3"
+        "version": "7.4"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
@@ -429,6 +432,9 @@
             "ref": "b9f462a47f7fd28d56c61f59c027fd7ad8e1aac8"
         }
     },
+    "symfony/http-client-contracts": {
+        "version": "v2.2.0"
+    },
     "symfony/http-foundation": {
         "version": "v4.0.4"
     },
@@ -627,6 +633,9 @@
     },
     "twig/twig": {
         "version": "v2.4.4"
+    },
+    "webimpress/safe-writer": {
+        "version": "2.1.0"
     },
     "webmozart/assert": {
         "version": "1.6.0"
