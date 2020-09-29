@@ -26,10 +26,12 @@ export default class Login extends Component {
 
     componentDidMount() {
         if(typeof this.props.match.params.catalogSlug !== 'undefined') {
-            this.getCatalog(this.props.match.params.catalogSlug);
+            this.getCatalog(this.props.match.params.catalogSlug, () => {
+                this.getServers();
+            });
+        } else {
+            this.getServers();
         }
-
-        this.getServers();
     }
 
     getServers = () => {
@@ -59,13 +61,19 @@ export default class Login extends Component {
             });
     };
 
-    getCatalog = (catalog) => {
+    getCatalog = (catalog, callback) => {
         axios.get('/api/brand/' + catalog)
             .then((response) => {
-                this.setState({
-                    catalog:   response.data,
-                    isLoading: false
-                });
+                if(typeof callback === "function") {
+                    this.setState({
+                        catalog:   response.data,
+                    }, callback);
+                } else {
+                    this.setState({
+                        catalog:   response.data,
+                        isLoading: false
+                    });
+                }
             })
             .catch((error) => {
                 this.setState({
