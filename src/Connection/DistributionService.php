@@ -182,7 +182,7 @@ class DistributionService
             );
             $connection->executeStatement($sql);
         } catch (Throwable $t) {
-            throw new CouldNotCreateDatabaseUser();
+            throw new CouldNotCreateDatabaseUser($t->getMessage());
         }
 
         try {
@@ -191,7 +191,7 @@ class DistributionService
                 ON `' . $databaseInformation->getEscapedDatabase() . '`.* TO \'' . $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString() . '\'@\'%\';'
             );
         } catch (Throwable $t) {
-            throw new CouldNotCreateDatabase();
+            throw new CouldNotCreateDatabase($t->getMessage());
         }
     }
 }
