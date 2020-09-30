@@ -5,8 +5,8 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\RDF\DataModelMapping;
-use App\Entity\Data\RDF\DataModelModuleMapping;
+use App\Entity\Data\DataModelMapping\DataModelMapping;
+use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
@@ -45,7 +45,7 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
-        $study = $distribution->getDataset()->getStudy();
+        $study = $distribution->getStudy();
         $dataModelVersion = $command->getDataModelVersion();
 
         if (! $this->security->isGranted('edit', $distribution)) {
@@ -71,11 +71,11 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
 
         $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::fromString($command->getStructureType()->toString()), $command->getElement());
 
-        if ($contents->getMappingByModuleAndVersion($module, $dataModelVersion) !== null) {
-            $mapping = $contents->getMappingByModuleAndVersion($module, $dataModelVersion);
+        if ($study->getMappingByModuleAndVersion($module, $dataModelVersion) !== null) {
+            $mapping = $study->getMappingByModuleAndVersion($module, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelModuleMapping($contents, $module, $element, $dataModelVersion);
+            $mapping = new DataModelModuleMapping($study, $module, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

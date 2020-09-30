@@ -6,6 +6,7 @@ namespace App\Entity\FAIRData;
 use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
 use App\Entity\Metadata\DistributionMetadata;
+use App\Entity\Study;
 use App\Entity\Version;
 use App\Security\ApiUser;
 use App\Traits\CreatedAndUpdated;
@@ -121,6 +122,11 @@ class Distribution implements AccessibleEntity
     public function getContents(): ?DistributionContents
     {
         return $this->contents;
+    }
+
+    public function getStudy(): ?Study
+    {
+        return $this->dataset->getStudy();
     }
 
     public function setContents(?DistributionContents $contents): void

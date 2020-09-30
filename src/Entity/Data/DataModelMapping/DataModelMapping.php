@@ -1,16 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\RDF;
+namespace App\Entity\Data\DataModelMapping;
 
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Study;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="distribution_rdf_mappings")
+ * @ORM\Table(name="data_model_mappings")
  * @ORM\HasLifecycleCallbacks
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -28,10 +29,10 @@ abstract class DataModelMapping
     private string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RDFDistribution", inversedBy="mappings",cascade={"persist"})
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="mappings",cascade={"persist"})
+     * @ORM\JoinColumn(name="study", referencedColumnName="id", nullable=false)
      */
-    private RDFDistribution $distribution;
+    private Study $study;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity")
@@ -45,9 +46,9 @@ abstract class DataModelMapping
      */
     private DataModelVersion $dataModelVersion;
 
-    public function __construct(RDFDistribution $distribution, CastorEntity $entity, DataModelVersion $dataModelVersion)
+    public function __construct(Study $study, CastorEntity $entity, DataModelVersion $dataModelVersion)
     {
-        $this->distribution = $distribution;
+        $this->study = $study;
         $this->entity = $entity;
         $this->dataModelVersion = $dataModelVersion;
     }
@@ -55,16 +56,6 @@ abstract class DataModelMapping
     public function getId(): string
     {
         return $this->id;
-    }
-
-    public function getDistribution(): RDFDistribution
-    {
-        return $this->distribution;
-    }
-
-    public function setDistribution(RDFDistribution $distribution): void
-    {
-        $this->distribution = $distribution;
     }
 
     public function getEntity(): CastorEntity
@@ -80,5 +71,15 @@ abstract class DataModelMapping
     public function getDataModelVersion(): DataModelVersion
     {
         return $this->dataModelVersion;
+    }
+
+    public function getStudy(): Study
+    {
+        return $this->study;
+    }
+
+    public function setStudy(Study $study): void
+    {
+        $this->study = $study;
     }
 }

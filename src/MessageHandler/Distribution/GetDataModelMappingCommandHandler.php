@@ -30,6 +30,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
     public function __invoke(GetDataModelMappingCommand $command): PaginatedResultCollection
     {
         $distribution = $command->getDistribution();
+        $study = $distribution->getStudy();
 
         if (! $this->security->isGranted('view', $distribution->getDistribution())) {
             throw new NoAccessPermission();
@@ -44,7 +45,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
 
             foreach ($valueNodes as $valueNode) {
                 assert($valueNode instanceof ValueNode);
-                $mapping = $distribution->getMappingByNodeAndVersion($valueNode, $command->getDataModelVersion());
+                $mapping = $study->getMappingByNodeAndVersion($valueNode, $command->getDataModelVersion());
 
                 $results[] = $mapping ?? $valueNode;
             }
@@ -52,7 +53,7 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
             $repeatedModules = $command->getDataModelVersion()->getRepeatedModules();
 
             foreach ($repeatedModules as $repeatedModule) {
-                $mapping = $distribution->getMappingByModuleAndVersion($repeatedModule, $command->getDataModelVersion());
+                $mapping = $study->getMappingByModuleAndVersion($repeatedModule, $command->getDataModelVersion());
 
                 $results[] = $mapping ?? $repeatedModule;
             }

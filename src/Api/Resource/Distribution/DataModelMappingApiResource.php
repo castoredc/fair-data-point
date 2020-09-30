@@ -9,8 +9,8 @@ use App\Api\Resource\Data\DataModelModuleApiResource;
 use App\Api\Resource\Data\NodeApiResource;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\RDF\DataModelModuleMapping;
-use App\Entity\Data\RDF\DataModelNodeMapping;
+use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
+use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 
 class DataModelMappingApiResource implements ApiResource
 {

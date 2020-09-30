@@ -5,6 +5,7 @@ namespace App\Entity\Data;
 
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\Study;
 use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -70,6 +71,11 @@ abstract class DistributionContents
     public function getDistribution(): Distribution
     {
         return $this->distribution;
+    }
+
+    public function getStudy(): Study
+    {
+        return $this->getDistribution()->getStudy();
     }
 
     public function setAccessRights(int $accessRights): void
