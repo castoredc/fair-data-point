@@ -24,29 +24,29 @@ class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequen
      * @Assert\NotBlank(groups = {"node"})
      * @Assert\Type("string")
      */
-    private string $node;
+    private ?string $node;
 
     /**
      * @Assert\NotBlank(groups = {"module"})
      * @Assert\Type("string")
      */
-    private string $structureType;
+    private ?string $structureType;
 
     /**
      * @Assert\NotBlank(groups = {"module"})
      * @Assert\Type("string")
      */
-    private string $module;
+    private ?string $module;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private string $element;
+    private ?string $element;
 
     protected function parse(): void
     {
-        $this->type = $this->getFromData('type');
+        $this->type = (string) $this->getFromData('type');
         $this->node = $this->getFromData('node');
         $this->structureType = $this->getFromData('structureType');
         $this->module = $this->getFromData('module');
