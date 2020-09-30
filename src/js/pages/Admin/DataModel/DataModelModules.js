@@ -271,7 +271,7 @@ export default class DataModelModules extends Component {
             {modules.length === 0 ? <div className="NoResults">
                 This data model does not have any groups.
 
-                <br><br>
+                <br /><br />
 
                 <Button icon="add" onClick={() => this.openModuleModal(null)}>Add group</Button>
             </div> : <SideTabs
