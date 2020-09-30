@@ -81,11 +81,11 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
 
             if ($contents->getDataModel() !== $dataModel) {
                 // Switched data model, remove mappings
-                foreach ($contents->getMappings() as $mapping) {
+                foreach ($study->getMappings() as $mapping) {
                     $this->em->remove($mapping);
                 }
 
-                $contents->getMappings()->clear();
+                $study->getMappings()->clear();
             }
 
             $contents->setDataModel($dataModel);
@@ -94,6 +94,7 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
 
         $this->em->persist($distribution);
         $this->em->persist($contents);
+        $this->em->persist($study);
         $this->em->flush();
     }
 }

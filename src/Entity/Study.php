@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\Data\DataModelMapping\DataModelMapping;
+use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
+use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Enum\StudySource;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
@@ -71,6 +77,13 @@ abstract class Study implements AccessibleEntity
 
     /** @ORM\Column(type="boolean") */
     private bool $isPublished = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModelMapping\DataModelMapping", mappedBy="study", cascade={"persist", "remove"}, fetch="EAGER")
+     *
+     * @var Collection<DataModelMapping>
+     */
+    private Collection $mappings;
 
     public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)
     {
@@ -202,5 +215,71 @@ abstract class Study implements AccessibleEntity
     public function getRelativeUrl(): string
     {
         return '/study/' . $this->slug;
+    }
+
+    /**
+     * @return Collection<DataModelMapping>
+     */
+    public function getMappings(): Collection
+    {
+        return $this->mappings;
+    }
+
+    /**
+     * @return Collection<DataModelNodeMapping>
+     */
+    public function getNodeMappings(): Collection
+    {
+        $return = new ArrayCollection();
+
+        foreach ($this->mappings as $mapping) {
+            if (! $mapping instanceof DataModelNodeMapping) {
+                continue;
+            }
+
+            $return->add($mapping);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return Collection<DataModelModuleMapping>
+     */
+    public function getModuleMappings(): Collection
+    {
+        $return = new ArrayCollection();
+
+        foreach ($this->mappings as $mapping) {
+            if (! $mapping instanceof DataModelModuleMapping) {
+                continue;
+            }
+
+            $return->add($mapping);
+        }
+
+        return $return;
+    }
+
+    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
+    {
+        foreach ($this->getNodeMappings() as $mapping) {
+            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
+                return $mapping;
+            }
+        }
+
+        return null;
+    }
+
+    public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
+    {
+        foreach ($this->getModuleMappings() as $mapping) {
+            if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
+                return $mapping;
+            }
+        }
+
+        return null;
     }
 }

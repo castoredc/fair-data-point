@@ -7,10 +7,10 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
+use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\AccessibleEntity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,14 +32,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
      */
     private DataModelVersion $currentDataModelVersion;
 
-    /**
-     * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist", "remove"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
-     *
-     * @var Collection<DataModelMapping>
-     */
-    private Collection $mappings;
-
     /** @ORM\Column(type="boolean") */
     private bool $isCached = false;
 
@@ -56,82 +48,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getRelativeUrl(): string
     {
         return $this->getDistribution()->getRelativeUrl() . '/rdf';
-    }
-
-    /**
-     * @return Collection<DataModelMapping>
-     */
-    public function getMappings(): Collection
-    {
-        return $this->mappings;
-    }
-
-    /**
-     * @return Collection<DataModelNodeMapping>
-     */
-    public function getNodeMappings(): Collection
-    {
-        $return = new ArrayCollection();
-
-        foreach ($this->mappings as $mapping) {
-            if (! $mapping instanceof DataModelNodeMapping) {
-                continue;
-            }
-
-            $return->add($mapping);
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return Collection<DataModelModuleMapping>
-     */
-    public function getModuleMappings(): Collection
-    {
-        $return = new ArrayCollection();
-
-        foreach ($this->mappings as $mapping) {
-            if (! $mapping instanceof DataModelModuleMapping) {
-                continue;
-            }
-
-            $return->add($mapping);
-        }
-
-        return $return;
-    }
-
-    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
-    {
-        foreach ($this->getNodeMappings() as $mapping) {
-            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
-                return $mapping;
-            }
-        }
-
-        return null;
-    }
-
-    public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
-    {
-        foreach ($this->getModuleMappings() as $mapping) {
-            if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
-                return $mapping;
-            }
-        }
-
-        return null;
-    }
-
-    public function getMappingByModuleForCurrentVersion(DataModelModule $module): ?DataModelModuleMapping
-    {
-        return $this->getMappingByModuleAndVersion($module, $this->currentDataModelVersion);
-    }
-
-    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
-    {
-        return $this->getMappingByNodeAndVersion($node, $this->currentDataModelVersion);
     }
 
     public function isCached(): bool
@@ -156,5 +72,15 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         }
 
         $this->currentDataModelVersion = $dataModelVersion;
+    }
+
+    public function getMappingByModuleForCurrentVersion(DataModelModule $module): ?DataModelModuleMapping
+    {
+        return $this->getStudy()->getMappingByModuleAndVersion($module, $this->currentDataModelVersion);
+    }
+
+    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
+    {
+        return $this->getStudy()->getMappingByNodeAndVersion($node, $this->currentDataModelVersion);
     }
 }
