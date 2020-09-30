@@ -46,7 +46,7 @@ class Dataset implements AccessibleEntity
     private Collection $distributions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=TRUE)
      */
     private ?Study $study = null;

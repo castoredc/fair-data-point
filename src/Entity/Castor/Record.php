@@ -21,12 +21,18 @@ class Record
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="CastorStudy", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="CastorStudy")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
+     *
+     * phpcs:disable
+     *
+     * @var CastorStudy
      */
-    private CastorStudy $study;
+    private $study;
 
     /**
+     * phpcs:enable
+     *
      * @ORM\ManyToOne(targetEntity="Institute", fetch="EAGER", inversedBy="records",cascade={"persist"})
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(name="institute_id", referencedColumnName="id", nullable=FALSE),
