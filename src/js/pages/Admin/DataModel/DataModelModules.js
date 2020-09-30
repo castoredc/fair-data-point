@@ -268,7 +268,13 @@ export default class DataModelModules extends Component {
                 Are you sure you want to delete this triple?
             </ConfirmModal>
 
-            {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
+            {modules.length === 0 ? <div className="NoResults">
+                <p>
+                    This data model does not have any groups.
+                </p>
+
+                <Button icon="add" iconDescription="Add group" onClick={() => this.openModuleModal(null)} />
+            </div> : <SideTabs
                 hasButtons
                 title="Groups"
                 actions={
