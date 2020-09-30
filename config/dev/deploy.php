@@ -26,7 +26,7 @@ return new class extends DefaultDeployer
         $deploying = (bool) $this->ask($question);
 
         if (! $deploying) {
-            $this->log('<h1><fg=red>Not deploying</fg></h1>');
+            $this->log('<h1><fg=red>Not deploying</></h1>');
             exit;
         }
     }
@@ -46,6 +46,7 @@ return new class extends DefaultDeployer
             ->deployDir('/srv/www/fdp.castoredc.dev')
             ->repositoryUrl(sprintf('git@github.com:%s.git', 'castoredc/fair-data-point'))
             ->repositoryBranch($branch)
+            ->fixPermissionsWithAcl('web')
             ->composerInstallFlags('--prefer-dist --no-interaction --no-dev --no-scripts --quiet');
     }
 
@@ -92,7 +93,7 @@ return new class extends DefaultDeployer
         assert($server instanceof Server);
         $projectDir = $server->get(Property::project_dir);
 
-        $this->log('<h1>Building Ui</h1>');
+        $this->log('<h1>Building UI</h1>');
         $this->runLocal('yarn install');
         $this->runLocal('yarn run encore production');
         $this->runLocal(sprintf(
@@ -116,9 +117,9 @@ return new class extends DefaultDeployer
         $this->pushVersion($version);
     }
 
-    public function beforeFinishingDeploy()
+    public function beforeFinishingDeploy(): void
     {
-        $this->log('Restarting servers');
+        $this->log('<h1>Restarting servers</h1>');
         $this->runRemote('sudo /etc/init.d/nginx restart');
         $this->runRemote('sudo /etc/init.d/php7.4-fpm restart');
     }
