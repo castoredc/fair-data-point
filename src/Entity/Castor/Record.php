@@ -21,7 +21,7 @@ class Record
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="CastorStudy", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="CastorStudy")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
      */
     private CastorStudy $study;
