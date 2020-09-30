@@ -267,7 +267,10 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 409);
             }
 
-            $this->logger->critical('An error occurred while adding a distribution', ['exception' => $e]);
+            $this->logger->critical('An error occurred while adding a distribution', [
+                'exception' => $e,
+                'details' => $e->getMessage()
+            ]);
 
             return new JsonResponse([], 500);
         }
