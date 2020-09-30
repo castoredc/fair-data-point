@@ -116,6 +116,13 @@ return new class extends DefaultDeployer
         $this->pushVersion($version);
     }
 
+    public function beforeFinishingDeploy()
+    {
+        $this->log('Restarting servers');
+        $this->runRemote('sudo /etc/init.d/nginx restart');
+        $this->runRemote('sudo /etc/init.d/php7.4-fpm restart');
+    }
+
     public function pushVersion(string $version): void
     {
         $this->runRemote(
