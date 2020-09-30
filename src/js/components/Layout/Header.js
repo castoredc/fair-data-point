@@ -99,7 +99,7 @@ export default class Header extends Component {
     };
 
     render() {
-        const {embedded, className, title, badge, location, data, breadcrumbs, user} = this.props;
+        const {embedded, className, title, badge, location, data, breadcrumbs, user, hideTitle = false, forceSmallHeader = false} = this.props;
         const {mobile, smallHeader, showMenu, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
         const adminMenuItems = [{
@@ -132,8 +132,8 @@ export default class Header extends Component {
             />
             {title && <DocumentTitle title={title}/>}
             {!embedded && <div className="Header">
-                <div className="Spacing"/>
-                {!mobile && <div className={classNames('MainHeader', smallHeader && 'Small')}>
+                <div className={classNames('Spacing', forceSmallHeader && 'Small')} />
+                {!mobile && <div className={classNames('MainHeader', smallHeader && 'Small', forceSmallHeader && 'Small')}>
                     <div className="container">
                         <Stack distribution="equalSpacing">
                             <div className="HeaderLogoCol">
@@ -191,7 +191,7 @@ export default class Header extends Component {
                     </div>
                 </div>}
             </div>}
-            <div className="InformationHeader">
+            {!hideTitle && <div className="InformationHeader">
                 <div className="container Children">
                     <div className="MainCol">
                         {badge && <div><span className="InformationBadge">{badge}</span></div>}
@@ -200,7 +200,7 @@ export default class Header extends Component {
                         </h1>
                     </div>
                 </div>
-            </div>
+            </div>}
         </header>;
     }
 }

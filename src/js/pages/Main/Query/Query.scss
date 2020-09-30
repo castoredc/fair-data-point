@@ -2,6 +2,73 @@
 
 .Query {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .QueryComponent {
+    padding: 30px!important;
+    flex: 1;
+    overflow: auto;
+
+    .Split {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+
+      .gutter {
+        .chip {
+          background: $neutral-40;
+          border-radius: 4px;
+          opacity: 0;
+        }
+
+        &:hover {
+          .chip {
+            opacity: 1;
+          }
+        }
+      }
+
+      .gutter.gutter-horizontal {
+        cursor: col-resize;
+        display: flex;
+        align-items: center;
+
+        .chip {
+          width: 4px;
+          height: 80%;
+          margin: auto;
+        }
+      }
+    }
+
+    .QueryTools, .QueryResults, .QueryResults .DataTableWrapper {
+      height: 100%;
+    }
+  }
+
+  .QueryTools {
+    display: flex;
+    flex-direction: column;
+
+
+    .QueryEditor {
+      flex: 1;
+    }
+  }
+
+  .QueryResults {
+    .DataTableWrapper {
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid #d1d1d1;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
 
   .Information {
     flex: 1;
@@ -34,13 +101,14 @@
   .CodeMirror {
     font-family: 'Fira Code', monospace;
     font-size: 13px;
+    height: 100%!important;
+    border-radius: 4px;
   }
 
   .yasqe {
     transition: all 0.8s ease;
     overflow: hidden;
-    max-height: 100vh;
-    height: fit-content;
+    height: 100%;
     border-radius: 3px;
   }
 
@@ -51,7 +119,8 @@
   }
 
   .QueryButtons {
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 0;
 
     .ResultCount {
       line-height: 30px;
@@ -63,6 +132,7 @@
 
     .ShowHideButton {
       border: 0;
+      display: none;
     }
   }
 }

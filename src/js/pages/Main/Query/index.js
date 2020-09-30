@@ -14,6 +14,7 @@ import {Button, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
+import Split from 'react-split'
 
 export default class Query extends Component {
     constructor(props) {
@@ -103,7 +104,9 @@ export default class Query extends Component {
         this.setState({
             isLoading: false
         }, () => {
-            let config = {};
+            let config = {
+                resizeable: false
+            };
 
             if (distribution) {
                 config['requestConfig'] = {
@@ -177,48 +180,69 @@ export default class Query extends Component {
             title={title}
             isLoading={isLoading}
             embedded={embedded}
+            fullWidth
         >
-            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title}/>
+            <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true} />
 
-            <MainBody isLoading={isLoading}>
-                <div className="QueryTools">
-                    <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
-                    <Stack className="QueryButtons"
-                           alignment="center"
-                           distribution="equalSpacing">
-                        <div className="ResultCount">
-                            {executedWithoutErrors && <>
-                                <strong>{rows.length}</strong> results in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds
-                            </>}
-                        </div>
-                        <div>
-                            {executedWithoutErrors && <Button onClick={this.toggleEditor}
-                                                              buttonType="secondary"
-                                                              fullWidth
-                                                              isDropdown
-                                                              isOpen={showEditor}
-                                                              className="ShowHideButton"
-                            >
-                                {showEditor ? 'Hide' : 'Show'} query editor
-                            </Button>}
-                        </div>
-                        <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">Run query</Button>
-                    </Stack>
-                </div>
-                {isExecutingQuery && <InlineLoader/>}
+            <MainBody isLoading={isLoading} className="QueryComponent">
+                <Split
+                    className="Split"
+                    sizes={[40, 60]}
+                    cursor="col-resize"
+                    gutterSize={20}
+                    gutter={(index, direction) => {
+                        const gutter = document.createElement('div')
+                        const chip = document.createElement('div');
 
-                {executedWithoutErrors && <SPARQLDataTable
-                    vars={columns}
-                    bindings={rows}
-                    prefixes={prefixes}
-                    fullUrl={distribution.fullUrl}
-                />}
+                        gutter.className = `gutter gutter-${direction}`
+                        chip.className = `chip`
 
+                        gutter.appendChild(chip);
+                        return gutter
+                    }}
+                >
+                    <div className="QueryTools">
+                        <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
+                        <Stack className="QueryButtons"
+                               alignment="center"
+                               distribution="equalSpacing">
+                            <div className="ResultCount">
+                                {executedWithoutErrors && <>
+                                    <strong>{rows.length}</strong> results
+                                    in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds
+                                </>}
+                            </div>
+                            <div>
+                                {executedWithoutErrors && <Button onClick={this.toggleEditor}
+                                                                  buttonType="secondary"
+                                                                  fullWidth
+                                                                  isDropdown
+                                                                  isOpen={showEditor}
+                                                                  className="ShowHideButton"
+                                >
+                                    {showEditor ? 'Hide' : 'Show'} query editor
+                                </Button>}
+                            </div>
+                            <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">Run
+                                query</Button>
+                        </Stack>
+                    </div>
 
-                {error && <Alert variant="error" icon="errorCircled">
-                    <strong>An error occurred, please check your query and try again</strong>
-                    {message}
-                </Alert>}
+                    <div className="QueryResults">
+                        {isExecutingQuery && <InlineLoader/>}
+                        {executedWithoutErrors && <SPARQLDataTable
+                            vars={columns}
+                            bindings={rows}
+                            prefixes={prefixes}
+                            fullUrl={distribution.fullUrl}
+                        />}
+
+                        {error && <Alert variant="error" icon="errorCircled">
+                            <strong>An error occurred, please check your query and try again</strong>
+                            {message}
+                        </Alert>}
+                    </div>
+                </Split>
             </MainBody>
 
         </Layout>;
