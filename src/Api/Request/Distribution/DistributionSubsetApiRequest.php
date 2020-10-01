@@ -5,15 +5,11 @@ namespace App\Api\Request\Distribution;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
-use Symfony\Component\Validator\Constraints as Assert;
 use function count;
 
 class DistributionSubsetApiRequest extends SingleApiRequest
 {
-    /**
-     * @var mixed[]|null
-     * @Assert\NotBlank()
-     */
+    /** @var mixed[]|null */
     private ?array $dependencies = null;
 
     protected function parse(): void

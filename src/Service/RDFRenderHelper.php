@@ -413,13 +413,11 @@ class RDFRenderHelper
 
             if ($this->contents->getDependencies() === null) {
                 $return[] = $newRecord;
-            }
-
-            if (! $this->parseSubsetDependencies($this->contents->getDependencies(), $newRecord->getData()->getStudy())) {
+            } elseif (! $this->parseSubsetDependencies($this->contents->getDependencies(), $newRecord->getData()->getStudy())) {
                 continue;
+            } else {
+                $return[] = $newRecord;
             }
-
-            $return[] = $newRecord;
         }
 
         return $return;
