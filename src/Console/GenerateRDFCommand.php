@@ -172,7 +172,7 @@ class GenerateRDFCommand extends Command
                     $output->writeln(sprintf('- Forced importing record %s', $record->getId()));
                     $import = true;
                 } elseif ($record->getCreatedOn() > $lastImport) {
-                    $output->writeln(sprintf('- Record %s is created since last import', $record->getId()));
+                    $output->writeln(sprintf('- Record %s is created (%s) since last import (%s)', $record->getId(), $record->getCreatedOn(), $lastImport));
                     $import = true;
                 } elseif ($record->getUpdatedOn() > $lastImport) {
                     $output->writeln(sprintf('- Record %s is changed since last import, old render will be removed', $record->getId()));
