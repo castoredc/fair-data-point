@@ -25,6 +25,7 @@ use EasyRdf_Namespace;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use function assert;
@@ -66,6 +67,17 @@ class GenerateRDFCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->addOption(
+            'force',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Force update',
+            false
+        );
+    }
+
     /** @inheritDoc */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -77,6 +89,12 @@ class GenerateRDFCommand extends Command
                 '',
             ]
         );
+
+        $forceUpdate = ($input->getOption('force') !== false);
+
+        if ($forceUpdate) {
+            $output->writeln('FORCE UPDATE');
+        }
 
         /** @var RDFDistribution[] $rdfDistributionContents */
         $rdfDistributionContents = $this->em->getRepository(RDFDistribution::class)->findBy(['isCached' => true]);
@@ -147,7 +165,7 @@ class GenerateRDFCommand extends Command
                 $import = false;
                 $recordGraphUri = $graphUri . '/' . $record->getId();
 
-                if ($lastImport === null) {
+                if ($lastImport === null || $forceUpdate === true) {
                     $output->writeln(sprintf('- Importing record %s', $record->getId()));
                     $import = true;
                 } elseif ($record->getCreatedOn() > $lastImport) {
