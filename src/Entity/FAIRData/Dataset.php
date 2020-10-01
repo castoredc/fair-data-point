@@ -40,6 +40,7 @@ class Dataset implements AccessibleEntity
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset", cascade={"persist"})
+     * @ORM\OrderBy({"slug" = "ASC"})
      *
      * @var Collection<Distribution>
      */
