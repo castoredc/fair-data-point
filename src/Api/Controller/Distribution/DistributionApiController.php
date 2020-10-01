@@ -7,6 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Distribution\DistributionApiRequest;
 use App\Api\Request\Distribution\DistributionContentApiRequest;
 use App\Api\Request\Distribution\DistributionGenerationLogsFilterApiRequest;
+use App\Api\Request\Distribution\DistributionSubsetApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationLogApiResource;
@@ -27,6 +28,7 @@ use App\Message\Distribution\CreateDistributionDatabaseCommand;
 use App\Message\Distribution\GetDistributionGenerationLogsCommand;
 use App\Message\Distribution\GetDistributionGenerationRecordLogsCommand;
 use App\Message\Distribution\UpdateDistributionCommand;
+use App\Message\Distribution\UpdateDistributionSubsetCommand;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -314,6 +316,40 @@ class DistributionApiController extends ApiController
             }
 
             $this->logger->critical('An error occurred while updating a distribution', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/{distribution}/subset", methods={"POST"}, name="api_distribution_subset")
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     */
+    public function subsetDistribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $dataset);
+
+        try {
+            $parsed = $this->parseRequest(DistributionSubsetApiRequest::class, $request);
+            assert($parsed instanceof DistributionSubsetApiRequest);
+            $bus->dispatch(
+                new UpdateDistributionSubsetCommand(
+                    $distribution,
+                    $parsed->getDependencies()
+                )
+            );
+
+            return new JsonResponse([], 200);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            $this->logger->critical('An error occurred while updating the subset of a distribution', [
                 'exception' => $e,
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),

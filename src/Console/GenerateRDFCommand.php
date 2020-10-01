@@ -127,6 +127,9 @@ class GenerateRDFCommand extends Command
             $output->writeln('');
             $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
 
+            $recordsSubset = $helper->getSubset($records);
+            $output->writeln(sprintf("Subset: \t %s record(s)", count($recordsSubset)));
+
             $dataModel = $rdfDistributionContent->getCurrentDataModelVersion();
             $prefixes = $dataModel->getPrefixes();
 
@@ -138,7 +141,7 @@ class GenerateRDFCommand extends Command
             $errors = [];
             $skipped = [];
 
-            foreach ($records as $record) {
+            foreach ($recordsSubset as $record) {
                 $recordLog = new DistributionGenerationRecordLog($record);
 
                 $import = false;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data;
 
+use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\Study;
@@ -54,6 +55,12 @@ abstract class DistributionContents
      * @var Collection<DistributionGenerationLog>
      */
     protected Collection $logs;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup", cascade={"persist"}, fetch = "EAGER")
+     * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
+     */
+    private ?DistributionContentsDependencyGroup $dependencies = null;
 
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
@@ -121,5 +128,15 @@ abstract class DistributionContents
         assert($firstLog instanceof DistributionGenerationLog);
 
         return $firstLog->getCreatedAt();
+    }
+
+    public function getDependencies(): ?DistributionContentsDependencyGroup
+    {
+        return $this->dependencies;
+    }
+
+    public function setDependencies(?DistributionContentsDependencyGroup $dependencies): void
+    {
+        $this->dependencies = $dependencies;
     }
 }

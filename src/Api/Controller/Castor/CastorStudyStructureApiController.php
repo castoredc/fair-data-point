@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Castor;
 
 use App\Api\Controller\ApiController;
+use App\Api\Resource\Study\InstitutesApiResource;
 use App\Api\Resource\StudyStructure\FieldsApiResource;
 use App\Api\Resource\StudyStructure\OptionGroupsApiResource;
 use App\Api\Resource\StudyStructure\StudyStructureApiResource;
@@ -13,6 +14,7 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Message\Study\GetFieldsForStepCommand;
+use App\Message\Study\GetInstitutesForStudyCommand;
 use App\Message\Study\GetOptionGroupsForStudyCommand;
 use App\Message\Study\GetStudyStructureCommand;
 use App\Security\User;
@@ -162,6 +164,55 @@ class CastorStudyStructureApiController extends ApiController
 
             $this->logger->critical(
                 'An error occurred while getting the option groups',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                ]
+            );
+        }
+
+        return new JsonResponse([], 500);
+    }
+
+    /**
+     * @Route("/institutes", name="api_study_institutes")
+     */
+    public function institutes(CastorStudy $study, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $study);
+
+        $user = $this->getUser();
+        assert($user instanceof User || $user === null);
+
+        try {
+            $envelope = $bus->dispatch(new GetInstitutesForStudyCommand($study));
+
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            return new JsonResponse((new InstitutesApiResource($handledStamp->getResult()))->toArray());
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof ErrorFetchingCastorData) {
+                return new JsonResponse($e->toArray(), 500);
+            }
+
+            if ($e instanceof NoAccessPermission) {
+                return new JsonResponse($e->toArray(), 403);
+            }
+
+            if ($e instanceof NotFound) {
+                return new JsonResponse($e->toArray(), 404);
+            }
+
+            if ($e instanceof SessionTimedOut) {
+                return new JsonResponse($e->toArray(), 401);
+            }
+
+            $this->logger->critical(
+                'An error occurred while getting the institutes',
                 [
                     'exception' => $e,
                     'Study' => $study->getSlug(),
