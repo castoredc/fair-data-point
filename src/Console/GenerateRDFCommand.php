@@ -165,23 +165,25 @@ class GenerateRDFCommand extends Command
                 $import = false;
                 $recordGraphUri = $graphUri . '/' . $record->getId();
 
-                if ($lastImport === null || $forceUpdate === true) {
+                if ($lastImport === null) {
                     $output->writeln(sprintf('- Importing record %s', $record->getId()));
+                    $import = true;
+                } elseif ($forceUpdate === true) {
+                    $output->writeln(sprintf('- Forced importing record %s', $record->getId()));
                     $import = true;
                 } elseif ($record->getCreatedOn() > $lastImport) {
                     $output->writeln(sprintf('- Record %s is created since last import', $record->getId()));
                     $import = true;
                 } elseif ($record->getUpdatedOn() > $lastImport) {
-                    $output->writeln(sprintf('- Record %s is changed since last import', $record->getId()));
+                    $output->writeln(sprintf('- Record %s is changed since last import, old render will be removed', $record->getId()));
                     $import = true;
-
-                    $output->writeln('    - Removing old render for record ' . $record->getId());
-                    $store->delete(false, $recordGraphUri);
                 } else {
                     $output->writeln(sprintf('- Record %s is not changed since last import', $record->getId()));
                 }
 
                 if ($import) {
+                    $store->delete(false, $recordGraphUri);
+
                     try {
                         $graph = new EasyRdf_Graph();
 
