@@ -50,7 +50,6 @@ export default class SideBar extends Component {
 
                             return <Link
                                 to={item.to}
-                                exact={item.exact}
                                 className={classNames('SideBarNavItem', item.active && 'Active', active && 'Active', item.disabled && 'Disabled')}
                                 key={`sitebar-item-${index}`}>
                             <span className="SideBarNavItemIcon">

@@ -1,14 +1,14 @@
 import React, {Component} from "react";
-import Dropdown from "../Input/Dropdown";
+import Dropdown from "../../Input/Dropdown";
 import {Button} from "@castoredc/matter/lib/matter.esm";
-import './DependencyEditor.scss';
+import '../DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
 import {RuleGroup} from "./RuleGroup";
 import {Rule} from "./Rule";
 import {ValueEditor} from "./ValueEditor";
 import {ValidatorForm} from "react-form-validator-core";
 
-export default class DependencyEditor extends Component {
+export default class ModuleDependencyEditor extends Component {
     constructor(props) {
         super(props);
 

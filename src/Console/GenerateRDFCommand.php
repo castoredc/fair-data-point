@@ -25,6 +25,7 @@ use EasyRdf_Namespace;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use function assert;
@@ -66,6 +67,17 @@ class GenerateRDFCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->addOption(
+            'force',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Force update',
+            false
+        );
+    }
+
     /** @inheritDoc */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -77,6 +89,12 @@ class GenerateRDFCommand extends Command
                 '',
             ]
         );
+
+        $forceUpdate = ($input->getOption('force') !== false);
+
+        if ($forceUpdate) {
+            $output->writeln('FORCE UPDATE');
+        }
 
         /** @var RDFDistribution[] $rdfDistributionContents */
         $rdfDistributionContents = $this->em->getRepository(RDFDistribution::class)->findBy(['isCached' => true]);
@@ -127,6 +145,9 @@ class GenerateRDFCommand extends Command
             $output->writeln('');
             $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
 
+            $recordsSubset = $helper->getSubset($records);
+            $output->writeln(sprintf("Subset: \t %s record(s)", count($recordsSubset)));
+
             $dataModel = $rdfDistributionContent->getCurrentDataModelVersion();
             $prefixes = $dataModel->getPrefixes();
 
@@ -138,7 +159,7 @@ class GenerateRDFCommand extends Command
             $errors = [];
             $skipped = [];
 
-            foreach ($records as $record) {
+            foreach ($recordsSubset as $record) {
                 $recordLog = new DistributionGenerationRecordLog($record);
 
                 $import = false;
@@ -147,20 +168,22 @@ class GenerateRDFCommand extends Command
                 if ($lastImport === null) {
                     $output->writeln(sprintf('- Importing record %s', $record->getId()));
                     $import = true;
+                } elseif ($forceUpdate === true) {
+                    $output->writeln(sprintf('- Forced importing record %s', $record->getId()));
+                    $import = true;
                 } elseif ($record->getCreatedOn() > $lastImport) {
-                    $output->writeln(sprintf('- Record %s is created since last import', $record->getId()));
+                    $output->writeln(sprintf('- Record %s is created (%s) since last import (%s)', $record->getId(), $record->getCreatedOn()->format(DATE_ATOM), $lastImport->format(DATE_ATOM)));
                     $import = true;
                 } elseif ($record->getUpdatedOn() > $lastImport) {
-                    $output->writeln(sprintf('- Record %s is changed since last import', $record->getId()));
+                    $output->writeln(sprintf('- Record %s is changed since last import, old render will be removed', $record->getId()));
                     $import = true;
-
-                    $output->writeln('    - Removing old render for record ' . $record->getId());
-                    $store->delete(false, $recordGraphUri);
                 } else {
                     $output->writeln(sprintf('- Record %s is not changed since last import', $record->getId()));
                 }
 
                 if ($import) {
+                    $store->delete(false, $recordGraphUri);
+
                     try {
                         $graph = new EasyRdf_Graph();
 

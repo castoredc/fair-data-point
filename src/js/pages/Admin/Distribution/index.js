@@ -14,6 +14,7 @@ import DistributionLogs from "./DistributionLogs";
 import DistributionLog from "./DistributionLog";
 import DocumentTitle from "../../../components/DocumentTitle";
 import SideBar from "../../../components/SideBar";
+import DistributionSubset from "./DistributionSubset";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -75,6 +76,12 @@ export default class Distribution extends Component {
                 exact: true,
                 title: 'Metadata',
                 customIcon: 'metadata'
+            },
+            {
+                to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/subset',
+                exact: true,
+                title: 'Subset',
+                icon: 'selectList'
             },
             {
                 type: 'separator'
@@ -144,6 +151,9 @@ export default class Distribution extends Component {
                                                                distribution={distribution}/>}/>
                     <Route path="/admin/dataset/:dataset/distribution/:distribution/log" exact
                            render={(props) => <DistributionLogs {...props} dataset={dataset}
+                                                                distribution={distribution}/>}/>
+                    <Route path="/admin/dataset/:dataset/distribution/:distribution/subset" exact
+                           render={(props) => <DistributionSubset {...props} dataset={dataset}
                                                                 distribution={distribution}/>}/>
                     <Route component={NotFound}/>
                 </Switch>

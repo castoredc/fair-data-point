@@ -26,6 +26,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function dump;
 use function time;
 use function urlencode;
 
@@ -97,6 +98,8 @@ class RDFDistributionController extends FAIRDataController
             if ($e instanceof NotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
+
+            dump($e);
 
             return new JsonResponse([], 500);
         }

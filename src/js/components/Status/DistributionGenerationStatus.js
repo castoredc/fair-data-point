@@ -11,6 +11,7 @@ export default ({
   let variation = 'information';
 
   if(status === 'success') {
+    variation = 'success';
     icon = <Icon type="tickCircledSkinny" />;
   } else if(status === 'not_updated') {
     icon = <Icon type="minusSkinny" />;

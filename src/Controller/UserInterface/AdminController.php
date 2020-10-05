@@ -151,6 +151,7 @@ class AdminController extends AbstractController
      * @Route("/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
      * @Route("/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
      * @Route("/dataset/{dataset}/distribution/{distribution}/log", name="admin_study_distribution_log")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/subset", name="admin_study_distribution_subset")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
