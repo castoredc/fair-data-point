@@ -17,15 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 class CastorStudy extends Study
 {
     /** @var ArrayCollection<string, Field>|null */
-    private $fields;
+    private ?ArrayCollection $fields = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Security\CastorServer")
      * @ORM\JoinColumn(name="server", referencedColumnName="id")
-     *
-     * @var CastorServer|null
      */
-    private $server;
+    private ?CastorServer $server = null;
 
     /**
      * @return ArrayCollection<string, Field>|null

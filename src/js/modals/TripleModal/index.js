@@ -1,16 +1,13 @@
 import React, {Component} from 'react'
 import {ValidatorForm} from "react-form-validator-core";
 import FormItem from "../../components/Form/FormItem";
-import Container from "react-bootstrap/Container";
 import FormHeading from "../../components/Form/FormHeading";
 import Input from "../../components/Input";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Dropdown from "../../components/Input/Dropdown";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
-import {Button} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import Modal from "../Modal";
 
 export default class TripleModal extends Component {
@@ -26,7 +23,7 @@ export default class TripleModal extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { show, data } = this.props;
+        const {show, data} = this.props;
 
         if (show !== prevProps.show || data !== prevProps.data) {
             this.setState({
@@ -37,19 +34,20 @@ export default class TripleModal extends Component {
 
     componentDidMount() {
         ValidatorForm.addValidationRule('isUrl', (value) => {
-            var pattern = new RegExp('^((ft|htt)ps?:\\/\\/)?'+ // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
-                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                '(\\:\\d+)?'+ // port
-                '(\\/[-a-z\\d%@_.~+&:]*)*'+ // path
-                '(\\?[;&a-z\\d%@_.,~+&:=-]*)?'+ // query string
-                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            var pattern = new RegExp('^((ft|htt)ps?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?' + // port
+                '(\\/[-a-z\\d%@_.~+&:]*)*' + // path
+                '(\\?[;&a-z\\d%@_.,~+&:=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
             return pattern.test(value);
         });
     }
 
-    handleChange = (event, callback = (() => {})) => {
-        const { data, validation } = this.state;
+    handleChange = (event, callback = (() => {
+    })) => {
+        const {data, validation} = this.state;
         this.setState({
             data: {
                 ...data,
@@ -63,18 +61,20 @@ export default class TripleModal extends Component {
     };
 
     handlePredicateChange = (event) => {
-        const { data, validation } = this.state;
+        const {data, validation} = this.state;
         const {prefixes} = this.props;
 
         let predicate = event.target.value;
         const regex = /^([^:]*):(.*)/;
         const matches = regex.exec(predicate);
 
-        if(matches !== null) {
+        if (matches !== null) {
             const matchedPrefix = matches[1];
-            const foundPrefix = prefixes.find((prefix) => { return prefix.prefix === matchedPrefix});
+            const foundPrefix = prefixes.find((prefix) => {
+                return prefix.prefix === matchedPrefix
+            });
 
-            if(typeof foundPrefix !== 'undefined') {
+            if (typeof foundPrefix !== 'undefined') {
                 predicate = foundPrefix.uri + matches[2];
             }
         }
@@ -92,7 +92,7 @@ export default class TripleModal extends Component {
     };
 
     handleSubjectTypeChange = (event) => {
-        const { data } = this.state;
+        const {data} = this.state;
 
         this.setState({
             data: {
@@ -104,7 +104,7 @@ export default class TripleModal extends Component {
     };
 
     handleSubjectValueChange = (event) => {
-        const { data } = this.state;
+        const {data} = this.state;
 
         this.setState({
             data: {
@@ -115,7 +115,7 @@ export default class TripleModal extends Component {
     };
 
     handleObjectTypeChange = (event) => {
-        const { data } = this.state;
+        const {data} = this.state;
 
         this.setState({
             data: {
@@ -127,7 +127,7 @@ export default class TripleModal extends Component {
     };
 
     handleObjectValueChange = (event) => {
-        const { data } = this.state;
+        const {data} = this.state;
 
         this.setState({
             data: {
@@ -170,13 +170,13 @@ export default class TripleModal extends Component {
         const {nodes} = this.props;
 
         return nodes[type].map((node) => {
-            return { value: node.id, label: node.title, repeated: node.repeated };
+            return {value: node.id, label: node.title, repeated: node.repeated};
         });
     };
 
     render() {
-        const { show, handleClose, module } = this.props;
-        const { data, validation, isLoading } = this.state;
+        const {show, handleClose, module} = this.props;
+        const {data, validation, isLoading} = this.state;
 
         const required = "This field is required";
         const validUrl = "Please enter a valid URI";
@@ -186,19 +186,19 @@ export default class TripleModal extends Component {
         const objectSelectable = (data.objectType === 'internal' || data.objectType === 'external' || data.objectType === 'value' || data.objectType === 'literal');
         let objectOptions = objectSelectable ? this.getOptions(data.objectType) : [];
 
-        if(module && data.objectType === 'value' && module.repeated) {
+        if (module && data.objectType === 'value' && module.repeated) {
             objectOptions = objectOptions.filter((option) => {
                 return option.repeated;
             })
         }
 
-        if(module && data.objectType === 'internal' && ! module.repeated) {
+        if (module && data.objectType === 'internal' && !module.repeated) {
             objectOptions = objectOptions.filter((option) => {
                 return option.repeated === false;
             })
         }
 
-        if(module && data.subjectType === 'internal' && ! module.repeated) {
+        if (module && data.subjectType === 'internal' && !module.repeated) {
             subjectOptions = subjectOptions.filter((option) => {
                 return option.repeated === false;
             })
@@ -221,96 +221,92 @@ export default class TripleModal extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                <Container>
-                    <Row>
-                        <Col md={12}>
-                            <FormHeading label="Subject" />
-                        </Col>
-                        <Col md={6}>
-                            <FormItem label="Type">
-                                <Dropdown
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={tripleTypes.subject}
-                                    onChange={this.handleSubjectTypeChange}
-                                    value={tripleTypes.subject.find((option) => {return data.subjectType === option.value}) || null}
-                                    serverError={validation.subjectType}
-                                    name="subjectType"
-                                    width="fullWidth"
-                                    menuPosition="fixed"
-                                />
-                            </FormItem>
-                        </Col>
-                        <Col md={6}>
-                            {subjectSelectable && <FormItem label="Node">
-                                <Dropdown
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={subjectOptions}
-                                    onChange={this.handleSubjectValueChange}
-                                    value={subjectOptions.find((option) => {return data.subjectValue === option.value}) || null}
-                                    serverError={validation.subjectValue}
-                                    name="subjectValue"
-                                    width="fullWidth"
-                                    menuPosition="fixed"
-                                />
-                            </FormItem>}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}>
-                            <FormHeading label="Predicate" />
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="URI">
-                                <Input
-                                    validators={['required', 'isUrl']}
-                                    errorMessages={[required, validUrl]}
-                                    name="predicateValue"
-                                    onChange={this.handlePredicateChange}
-                                    value={data.predicateValue}
-                                    serverError={validation.predicateValue}
-                                    width="100%"
-                                />
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}>
-                            <FormHeading label="Object" />
-                        </Col>
-                        <Col md={6}>
-                            <FormItem label="Type">
-                                <Dropdown
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={tripleTypes.object}
-                                    onChange={this.handleObjectTypeChange}
-                                    value={tripleTypes.object.find((option) => {return data.objectType === option.value}) || null}
-                                    serverError={validation.objectType}
-                                    name="objectType"
-                                    width="fullWidth"
-                                    menuPosition="fixed"
-                                />
-                            </FormItem>
-                        </Col>
-                        <Col md={6}>
-                            {objectSelectable && <FormItem label="Node">
-                                <Dropdown
-                                    validators={['required']}
-                                    errorMessages={[required]}
-                                    options={objectOptions}
-                                    onChange={this.handleObjectValueChange}
-                                    value={objectOptions.find((option) => {return data.objectValue === option.value}) || null}
-                                    serverError={validation.objectValue}
-                                    name="objectValue"
-                                    width="fullWidth"
-                                    menuPosition="fixed"
-                                />
-                            </FormItem>}
-                        </Col>
-                    </Row>
-                </Container>
+
+                <FormHeading label="Subject"/>
+                <Stack>
+                    <FormItem label="Type">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={tripleTypes.subject}
+                            onChange={this.handleSubjectTypeChange}
+                            value={tripleTypes.subject.find((option) => {
+                                return data.subjectType === option.value
+                            }) || null}
+                            serverError={validation.subjectType}
+                            name="subjectType"
+                            width="tiny"
+                            menuPosition="fixed"
+                        />
+                    </FormItem>
+
+                    {subjectSelectable && <FormItem label="Node">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={subjectOptions}
+                            onChange={this.handleSubjectValueChange}
+                            value={subjectOptions.find((option) => {
+                                return data.subjectValue === option.value
+                            }) || null}
+                            serverError={validation.subjectValue}
+                            name="subjectValue"
+                            width="small"
+                            menuPosition="fixed"
+                        />
+                    </FormItem>}
+                </Stack>
+
+                <FormHeading label="Predicate"/>
+
+                <FormItem label="URI">
+                    <Input
+                        validators={['required', 'isUrl']}
+                        errorMessages={[required, validUrl]}
+                        name="predicateValue"
+                        onChange={this.handlePredicateChange}
+                        value={data.predicateValue}
+                        serverError={validation.predicateValue}
+                        width="100%"
+                        inputSize="100%"
+                    />
+                </FormItem>
+
+                <FormHeading label="Object"/>
+
+                <Stack>
+                    <FormItem label="Type">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={tripleTypes.object}
+                            onChange={this.handleObjectTypeChange}
+                            value={tripleTypes.object.find((option) => {
+                                return data.objectType === option.value
+                            }) || null}
+                            serverError={validation.objectType}
+                            name="objectType"
+                            width="tiny"
+                            menuPosition="fixed"
+                        />
+                    </FormItem>
+
+                    {objectSelectable && <FormItem label="Node">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={objectOptions}
+                            onChange={this.handleObjectValueChange}
+                            value={objectOptions.find((option) => {
+                                return data.objectValue === option.value
+                            }) || null}
+                            serverError={validation.objectValue}
+                            name="objectValue"
+                            width="small"
+                            menuPosition="fixed"
+                        />
+                    </FormItem>}
+                </Stack>
             </ValidatorForm>
         </Modal>
     }
@@ -318,16 +314,16 @@ export default class TripleModal extends Component {
 
 export const tripleTypes = {
     subject: [
-        { value: 'internal', label: 'Internal' },
-        { value: 'external', label: 'External' },
-        { value: 'record', label: 'Record' },
+        {value: 'internal', label: 'Internal'},
+        {value: 'external', label: 'External'},
+        {value: 'record', label: 'Record'},
     ],
     object: [
-        { value: 'internal', label: 'Internal' },
-        { value: 'external', label: 'External' },
-        { value: 'record', label: 'Record' },
-        { value: 'literal', label: 'Literal' },
-        { value: 'value', label: 'Value' }
+        {value: 'internal', label: 'Internal'},
+        {value: 'external', label: 'External'},
+        {value: 'record', label: 'Record'},
+        {value: 'literal', label: 'Literal'},
+        {value: 'value', label: 'Value'}
     ]
 };
 

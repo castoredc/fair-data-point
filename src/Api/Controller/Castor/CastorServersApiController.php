@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Castor;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\Security\CastorServersApiResource;
-use App\Controller\Api\ApiController;
 use App\Message\Security\GetCastorServersCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class CastorServersApiController extends ApiController
 {
@@ -21,8 +22,8 @@ class CastorServersApiController extends ApiController
     {
         $envelope = $bus->dispatch(new GetCastorServersCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse((new CastorServersApiResource($handledStamp->getResult()))->toArray());
     }

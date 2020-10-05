@@ -1,7 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {classNames} from "../../util";
-import LoadingScreen from "../LoadingScreen";
 
 class Layout extends React.Component {
     componentDidUpdate(prevProps) {
@@ -13,9 +12,9 @@ class Layout extends React.Component {
     }
 
     render() {
-        const { children, className, isLoading, embedded } = this.props;
+        const { children, className, isLoading, embedded, fullWidth } = this.props;
 
-        return <div className={classNames('MainApp', className, embedded && 'Embedded')}>
+        return <div className={classNames('MainApp', className, embedded && 'Embedded', fullWidth && 'FullWidthApp')}>
             {children}
         </div>;
     }

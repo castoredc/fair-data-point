@@ -6,6 +6,10 @@ header {
         .Spacing {
             height: $desktopHeaderHeight;
             background: $primary-main;
+
+            &.Small {
+                height: $desktopHeaderHeightSmall;
+            }
         }
 
         &.Embedded {
@@ -46,7 +50,7 @@ header {
         background: $primary-main;
         position: fixed;
         width: 100%;
-        z-index: 100;
+        z-index: 1001;
         height: $desktopHeaderHeight;
         top: 0;
         transition: all 0.3s ease;
@@ -78,7 +82,7 @@ header {
         position: fixed;
         top: 0;
         width: 100%;
-        z-index: 100;
+        z-index: 1001;
         padding-top: $mobileHeaderPadding;
         padding-bottom: $mobileHeaderPadding;
 

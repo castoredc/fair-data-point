@@ -21,17 +21,13 @@ use function random_bytes;
 
 class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var DistributionService */
-    private $distributionService;
+    private DistributionService $distributionService;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, DistributionService $distributionService, EncryptionService $encryptionService, Security $security)
     {

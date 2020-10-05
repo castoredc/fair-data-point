@@ -10,23 +10,19 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\GetRecordCommand;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
 class GetRecordCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
-
-    /** @var Security */
-    private $security;
-
-    /** @var EncryptionService */
-    private $encryptionService;
+    private ApiClient $apiClient;
+    private Security $security;
+    private EncryptionService $encryptionService;
 
     public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {
@@ -40,6 +36,7 @@ class GetRecordCommandHandler implements MessageHandlerInterface
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
+     * @throws UserNotACastorUser
      */
     public function __invoke(GetRecordCommand $command): Record
     {
@@ -48,7 +45,7 @@ class GetRecordCommandHandler implements MessageHandlerInterface
         assert($study instanceof CastorStudy);
 
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('access_data', $distribution)) {
             throw new NoAccessPermission();
@@ -59,7 +56,11 @@ class GetRecordCommandHandler implements MessageHandlerInterface
         if ($apiUser !== null) {
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
         } else {
-            $this->apiClient->setUser($user);
+            if (! $user->hasCastorUser()) {
+                throw new UserNotACastorUser();
+            }
+
+            $this->apiClient->setUser($user->getCastorUser());
         }
 
         return $this->apiClient->getRecord($study, $command->getRecordId());

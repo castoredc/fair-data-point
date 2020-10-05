@@ -5,6 +5,7 @@ namespace App\Controller\UserInterface;
 
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -40,7 +41,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('react.html.twig', ['title' => 'Admin']);
+        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }
 
     /**
@@ -57,7 +58,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('react.html.twig', ['title' => 'Admin']);
+        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }
 
     /**
@@ -72,7 +73,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -87,7 +88,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -96,6 +97,7 @@ class AdminController extends AbstractController
      * @Route("/model/{model}/{version}/prefixes", name="admin_model_prefixes")
      * @Route("/model/{model}/{version}/nodes", name="admin_model_nodes")
      * @Route("/model/{model}/{version}/preview", name="admin_model_preview")
+     * @Route("/model/{model}/{version}/import-export", name="admin_model_importexport")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
      */
@@ -105,7 +107,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -123,7 +125,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -140,7 +142,7 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
         );
     }
 
@@ -148,7 +150,8 @@ class AdminController extends AbstractController
      * @Route("/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
      * @Route("/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
      * @Route("/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
-     * @Route("/dataset/{dataset}/distribution/{distribution}/prefixes", name="admin_study_distribution_prefix")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/log", name="admin_study_distribution_log")
+     * @Route("/dataset/{dataset}/distribution/{distribution}/subset", name="admin_study_distribution_subset")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
@@ -162,7 +165,27 @@ class AdminController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => 'Admin']
+            ['title' => 'FDP Admin']
+        );
+    }
+
+    /**
+     * @Route("/dataset/{dataset}/distribution/{distribution}/log/{log}", name="admin_study_distribution_log_records")
+     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
+     * @ParamConverter("log", options={"mapping": {"log": "id"}})
+     */
+    public function adminDistributionLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FDP Admin']
         );
     }
 }

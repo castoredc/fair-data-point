@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Study\StudyApiRequest;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Message\Study\UpdateStudyCommand;
@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study")
@@ -53,8 +54,8 @@ class StudyApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $study);
 
         try {
-            /** @var StudyApiRequest $parsed */
             $parsed = $this->parseRequest(StudyApiRequest::class, $request);
+            assert($parsed instanceof StudyApiRequest);
 
             $bus->dispatch(new UpdateStudyCommand($study, $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), $parsed->getSlug(), $parsed->getPublished()));
 

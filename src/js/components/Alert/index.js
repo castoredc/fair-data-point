@@ -2,19 +2,23 @@ import React, {Component} from 'react'
 
 import './Alert.scss'
 import {classNames} from "../../util";
-import {Icon} from "@castoredc/matter";
+import {Icon, Stack} from "@castoredc/matter";
 
 class Alert extends Component {
     render() {
-        const { icon, children, variant, form} = this.props;
+        const {icon, children, variant, form} = this.props;
 
         return <div className={classNames('AlertMessage', 'AlertMessage-' + variant, form && 'AlertMessageForm')}>
-            {icon && <div className="AlertIcon">
-                <Icon type={icon} />
-            </div>}
-            <div className="AlertText">
-                {children}
-            </div>
+            <div className="AlertMessageBorder" />
+
+            <Stack spacing="none" wrap={false}>
+                {icon && <div className="AlertIcon">
+                    <Icon type={icon}/>
+                </div>}
+                <div className="AlertText">
+                    {children}
+                </div>
+            </Stack>
         </div>;
     }
 }

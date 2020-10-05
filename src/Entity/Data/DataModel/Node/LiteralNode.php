@@ -15,19 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LiteralNode extends Node
 {
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $value;
+    /** @ORM\Column(type="string") */
+    private string $value;
 
-    /**
-     * @ORM\Column(type="XsdDataType")
-     *
-     * @var XsdDataType
-     */
-    private $dataType;
+    /** @ORM\Column(type="XsdDataType") */
+    private XsdDataType $dataType;
 
     public function getValue(): ?string
     {

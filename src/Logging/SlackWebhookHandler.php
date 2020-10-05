@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Logging;
 
 use App\Model\Slack\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -24,14 +24,11 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     public const COLOR_WARNING = 'warning';
     public const COLOR_GOOD = 'good';
 
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security|null */
-    private $security;
+    private ?Security $security = null;
 
-    /** @var string */
-    private $rootPath;
+    private string $rootPath;
 
     public function __construct(
         string $webhookUrl = '',
@@ -138,7 +135,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 
         if ($this->security !== null && $this->security->getUser() !== null) {
             $user = $this->security->getUser();
-            assert($user instanceof CastorUser);
+            assert($user instanceof User);
             $currentUser = $user->getId();
         }
 

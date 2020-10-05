@@ -27,49 +27,35 @@ abstract class Metadata
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="title", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
      */
-    private $title;
+    private ?LocalizedText $title = null;
 
-    /**
-     * @ORM\Column(type="version")
-     *
-     * @var Version
-     */
-    private $version;
+    /** @ORM\Column(type="version") */
+    private Version $version;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="description", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
      */
-    private $description;
+    private ?LocalizedText $description = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Language",cascade={"persist"})
      * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     *
-     * @var Language|null
      */
-    private $language;
+    private ?Language $language = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
      * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     *
-     * @var License|null
      */
-    private $license;
+    private ?License $license = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -77,15 +63,13 @@ abstract class Metadata
      *
      * @var Collection<Agent>
      */
-    private $publishers;
+    private Collection $publishers;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
      * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
-     *
-     * @var LocalizedText|null
      */
-    private $keyword;
+    private ?LocalizedText $keyword = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -93,14 +77,10 @@ abstract class Metadata
      *
      * @var Collection<Agent>
      */
-    private $contacts;
+    private Collection $contacts;
 
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $landingPage;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $landingPage = null;
 
     public function getId(): string
     {

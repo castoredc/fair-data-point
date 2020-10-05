@@ -15,17 +15,11 @@ class Language
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
-     *
-     * @var string
      */
-    private $code;
+    private string $code;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string") */
+    private string $name;
 
     public function getCode(): string
     {

@@ -5,13 +5,15 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\RDF\DataModelMapping;
-use App\Entity\Data\RDF\DataModelModuleMapping;
+use App\Entity\Data\DataModelMapping\DataModelMapping;
+use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\CreateDataModelModuleMappingCommand;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -20,14 +22,11 @@ use function assert;
 
 class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
     {
@@ -40,21 +39,30 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws InvalidEntityType
+     * @throws UserNotACastorUser
      */
     public function __invoke(CreateDataModelModuleMappingCommand $command): DataModelMapping
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
-        $study = $distribution->getDataset()->getStudy();
+        $study = $distribution->getStudy();
         $dataModelVersion = $command->getDataModelVersion();
 
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
 
+        $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->entityHelper->useUser($user->getCastorUser());
+
         assert($study instanceof CastorStudy);
 
-        /** @var DataModelModule|null $module */
         $module = $this->em->getRepository(DataModelModule::class)->find($command->getModule());
 
         if ($module === null || ! $module->isRepeated()) {
@@ -63,11 +71,11 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
 
         $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::fromString($command->getStructureType()->toString()), $command->getElement());
 
-        if ($contents->getMappingByModuleAndVersion($module, $dataModelVersion) !== null) {
-            $mapping = $contents->getMappingByModuleAndVersion($module, $dataModelVersion);
+        if ($study->getMappingByModuleAndVersion($module, $dataModelVersion) !== null) {
+            $mapping = $study->getMappingByModuleAndVersion($module, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelModuleMapping($contents, $module, $element, $dataModelVersion);
+            $mapping = new DataModelModuleMapping($study, $module, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

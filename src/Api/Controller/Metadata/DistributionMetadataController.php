@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Metadata;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\DatasetMetadataApiRequest;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Message\Metadata\CreateDistributionMetadataCommand;
@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/metadata/distribution/{distribution}")
@@ -30,8 +31,8 @@ class DistributionMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $distribution);
 
         try {
-            /** @var DatasetMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(DatasetMetadataApiRequest::class, $request);
+            assert($parsed instanceof DatasetMetadataApiRequest);
 
             $bus->dispatch(
                 new CreateDistributionMetadataCommand(

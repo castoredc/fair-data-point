@@ -1,19 +1,18 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
-import {LinkContainer} from "react-router-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import DatasetDistributions from "../Dataset/DatasetDistributions";
 import AddDistribution from "../Dataset/AddDistribution";
 import DatasetMetadata from "./DatasetMetadata";
 import DatasetDetails from "./DatasetDetails";
-import {Button, ViewHeader} from "@castoredc/matter";
-import BackButton from "../../../components/BackButton";
+import {ViewHeader} from "@castoredc/matter";
+import DocumentTitle from "../../../components/DocumentTitle";
+import SideBar from "../../../components/SideBar";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -49,6 +48,7 @@ export default class Dataset extends Component {
 
     render() {
         const {dataset, isLoadingDataset, catalog} = this.state;
+        const {location} = this.props;
 
         if (isLoadingDataset) {
             return <InlineLoader/>;
@@ -56,28 +56,45 @@ export default class Dataset extends Component {
 
         const url = '/admin' + (catalog ? '/catalog/' + catalog : '');
 
-        return <div className="PageContainer">
-            <div className="LeftNav">
-                <div className="Back">
-                    {catalog && <BackButton to={url + '/studies'}>Back to catalog</BackButton>}
-                </div>
+        const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : null;
 
-                <Nav className="flex-column">
-                    <LinkContainer to={url + '/dataset/' + dataset.slug} exact={true}>
-                        <Nav.Link>Dataset</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={url + '/dataset/' + dataset.slug + '/metadata'} exact={true}>
-                        <Nav.Link>Metadata</Nav.Link>
-                    </LinkContainer>
-                    <hr/>
-                    <LinkContainer to={url + '/dataset/' + dataset.slug + '/distributions'} exact={true}>
-                        <Nav.Link disabled={!dataset.hasMetadata}>Available data</Nav.Link>
-                    </LinkContainer>
-                </Nav>
-            </div>
+        return <div className="PageContainer">
+            <DocumentTitle title={'FDP Admin | Dataset' + (title ? ` | ${title}` : '')}/>
+
+            <SideBar
+                back={catalog ? {
+                    to: url + '/studies',
+                    title: 'Back to catalog'
+                } : undefined}
+                location={location}
+                items={[
+                    {
+                        to: url + '/dataset/' + dataset.slug,
+                        exact: true,
+                        title: 'Dataset',
+                        customIcon: 'dataset'
+                    },
+                    {
+                        to: url + '/dataset/' + dataset.slug + '/metadata',
+                        exact: true,
+                        title: 'Metadata',
+                        customIcon: 'metadata'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: url + '/dataset/' + dataset.slug + '/distributions',
+                        exact: true,
+                        title: 'Distributions',
+                        customIcon: 'distribution'
+                    }
+                ]}
+            />
+
             <div className="Page">
                 <div className="PageTitle">
-                    <ViewHeader>{dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Dataset'}</ViewHeader>
+                    <ViewHeader>{title ? title : 'Dataset'}</ViewHeader>
                 </div>
 
                 <Switch>

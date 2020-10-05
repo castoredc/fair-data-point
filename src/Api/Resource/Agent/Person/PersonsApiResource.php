@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Person;
 class PersonsApiResource implements ApiResource
 {
     /** @var Person[] */
-    private $persons;
+    private array $persons;
 
     /**
      * @param Person[] $persons

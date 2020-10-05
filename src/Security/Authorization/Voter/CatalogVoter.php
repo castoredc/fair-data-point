@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\FAIRData\Catalog;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class CatalogVoter extends Voter
@@ -16,8 +17,7 @@ class CatalogVoter extends Voter
     public const ADD = 'add';
     public const EDIT = 'edit';
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -41,9 +41,8 @@ class CatalogVoter extends Voter
             return true;
         }
 
-        // you know $subject is a Post object, thanks to `supports()`
-        /** @var Catalog $catalog */
         $catalog = $subject;
+        assert($catalog instanceof Catalog);
 
         switch ($attribute) {
             case self::VIEW:
@@ -59,7 +58,13 @@ class CatalogVoter extends Voter
 
     private function canAdd(Catalog $catalog, TokenInterface $token): bool
     {
-        if (! $token->getUser() instanceof CastorUser) {
+        $user = $token->getUser();
+
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        if (! $user->hasCastorUser()) {
             return false;
         }
 

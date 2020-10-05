@@ -3,27 +3,41 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModelApiRequest;
 use App\Api\Request\Data\DataModelVersionApiRequest;
+use App\Api\Request\Data\DataModelVersionTypeApiRequest;
 use App\Api\Resource\Data\DataModelApiResource;
 use App\Api\Resource\Data\DataModelsApiResource;
 use App\Api\Resource\Data\DataModelVersionApiResource;
-use App\Controller\Api\ApiController;
+use App\Api\Resource\Data\DataModelVersionExportApiResource;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Exception\InvalidDataModelVersion;
+use App\Exception\Upload\EmptyFile;
+use App\Exception\Upload\InvalidFile;
+use App\Exception\Upload\InvalidJSON;
+use App\Exception\Upload\NoFileSpecified;
 use App\Message\Data\CreateDataModelCommand;
 use App\Message\Data\CreateDataModelVersionCommand;
 use App\Message\Data\GetDataModelRDFPreviewCommand;
 use App\Message\Data\GetDataModelsCommand;
+use App\Message\Data\ImportDataModelCommand;
+use Cocur\Slugify\Slugify;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
+use function sprintf;
+use const JSON_PRETTY_PRINT;
 
 /**
  * @Route("/api/model")
@@ -39,8 +53,8 @@ class DataModelApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetDataModelsCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse((new DataModelsApiResource($handledStamp->getResult()))->toArray());
     }
@@ -53,13 +67,13 @@ class DataModelApiController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            /** @var DataModelApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
+            assert($parsed instanceof DataModelApiRequest);
 
             $envelope = $bus->dispatch(new CreateDataModelCommand($parsed->getTitle(), $parsed->getDescription()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new DataModelApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
@@ -102,13 +116,13 @@ class DataModelApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModel);
 
         try {
-            /** @var DataModelVersionApiRequest $parsed */
-            $parsed = $this->parseRequest(DataModelVersionApiRequest::class, $request);
+            $parsed = $this->parseRequest(DataModelVersionTypeApiRequest::class, $request);
+            assert($parsed instanceof DataModelVersionTypeApiRequest);
 
             $envelope = $bus->dispatch(new CreateDataModelVersionCommand($dataModel, $parsed->getVersionType()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             return new JsonResponse((new DataModelVersionApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
@@ -124,6 +138,71 @@ class DataModelApiController extends ApiController
     }
 
     /**
+     * @Route("/{model}/import", methods={"POST"}, name="api_model_import")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     */
+    public function importDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $dataModel);
+
+        $file = $request->files->get('file');
+        assert($file instanceof UploadedFile || $file === null);
+
+        try {
+            if ($file === null) {
+                throw new NoFileSpecified();
+            }
+
+            $parsed = $this->parseRequest(DataModelVersionApiRequest::class, $request);
+            assert($parsed instanceof DataModelVersionApiRequest);
+
+            $envelope = $bus->dispatch(new ImportDataModelCommand($dataModel, $file, $parsed->getVersion()));
+
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            return new JsonResponse((new DataModelVersionApiResource($handledStamp->getResult()))->toArray());
+        } catch (NoFileSpecified $e) {
+            return new JsonResponse($e->toArray(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof InvalidFile || $e instanceof EmptyFile || $e instanceof InvalidJSON || $e instanceof InvalidDataModelVersion) {
+                return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+            }
+
+            $this->logger->critical('An error occurred while importing a data model', [
+                'exception' => $e,
+                'dataModel' => $dataModel->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_model_version_export")
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
+     */
+    public function exportDataModelVersion(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+
+        $response = new JsonResponse((new DataModelVersionExportApiResource($dataModelVersion))->toArray());
+
+        $slugify = new Slugify();
+        $name = sprintf('%s - %s.json', $slugify->slugify($dataModelVersion->getDataModel()->getTitle()), $dataModelVersion->getVersion()->getValue());
+        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $name);
+
+        $response->setEncodingOptions(JSON_PRETTY_PRINT);
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
      * @Route("/{model}/v/{version}/rdf", methods={"GET"}, name="api_model_rdf_preview")
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
      */
@@ -133,8 +212,8 @@ class DataModelApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetDataModelRDFPreviewCommand($dataModelVersion));
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse($handledStamp->getResult()->toArray());
     }

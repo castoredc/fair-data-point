@@ -12,11 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Report extends StructureElement
 {
-    /** @var string|null */
-    private $description;
+    private ?string $description = null;
 
-    /** @var string|null */
-    private $type;
+    private ?string $type = null;
 
     public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, ?string $type)
     {

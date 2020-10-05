@@ -21,6 +21,8 @@ use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Triple;
+use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
+use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyRule;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\DependencyOperatorType;
@@ -44,18 +46,12 @@ use function in_array;
 
 class RDFRenderHelper
 {
-    /** @var ApiClient */
-    private $apiClient;
-    /** @var CastorEntityHelper */
-    private $entityHelper;
-    /** @var CastorStudy */
-    private $study;
-    /** @var RDFDistribution */
-    private $contents;
-    /** @var UriHelper */
-    private $uriHelper;
-    /** @var CastorEntityCollection */
-    private $optionGroups;
+    private ApiClient $apiClient;
+    private CastorEntityHelper $entityHelper;
+    private CastorStudy $study;
+    private RDFDistribution $contents;
+    private UriHelper $uriHelper;
+    private CastorEntityCollection $optionGroups;
 
     public function __construct(Distribution $distribution, ApiClient $apiClient, CastorEntityHelper $entityHelper, UriHelper $uriHelper)
     {
@@ -83,8 +79,6 @@ class RDFRenderHelper
      */
     public function renderRecord(Record $record, EasyRdf_Graph $graph): EasyRdf_Graph
     {
-        $record = $this->apiClient->getRecordDataCollection($this->study, $record);
-
         $dataModel = $this->contents->getCurrentDataModelVersion();
         $modules = $dataModel->getModules();
 
@@ -153,7 +147,6 @@ class RDFRenderHelper
             return;
         }
 
-        /** @var DataModelModule $module */
         $triples = $module->getTriples();
 
         foreach ($triples as $triple) {
@@ -189,6 +182,30 @@ class RDFRenderHelper
 
                 if ($placeholderType->isRecordId()) {
                     return $record->getId();
+                }
+
+                if ($placeholderType->isInstituteId()) {
+                    return $record->getInstitute()->getId();
+                }
+
+                if ($placeholderType->isInstituteAbbreviation()) {
+                    return $record->getInstitute()->getAbbreviation();
+                }
+
+                if ($placeholderType->isInstituteCode()) {
+                    return $record->getInstitute()->getCode();
+                }
+
+                if ($placeholderType->isInstituteName()) {
+                    return $record->getInstitute()->getName();
+                }
+
+                if ($placeholderType->isInstituteCountryCode()) {
+                    return $record->getInstitute()->getCountry()->getCode();
+                }
+
+                if ($placeholderType->isInstituteCountryName()) {
+                    return $record->getInstitute()->getCountry()->getName();
                 }
             }
 
@@ -380,5 +397,86 @@ class RDFRenderHelper
         }
 
         return false;
+    }
+
+    /**
+     * @param Record[] $records
+     *
+     * @return Record[]
+     */
+    public function getSubset(array $records): array
+    {
+        $return = [];
+
+        foreach ($records as $record) {
+            $newRecord = $this->apiClient->getRecordDataCollection($this->study, $record);
+
+            if ($this->contents->getDependencies() === null) {
+                $return[] = $newRecord;
+            } elseif (! $this->parseSubsetDependencies($this->contents->getDependencies(), $newRecord->getData()->getStudy())) {
+                continue;
+            } else {
+                $return[] = $newRecord;
+            }
+        }
+
+        return $return;
+    }
+
+    private function parseSubsetDependencies(DistributionContentsDependencyGroup $group, RecordData $data): bool
+    {
+        $outcomes = [];
+        $combinator = $group->getCombinator();
+
+        foreach ($group->getRules() as $rule) {
+            if ($rule instanceof DistributionContentsDependencyGroup) {
+                $outcomes[] = $this->parseSubsetDependencies($rule, $data);
+            } elseif ($rule instanceof DistributionContentsDependencyRule) {
+                if ($rule->getType()->isInstitute()) {
+                    $outcomes[] = $this->parseInstituteDependency($rule, $data);
+                } elseif ($rule->getType()->isValueNode()) {
+                    $outcomes[] = $this->parseValueNodeDependency($rule, $data);
+                }
+            }
+        }
+
+        if ($combinator->isAnd()) {
+            return ! in_array(false, $outcomes, true);
+        }
+
+        if ($combinator->isOr()) {
+            return in_array(true, $outcomes, true);
+        }
+
+        return false;
+    }
+
+    private function parseInstituteDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
+    {
+        $institute = $data->getRecord()->getInstitute()->getId();
+
+        if ($rule->getOperator()->isEqual()) {
+            return $institute === $rule->getValue();
+        }
+
+        if ($rule->getOperator()->isNotEqual()) {
+            return $institute !== $rule->getValue();
+        }
+
+        return false;
+    }
+
+    private function parseValueNodeDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
+    {
+        $node = $rule->getNode();
+        $compareValue = $this->transformValue($node->getDataType(), $rule->getValue());
+
+        $value = $this->getValue($data, $node);
+
+        if ($value === null && $data instanceof InstanceData) {
+            $value = $this->getValue($data->getRecord()->getData()->getStudy(), $node);
+        }
+
+        return $this->compareValue($rule->getOperator(), $node->getDataType(), $value, $compareValue);
     }
 }

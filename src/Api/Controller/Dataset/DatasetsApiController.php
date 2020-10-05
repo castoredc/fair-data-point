@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Dataset;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Controller\Api\ApiController;
 use App\Exception\ApiRequestParseError;
 use App\Message\Dataset\GetPaginatedDatasetsCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +16,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/dataset")
@@ -28,8 +29,8 @@ class DatasetsApiController extends ApiController
     public function datasets(Request $request, MessageBusInterface $bus): Response
     {
         try {
-            /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetPaginatedDatasetsCommand(
@@ -44,8 +45,8 @@ class DatasetsApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 

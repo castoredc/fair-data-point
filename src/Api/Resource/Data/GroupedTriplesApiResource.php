@@ -11,8 +11,7 @@ use function array_values;
 
 class GroupedTriplesApiResource implements ApiResource
 {
-    /** @var DataModelModule */
-    private $module;
+    private DataModelModule $module;
 
     public function __construct(DataModelModule $module)
     {

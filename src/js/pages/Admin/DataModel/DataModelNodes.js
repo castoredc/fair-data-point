@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
@@ -81,6 +81,63 @@ export default class DataModelNodes extends Component {
             return <InlineLoader/>;
         }
 
+        const internalNodeRows = new Map(nodes.internal.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.title,
+                        item.value,
+                        item.repeated ? {
+                            type: 'tickSmall',
+                        } : undefined,
+                    ],
+                },
+            ];
+        }));
+
+        const externalNodeRows = new Map(nodes.external.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.title,
+                        item.value.prefixedValue,
+                        item.value.value,
+                    ],
+                },
+            ];
+        }));
+
+        const literalNodeRows = new Map(nodes.literal.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.title,
+                        item.value.value,
+                        item.value.dataType,
+                    ],
+                },
+            ];
+        }));
+
+        const valueNodeRows = new Map(nodes.value.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.title,
+                        item.value.value,
+                        item.value.dataType,
+                        item.repeated ? {
+                            type: 'tickSmall',
+                        } : undefined,
+                    ],
+                },
+            ];
+        }));
+
         return <div className="PageBody">
             <AddNodeModal
                 show={showModal}
@@ -107,15 +164,7 @@ export default class DataModelNodes extends Component {
                             content: <DataTable
                                          emptyTableMessage="This data model does not have internal nodes"
                                          cellSpacing="default"
-                                         rows={nodes.internal.map((item) => {
-                                             return [
-                                                 item.title,
-                                                 item.value,
-                                                 item.repeated ? {
-                                                     type: 'tickSmall',
-                                                 } : undefined,
-                                             ];
-                                         })}
+                                         rows={internalNodeRows}
                                          structure={{
                                              id:       {
                                                  header:    'Title',
@@ -140,9 +189,7 @@ export default class DataModelNodes extends Component {
                             content: <DataTable
                                          emptyTableMessage="This data model does not have external nodes"
                                          cellSpacing="default"
-                                         rows={nodes.external.map((item) => {
-                                             return [item.title, item.value.prefixedValue, item.value.value];
-                                         })}
+                                         rows={externalNodeRows}
                                          structure={{
                                              id:    {
                                                  header:    'Title',
@@ -167,9 +214,7 @@ export default class DataModelNodes extends Component {
                             content: <DataTable
                                          emptyTableMessage="This data model does not have literal nodes"
                                          cellSpacing="default"
-                                         rows={nodes.literal.map((item) => {
-                                             return [item.title, item.value.value, item.value.dataType];
-                                         })}
+                                         rows={literalNodeRows}
                                          structure={{
                                              id:       {
                                                  header:    'Title',
@@ -194,16 +239,7 @@ export default class DataModelNodes extends Component {
                             content: <DataTable
                                          emptyTableMessage="This data model does not have value nodes"
                                          cellSpacing="default"
-                                         rows={nodes.value.map((item) => {
-                                             return [
-                                                 item.title,
-                                                 item.value.value,
-                                                 item.value.dataType,
-                                                 item.repeated ? {
-                                                     type: 'tickSmall',
-                                                 } : undefined,
-                                             ];
-                                         })}
+                                         rows={valueNodeRows}
                                          structure={{
                                              id:       {
                                                  header:    'Title',

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\NodeApiRequest;
 use App\Api\Resource\Data\NodesApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;
@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/model/{model}/v/{version}/node")
@@ -57,8 +58,8 @@ class NodeApiController extends ApiController
         $nodeType = NodeType::fromString($type);
 
         try {
-            /** @var NodeApiRequest $parsed */
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
+            assert($parsed instanceof NodeApiRequest);
 
             $bus->dispatch(new CreateNodeCommand($dataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType(), $parsed->isRepeated()));
 

@@ -9,7 +9,7 @@ use App\Entity\Castor\Form\Field;
 class FieldsApiResource implements ApiResource
 {
     /** @var Field[] */
-    private $fields;
+    private array $fields;
 
     /**
      * @param Field[] $fields

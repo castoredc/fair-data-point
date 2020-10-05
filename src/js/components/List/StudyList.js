@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-
-import {Col, Row} from "react-bootstrap";
 import {classNames} from "../../util";
 import {Sticky, StickyContainer} from 'react-sticky';
 import StudyListItem from "../ListItem/StudyListItem";
@@ -172,8 +170,8 @@ export default class StudyList extends Component {
             return <InlineLoader />;
         }
 
-        return <StickyContainer>
-                <Row className="Datasets" ref={this.wrapperRef}>
+        return <StickyContainer className="StickyContainer">
+                <div className="Datasets HasFilters" ref={this.wrapperRef}>
                     <div className={classNames('MainCol', displayMap && 'FullWidth')}>
                         {displayList && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
                             {studies.length > 0 ? <div>
@@ -239,7 +237,7 @@ export default class StudyList extends Component {
                             )}
                         </Sticky>
                     </div>
-                </Row>
+                </div>
             </StickyContainer>;
     }
 }

@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Dataset;
 class DatasetsApiResource implements ApiResource
 {
     /** @var Dataset[] */
-    private $datasets;
+    private array $datasets;
 
     /**
      * @param Dataset[] $datasets

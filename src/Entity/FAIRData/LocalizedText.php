@@ -16,10 +16,8 @@ class LocalizedText
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\OneToMany(targetEntity="LocalizedTextItem", mappedBy="parent", cascade={"persist"}, fetch = "EAGER")
@@ -27,7 +25,7 @@ class LocalizedText
      *
      * @var Collection<mixed, LocalizedTextItem>
      */
-    private $texts;
+    private Collection $texts;
 
     /**
      * @param Collection<mixed, LocalizedTextItem> $texts
@@ -86,7 +84,6 @@ class LocalizedText
     public function getTextByLanguageString(string $language): ?LocalizedTextItem
     {
         foreach ($this->texts as $text) {
-            /** @var LocalizedTextItem $text */
             if ($text->getLanguage()->getCode() === $language) {
                 return $text;
             }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\RDF\RDFDistribution;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class DataModelVoter extends Voter
@@ -15,9 +15,7 @@ class DataModelVoter extends Voter
     public const VIEW = 'view';
     public const ADD = 'add';
     public const EDIT = 'edit';
-
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -45,12 +43,11 @@ class DataModelVoter extends Voter
             return false;
         }
 
-        /** @var DataModel $dataModel */
         $dataModel = $subject;
+        assert($dataModel instanceof DataModel);
         $distributions = $dataModel->getDistributions();
 
         foreach ($distributions as $distribution) {
-            /** @var RDFDistribution $distribution */
             if ($this->security->isGranted('view', $distribution->getDistribution())) {
                 return true;
             }

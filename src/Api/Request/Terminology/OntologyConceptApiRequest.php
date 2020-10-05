@@ -10,21 +10,18 @@ use function boolval;
 class OntologyConceptApiRequest extends SingleApiRequest
 {
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $ontology;
+    private string $ontology;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $search;
+    private string $search;
 
-    /** @var bool|null */
-    private $includeIndividuals;
+    private ?bool $includeIndividuals = null;
 
     protected function parse(): void
     {

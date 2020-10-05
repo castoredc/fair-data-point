@@ -6,6 +6,7 @@ import {Button, DataTable, Stack, ViewHeader} from "@castoredc/matter";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import AddCatalogModal from "../../../modals/AddCatalogModal";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Catalogs extends Component {
     constructor(props) {
@@ -48,15 +49,36 @@ export default class Catalogs extends Component {
         });
     };
 
+    onRowClick = (event, rowID, index) => {
+        const {catalogs} = this.state;
+        const {history} = this.props;
+
+        if (typeof index !== "undefined") {
+            const catalog = catalogs.find((item) => item.id === rowID);
+            history.push(`/admin/catalog/${catalog.slug}`)
+        }
+    };
+
     render() {
         const {catalogs, isLoading, showModal} = this.state;
-        const {history} = this.props;
 
         if (isLoading) {
             return <InlineLoader/>;
         }
 
+        const rows = new Map(catalogs.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '',
+                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
+                    ],
+                }];
+        }));
+
         return <div className="PageContainer">
+            <DocumentTitle title="FDP Admin | Catalogs"/>
             <AddCatalogModal
                 show={showModal}
                 handleClose={this.closeModal}
@@ -79,17 +101,8 @@ export default class Catalogs extends Component {
                                 emptyTableMessage="No catalogs found"
                                 highlightRowOnHover
                                 cellSpacing="default"
-                                onClick={(event, rowID, index) => {
-                                    if (typeof index !== "undefined") {
-                                        history.push(`/admin/catalog/${catalogs[index].slug}`)
-                                    }
-                                }}
-                                rows={catalogs.map((item) => {
-                                    return [
-                                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '',
-                                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                                    ];
-                                })}
+                                onClick={this.onRowClick}
+                                rows={rows}
                                 structure={{
                                     title: {
                                         header:    'Name',

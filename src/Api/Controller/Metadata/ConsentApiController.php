@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Metadata;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\ConsentApiRequest;
 use App\Api\Resource\Metadata\ConsentApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Exception\StudyAlreadyHasDataset;
@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study/{studyId}/consent")
@@ -45,8 +46,8 @@ class ConsentApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $study);
 
         try {
-            /** @var ConsentApiRequest $parsed */
             $parsed = $this->parseRequest(ConsentApiRequest::class, $request);
+            assert($parsed instanceof ConsentApiRequest);
 
             $bus->dispatch(
                 new UpdateConsentCommand(
@@ -69,9 +70,11 @@ class ConsentApiController extends ApiController
             if ($e instanceof StudyNotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
+
             if ($e instanceof StudyAlreadyHasDataset) {
                 return new JsonResponse($e->toArray(), 400);
             }
+
             if ($e instanceof StudyAlreadyHasSameDataset) {
                 return new JsonResponse([], 200);
             }

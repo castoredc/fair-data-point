@@ -6,42 +6,34 @@ namespace App\Service;
 use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Castor\Institute;
+use App\Entity\Castor\Record;
 use App\Entity\Enum\CastorEntityType;
+use App\Entity\FAIRData\Country;
 use App\Exception\InvalidEntityType;
+use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
-use App\Repository\CastorEntityRepository;
 use App\Security\ApiUser;
-use App\Security\CastorUser;
+use App\Security\Providers\Castor\CastorUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use function assert;
 
 class CastorEntityHelper
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
+    private ApiClient $apiClient;
+    private EncryptionService $encryptionService;
 
-    /** @var ApiClient */
-    private $apiClient;
-
-    /** @var EncryptionService */
-    private $encryptionService;
-
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, TokenStorageInterface $tokenStorage, EncryptionService $encryptionService)
+    /**
+     * @throws UserNotACastorUser
+     */
+    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, EncryptionService $encryptionService)
     {
         $this->em = $em;
         $this->apiClient = $apiClient;
         $this->encryptionService = $encryptionService;
-
-        if ($tokenStorage->getToken() === null) {
-            return;
-        }
-
-        $user = $tokenStorage->getToken()->getUser();
-        assert($user instanceof CastorUser);
-
-        $this->apiClient->setUser($user);
     }
 
     public function useApiUser(ApiUser $user): void
@@ -49,9 +41,13 @@ class CastorEntityHelper
         $this->apiClient->useApiUser($user, $this->encryptionService);
     }
 
+    public function useUser(CastorUser $user): void
+    {
+        $this->apiClient->setUser($user);
+    }
+
     public function getEntityFromDatabaseById(CastorStudy $study, string $id): ?CastorEntity
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
 
         return $repository->findByIdAndStudy($study, $id);
@@ -59,7 +55,6 @@ class CastorEntityHelper
 
     public function getEntitiesFromDatabaseByType(CastorStudy $study, CastorEntityType $type): CastorEntityCollection
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
 
         return new CastorEntityCollection($repository->findByStudyAndType($study, $type->getClassName()));
@@ -67,7 +62,6 @@ class CastorEntityHelper
 
     public function getEntitiesFromDatabaseByParent(CastorStudy $study, CastorEntity $parent): CastorEntityCollection
     {
-        /** @var CastorEntityRepository $repository */
         $repository = $this->em->getRepository(CastorEntity::class);
 
         return new CastorEntityCollection($repository->findByStudyAndParent($study, $parent));
@@ -143,8 +137,12 @@ class CastorEntityHelper
         // Entities from Castor are leading, since they contain more information
 
         foreach ($dbEntities as $dbEntity) {
-            /** @var CastorEntity $castorEntity */
             $castorEntity = $castorEntities->getById($dbEntity->getId());
+
+            if ($castorEntity === null) {
+                continue;
+            }
+
             $castorEntity->setAnnotations($dbEntity->getAnnotations());
 
             if (! $castorEntity->hasChildren()) {
@@ -165,5 +163,72 @@ class CastorEntityHelper
         }
 
         return $castorEntities;
+    }
+
+    public function getInstitutes(CastorStudy $study): ArrayCollection
+    {
+        $institutes = new ArrayCollection();
+
+        $repository = $this->em->getRepository(Institute::class);
+
+        $countryRepository = $this->em->getRepository(Country::class);
+        $countries = $countryRepository->getAllCountriesWithCastorIds();
+
+        $castorInstitutes = $this->apiClient->getInstitutes($study);
+        $dbInstitutes = $repository->findByStudy($study);
+
+        foreach ($castorInstitutes as $castorInstitute) {
+            assert($castorInstitute instanceof Institute);
+
+            $dbInstitute = $dbInstitutes->get($castorInstitute->getId());
+            assert($dbInstitute instanceof Institute || $dbInstitute === null);
+
+            if ($dbInstitute === null) {
+                $dbInstitute = $castorInstitute;
+            } else {
+                $dbInstitute->setName($castorInstitute->getName());
+                $dbInstitute->setCode($castorInstitute->getCode());
+                $dbInstitute->setAbbreviation($castorInstitute->getAbbreviation());
+                $dbInstitute->setCountry($castorInstitute->getCountry());
+                $dbInstitute->setCountryId($castorInstitute->getCountryId());
+                $dbInstitute->setDeleted($castorInstitute->isDeleted());
+            }
+
+            $country = $countries->get($dbInstitute->getCountryId());
+            $dbInstitute->setCountry($country);
+
+            $institutes->set($dbInstitute->getId(), $dbInstitute);
+        }
+
+        return $institutes;
+    }
+
+    public function getRecords(CastorStudy $study): ArrayCollection
+    {
+        $institutes = $this->getInstitutes($study);
+        $records = new ArrayCollection();
+
+        $repository = $this->em->getRepository(Record::class);
+
+        $castorRecords = $this->apiClient->getRecords($study, $institutes);
+        $dbRecords = $repository->findByStudy($study);
+
+        foreach ($castorRecords as $castorRecord) {
+            assert($castorRecord instanceof Record);
+
+            $dbRecord = $dbRecords->get($castorRecord->getId());
+            assert($dbRecord instanceof Record || $dbRecord === null);
+
+            if ($dbRecord === null) {
+                $dbRecord = $castorRecord;
+            } else {
+                $dbRecord->setUpdatedOn($castorRecord->getUpdatedOn());
+                $dbRecord->setInstitute($castorRecord->getInstitute());
+            }
+
+            $records->set($dbRecord->getId(), $dbRecord);
+        }
+
+        return $records;
     }
 }

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModelModuleApiRequest;
 use App\Api\Resource\Data\DataModelModulesApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/model/{model}/v/{version}/module")
@@ -44,8 +45,8 @@ class DataModelModuleApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         try {
-            /** @var DataModelModuleApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
+            assert($parsed instanceof DataModelModuleApiRequest);
 
             $bus->dispatch(new CreateDataModelModuleCommand($dataModelVersion, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
 
@@ -72,8 +73,8 @@ class DataModelModuleApiController extends ApiController
         }
 
         try {
-            /** @var DataModelModuleApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
+            assert($parsed instanceof DataModelModuleApiRequest);
 
             $bus->dispatch(new UpdateDataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
 

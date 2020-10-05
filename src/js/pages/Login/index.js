@@ -7,10 +7,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import LoadingScreen from "../../components/LoadingScreen";
-import {localizedText} from "../../util";
-import ListItem from "../../components/ListItem";
-import {Button, CastorLogo} from "@castoredc/matter";
-import {LoginViews} from "../../components/MetadataItem/EnumMappings";
+import {CastorLogo} from "@castoredc/matter";
 import LoginForm from "../../components/Form/LoginForm";
 
 export default class Login extends Component {
@@ -29,10 +26,12 @@ export default class Login extends Component {
 
     componentDidMount() {
         if(typeof this.props.match.params.catalogSlug !== 'undefined') {
-            this.getCatalog(this.props.match.params.catalogSlug);
+            this.getCatalog(this.props.match.params.catalogSlug, () => {
+                this.getServers();
+            });
+        } else {
+            this.getServers();
         }
-
-        this.getServers();
     }
 
     getServers = () => {
@@ -62,13 +61,19 @@ export default class Login extends Component {
             });
     };
 
-    getCatalog = (catalog) => {
+    getCatalog = (catalog, callback) => {
         axios.get('/api/brand/' + catalog)
             .then((response) => {
-                this.setState({
-                    catalog:   response.data,
-                    isLoading: false
-                });
+                if(typeof callback === "function") {
+                    this.setState({
+                        catalog:   response.data,
+                    }, callback);
+                } else {
+                    this.setState({
+                        catalog:   response.data,
+                        isLoading: false
+                    });
+                }
             })
             .catch((error) => {
                 this.setState({

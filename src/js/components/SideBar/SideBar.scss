@@ -1,0 +1,67 @@
+@import '../../scss/colors';
+
+.SideBar {
+  width: 208px;
+  overflow: auto;
+  flex: 0 0 208px;
+  font-weight: 700;
+  background: $pale-grey;
+  display: flex;
+  flex-direction: column;
+
+  .SideBarNav {
+    margin: 0 16px;
+    padding: 16px 0 8px;
+  }
+
+  hr {
+    margin: 10px 0 14px 0;
+    border-color: $neutral-40;
+    border-style: solid;
+    border-top: 0;
+  }
+
+  .SideBarNavItem {
+    color: $neutral-500;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    text-decoration: none;
+    display: block;
+    padding: 1px 6px 1px 12px;
+    height: 36px;
+    line-height: 34px;
+
+    &.Disabled {
+      color: $neutral-60;
+    }
+
+    &.Active {
+      color: $azul;
+
+      .SideBarNavItemIcon svg path {
+        fill: $azul;
+      }
+    }
+
+    &:hover {
+      background: $neutral-30;
+      color: $azul;
+
+      .SideBarNavItemIcon svg path {
+        fill: $azul;
+      }
+    }
+
+    .SideBarNavItemIcon {
+      margin-right: 12px;
+
+      svg path {
+        fill: $neutral-70;
+      }
+    }
+  }
+
+  .SideBarNavVersion {
+    margin: 20px 12px;
+  }
+}

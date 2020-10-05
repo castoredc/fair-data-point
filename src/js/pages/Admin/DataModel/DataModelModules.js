@@ -9,6 +9,7 @@ import ToastContent from "../../../components/ToastContent";
 import TripleModal from "../../../modals/TripleModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import SideTabs from "../../../components/SideTabs";
+import {Button} from "@castoredc/matter";
 
 export default class DataModelModules extends Component {
     constructor(props) {
@@ -134,7 +135,7 @@ export default class DataModelModules extends Component {
                 const moduleNumber = (i + 1);
                 order.push({
                     value: (moduleNumber + 1),
-                    label: 'After Module ' + moduleNumber + ' (' + item.title + ')',
+                    label: 'After Group ' + moduleNumber + ' (' + item.title + ')',
                 });
             }
         }
@@ -267,17 +268,33 @@ export default class DataModelModules extends Component {
                 Are you sure you want to delete this triple?
             </ConfirmModal>
 
-            {modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
+            {modules.length === 0 ? <div className="NoResults">
+                This data model does not have any groups.
+
+                <br /><br />
+
+                <Button icon="add" onClick={() => this.openModuleModal(null)}>Add group</Button>
+            </div> : <SideTabs
                 hasButtons
+                title="Groups"
+                actions={
+                    <Button icon="add" iconDescription="Add group" onClick={() => this.openModuleModal(null)} />
+                }
                 tabs={modules.map((element) => {
                     let icons = [];
 
                     if (element.repeated) {
-                        icons.push('copy');
+                        icons.push({
+                            icon: 'copy',
+                            title: 'This group is repeated'
+                        });
                     }
 
                     if (element.dependent) {
-                        icons.push('decision');
+                        icons.push({
+                            icon: 'decision',
+                            title: 'This group is dependent'
+                        });
                     }
 
                     return {
@@ -293,9 +310,6 @@ export default class DataModelModules extends Component {
                                      groupedTriples={element.groupedTriples}
                                      modelId={dataModel.id}
                                      versionId={version}
-                                     openAddModuleModal={() => {
-                                         this.openModuleModal(null)
-                                     }}
                                      openModuleModal={() => this.openModuleModal({
                                          id:           element.id,
                                          title:        element.title,

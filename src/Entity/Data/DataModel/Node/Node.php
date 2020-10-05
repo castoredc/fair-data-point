@@ -22,32 +22,20 @@ abstract class Node
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="nodes", cascade={"persist"})
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $dataModel;
+    private DataModelVersion $dataModel;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $title;
+    /** @ORM\Column(type="string") */
+    private string $title;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string|null
-     */
-    private $description;
+    /** @ORM\Column(type="string", nullable=true) */
+    private ?string $description = null;
 
     public function __construct(DataModelVersion $dataModel, string $title, ?string $description)
     {

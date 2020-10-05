@@ -4,17 +4,16 @@ declare(strict_types=1);
 namespace App\Encryption;
 
 use App\Exception\CouldNotDecrypt;
-use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 use function random_bytes;
 use function sodium_bin2hex;
 use function sodium_crypto_secretbox;
 use function sodium_crypto_secretbox_open;
 use function sodium_hex2bin;
+use const SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 
 class EncryptionService
 {
-    /** @var string */
-    private $encryptionKey;
+    private string $encryptionKey;
 
     public function __construct(string $encryptionKey = '')
     {

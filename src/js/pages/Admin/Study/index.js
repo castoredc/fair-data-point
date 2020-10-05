@@ -1,11 +1,9 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {LinkContainer} from "react-router-bootstrap";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import Nav from "react-bootstrap/Nav";
 import NotFound from "../../NotFound";
 import {Route, Switch} from "react-router-dom";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import StudyDetails from "./StudyDetails";
 import StudyContacts from "./StudyContacts";
@@ -15,6 +13,9 @@ import StudyAnnotations from "./StudyAnnotations";
 import {ViewHeader} from "@castoredc/matter";
 import StudyDatasets from "./StudyDatasets";
 import StudyMetadata from "./StudyMetadata";
+import {localizedText} from "../../../util";
+import DocumentTitle from "../../../components/DocumentTitle";
+import SideBar from "../../../components/SideBar";
 
 export default class Study extends Component {
     constructor(props) {
@@ -51,45 +52,71 @@ export default class Study extends Component {
 
     render() {
         const {study, isLoadingStudy, catalog} = this.state;
+        const {location} = this.props;
 
         if (isLoadingStudy) {
             return <InlineLoader/>;
         }
 
+        const title = study.hasMetadata ? localizedText(study.metadata.briefName, 'en') : null;
+
         return <div className="PageContainer">
-            <div className="LeftNav">
-                <Nav className="flex-column">
-                    <LinkContainer to={'/admin/study/' + study.id} exact={true}>
-                        <Nav.Link>Study</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/study/' + study.id + '/metadata'} exact={true}>
-                        <Nav.Link>Metadata</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/study/' + study.id + '/contacts'} exact={true}>
-                        <Nav.Link disabled={!study.hasMetadata}>Contacts</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/study/' + study.id + '/organizations'} exact={true}>
-                        <Nav.Link disabled={!study.hasMetadata}>Centers</Nav.Link>
-                    </LinkContainer>
-                    <LinkContainer to={'/admin/study/' + study.id + '/consent'} exact={true}>
-                        <Nav.Link disabled={!study.hasMetadata}>Consent</Nav.Link>
-                    </LinkContainer>
-                    <hr/>
-                    <LinkContainer to={'/admin/study/' + study.id + '/datasets'} exact={true}>
-                        <Nav.Link disabled={!study.hasMetadata}>Datasets</Nav.Link>
-                    </LinkContainer>
-                    <hr/>
-                    <LinkContainer to={'/admin/study/' + study.id + '/annotations'} exact={true}>
-                        <Nav.Link disabled={!study.hasMetadata}>Annotations</Nav.Link>
-                    </LinkContainer>
-                    {/*<LinkContainer to={'/admin/catalog/' + catalog + '/study/' + study.slug + '/distributions'} exact={true}>*/}
-                    {/*    <Nav.Link disabled={!study.hasMetadata}>Available data</Nav.Link>*/}
-                    {/*</LinkContainer>*/}
-                </Nav>
-            </div>
+            <DocumentTitle title={'FDP Admin | Study' + (title ? ` | ${title}` : '')}/>
+
+            <SideBar
+                location={location}
+                items={[
+                    {
+                        to: '/admin/study/' + study.id,
+                        exact: true,
+                        title: 'Study',
+                        icon: 'study'
+                    },
+                    {
+                        to: '/admin/study/' + study.id + '/metadata',
+                        exact: true,
+                        title: 'Metadata',
+                        customIcon: 'metadata'
+                    },
+                    {
+                        to: '/admin/study/' + study.id + '/contacts',
+                        exact: true,
+                        title: 'Contacts',
+                        customIcon: 'contacts'
+                    },
+                    {
+                        to: '/admin/study/' + study.id + '/organizations',
+                        exact: true,
+                        title: 'Centers',
+                        customIcon: 'center'
+                    },
+                    {
+                        to: '/admin/study/' + study.id + '/consent',
+                        exact: true,
+                        title: 'Consent',
+                        customIcon: 'consent'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: '/admin/study/' + study.id + '/datasets',
+                        exact: true,
+                        title: 'Datasets',
+                        customIcon: 'dataset'
+                    },
+                    {
+                        to: '/admin/study/' + study.id + '/annotations',
+                        exact: true,
+                        title: 'Annotations',
+                        customIcon: 'annotations'
+                    }
+                ]}
+            />
+
             <div className="Page">
                 <div className="PageTitle">
-                   {study.hasMetadata && <ViewHeader>{study.metadata.briefName}</ViewHeader>}
+                    {title && <ViewHeader>{title}</ViewHeader>}
                 </div>
 
                 <Switch>

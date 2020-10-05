@@ -10,8 +10,7 @@ use EasyRdf_Graph;
 
 class DepartmentGraphResource extends AgentGraphResource
 {
-    /** @var Department */
-    private $department;
+    private Department $department;
 
     public function __construct(Department $department)
     {

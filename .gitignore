@@ -1,6 +1,6 @@
 
 ###> symfony/framework-bundle ###
-.env
+.env.local
 /public/bundles/
 /var/
 /vendor/
@@ -26,3 +26,5 @@ yarn-error.log
 
 .npmrc
 bfg.jar
+.DS_Store
+public/.DS_Store

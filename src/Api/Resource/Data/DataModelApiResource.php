@@ -8,12 +8,14 @@ use App\Entity\Data\DataModel\DataModel;
 
 class DataModelApiResource implements ApiResource
 {
-    /** @var DataModel */
-    private $dataModel;
+    private DataModel $dataModel;
 
-    public function __construct(DataModel $dataModel)
+    private bool $includeVersions;
+
+    public function __construct(DataModel $dataModel, bool $includeVersions = true)
     {
         $this->dataModel = $dataModel;
+        $this->includeVersions = $includeVersions;
     }
 
     /**
@@ -21,17 +23,22 @@ class DataModelApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $versions = [];
-
-        foreach ($this->dataModel->getVersions() as $version) {
-            $versions[] = (new DataModelVersionApiResource($version))->toArray();
-        }
-
-        return [
+        $array = [
             'id' => $this->dataModel->getId(),
             'title' => $this->dataModel->getTitle(),
             'description' => $this->dataModel->getDescription(),
-            'versions' => $versions,
         ];
+
+        if ($this->includeVersions) {
+            $versions = [];
+
+            foreach ($this->dataModel->getVersions() as $version) {
+                $versions[] = (new DataModelVersionApiResource($version))->toArray();
+            }
+
+            $array['versions'] = $versions;
+        }
+
+        return $array;
     }
 }

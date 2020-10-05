@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Study;
 use App\Message\Dataset\CreateDatasetForStudyCommand;
 use App\Message\Dataset\GetDatasetsByStudyCommand;
@@ -16,6 +16,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study/{study}")
@@ -32,8 +33,8 @@ class StudyDatasetApiController extends ApiController
 
         $envelope = $bus->dispatch(new GetDatasetsByStudyCommand($study));
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         $results = $handledStamp->getResult();
 
@@ -50,8 +51,8 @@ class StudyDatasetApiController extends ApiController
         try {
             $envelope = $bus->dispatch(new CreateDatasetForStudyCommand($study));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $dataset = $handledStamp->getResult();
 

@@ -16,10 +16,8 @@ class DatasetMetadata extends Metadata
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="metadata", fetch="EAGER")
      * @ORM\JoinColumn(name="dataset", referencedColumnName="id", nullable=FALSE)
-     *
-     * @var Dataset
      */
-    private $dataset;
+    private Dataset $dataset;
 
     public function __construct(Dataset $dataset)
     {

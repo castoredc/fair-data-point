@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Button, Stack, ViewHeader} from "@castoredc/matter";
 import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
 import AddStudyModal from "../../../modals/AddStudyModal";
+import DocumentTitle from "../../../components/DocumentTitle";
 
 export default class Studies extends Component {
     constructor(props) {
@@ -28,6 +29,8 @@ export default class Studies extends Component {
         const { showModal } = this.state;
 
         return <div className="PageContainer">
+            <DocumentTitle title="FDP Admin | Studies" />
+
             <AddStudyModal
                 show={showModal}
                 handleClose={this.closeModal}

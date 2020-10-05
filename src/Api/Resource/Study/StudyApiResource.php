@@ -11,8 +11,7 @@ use App\Entity\Study;
 
 class StudyApiResource extends RoleBasedApiResource
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
     public function __construct(Study $study, bool $isAdmin = false)
     {

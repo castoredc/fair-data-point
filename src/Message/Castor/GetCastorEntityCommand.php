@@ -5,37 +5,23 @@ namespace App\Message\Castor;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\CastorEntityType;
-use App\Security\CastorUser;
 
 class GetCastorEntityCommand
 {
-    /** @var CastorUser */
-    private $user;
+    private CastorStudy $study;
 
-    /** @var CastorStudy */
-    private $study;
+    private CastorEntityType $type;
 
-    /** @var CastorEntityType */
-    private $type;
+    private string $id;
 
-    /** @var string */
-    private $id;
+    private ?string $parentId = null;
 
-    /** @var string|null */
-    private $parentId;
-
-    public function __construct(CastorStudy $study, CastorUser $user, CastorEntityType $type, string $id, ?string $parentId)
+    public function __construct(CastorStudy $study, CastorEntityType $type, string $id, ?string $parentId)
     {
-        $this->user = $user;
         $this->study = $study;
         $this->type = $type;
         $this->id = $id;
         $this->parentId = $parentId;
-    }
-
-    public function getUser(): CastorUser
-    {
-        return $this->user;
     }
 
     public function getStudy(): CastorStudy

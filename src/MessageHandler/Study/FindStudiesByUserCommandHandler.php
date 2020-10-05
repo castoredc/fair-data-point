@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Study;
 
 use App\Entity\Study;
+use App\Exception\UserNotACastorUser;
 use App\Message\Study\FindStudiesByUserCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,11 +12,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
     public function __construct(EntityManagerInterface $em, ApiClient $apiClient)
     {
@@ -25,10 +24,18 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 
     /**
      * @return array<Study>
+     *
+     * @throws UserNotACastorUser
      */
     public function __invoke(FindStudiesByUserCommand $message): array
     {
-        $this->apiClient->setUser($message->getUser());
+        $user = $message->getUser();
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->apiClient->setUser($user->getCastorUser());
 
         $castorStudies = $this->apiClient->getStudies();
         $castorStudyIds = $this->apiClient->getStudyIds($castorStudies);
@@ -57,6 +64,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 
             return $studies;
         }
+
         if ($message->getLoadFromCastor() && ! $message->getHideExistingStudies()) {
             return $castorStudies;
         }

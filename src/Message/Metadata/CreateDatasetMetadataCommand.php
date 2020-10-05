@@ -10,8 +10,7 @@ use App\Entity\FAIRData\LocalizedText;
 
 class CreateDatasetMetadataCommand extends CreateMetadataCommand
 {
-    /** @var Dataset */
-    private $dataset;
+    private Dataset $dataset;
 
     /** @param Agent[] $publishers */
     public function __construct(

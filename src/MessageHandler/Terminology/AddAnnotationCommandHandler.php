@@ -12,11 +12,8 @@ use App\Exception\NoAccessPermission;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Message\Terminology\AddAnnotationCommand;
-use App\Repository\OntologyConceptRepository;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
-use Castor\BioPortal\Model\Concept;
-use Castor\BioPortal\Model\Individual;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -24,14 +21,11 @@ use function count;
 
 class AddAnnotationCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var ApiWrapper  */
-    private $bioPortalApiWrapper;
+    private ApiWrapper $bioPortalApiWrapper;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper, Security $security)
     {
@@ -50,17 +44,13 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
 
         $entity = $command->getEntity();
 
-        /** @var Ontology|null $ontology */
         $ontology = $this->em->getRepository(Ontology::class)->find($command->getOntologyId());
 
         if ($ontology === null) {
             throw new OntologyNotFound();
         }
 
-        /** @var OntologyConceptRepository $ontologyConceptRepository */
         $ontologyConceptRepository = $this->em->getRepository(OntologyConcept::class);
-
-        /** @var OntologyConcept|null $dbConcept */
         $dbConcept = $ontologyConceptRepository->findByOntologyAndCode($ontology, $command->getConceptCode());
 
         if ($dbConcept !== null) {
@@ -75,7 +65,6 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
                     throw new OntologyConceptNotFound();
                 }
 
-                /** @var Individual $concept */
                 $concept = $results[0];
 
                 $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getId()->getBase(), $ontology, $concept->getLabel());
@@ -87,7 +76,6 @@ class AddAnnotationCommandHandler implements MessageHandlerInterface
                     throw new OntologyConceptNotFound();
                 }
 
-                /** @var Concept $concept */
                 $concept = $results->getCollection()[0];
 
                 $dbConcept = new OntologyConcept(new Iri((string) $concept->getId()), $concept->getNotation(), $ontology, $concept->getPrefLabel());

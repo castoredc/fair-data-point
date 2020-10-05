@@ -9,10 +9,9 @@ use App\Entity\Data\RDF\RDFDistribution;
 class RenderRDFDistributionCommand
 {
     /** @var Record[] */
-    private $records;
+    private array $records;
 
-    /** @var RDFDistribution */
-    private $distribution;
+    private RDFDistribution $distribution;
 
     /**
      * @param Record[] $records

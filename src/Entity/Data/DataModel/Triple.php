@@ -20,42 +20,32 @@ class Triple
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModelModule", inversedBy="triples", cascade={"persist"})
      * @ORM\JoinColumn(name="module", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelModule
      */
-    private $module;
+    private DataModelModule $module;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", cascade={"persist"})
      * @ORM\JoinColumn(name="subject", referencedColumnName="id", nullable=false)
-     *
-     * @var Node
      */
-    private $subject;
+    private Node $subject;
 
     /**
      * @ORM\ManyToOne(targetEntity="Predicate", cascade={"persist"})
      * @ORM\JoinColumn(name="predicate", referencedColumnName="id", nullable=false)
-     *
-     * @var Predicate
      */
-    private $predicate;
+    private Predicate $predicate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", cascade={"persist"})
      * @ORM\JoinColumn(name="object", referencedColumnName="id", nullable=false)
-     *
-     * @var Node
      */
-    private $object;
+    private Node $object;
 
     public function __construct(DataModelModule $module, Node $subject, Predicate $predicate, Node $object)
     {

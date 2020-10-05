@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Catalog;
 
 class CatalogBrandApiResource implements ApiResource
 {
-    /** @var Catalog */
-    private $catalog;
+    private Catalog $catalog;
 
     public function __construct(Catalog $catalog)
     {

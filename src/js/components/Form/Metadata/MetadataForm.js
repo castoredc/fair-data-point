@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
 import axios from "axios";
 import FormItem from "../FormItem";
@@ -8,7 +8,7 @@ import LocalizedTextInput from "../../Input/LocalizedTextInput";
 import {ValidatorForm} from "react-form-validator-core";
 import MetadataVersionModal from "../../../modals/MetadataVersionModal";
 import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
-import {localizedText, mergeData, replaceAt, ucfirst} from "../../../util";
+import {mergeData, replaceAt, ucfirst} from "../../../util";
 import PublisherModal from "../../../modals/PublisherModal";
 
 export default class MetadataForm extends Component {
@@ -90,7 +90,7 @@ export default class MetadataForm extends Component {
         const {showModal} = this.state;
 
         this.setState({
-            showModal: {
+            showModal:        {
                 ...showModal,
                 [type]: true,
             },
@@ -102,11 +102,11 @@ export default class MetadataForm extends Component {
         const {showModal} = this.state;
 
         this.setState({
-            showModal: {
+            showModal:        {
                 ...showModal,
                 [type]: false,
             },
-            currentPublisher: null
+            currentPublisher: null,
         });
     };
 
@@ -249,6 +249,26 @@ export default class MetadataForm extends Component {
 
         const required = "This field is required";
 
+        const publisherRows = new Map(data.publishers.map((publisher, index) => {
+            let name = '';
+
+            if (publisher.type === 'organization') {
+                name = publisher.name;
+            } else if (publisher.type === 'person') {
+                name = [publisher.firstName, publisher.middleName, publisher.lastName].filter(Boolean).join(' ');
+            }
+
+            return [
+                index,
+                {
+                    cells: [
+                        name,
+                        ucfirst(publisher.type),
+                    ],
+                },
+            ];
+        }));
+
         return (
             <ValidatorForm
                 className="FullHeightForm"
@@ -355,20 +375,7 @@ export default class MetadataForm extends Component {
                                                      highlightRowOnHover
                                                      cellSpacing="default"
                                                      onClick={this.handleClick}
-                                                     rows={data.publishers.map((publisher) => {
-                                                         let name = '';
-
-                                                         if (publisher.type === 'organization') {
-                                                             name = publisher.name;
-                                                         } else if (publisher.type === 'person') {
-                                                             name = [publisher.firstName, publisher.middleName, publisher.lastName].filter(Boolean).join(' ');
-                                                         }
-
-                                                         return [
-                                                             name,
-                                                             ucfirst(publisher.type)
-                                                         ];
-                                                     })}
+                                                     rows={publisherRows}
                                                      structure={{
                                                          title: {
                                                              header:    'Name',

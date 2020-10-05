@@ -18,19 +18,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';
 
-    /** @var EntityManagerInterface */
-    protected $em;
+    protected EntityManagerInterface $em;
 
-    /** @var Security */
-    protected $security;
+    protected Security $security;
 
-    /** @var VersionNumberHelper */
-    protected $versionNumberHelper;
+    protected VersionNumberHelper $versionNumberHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
     {
@@ -64,7 +62,6 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
             if ($agent->hasId()) {
                 $repository = $this->em->getRepository(Agent::class);
 
-                /** @var Agent $newAgent */
                 $dbAgent = $repository->find($agent->getId());
 
                 if ($agent instanceof Department && $dbAgent instanceof Department) {
@@ -97,7 +94,7 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
                         $dbAgent->setEmail($agent->getEmail());
                         $dbAgent->setOrcid($agent->getOrcid());
                         $dbAgent->setPhoneNumber($agent->getPhoneNumber());
-                        $dbAgent->generateFullName();
+                        $dbAgent->setName($dbAgent->getFullName());
                     }
                 } else {
                     throw new InvalidAgentType();
@@ -126,8 +123,8 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
     {
         $repository = $this->em->getRepository(Country::class);
 
-        /** @var Country $country */
         $country = $repository->find($countryCode);
+        assert($country instanceof Country);
 
         return $country;
     }
@@ -136,8 +133,8 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
     {
         $repository = $this->em->getRepository(Language::class);
 
-        /** @var Language $language */
         $language = $repository->find($languageCode);
+        assert($language instanceof Language);
 
         return $language;
     }
@@ -146,8 +143,8 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
     {
         $repository = $this->em->getRepository(License::class);
 
-        /** @var License $license */
         $license = $repository->find($licenseId);
+        assert($license instanceof License);
 
         return $license;
     }

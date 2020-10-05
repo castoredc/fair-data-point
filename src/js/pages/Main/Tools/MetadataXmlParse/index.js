@@ -1,34 +1,35 @@
 import React, {Component} from "react";
-import {Col, Row} from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import bsCustomFileInput from "bs-custom-file-input";
 import axios from "axios";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
-import InlineLoader from "../../../../components/LoadingScreen/InlineLoader";
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-import {Heading, Icon} from "@castoredc/matter/lib/matter.esm";
 import Layout from "../../../../components/Layout";
-import Header from "../../../../components/Layout/Header";
 import MainBody from "../../../../components/Layout/MainBody";
+import {Button, DataTable, FileSelector, Stack} from "@castoredc/matter";
+import {classNames, downloadFile} from "../../../../util";
+import InlineLoader from "../../../../components/LoadingScreen/InlineLoader";
+import './MetadataXmlParse.scss';
 
 export default class MetadataXmlParse extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoading: false,
+            isLoaded: false,
             data: []
         };
     }
 
-    componentDidMount() {
-        bsCustomFileInput.init()
-    }
-
     onFileChange = (e) => {
-        if(e.target.files.length > 0) {
+        if (e.target.files.length > 0) {
             const file = e.target.files[0];
+
+            if(file.type !== 'text/xml') {
+                toast.error(<ToastContent type="error"
+                                          message="This file is not an XML file."/>);
+
+                return;
+            }
+
             const formData = new FormData();
 
             formData.append('xml', file);
@@ -45,7 +46,8 @@ export default class MetadataXmlParse extends Component {
                 .then((response) => {
                     this.setState({
                         isLoading: false,
-                        data:      response.data
+                        isLoaded: true,
+                        data: response.data
                     });
                 })
                 .catch((error) => {
@@ -63,83 +65,91 @@ export default class MetadataXmlParse extends Component {
         }
     };
 
+    generateCSV = () => {
+        const {data} = this.state;
+
+        const array = [Object.keys(data[0])].concat(data);
+
+        const csvContent = array.map(it => {
+            return Object.values(it).toString()
+        }).join('\n');
+
+        const blob = new Blob([csvContent], {type: "text/csv"});
+        downloadFile(blob, 'metadata.csv');
+    };
+
     render() {
-        const { user, embedded } = this.props;
-
-        const columns = [{
-            dataField: 'id',
-            text: 'Metadata ID',
-            hidden: true
-        }, {
-            dataField: 'variableName',
-            text: 'Variable'
-        }, {
-            dataField: 'type',
-            text: 'Metadata Type'
-        }, {
-            dataField: 'value',
-            text: 'Metadata Value'
-        }, {
-            dataField: 'description',
-            text: 'Metadata Description'
-        }];
-
-        const defaultSorted = [{
-            dataField: 'variableName',
-            order: 'desc'
-        }];
+        const {data, isLoading, isLoaded} = this.state;
 
         const title = 'Convert Metadata XML to CSV';
 
+        const rows = new Map(data.map((item) => {
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.variableName,
+                        item.type,
+                        item.value,
+                        item.description
+                    ],
+                },
+            ];
+        }));
+
         return <Layout
-            className="Study"
+            className="MetadataXmlParse"
             title={title}
         >
-            <Header user={user} embedded={embedded} breadcrumbs={false} title={title} />
-
             <MainBody>
-                <Row className="justify-content-md-center">
-                    <Col className="MainCol" md={6}>
-                        <Form>
-                            <Form.File
-                                id="custom-file"
-                                label="Upload Castor Form XML"
-                                custom
-                                onChange={ this.onFileChange }
-                                accept=".xml"
-                            />
-                        </Form>
-                    </Col>
-                </Row>
-                {this.state.isLoading && <Row><Col md={12}><InlineLoader/></Col></Row>}
-                    {this.state.data.length > 0 && <ToolkitProvider
-                        keyField="id"
-                        data={ this.state.data }
-                        columns={ columns }
-                        defaultSorted={ defaultSorted }
-                        exportCSV
-                        bootstrap4
-                    >
-                        {
-                            props => (<div className="Children Results">
-                                <Row className="ResultsHeader">
-                                    <Col md={8}><Heading type="Subsection">Metadata</Heading></Col>
-                                    <Col md={4} className="ResultsHeaderButtons">
-                                        <button className="btn btn-primary" onClick={ () => {props.csvProps.onExport()} }>
-                                            <Icon type="download" /> Export to CSV
-                                        </button>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <BootstrapTable { ...props.baseProps } />
-                                    </Col>
-                                </Row>
-                            </div>
-                            )
-                        }
-                    </ToolkitProvider>
-                }
+                <div className="Top">
+                    <h1>
+                        {title}
+                    </h1>
+
+                    <Stack distribution="equalSpacing">
+                        <FileSelector
+                            onChange={this.onFileChange}
+                        />
+
+                        {isLoaded && <Button icon="download" onClick={this.generateCSV}>Download CSV</Button>}
+                    </Stack>
+                </div>
+
+                <div className={classNames('DataTable FullHeightDataTable', isLoading && 'Loading', !isLoaded && 'NotLoaded')}>
+                    {isLoading && <InlineLoader overlay={true} />}
+                    <div className="DataTableWrapper">
+                        <DataTable
+                            emptyTableMessage="No metadata found"
+                            highlightRowOnHover
+                            cellSpacing="default"
+                            onClick={this.onRowClick}
+                            rows={rows}
+                            structure={{
+                                variable: {
+                                    header: 'Variable',
+                                    resizable: true,
+                                    template: 'text',
+                                },
+                                type: {
+                                    header: 'Metadata Type',
+                                    resizable: true,
+                                    template: 'text',
+                                },
+                                value: {
+                                    header: 'Metadata Value',
+                                    resizable: true,
+                                    template: 'text',
+                                },
+                                description: {
+                                    header: 'Metadata Description',
+                                    resizable: true,
+                                    template: 'text',
+                                },
+                            }}
+                        />
+                    </div>
+                </div>
             </MainBody>
         </Layout>;
     }

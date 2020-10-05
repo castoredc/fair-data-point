@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\FAIRData\Distribution;
-use App\Security\CastorUser;
+use App\Security\User;
 use App\Type\DistributionAccessType;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class DistributionVoter extends Voter
@@ -16,9 +17,7 @@ class DistributionVoter extends Voter
     public const VIEW = 'view';
     public const EDIT = 'edit';
     public const ACCESS_DATA = 'access_data';
-
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -38,8 +37,8 @@ class DistributionVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
-        /** @var Distribution $distribution */
         $distribution = $subject;
+        assert($distribution instanceof Distribution);
 
         switch ($attribute) {
             case self::VIEW:
@@ -65,10 +64,14 @@ class DistributionVoter extends Voter
 
         $user = $token->getUser();
 
-        if (! $user instanceof CastorUser) {
+        if (! $user instanceof User) {
             return false;
         }
 
-        return in_array($distribution->getDataset()->getStudy()->getSourceId(), $user->getStudies(), true);
+        if (! $user->hasCastorUser()) {
+            return false;
+        }
+
+        return $user->getCastorUser()->hasAccessToStudy($distribution->getDataset()->getStudy()->getSourceId());
     }
 }

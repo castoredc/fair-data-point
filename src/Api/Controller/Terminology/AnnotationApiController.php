@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Terminology;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Terminology\AnnotationApiRequest;
-use App\Controller\Api\ApiController;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
@@ -15,7 +15,7 @@ use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Message\Castor\GetCastorEntityCommand;
 use App\Message\Terminology\AddAnnotationCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,22 +40,22 @@ class AnnotationApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $study);
 
-        /** @var CastorUser|null $user */
         $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         try {
-            /** @var AnnotationApiRequest $parsed */
             $parsed = $this->parseRequest(AnnotationApiRequest::class, $request);
+            assert($parsed instanceof AnnotationApiRequest);
 
             assert($study instanceof CastorStudy);
 
-            $envelope = $bus->dispatch(new GetCastorEntityCommand($study, $user, $parsed->getEntityType(), $parsed->getEntityId(), $parsed->getEntityParent()));
+            $envelope = $bus->dispatch(new GetCastorEntityCommand($study, $parsed->getEntityType(), $parsed->getEntityId(), $parsed->getEntityParent()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var CastorEntity $entity */
             $entity = $handledStamp->getResult();
+            assert($entity instanceof CastorEntity);
 
             $bus->dispatch(new AddAnnotationCommand($study, $entity, $parsed->getOntology(), $parsed->getConcept(), $parsed->getConceptType()));
 
@@ -68,9 +68,11 @@ class AnnotationApiController extends ApiController
             if ($e instanceof OntologyNotFound || $e instanceof OntologyConceptNotFound) {
                 return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
+
             if ($e instanceof InvalidEntityType) {
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
+
             if ($e instanceof AnnotationAlreadyExists) {
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }

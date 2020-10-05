@@ -12,11 +12,9 @@ use function implode;
 
 class ApiClient
 {
-    /** @var Client */
-    private $client;
+    private Client $client;
 
-    /** @var string */
-    private $webhookUrl;
+    private string $webhookUrl;
 
     public function __construct(string $webhookUrl = '')
     {
@@ -40,7 +38,7 @@ class ApiClient
         $metadata = $study->getLatestMetadata();
 
         $type = $metadata->getType()->toString();
-        $method = $metadata->getMethodType() !== null ? $metadata->getMethodType()->toString() : 'N/A';
+        $method = $metadata->getMethodType()->toString();
         $condition = $metadata->getCondition() !== null ? $metadata->getCondition()->getText() : 'N/A';
         $intervention = $metadata->getIntervention() !== null ? $metadata->getIntervention()->getText() : 'N/A';
         $estimatedEnrollment = $metadata->getEstimatedEnrollment() ?? 'N/A';

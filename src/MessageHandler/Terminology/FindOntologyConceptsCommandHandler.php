@@ -16,11 +16,9 @@ use function array_merge;
 
 class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var ApiWrapper  */
-    private $bioPortalApiWrapper;
+    private ApiWrapper $bioPortalApiWrapper;
 
     public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper)
     {
@@ -31,7 +29,6 @@ class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
     /** @return (Concept|Individual)[] */
     public function __invoke(FindOntologyConceptsCommand $message): array
     {
-        /** @var Ontology|null $ontology */
         $ontology = $this->em->getRepository(Ontology::class)->find($message->getOntologyId());
 
         if ($ontology === null) {

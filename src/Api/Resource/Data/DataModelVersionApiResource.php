@@ -9,8 +9,7 @@ use const DATE_ATOM;
 
 class DataModelVersionApiResource implements ApiResource
 {
-    /** @var DataModelVersion */
-    private $dataModelVersion;
+    private DataModelVersion $dataModelVersion;
 
     public function __construct(DataModelVersion $dataModelVersion)
     {

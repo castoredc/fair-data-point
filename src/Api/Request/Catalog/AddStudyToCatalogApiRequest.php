@@ -9,11 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AddStudyToCatalogApiRequest extends SingleApiRequest
 {
     /**
-     * @var string|null
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private $studyId;
+    private ?string $studyId = null;
 
     protected function parse(): void
     {

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Request\Study\StudyApiRequest;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
@@ -16,12 +16,13 @@ use App\Exception\CatalogNotFound;
 use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
+use App\Exception\UserNotACastorUser;
 use App\Message\Catalog\GetCatalogBySlugCommand;
 use App\Message\Study\AddStudyToCatalogCommand;
 use App\Message\Study\CreateStudyCommand;
 use App\Message\Study\GetPaginatedStudiesCommand;
 use App\Message\Study\GetStudiesCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +30,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use function assert;
 
 /**
@@ -43,8 +43,8 @@ class StudiesApiController extends ApiController
     public function studies(Request $request, MessageBusInterface $bus): Response
     {
         try {
-            /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetPaginatedStudiesCommand(
@@ -59,8 +59,8 @@ class StudiesApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 
@@ -79,11 +79,16 @@ class StudiesApiController extends ApiController
      */
     public function studiesFilters(MessageBusInterface $bus): Response
     {
-        /** @var CastorUser|null $user */
         $user = $this->getUser();
-        $studies = $this->getStudies($user, $bus);
+        assert($user instanceof User || $user === null);
 
-        return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
+        try {
+            $studies = $this->getStudies($user, $bus);
+
+            return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
+        } catch (UserNotACastorUser $e) {
+            return new JsonResponse($e->toArray(), 403);
+        }
     }
 
     /**
@@ -94,30 +99,32 @@ class StudiesApiController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            /** @var StudyApiRequest $parsed */
             $parsed = $this->parseRequest(StudyApiRequest::class, $request);
+            assert($parsed instanceof StudyApiRequest);
 
             $catalog = null;
 
             if ($parsed->getCatalog() !== null) {
                 $envelope = $bus->dispatch(new GetCatalogBySlugCommand($parsed->getCatalog()));
 
-                /** @var HandledStamp $handledStamp */
                 $handledStamp = $envelope->last(HandledStamp::class);
+                assert($handledStamp instanceof HandledStamp);
 
-                /** @var Catalog $catalog */
                 $catalog = $handledStamp->getResult();
+                assert($catalog instanceof Catalog);
 
                 $this->denyAccessUnlessGranted('add', $catalog);
             }
 
-            $envelope = $bus->dispatch(new CreateStudyCommand($parsed->getSource(), $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), true));
+            $envelope = $bus->dispatch(
+                new CreateStudyCommand($parsed->getSource(), $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), true)
+            );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Study $study */
             $study = $handledStamp->getResult();
+            assert($study instanceof Study);
 
             if ($catalog !== null) {
                 $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
@@ -151,14 +158,21 @@ class StudiesApiController extends ApiController
         }
     }
 
-    /** @return Study[] */
-    private function getStudies(?UserInterface $user, MessageBusInterface $bus): array
+    /**
+     * @return Study[]
+     *
+     * @throws UserNotACastorUser
+     */
+    private function getStudies(User $user, MessageBusInterface $bus): array
     {
-        assert($user instanceof CastorUser);
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
         $envelope = $bus->dispatch(new GetStudiesCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return $handledStamp->getResult();
     }

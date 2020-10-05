@@ -20,18 +20,14 @@ class DataModelDependency
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModelDependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     *
-     * @var DataModelDependencyGroup|null
      */
-    private $group;
+    private ?DataModelDependencyGroup $group = null;
 
     public function getId(): string
     {

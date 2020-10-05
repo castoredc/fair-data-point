@@ -32,132 +32,68 @@ class StudyMetadata
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
-     *
-     * @var Study
      */
-    private $study;
+    private Study $study;
 
-    /**
-     * @ORM\Column(type="version")
-     *
-     * @var Version
-     */
-    private $version;
+    /** @ORM\Column(type="version") */
+    private Version $version;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $briefName;
+    /** @ORM\Column(type="string", length=255) */
+    private string $briefName;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string|null
-     */
-    private $scientificName;
+    /** @ORM\Column(type="text", nullable=true) */
+    private ?string $scientificName = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string|null
-     */
-    private $briefSummary;
+    /** @ORM\Column(type="text", nullable=true) */
+    private ?string $briefSummary = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string|null
-     */
-    private $summary;
+    /** @ORM\Column(type="text", nullable=true) */
+    private ?string $summary = null;
 
-    /**
-     * @ORM\Column(type="StudyType", name="study_type")
-     *
-     * @var StudyType
-     */
-    private $type;
+    /** @ORM\Column(type="StudyType", name="study_type") */
+    private StudyType $type;
 
-    /**
-     * @ORM\Column(type="MethodType", name="method_type")
-     *
-     * @var MethodType
-     */
-    private $methodType;
+    /** @ORM\Column(type="MethodType", name="method_type") */
+    private MethodType $methodType;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText",cascade={"persist"})
      * @ORM\JoinColumn(name="studied_condition", referencedColumnName="id", nullable=true)
-     *
-     * @var CodedText|null
      */
-    private $condition;
+    private ?CodedText $condition = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText",cascade={"persist"})
      * @ORM\JoinColumn(name="intervention", referencedColumnName="id", nullable=true)
-     *
-     * @var CodedText|null
      */
-    private $intervention;
+    private ?CodedText $intervention = null;
 
-    /**
-     * @ORM\Column(type="RecruitmentStatusType", name="recruitment_status", nullable=true)
-     *
-     * @var RecruitmentStatus|null
-     */
-    private $recruitmentStatus;
+    /** @ORM\Column(type="RecruitmentStatusType", name="recruitment_status", nullable=true) */
+    private ?RecruitmentStatus $recruitmentStatus = null;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int|null
-     */
-    private $estimatedEnrollment;
+    /** @ORM\Column(type="integer", nullable=true) */
+    private ?int $estimatedEnrollment = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     *
-     * @var bool|null
-     */
-    private $consentPublish;
+    /** @ORM\Column(type="boolean", nullable=true) */
+    private ?bool $consentPublish = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     *
-     * @var bool|null
-     */
-    private $consentSocialMedia;
+    /** @ORM\Column(type="boolean", nullable=true) */
+    private ?bool $consentSocialMedia = null;
 
-    /**
-     * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable|null
-     */
-    private $estimatedStudyStartDate;
+    /** @ORM\Column(type="date_immutable", nullable=true) */
+    private ?DateTimeImmutable $estimatedStudyStartDate = null;
 
-    /**
-     * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable|null
-     */
-    private $estimatedStudyCompletionDate;
+    /** @ORM\Column(type="date_immutable", nullable=true) */
+    private ?DateTimeImmutable $estimatedStudyCompletionDate = null;
 
-    /**
-     * @ORM\Column(type="date_immutable", nullable=true)
-     *
-     * @var DateTimeImmutable|null
-     */
-    private $studyCompletionDate;
+    /** @ORM\Column(type="date_immutable", nullable=true) */
+    private ?DateTimeImmutable $studyCompletionDate = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -165,7 +101,7 @@ class StudyMetadata
      *
      * @var Collection<Agent>
      */
-    private $contacts;
+    private Collection $contacts;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
@@ -173,14 +109,10 @@ class StudyMetadata
      *
      * @var Collection<Agent>
      */
-    private $centers;
+    private Collection $centers;
 
-    /**
-     * @ORM\Column(type="iri", nullable=true)
-     *
-     * @var Iri|null
-     */
-    private $logo = null;
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $logo = null;
 
     public function __construct(Study $study)
     {
@@ -375,6 +307,7 @@ class StudyMetadata
             if (! $center instanceof Department) {
                 continue;
             }
+
             $departments[] = $center;
         }
 
@@ -392,6 +325,7 @@ class StudyMetadata
             if (! $center instanceof Organization) {
                 continue;
             }
+
             $organizations[] = $center;
         }
 
@@ -450,12 +384,12 @@ class StudyMetadata
         $this->consentSocialMedia = $consentSocialMedia;
     }
 
-    public function getMethodType(): ?MethodType
+    public function getMethodType(): MethodType
     {
         return $this->methodType;
     }
 
-    public function setMethodType(?MethodType $methodType): void
+    public function setMethodType(MethodType $methodType): void
     {
         $this->methodType = $methodType;
     }

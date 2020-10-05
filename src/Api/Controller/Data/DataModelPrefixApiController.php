@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Data;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModelPrefixApiRequest;
 use App\Api\Resource\Data\DataModelPrefixesApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/model/{model}/v/{version}/prefix")
@@ -44,8 +45,8 @@ class DataModelPrefixApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         try {
-            /** @var DataModelPrefixApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
+            assert($parsed instanceof DataModelPrefixApiRequest);
 
             $bus->dispatch(new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
 
@@ -72,8 +73,8 @@ class DataModelPrefixApiController extends ApiController
         }
 
         try {
-            /** @var DataModelPrefixApiRequest $parsed */
             $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
+            assert($parsed instanceof DataModelPrefixApiRequest);
 
             $bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 

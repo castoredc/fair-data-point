@@ -1,0 +1,158 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Entity\Castor;
+
+use App\Entity\FAIRData\Country;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\CastorInstituteRepository")
+ * @ORM\Table(name="castor_institute")
+ */
+class Institute
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string", length=190)
+     */
+    private string $id;
+
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy", fetch="EAGER")
+     * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
+     */
+    private CastorStudy $study;
+
+    /** @ORM\Column(name="institute_name", type="string", length=1000, nullable=false) */
+    private string $name;
+
+    /** @ORM\Column(name="abbreviation", type="string", length=1000, nullable=false) */
+    private string $abbreviation;
+
+    /** @ORM\Column(name="code", type="string", length=3, nullable=true) */
+    private ?string $code = null;
+
+    private int $countryId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Country",cascade={"persist"})
+     * @ORM\JoinColumn(name="country", referencedColumnName="code")
+     */
+    private ?Country $country = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Record", mappedBy="institute")
+     *
+     * @var Collection<Record>
+     */
+    private Collection $records;
+
+    private bool $deleted = false;
+
+    public function __construct(
+        CastorStudy $study,
+        string $id,
+        string $name,
+        string $abbreviation,
+        ?string $code,
+        int $countryId,
+        bool $deleted
+    ) {
+        $this->id = $id;
+        $this->study = $study;
+        $this->name = $name;
+        $this->abbreviation = $abbreviation;
+        $this->code = $code;
+        $this->countryId = $countryId;
+        $this->deleted = $deleted;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getStudy(): CastorStudy
+    {
+        return $this->study;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getAbbreviation(): string
+    {
+        return $this->abbreviation;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function getCountryId(): int
+    {
+        return $this->countryId;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    /**
+     * @return Collection<Record>
+     */
+    public function getRecords(): Collection
+    {
+        return $this->records;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setCountryId(int $countryId): void
+    {
+        $this->countryId = $countryId;
+    }
+
+    public function setCountry(?Country $country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @param Collection<Record> $records
+     */
+    public function setRecords(Collection $records): void
+    {
+        $this->records = $records;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setAbbreviation(string $abbreviation): void
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
+    public function setCode(?string $code): void
+    {
+        $this->code = $code;
+    }
+
+    public function setDeleted(bool $deleted): void
+    {
+        $this->deleted = $deleted;
+    }
+}

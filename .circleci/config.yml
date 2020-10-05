@@ -3,7 +3,7 @@ version: 2.1
 executors:
   php-only:
     docker:
-      - image: circleci/php:7.3
+      - image: circleci/php:7.4
 
 
 jobs:
@@ -77,7 +77,7 @@ jobs:
           paths:
             - ./vendor
 
-      - run: vendor/bin/phpstan analyze
+      - run: php -d memory_limit=4G vendor/bin/phpstan analyze
 
 workflows:
   version: 2

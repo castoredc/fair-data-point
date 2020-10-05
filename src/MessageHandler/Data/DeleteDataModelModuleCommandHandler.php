@@ -11,11 +11,9 @@ use Symfony\Component\Security\Core\Security;
 
 class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {

@@ -1,1 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 28 20" class="Icon nl" width="16" height="16"><defs><rect id="a" width="28" height="20" rx="2"/></defs><g fill="none" fill-rule="evenodd"><path fill="#FFF" d="M0 6h28v8H0z"/><mask id="b" fill="#fff"><use xlink:href="#a"/></mask><use fill="#FFF" xlink:href="#a"/><path fill="#CA2B39" mask="url(#b)" d="M0 0h28v6.667H0z"/><path fill="#2C56A2" mask="url(#b)" d="M0 13.333h28V20H0z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 28 20" class="Icon nl"
+     width="16" height="16">
+    <defs>
+        <rect id="a" width="28" height="20" rx="2"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#FFF" d="M0 6h28v8H0z"/>
+        <mask id="b" fill="#fff">
+            <use xlink:href="#a"/>
+        </mask>
+        <use fill="#FFF" xlink:href="#a"/>
+        <path fill="#CA2B39" mask="url(#b)" d="M0 0h28v6.667H0z"/>
+        <path fill="#2C56A2" mask="url(#b)" d="M0 13.333h28V20H0z"/>
+    </g>
+</svg>

@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import {ValidatorForm} from 'react-form-validator-core';
 
 import '../Form.scss'
@@ -13,7 +11,6 @@ import Input from "../../Input";
 import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
 import {Button, Icon, Stack} from "@castoredc/matter";
-import Form from 'react-bootstrap/Form'
 
 export default class DatasetForm extends Component {
     constructor(props) {
@@ -102,11 +99,23 @@ export default class DatasetForm extends Component {
             >
                 <div className="FormContent">
                     {dataset.study && <FormItem label="Study">
-                        <div className="Input">
-                            <Link to={`/admin/study/${dataset.study.id}`}>
-                                <Icon
-                                    type="study"/> {dataset.study.hasMetadata ? dataset.study.metadata.briefName : dataset.study.name}
-                            </Link>
+                        <div className="StudyLink">
+                                <div className="StudyIcon">
+                                    <Icon type="study" width="32px" height="32px" />
+                                </div>
+                                <div className="StudyDetails">
+                                    <div className="StudyName">
+                                        <dl>
+                                            <dt>Brief name</dt>
+                                            <dd>{dataset.study.hasMetadata ? dataset.study.metadata.briefName : <span className="None">None</span>}</dd>
+                                            <dt>Study name</dt>
+                                            <dd>{dataset.study.name}</dd>
+                                        </dl>
+                                    </div>
+                                    <Link to={`/admin/study/${dataset.study.id}`}>
+                                        <Button buttonType="secondary">Open study</Button>
+                                    </Link>
+                                </div>
                         </div>
                     </FormItem>}
 

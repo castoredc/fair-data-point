@@ -27,39 +27,51 @@ use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
-use App\Entity\Castor\User;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Factory\Castor\CastorUserFactory;
+use App\Factory\Castor\InstituteFactory;
+use App\Factory\Castor\RecordFactory;
 use App\Security\ApiUser;
-use App\Security\CastorUser;
+use App\Security\Providers\Castor\CastorUser;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Throwable;
+use function assert;
 use function iterator_to_array;
 use function json_decode;
 
 class ApiClient
 {
-    /** @var string */
-    private $token = '';
+    private string $token = '';
 
-    /** @var Client */
-    private $client;
+    private Client $client;
 
-    /** @var ?string */
-    private $server;
+    private string $server;
 
-    /** @var int */
-    private $pageSize = 1000;
+    private int $pageSize = 1000;
 
-    public function __construct(string $server = '')
+    private RecordFactory $recordFactory;
+
+    private InstituteFactory $instituteFactory;
+
+    private CastorUserFactory $castorUserFactory;
+
+    public function __construct(RecordFactory $recordFactory, InstituteFactory $instituteFactory, CastorUserFactory $castorUserFactory)
     {
         $this->client = new Client();
+        $this->recordFactory = $recordFactory;
+        $this->instituteFactory = $instituteFactory;
+        $this->castorUserFactory = $castorUserFactory;
+    }
+
+    public function setServer(string $server): void
+    {
         $this->server = $server;
     }
 
@@ -217,11 +229,11 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getUser(): User
+    public function getUser(): CastorUser
     {
         $body = $this->request('/api/user');
 
-        return User::fromData($body['_embedded']['user'][0]);
+        return $this->castorUserFactory->createFromCastorApiData($body['_embedded']['user'][0]);
     }
 
     /**
@@ -280,8 +292,8 @@ class ApiClient
             $results->set($field->getId(), $field);
         }
 
-        /** @var ArrayIterator $iterator */
         $iterator = $results->getIterator();
+        assert($iterator instanceof ArrayIterator);
 
         $iterator->uasort(static function (Field $a, Field $b) {
             if ($a->getNumber() === $b->getNumber()) {
@@ -388,6 +400,7 @@ class ApiClient
                         $surveyStep->setFields($fields->toArray());
                         $steps[] = $surveyStep;
                     }
+
                     $tempSurvey->setSteps($steps);
                 }
 
@@ -440,6 +453,7 @@ class ApiClient
 
                     $tempReport->addStep($newStep);
                 }
+
                 $tempReport->setStepParent();
                 $reports->add($tempReport);
             }
@@ -507,9 +521,11 @@ class ApiClient
      */
     public function getRecord(CastorStudy $study, string $recordId): Record
     {
+        $institutes = $this->getInstitutes($study);
+
         $body = $this->request('/api/study/' . $study->getSourceId() . '/record/' . $recordId);
 
-        return Record::fromData($body);
+        return $this->recordFactory->createFromCastorApiData($study, $institutes, $body);
     }
 
     /**
@@ -518,8 +534,12 @@ class ApiClient
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    public function getRecords(CastorStudy $study, bool $extractArchived = false): ArrayCollection
+    public function getRecords(CastorStudy $study, ?ArrayCollection $institutes = null, bool $extractArchived = false): ArrayCollection
     {
+        if ($institutes === null) {
+            $institutes = $this->getInstitutes($study);
+        }
+
         $pages = 1;
         $records = new ArrayCollection();
 
@@ -528,12 +548,36 @@ class ApiClient
             $pages = $body['page_count'];
 
             foreach ($body['_embedded']['records'] as $rawRecord) {
-                $record = Record::fromData($rawRecord);
+                $record = $this->recordFactory->createFromCastorApiData($study, $institutes, $rawRecord);
                 $records->set($record->getId(), $record);
             }
         }
 
         return $records;
+    }
+
+    /**
+     * @throws ErrorFetchingCastorData
+     * @throws SessionTimedOut
+     * @throws NoAccessPermission
+     * @throws NotFound
+     */
+    public function getInstitutes(CastorStudy $study): ArrayCollection
+    {
+        $pages = 1;
+        $institutes = new ArrayCollection();
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $body = $this->request('/api/study/' . $study->getSourceId() . '/institute?page=' . $page . '&page_size=' . $this->pageSize);
+            $pages = $body['page_count'];
+
+            foreach ($body['_embedded']['institutes'] as $rawInstitute) {
+                $institute = $this->instituteFactory->createFromCastorApiData($study, $rawInstitute);
+                $institutes->set($institute->getId(), $institute);
+            }
+        }
+
+        return $institutes;
     }
 
     /**

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Header from "../../../components/Layout/Header";
 import axios from "axios";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {classNames, localizedText} from "../../../util";
 import Yasqe from "@triply/yasqe";
@@ -10,28 +10,27 @@ import './Query.scss';
 import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
 import Alert from "../../../components/Alert";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button} from "@castoredc/matter";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {Button, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
+import Split from 'react-split'
 
 export default class Query extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            hasDistribution:       !!props.match.params.distribution,
-            isLoading:             true,
-            distribution:          null,
-            prefixes:              [],
-            columns:               [],
-            rows:                  [],
-            queryExecuted:         false,
-            isExecutingQuery:      false,
-            showEditor:            true,
-            executionTime:         ''
+            hasDistribution: !!props.match.params.distribution,
+            isLoading: true,
+            distribution: null,
+            prefixes: [],
+            columns: [],
+            rows: [],
+            queryExecuted: false,
+            isExecutingQuery: false,
+            showEditor: true,
+            executionTime: ''
         };
     }
 
@@ -51,7 +50,7 @@ export default class Query extends Component {
         axios.get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution)
             .then((response) => {
                 this.setState({
-                    distribution:          response.data,
+                    distribution: response.data,
                     isLoadingDistribution: false,
                     hasLoadedDistribution: true,
                 }, () => {
@@ -90,8 +89,8 @@ export default class Query extends Component {
                             this.createYasgui()
                         });
                     }).catch((error) => {
-                        toast.error(<ToastContent type="error" message="An error occurred while loading the prefixes"/>);
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred while loading the prefixes"/>);
+                });
             })
             .catch((error) => {
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the prefixes';
@@ -105,7 +104,9 @@ export default class Query extends Component {
         this.setState({
             isLoading: false
         }, () => {
-            let config = {};
+            let config = {
+                resizeable: false
+            };
 
             if (distribution) {
                 config['requestConfig'] = {
@@ -122,33 +123,33 @@ export default class Query extends Component {
 
     onQuery = (instance, req) => {
         this.setState({
-            isExecutingQuery:   true,
-            queryExecuted:      false,
-            error:              false,
-            message:            null
+            isExecutingQuery: true,
+            queryExecuted: false,
+            error: false,
+            message: null
         });
     };
 
     onResponse = (instance, req, duration) => {
-        if(req instanceof Error) {
+        if (req instanceof Error) {
             this.setState({
-                columns:        [],
-                rows:           [],
+                columns: [],
+                rows: [],
                 isExecutingQuery: false,
-                queryExecuted:  true,
-                error:          true,
-                message:        req.message.replace(/&quot;/g, '"'),
-                executionTime:  ''
+                queryExecuted: true,
+                error: true,
+                message: req.message.replace(/&quot;/g, '"'),
+                executionTime: ''
             });
         } else {
             this.setState({
-                columns:        req.body.head.vars,
-                rows:           req.body.results.bindings,
+                columns: req.body.head.vars,
+                rows: req.body.results.bindings,
                 isExecutingQuery: false,
-                queryExecuted:  true,
-                error:          false,
-                message:        null,
-                executionTime:  duration
+                queryExecuted: true,
+                error: false,
+                message: null,
+                executionTime: duration
             });
         }
     };
@@ -158,7 +159,7 @@ export default class Query extends Component {
     };
 
     toggleEditor = () => {
-        const { showEditor } = this.state;
+        const {showEditor} = this.state;
 
         this.setState({
             showEditor: !showEditor
@@ -166,8 +167,8 @@ export default class Query extends Component {
     };
 
     render() {
-        const { hasDistribution, isLoading, distribution, prefixes, columns, rows, queryExecuted, error, message, isExecutingQuery, showEditor, executionTime } = this.state;
-        const { location, user, embedded } = this.props;
+        const {hasDistribution, isLoading, distribution, prefixes, columns, rows, queryExecuted, error, message, isExecutingQuery, showEditor, executionTime} = this.state;
+        const {location, user, embedded} = this.props;
 
         const breadcrumbs = getBreadCrumbs(location, {distribution, query: true});
 
@@ -179,46 +180,69 @@ export default class Query extends Component {
             title={title}
             isLoading={isLoading}
             embedded={embedded}
+            fullWidth
         >
-            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
+            <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true} />
 
-            <MainBody isLoading={isLoading}>
-                <div className="QueryTools">
-                    <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
-                    <Row className="QueryButtons">
-                        <Col>
-                            {executedWithoutErrors && <div className="ResultCount"><strong>{rows.length}</strong> results in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds</div>}
-                        </Col>
-                        <Col>
-                            {executedWithoutErrors && <Button onClick={this.toggleEditor}
-                                                              buttonType="secondary"
-                                                              fullWidth
-                                                              isDropdown
-                                                              isOpen={showEditor}
-                                                              className="ShowHideButton"
-                            >
-                                {showEditor ? 'Hide' : 'Show'} query editor
-                            </Button>}
-                        </Col>
-                        <Col>
-                            <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">Run query</Button>
-                        </Col>
-                    </Row>
-                </div>
-                {isExecutingQuery && <InlineLoader />}
+            <MainBody isLoading={isLoading} className="QueryComponent">
+                <Split
+                    className="Split"
+                    sizes={[40, 60]}
+                    cursor="col-resize"
+                    gutterSize={20}
+                    gutter={(index, direction) => {
+                        const gutter = document.createElement('div')
+                        const chip = document.createElement('div');
 
-                {executedWithoutErrors && <SPARQLDataTable
-                    vars={columns}
-                    bindings={rows}
-                    prefixes={prefixes}
-                    fullUrl={distribution.fullUrl}
-                />}
+                        gutter.className = `gutter gutter-${direction}`
+                        chip.className = `chip`
 
+                        gutter.appendChild(chip);
+                        return gutter
+                    }}
+                >
+                    <div className="QueryTools">
+                        <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
+                        <Stack className="QueryButtons"
+                               alignment="center"
+                               distribution="equalSpacing">
+                            <div className="ResultCount">
+                                {executedWithoutErrors && <>
+                                    <strong>{rows.length}</strong> results
+                                    in <strong>{(executionTime / 1000.0).toFixed(2)}</strong> seconds
+                                </>}
+                            </div>
+                            <div>
+                                {executedWithoutErrors && <Button onClick={this.toggleEditor}
+                                                                  buttonType="secondary"
+                                                                  fullWidth
+                                                                  isDropdown
+                                                                  isOpen={showEditor}
+                                                                  className="ShowHideButton"
+                                >
+                                    {showEditor ? 'Hide' : 'Show'} query editor
+                                </Button>}
+                            </div>
+                            <Button onClick={this.runQuery} icon="arrowPlay" className="ExecuteButton">Run
+                                query</Button>
+                        </Stack>
+                    </div>
 
-                {error && <Alert variant="error" icon="errorCircled">
-                    <strong>An error occurred, please check your query and try again</strong>
-                    {message}
-                </Alert>}
+                    <div className="QueryResults">
+                        {isExecutingQuery && <InlineLoader/>}
+                        {executedWithoutErrors && <SPARQLDataTable
+                            vars={columns}
+                            bindings={rows}
+                            prefixes={prefixes}
+                            fullUrl={distribution.fullUrl}
+                        />}
+
+                        {error && <Alert variant="error" icon="errorCircled">
+                            <strong>An error occurred, please check your query and try again</strong>
+                            {message}
+                        </Alert>}
+                    </div>
+                </Split>
             </MainBody>
 
         </Layout>;

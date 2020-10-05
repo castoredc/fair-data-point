@@ -7,11 +7,10 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
+use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\AccessibleEntity;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,40 +23,17 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModel
      */
-    private $dataModel;
+    private DataModel $dataModel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="distributions")
      * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
-     *
-     * @var DataModelVersion
      */
-    private $currentDataModelVersion;
+    private DataModelVersion $currentDataModelVersion;
 
-    /**
-     * @ORM\OneToMany(targetEntity="DataModelMapping", mappedBy="distribution", cascade={"persist", "remove"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
-     *
-     * @var Collection<DataModelMapping>
-     */
-    private $mappings;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $isCached = false;
-
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=TRUE)
-     *
-     * @var DateTimeImmutable|null
-     */
-    private $lastImport;
+    /** @ORM\Column(type="boolean") */
+    private bool $isCached = false;
 
     public function getDataModel(): DataModel
     {
@@ -74,84 +50,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         return $this->getDistribution()->getRelativeUrl() . '/rdf';
     }
 
-    /**
-     * @return Collection<DataModelMapping>
-     */
-    public function getMappings(): Collection
-    {
-        return $this->mappings;
-    }
-
-    /**
-     * @return Collection<DataModelNodeMapping>
-     */
-    public function getNodeMappings(): Collection
-    {
-        $return = new ArrayCollection();
-
-        foreach ($this->mappings as $mapping) {
-            if (! $mapping instanceof DataModelNodeMapping) {
-                continue;
-            }
-
-            $return->add($mapping);
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return Collection<DataModelModuleMapping>
-     */
-    public function getModuleMappings(): Collection
-    {
-        $return = new ArrayCollection();
-
-        foreach ($this->mappings as $mapping) {
-            if (! $mapping instanceof DataModelModuleMapping) {
-                continue;
-            }
-
-            $return->add($mapping);
-        }
-
-        return $return;
-    }
-
-    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
-    {
-        foreach ($this->getNodeMappings() as $mapping) {
-            /** @var DataModelNodeMapping $mapping */
-            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
-                return $mapping;
-            }
-        }
-
-        return null;
-    }
-
-    public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
-    {
-        foreach ($this->getModuleMappings() as $mapping) {
-            /** @var DataModelModuleMapping $mapping */
-            if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
-                return $mapping;
-            }
-        }
-
-        return null;
-    }
-
-    public function getMappingByModuleForCurrentVersion(DataModelModule $module): ?DataModelModuleMapping
-    {
-        return $this->getMappingByModuleAndVersion($module, $this->currentDataModelVersion);
-    }
-
-    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
-    {
-        return $this->getMappingByNodeAndVersion($node, $this->currentDataModelVersion);
-    }
-
     public function isCached(): bool
     {
         return $this->isCached;
@@ -160,16 +58,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function setIsCached(bool $isCached): void
     {
         $this->isCached = $isCached;
-    }
-
-    public function getLastImport(): ?DateTimeImmutable
-    {
-        return $this->lastImport;
-    }
-
-    public function setLastImport(?DateTimeImmutable $lastImport): void
-    {
-        $this->lastImport = $lastImport;
     }
 
     public function getCurrentDataModelVersion(): DataModelVersion
@@ -184,5 +72,15 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         }
 
         $this->currentDataModelVersion = $dataModelVersion;
+    }
+
+    public function getMappingByModuleForCurrentVersion(DataModelModule $module): ?DataModelModuleMapping
+    {
+        return $this->getStudy()->getMappingByModuleAndVersion($module, $this->currentDataModelVersion);
+    }
+
+    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
+    {
+        return $this->getStudy()->getMappingByNodeAndVersion($node, $this->currentDataModelVersion);
     }
 }

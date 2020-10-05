@@ -11,7 +11,10 @@ class DistributionAccessType extends AbstractEnumType
     public const STUDY_USERS = 2;
     public const STUDY_ADMIN = 3;
 
-    /** @var string[] */
+    /**
+     * @inheritDoc
+     * @var string[]
+     */
     protected static $choices = [
         self::PUBLIC => 'Public',
         self::STUDY_USERS => 'Users with access to the study',

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Catalog;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\AddStudyToCatalogApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
@@ -26,6 +26,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/catalog/{catalog}/study")
@@ -41,8 +42,8 @@ class CatalogStudiesApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            /** @var StudyMetadataFilterApiRequest $parsed */
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof StudyMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetPaginatedStudiesCommand(
@@ -57,8 +58,8 @@ class CatalogStudiesApiController extends ApiController
                 )
             );
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
 
@@ -95,16 +96,16 @@ class CatalogStudiesApiController extends ApiController
         $this->denyAccessUnlessGranted('add', $catalog);
 
         try {
-            /** @var AddStudyToCatalogApiRequest $parsed */
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);
+            assert($parsed instanceof AddStudyToCatalogApiRequest);
 
             $envelope = $bus->dispatch(new GetStudyCommand($parsed->getStudyId()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Study $study */
             $study = $handledStamp->getResult();
+            assert($study instanceof Study);
 
             $this->denyAccessUnlessGranted('edit', $study);
 
@@ -142,16 +143,16 @@ class CatalogStudiesApiController extends ApiController
         $this->denyAccessUnlessGranted('add', $catalog);
 
         try {
-            /** @var AddStudyToCatalogApiRequest $parsed */
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);
+            assert($parsed instanceof AddStudyToCatalogApiRequest);
 
             $envelope = $bus->dispatch(new ImportStudyCommand($parsed->getStudyId()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Study $study */
             $study = $handledStamp->getResult();
+            assert($study instanceof Study);
 
             $this->denyAccessUnlessGranted('edit', $study);
 

@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Person;
 
 class PersonApiResource implements ApiResource
 {
-    /** @var Person */
-    private $person;
+    private Person $person;
 
     public function __construct(Person $person)
     {
@@ -28,6 +27,8 @@ class PersonApiResource implements ApiResource
             'firstName' => $this->person->getFirstName(),
             'middleName' => $this->person->getMiddleName(),
             'lastName' => $this->person->getLastName(),
+            'fullName' => $this->person->getFullName(),
+            'nameOrigin' => $this->person->getNameOrigin()->toString(),
             'email' => $this->person->getEmail(),
             'orcid' => $this->person->getOrcid() !== null ? $this->person->getOrcid()->getValue() : null,
         ];

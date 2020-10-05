@@ -12,17 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FieldOption extends CastorEntity
 {
-    /** @var string|null */
-    private $name;
+    private ?string $name = null;
 
-    /** @var string|null */
-    private $value;
+    private ?string $value = null;
 
-    /** @var int|null */
-    private $groupOrder;
+    private ?int $groupOrder = null;
 
-    /** @var FieldOptionGroup */
-    private $optionGroup;
+    private FieldOptionGroup $optionGroup;
 
     public function __construct(string $id, CastorStudy $study, string $name, ?string $value, ?int $groupOrder)
     {

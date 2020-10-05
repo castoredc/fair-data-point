@@ -8,8 +8,7 @@ use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 
 class StudyStructureApiResource implements ApiResource
 {
-    /** @var StructureCollection */
-    private $structure;
+    private StructureCollection $structure;
 
     public function __construct(StructureCollection $structure)
     {

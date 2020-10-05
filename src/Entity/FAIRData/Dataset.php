@@ -25,39 +25,32 @@ class Dataset implements AccessibleEntity
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
-     *
-     * @var string
      */
-    private $id;
+    private string $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $slug;
+    /** @ORM\Column(type="string") */
+    private string $slug;
 
     /**
      * @ORM\ManyToMany(targetEntity="Catalog", mappedBy="datasets",cascade={"persist"})
      *
      * @var Collection<string, Catalog>
      */
-    private $catalogs;
+    private Collection $catalogs;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset", cascade={"persist"})
+     * @ORM\OrderBy({"slug" = "ASC"})
      *
      * @var Collection<Distribution>
      */
-    private $distributions;
+    private Collection $distributions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=TRUE)
-     *
-     * @var Study|null
      */
-    private $study;
+    private ?Study $study = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DatasetMetadata", mappedBy="dataset", fetch="EAGER")
@@ -65,14 +58,10 @@ class Dataset implements AccessibleEntity
      *
      * @var Collection<DatasetMetadata>
      */
-    private $metadata;
+    private Collection $metadata;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $isPublished = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $isPublished = false;
 
     public function __construct(string $slug)
     {

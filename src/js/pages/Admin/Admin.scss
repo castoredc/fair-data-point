@@ -12,6 +12,7 @@
     .PageContainer {
       display: flex;
       height: 100%;
+      overflow: auto;
     }
   }
 
@@ -25,41 +26,6 @@
     }
   }
 
-  .LeftNav {
-    font-weight: 700;
-    background: $pale-grey;
-
-    .nav {
-      margin: 0 16px;
-      padding: 16px 0 8px;
-    }
-
-    hr {
-      margin: 10px 0 14px 0;
-    }
-
-    a.nav-link {
-      color: $neutral-500;
-      border-radius: 3px;
-      margin-bottom: 4px;
-      text-decoration: none;
-      border: 1px solid transparent;
-
-      &.disabled {
-        color: $neutral-60;
-      }
-
-      &.active {
-        color: $azul;
-        border-color: $azul;
-      }
-
-      &:hover {
-        background: $neutral-30;
-      }
-    }
-  }
-
   .Back {
     padding: 0 16px;
   }
@@ -69,12 +35,6 @@
     overflow: hidden;
     display: flex;
     flex-flow: column;
-  }
-
-  .LeftNav {
-    width: 208px;
-    overflow: hidden;
-    flex: 0 0 208px;
   }
 
   .Page {
@@ -100,6 +60,12 @@
       height: 100%;
       flex: 1;
       overflow: auto;
+
+      .FullHeightPageTab {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
 
       & > div {
         /* Matter Tabs */
@@ -130,6 +96,35 @@
     .TableBody {
       flex: 1;
       overflow: auto;
+    }
+  }
+
+  .RecordLogs {
+    display: flex;
+    height: 100%;
+
+    .RecordLogsDataTable {
+      flex: 1;
+    }
+
+    .RecordLogsDetails {
+      width: 300px;
+      margin-left: 30px;
+      padding-left: 30px;
+      border-left: 1px solid $neutral-40;
+      overflow: auto;
+    }
+  }
+
+  .ErrorLogItem {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $neutral-40;
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
     }
   }
 }

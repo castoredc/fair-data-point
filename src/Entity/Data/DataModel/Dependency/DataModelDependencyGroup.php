@@ -16,19 +16,15 @@ use function array_key_exists;
  */
 class DataModelDependencyGroup extends DataModelDependency
 {
-    /**
-     * @ORM\Column(type="DependencyCombinatorType")
-     *
-     * @var DependencyCombinatorType
-     */
-    private $combinator;
+    /** @ORM\Column(type="DependencyCombinatorType") */
+    private DependencyCombinatorType $combinator;
 
     /**
      * @ORM\OneToMany(targetEntity="DataModelDependency", mappedBy="group", cascade={"persist", "remove"})
      *
      * @var Collection<DataModelDependency>
      */
-    private $rules;
+    private Collection $rules;
 
     public function __construct(DependencyCombinatorType $combinator)
     {

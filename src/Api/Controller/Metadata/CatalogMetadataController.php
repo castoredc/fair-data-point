@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Metadata;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\CatalogMetadataApiRequest;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Message\Metadata\CreateCatalogMetadataCommand;
@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/metadata/catalog/{catalog}")
@@ -30,8 +31,8 @@ class CatalogMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $catalog);
 
         try {
-            /** @var CatalogMetadataApiRequest $parsed */
             $parsed = $this->parseRequest(CatalogMetadataApiRequest::class, $request);
+            assert($parsed instanceof CatalogMetadataApiRequest);
 
             $bus->dispatch(
                 new CreateCatalogMetadataCommand(

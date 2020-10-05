@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\MessageHandler\Distribution;
 
 use App\Encryption\EncryptionService;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
@@ -23,23 +23,17 @@ use function assert;
 
 class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
-    /** @var UriHelper */
-    private $uriHelper;
+    private UriHelper $uriHelper;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         ApiClient $apiClient,
@@ -66,7 +60,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $distribution = $contents->getDistribution();
 
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('access_data', $distribution)) {
             throw new NoAccessPermission();
@@ -78,7 +72,12 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
             $this->entityHelper->useApiUser($apiUser);
         } else {
-            $this->apiClient->setUser($user);
+            if (! $user->hasCastorUser()) {
+                throw new UserNotACastorUser();
+            }
+
+            $this->apiClient->setUser($user->getCastorUser());
+            $this->entityHelper->useUser($user->getCastorUser());
         }
 
         $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
@@ -89,11 +88,12 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $prefixes = $dataModel->getPrefixes();
 
         foreach ($prefixes as $prefix) {
-            /** @var NamespacePrefix $prefix */
             EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 
-        foreach ($command->getRecords() as $record) {
+        $records = $helper->getSubset($command->getRecords());
+
+        foreach ($records as $record) {
             try {
                 $graph = $helper->renderRecord($record, $graph);
             } catch (Throwable $t) {

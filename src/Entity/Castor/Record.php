@@ -5,26 +5,67 @@ namespace App\Entity\Castor;
 
 use App\Entity\Castor\Data\RecordDataCollection;
 use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\CastorRecordRepository")
+ * @ORM\Table(name="castor_record")
+ */
 class Record
 {
-    /** @var string */
-    private $recordId;
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string", length=190)
+     */
+    private string $recordId;
 
-    /** @var RecordDataCollection */
-    private $data;
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="CastorStudy")
+     * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
+     *
+     * phpcs:disable
+     *
+     * @var CastorStudy
+     */
+    private $study;
 
-    /** @var DateTimeImmutable */
-    private $createdOn;
+    /**
+     * phpcs:enable
+     *
+     * @ORM\ManyToOne(targetEntity="Institute", fetch="EAGER", inversedBy="records",cascade={"persist"})
+     * @ORM\JoinColumns({
+     *      @ORM\JoinColumn(name="institute_id", referencedColumnName="id", nullable=FALSE),
+     *      @ORM\JoinColumn(name="study_id", referencedColumnName="study_id", nullable=FALSE)
+     * })
+     */
+    private Institute $institute;
 
-    /** @var DateTimeImmutable */
-    private $updatedOn;
+    private RecordDataCollection $data;
 
-    public function __construct(string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
+    /** @ORM\Column(type="datetime_immutable") */
+    private DateTimeImmutable $createdOn;
+
+    /** @ORM\Column(type="datetime_immutable") */
+    private DateTimeImmutable $updatedOn;
+
+    public function __construct(CastorStudy $study, Institute $institute, string $recordId, DateTimeImmutable $createdOn, DateTimeImmutable $updatedOn)
     {
+        $this->study = $study;
+        $this->institute = $institute;
         $this->recordId = $recordId;
         $this->createdOn = $createdOn;
         $this->updatedOn = $updatedOn;
+    }
+
+    public function getRecordId(): string
+    {
+        return $this->recordId;
+    }
+
+    public function getStudy(): CastorStudy
+    {
+        return $this->study;
     }
 
     public function getData(): RecordDataCollection
@@ -52,15 +93,23 @@ class Record
         return $this->updatedOn;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
-    public static function fromData(array $data): Record
+    public function getInstitute(): Institute
     {
-        return new Record(
-            $data['record_id'],
-            DateTimeImmutable::__set_state($data['created_on']),
-            DateTimeImmutable::__set_state($data['updated_on']),
-        );
+        return $this->institute;
+    }
+
+    public function setInstitute(Institute $institute): void
+    {
+        $this->institute = $institute;
+    }
+
+    public function setCreatedOn(DateTimeImmutable $createdOn): void
+    {
+        $this->createdOn = $createdOn;
+    }
+
+    public function setUpdatedOn(DateTimeImmutable $updatedOn): void
+    {
+        $this->updatedOn = $updatedOn;
     }
 }

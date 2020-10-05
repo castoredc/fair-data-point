@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-
-import {Col, Row} from "react-bootstrap";
 import {paragraphText} from "../../../util";
 import MetadataItem from "../../../components/MetadataItem";
 import Header from "../../../components/Layout/Header";
@@ -9,7 +7,7 @@ import {MethodType, RecruitmentStatus, StudyType} from "../../../components/Meta
 import Tags from "../../../components/Tags";
 import Contacts from "../../../components/MetadataItem/Contacts";
 import Organizations from "../../../components/MetadataItem/Organizations";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import DatasetList from "../../../components/List/DatasetList";
 import Layout from "../../../components/Layout";
@@ -80,7 +78,7 @@ export default class Study extends Component {
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} badge={badge} />
 
             <MainBody isLoading={isLoadingStudy}>
-                {study && <Row>
+                {study && <>
                     <div className="MainCol">
                         {study.metadata.contacts.length > 0 && <Contacts contacts={study.metadata.contacts} />}
 
@@ -103,7 +101,7 @@ export default class Study extends Component {
                         {/*{study.language && <MetadataItem label="Language" url={study.language.url} value={study.language.name} />}*/}
                         {/*{study.landingPage && <MetadataItem label="Landing page" value={study.landingPage} />}*/}
                     </div>
-                </Row>}
+                </>}
             </MainBody>
         </Layout>;
     }

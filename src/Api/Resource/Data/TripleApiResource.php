@@ -8,8 +8,7 @@ use App\Entity\Data\DataModel\Triple;
 
 class TripleApiResource implements ApiResource
 {
-    /** @var Triple */
-    private $triple;
+    private Triple $triple;
 
     public function __construct(Triple $triple)
     {

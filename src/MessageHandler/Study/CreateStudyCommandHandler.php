@@ -11,28 +11,23 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
+use App\Exception\UserNotACastorUser;
 use App\Message\Study\CreateStudyCommand;
 use App\Model\Castor\ApiClient;
-use App\Repository\CastorServerRepository;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
-use App\Security\CastorUser;
+use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function in_array;
 
 class CreateStudyCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /** @var Security */
-    private $security;
-
-    /** @var ApiClient */
-    private $apiClient;
+    private EntityManagerInterface $em;
+    private Security $security;
+    private ApiClient $apiClient;
 
     public function __construct(EntityManagerInterface $em, Security $security, ApiClient $apiClient)
     {
@@ -57,7 +52,6 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
 
         $source = $command->getSource();
 
-        /** @var StudyRepository $repository */
         $repository = $this->em->getRepository(Study::class);
 
         if ($command->getSourceId() !== null && $repository->studyExists($source, $command->getSourceId())) {
@@ -72,7 +66,13 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
         $study = null;
 
         if ($source->isCastor()) {
-            $study = $this->createCastorStudy($command->isManuallyEntered(), $command->getSourceId(), $command->getName(), $command->getSourceServer(), $slug);
+            $study = $this->createCastorStudy(
+                $command->isManuallyEntered(),
+                $command->getSourceId(),
+                $command->getName(),
+                $command->getSourceServer(),
+                $slug
+            );
         }
 
         $this->em->persist($study);
@@ -87,16 +87,22 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
+     * @throws UserNotACastorUser
      */
     private function createCastorStudy(bool $manuallyEntered, ?string $sourceId, ?string $name, ?string $sourceServer, string $slug): CastorStudy
     {
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
-        /** @var CastorServerRepository $serverRepository */
         $serverRepository = $this->em->getRepository(CastorServer::class);
 
-        /** @var CastorUser $user */
         $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $castorUser = $user->getCastorUser();
 
         if ($isAdmin && $manuallyEntered) {
             $study = new CastorStudy($sourceId, $name, $slug);
@@ -104,14 +110,14 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
 
             $server = $serverRepository->find($sourceServer);
         } else {
-            if (! in_array($sourceId, $user->getStudies(), true)) {
+            if (! in_array($sourceId, $castorUser->getStudies(), true)) {
                 throw new NoAccessPermissionToStudy();
             }
 
-            $this->apiClient->setUser($user);
+            $this->apiClient->setUser($castorUser);
             $study = $this->apiClient->getStudy($sourceId);
 
-            $server = $serverRepository->findServerByUrl($user->getServer());
+            $server = $serverRepository->findServerByUrl($castorUser->getServer());
         }
 
         $study->setServer($server);

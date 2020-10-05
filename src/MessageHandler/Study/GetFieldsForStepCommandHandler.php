@@ -8,20 +8,19 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Exception\UserNotACastorUser;
 use App\Message\Study\GetFieldsForStepCommand;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
 class GetFieldsForStepCommandHandler implements MessageHandlerInterface
 {
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(ApiClient $apiClient, Security $security)
     {
@@ -36,12 +35,18 @@ class GetFieldsForStepCommandHandler implements MessageHandlerInterface
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
+     * @throws UserNotACastorUser
      */
     public function __invoke(GetFieldsForStepCommand $message): array
     {
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
-        $this->apiClient->setUser($user);
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->apiClient->setUser($user->getCastorUser());
 
         return $this->apiClient->getFieldByParent($message->getStudy(), $message->getStepId())->toArray();
     }

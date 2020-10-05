@@ -11,14 +11,11 @@ class Version
 {
     public const VERSION_REGEX = '/^(\d+)\.(\d+)\.(\d+)$/m';
 
-    /** @var int */
-    private $major;
+    private int $major;
 
-    /** @var int */
-    private $minor;
+    private int $minor;
 
-    /** @var int */
-    private $patch;
+    private int $patch;
 
     public function __construct(?string $version = null)
     {

@@ -23,14 +23,10 @@ class CSVDistribution extends DistributionContents
      *
      * @var Collection<string, CSVDistributionElement>
      */
-    private $elements;
+    private Collection $elements;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $includeAll = false;
+    /** @ORM\Column(type="boolean") */
+    private bool $includeAll = false;
 
     /** @inheritDoc */
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished, bool $includeAll)

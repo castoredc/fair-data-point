@@ -12,7 +12,7 @@ use function sort;
 class StudyMetadataFilterApiResource implements ApiResource
 {
     /** @var StudyMetadata[] */
-    private $metadata;
+    private array $metadata;
 
     /**
      * @param StudyMetadata[] $metadata
@@ -50,10 +50,7 @@ class StudyMetadataFilterApiResource implements ApiResource
                 $filters = $this->addFilterItem($filters, 'country', $center->getOrganization()->getCountry()->getCode());
             }
 
-            if ($metadata->getMethodType() !== null) {
-                $filters = $this->addFilterItem($filters, 'methodType', $metadata->getMethodType()->toString());
-            }
-
+            $filters = $this->addFilterItem($filters, 'methodType', $metadata->getMethodType()->toString());
             $filters = $this->addFilterItem($filters, 'studyType', $metadata->getType()->toString());
         }
 

@@ -14,24 +14,14 @@ class License
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=190)
-     *
-     * @var string
      */
-    private $slug;
+    private string $slug;
 
-    /**
-     * @ORM\Column(type="iri")
-     *
-     * @var Iri
-     */
-    private $url;
+    /** @ORM\Column(type="iri") */
+    private Iri $url;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string") */
+    private string $name;
 
     public function __construct(string $slug, Iri $url, string $name)
     {

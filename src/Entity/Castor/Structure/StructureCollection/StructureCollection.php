@@ -9,14 +9,11 @@ use App\Entity\Castor\Structure\Survey;
 
 class StructureCollection
 {
-    /** @var PhaseCollection */
-    private $phases;
+    private PhaseCollection $phases;
 
-    /** @var ReportCollection */
-    private $reports;
+    private ReportCollection $reports;
 
-    /** @var SurveyCollection */
-    private $surveys;
+    private SurveyCollection $surveys;
 
     public function __construct()
     {

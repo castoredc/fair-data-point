@@ -7,8 +7,7 @@ use App\Entity\FAIRData\Distribution;
 
 class CreateDistributionDatabaseCommand
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
     public function __construct(Distribution $distribution)
     {

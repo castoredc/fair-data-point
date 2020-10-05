@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Organization;
 class OrganizationsApiResource implements ApiResource
 {
     /** @var Organization[] */
-    private $organizations;
+    private array $organizations;
 
     /**
      * @param Organization[] $organizations

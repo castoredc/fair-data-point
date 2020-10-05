@@ -13,11 +13,9 @@ use Symfony\Component\Security\Core\Security;
 
 class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -27,7 +25,6 @@ class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetCatalogBySlugCommand $command): Catalog
     {
-        /** @var Catalog|null $catalog */
         $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $command->getSlug()]);
 
         if ($catalog === null) {

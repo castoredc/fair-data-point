@@ -5,14 +5,16 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\RDF\DataModelMapping;
-use App\Entity\Data\RDF\DataModelNodeMapping;
+use App\Entity\Data\DataModelMapping\DataModelMapping;
+use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\CreateDataModelNodeMappingCommand;
+use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -21,14 +23,11 @@ use function assert;
 
 class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var CastorEntityHelper */
-    private $entityHelper;
+    private CastorEntityHelper $entityHelper;
 
     public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
     {
@@ -41,21 +40,30 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws InvalidEntityType
+     * @throws UserNotACastorUser
      */
     public function __invoke(CreateDataModelNodeMappingCommand $command): DataModelMapping
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
-        $study = $distribution->getDataset()->getStudy();
+        $study = $distribution->getStudy();
         $dataModelVersion = $command->getDataModelVersion();
 
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
 
+        $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        if (! $user->hasCastorUser()) {
+            throw new UserNotACastorUser();
+        }
+
+        $this->entityHelper->useUser($user->getCastorUser());
+
         assert($study instanceof CastorStudy);
 
-        /** @var ValueNode|null $node */
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
         if ($node === null) {
             throw new NotFound();
@@ -67,11 +75,11 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
             throw new InvalidEntityType();
         }
 
-        if ($contents->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
-            $mapping = $contents->getMappingByNodeAndVersion($node, $dataModelVersion);
+        if ($study->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
+            $mapping = $study->getMappingByNodeAndVersion($node, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelNodeMapping($contents, $node, $element, $dataModelVersion);
+            $mapping = new DataModelNodeMapping($study, $node, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Button, DataTable, Stack} from "@castoredc/matter";
@@ -17,7 +17,7 @@ export default class DataModelPrefixes extends Component {
             },
             isLoadingContents: true,
             hasLoadedContents: false,
-            prefixes:          null,
+            prefixes:          [],
             prefixModalData:   null,
         };
     }
@@ -27,7 +27,7 @@ export default class DataModelPrefixes extends Component {
     }
 
     getContents = () => {
-        const { dataModel, version } = this.props;
+        const {dataModel, version} = this.props;
 
         this.setState({
             isLoadingContents: true,
@@ -98,6 +98,34 @@ export default class DataModelPrefixes extends Component {
         const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
         const {dataModel, version} = this.props;
 
+        const rows = new Map(prefixes.map((item) => {
+            const data = {id: item.id, prefix: item.prefix, uri: item.uri};
+
+            return [
+                item.id,
+                {
+                    cells: [
+                        item.prefix,
+                        item.uri,
+                        [
+                            {
+                                destination: () => {
+                                    this.openModal('add', data)
+                                },
+                                label:       'Edit prefix',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', data)
+                                },
+                                label:       'Delete prefix',
+                            },
+                        ],
+                    ],
+                },
+            ];
+        }));
+
         return <div className="PageBody">
             <DataModelPrefixModal
                 show={showModal.add}
@@ -127,38 +155,19 @@ export default class DataModelPrefixes extends Component {
 
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
-                        <Button icon="add" onClick={() => {
-                            this.openModal('add', null)
-                        }}>Add prefix</Button>
+                    <Button icon="add" onClick={() => {
+                        this.openModal('add', null)
+                    }}>Add prefix</Button>
                 </Stack>
             </div>
 
-                <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
-                    {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
-                            <DataTable
+            <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
+                {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
+                    <DataTable
                         anchorRight={1}
                         emptyTableMessage="This data model does not have prefixes"
                         cellSpacing="default"
-                        rows={prefixes.map((item) => {
-                            return [
-                                item.prefix,
-                                item.uri,
-                                [
-                                    {
-                                        destination: () => {
-                                            this.openModal('add', {id: item.id, prefix: item.prefix, uri: item.uri})
-                                        },
-                                        label:       'Edit prefix',
-                                    },
-                                    {
-                                        destination: () => {
-                                            this.openModal('remove', {id: item.id, prefix: item.prefix, uri: item.uri})
-                                        },
-                                        label:       'Delete prefix',
-                                    },
-                                ],
-                            ];
-                        })}
+                        rows={rows}
                         structure={{
                             id:      {
                                 header:    'Prefix',
@@ -176,8 +185,8 @@ export default class DataModelPrefixes extends Component {
                             },
                         }}
                     />
-                    </div>}
-                </div>
+                </div>}
+            </div>
         </div>;
     }
 }

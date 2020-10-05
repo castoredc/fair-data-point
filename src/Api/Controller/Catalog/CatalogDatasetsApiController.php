@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Catalog;
 
+use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\AddDatasetToCatalogApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
-use App\Controller\Api\ApiController;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
@@ -21,6 +21,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/catalog/{catalog}/dataset")
@@ -36,16 +37,16 @@ class CatalogDatasetsApiController extends ApiController
         $this->denyAccessUnlessGranted('add', $catalog);
 
         try {
-            /** @var AddDatasetToCatalogApiRequest $parsed */
             $parsed = $this->parseRequest(AddDatasetToCatalogApiRequest::class, $request);
+            assert($parsed instanceof AddDatasetToCatalogApiRequest);
 
             $envelope = $bus->dispatch(new GetDatasetCommand($parsed->getDatasetId()));
 
-            /** @var HandledStamp $handledStamp */
             $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
 
-            /** @var Dataset $dataset */
             $dataset = $handledStamp->getResult();
+            assert($dataset instanceof Dataset);
 
             $this->denyAccessUnlessGranted('edit', $dataset);
 

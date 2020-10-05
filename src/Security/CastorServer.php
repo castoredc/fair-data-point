@@ -14,38 +14,20 @@ class CastorServer
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    private $id;
+    private int $id;
 
-    /**
-     * @ORM\Column(type="iri")
-     *
-     * @var Iri
-     */
-    private $url;
+    /** @ORM\Column(type="iri") */
+    private Iri $url;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $name;
+    /** @ORM\Column(type="string", length=255) */
+    private string $name;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     *
-     * @var string
-     */
-    private $flag;
+    /** @ORM\Column(type="string", length=255) */
+    private string $flag;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $default;
+    /** @ORM\Column(type="boolean") */
+    private bool $default;
 
     public function getId(): int
     {

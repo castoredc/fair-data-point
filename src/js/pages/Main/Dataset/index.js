@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios";
-
-import {Col, Row} from "react-bootstrap";
 import {localizedText} from "../../../util";
 import ListItem from "../../../components/ListItem";
-import {toast} from "react-toastify/index";
+import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import Layout from "../../../components/Layout";
@@ -17,12 +15,12 @@ export default class Dataset extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingDataset:       true,
-            hasLoadedDataset:       false,
+            isLoadingDataset: true,
+            hasLoadedDataset: false,
             isLoadingDistributions: true,
             hasLoadedDistributions: false,
-            dataset:                null,
-            distributions:          []
+            dataset: null,
+            distributions: []
         };
     }
 
@@ -46,7 +44,7 @@ export default class Dataset extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the dataset';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
@@ -67,13 +65,13 @@ export default class Dataset extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distributions';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     render() {
-        const { dataset, distributions, isLoadingDataset, isLoadingDistributions } = this.state;
-        const { location, user, embedded } = this.props;
+        const {dataset, distributions, isLoadingDataset, isLoadingDistributions} = this.state;
+        const {location, user, embedded} = this.props;
 
         const breadcrumbs = getBreadCrumbs(location, {dataset});
 
@@ -85,19 +83,21 @@ export default class Dataset extends Component {
             isLoading={isLoadingDataset}
             embedded={embedded}
         >
-            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
+            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title}/>
 
             <MainBody isLoading={isLoadingDataset}>
-                {dataset && <Row>
-                    <div className="MainCol">
-                        {dataset.metadata.description && <div className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>}
+                {dataset && <div className="MainCol">
+                    {dataset.metadata.description && <div
+                        className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>}
 
-                        {isLoadingDistributions ? <InlineLoader /> : distributions.length > 0 ? <div>
-                            <Heading type="Subsection">Distributions</Heading>
-                            <div className="Description">
-                                Distributions represent a specific available form of a dataset. Each dataset might be available in different forms, these forms might represent different formats of the dataset or different endpoints.
-                            </div>
-                            {distributions.map((distribution) => {
+                    {isLoadingDistributions ? <InlineLoader/> : distributions.length > 0 ? <div>
+                        <Heading type="Subsection">Distributions</Heading>
+                        <div className="Description">
+                            Distributions represent a specific available form of a dataset. Each dataset might be
+                            available in different forms, these forms might represent different formats of the dataset
+                            or different endpoints.
+                        </div>
+                        {distributions.map((distribution) => {
                                 return <ListItem key={distribution.id}
                                                  newWindow={embedded}
                                                  link={{
@@ -107,11 +107,11 @@ export default class Dataset extends Component {
                                                  title={localizedText(distribution.metadata.title, 'en')}
                                                  description={localizedText(distribution.metadata.description, 'en')}
                                                  smallIcon={(distribution.accessRights === 2 || distribution.accessRights === 3) && 'lock'}
-                                />}
-                            )}
-                        </div> : <div className="NoResults">This dataset does not have any associated distributions.</div>}
-                    </div>
-                </Row>}
+                                />
+                            }
+                        )}
+                    </div> : <div className="NoResults">This dataset does not have any associated distributions.</div>}
+                </div>}
             </MainBody>
         </Layout>;
     }

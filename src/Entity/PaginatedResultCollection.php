@@ -12,16 +12,13 @@ use function count;
 class PaginatedResultCollection implements Countable, IteratorAggregate
 {
     /** @var mixed[] */
-    private $results;
+    private array $results;
 
-    /** @var int */
-    private $currentPage;
+    private int $currentPage;
 
-    /** @var int */
-    private $perPage;
+    private int $perPage;
 
-    /** @var int */
-    private $totalResults;
+    private int $totalResults;
 
     /**
      * @param mixed[] $results

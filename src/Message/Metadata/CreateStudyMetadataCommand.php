@@ -7,52 +7,35 @@ use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
 use App\Entity\Study;
-use App\Security\CastorUser;
 use DateTimeImmutable;
 
 class CreateStudyMetadataCommand
 {
-    /** @var Study */
-    private $study;
+    private Study $study;
 
-    /** @var string */
-    private $briefName;
+    private string $briefName;
 
-    /** @var string|null */
-    private $scientificName;
+    private ?string $scientificName = null;
 
-    /** @var string */
-    private $briefSummary;
+    private string $briefSummary;
 
-    /** @var string|null */
-    private $summary;
+    private ?string $summary = null;
 
-    /** @var StudyType */
-    private $type;
+    private StudyType $type;
 
-    /** @var string|null */
-    private $condition;
+    private ?string $condition = null;
 
-    /** @var string|null */
-    private $intervention;
+    private ?string $intervention = null;
 
-    /** @var int */
-    private $estimatedEnrollment;
+    private int $estimatedEnrollment;
 
-    /** @var DateTimeImmutable|null */
-    private $estimatedStudyStartDate;
+    private ?DateTimeImmutable $estimatedStudyStartDate = null;
 
-    /** @var DateTimeImmutable|null */
-    private $estimatedStudyCompletionDate;
+    private ?DateTimeImmutable $estimatedStudyCompletionDate = null;
 
-    /** @var RecruitmentStatus|null */
-    private $recruitmentStatus;
+    private ?RecruitmentStatus $recruitmentStatus = null;
 
-    /** @var MethodType|null */
-    private $methodType;
-
-    /** @var CastorUser */
-    private $user;
+    private ?MethodType $methodType = null;
 
     public function __construct(
         Study $study,
@@ -67,8 +50,7 @@ class CreateStudyMetadataCommand
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         ?RecruitmentStatus $recruitmentStatus,
-        ?MethodType $methodType,
-        CastorUser $user
+        ?MethodType $methodType
     ) {
         $this->study = $study;
         $this->briefName = $briefName;
@@ -83,7 +65,6 @@ class CreateStudyMetadataCommand
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
         $this->recruitmentStatus = $recruitmentStatus;
         $this->methodType = $methodType;
-        $this->user = $user;
     }
 
     public function getStudy(): Study
@@ -149,10 +130,5 @@ class CreateStudyMetadataCommand
     public function getMethodType(): ?MethodType
     {
         return $this->methodType;
-    }
-
-    public function getUser(): CastorUser
-    {
-        return $this->user;
     }
 }

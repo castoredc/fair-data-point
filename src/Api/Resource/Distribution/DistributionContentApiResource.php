@@ -13,8 +13,7 @@ use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource
 {
-    /** @var Distribution */
-    private $distribution;
+    private Distribution $distribution;
 
     public function __construct(Distribution $distribution)
     {
@@ -30,9 +29,11 @@ class DistributionContentApiResource implements ApiResource
             return [];
         }
 
-        $data = [];
-
         $contents = $this->distribution->getContents();
+
+        $data = [
+            'dependencies' => $contents->getDependencies() !== null ? (new DistributionContentsDependencyApiResource($contents->getDependencies()))->toArray() : null,
+        ];
 
         if ($contents instanceof CSVDistribution) {
             $elements = [];

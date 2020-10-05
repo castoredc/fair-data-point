@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Language;
 
 class LanguageApiResource implements ApiResource
 {
-    /** @var Language */
-    private $language;
+    private Language $language;
 
     public function __construct(Language $language)
     {

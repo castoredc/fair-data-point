@@ -1,5 +1,4 @@
 import React from 'react';
-import Form from "react-bootstrap/Form";
 import {ValidatorComponent} from "react-form-validator-core";
 import {ChoiceOption, TextStyle} from "@castoredc/matter";
 import './Input.scss'

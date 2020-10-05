@@ -8,8 +8,7 @@ use App\Entity\FAIRData\Organization;
 
 class OrganizationApiResource implements ApiResource
 {
-    /** @var Organization */
-    private $organization;
+    private Organization $organization;
 
     public function __construct(Organization $organization)
     {

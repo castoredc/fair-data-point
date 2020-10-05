@@ -12,14 +12,13 @@ use App\Message\Agent\CreateDepartmentAndOrganizationCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
     {
@@ -33,8 +32,8 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
             throw new NoAccessPermissionToStudy();
         }
 
-        /** @var Country|null $country */
         $country = $this->em->getRepository(Country::class)->find($message->getCountry());
+        assert($country instanceof Country || $country === null);
 
         if ($country === null) {
             throw new CountryNotFound();

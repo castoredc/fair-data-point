@@ -11,10 +11,11 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderCSVDistributionCommand;
 use App\MessageHandler\CSVCommandHandler;
 use App\Model\Castor\ApiClient;
-use App\Security\CastorUser;
+use App\Security\User;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;
@@ -24,14 +25,11 @@ use function count;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
-    /** @var ApiClient */
-    private $apiClient;
+    private ApiClient $apiClient;
 
-    /** @var Security */
-    private $security;
+    private Security $security;
 
-    /** @var EncryptionService */
-    private $encryptionService;
+    private EncryptionService $encryptionService;
 
     public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
     {
@@ -49,7 +47,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $distribution = $contents->getDistribution();
 
         $user = $this->security->getUser();
-        assert($user instanceof CastorUser);
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('access_data', $distribution)) {
             throw new NoAccessPermission();
@@ -61,7 +59,11 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
             $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
         } else {
-            $this->apiClient->setUser($user);
+            if (! $user->hasCastorUser()) {
+                throw new UserNotACastorUser();
+            }
+
+            $this->apiClient->setUser($user->getCastorUser());
         }
 
         $study = $this->apiClient->getStudy($dbStudy->getId());
@@ -73,7 +75,6 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $columns = ['record_id'];
 
         foreach ($studyFields as $field) {
-            /** @var Field $field */
             if (! $message->getDistribution()->isFieldIncluded($field)) {
                 continue;
             }
@@ -88,6 +89,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             if (count($recordData) <= 0) {
                 continue;
             }
+
             $recordData['record_id'] = $record->getId();
             $data[] = $recordData;
         }

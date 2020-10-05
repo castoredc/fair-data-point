@@ -26,6 +26,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function dump;
 use function time;
 use function urlencode;
 
@@ -50,26 +51,26 @@ class RDFDistributionController extends FAIRDataController
 
         try {
             if ($contents->isCached()) {
-                /** @var HandledStamp $handledStamp */
                 $handledStamp = $bus->dispatch(new GetRDFFromStoreCommand($contents, $record))->last(HandledStamp::class);
+                assert($handledStamp instanceof HandledStamp);
 
                 $turtle = $handledStamp->getResult();
             } else {
                 if ($record !== null) {
-                    /** @var HandledStamp $handledStamp */
                     $handledStamp = $bus->dispatch(new GetRecordCommand($distribution, $record))->last(HandledStamp::class);
+                    assert($handledStamp instanceof HandledStamp);
                     $records = [$handledStamp->getResult()];
                 } else {
-                    /** @var HandledStamp $handledStamp */
                     $handledStamp = $bus->dispatch(new GetRecordsCommand($distribution))->last(HandledStamp::class);
+                    assert($handledStamp instanceof HandledStamp);
                     $records = $handledStamp->getResult();
                 }
 
-                /** @var HandledStamp $handledStamp */
                 $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents))->last(HandledStamp::class);
+                assert($handledStamp instanceof HandledStamp);
 
-                /** @var EasyRdf_Graph $graph */
                 $graph = $handledStamp->getResult();
+                assert($graph instanceof EasyRdf_Graph);
                 $turtle = $graph->serialise('turtle');
             }
         } catch (HandlerFailedException $e) {
@@ -85,15 +86,20 @@ class RDFDistributionController extends FAIRDataController
                     ]
                 );
             }
+
             if ($e instanceof NoAccessPermissionToStudy) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
             if ($e instanceof NoAccessPermission) {
                 return new JsonResponse($e->toArray(), 403);
             }
+
             if ($e instanceof NotFound) {
                 return new JsonResponse($e->toArray(), 404);
             }
+
+            dump($e);
 
             return new JsonResponse([], 500);
         }

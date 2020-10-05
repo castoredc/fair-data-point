@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 class FAIRDataPointController extends FAIRDataController
 {
@@ -21,11 +22,11 @@ class FAIRDataPointController extends FAIRDataController
     {
         $envelope = $bus->dispatch(new GetFAIRDataPointCommand());
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
-        /** @var FAIRDataPoint $fdp */
         $fdp = $handledStamp->getResult();
+        assert($fdp instanceof FAIRDataPoint);
 
         if ($this->acceptsHttp($request)) {
             return $this->render(

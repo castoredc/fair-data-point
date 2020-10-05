@@ -1,11 +1,9 @@
 import React, {Component} from 'react'
 import './FullScreenSteppedForm.scss'
 import {classNames} from "../../util";
-import Container from "react-bootstrap/Container";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import DocumentTitle from "../DocumentTitle";
-import {CastorLogo} from "@castoredc/matter";
+import {CastorLogo, Stack} from "@castoredc/matter";
+import MainBody from "../Layout/MainBody";
 
 export default class FullScreenSteppedForm extends Component {
     getBreadCrumbs = () => {
@@ -27,10 +25,10 @@ export default class FullScreenSteppedForm extends Component {
     render() {
         const {brandText, currentStep, smallHeading, heading, description, children} = this.props;
 
-        return <Container className="FullScreenSteppedFormContainer">
+        return <MainBody className="FullScreenSteppedFormContainer">
             <DocumentTitle title={brandText + ' | ' + heading}/>
-            <Row className="FullScreenSteppedFormTop">
-                <Col lg={6}>
+            <div className="FullScreenSteppedFormTop">
+                <Stack distribution="equalSpacing">
                     <div className="FullScreenSteppedFormBrand">
                         <div className="FullScreenSteppedFormBrandLogo">
                             <CastorLogo className="Logo" />
@@ -39,13 +37,12 @@ export default class FullScreenSteppedForm extends Component {
                             {brandText}
                         </div>
                     </div>
-                </Col>
-                <Col lg={6}>
+
                     {currentStep && <div className="FullScreenSteppedFormBreadcrumbs">
                         {this.getBreadCrumbs()}
                     </div>}
-                </Col>
-            </Row>
+                </Stack>
+            </div>
             <div className="FullScreenSteppedForm">
                 <div className="FullScreenSteppedFormHeader">
                     {smallHeading && <div className="FullScreenSteppedFormStepNumber">{smallHeading}</div>}
@@ -57,6 +54,6 @@ export default class FullScreenSteppedForm extends Component {
                     {children}
                 </div>
             </div>
-        </Container>;
+        </MainBody>;
     }
 }

@@ -5,8 +5,6 @@ namespace App\MessageHandler\Data;
 
 use App\Api\Resource\Data\DataModelModuleRDFPreviewApiResource;
 use App\Api\Resource\Data\DataModelRDFPreviewApiResource;
-use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -27,8 +25,7 @@ use function assert;
 
 class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
 {
-    /** @var Security */
-    private $security;
+    private Security $security;
 
     public function __construct(Security $security)
     {
@@ -53,15 +50,15 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
         $modules = $dataModel->getModules();
         $prefixes = $dataModel->getPrefixes();
 
+        $dataModelTriples = [];
+
         foreach ($prefixes as $prefix) {
-            /** @var NamespacePrefix $prefix */
             EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 
         foreach ($modules as $module) {
             $moduleGraph = new EasyRdf_Graph();
 
-            /** @var DataModelModule $module */
             $triples = $module->getTriples();
 
             foreach ($triples as $triple) {
@@ -87,12 +84,14 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                     $fullGraph->add($subjectInFullGraph, $predicateUri, $fullGraph->resource($this->getValue($object)));
                     $moduleGraph->add($subjectInModuleGraph, $predicateUri, $moduleGraph->resource($this->getValue($object)));
                 }
+
+                $dataModelTriples[] = $triple;
             }
 
             $modulePreviews[] = new DataModelModuleRDFPreviewApiResource($module, $moduleGraph->serialise('turtle'));
         }
 
-        return new DataModelRDFPreviewApiResource($modulePreviews, $fullGraph->serialise('turtle'));
+        return new DataModelRDFPreviewApiResource($dataModelTriples, $modulePreviews, $fullGraph->serialise('turtle'));
     }
 
     private function getValue(Node $node): string
@@ -110,19 +109,23 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 }
 
                 if ($placeholderType->isInstituteName()) {
-                    return '##Insitute Name##';
+                    return '##Institute Name##';
                 }
 
                 if ($placeholderType->isInstituteAbbreviation()) {
-                    return '##Insitute Abbreviation##';
+                    return '##Institute Abbreviation##';
                 }
 
                 if ($placeholderType->isInstituteCode()) {
-                    return '##Insitute Code##';
+                    return '##Institute Code##';
                 }
 
-                if ($placeholderType->isInstituteCountryId()) {
-                    return '##Insitute Country ID##';
+                if ($placeholderType->isInstituteCountryCode()) {
+                    return '##Institute Country Code##';
+                }
+
+                if ($placeholderType->isInstituteCountryName()) {
+                    return '##Institute Country Name##';
                 }
             }
 

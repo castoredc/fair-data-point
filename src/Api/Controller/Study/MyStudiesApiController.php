@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Api\Controller\Study;
 
-use App\Controller\Api\ApiController;
+use App\Api\Controller\ApiController;
 use App\Message\Study\FindStudiesByUserCommand;
-use App\Security\CastorUser;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use function assert;
 
 /**
  * @Route("/api/study")
@@ -24,12 +25,12 @@ class MyStudiesApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var CastorUser $user */
         $user = $this->getUser();
+        assert($user instanceof User);
         $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
 
-        /** @var HandledStamp $handledStamp */
         $handledStamp = $envelope->last(HandledStamp::class);
+        assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse($handledStamp->getResult());
     }

@@ -1,6 +1,5 @@
 import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
-import Form from 'react-bootstrap/Form'
 import AsyncSelect from 'react-select/async';
 import {ChoiceOption, Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
 
@@ -19,7 +18,7 @@ class Dropdown extends ValidatorComponent {
     }
 
     loadOptions = (inputValue, callback) => {
-        const { loadOptions } = this.props;
+        const {loadOptions} = this.props;
 
         if (this.timeout) {
             clearTimeout(this.timeout);
@@ -38,38 +37,42 @@ class Dropdown extends ValidatorComponent {
     };
 
     render() {
-        const {   serverError,
-                  placeholder,
-                  isDisabled,
-                  options,
-                  value,
-                  width,
-                  async = false,
-                  onChange,
-                  isMulti = false,
-                  menuPosition,
-              } = this.props;
-        const { cachedOptions, isValid } = this.state;
+        const {
+            serverError,
+            placeholder,
+            isDisabled,
+            options,
+            value,
+            width,
+            async = false,
+            onChange,
+            isMulti = false,
+            isGrouped = false,
+            menuPosition,
+        } = this.props;
+        const {cachedOptions, isValid} = this.state;
 
         let SelectComponent = null;
 
         let dropdownValue = value;
 
-        if(typeof dropdownValue !== 'object' && dropdownValue !== null) {
+        if (typeof dropdownValue !== 'object' && dropdownValue !== null && ! isGrouped) {
             dropdownValue = options.find((option) => option.value === dropdownValue);
         }
 
-        if(async) {
+        if (async) {
             SelectComponent = <AsyncSelect
                 loadOptions={this.loadOptions}
                 options={cachedOptions}
                 openMenuOnClick={false}
-                ref={(r) => { this.input = r; }}
+                ref={(r) => {
+                    this.input = r;
+                }}
                 menuPosition="fixed"
                 menuPlacement="auto"
                 onChange={onChange}
             />
-        } else if(isMulti) {
+        } else if (isMulti) {
             const CustomOption = props => (
                 <components.Option className="DropdownMultiOption" {...props}>
                     <ChoiceOption
@@ -80,11 +83,11 @@ class Dropdown extends ValidatorComponent {
                 </components.Option>
             );
 
-            const MultiValue = ({ children, ...props }) => {
+            const MultiValue = ({children, ...props}) => {
                 const value = props.getValue();
 
                 if (value.length === 1) {
-                    return  <div>{value[0].label}</div>;
+                    return <div>{value[0].label}</div>;
                 }
 
                 if (value.length === options.length) {
@@ -129,7 +132,9 @@ class Dropdown extends ValidatorComponent {
 
         return (
             <div className="Select" onClick={this.props.onClick}
-                        ref={(r) => { this.input = r; }}>
+                 ref={(r) => {
+                     this.input = r;
+                 }}>
                 {SelectComponent}
                 {this.errorText()}
                 {serverError && serverError.map((errorText, index) => (
@@ -142,7 +147,7 @@ class Dropdown extends ValidatorComponent {
     }
 
     errorText() {
-        const { isValid } = this.state;
+        const {isValid} = this.state;
 
         if (isValid) {
             return null;
