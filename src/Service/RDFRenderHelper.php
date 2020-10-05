@@ -34,8 +34,8 @@ use App\Exception\SessionTimedOut;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
 use DateTimeImmutable;
-use EasyRdf_Graph;
-use EasyRdf_Literal;
+use EasyRdf\Graph;
+use EasyRdf\Literal;
 use function assert;
 use function boolval;
 use function count;
@@ -75,7 +75,7 @@ class RDFRenderHelper
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    public function renderRecord(Record $record, EasyRdf_Graph $graph): EasyRdf_Graph
+    public function renderRecord(Record $record, Graph $graph): Graph
     {
         $record = $this->apiClient->getRecordDataCollection($this->study, $record);
 
@@ -135,7 +135,7 @@ class RDFRenderHelper
         return $uri;
     }
 
-    private function renderModule(RecordData $data, EasyRdf_Graph $graph, DataModelModule $module): void
+    private function renderModule(RecordData $data, Graph $graph, DataModelModule $module): void
     {
         if ($module->isDependent()) {
             $shouldRender = $this->parseDependencies($module->getDependencies(), $data);
@@ -165,7 +165,7 @@ class RDFRenderHelper
             if ($isLiteral) {
                 assert($object instanceof LiteralNode || $object instanceof ValueNode);
 
-                $literal = new EasyRdf_Literal($value, null, 'xsd:' . $object->getDataType()->toString());
+                $literal = new Literal($value, null, 'xsd:' . $object->getDataType()->toString());
                 $graph->addLiteral($subject, $predicate, $literal);
             } else {
                 $graph->add($subject, $predicate, $graph->resource($value));

@@ -5,7 +5,7 @@ namespace App\Graph\Resource\Agent;
 
 use App\Entity\FAIRData\Agent;
 use App\Graph\Resource\GraphResource;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 abstract class AgentGraphResource implements GraphResource
 {
@@ -16,12 +16,12 @@ abstract class AgentGraphResource implements GraphResource
         $this->agent = $agent;
     }
 
-    public function toGraph(string $baseUrl = ''): EasyRdf_Graph
+    public function toGraph(string $baseUrl = ''): Graph
     {
-        return $this->addToGraph($baseUrl, null, null, new EasyRdf_Graph());
+        return $this->addToGraph($baseUrl, null, null, new Graph());
     }
 
-    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
+    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, Graph $graph): Graph
     {
         $url = $baseUrl . $this->agent->getRelativeUrl();
         $graph->addResource($url, 'a', 'foaf:Agent');

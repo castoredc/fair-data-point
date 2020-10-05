@@ -12,8 +12,8 @@ use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
-use EasyRdf_Graph;
-use EasyRdf_Namespace;
+use EasyRdf\Graph;
+use EasyRdf\RdfNamespace;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -54,7 +54,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
     /**
      * @throws Exception
      */
-    public function __invoke(RenderRDFDistributionCommand $command): EasyRdf_Graph
+    public function __invoke(RenderRDFDistributionCommand $command): Graph
     {
         $contents = $command->getDistribution();
         $distribution = $contents->getDistribution();
@@ -82,13 +82,13 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 
         $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
 
-        $graph = new EasyRdf_Graph();
+        $graph = new Graph();
 
         $dataModel = $contents->getCurrentDataModelVersion();
         $prefixes = $dataModel->getPrefixes();
 
         foreach ($prefixes as $prefix) {
-            EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
+            RdfNamespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 
         foreach ($command->getRecords() as $record) {

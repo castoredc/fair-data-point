@@ -6,7 +6,7 @@ namespace App\Graph\Resource\Catalog;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\GraphResource;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 class CatalogGraphResource implements GraphResource
 {
@@ -17,9 +17,9 @@ class CatalogGraphResource implements GraphResource
         $this->catalog = $catalog;
     }
 
-    public function toGraph(string $baseUrl): EasyRdf_Graph
+    public function toGraph(string $baseUrl): Graph
     {
-        $graph = new EasyRdf_Graph();
+        $graph = new Graph();
         $url = $baseUrl . $this->catalog->getRelativeUrl();
         $metadata = $this->catalog->getLatestMetadata();
 
