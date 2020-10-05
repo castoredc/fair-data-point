@@ -384,12 +384,12 @@ class StudyMetadata
         $this->consentSocialMedia = $consentSocialMedia;
     }
 
-    public function getMethodType(): ?MethodType
+    public function getMethodType(): MethodType
     {
         return $this->methodType;
     }
 
-    public function setMethodType(?MethodType $methodType): void
+    public function setMethodType(MethodType $methodType): void
     {
         $this->methodType = $methodType;
     }

@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Catalog;
 
 class GetPaginatedDatasetsCommand
 {
-    private Catalog $catalog;
+    private ?Catalog $catalog;
 
     private ?string $search = null;
 

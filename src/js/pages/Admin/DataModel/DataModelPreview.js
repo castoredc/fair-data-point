@@ -81,7 +81,7 @@ export default class DataModelPreview extends Component {
         });
 
         return <div className="PageBody">
-            {previews.modules.length === 0 ? <div className="NoResults">This data model does not have modules.</div> : <SideTabs
+            {previews.modules.length === 0 ? <div className="NoResults">This data model does not have groups.</div> : <SideTabs
                 hasTabs
                 title="Groups"
                 tabs={[

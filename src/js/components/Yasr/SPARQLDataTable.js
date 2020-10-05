@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {DataTable} from "@castoredc/matter";
+import {DataTable, Link} from "@castoredc/matter";
 
 export default class SPARQLDataTable extends Component {
     constructor(props) {
@@ -62,8 +62,8 @@ export default class SPARQLDataTable extends Component {
             prefixed = true;
         }
 
-        return <span>{prefixed ? "" : "<"}<a className='iri' href={href}
-                                             target="_blank">{visibleString}</a>{prefixed ? "" : ">"}</span>;
+        return <span>{prefixed ? "" : "<"}<Link className='iri' href={href}
+                                             target="_blank">{visibleString}</Link>{prefixed ? "" : ">"}</span>;
     };
 
     getCellContent = (bindings, sparqlVar) => {
@@ -85,7 +85,7 @@ export default class SPARQLDataTable extends Component {
             stringRepresentation = <span>{stringRepresentation} <sup>{literalBinding["xml:lang"]}</sup></span>;
         } else if (literalBinding.datatype) {
             const dataType = this.getUriLinkFromBinding({type: "uri", value: literalBinding.datatype}, prefixes);
-            stringRepresentation = <span>{stringRepresentation} <sup>^^{dataType}</sup></span>;
+            stringRepresentation = <span>{stringRepresentation} <sup className="DataType">^^{dataType}</sup></span>;
         }
         return stringRepresentation;
     };
@@ -94,7 +94,7 @@ export default class SPARQLDataTable extends Component {
         const rows = this.getRows();
         const columns = this.getColumns();
 
-        return <div className="QueryResults DataTableWrapper">
+        return <div className="DataTableWrapper">
             <DataTable structure={columns} rows={rows}/>
         </div>;
     }

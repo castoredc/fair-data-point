@@ -40,13 +40,14 @@ class Dataset implements AccessibleEntity
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="dataset", cascade={"persist"})
+     * @ORM\OrderBy({"slug" = "ASC"})
      *
      * @var Collection<Distribution>
      */
     private Collection $distributions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="datasets")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=TRUE)
      */
     private ?Study $study = null;

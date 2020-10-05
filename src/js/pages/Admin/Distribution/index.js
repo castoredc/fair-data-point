@@ -14,6 +14,7 @@ import DistributionLogs from "./DistributionLogs";
 import DistributionLog from "./DistributionLog";
 import DocumentTitle from "../../../components/DocumentTitle";
 import SideBar from "../../../components/SideBar";
+import DistributionSubset from "./DistributionSubset";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -21,8 +22,8 @@ export default class Distribution extends Component {
         this.state = {
             isLoadingDistribution: true,
             hasLoadedDistribution: false,
-            distribution:          null,
-            dataset:               props.match.params.dataset,
+            distribution: null,
+            dataset: props.match.params.dataset,
         };
     }
 
@@ -38,7 +39,7 @@ export default class Distribution extends Component {
         axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution)
             .then((response) => {
                 this.setState({
-                    distribution:          response.data,
+                    distribution: response.data,
                     isLoadingDistribution: false,
                     hasLoadedDistribution: true,
                 });
@@ -77,26 +78,37 @@ export default class Distribution extends Component {
                 customIcon: 'metadata'
             },
             {
+                to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/subset',
+                exact: true,
+                title: 'Subset',
+                icon: 'selectList'
+            },
+            {
                 type: 'separator'
             }
         ];
 
-        if(distribution.type === 'rdf') {
+        if (distribution.type === 'rdf') {
             sidebarItems.push(
                 {
                     to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Mappings',
                     icon: 'order'
-                },
-                {
-                    to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log',
-                    exact: true,
-                    title: 'Log',
-                    icon: 'summary'
                 }
             );
-        } else if(distribution.type === 'csv') {
+
+            if (distribution.isCached) {
+                sidebarItems.push(
+                    {
+                        to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log',
+                        exact: true,
+                        title: 'Log',
+                        icon: 'summary'
+                    }
+                );
+            }
+        } else if (distribution.type === 'csv') {
             sidebarItems.push(
                 {
                     to: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents',
@@ -139,6 +151,9 @@ export default class Distribution extends Component {
                                                                distribution={distribution}/>}/>
                     <Route path="/admin/dataset/:dataset/distribution/:distribution/log" exact
                            render={(props) => <DistributionLogs {...props} dataset={dataset}
+                                                                distribution={distribution}/>}/>
+                    <Route path="/admin/dataset/:dataset/distribution/:distribution/subset" exact
+                           render={(props) => <DistributionSubset {...props} dataset={dataset}
                                                                 distribution={distribution}/>}/>
                     <Route component={NotFound}/>
                 </Switch>

@@ -5,8 +5,8 @@ namespace App\MessageHandler\Distribution;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\RDF\DataModelMapping;
-use App\Entity\Data\RDF\DataModelNodeMapping;
+use App\Entity\Data\DataModelMapping\DataModelMapping;
+use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
@@ -46,7 +46,7 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
-        $study = $distribution->getDataset()->getStudy();
+        $study = $distribution->getStudy();
         $dataModelVersion = $command->getDataModelVersion();
 
         if (! $this->security->isGranted('edit', $distribution)) {
@@ -75,11 +75,11 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
             throw new InvalidEntityType();
         }
 
-        if ($contents->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
-            $mapping = $contents->getMappingByNodeAndVersion($node, $dataModelVersion);
+        if ($study->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
+            $mapping = $study->getMappingByNodeAndVersion($node, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelNodeMapping($contents, $node, $element, $dataModelVersion);
+            $mapping = new DataModelNodeMapping($study, $node, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

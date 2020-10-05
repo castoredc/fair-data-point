@@ -8,7 +8,7 @@ use App\Api\Request\Distribution\DataModelMappingApiRequest;
 use App\Api\Resource\Distribution\DataModelMappingApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\RDF\DataModelMapping;
+use App\Entity\Data\DataModelMapping\DataModelMapping;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Enum\DataModelMappingType;
 use App\Entity\FAIRData\Dataset;

@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\RDF;
+namespace App\Entity\Data\DataModelMapping;
 
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\Study;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,9 +20,9 @@ class DataModelNodeMapping extends DataModelMapping
      */
     private ?Node $node = null;
 
-    public function __construct(RDFDistribution $distribution, Node $node, CastorEntity $entity, DataModelVersion $dataModelVersion)
+    public function __construct(Study $study, Node $node, CastorEntity $entity, DataModelVersion $dataModelVersion)
     {
-        parent::__construct($distribution, $entity, $dataModelVersion);
+        parent::__construct($study, $entity, $dataModelVersion);
 
         $this->node = $node;
     }

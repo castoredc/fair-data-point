@@ -91,7 +91,9 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
             RdfNamespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 
-        foreach ($command->getRecords() as $record) {
+        $records = $helper->getSubset($command->getRecords());
+
+        foreach ($records as $record) {
             try {
                 $graph = $helper->renderRecord($record, $graph);
             } catch (Throwable $t) {

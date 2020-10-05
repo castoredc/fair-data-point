@@ -127,7 +127,7 @@ export const Node = (title, type, value, repeated) => {
         </div>}
         {(type === "literal") && <div className="NodeInfo Literal">
             <span>
-                {value.value} (${value.dataType})
+                {value.value} ({value.dataType})
             </span>
         </div>}
     </div>;

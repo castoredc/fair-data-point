@@ -12,9 +12,9 @@ class Layout extends React.Component {
     }
 
     render() {
-        const { children, className, isLoading, embedded } = this.props;
+        const { children, className, isLoading, embedded, fullWidth } = this.props;
 
-        return <div className={classNames('MainApp', className, embedded && 'Embedded')}>
+        return <div className={classNames('MainApp', className, embedded && 'Embedded', fullWidth && 'FullWidthApp')}>
             {children}
         </div>;
     }

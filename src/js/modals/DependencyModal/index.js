@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Modal from "../Modal";
-import DependencyEditor from "../../components/DependencyEditor";
+import ModuleDependencyEditor from "../../components/DependencyEditor/ModuleDependencyEditor";
 import {formatQuery} from "react-querybuilder";
 import Alert from "../../components/Alert";
 
@@ -71,7 +71,7 @@ export default class DependencyModal extends Component {
                 There were no dependency conditions found, please add one or more conditions
             </Alert>}
 
-            <DependencyEditor
+            <ModuleDependencyEditor
                 valueNodes={valueNodes}
                 prefixes={prefixes}
                 value={dependencies}

@@ -115,7 +115,7 @@ export default class DataModelNodes extends Component {
                 {
                     cells: [
                         item.title,
-                        item.value,
+                        item.value.value,
                         item.value.dataType,
                     ],
                 },

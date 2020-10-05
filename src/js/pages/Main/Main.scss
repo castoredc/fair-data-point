@@ -169,6 +169,13 @@
         margin-left: auto;
     }
 
+    &.FullWidthApp {
+        .container {
+            max-width: none;
+            padding: 0 30px;
+        }
+    }
+
     @media (min-width: 576px) {
         .container {
             max-width: 540px;
