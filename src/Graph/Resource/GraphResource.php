@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Graph\Resource;
 
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 interface GraphResource
 {
-    public function toGraph(string $baseUrl): EasyRdf_Graph;
+    public function toGraph(string $baseUrl): Graph;
 
-    // public function addToGraph(?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph;
+    // public function addToGraph(?string $subject, ?string $predicate, Graph $graph): Graph;
 }

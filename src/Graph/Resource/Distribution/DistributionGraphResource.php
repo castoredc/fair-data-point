@@ -7,7 +7,7 @@ use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\GraphResource;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 class DistributionGraphResource implements GraphResource
 {
@@ -18,9 +18,9 @@ class DistributionGraphResource implements GraphResource
         $this->distribution = $distribution;
     }
 
-    public function toGraph(string $baseUrl): EasyRdf_Graph
+    public function toGraph(string $baseUrl): Graph
     {
-        $graph = new EasyRdf_Graph();
+        $graph = new Graph();
         $url = $baseUrl . $this->distribution->getRelativeUrl();
         $metadata = $this->distribution->getLatestMetadata();
 

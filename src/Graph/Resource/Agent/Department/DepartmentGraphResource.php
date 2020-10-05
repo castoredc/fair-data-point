@@ -6,7 +6,7 @@ namespace App\Graph\Resource\Agent\Department;
 use App\Entity\FAIRData\Department;
 use App\Graph\Resource\Agent\AgentGraphResource;
 use App\Graph\Resource\Agent\Organization\OrganizationGraphResource;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 class DepartmentGraphResource extends AgentGraphResource
 {
@@ -19,7 +19,7 @@ class DepartmentGraphResource extends AgentGraphResource
         parent::__construct($department);
     }
 
-    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
+    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, Graph $graph): Graph
     {
         return (new OrganizationGraphResource($this->department->getOrganization()))->addToGraph($baseUrl, $subject, $predicate, $graph);
     }

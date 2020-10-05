@@ -20,8 +20,8 @@ use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyRdf_Graph;
-use EasyRdf_Namespace;
+use EasyRdf\Graph;
+use EasyRdf\RdfNamespace;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -152,7 +152,7 @@ class GenerateRDFCommand extends Command
             $prefixes = $dataModel->getPrefixes();
 
             foreach ($prefixes as $prefix) {
-                EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
+                RdfNamespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
             }
 
             $imported = [];
@@ -185,7 +185,7 @@ class GenerateRDFCommand extends Command
                     $store->delete(false, $recordGraphUri);
 
                     try {
-                        $graph = new EasyRdf_Graph();
+                        $graph = new Graph();
 
                         $output->writeln('    - Rendering record ' . $record->getId());
 

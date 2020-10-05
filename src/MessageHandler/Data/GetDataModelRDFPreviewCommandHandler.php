@@ -16,9 +16,9 @@ use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;
 use App\Exception\NoAccessPermission;
 use App\Message\Data\GetDataModelRDFPreviewCommand;
-use EasyRdf_Graph;
-use EasyRdf_Literal;
-use EasyRdf_Namespace;
+use EasyRdf\Graph;
+use EasyRdf\Literal;
+use EasyRdf\RdfNamespace;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
@@ -44,7 +44,7 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
 
         $modulePreviews = [];
 
-        $fullGraph = new EasyRdf_Graph();
+        $fullGraph = new Graph();
 
         $dataModel = $command->getDataModel();
         $modules = $dataModel->getModules();
@@ -53,11 +53,11 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
         $dataModelTriples = [];
 
         foreach ($prefixes as $prefix) {
-            EasyRdf_Namespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
+            RdfNamespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
         }
 
         foreach ($modules as $module) {
-            $moduleGraph = new EasyRdf_Graph();
+            $moduleGraph = new Graph();
 
             $triples = $module->getTriples();
 
@@ -77,7 +77,7 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 if ($isLiteral) {
                     assert($object instanceof LiteralNode || $object instanceof ValueNode);
 
-                    $literal = new EasyRdf_Literal($this->getValue($object));
+                    $literal = new Literal($this->getValue($object));
                     $fullGraph->addLiteral($subjectInFullGraph, $predicateUri, $literal);
                     $moduleGraph->addLiteral($subjectInModuleGraph, $predicateUri, $literal);
                 } else {

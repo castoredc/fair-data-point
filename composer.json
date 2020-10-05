@@ -11,7 +11,7 @@
         "ciwit/bioportal-browser": "^1.1.1",
         "cocur/slugify": "^4.0",
         "czproject/git-php": "^3.18",
-        "easyrdf/easyrdf": "^0.9.1",
+        "easyrdf/easyrdf": "^1.0.0",
         "fresh/doctrine-enum-bundle": "^7.1",
         "guzzlehttp/guzzle": "~6.5",
         "knpuniversity/oauth2-client-bundle": "^2.3",

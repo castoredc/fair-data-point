@@ -15,7 +15,7 @@ use App\Message\Distribution\GetRDFFromStoreCommand;
 use App\Message\Distribution\GetRecordCommand;
 use App\Message\Distribution\GetRecordsCommand;
 use App\Message\Distribution\RenderRDFDistributionCommand;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +70,7 @@ class RDFDistributionController extends FAIRDataController
                 assert($handledStamp instanceof HandledStamp);
 
                 $graph = $handledStamp->getResult();
-                assert($graph instanceof EasyRdf_Graph);
+                assert($graph instanceof Graph);
                 $turtle = $graph->serialise('turtle');
             }
         } catch (HandlerFailedException $e) {

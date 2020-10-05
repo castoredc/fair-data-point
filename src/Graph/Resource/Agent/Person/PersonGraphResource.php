@@ -5,7 +5,7 @@ namespace App\Graph\Resource\Agent\Person;
 
 use App\Entity\FAIRData\Person;
 use App\Graph\Resource\Agent\AgentGraphResource;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 class PersonGraphResource extends AgentGraphResource
 {
@@ -18,7 +18,7 @@ class PersonGraphResource extends AgentGraphResource
         parent::__construct($person);
     }
 
-    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, EasyRdf_Graph $graph): EasyRdf_Graph
+    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, Graph $graph): Graph
     {
         $url = $baseUrl . $this->person->getRelativeUrl();
         if ($this->person->getOrcid() !== null) {

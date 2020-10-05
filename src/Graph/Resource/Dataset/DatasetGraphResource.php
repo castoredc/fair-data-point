@@ -9,7 +9,7 @@ use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\FAIRData\Person;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use App\Graph\Resource\GraphResource;
-use EasyRdf_Graph;
+use EasyRdf\Graph;
 
 class DatasetGraphResource implements GraphResource
 {
@@ -20,9 +20,9 @@ class DatasetGraphResource implements GraphResource
         $this->dataset = $dataset;
     }
 
-    public function toGraph(string $baseUrl): EasyRdf_Graph
+    public function toGraph(string $baseUrl): Graph
     {
-        $graph = new EasyRdf_Graph();
+        $graph = new Graph();
         $url = $baseUrl . $this->dataset->getRelativeUrl();
         $metadata = $this->dataset->getLatestMetadata();
 
