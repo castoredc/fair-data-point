@@ -4,14 +4,14 @@ declare(strict_types=1);
 namespace App\MessageHandler\Metadata;
 
 use App\Entity\FAIRData\Agent\Agent;
-use App\Entity\FAIRData\Country;
 use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
+use App\Entity\FAIRData\Country;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Entity\FAIRData\Agent\Organization;
-use App\Entity\FAIRData\Agent\Person;
 use App\Exception\InvalidAgentType;
 use App\Service\VersionNumberHelper;
 use Doctrine\Common\Collections\ArrayCollection;

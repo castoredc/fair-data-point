@@ -162,6 +162,7 @@ class User implements UserInterface
         if ($this->getPerson() === null) {
             $wizards['details'] = true;
         }
+
 //        elseif ($this->getPerson()-> !== null) {
 //            $wizards['details'] = true;
 //        }
