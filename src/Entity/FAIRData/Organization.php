@@ -11,6 +11,7 @@ use function uniqid;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="organization", indexes={@ORM\Index(name="grid_id", columns={"grid_id"})})
  */
 class Organization extends Agent
 {
@@ -18,6 +19,9 @@ class Organization extends Agent
 
     /** @ORM\Column(type="iri", nullable=true) */
     private ?Iri $homepage = null;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private ?string $gridId = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Country",cascade={"persist"})
@@ -144,6 +148,16 @@ class Organization extends Agent
     public function setCoordinatesLongitude(?string $coordinatesLongitude): void
     {
         $this->coordinatesLongitude = $coordinatesLongitude;
+    }
+
+    public function getGridId(): ?string
+    {
+        return $this->gridId;
+    }
+
+    public function setGridId(?string $gridId): void
+    {
+        $this->gridId = $gridId;
     }
 
     /**
