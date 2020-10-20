@@ -7,6 +7,7 @@ use App\Entity\Enum\NameOrigin;
 use App\Entity\Iri;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_filter;
 use function implode;
@@ -46,6 +47,13 @@ class Person extends Agent
     /** @ORM\Column(type="NameOriginType") */
     private NameOrigin $nameOrigin;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Affiliation", mappedBy="person", cascade={"persist"}, fetch="EAGER")
+     *
+     * @var ArrayCollection<Affiliation>
+     */
+    private ArrayCollection $affiliations;
+
     public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)
     {
         $this->firstName = $firstName;
@@ -59,6 +67,8 @@ class Person extends Agent
         $slugify = new Slugify();
         $fullName = $this->getFullName();
         parent::__construct($slugify->slugify($fullName), $fullName);
+
+        $this->affiliations = new ArrayCollection();
     }
 
     public function getFullName(): string
@@ -154,6 +164,29 @@ class Person extends Agent
     public function setNameOrigin(NameOrigin $nameOrigin): void
     {
         $this->nameOrigin = $nameOrigin;
+    }
+
+    public function addAffiliation(Affiliation $affiliation): void
+    {
+        $this->affiliations->add($affiliation);
+    }
+
+    public function removeAffiliation(Affiliation $affiliation): void
+    {
+        $this->affiliations->removeElement($affiliation);
+    }
+
+    /**
+     * @return ArrayCollection<Affiliation>
+     */
+    public function getAffiliations(): ArrayCollection
+    {
+        return $this->affiliations;
+    }
+
+    public function hasAffiliations(): bool
+    {
+        return ! $this->affiliations->isEmpty();
     }
 
     /**

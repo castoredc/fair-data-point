@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData;
 
 use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
