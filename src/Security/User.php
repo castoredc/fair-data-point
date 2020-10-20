@@ -34,7 +34,7 @@ class User implements UserInterface
      */
     private string $id;
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Person", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Agent\Person", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
      */
     private ?Person $person = null;

@@ -58,7 +58,7 @@ abstract class Metadata
     private ?License $license = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="metadata_publishers")
      *
      * @var Collection<Agent>
@@ -72,7 +72,7 @@ abstract class Metadata
     private ?LocalizedText $keyword = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="dataset_contacts")
      *
      * @var Collection<Agent>

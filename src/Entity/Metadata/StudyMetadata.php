@@ -96,7 +96,7 @@ class StudyMetadata
     private ?DateTimeImmutable $studyCompletionDate = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_contacts")
      *
      * @var Collection<Agent>
@@ -104,7 +104,7 @@ class StudyMetadata
     private Collection $contacts;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_centers")
      *
      * @var Collection<Agent>

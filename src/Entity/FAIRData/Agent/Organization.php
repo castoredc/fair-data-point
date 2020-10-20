@@ -25,7 +25,7 @@ class Organization extends Agent
     private ?string $gridId = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Country",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Country",cascade={"persist"})
      * @ORM\JoinColumn(name="country", referencedColumnName="code")
      */
     private ?Country $country = null;

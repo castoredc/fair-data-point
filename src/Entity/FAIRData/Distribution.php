@@ -69,7 +69,7 @@ class Distribution implements AccessibleEntity
     private ?ApiUser $apiUser = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="distribution_contactpoint")
      *
      * @var Collection<Agent>
