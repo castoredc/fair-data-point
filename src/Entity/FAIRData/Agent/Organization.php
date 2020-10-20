@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData;
+namespace App\Entity\FAIRData\Agent;
 
+use App\Entity\FAIRData\Country;
 use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;

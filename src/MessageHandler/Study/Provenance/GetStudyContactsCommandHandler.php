@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Study\Provenance;
 
 use App\Api\Resource\Agent\Person\PersonsApiResource;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Message\Study\Provenance\GetStudyContactsCommand;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

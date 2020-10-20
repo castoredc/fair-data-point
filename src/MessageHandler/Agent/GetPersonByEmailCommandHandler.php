@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Agent;
 
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Message\Agent\GetPersonByEmailCommand;

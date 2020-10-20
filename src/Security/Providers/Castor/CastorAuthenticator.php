@@ -7,7 +7,7 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\NameOrigin;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;

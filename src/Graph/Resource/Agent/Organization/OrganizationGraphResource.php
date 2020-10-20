@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Graph\Resource\Agent\Organization;
 
-use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Agent\Organization;
 use App\Graph\Resource\Agent\AgentGraphResource;
 use EasyRdf\Graph;
 

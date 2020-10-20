@@ -6,7 +6,7 @@ namespace App\Graph\Resource\Dataset;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use App\Graph\Resource\GraphResource;
 use EasyRdf\Graph;

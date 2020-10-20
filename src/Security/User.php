@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Security\Providers\Castor\CastorUser;
 use App\Security\Providers\Orcid\OrcidUser;
 use App\Traits\CreatedAt;
@@ -162,6 +162,9 @@ class User implements UserInterface
         if ($this->getPerson() === null) {
             $wizards['details'] = true;
         }
+//        elseif ($this->getPerson()-> !== null) {
+//            $wizards['details'] = true;
+//        }
 
         return $wizards;
     }

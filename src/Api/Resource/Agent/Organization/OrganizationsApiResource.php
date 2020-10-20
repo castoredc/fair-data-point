@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Agent\Organization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Agent\Organization;
 
 class OrganizationsApiResource implements ApiResource
 {

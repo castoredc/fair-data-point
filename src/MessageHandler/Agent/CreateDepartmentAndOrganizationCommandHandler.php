@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\MessageHandler\Agent;
 
 use App\Entity\FAIRData\Country;
-use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Organization;
 use App\Exception\CountryNotFound;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Message\Agent\CreateDepartmentAndOrganizationCommand;

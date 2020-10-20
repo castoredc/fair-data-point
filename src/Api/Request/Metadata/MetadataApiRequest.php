@@ -5,11 +5,11 @@ namespace App\Api\Request\Metadata;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\VersionType;
-use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Entity\FAIRData\Organization;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
 use App\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData;
+namespace App\Entity\FAIRData\Agent;
 
 use App\Entity\Enum\NameOrigin;
 use App\Entity\Iri;

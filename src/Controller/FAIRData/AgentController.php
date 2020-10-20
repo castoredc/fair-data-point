@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
-use App\Entity\FAIRData\Organization;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
 use App\Graph\Resource\Agent\Organization\OrganizationGraphResource;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
-use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;

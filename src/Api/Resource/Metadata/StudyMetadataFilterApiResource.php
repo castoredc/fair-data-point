@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Metadata;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Department;
+use App\Entity\FAIRData\Agent\Department;
 use App\Entity\Metadata\StudyMetadata;
 use function in_array;
 use function sort;

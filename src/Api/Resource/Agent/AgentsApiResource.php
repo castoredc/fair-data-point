@@ -7,10 +7,10 @@ use App\Api\Resource\Agent\Department\DepartmentApiResource;
 use App\Api\Resource\Agent\Organization\OrganizationApiResource;
 use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Agent;
-use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Organization;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Agent;
+use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
 
 class AgentsApiResource implements ApiResource
 {
