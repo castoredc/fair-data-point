@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Agent\Person;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 
 class PersonsApiResource implements ApiResource
 {

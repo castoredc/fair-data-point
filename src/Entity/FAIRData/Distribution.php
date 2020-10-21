@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData;
 
 use App\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
@@ -69,7 +70,7 @@ class Distribution implements AccessibleEntity
     private ?ApiUser $apiUser = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="distribution_contactpoint")
      *
      * @var Collection<Agent>

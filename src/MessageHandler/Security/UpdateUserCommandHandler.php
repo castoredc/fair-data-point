@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Security;
 
 use App\Entity\Enum\NameOrigin;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Iri;
 use App\Message\Security\UpdateUserCommand;
 use App\Security\User;

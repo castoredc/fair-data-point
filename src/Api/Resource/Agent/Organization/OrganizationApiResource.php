@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Agent\Organization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Agent\Organization;
 
 class OrganizationApiResource implements ApiResource
 {
@@ -30,7 +30,6 @@ class OrganizationApiResource implements ApiResource
         }
 
         return [
-            'type' => 'organization',
             'id' => $this->organization->getId(),
             'name' => $this->organization->getName(),
             'country' => $this->organization->getCountry()->getCode(),

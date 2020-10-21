@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData;
+namespace App\Entity\FAIRData\Agent;
 
 use App\Entity\Enum\NameOrigin;
 use App\Entity\Iri;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_filter;
 use function implode;
@@ -46,6 +48,13 @@ class Person extends Agent
     /** @ORM\Column(type="NameOriginType") */
     private NameOrigin $nameOrigin;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Affiliation", mappedBy="person", cascade={"persist"}, fetch="EAGER")
+     *
+     * @var Collection<Affiliation>
+     */
+    private Collection $affiliations;
+
     public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)
     {
         $this->firstName = $firstName;
@@ -59,6 +68,8 @@ class Person extends Agent
         $slugify = new Slugify();
         $fullName = $this->getFullName();
         parent::__construct($slugify->slugify($fullName), $fullName);
+
+        $this->affiliations = new ArrayCollection();
     }
 
     public function getFullName(): string
@@ -156,10 +167,38 @@ class Person extends Agent
         $this->nameOrigin = $nameOrigin;
     }
 
+    public function addAffiliation(Affiliation $affiliation): void
+    {
+        $this->affiliations->add($affiliation);
+    }
+
+    public function removeAffiliation(Affiliation $affiliation): void
+    {
+        $this->affiliations->removeElement($affiliation);
+    }
+
+    /**
+     * @return Collection<Affiliation>
+     */
+    public function getAffiliations(): Collection
+    {
+        return $this->affiliations;
+    }
+
+    public function hasAffiliations(): bool
+    {
+        return ! $this->affiliations->isEmpty();
+    }
+
+    public function clearAffiliations(): void
+    {
+        $this->affiliations->clear();
+    }
+
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, ?string $id): self
+    public static function fromData(array $data): self
     {
         $person = new Person(
             $data['firstName'],
@@ -171,8 +210,8 @@ class Person extends Agent
             NameOrigin::peer()
         );
 
-        if ($id !== null) {
-            $person->setId($id);
+        if ($data['id'] !== null) {
+            $person->setId($data['id']);
         }
 
         return $person;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Message\Metadata;
 
 use App\Entity\Enum\VersionType;
-use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\LocalizedText;
 
 abstract class CreateMetadataCommand

@@ -5,11 +5,12 @@ namespace App\Api\Request\Metadata;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\VersionType;
-use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Agent\Agent;
+use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
-use App\Entity\FAIRData\Organization;
-use App\Entity\FAIRData\Person;
 use App\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -115,13 +116,17 @@ abstract class MetadataApiRequest extends SingleApiRequest
         $agents = [];
 
         foreach ($items as $item) {
-            $id = $item['id'] ?? null;
+            $agent = null;
 
             if ($item['type'] === Organization::TYPE) {
-                $agents[] = Organization::fromData($item, $id);
+                $organization = Organization::fromData($item['organization']);
+                $department = Department::fromData($item['department'], $organization);
+                $agent = $department;
             } elseif ($item['type'] === Person::TYPE) {
-                $agents[] = Person::fromData($item, $id);
+                $agent = Person::fromData($item['person']);
             }
+
+            $agents[] = $agent;
         }
 
         return $agents;

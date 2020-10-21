@@ -3,16 +3,20 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Agent\Department;
 
+use App\Api\Resource\Agent\Organization\OrganizationApiResource;
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Department;
+use App\Entity\FAIRData\Agent\Department;
+use function array_merge;
 
 class DepartmentApiResource implements ApiResource
 {
     private Department $department;
+    private bool $includeOrganization;
 
-    public function __construct(Department $department)
+    public function __construct(Department $department, bool $includeOrganization)
     {
         $this->department = $department;
+        $this->includeOrganization = $includeOrganization;
     }
 
     /**
@@ -20,24 +24,17 @@ class DepartmentApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $coordinates = null;
-
-        if ($this->department->getOrganization()->hasCoordinates()) {
-            $coordinates = [
-                'lat' => $this->department->getOrganization()->getCoordinatesLatitude(),
-                'long' => $this->department->getOrganization()->getCoordinatesLongitude(),
-            ];
-        }
-
-        return [
+        $data = [
             'type' => 'department',
             'id' => $this->department->getId(),
-            'name' => $this->department->getOrganization()->getName(),
-            'country' => $this->department->getOrganization()->getCountry()->getCode(),
-            'city' => $this->department->getOrganization()->getCity(),
-            'department' => $this->department->getName(),
+            'name' => $this->department->getName(),
             'additionalInformation' => $this->department->getAdditionalInformation(),
-            'coordinates' => $coordinates,
         ];
+
+        if ($this->includeOrganization) {
+            $data = array_merge($data, (new OrganizationApiResource($this->department->getOrganization()))->toArray());
+        }
+
+        return $data;
     }
 }

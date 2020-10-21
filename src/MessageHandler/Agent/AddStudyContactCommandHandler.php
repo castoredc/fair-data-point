@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\MessageHandler\Agent;
 
 use App\Entity\Enum\NameOrigin;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;

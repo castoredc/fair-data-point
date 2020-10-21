@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
-use App\Entity\FAIRData\Agent;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
@@ -58,7 +58,7 @@ abstract class Metadata
     private ?License $license = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="metadata_publishers")
      *
      * @var Collection<Agent>
@@ -72,7 +72,7 @@ abstract class Metadata
     private ?LocalizedText $keyword = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="dataset_contacts")
      *
      * @var Collection<Agent>

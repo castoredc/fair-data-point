@@ -6,9 +6,9 @@ namespace App\Entity\Metadata;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
-use App\Entity\FAIRData\Agent;
-use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Organization;
+use App\Entity\FAIRData\Agent\Agent;
+use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\Iri;
 use App\Entity\Study;
 use App\Entity\Terminology\CodedText;
@@ -96,7 +96,7 @@ class StudyMetadata
     private ?DateTimeImmutable $studyCompletionDate = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_contacts")
      *
      * @var Collection<Agent>
@@ -104,7 +104,7 @@ class StudyMetadata
     private Collection $contacts;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="study_centers")
      *
      * @var Collection<Agent>

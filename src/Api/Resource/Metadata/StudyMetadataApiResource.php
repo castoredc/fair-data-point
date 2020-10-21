@@ -6,8 +6,8 @@ namespace App\Api\Resource\Metadata;
 use App\Api\Resource\Agent\Department\DepartmentApiResource;
 use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Department;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Metadata\StudyMetadata;
 
 class StudyMetadataApiResource implements ApiResource
@@ -36,7 +36,7 @@ class StudyMetadataApiResource implements ApiResource
         $organizations = [];
         foreach ($this->studyMetadata->getDepartments() as $department) {
             /** @var Department $department */
-            $organizations[] = (new DepartmentApiResource($department))->toArray();
+            $organizations[] = (new DepartmentApiResource($department, true))->toArray();
         }
 
         return [

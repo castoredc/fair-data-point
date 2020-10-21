@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData;
+namespace App\Entity\FAIRData\Agent;
 
+use App\Entity\FAIRData\Country;
 use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function uniqid;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\OrganizationRepository")
  * @ORM\Table(name="organization", indexes={@ORM\Index(name="grid_id", columns={"grid_id"})})
  */
 class Organization extends Agent
@@ -24,7 +25,7 @@ class Organization extends Agent
     private ?string $gridId = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Country",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Country",cascade={"persist"})
      * @ORM\JoinColumn(name="country", referencedColumnName="code")
      */
     private ?Country $country = null;
@@ -163,7 +164,7 @@ class Organization extends Agent
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, ?string $id): self
+    public static function fromData(array $data): self
     {
         $organization = new Organization(
             $data['slug'] ?? null,
@@ -175,8 +176,8 @@ class Organization extends Agent
             isset($data['coordinatesLongitude']) && $data['coordinatesLongitude'] !== '' ? $data['coordinatesLongitude'] : null
         );
 
-        if ($id !== null) {
-            $organization->setId($id);
+        if ($data['id'] !== null) {
+            $organization->setId($data['id']);
         }
 
         return $organization;

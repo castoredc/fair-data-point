@@ -14,16 +14,13 @@ export default class PersonForm extends Component {
     constructor(props) {
         super(props);
 
-        const newData = props.data ? mergeData(defaultData, props.data) : defaultData;
-
         this.state = {
-            data: newData,
             checkedForExistingEmail: false,
             hasExistingEmail: false
         };
 
-        if(newData.email !== '') {
-            this.getPersonInformation(newData.email);
+        if(props.data.email !== '') {
+            this.getPersonInformation(props.data.email);
         }
 
         this.timer = null;
@@ -34,7 +31,7 @@ export default class PersonForm extends Component {
 
         if (show !== prevProps.show || data !== prevProps.data) {
             this.setState({
-                data: data ? mergeData(defaultData, data) : defaultData,
+                data: data
             })
         }
     }
@@ -51,10 +48,10 @@ export default class PersonForm extends Component {
     }
 
     getPersonInformation = (email) => {
-        const {handleDataChange} = this.props;
+        const {data, handleDataChange} = this.props;
 
         axios.get('/api/agent/person/email', {params: {email: email}}).then((response) => {
-            const newData = mergeData(defaultData, response.data);
+            const newData = mergeData(data, response.data);
 
             this.setState({
                 data: newData,
@@ -68,7 +65,7 @@ export default class PersonForm extends Component {
             .catch((error) => {
                 if (error.response && error.response.status === 404) {
                     const newData = {
-                        ...defaultData,
+                        ...data,
                         email: email
                     };
 
@@ -91,23 +88,9 @@ export default class PersonForm extends Component {
             });
     };
 
-    handleChange = (event) => {
-        const {data} = this.state;
-        const {handleDataChange} = this.props;
-
-        const newState = {
-            data: {
-                ...data,
-                [event.target.name]: event.target.value,
-            },
-        };
-
-        this.setState(newState);
-        handleDataChange(newState.data);
-    };
-
     handleEmailChange = (event) => {
-        this.handleChange(event);
+        const {handleChange} = this.props;
+        handleChange(event);
 
         const email = event.target.value;
 
@@ -122,8 +105,8 @@ export default class PersonForm extends Component {
     };
 
     render() {
-        const {data, checkedForExistingEmail, hasExistingEmail} = this.state;
-        const {edit} = this.props;
+        const {checkedForExistingEmail, hasExistingEmail} = this.state;
+        const {data, edit, handleChange} = this.props;
 
         const required = "This field is required";
         const invalid = "This value is invalid";
@@ -170,7 +153,7 @@ export default class PersonForm extends Component {
                             validators={['required']}
                             errorMessages={[required]}
                             name="firstName"
-                            onChange={this.handleChange}
+                            onChange={handleChange}
                             value={data.firstName}
                             readOnly={readOnly}
                         />
@@ -178,7 +161,7 @@ export default class PersonForm extends Component {
                     <FormItem label="Middle Name">
                         <Input
                             name="middleName"
-                            onChange={this.handleChange}
+                            onChange={handleChange}
                             value={data.middleName}
                             readOnly={readOnly}
                         />
@@ -188,7 +171,7 @@ export default class PersonForm extends Component {
                             validators={['required']}
                             errorMessages={[required]}
                             name="lastName"
-                            onChange={this.handleChange}
+                            onChange={handleChange}
                             value={data.lastName}
                             readOnly={readOnly}
                         />
@@ -199,7 +182,7 @@ export default class PersonForm extends Component {
                             validators={['isOrcid']}
                             errorMessages={[invalid]}
                             name="orcid"
-                            onChange={this.handleChange}
+                            onChange={handleChange}
                             value={data.orcid}
                             mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /[\dX]/]}
                             readOnly={readOnly}
@@ -210,12 +193,3 @@ export default class PersonForm extends Component {
         );
     }
 }
-
-const defaultData = {
-    id:         null,
-    firstName:  '',
-    middleName: '',
-    lastName:   '',
-    email:      '',
-    orcid:      '',
-};

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import './Onboarding.scss';
+import './UserDetails.scss';
 import Emoji from "../../../components/Emoji";
 import {Button, CastorLogo, Stack} from "@castoredc/matter";
 import FormItem from "../../../components/Form/FormItem";
@@ -10,7 +10,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import queryString from "query-string";
 
-export default class Onboarding extends Component {
+export default class UserDetails extends Component {
     constructor(props) {
         super(props);
 
@@ -30,10 +30,10 @@ export default class Onboarding extends Component {
             email:      '',
         }
 
-        if(typeof user.suggestions !== "undefined")
+        if(typeof user.suggestions.details !== "undefined")
         {
-            details.firstName = user.suggestions.firstName;
-            details.lastName = user.suggestions.lastName;
+            details.firstName = user.suggestions.details.firstName;
+            details.lastName = user.suggestions.details.lastName;
         }
 
         if(user.details !== null)
@@ -106,8 +106,7 @@ export default class Onboarding extends Component {
 
         if (isSaved) {
             const params = queryString.parse(location.search);
-
-            // window.location.href = (typeof params.origin !== 'undefined') ? params.origin : '/';
+            window.location.href = (typeof params.origin !== 'undefined') ? params.origin : '/';
         }
 
         return <>

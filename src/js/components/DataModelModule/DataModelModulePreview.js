@@ -35,8 +35,6 @@ export default class DataModelModulePreview extends Component {
         const {selectedTab} = this.state;
         const {repeated, dependent, dependencies, rdf, visualization} = this.props;
 
-        console.log(visualization);
-
         let alerts = <>
             {repeated && <Alert
                 variant="info"

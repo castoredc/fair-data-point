@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\FAIRData;
+namespace App\Entity\FAIRData\Agent;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,5 +53,24 @@ class Department extends Agent
     public function setAdditionalInformation(?string $additionalInformation): void
     {
         $this->additionalInformation = $additionalInformation;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromData(array $data, Organization $organization): self
+    {
+        $department = new self(
+            $data['slug'] ?? null,
+            $data['name'],
+            $organization,
+            $data['additionalInformation'] ?? null,
+        );
+
+        if ($data['id'] !== null) {
+            $department->setId($data['id']);
+        }
+
+        return $department;
     }
 }

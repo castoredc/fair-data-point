@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Agent\Person;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Person;
+use App\Entity\FAIRData\Agent\Person;
 
 class PersonApiResource implements ApiResource
 {
@@ -20,6 +20,12 @@ class PersonApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $affiliations = [];
+
+        foreach ($this->person->getAffiliations() as $affiliation) {
+            $affiliations[] = (new AffiliationApiResource($affiliation))->toArray();
+        }
+
         return [
             'type' => 'person',
             'id' => $this->person->getId(),
@@ -31,6 +37,7 @@ class PersonApiResource implements ApiResource
             'nameOrigin' => $this->person->getNameOrigin()->toString(),
             'email' => $this->person->getEmail(),
             'orcid' => $this->person->getOrcid() !== null ? $this->person->getOrcid()->getValue() : null,
+            'affiliations' => $affiliations,
         ];
     }
 }
