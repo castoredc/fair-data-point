@@ -18,7 +18,7 @@ class UserDetailsHelper
         $this->user = $user;
     }
 
-    /** @return string[] */
+    /** @return array<string, bool> */
     public function getWizards(): array
     {
         $wizards = [];
