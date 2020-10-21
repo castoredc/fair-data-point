@@ -17,7 +17,20 @@ export default class OrganizationForm extends Component {
         this.state = {
             axiosCancel: null,
             isLoading: false,
+            defaultOptions: []
         };
+    }
+
+    componentDidMount() {
+        const {data} = this.props;
+
+        if(data.id !== null) {
+            this.loadOrganizations(data.id, (data) => {
+                this.setState({
+                    defaultOptions: data
+                })
+            });
+        }
     }
 
     loadOrganizations = (inputValue, callback) => {
@@ -61,10 +74,10 @@ export default class OrganizationForm extends Component {
     };
 
     handleOrganizationChange = (event) => {
-        const {handleChange} = this.props;
+        const {handleChange, handleDataChange} = this.props;
 
         handleChange({target: {name: 'source', value: event.source}}, () => {
-            handleChange({target: {name: 'id', value: event.value}});
+            handleDataChange(event.data);
         });
     }
 
@@ -82,6 +95,7 @@ export default class OrganizationForm extends Component {
 
     render() {
         const {countries, data, validation, handleChange} = this.props;
+        const {defaultOptions} = this.state;
 
         const required = "This field is required";
         const invalid = "This value is invalid";
@@ -118,6 +132,7 @@ export default class OrganizationForm extends Component {
                                 value={data.id}
                                 menuPosition="fixed"
                                 isDisabled={data.country === null}
+                                defaultOptions={defaultOptions}
                             />
 
                             <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual}

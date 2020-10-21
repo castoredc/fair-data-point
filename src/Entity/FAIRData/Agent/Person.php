@@ -198,7 +198,7 @@ class Person extends Agent
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, ?string $id): self
+    public static function fromData(array $data): self
     {
         $person = new Person(
             $data['firstName'],
@@ -210,8 +210,8 @@ class Person extends Agent
             NameOrigin::peer()
         );
 
-        if ($id !== null) {
-            $person->setId($id);
+        if ($data['id'] !== null) {
+            $person->setId($data['id']);
         }
 
         return $person;

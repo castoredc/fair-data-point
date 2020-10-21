@@ -22,12 +22,15 @@ class OrganizationRepository extends EntityRepository
 
         $qb->andWhere(
             $qb->expr()->orX(
-                $qb->expr()->like('organization.name', ':search'),
+                $qb->expr()->eq('organization.id', ':search'),
+                $qb->expr()->like('organization.name', ':like_search'),
+                $qb->expr()->like('organization.city', ':like_search'),
             )
         );
 
         $qb->setParameter('country_id', $country->getCode());
-        $qb->setParameter('search', '%' . $search . '%');
+        $qb->setParameter('search', $search);
+        $qb->setParameter('like_search', '%' . $search . '%');
 
         return $qb->getQuery()->getResult();
     }

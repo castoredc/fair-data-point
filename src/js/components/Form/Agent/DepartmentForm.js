@@ -44,7 +44,7 @@ export default class DepartmentForm extends Component {
                 .then((response) => {
                     this.setState({
                         options: response.data.map((department) => {
-                            return {value: department.id, label: department.name};
+                            return {value: department.id, label: department.name, data: department};
                         }),
                         isLoading: false,
                     });
@@ -69,10 +69,10 @@ export default class DepartmentForm extends Component {
     };
 
     handleDepartmentChange = (event) => {
-        const {handleChange} = this.props;
+        const {handleChange, handleDataChange} = this.props;
 
         handleChange({target: {name: 'source', value: 'database'}}, () => {
-            handleChange({target: {name: 'id', value: event.value}});
+            handleDataChange(event.data);
         });
     }
 

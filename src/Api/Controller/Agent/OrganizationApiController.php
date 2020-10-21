@@ -54,8 +54,6 @@ class OrganizationApiController extends ApiController
                 return new JsonResponse([], Response::HTTP_NOT_FOUND);
             }
 
-            dump($e);
-
             return new JsonResponse([], 500);
         }
     }

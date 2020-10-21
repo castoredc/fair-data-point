@@ -7,6 +7,7 @@ import RadioGroup from "../../components/Input/RadioGroup";
 import PersonForm from "../../components/Form/Agent/PersonForm";
 import OrganizationForm from "../../components/Form/Agent/OrganizationForm";
 import ConfirmModal from "../ConfirmModal";
+import DepartmentForm from "../../components/Form/Agent/DepartmentForm";
 
 export default class PublisherModal extends Component {
     constructor(props) {
@@ -49,9 +50,34 @@ export default class PublisherModal extends Component {
         });
     };
 
-    handleDataChange = (data) => {
+    handleChange = (group, event, callback = () => {
+    }) => {
+        const {data} = this.state;
+
+        const newData = {
+            ...data,
+            [group]: {
+                ...data[group],
+                [event.target.name]: event.target.value,
+            }
+        };
+
         this.setState({
-            data: data,
+            data: newData
+        }, callback);
+    };
+
+    handleDataChange = (group, newData) => {
+        const {data} = this.state;
+
+        this.setState({
+            data: {
+                ...data,
+                [group]: {
+                    ...data[group],
+                    ...newData
+                }
+            }
         });
     };
 
@@ -59,10 +85,17 @@ export default class PublisherModal extends Component {
         const {save, edit = false} = this.props;
         const {type, data} = this.state;
 
+        const newData = type === 'person' ? {
+            person: data.person
+        } : {
+            organization: data.organization,
+            department: data.department
+        };
+
         if (this.form.isFormValid() && !edit) {
             save({
                 type: type,
-                ...data
+                ...newData
             });
         }
     };
@@ -78,7 +111,8 @@ export default class PublisherModal extends Component {
             closeButton
             footer={(
                 <Stack>
-                    {(!edit || (edit && type === 'organization')) && <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
+                    {(!edit || (edit && type === 'organization')) &&
+                    <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
                         {edit ? 'Edit publisher' : 'Add publisher'}
                     </Button>}
                     {edit && <ConfirmModal
@@ -98,7 +132,7 @@ export default class PublisherModal extends Component {
                 onSubmit={this.handleSubmit}
                 method="post"
             >
-                {! edit && <FormItem label="Type">
+                {!edit && <FormItem label="Type">
                     <RadioGroup
                         options={[
                             {
@@ -117,14 +151,52 @@ export default class PublisherModal extends Component {
                     />
                 </FormItem>}
 
-                {type === 'person' && <PersonForm data={data} edit={edit} handleDataChange={this.handleDataChange}/>}
-                {type === 'organization' &&
-                <OrganizationForm data={data} handleDataChange={this.handleDataChange} countries={countries}/>}
+                {type === 'person' && <PersonForm
+                    data={data.person}
+                    edit={edit}
+                    handleChange={(event, callback) => this.handleChange('person', event, callback)}
+                    handleDataChange={(newData) => this.handleDataChange('person', newData)}
+                />}
+
+                {type === 'organization' && <>
+                    <OrganizationForm
+                        data={data.organization}
+                        countries={countries}
+                        handleChange={(event, callback) => this.handleChange('organization', event, callback)}
+                        handleDataChange={(newData) => this.handleDataChange('organization', newData)}
+                    />
+
+                    <DepartmentForm
+                        data={data.department}
+                        organization={data.organization}
+                        handleChange={(event, callback) => this.handleChange('department', event, callback)}
+                        handleDataChange={(newData) => this.handleDataChange('department', newData)}
+                    />
+                </>}
             </ValidatorForm>
         </Modal>
     }
 }
 
 const defaultData = {
-    id: null
+    person: {
+        id:         null,
+        firstName:  '',
+        middleName: '',
+        lastName:   '',
+        email:      '',
+        orcid:      '',
+    },
+    organization: {
+        id: null,
+        name: '',
+        source: null,
+        country: null,
+        city: '',
+    },
+    department: {
+        id: null,
+        name: '',
+        source: null,
+    },
 };

@@ -251,11 +251,14 @@ export default class MetadataForm extends Component {
 
         const publisherRows = new Map(data.publishers.map((publisher, index) => {
             let name = '';
+            let additionalInfo = '';
 
             if (publisher.type === 'organization') {
-                name = publisher.name;
+                name = publisher.organization.name;
+                additionalInfo = publisher.department.name;
             } else if (publisher.type === 'person') {
-                name = [publisher.firstName, publisher.middleName, publisher.lastName].filter(Boolean).join(' ');
+                name = [publisher.person.firstName, publisher.person.middleName, publisher.person.lastName].filter(Boolean).join(' ');
+                additionalInfo = publisher.person.orcid;
             }
 
             return [
@@ -264,6 +267,7 @@ export default class MetadataForm extends Component {
                     cells: [
                         name,
                         ucfirst(publisher.type),
+                        additionalInfo
                     ],
                 },
             ];
@@ -384,6 +388,11 @@ export default class MetadataForm extends Component {
                                                          },
                                                          type:  {
                                                              header:    'Type',
+                                                             resizable: true,
+                                                             template:  'text',
+                                                         },
+                                                         info:  {
+                                                             header:    'Additional Information',
                                                              resizable: true,
                                                              template:  'text',
                                                          },

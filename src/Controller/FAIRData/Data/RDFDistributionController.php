@@ -99,8 +99,6 @@ class RDFDistributionController extends FAIRDataController
                 return new JsonResponse($e->toArray(), 404);
             }
 
-            dump($e);
-
             return new JsonResponse([], 500);
         }
 

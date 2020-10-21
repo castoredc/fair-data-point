@@ -54,4 +54,23 @@ class Department extends Agent
     {
         $this->additionalInformation = $additionalInformation;
     }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromData(array $data, Organization $organization): self
+    {
+        $department = new self(
+            $data['slug'] ?? null,
+            $data['name'],
+            $organization,
+            $data['additionalInformation'] ?? null,
+        );
+
+        if ($data['id'] !== null) {
+            $department->setId($data['id']);
+        }
+
+        return $department;
+    }
 }

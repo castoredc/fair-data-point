@@ -75,13 +75,6 @@ export default class AffiliationsForm extends Component {
             }
         };
 
-        if(group === 'organization') {
-            newAffiliation.department = {
-                ...defaultData.department,
-                source: newAffiliation.organization.id === null ? 'manual' : 'database'
-            };
-        }
-
         const newAffiliations = replaceAt(affiliations, index, newAffiliation);
 
         const newValidation = replaceAt(validation, index, {
@@ -93,6 +86,31 @@ export default class AffiliationsForm extends Component {
             affiliations: newAffiliations,
             validation: newValidation,
         }, callback);
+    };
+
+    handleDataChange = (index, group, newData) => {
+        const {affiliations} = this.state;
+
+        let newAffiliation = {
+            ...affiliations[index],
+            [group]: {
+                ...affiliations[index][group],
+                ...newData
+            }
+        };
+
+        if(group === 'organization') {
+            newAffiliation.department = {
+                ...defaultData.department,
+                source: newAffiliation.organization.id === null ? 'manual' : 'database'
+            };
+        }
+
+        const newAffiliations = replaceAt(affiliations, index, newAffiliation);
+
+        this.setState({
+            affiliations: newAffiliations,
+        });
     };
 
     getCountries = () => {
@@ -179,6 +197,7 @@ export default class AffiliationsForm extends Component {
                                 validation={validation[index]}
                                 countries={countries}
                                 handleChange={(group, event, callback) => this.handleChange(index, event, group, callback)}
+                                handleDataChange={(group, newData) => this.handleDataChange(index, group, newData)}
                             />
 
                             {index > 0 && <Stack alignment="end" distribution="trailing">

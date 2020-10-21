@@ -10,7 +10,7 @@ import {Stack} from "@castoredc/matter";
 
 export default class AffiliationForm extends Component {
     render() {
-        const {data, validation, countries, handleChange} = this.props;
+        const {data, validation, countries, handleChange, handleDataChange} = this.props;
 
         const required = "This field is required";
 
@@ -21,6 +21,7 @@ export default class AffiliationForm extends Component {
                     countries={countries}
                     validation={validation}
                     handleChange={(event, callback) => handleChange('organization', event, callback)}
+                    handleDataChange={(newData) => handleDataChange('organization', newData)}
                 />
 
                 <DepartmentForm
@@ -28,6 +29,7 @@ export default class AffiliationForm extends Component {
                     organization={data.organization}
                     validation={validation}
                     handleChange={(event, callback) => handleChange('department', event, callback)}
+                    handleDataChange={(newData) => handleDataChange('department', newData)}
                 />
 
                 <div className={classNames('Position', data.organization.source === null && 'WaitingOnInput')}>

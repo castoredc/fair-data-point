@@ -164,7 +164,7 @@ class Organization extends Agent
     /**
      * @param array<mixed> $data
      */
-    public static function fromData(array $data, ?string $id): self
+    public static function fromData(array $data): self
     {
         $organization = new Organization(
             $data['slug'] ?? null,
@@ -176,8 +176,8 @@ class Organization extends Agent
             isset($data['coordinatesLongitude']) && $data['coordinatesLongitude'] !== '' ? $data['coordinatesLongitude'] : null
         );
 
-        if ($id !== null) {
-            $organization->setId($id);
+        if ($data['id'] !== null) {
+            $organization->setId($data['id']);
         }
 
         return $organization;

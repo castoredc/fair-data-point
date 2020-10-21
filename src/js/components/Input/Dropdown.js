@@ -49,6 +49,7 @@ class Dropdown extends ValidatorComponent {
             isMulti = false,
             isGrouped = false,
             menuPosition,
+            defaultOptions
         } = this.props;
         const {cachedOptions, isValid} = this.state;
 
@@ -62,6 +63,12 @@ class Dropdown extends ValidatorComponent {
                     </components.DropdownIndicator>
                 );
             };
+
+            let dropdownValue = value;
+
+            if (defaultOptions !== undefined && typeof dropdownValue !== 'object' && dropdownValue !== null) {
+                dropdownValue = defaultOptions.find((option) => option.value === dropdownValue);
+            }
 
             SelectComponent = <AsyncSelect
                 loadOptions={this.loadOptions}
@@ -77,6 +84,8 @@ class Dropdown extends ValidatorComponent {
                 components={{ DropdownIndicator }}
                 placeholder=""
                 isDisabled={isDisabled}
+                value={dropdownValue}
+                defaultOptions={defaultOptions}
             />
         } else if (isMulti) {
             const CustomOption = props => (
