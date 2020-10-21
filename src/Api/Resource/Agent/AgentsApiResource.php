@@ -36,7 +36,7 @@ class AgentsApiResource implements ApiResource
             if ($agent instanceof Organization) {
                 $data[] = (new OrganizationApiResource($agent))->toArray();
             } elseif ($agent instanceof Department) {
-                $data[] = (new DepartmentApiResource($agent))->toArray();
+                $data[] = (new DepartmentApiResource($agent, true))->toArray();
             } elseif ($agent instanceof Person) {
                 $data[] = (new PersonApiResource($agent))->toArray();
             }

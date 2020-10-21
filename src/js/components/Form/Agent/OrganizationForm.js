@@ -2,104 +2,159 @@ import React, {Component} from 'react';
 
 import '../Form.scss'
 import FormItem from "../FormItem";
-import Input from "../../Input";
 import Dropdown from "../../Input/Dropdown";
-import {mergeData} from "../../../util";
+import {Button, Stack} from "@castoredc/matter";
+import axios from "axios";
+import {toast} from "react-toastify";
+import ToastContent from "../../ToastContent";
+import Input from "../../Input";
+import {classNames} from "../../../util";
 
 export default class OrganizationForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: props.data ? mergeData(defaultData, props.data) : defaultData,
+            axiosCancel: null,
+            isLoading: false,
         };
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const {show, data} = this.props;
+    loadOrganizations = (inputValue, callback) => {
+        const {data} = this.props;
+        const {axiosCancel} = this.state;
 
-        if (show !== prevProps.show || data !== prevProps.data) {
-            this.setState({
-                data: data ? mergeData(defaultData, data) : defaultData,
-            })
+        if (data.country === null) {
+            return null;
         }
-    }
 
-    handleChange = (event) => {
-        const {data} = this.state;
-        const {handleDataChange} = this.props;
+        if (axiosCancel !== null) {
+            axiosCancel.cancel();
+        }
 
-        const newState = {
-            data: {
-                ...data,
-                [event.target.name]: event.target.value,
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+
+        this.setState({
+            axiosCancel: source,
+        });
+
+        axios.get('/api/agent/organization', {
+            cancelToken: source.token,
+            params: {
+                country: data.country,
+                search: inputValue,
             },
-        };
-
-        this.setState(newState);
-        handleDataChange(newState.data);
+        }).then((response) => {
+            callback(response.data);
+        })
+            .catch((error) => {
+                if (!axios.isCancel(error)) {
+                    if (error.response && typeof error.response.data.error !== "undefined") {
+                        toast.error(<ToastContent type="error" message={error.response.data.error}/>);
+                    } else {
+                        toast.error(<ToastContent type="error" message="An error occurred"/>);
+                    }
+                }
+                callback(null);
+            });
     };
 
+    handleOrganizationChange = (event) => {
+        const {handleChange} = this.props;
+
+        handleChange({target: {name: 'source', value: event.source}}, () => {
+            handleChange({target: {name: 'id', value: event.value}});
+        });
+    }
+
+    toggleManual = () => {
+        const {handleChange, data} = this.props;
+
+        const source = (data.source === 'manual') ? null : 'manual';
+
+        handleChange({target: {name: 'source', value: source}}, () => {
+            if (source === 'manual') {
+                handleChange({target: {name: 'id', value: null}});
+            }
+        });
+    }
+
     render() {
-        const {countries} = this.props;
-        const {data} = this.state;
+        const {countries, data, validation, handleChange} = this.props;
 
         const required = "This field is required";
         const invalid = "This value is invalid";
 
+        const showForm = data.source === 'manual';
+
         return (
             <div className="Organization">
-                <FormItem label="Name">
-                    <Input
-                        validators={['required']}
-                        errorMessages={[required]}
-                        name="name"
-                        onChange={this.handleChange}
-                        value={data.name}
-                    />
-                </FormItem>
-                <FormItem label="Department(s)">
-                    <Input
-                        validators={['required']}
-                        errorMessages={[required]}
-                        name="department"
-                        onChange={this.handleChange}
-                        value={data.department}
-                    />
-                </FormItem>
-                <FormItem label="City">
-                    <Input
-                        validators={['required']}
-                        errorMessages={[required]}
-                        name="city"
-                        onChange={this.handleChange}
-                        value={data.city}
-                    />
-                </FormItem>
-                <FormItem label="Country">
-                    <Dropdown
-                        validators={['required']}
-                        errorMessages={[required]}
-                        options={countries}
-                        name="country"
-                        onChange={(e) => {
-                            this.handleChange({target: {name: 'country', value: e.value}})
-                        }}
-                        value={countries.filter(({value}) => value === data.country)}
-                    />
-                </FormItem>
+                <Stack>
+                    <FormItem label="Country">
+                        <Dropdown
+                            validators={['required']}
+                            errorMessages={[required]}
+                            options={countries}
+                            name="country"
+                            onChange={(e) => {
+                                handleChange({target: {name: 'country', value: e.value}})
+                            }}
+                            value={countries.filter(({value}) => value === data.country)}
+                            menuPosition="fixed"
+                        />
+                    </FormItem>
+                </Stack>
+                <div className={classNames(data.country === null && 'WaitingOnInput')}>
+                    <Stack>
+                        {!showForm && <FormItem label="Organization / Institution">
+                            <Dropdown
+                                validators={['required']}
+                                errorMessages={[required]}
+                                async
+                                name="id"
+                                onChange={this.handleOrganizationChange}
+                                loadOptions={this.loadOrganizations}
+                                value={data.id}
+                                menuPosition="fixed"
+                                isDisabled={data.country === null}
+                            />
+
+                            <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual}
+                                    disabled={data.country === null}>
+                                I cannot find my organization
+                            </Button>
+                        </FormItem>}
+
+                        {showForm && <>
+                            <FormItem label="Organization / Institution Name">
+                                <Input
+                                    validators={['required']}
+                                    errorMessages={[required]}
+                                    name="name"
+                                    onChange={handleChange}
+                                    value={data.name}
+                                    autoFocus
+                                />
+
+                                <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual}
+                                        disabled={data.country === null}>
+                                    Search for an organization
+                                </Button>
+                            </FormItem>
+                            <FormItem label="City">
+                                <Input
+                                    validators={['required']}
+                                    errorMessages={[required]}
+                                    name="city"
+                                    onChange={handleChange}
+                                    value={data.city}
+                                />
+                            </FormItem>
+                        </>}
+                    </Stack>
+                </div>
             </div>
         );
     }
 }
-
-const defaultData = {
-    id:                    null,
-    name:                  '',
-    country:               '',
-    city:                  '',
-    department:            '',
-    additionalInformation: '',
-    coordinatesLatitude:   '',
-    coordinatesLongitude:  '',
-};

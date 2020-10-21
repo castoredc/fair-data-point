@@ -190,6 +190,11 @@ class Person extends Agent
         return ! $this->affiliations->isEmpty();
     }
 
+    public function clearAffiliations(): void
+    {
+        $this->affiliations->clear();
+    }
+
     /**
      * @param array<mixed> $data
      */

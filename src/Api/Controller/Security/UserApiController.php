@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,12 +43,10 @@ class UserApiController extends ApiController
      */
     public function updateUser(Request $request, MessageBusInterface $bus): Response
     {
-        $user = $this->getUser();
-        assert($user instanceof User || $user === null);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
-        if ($user === null) {
-            throw new NotFoundHttpException();
-        }
+        $user = $this->getUser();
+        assert($user instanceof User);
 
         if (! $user->hasOrcid()) {
             throw new AccessDeniedHttpException();

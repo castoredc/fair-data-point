@@ -35,11 +35,15 @@ class Affiliation
      */
     private Department $department;
 
-    public function __construct(Person $person, Organization $organization, Department $department)
+    /** @ORM\Column(type="string") */
+    private string $position;
+
+    public function __construct(Person $person, Organization $organization, Department $department, string $position)
     {
         $this->person = $person;
         $this->organization = $organization;
         $this->department = $department;
+        $this->position = $position;
     }
 
     public function getId(): string
@@ -75,5 +79,15 @@ class Affiliation
     public function setDepartment(Department $department): void
     {
         $this->department = $department;
+    }
+
+    public function getPosition(): string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(string $position): void
+    {
+        $this->position = $position;
     }
 }

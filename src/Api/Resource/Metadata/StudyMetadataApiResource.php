@@ -36,7 +36,7 @@ class StudyMetadataApiResource implements ApiResource
         $organizations = [];
         foreach ($this->studyMetadata->getDepartments() as $department) {
             /** @var Department $department */
-            $organizations[] = (new DepartmentApiResource($department))->toArray();
+            $organizations[] = (new DepartmentApiResource($department, true))->toArray();
         }
 
         return [

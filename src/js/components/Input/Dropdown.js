@@ -1,7 +1,7 @@
 import React from 'react';
 import {ValidatorComponent} from 'react-form-validator-core';
 import AsyncSelect from 'react-select/async';
-import {ChoiceOption, Dropdown as CastorDropdown, TextStyle} from '@castoredc/matter';
+import {ChoiceOption, Dropdown as CastorDropdown, dropdownStyle, Icon, TextStyle} from '@castoredc/matter';
 
 import {components} from 'react-select';
 
@@ -54,13 +54,15 @@ class Dropdown extends ValidatorComponent {
 
         let SelectComponent = null;
 
-        let dropdownValue = value;
-
-        if (typeof dropdownValue !== 'object' && dropdownValue !== null && ! isGrouped) {
-            dropdownValue = options.find((option) => option.value === dropdownValue);
-        }
-
         if (async) {
+            const DropdownIndicator = props => {
+                return (
+                    <components.DropdownIndicator {...props}>
+                        <Icon type="search" />
+                    </components.DropdownIndicator>
+                );
+            };
+
             SelectComponent = <AsyncSelect
                 loadOptions={this.loadOptions}
                 options={cachedOptions}
@@ -71,6 +73,10 @@ class Dropdown extends ValidatorComponent {
                 menuPosition="fixed"
                 menuPlacement="auto"
                 onChange={onChange}
+                styles={dropdownStyle}
+                components={{ DropdownIndicator }}
+                placeholder=""
+                isDisabled={isDisabled}
             />
         } else if (isMulti) {
             const CustomOption = props => (
@@ -117,6 +123,12 @@ class Dropdown extends ValidatorComponent {
                 }}
             />;
         } else {
+            let dropdownValue = value;
+
+            if (typeof dropdownValue !== 'object' && dropdownValue !== null && ! isGrouped) {
+                dropdownValue = options.find((option) => option.value === dropdownValue);
+            }
+
             SelectComponent = <CastorDropdown
                 invalid={!isValid}
                 onChange={onChange}

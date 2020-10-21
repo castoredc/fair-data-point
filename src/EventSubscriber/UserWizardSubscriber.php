@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Api\Controller\Agent\OrganizationApiController;
+use App\Api\Controller\FAIRData\CountriesApiController;
+use App\Api\Controller\Security\UserAffiliationApiController;
 use App\Api\Controller\Security\UserApiController;
 use App\Controller\Wizard\UserOnboardingWizardController;
 use App\Entity\Enum\Wizard;
@@ -45,7 +48,14 @@ class UserWizardSubscriber implements EventSubscriberInterface
             $controller = $controller[0];
         }
 
-        if ($controller instanceof UserOnboardingWizardController || $controller instanceof UserApiController || $controller instanceof ErrorController) {
+        if (
+            $controller instanceof UserOnboardingWizardController ||
+            $controller instanceof UserApiController ||
+            $controller instanceof ErrorController ||
+            $controller instanceof CountriesApiController ||
+            $controller instanceof OrganizationApiController ||
+            $controller instanceof UserAffiliationApiController
+        ) {
             return;
         }
 

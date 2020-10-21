@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function uniqid;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\OrganizationRepository")
  * @ORM\Table(name="organization", indexes={@ORM\Index(name="grid_id", columns={"grid_id"})})
  */
 class Organization extends Agent

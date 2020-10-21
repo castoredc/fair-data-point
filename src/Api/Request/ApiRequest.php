@@ -43,15 +43,35 @@ abstract class ApiRequest
             return null;
         }
 
-        $value = $this->data[$key];
+        return $this->parseValue($this->data[$key]);
+    }
 
+    /**
+     * @return mixed|null
+     */
+    protected function getFromNestedData(string $group, string $key)
+    {
+        if (! array_key_exists($group, $this->data) || ! array_key_exists($key, $this->data[$group])) {
+            return null;
+        }
+
+        return $this->parseValue($this->data[$group][$key]);
+    }
+
+    /**
+     * @param mixed|null $value
+     *
+     * @return mixed|null
+     */
+    private function parseValue($value)
+    {
         if (is_string($value)) {
             $value = trim($value);
 
             return $value !== '' ? $value : null;
         }
 
-        return $this->data[$key];
+        return $value;
     }
 
     /**

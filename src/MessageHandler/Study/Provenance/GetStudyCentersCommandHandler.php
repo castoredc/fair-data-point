@@ -29,6 +29,6 @@ class GetStudyCentersCommandHandler implements MessageHandlerInterface
             }
         }
 
-        return new DepartmentsApiResource($centers);
+        return new DepartmentsApiResource($centers, true);
     }
 }
