@@ -12,13 +12,13 @@ use function trim;
 class UserDetailsHelper
 {
     private User $user;
-    private array $wizards;
 
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
+    /** @return string[] */
     public function getWizards(): array
     {
         $wizards = [];

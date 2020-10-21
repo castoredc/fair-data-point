@@ -21,7 +21,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function dump;
 
 /**
  * @Route("/api/agent/organization")
