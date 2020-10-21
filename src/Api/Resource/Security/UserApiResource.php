@@ -6,15 +6,17 @@ namespace App\Api\Resource\Security;
 use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\ApiResource;
 use App\Security\User;
-use function in_array;
+use App\Service\UserDetailsHelper;
 
 class UserApiResource implements ApiResource
 {
     private User $user;
+    private UserDetailsHelper $helper;
 
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->helper = new UserDetailsHelper($user);
     }
 
     /**
@@ -25,21 +27,21 @@ class UserApiResource implements ApiResource
         $data = [
             'id' => $this->user->getId(),
             'details' => $this->user->getPerson() !== null ? (new PersonApiResource($this->user->getPerson()))->toArray() : null,
-            'isAdmin' => in_array('ROLE_ADMIN', $this->user->getRoles(), true),
+            'isAdmin' => $this->user->isAdmin(),
             'linkedAccounts' => [
                 'castor' => $this->user->hasCastorUser() ? $this->user->getCastorUser()->toArray() : false,
                 'orcid' => $this->user->hasOrcid() ? $this->user->getOrcid()->toArray() : false,
             ],
-            'wizards' => $this->user->getWizards(),
+            'wizards' => $this->helper->getWizards(),
+            'suggestions' => [],
         ];
 
-        if ($this->user->shouldShowDetailsSuggestions()) {
-            $suggestions = $this->user->getDetailsSuggestions();
+        if ($this->helper->shouldShowDetailsSuggestions()) {
+            $data['suggestions']['details'] = $this->helper->getDetailsSuggestions();
+        }
 
-            $data['suggestions'] = [
-                'firstName' => $suggestions[0],
-                'lastName' => $suggestions[1],
-            ];
+        if ($this->helper->shouldShowAffiliationsSuggestions()) {
+            $data['suggestions']['affiliations'] = [];
         }
 
         return $data;

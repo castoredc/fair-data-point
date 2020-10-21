@@ -8,6 +8,7 @@ use App\Entity\Iri;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_filter;
 use function implode;
@@ -50,9 +51,9 @@ class Person extends Agent
     /**
      * @ORM\OneToMany(targetEntity="Affiliation", mappedBy="person", cascade={"persist"}, fetch="EAGER")
      *
-     * @var ArrayCollection<Affiliation>
+     * @var Collection<Affiliation>
      */
-    private ArrayCollection $affiliations;
+    private Collection $affiliations;
 
     public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)
     {
@@ -177,9 +178,9 @@ class Person extends Agent
     }
 
     /**
-     * @return ArrayCollection<Affiliation>
+     * @return Collection<Affiliation>
      */
-    public function getAffiliations(): ArrayCollection
+    public function getAffiliations(): Collection
     {
         return $this->affiliations;
     }

@@ -5,9 +5,11 @@ namespace App\EventSubscriber;
 
 use App\Api\Controller\Security\UserApiController;
 use App\Controller\Wizard\UserOnboardingWizardController;
+use App\Entity\Enum\Wizard;
 use App\Security\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Controller\ErrorController;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
@@ -39,13 +41,11 @@ class UserWizardSubscriber implements EventSubscriberInterface
         $user = $this->security->getUser();
         assert($user instanceof User);
 
-        // when a controller class defines multiple action methods, the controller
-        // is returned as [$controllerInstance, 'methodName']
         if (is_array($controller)) {
             $controller = $controller[0];
         }
 
-        if ($controller instanceof UserOnboardingWizardController || $controller instanceof UserApiController) {
+        if ($controller instanceof UserOnboardingWizardController || $controller instanceof UserApiController || $controller instanceof ErrorController) {
             return;
         }
 
@@ -53,9 +53,12 @@ class UserWizardSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $firstWizard = $user->getWizards()->first();
+        assert($firstWizard instanceof Wizard);
+
         $event->setController(
-            function () use ($event): RedirectResponse {
-                $url = $this->router->generate('wizard_user_onboarding') . '?origin=' . urlencode($event->getRequest()->getRequestUri());
+            function () use ($event, $firstWizard): RedirectResponse {
+                $url = $this->router->generate($firstWizard->getRoute()) . '?origin=' . urlencode($event->getRequest()->getRequestUri());
 
                 return new RedirectResponse($url);
             }

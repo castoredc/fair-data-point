@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import './Onboarding.scss';
+import './Affiliations.scss';
 import Emoji from "../../../components/Emoji";
 import {Button, CastorLogo, Stack} from "@castoredc/matter";
 import FormItem from "../../../components/Form/FormItem";
@@ -10,10 +10,9 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import queryString from "query-string";
 
-export default class Onboarding extends Component {
+export default class Affiliations extends Component {
     constructor(props) {
         super(props);
-
 
         this.state = {
             data:      this.parseUserDetails(props.user),
@@ -106,12 +105,10 @@ export default class Onboarding extends Component {
 
         if (isSaved) {
             const params = queryString.parse(location.search);
-
             // window.location.href = (typeof params.origin !== 'undefined') ? params.origin : '/';
         }
 
         return <>
-
             <div className="WizardBrand">
                 <div className="WizardBrandLogo">
                     <CastorLogo className="Logo"/>
@@ -123,67 +120,16 @@ export default class Onboarding extends Component {
 
             <header>
                 <h1>
-                    <Emoji symbol="👋"/>&nbsp;
-                    Hi {data.firstName}!
+                    <Emoji symbol="🏥"/>&nbsp;
+                    Where do you work, {data.firstName}?
                 </h1>
                 <div className="Description">
-                    Before you continue, please check your details below.
+                    Please add your affiliation(s) below.
                 </div>
             </header>
 
 
-            <ValidatorForm
-                className="FullHeightForm"
-                ref={node => (this.form = node)}
-                onSubmit={this.handleSubmit}
-                method="post"
-            >
-                {user.wizards.details && <>
-                    <FormItem label="First Name">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="firstName"
-                            onChange={this.handleChange}
-                            value={data.firstName}
-                        />
-                    </FormItem>
-                    <FormItem label="Middle Name">
-                        <Input
-                            name="middleName"
-                            onChange={this.handleChange}
-                            value={data.middleName}
-                        />
-                    </FormItem>
-                    <FormItem label="Last Name">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="lastName"
-                            onChange={this.handleChange}
-                            value={data.lastName}
-                        />
-                    </FormItem>
-                </>}
-
-                {user.wizards.email && <FormItem label="Email address">
-                    <Input
-                        validators={['required', 'isEmail']}
-                        errorMessages={[required, invalid]}
-                        name="email"
-                        onChange={this.handleChange}
-                        value={data.email}
-                    />
-                </FormItem>}
-
-                <div className="FormButtons">
-                    <Stack distribution="trailing">
-                        <Button type="submit" disabled={isLoading}>
-                            Save details
-                        </Button>
-                    </Stack>
-                </div>
-            </ValidatorForm>
+            xxx
         </>;
     }
 }

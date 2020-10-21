@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\Enum\Wizard;
 use App\Entity\FAIRData\Agent\Person;
 use App\Security\Providers\Castor\CastorUser;
 use App\Security\Providers\Orcid\OrcidUser;
 use App\Traits\CreatedAt;
 use App\Traits\UpdatedAt;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
-use function preg_replace;
-use function strpos;
+use function in_array;
 use function strrchr;
 use function substr;
-use function trim;
 
 /**
  * @ORM\Entity
@@ -94,6 +94,11 @@ class User implements UserInterface
         return $roles;
     }
 
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles(), true);
+    }
+
     public function getPassword(): string
     {
         return '';
@@ -130,42 +135,20 @@ class User implements UserInterface
         return null;
     }
 
-    public function shouldShowDetailsSuggestions(): bool
+    /** @return ArrayCollection<Wizard> */
+    public function getWizards(): ArrayCollection
     {
-        return $this->getEmailAddress() === null;
-    }
-
-    /** @return mixed[] */
-    public function getDetailsSuggestions(): array
-    {
-        $firstName = '';
-        $lastName = '';
-
-        if ($this->hasOrcid()) {
-            $name = trim($this->orcid->getName());
-            $lastName = strpos($name, ' ') === false ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-            $firstName = trim(preg_replace('#' . $lastName . '#', '', $name));
-        }
-
-        return [$firstName, $lastName];
-    }
-
-    /** @return mixed[] */
-    public function getWizards(): array
-    {
-        $wizards = [];
+        $wizards = new ArrayCollection();
 
         if ($this->getEmailAddress() === null) {
-            $wizards['email'] = true;
+            $wizards->add(Wizard::email());
         }
 
         if ($this->getPerson() === null) {
-            $wizards['details'] = true;
+            $wizards->add(Wizard::details());
+        } elseif (! $this->getPerson()->hasAffiliations()) {
+            $wizards->add(Wizard::affiliations());
         }
-
-//        elseif ($this->getPerson()-> !== null) {
-//            $wizards['details'] = true;
-//        }
 
         return $wizards;
     }
