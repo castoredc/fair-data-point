@@ -45,7 +45,7 @@
         "phpstan/phpstan-doctrine": "^0.12.21",
         "phpstan/phpstan-phpunit": "^0.12.8",
         "phpstan/phpstan-strict-rules": "^0.12.3",
-        "phpstan/phpstan-symfony": "^0.12.6",
+        "phpstan/phpstan-symfony": "^0.12.10",
         "phpunit/phpunit": "^9.4",
         "roave/security-advisories": "dev-master"
     },
