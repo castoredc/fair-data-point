@@ -12,15 +12,15 @@ class DepartmentGraphResource extends AgentGraphResource
 {
     private Department $department;
 
-    public function __construct(Department $department)
+    public function __construct(Department $department, string $baseUrl)
     {
         $this->department = $department;
 
-        parent::__construct($department);
+        parent::__construct($department, $baseUrl);
     }
 
-    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, Graph $graph): Graph
+    public function addToGraph(?string $subject, ?string $predicate, Graph $graph): Graph
     {
-        return (new OrganizationGraphResource($this->department->getOrganization()))->addToGraph($baseUrl, $subject, $predicate, $graph);
+        return (new OrganizationGraphResource($this->department->getOrganization(), $this->baseUrl))->addToGraph($subject, $predicate, $graph);
     }
 }

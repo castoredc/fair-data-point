@@ -11,16 +11,16 @@ class PersonGraphResource extends AgentGraphResource
 {
     private Person $person;
 
-    public function __construct(Person $person)
+    public function __construct(Person $person, string $baseUrl)
     {
         $this->person = $person;
 
-        parent::__construct($person);
+        parent::__construct($person, $baseUrl);
     }
 
-    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, Graph $graph): Graph
+    public function addToGraph(?string $subject, ?string $predicate, Graph $graph): Graph
     {
-        $url = $baseUrl . $this->person->getRelativeUrl();
+        $url = $this->baseUrl . $this->person->getRelativeUrl();
         if ($this->person->getOrcid() !== null) {
             $url = $this->person->getOrcid()->getValue();
         }
