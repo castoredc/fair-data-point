@@ -82,6 +82,6 @@ abstract class GraphResource
 
     protected function getUrl(): string
     {
-        return $this->baseUrl . '/' . $this->url;
+        return $this->baseUrl . $this->url;
     }
 }
