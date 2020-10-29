@@ -33,7 +33,7 @@ class DatasetController extends FAIRDataController
         }
 
         return new Response(
-            (new DatasetGraphResource($dataset))->toGraph($this->baseUri)->serialise('turtle'),
+            (new DatasetGraphResource($dataset, $this->baseUri))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

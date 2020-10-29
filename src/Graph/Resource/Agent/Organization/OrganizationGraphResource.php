@@ -11,16 +11,16 @@ class OrganizationGraphResource extends AgentGraphResource
 {
     private Organization $organization;
 
-    public function __construct(Organization $organization)
+    public function __construct(Organization $organization, string $baseUrl)
     {
         $this->organization = $organization;
 
-        parent::__construct($organization);
+        parent::__construct($organization, $baseUrl);
     }
 
-    public function addToGraph(string $baseUrl, ?string $subject, ?string $predicate, Graph $graph): Graph
+    public function addToGraph(?string $subject, ?string $predicate, Graph $graph): Graph
     {
-        $url = $baseUrl . $this->organization->getRelativeUrl();
+        $url = $this->baseUrl . $this->organization->getRelativeUrl();
         if ($this->organization->getHomepage() !== null) {
             $url = $this->organization->getHomepage()->getValue();
         }

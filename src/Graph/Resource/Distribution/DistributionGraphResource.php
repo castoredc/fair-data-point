@@ -5,55 +5,33 @@ namespace App\Graph\Resource\Distribution;
 
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
-use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\GraphResource;
 use EasyRdf\Graph;
 
-class DistributionGraphResource implements GraphResource
+class DistributionGraphResource extends GraphResource
 {
     private Distribution $distribution;
 
-    public function __construct(Distribution $distribution)
+    public function __construct(Distribution $distribution, string $baseUrl)
     {
         $this->distribution = $distribution;
+        parent::__construct($distribution, $baseUrl);
     }
 
-    public function toGraph(string $baseUrl): Graph
+    public function toGraph(): Graph
     {
         $graph = new Graph();
-        $url = $baseUrl . $this->distribution->getRelativeUrl();
         $metadata = $this->distribution->getLatestMetadata();
 
-        $graph->addResource($url, 'a', 'dcat:Dataset');
+        $graph->addResource($this->getUrl(), 'a', 'dcat:Distribution');
 
-        foreach ($metadata->getTitle()->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($url, 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
-            $graph->addLiteral($url, 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());
-        }
-
-        $graph->addLiteral($url, 'dcterms:hasVersion', $metadata->getVersion()->getValue());
-
-        foreach ($metadata->getDescription()->getTexts() as $text) {
-            /** @var LocalizedTextItem $text */
-            $graph->addLiteral($url, 'dcterms:description', $text->getText(), $text->getLanguage()->getCode());
-        }
-
-        // foreach ($metadata->getPublishers() as $agent) {
-        //     /** @var Department $department */
-        //     // $graph = (new DepartmentGraphResource($department))->addToGraph($baseUrl, $url, 'dcterms:publisher', $graph);
-        // }
-
-        $graph->addResource($url, 'dcterms:language', $metadata->getLanguage()->getAccessUrl());
-
-        $graph->addResource($url, 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());
+        $graph = $this->addMetadataToGraph($metadata, $graph);
 
         $contents = $this->distribution->getContents();
 
         if ($contents instanceof RDFDistribution) {
-            $graph->addResource($url, 'dcat:downloadURL', $baseUrl . $contents->getRelativeUrl() . '/?download=1');
-            $graph->addResource($url, 'dcat:accessURL', $baseUrl . $contents->getRelativeUrl());
-            $graph->addLiteral($url, 'dcat:mediaType', 'text/turtle');
+            $graph->addResource($this->getUrl(), 'dcat:accessURL', $this->baseUrl . $contents->getRelativeUrl());
+            $graph->addLiteral($this->getUrl(), 'dcat:mediaType', 'text/turtle');
         }
 
         return $graph;

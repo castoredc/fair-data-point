@@ -102,7 +102,7 @@ abstract class Deployer extends DefaultDeployer
         $projectDir = $server->get(Property::project_dir);
         $pathParts = explode('/', $projectDir);
 
-        return (string) end($pathParts);
+        return end($pathParts);
     }
 
     public function pushVersion(): void

@@ -37,7 +37,7 @@ class DistributionController extends FAIRDataController
         }
 
         return new Response(
-            (new DistributionGraphResource($distribution))->toGraph($this->baseUri)->serialise('turtle'),
+            (new DistributionGraphResource($distribution, $this->baseUri))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );

@@ -43,8 +43,10 @@ class DistributionVoter extends Voter
         switch ($attribute) {
             case self::VIEW:
                 return $this->security->isGranted(self::VIEW, $distribution->getDataset());
+
             case self::EDIT:
                 return $this->security->isGranted(self::EDIT, $distribution->getDataset());
+
             case self::ACCESS_DATA:
                 return $this->canAccessData($distribution, $token);
         }
