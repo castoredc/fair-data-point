@@ -209,7 +209,7 @@ export default class MetadataForm extends Component {
                 isLoading:      true,
             });
 
-            axios.post('/api/metadata/' + type + '/' + object.id, data)
+            axios.post('/api/metadata/' + type + (type === 'fdp' ? '' : '/' + object.id), data)
                 .then((response) => {
                     this.setState({
                         isSaved:        true,

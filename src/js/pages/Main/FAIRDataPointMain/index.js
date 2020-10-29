@@ -72,7 +72,7 @@ export default class FAIRDataPointMain extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, {fdp});
 
-        const title = fdp ? localizedText(fdp.title, 'en') : null;
+        const title = fdp ? localizedText(fdp.metadata.title, 'en') : null;
 
         return <Layout
             className="FAIRDataPoint"
@@ -84,9 +84,9 @@ export default class FAIRDataPointMain extends Component {
 
             <MainBody isLoading={(isLoadingFDP || isLoadingCatalogs)}>
                 <div className="MainCol">
-                    {(fdp && fdp.description && !embedded) &&
+                    {(fdp && fdp.metadata.description && !embedded) &&
                         <div className="InformationDescription">
-                            {localizedText(fdp.description, 'en', true)}
+                            {localizedText(fdp.metadata.description, 'en', true)}
                         </div>}
 
                     <Heading type="Subsection">Catalogs</Heading>

@@ -14,6 +14,7 @@ use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\Agent\Organization\OrganizationGraphResource;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use EasyRdf\Graph;
+use EasyRdf\Literal;
 
 abstract class GraphResource
 {
@@ -54,13 +55,17 @@ abstract class GraphResource
         $graph->addResource($this->getUrl(), 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());
 
         $graph->addResource($this->getUrl(), 'fdp:metadataIdentifier', $this->getUrl());
-        $graph->addResource($this->getUrl(), 'fdp:metadataIssued', $metadata->getCreatedAt()->format('Y-m-d\TH:i:s'));
+
+        $createdAt = new Literal($metadata->getCreatedAt()->format('Y-m-d\TH:i:s'), null, 'xsd:dateTime');
 
         if ($metadata->getUpdatedAt() === null) {
-            $graph->addResource($this->getUrl(), 'fdp:metadataModified', $metadata->getCreatedAt()->format('Y-m-d\TH:i:s'));
+            $updatedAt = $createdAt;
         } else {
-            $graph->addResource($this->getUrl(), 'fdp:metadataModified', $metadata->getUpdatedAt()->format('Y-m-d\TH:i:s'));
+            $updatedAt = new Literal($metadata->getUpdatedAt()->format('Y-m-d\TH:i:s'), null, 'xsd:dateTime');
         }
+
+        $graph->addLiteral($this->getUrl(), 'fdp:metadataIssued', $createdAt);
+        $graph->addLiteral($this->getUrl(), 'fdp:metadataModified', $updatedAt);
 
         return $graph;
     }

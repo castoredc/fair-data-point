@@ -13,6 +13,7 @@ import Distribution from "./Distribution";
 import Dataset from "./Dataset";
 import Datasets from "./Home/Datasets";
 import CustomIcon from "../../components/Icon/CustomIcon";
+import FAIRDataPoint from "./FAIRDataPoint";
 
 export default class Admin extends Component {
     constructor(props) {
@@ -40,87 +41,97 @@ export default class Admin extends Component {
                 items={[
                     {
                         destination: '#',
-                        label:       'Castor',
-                        type:        'brand',
+                        label: 'Castor',
+                        type: 'brand',
                     },
                     {
                         destination: <Link to={'/admin/catalogs'}/>,
-                        icon:        <CustomIcon type="catalog" />,
-                        label:       'Catalogs',
-                        isCurrent:   (
-                                         matchPath(window.location.pathname, {
-                                             path:   "/admin/catalogs",
-                                             exact:  true,
-                                             strict: false,
-                                         }) || matchPath(window.location.pathname, {
-                                             path:   "/admin/catalog/:catalog",
-                                             exact:  false,
-                                             strict: false,
-                                         })
-                                     ),
+                        icon: <CustomIcon type="catalog"/>,
+                        label: 'Catalogs',
+                        isCurrent: (
+                            matchPath(window.location.pathname, {
+                                path: "/admin/catalogs",
+                                exact: true,
+                                strict: false,
+                            }) || matchPath(window.location.pathname, {
+                                path: "/admin/catalog/:catalog",
+                                exact: false,
+                                strict: false,
+                            })
+                        ),
                     },
                     {
                         destination: <Link to={'/admin/datasets'}/>,
-                        icon:        <CustomIcon type="dataset" />,
-                        label:       'Datasets',
-                        isCurrent:   (
-                                         matchPath(window.location.pathname, {
-                                             path:   "/admin/datasets",
-                                             exact:  true,
-                                             strict: false,
-                                         }) || matchPath(window.location.pathname, {
-                                             path:   "/admin/dataset/:dataset",
-                                             exact:  false,
-                                             strict: false,
-                                         })
-                                     ),
+                        icon: <CustomIcon type="dataset"/>,
+                        label: 'Datasets',
+                        isCurrent: (
+                            matchPath(window.location.pathname, {
+                                path: "/admin/datasets",
+                                exact: true,
+                                strict: false,
+                            }) || matchPath(window.location.pathname, {
+                                path: "/admin/dataset/:dataset",
+                                exact: false,
+                                strict: false,
+                            })
+                        ),
                     },
                     {
                         destination: <Link to={'/admin/studies'}/>,
-                        icon:        'study',
-                        label:       'Studies',
-                        isCurrent:   (
-                                         matchPath(window.location.pathname, {
-                                             path:   "/admin/studies",
-                                             exact:  true,
-                                             strict: false,
-                                         }) || matchPath(window.location.pathname, {
-                                             path:   "/admin/study/:study",
-                                             exact:  false,
-                                             strict: false,
-                                         })
-                                     ),
+                        icon: 'study',
+                        label: 'Studies',
+                        isCurrent: (
+                            matchPath(window.location.pathname, {
+                                path: "/admin/studies",
+                                exact: true,
+                                strict: false,
+                            }) || matchPath(window.location.pathname, {
+                                path: "/admin/study/:study",
+                                exact: false,
+                                strict: false,
+                            })
+                        ),
                     },
                     {
                         destination: <Link to={'/admin/models'}/>,
-                        icon:        'structure',
-                        label:       'Data models',
-                        isCurrent:   (
-                                         matchPath(window.location.pathname, {
-                                             path:   "/admin/models",
-                                             exact:  true,
-                                             strict: false,
-                                         }) || matchPath(window.location.pathname, {
-                                             path:   "/admin/model/:model",
-                                             exact:  false,
-                                             strict: false,
-                                         })
-                                     ),
+                        icon: 'structure',
+                        label: 'Data models',
+                        isCurrent: (
+                            matchPath(window.location.pathname, {
+                                path: "/admin/models",
+                                exact: true,
+                                strict: false,
+                            }) || matchPath(window.location.pathname, {
+                                path: "/admin/model/:model",
+                                exact: false,
+                                strict: false,
+                            })
+                        ),
+                    },
+                    {
+                        destination: <Link to={'/admin/fdp/metadata'}/>,
+                        icon: <CustomIcon type="metadata"/>,
+                        label: 'Metadata',
+                        isCurrent: matchPath(window.location.pathname, {
+                            path: "/admin/fdp/metadata",
+                            exact: true,
+                            strict: false,
+                        }),
                     },
                     {
                         items: [
                             {
                                 isTitle: true,
-                                label:   'Account',
+                                label: 'Account',
                             },
                             {
                                 destination: '/logout',
-                                icon:        'logOut',
-                                label:       'Log out',
+                                icon: 'logOut',
+                                label: 'Log out',
                             },
                         ],
                         label: 'Account',
-                        type:  'account',
+                        type: 'account',
                     },
                 ]}
                 label="Castor navigation"
@@ -128,6 +139,8 @@ export default class Admin extends Component {
             <div className="Main">
                 <Switch>
                     <Redirect exact from="/admin" to="/admin/catalogs"/>
+
+                    <Route path="/admin/fdp" component={FAIRDataPoint}/>
 
                     <Route path="/admin/catalogs" exact component={Catalogs}/>
                     <Route path="/admin/catalog/:catalog" component={Catalog}/>
