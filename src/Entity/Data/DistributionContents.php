@@ -49,7 +49,7 @@ abstract class DistributionContents
     private bool $isPublished = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\Log\DistributionGenerationLog", mappedBy="distribution", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\Log\DistributionGenerationLog", mappedBy="distribution", cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Collection<DistributionGenerationLog>

@@ -33,7 +33,7 @@ class DistributionGenerationLog
     private DistributionContents $distribution;
 
     /**
-     * @ORM\OneToMany(targetEntity="DistributionGenerationRecordLog", mappedBy="log", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="DistributionGenerationRecordLog", mappedBy="log", cascade={"persist"})
      *
      * @var Collection<DistributionGenerationRecordLog>
      */
