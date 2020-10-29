@@ -42,6 +42,7 @@ class StudyVoter extends Voter
         switch ($attribute) {
             case self::VIEW:
                 return $this->canView($study, $token);
+
             case self::EDIT:
                 return $this->canEdit($study, $token);
         }

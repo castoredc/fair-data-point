@@ -44,6 +44,7 @@ class DatasetVoter extends Voter
         switch ($attribute) {
             case self::VIEW:
                 return $this->security->isGranted(self::VIEW, $dataset->getStudy());
+
             case self::EDIT:
                 return $this->security->isGranted(self::EDIT, $dataset->getStudy());
         }

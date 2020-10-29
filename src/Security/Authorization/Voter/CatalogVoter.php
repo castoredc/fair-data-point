@@ -47,8 +47,10 @@ class CatalogVoter extends Voter
         switch ($attribute) {
             case self::VIEW:
                 return true;
+
             case self::ADD:
                 return $this->canAdd($catalog, $token);
+
             case self::EDIT:
                 return false;
         }
