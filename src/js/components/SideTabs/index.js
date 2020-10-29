@@ -46,6 +46,7 @@ export default class SideTabs extends Component {
                         } else {
                             return <button
                                 onClick={() => this.changeTab(index)}
+                                type="button"
                                 className={classNames('SideTabsNavItem', activeTab === index && 'Active')}
                                 key={`sidetabs-${index}`}>
                                 {tab.number && <span className="SideTabsNavItemNumber">{tab.number}</span>}
