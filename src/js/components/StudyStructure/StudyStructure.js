@@ -72,6 +72,7 @@ export default class StudyStructure extends Component {
                                         const active = selectedStep !== null && selectedStep.id === step.id;
                                         return <button key={step.id}
                                                        className={classNames('Step', active && 'active')}
+                                                       type="button"
                                                        onClick={() => {
                                                            this.handleStepSwitch(step)
                                                        }}
