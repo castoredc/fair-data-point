@@ -10,6 +10,7 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function array_merge;
 use function count;
 
 /**
@@ -110,21 +111,26 @@ class Catalog implements AccessibleEntity
      */
     public function getDatasets(bool $includeUnpublishedDatasets): array
     {
-        if ($includeUnpublishedDatasets) {
-            return $this->datasets->toArray();
+        $datasets = $this->datasets->toArray();
+        $return = [];
+
+        foreach ($this->getStudies($includeUnpublishedDatasets) as $study) {
+            $datasets = array_merge($datasets, $study->getDatasets()->toArray());
         }
 
-        $datasets = [];
+        if ($includeUnpublishedDatasets) {
+            return $datasets;
+        }
 
-        foreach ($this->datasets as $dataset) {
+        foreach ($datasets as $dataset) {
             if (! $dataset->isPublished()) {
                 continue;
             }
 
-            $datasets[] = $dataset;
+            $return[] = $dataset;
         }
 
-        return $datasets;
+        return $return;
     }
 
     /** @return Study[] */
