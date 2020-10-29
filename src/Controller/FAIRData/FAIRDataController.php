@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData;
 
 use App\Service\UriHelper;
+use EasyRdf\RdfNamespace;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use function in_array;
@@ -18,6 +19,8 @@ abstract class FAIRDataController extends AbstractController
     {
         $this->uriHelper = $uriHelper;
         $this->baseUri = $uriHelper->getBaseUri();
+
+        $this->setNameSpaces();
     }
 
     protected function acceptsHttp(Request $request): bool
@@ -36,5 +39,11 @@ abstract class FAIRDataController extends AbstractController
         }
 
         return in_array('text/turtle', $request->getAcceptableContentTypes(), true) || in_array('text/turtle;q=0.8', $request->getAcceptableContentTypes(), true);
+    }
+
+    protected function setNameSpaces(): void
+    {
+        RdfNamespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
+        RdfNamespace::set('fdp', 'http://rdf.biosemantics.org/ontologies/fdp-o#');
     }
 }

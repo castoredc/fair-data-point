@@ -53,6 +53,15 @@ abstract class GraphResource
 
         $graph->addResource($this->getUrl(), 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());
 
+        $graph->addResource($this->getUrl(), 'fdp:metadataIdentifier', $this->getUrl());
+        $graph->addResource($this->getUrl(), 'fdp:metadataIssued', $metadata->getCreatedAt()->format('Y-m-d\TH:i:s'));
+
+        if ($metadata->getUpdatedAt() === null) {
+            $graph->addResource($this->getUrl(), 'fdp:metadataModified', $metadata->getCreatedAt()->format('Y-m-d\TH:i:s'));
+        } else {
+            $graph->addResource($this->getUrl(), 'fdp:metadataModified', $metadata->getUpdatedAt()->format('Y-m-d\TH:i:s'));
+        }
+
         return $graph;
     }
 
