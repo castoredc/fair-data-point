@@ -62,6 +62,7 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/fdp/metadata", name="admin_fdp_metadata")
      * @Route("/catalogs", name="admin_catalogs")
      * @Route("/models", name="admin_models")
      * @Route("/studies", name="admin_studies")

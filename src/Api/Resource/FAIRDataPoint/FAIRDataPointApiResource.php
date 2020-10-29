@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\FAIRDataPoint;
 
+use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\FAIRDataPoint;
 
@@ -20,15 +21,29 @@ class FAIRDataPointApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        return [
+        $fdp = [
             'relativeUrl' => $this->fairDataPoint->getRelativeUrl(),
             'iri' => $this->fairDataPoint->getIri(),
-            'title' => $this->fairDataPoint->getTitle()->toArray(),
-            'version' => $this->fairDataPoint->getVersion(),
-            'description' => $this->fairDataPoint->getDescription()->toArray(),
-            'publishers' => [],
-            'language' => $this->fairDataPoint->getLanguage()->toArray(),
-            'license' => $this->fairDataPoint->getLicense()->toArray(),
+            'hasMetadata' => $this->fairDataPoint->hasMetadata(),
         ];
+
+        if ($this->fairDataPoint->hasMetadata()) {
+            $metadata = $this->fairDataPoint->getLatestMetadata();
+
+            $fdp['metadata'] = [
+                'title' => $metadata->getTitle()->toArray(),
+                'version' => [
+                    'metadata' => $metadata->getVersion()->getValue(),
+                ],
+                'description' => $metadata->getDescription()->toArray(),
+                'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
+                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
+                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
+                'created' => $metadata->getCreatedAt(),
+                'updated' => $metadata->getUpdatedAt(),
+            ];
+        }
+
+        return $fdp;
     }
 }

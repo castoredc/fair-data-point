@@ -32,8 +32,8 @@ class FAIRDataPointController extends FAIRDataController
             return $this->render(
                 'react.html.twig',
                 [
-                    'title' => $fdp->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $fdp->getDescription()->getTextByLanguageString('en')->getText(),
+                    'title' => $fdp->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
+                    'description' => $fdp->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
                 ],
             );
         }
