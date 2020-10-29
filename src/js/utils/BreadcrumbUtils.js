@@ -9,7 +9,7 @@ export const getBreadCrumbs = (location, data) => {
     let crumbs = [
         fdp ? {
             type: 'fdp',
-            title: fdp.title,
+            title: fdp.hasMetadata ? fdp.metadata.title : 'FAIR Data Point',
             data: fdp,
             path: '/fdp',
             state: {fdp}
