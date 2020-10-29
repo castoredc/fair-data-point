@@ -44,7 +44,7 @@ class FAIRDataPointGraphResource extends GraphResource
 
         foreach ($this->fairDataPoint->getCatalogs() as $catalog) {
             /** @var Catalog $catalog */
-            $graph->addResource($this->getUrl(), 'http://www.re3data.org/schema/3-0#dataCatalog', $this->baseUrl . $catalog->getRelativeUrl());
+            $graph->addResource($this->getUrl(), 'r3d:dataCatalog', $this->baseUrl . $catalog->getRelativeUrl());
         }
 
         return $graph;
