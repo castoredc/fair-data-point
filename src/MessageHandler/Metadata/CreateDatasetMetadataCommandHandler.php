@@ -6,6 +6,7 @@ namespace App\MessageHandler\Metadata;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Exception\NoAccessPermission;
 use App\Message\Metadata\CreateDatasetMetadataCommand;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
 {
@@ -34,6 +35,10 @@ class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
         }
 
         $metadata->setPublishers($this->parsePublishers($command->getPublishers()));
+
+        $theme = $this->parseOntologyConcepts($command->getTheme());
+
+        $metadata->setThemes(new ArrayCollection($theme));
 
         $dataset->addMetadata($metadata);
 

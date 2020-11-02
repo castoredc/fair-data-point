@@ -3,6 +3,7 @@ import '../Form.scss'
 import MetadataForm from "./MetadataForm";
 import FormItem from "../FormItem";
 import Input from "../../Input";
+import OntologyConceptFormBlock from "../OntologyConceptFormBlock";
 
 export default class CatalogMetadataForm extends Component {
     render() {
@@ -32,6 +33,13 @@ export default class CatalogMetadataForm extends Component {
                         serverError={validation.logo}
                     />
                 </FormItem>
+
+                <OntologyConceptFormBlock
+                    label="Theme taxonomy"
+                    value={data.themeTaxonomy}
+                    name="themeTaxonomy"
+                    handleChange={handleChange}
+                />
             </div>)}
             </MetadataForm>
         );
@@ -41,4 +49,5 @@ export default class CatalogMetadataForm extends Component {
 const defaultData = {
     'homepage': '',
     'logo' : '',
+    'themeTaxonomy': []
 };

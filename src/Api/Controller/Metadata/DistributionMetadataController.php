@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Metadata\DatasetMetadataApiRequest;
+use App\Api\Request\Metadata\DistributionMetadataApiRequest;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Message\Metadata\CreateDistributionMetadataCommand;
@@ -26,13 +26,13 @@ class DistributionMetadataController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_metadata_distribution_add")
      */
-    public function addCatalogMetadata(Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function addDistributionMetadata(Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
 
         try {
-            $parsed = $this->parseRequest(DatasetMetadataApiRequest::class, $request);
-            assert($parsed instanceof DatasetMetadataApiRequest);
+            $parsed = $this->parseRequest(DistributionMetadataApiRequest::class, $request);
+            assert($parsed instanceof DistributionMetadataApiRequest);
 
             $bus->dispatch(
                 new CreateDistributionMetadataCommand(

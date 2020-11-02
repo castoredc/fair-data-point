@@ -31,7 +31,9 @@ class DatasetGraphResource extends GraphResource
 
         $graph = $this->addMetadataToGraph($metadata, $graph);
 
-        //$graph->addResource($this->getAccessUrl(), 'dcat:theme', $this->theme->getValue());
+        foreach ($metadata->getThemes() as $theme) {
+            $graph->addResource($this->getUrl(), 'dcat:theme', $theme->getUrl()->getValue());
+        }
 
         foreach ($this->dataset->getDistributions() as $distribution) {
             /** @var Distribution $distribution */

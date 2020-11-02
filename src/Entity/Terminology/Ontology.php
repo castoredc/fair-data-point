@@ -28,11 +28,10 @@ class Ontology
     /** @ORM\Column(type="string") */
     private string $bioPortalId;
 
-    public function __construct(string $name, Iri $url, string $bioPortalId)
+    public function __construct(string $name, Iri $url)
     {
         $this->name = $name;
         $this->url = $url;
-        $this->bioPortalId = $bioPortalId;
     }
 
     public function getId(): string
@@ -68,5 +67,21 @@ class Ontology
     public function setBioPortalId(string $bioPortalId): void
     {
         $this->bioPortalId = $bioPortalId;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromData(array $data): self
+    {
+        $ontology = new Ontology($data['name'], new Iri($data['url']));
+        $ontology->setId($data['id']);
+
+        return $ontology;
     }
 }

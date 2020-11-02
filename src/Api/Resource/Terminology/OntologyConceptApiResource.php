@@ -22,7 +22,7 @@ class OntologyConceptApiResource implements ApiResource
     {
         return [
             'code' => $this->concept->getCode(),
-            'url' => $this->concept->getUrl(),
+            'url' => $this->concept->getUrl()->getValue(),
             'displayName' => $this->concept->getDisplayName(),
             'ontology' => (new OntologyApiResource($this->concept->getOntology()))->toArray(),
         ];

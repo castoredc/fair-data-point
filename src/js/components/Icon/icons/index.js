@@ -17,6 +17,7 @@ import preview from './preview.svg'
 import repeated from './repeated.svg'
 import versions from './versions.svg'
 import warning from './warning.svg'
+import fair from './fair.svg'
 
 export default {
     flagNL,
@@ -37,5 +38,6 @@ export default {
     preview,
     repeated,
     versions,
-    warning
+    warning,
+    fair
 };

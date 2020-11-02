@@ -255,7 +255,7 @@ export default class MetadataForm extends Component {
 
             if (publisher.type === 'organization') {
                 name = publisher.organization.name;
-                additionalInfo = publisher.department.name;
+                additionalInfo = typeof publisher.department !== 'undefined' ? publisher.department.name : '';
             } else if (publisher.type === 'person') {
                 name = [publisher.person.firstName, publisher.person.middleName, publisher.person.lastName].filter(Boolean).join(' ');
                 additionalInfo = publisher.person.orcid;

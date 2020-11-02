@@ -26,7 +26,7 @@ class DatasetMetadataController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_metadata_dataset_add")
      */
-    public function addCatalogMetadata(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
+    public function addDatasetMetadata(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
 
@@ -42,7 +42,8 @@ class DatasetMetadataController extends ApiController
                     $parsed->getLanguage(),
                     $parsed->getLicense(),
                     $parsed->getVersionUpdate(),
-                    $parsed->getPublishers()
+                    $parsed->getPublishers(),
+                    $parsed->getTheme()
                 )
             );
 

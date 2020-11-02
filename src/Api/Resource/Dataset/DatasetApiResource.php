@@ -6,6 +6,7 @@ namespace App\Api\Resource\Dataset;
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Study\StudyApiResource;
+use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Dataset;
 
 class DatasetApiResource implements ApiResource
@@ -45,6 +46,7 @@ class DatasetApiResource implements ApiResource
                 'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
                 'created' => $metadata->getCreatedAt(),
                 'updated' => $metadata->getUpdatedAt(),
+                'theme' => (new OntologyConceptsApiResource($metadata->getThemes()->toArray()))->toArray(),
             ];
         }
 
