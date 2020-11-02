@@ -12,8 +12,8 @@ export default class DistributionSubset extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingNodes: true,
-            isLoadingDataModel: true,
+            isLoadingNodes: props.distribution.type === 'rdf',
+            isLoadingDataModel: props.distribution.type === 'rdf',
             isLoadingInstitutes: true,
             isLoadingContents: true,
             nodes: null,
@@ -25,8 +25,13 @@ export default class DistributionSubset extends Component {
     }
 
     componentDidMount() {
-        this.getDataModel();
-        this.getNodes();
+        const {distribution} = this.props;
+
+        if(distribution.type === 'rdf') {
+            this.getDataModel();
+            this.getNodes();
+        }
+
         this.getInstitutes();
         this.getContents();
     }
@@ -184,7 +189,7 @@ export default class DistributionSubset extends Component {
         const {isLoadingNodes, isLoadingDataModel, isLoadingInstitutes, isLoadingContents, nodes, institutes, contents} = this.state;
         const {distribution} = this.props;
 
-        if (isLoadingNodes || isLoadingDataModel || isLoadingInstitutes || isLoadingContents) {
+        if (isLoadingInstitutes || isLoadingContents) {
             return <InlineLoader/>;
         }
 
