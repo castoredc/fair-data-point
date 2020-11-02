@@ -41,7 +41,7 @@ class DistributionGraphResource extends GraphResource
             $graph->addLiteral($this->getUrl(), 'dcat:mediaType', 'text/csv');
         }
 
-        $graph->addResource($this->getUrl(), 'dcat:isPartOf', $this->baseUrl . $dataset->getRelativeUrl());
+        $graph->addResource($this->getUrl(), 'dcterms:isPartOf', $this->baseUrl . $dataset->getRelativeUrl());
 
         return $graph;
     }
