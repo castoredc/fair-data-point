@@ -45,6 +45,16 @@ export default class Admin extends Component {
                         type: 'brand',
                     },
                     {
+                        destination: <Link to={'/admin/fdp/metadata'}/>,
+                        icon: <CustomIcon type="fair"/>,
+                        label: 'FAIR Data Point',
+                        isCurrent: matchPath(window.location.pathname, {
+                            path: "/admin/fdp/metadata",
+                            exact: true,
+                            strict: false,
+                        }),
+                    },
+                    {
                         destination: <Link to={'/admin/catalogs'}/>,
                         icon: <CustomIcon type="catalog"/>,
                         label: 'Catalogs',
@@ -107,16 +117,6 @@ export default class Admin extends Component {
                                 strict: false,
                             })
                         ),
-                    },
-                    {
-                        destination: <Link to={'/admin/fdp/metadata'}/>,
-                        icon: <CustomIcon type="metadata"/>,
-                        label: 'Metadata',
-                        isCurrent: matchPath(window.location.pathname, {
-                            path: "/admin/fdp/metadata",
-                            exact: true,
-                            strict: false,
-                        }),
                     },
                     {
                         items: [

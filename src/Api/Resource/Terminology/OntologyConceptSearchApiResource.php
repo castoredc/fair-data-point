@@ -28,15 +28,19 @@ class OntologyConceptSearchApiResource implements ApiResource
         foreach ($this->concepts as $concept) {
             if ($concept instanceof Concept) {
                 $data[] = [
+                    'type' => 'concept',
+                    'url' => (string) $concept->getId(),
+                    'code' => $concept->getNotation(),
                     'value' => $concept->getNotation(),
                     'label' => $concept->getPrefLabel(),
-                    'type' => 'concept',
                 ];
             } else {
                 $data[] = [
+                    'type' => 'individual',
+                    'url' => (string) $concept->getId(),
+                    'code' => $concept->getId()->getBase(),
                     'value' => $concept->getId()->getBase(),
                     'label' => $concept->getLabel(),
-                    'type' => 'individual',
                 ];
             }
         }

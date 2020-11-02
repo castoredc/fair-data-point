@@ -45,6 +45,7 @@ class CatalogMetadataController extends ApiController
                     $parsed->getPublishers(),
                     $parsed->getHomepage(),
                     $parsed->getLogo(),
+                    $parsed->getThemeTaxonomy()
                 )
             );
 

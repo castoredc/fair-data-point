@@ -12,7 +12,10 @@ use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
+use App\Entity\Terminology\Ontology;
+use App\Entity\Terminology\OntologyConcept;
 use App\Exception\InvalidAgentType;
+use App\Exception\OntologyNotFound;
 use App\Service\VersionNumberHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -147,5 +150,38 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
         assert($license instanceof License);
 
         return $license;
+    }
+
+    /**
+     * @param OntologyConcept[] $concepts
+     *
+     * @return OntologyConcept[]
+     */
+    protected function parseOntologyConcepts(array $concepts): array
+    {
+        $return = [];
+
+        $ontologyRepository = $this->em->getRepository(Ontology::class);
+        $ontologyConceptRepository = $this->em->getRepository(OntologyConcept::class);
+
+        foreach ($concepts as $concept) {
+            $ontology = $ontologyRepository->find($concept->getOntology()->getId());
+
+            if ($ontology === null) {
+                throw new OntologyNotFound();
+            }
+
+            $concept->setOntology($ontology);
+
+            $dbConcept = $ontologyConceptRepository->findByOntologyAndCode($ontology, $concept->getCode());
+
+            if ($dbConcept !== null) {
+                $return[] = $dbConcept;
+            } else {
+                $return[] = $concept;
+            }
+        }
+
+        return $return;
     }
 }

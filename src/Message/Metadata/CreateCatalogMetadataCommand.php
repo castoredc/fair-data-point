@@ -7,6 +7,7 @@ use App\Entity\Enum\VersionType;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\LocalizedText;
+use App\Entity\Terminology\OntologyConcept;
 
 class CreateCatalogMetadataCommand extends CreateMetadataCommand
 {
@@ -16,7 +17,13 @@ class CreateCatalogMetadataCommand extends CreateMetadataCommand
 
     private ?string $logo = null;
 
-    /** @param Agent[] $publishers */
+    /** @var OntologyConcept[] */
+    private array $themeTaxonomy;
+
+    /**
+     * @param Agent[]           $publishers
+     * @param OntologyConcept[] $themeTaxonomy
+     */
     public function __construct(
         Catalog $catalog,
         ?LocalizedText $title,
@@ -26,13 +33,15 @@ class CreateCatalogMetadataCommand extends CreateMetadataCommand
         VersionType $versionUpdate,
         array $publishers,
         ?string $homepage,
-        ?string $logo
+        ?string $logo,
+        array $themeTaxonomy
     ) {
         parent::__construct($title, $description, $language, $license, $versionUpdate, $publishers);
 
         $this->catalog = $catalog;
         $this->homepage = $homepage;
         $this->logo = $logo;
+        $this->themeTaxonomy = $themeTaxonomy;
     }
 
     public function getCatalog(): Catalog
@@ -48,5 +57,13 @@ class CreateCatalogMetadataCommand extends CreateMetadataCommand
     public function getLogo(): ?string
     {
         return $this->logo;
+    }
+
+    /**
+     * @return OntologyConcept[]
+     */
+    public function getThemeTaxonomy(): array
+    {
+        return $this->themeTaxonomy;
     }
 }

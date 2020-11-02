@@ -7,6 +7,7 @@ use App\Entity\Iri;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Exception\NoAccessPermission;
 use App\Message\Metadata\CreateCatalogMetadataCommand;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
 {
@@ -43,6 +44,10 @@ class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
         }
 
         $metadata->setPublishers($this->parsePublishers($command->getPublishers()));
+
+        $themeTaxonomy = $this->parseOntologyConcepts($command->getThemeTaxonomy());
+
+        $metadata->setThemeTaxonomies(new ArrayCollection($themeTaxonomy));
 
         $catalog->addMetadata($metadata);
 

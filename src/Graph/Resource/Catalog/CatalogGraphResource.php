@@ -27,7 +27,7 @@ class CatalogGraphResource extends GraphResource
 
         $graph = $this->addMetadataToGraph($metadata, $graph);
 
-        foreach ($this->catalog->getThemeTaxonomies() as $themeTaxonomy) {
+        foreach ($metadata->getThemeTaxonomies() as $themeTaxonomy) {
             $graph->addResource($this->getUrl(), 'dcat:themeTaxonomy', $themeTaxonomy->getUrl()->getValue());
         }
 

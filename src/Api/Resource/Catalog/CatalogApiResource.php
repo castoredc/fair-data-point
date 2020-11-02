@@ -5,6 +5,7 @@ namespace App\Api\Resource\Catalog;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Catalog;
 
 class CatalogApiResource implements ApiResource
@@ -45,6 +46,7 @@ class CatalogApiResource implements ApiResource
                 'updated' => $metadata->getUpdatedAt(),
                 'homepage' => $metadata->getHomepage() !== null ? $metadata->getHomepage()->getValue() : null,
                 'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
+                'themeTaxonomy' => (new OntologyConceptsApiResource($metadata->getThemeTaxonomies()->toArray()))->toArray(),
             ];
         }
 

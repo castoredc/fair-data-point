@@ -32,7 +32,7 @@ abstract class ApiController extends AbstractController
     /**
      * @throws ApiRequestParseError
      */
-    protected function parseRequest(string $requestObject, Request $request, bool $multiple = false): ApiRequest
+    protected function parseRequest(string $requestObject, Request $request): ApiRequest
     {
         $request = new $requestObject($request);
 
