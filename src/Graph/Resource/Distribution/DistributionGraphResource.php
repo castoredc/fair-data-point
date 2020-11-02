@@ -29,6 +29,7 @@ class DistributionGraphResource extends GraphResource
         $graph = $this->addMetadataToGraph($metadata, $graph);
 
         $contents = $this->distribution->getContents();
+        $dataset = $this->distribution->getDataset();
 
         if ($contents instanceof RDFDistribution) {
             $graph->addResource($this->getUrl(), 'dcat:accessURL', $this->baseUrl . $contents->getRelativeUrl());
@@ -39,6 +40,8 @@ class DistributionGraphResource extends GraphResource
             $graph->addResource($this->getUrl(), 'dcat:accessURL', $this->baseUrl . $contents->getRelativeUrl());
             $graph->addLiteral($this->getUrl(), 'dcat:mediaType', 'text/csv');
         }
+
+        $graph->addResource($this->getUrl(), 'dcat:isPartOf', $this->baseUrl . $dataset->getRelativeUrl());
 
         return $graph;
     }

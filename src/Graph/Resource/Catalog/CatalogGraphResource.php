@@ -21,6 +21,7 @@ class CatalogGraphResource extends GraphResource
     {
         $graph = new Graph();
         $metadata = $this->catalog->getLatestMetadata();
+        $fdp = $this->catalog->getFairDataPoint();
 
         $graph->addResource($this->getUrl(), 'a', 'dcat:Catalog');
 
@@ -29,6 +30,8 @@ class CatalogGraphResource extends GraphResource
         foreach ($this->catalog->getDatasets(false) as $dataset) {
             $graph->addResource($this->getUrl(), 'dcat:dataset', $this->baseUrl . $dataset->getRelativeUrl());
         }
+
+        $graph->addResource($this->getUrl(), 'dcat:isPartOf', $this->baseUrl . $fdp->getRelativeUrl());
 
         return $graph;
     }
