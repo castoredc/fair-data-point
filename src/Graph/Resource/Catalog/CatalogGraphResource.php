@@ -31,7 +31,7 @@ class CatalogGraphResource extends GraphResource
             $graph->addResource($this->getUrl(), 'dcat:dataset', $this->baseUrl . $dataset->getRelativeUrl());
         }
 
-        $graph->addResource($this->getUrl(), 'dcat:isPartOf', $this->baseUrl . $fdp->getRelativeUrl());
+        $graph->addResource($this->getUrl(), 'dcterms:isPartOf', $this->baseUrl . $fdp->getRelativeUrl());
 
         return $graph;
     }

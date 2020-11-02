@@ -39,7 +39,7 @@ class DatasetGraphResource extends GraphResource
         }
 
         foreach ($this->dataset->getCatalogs() as $catalog) {
-            $graph->addResource($this->getUrl(), 'dcat:isPartOf', $this->baseUrl . $catalog->getRelativeUrl());
+            $graph->addResource($this->getUrl(), 'dcterms:isPartOf', $this->baseUrl . $catalog->getRelativeUrl());
         }
 
         return $graph;
