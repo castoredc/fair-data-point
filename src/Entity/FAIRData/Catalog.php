@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData;
 
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Study;
+use App\Entity\Terminology\OntologyConcept;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -67,6 +68,14 @@ class Catalog implements AccessibleEntity
      * @var Collection<CatalogMetadata>
      */
     private Collection $metadata;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
+     * @ORM\JoinTable(name="catalog_themetaxonomies")
+     *
+     * @var Collection<OntologyConcept>
+     */
+    private Collection $themeTaxonomies;
 
     public function __construct(string $slug)
     {
@@ -229,5 +238,28 @@ class Catalog implements AccessibleEntity
     public function addMetadata(CatalogMetadata $metadata): void
     {
         $this->metadata->add($metadata);
+    }
+
+    public function hasThemeTaxonomies(): bool
+    {
+        return count($this->themeTaxonomies) > 0;
+    }
+
+    /**
+     * @return Collection<OntologyConcept>
+     */
+    public function getThemeTaxonomies(): Collection
+    {
+        return $this->themeTaxonomies;
+    }
+
+    public function addThemeTaxonomy(OntologyConcept $themeTaxonomy): void
+    {
+        $this->themeTaxonomies->add($themeTaxonomy);
+    }
+
+    public function removeThemeTaxonomy(OntologyConcept $themeTaxonomy): void
+    {
+        $this->themeTaxonomies->removeElement($themeTaxonomy);
     }
 }

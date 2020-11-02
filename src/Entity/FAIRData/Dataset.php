@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData;
 
 use App\Entity\Metadata\DatasetMetadata;
 use App\Entity\Study;
+use App\Entity\Terminology\OntologyConcept;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -63,11 +64,20 @@ class Dataset implements AccessibleEntity
     /** @ORM\Column(type="boolean") */
     private bool $isPublished = false;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
+     * @ORM\JoinTable(name="dataset_themes")
+     *
+     * @var Collection<OntologyConcept>
+     */
+    private Collection $themes;
+
     public function __construct(string $slug)
     {
         $this->slug = $slug;
         $this->catalogs = new ArrayCollection();
         $this->metadata = new ArrayCollection();
+        $this->themes = new ArrayCollection();
     }
 
     public function getId(): string
@@ -180,5 +190,28 @@ class Dataset implements AccessibleEntity
     public function addMetadata(DatasetMetadata $metadata): void
     {
         $this->metadata->add($metadata);
+    }
+
+    public function hasThemes(): bool
+    {
+        return count($this->themes) > 0;
+    }
+
+    /**
+     * @return Collection<OntologyConcept>
+     */
+    public function getThemes(): Collection
+    {
+        return $this->themes;
+    }
+
+    public function addTheme(OntologyConcept $theme): void
+    {
+        $this->themes->add($theme);
+    }
+
+    public function removeTheme(OntologyConcept $theme): void
+    {
+        $this->themes->removeElement($theme);
     }
 }
