@@ -5,6 +5,7 @@ namespace App\Graph\Resource\Dataset;
 
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\LocalizedTextItem;
 use App\Graph\Resource\GraphResource;
 use EasyRdf\Graph;
 
@@ -42,6 +43,13 @@ class DatasetGraphResource extends GraphResource
 
         foreach ($this->dataset->getCatalogs() as $catalog) {
             $graph->addResource($this->getUrl(), 'dcterms:isPartOf', $this->baseUrl . $catalog->getRelativeUrl());
+        }
+
+        if ($metadata->getKeyword() !== null) {
+            foreach ($metadata->getKeyword()->getTexts() as $text) {
+                /** @var LocalizedTextItem $text */
+                $graph->addLiteral($this->getUrl(), 'dcat:keyword', $text->getText(), $text->getLanguage()->getCode());
+            }
         }
 
         return $graph;

@@ -39,6 +39,7 @@ class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
         $theme = $this->parseOntologyConcepts($command->getTheme());
 
         $metadata->setThemes(new ArrayCollection($theme));
+        $metadata->setKeyword($this->parseLocalizedText($command->getKeyword()));
 
         $dataset->addMetadata($metadata);
 

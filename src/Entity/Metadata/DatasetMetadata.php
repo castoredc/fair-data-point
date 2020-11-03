@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Metadata;
 
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\LocalizedText;
 use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,6 +30,12 @@ class DatasetMetadata extends Metadata
      * @var Collection<OntologyConcept>
      */
     private Collection $themes;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
+     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
+     */
+    private ?LocalizedText $keyword = null;
 
     public function __construct(Dataset $dataset)
     {
@@ -74,5 +81,15 @@ class DatasetMetadata extends Metadata
     public function removeTheme(OntologyConcept $theme): void
     {
         $this->themes->removeElement($theme);
+    }
+
+    public function getKeyword(): ?LocalizedText
+    {
+        return $this->keyword;
+    }
+
+    public function setKeyword(?LocalizedText $keyword): void
+    {
+        $this->keyword = $keyword;
     }
 }

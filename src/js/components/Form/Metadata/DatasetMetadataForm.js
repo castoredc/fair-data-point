@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import MetadataForm from "./MetadataForm";
 import OntologyConceptFormBlock from "../OntologyConceptFormBlock";
 import Input from "../../Input";
+import FormItem from "../FormItem";
+import LocalizedTextInput from "../../Input/LocalizedTextInput";
 
 export default class DatasetMetadataForm extends Component {
     render() {
@@ -10,7 +12,17 @@ export default class DatasetMetadataForm extends Component {
         return <MetadataForm type="dataset" object={dataset} onSave={onSave}
                              defaultData={defaultData}
         >
-            {(handleChange, data, validation) => (<div>
+            {(handleChange, data, validation, languages) => (<div>
+                <FormItem label="Keywords">
+                    <LocalizedTextInput
+                        name="keyword"
+                        onChange={handleChange}
+                        value={data.keyword}
+                        serverError={validation.keyword}
+                        languages={languages}
+                    />
+                </FormItem>
+
                 <OntologyConceptFormBlock
                     label="Themes"
                     value={data.theme}
@@ -24,4 +36,5 @@ export default class DatasetMetadataForm extends Component {
 
 const defaultData = {
     'theme': [],
+    'keyword': null,
 };

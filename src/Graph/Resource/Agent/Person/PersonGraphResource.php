@@ -9,6 +9,8 @@ use EasyRdf\Graph;
 
 class PersonGraphResource extends AgentGraphResource
 {
+    private const ORCID_URL = 'https://orcid.org/';
+
     private Person $person;
 
     public function __construct(Person $person, string $baseUrl)
@@ -22,7 +24,7 @@ class PersonGraphResource extends AgentGraphResource
     {
         $url = $this->baseUrl . $this->person->getRelativeUrl();
         if ($this->person->getOrcid() !== null) {
-            $url = $this->person->getOrcid()->getValue();
+            $url = self::ORCID_URL . $this->person->getOrcid()->getValue();
         }
 
         $graph->addResource($url, 'a', 'foaf:Person');

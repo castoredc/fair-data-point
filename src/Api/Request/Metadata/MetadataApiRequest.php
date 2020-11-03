@@ -92,7 +92,7 @@ abstract class MetadataApiRequest extends SingleApiRequest
     }
 
     /** @param mixed[] $items */
-    private function generateLocalizedText(array $items): LocalizedText
+    protected function generateLocalizedText(array $items): LocalizedText
     {
         $texts = new ArrayCollection();
 

@@ -359,7 +359,7 @@ export default class MetadataForm extends Component {
                                                  />
                                              </FormItem>
 
-                                             {children && children(this.handleChange, data, validation)}
+                                             {children && children(this.handleChange, data, validation, languages)}
                                          </div>,
                             },
                             publishers: {
