@@ -66,12 +66,6 @@ abstract class Metadata
     private Collection $publishers;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
-     */
-    private ?LocalizedText $keyword = null;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
      * @ORM\JoinTable(name="dataset_contacts")
      *
@@ -151,16 +145,6 @@ abstract class Metadata
     public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
-    }
-
-    public function getKeyword(): ?LocalizedText
-    {
-        return $this->keyword;
-    }
-
-    public function setKeyword(?LocalizedText $keyword): void
-    {
-        $this->keyword = $keyword;
     }
 
     /**

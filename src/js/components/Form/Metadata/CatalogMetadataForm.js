@@ -15,7 +15,7 @@ export default class CatalogMetadataForm extends Component {
                 object={catalog}
                 onSave={onSave}
                 defaultData={defaultData}
-            >{(handleChange, data, validation) => (<div>
+            >{(handleChange, data, validation, languages) => (<div>
                 <FormItem label="Homepage">
                     <Input
                         name="homepage"

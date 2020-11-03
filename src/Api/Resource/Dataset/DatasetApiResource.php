@@ -47,6 +47,7 @@ class DatasetApiResource implements ApiResource
                 'created' => $metadata->getCreatedAt(),
                 'updated' => $metadata->getUpdatedAt(),
                 'theme' => (new OntologyConceptsApiResource($metadata->getThemes()->toArray()))->toArray(),
+                'keyword' => $metadata->getKeyword() !== null ? $metadata->getKeyword()->toArray() : null,
             ];
         }
 

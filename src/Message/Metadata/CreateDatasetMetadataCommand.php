@@ -16,6 +16,8 @@ class CreateDatasetMetadataCommand extends CreateMetadataCommand
     /** @var OntologyConcept[] */
     private array $theme;
 
+    private ?LocalizedText $keyword = null;
+
     /**
      * @param Agent[]           $publishers
      * @param OntologyConcept[] $theme
@@ -28,12 +30,14 @@ class CreateDatasetMetadataCommand extends CreateMetadataCommand
         ?string $license,
         VersionType $versionUpdate,
         array $publishers,
-        array $theme
+        array $theme,
+        ?LocalizedText $keyword
     ) {
         parent::__construct($title, $description, $language, $license, $versionUpdate, $publishers);
 
         $this->dataset = $dataset;
         $this->theme = $theme;
+        $this->keyword = $keyword;
     }
 
     public function getDataset(): Dataset
@@ -47,5 +51,10 @@ class CreateDatasetMetadataCommand extends CreateMetadataCommand
     public function getTheme(): array
     {
         return $this->theme;
+    }
+
+    public function getKeyword(): ?LocalizedText
+    {
+        return $this->keyword;
     }
 }
