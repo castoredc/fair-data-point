@@ -35,18 +35,24 @@ export default class DepartmentForm extends Component {
     getDepartments = () => {
         const {organization, handleChange} = this.props;
 
-        if (organization.id !== null) {
+        if (organization.id !== null && organization.source === 'database') {
             this.setState({
                 isLoading: true,
             });
 
             axios.get('/api/agent/organization/' + organization.id + '/department')
                 .then((response) => {
+                    const options = response.data.map((department) => {
+                        return {value: department.id, label: department.name, data: department};
+                    });
+
                     this.setState({
-                        options: response.data.map((department) => {
-                            return {value: department.id, label: department.name, data: department};
-                        }),
+                        options: options,
                         isLoading: false,
+                    }, () => {
+                        if(options.length === 0) {
+                            handleChange({target: {name: 'source', value: 'manual'}});
+                        }
                     });
                 })
                 .catch((error) => {
@@ -64,6 +70,8 @@ export default class DepartmentForm extends Component {
         else {
             this.setState({
                 options: [],
+            }, () => {
+                handleChange({target: {name: 'source', value: 'manual'}});
             });
         }
     };
