@@ -1,0 +1,7 @@
+- name: deploy to production
+  hosts: dev
+  become: true
+  become_user: castor
+
+  roles:
+    - deploy

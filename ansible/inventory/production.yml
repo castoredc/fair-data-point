@@ -1,0 +1,7 @@
+all:
+  children:
+    production:
+      hosts:
+        oth-nl-prd-fdp.azure.castoredc.net:
+          host_deploy_path: /srv/www/fdp.castoredc.com
+          host_composer_path: /home/castor/composer.phar
