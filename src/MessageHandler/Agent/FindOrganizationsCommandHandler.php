@@ -8,10 +8,12 @@ use App\Entity\FAIRData\Country;
 use App\Exception\CountryNotFound;
 use App\Exception\NoAccessPermission;
 use App\Message\Agent\FindOrganizationsCommand;
+use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
+use function in_array;
 
 class FindOrganizationsCommandHandler implements MessageHandlerInterface
 {
@@ -19,10 +21,13 @@ class FindOrganizationsCommandHandler implements MessageHandlerInterface
 
     private Security $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security)
+    private ApiClient $gridApiClient;
+
+    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $gridApiClient)
     {
         $this->em = $em;
         $this->security = $security;
+        $this->gridApiClient = $gridApiClient;
     }
 
     /** @return Organization[] */
@@ -41,6 +46,31 @@ class FindOrganizationsCommandHandler implements MessageHandlerInterface
 
         $repository = $this->em->getRepository(Organization::class);
 
-        return $repository->findOrganizations($country, $command->getSearch());
+        /** @var Organization[] $dbOrganizations */
+        $dbOrganizations = $repository->findOrganizations($country, $command->getSearch());
+
+        $gridIds = [];
+
+        foreach ($dbOrganizations as $dbOrganization) {
+            if ($dbOrganization->getGridId() === null) {
+                continue;
+            }
+
+            $gridIds[] = $dbOrganization->getGridId();
+        }
+
+        $organizations = $dbOrganizations;
+
+        $gridInstitutes = $this->gridApiClient->findInstitutesByNameAndCountry($command->getSearch(), $command->getCountry());
+
+        foreach ($gridInstitutes as $gridInstitute) {
+            if (in_array($gridInstitute->getId(), $gridIds, true)) {
+                continue;
+            }
+
+            $organizations[] = $gridInstitute;
+        }
+
+        return $organizations;
     }
 }
