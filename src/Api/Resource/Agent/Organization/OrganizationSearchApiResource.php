@@ -5,13 +5,14 @@ namespace App\Api\Resource\Agent\Organization;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\Grid\Institute;
 
 class OrganizationSearchApiResource implements ApiResource
 {
-    /** @var Organization[] */
+    /** @var array<Organization|Institute> */
     private array $organizations;
 
-    /** @param Organization[] $organizations */
+    /** @param array<Organization|Institute> $organizations */
     public function __construct(array $organizations)
     {
         $this->organizations = $organizations;
@@ -25,12 +26,21 @@ class OrganizationSearchApiResource implements ApiResource
         $data = [];
 
         foreach ($this->organizations as $organization) {
-            $data[] = [
-                'value' => $organization->getId(),
-                'label' => $organization->getName(),
-                'data' => (new OrganizationApiResource($organization))->toArray(),
-                'source' => 'database',
-            ];
+            if ($organization instanceof Organization) {
+                $data[] = [
+                    'value' => $organization->getId(),
+                    'label' => $organization->getName(),
+                    'data' => (new OrganizationApiResource($organization))->toArray(),
+                    'source' => 'database',
+                ];
+            } else {
+                $data[] = [
+                    'value' => $organization->getId(),
+                    'label' => $organization->getName(),
+                    'data' => (new GridInstituteApiResource($organization))->toArray(),
+                    'source' => 'grid',
+                ];
+            }
         }
 
         return $data;

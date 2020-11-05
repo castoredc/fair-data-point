@@ -10,6 +10,7 @@ use App\Entity\FAIRData\Country;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Message\Agent\CreateAffiliationCommand;
+use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -21,10 +22,13 @@ class CreateAffiliationCommandHandler implements MessageHandlerInterface
 
     private Security $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security)
+    private ApiClient $gridApiClient;
+
+    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $gridApiClient)
     {
         $this->em = $em;
         $this->security = $security;
+        $this->gridApiClient = $gridApiClient;
     }
 
     public function __invoke(CreateAffiliationCommand $command): void
@@ -42,6 +46,28 @@ class CreateAffiliationCommandHandler implements MessageHandlerInterface
             if ($organization === null) {
                 throw new NotFound();
             }
+        } elseif ($command->getOrganizationSource()->isGrid()) {
+            try {
+                $gridInstitute = $this->gridApiClient->getInstituteById($command->getOrganizationId());
+            } catch (NotFound $e) {
+                throw new NotFound();
+            }
+
+            $mainAddress = $gridInstitute->getMainAddress();
+
+            $country = $this->em->getRepository(Country::class)->find($mainAddress->getCountryCode());
+
+            $organization = new Organization(
+                null,
+                $gridInstitute->getName(),
+                $gridInstitute->hasLinks() ? $gridInstitute->getLinks()[0] : null,
+                $mainAddress->getCountryCode(),
+                $mainAddress->getCity(),
+                (string) $mainAddress->getLat(),
+                (string) $mainAddress->getLng()
+            );
+
+            $organization->setCountry($country);
         } else {
             $country = $this->em->getRepository(Country::class)->find($command->getOrganizationCountry());
 

@@ -69,3 +69,7 @@ services:
 
     knpu.oauth2.provider_factory:
         class: App\Factory\Security\ProviderFactory
+
+    App\Model\Grid\ApiEndpoint:
+        arguments:
+            - '%env(GRID_API_URL)%'
