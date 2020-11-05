@@ -9,10 +9,10 @@ use App\Entity\Grid\Institute;
 
 class OrganizationSearchApiResource implements ApiResource
 {
-    /** @var Organization|Institute[] */
+    /** @var array<Organization|Institute> */
     private array $organizations;
 
-    /** @param Organization|Institute[] $organizations */
+    /** @param array<Organization|Institute> $organizations */
     public function __construct(array $organizations)
     {
         $this->organizations = $organizations;
@@ -33,7 +33,7 @@ class OrganizationSearchApiResource implements ApiResource
                     'data' => (new OrganizationApiResource($organization))->toArray(),
                     'source' => 'database',
                 ];
-            } elseif ($organization instanceof Institute) {
+            } else {
                 $data[] = [
                     'value' => $organization->getId(),
                     'label' => $organization->getName(),

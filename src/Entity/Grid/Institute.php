@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Grid;
 
 use App\Entity\Iri;
+use function count;
 
 class Institute
 {

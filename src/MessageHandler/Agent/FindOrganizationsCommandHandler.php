@@ -5,6 +5,7 @@ namespace App\MessageHandler\Agent;
 
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
+use App\Entity\Grid\Institute;
 use App\Exception\CountryNotFound;
 use App\Exception\NoAccessPermission;
 use App\Message\Agent\FindOrganizationsCommand;
@@ -30,7 +31,7 @@ class FindOrganizationsCommandHandler implements MessageHandlerInterface
         $this->gridApiClient = $gridApiClient;
     }
 
-    /** @return Organization[] */
+    /** @return array<Institute|Organization> */
     public function __invoke(FindOrganizationsCommand $command): array
     {
         if (! $this->security->isGranted('ROLE_USER')) {
