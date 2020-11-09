@@ -40,7 +40,7 @@
         "castor/coding-standard": "^5.0",
         "easycorp/easy-deploy-bundle": "^1.0",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.12.50",
+        "phpstan/phpstan": "^0.12.54",
         "phpstan/phpstan-deprecation-rules": "^0.12.2",
         "phpstan/phpstan-doctrine": "^0.12.21",
         "phpstan/phpstan-phpunit": "^0.12.8",
