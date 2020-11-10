@@ -61,7 +61,7 @@ class DistributionService
             'password' => $this->pass,
             'dbname' => null,
             'port' => $this->port,
-            'options' => $this->options,
+            'driverOptions' => $this->options,
         ];
 
         try {
@@ -85,6 +85,7 @@ class DistributionService
             'password' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             'dbname' => $databaseInformation->getDatabase(),
             'port' => $this->port,
+            'driverOptions' => $this->options,
         ];
 
         return DriverManager::getConnection($params, $config);
