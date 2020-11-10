@@ -32,12 +32,19 @@ class DistributionService
 
     private int $port;
 
-    public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306)
+    /** @var mixed[] */
+    private array $options;
+
+    /**
+     * @param mixed[] $options
+     */
+    public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306, array $options = [])
     {
         $this->host = $host;
         $this->user = $user;
         $this->pass = $pass;
         $this->port = $port;
+        $this->options = $options;
     }
 
     /**
@@ -54,6 +61,7 @@ class DistributionService
             'password' => $this->pass,
             'dbname' => null,
             'port' => $this->port,
+            'options' => $this->options,
         ];
 
         try {
