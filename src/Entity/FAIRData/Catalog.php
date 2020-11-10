@@ -18,7 +18,7 @@ use function count;
  * @ORM\Table(name="catalog", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Catalog implements AccessibleEntity
+class Catalog implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 

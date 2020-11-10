@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Service\UriHelper;
 use EasyRdf\RdfNamespace;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,5 +46,18 @@ abstract class FAIRDataController extends AbstractController
     {
         RdfNamespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
         RdfNamespace::set('fdp', 'http://rdf.biosemantics.org/ontologies/fdp-o#');
+    }
+
+    /** @return mixed[] */
+    protected function getSeoTexts(MetadataEnrichedEntity $entity): array
+    {
+        if (! $entity->hasMetadata()) {
+            return ['title' => '', 'description' => ''];
+        }
+
+        return [
+            'title' => $entity->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
+            'description' => $entity->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
+        ];
     }
 }
