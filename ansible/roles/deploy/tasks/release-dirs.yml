@@ -20,6 +20,6 @@
     remote_src: yes
 
 - name: Add version to environment variable
-  command:
-    chdir: "{{ release_deploy_path }}"
-    cmd: "echo \"APP_VERSION={{ release_timestamp }}\" > ./.env.prod.local"
+  copy:
+    dest: "{{ release_deploy_path }}/.env.prod.local"
+    content: "APP_VERSION={{ release_timestamp }}"
