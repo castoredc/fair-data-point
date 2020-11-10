@@ -1,0 +1,13 @@
+- name: Create symlink to new release
+  file:
+    src: "{{ release_deploy_path }}"
+    dest: "{{ host_deploy_path }}/current"
+    state: link
+    force: yes
+
+- name: Create symlink to new release
+  file:
+    src: "{{ release_deploy_path }}/public"
+    dest: "{{ host_deploy_path }}/public"
+    state: link
+    force: yes

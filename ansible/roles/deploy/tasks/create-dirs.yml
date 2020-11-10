@@ -1,0 +1,9 @@
+- name: Create base deployment directories.
+  file: state=directory path={{ item.path }}
+  with_items:
+    - { path: "{{ release_deploy_path }}" }
+    - { path: "{{ shared_dir }}" }
+
+- name: Create managed shared directories.
+  file: state=directory path="{{ shared_dir }}/{{ item.path }}"
+  with_items: "{{ symfony_shared_dirs }}"

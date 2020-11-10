@@ -1,37 +1,24 @@
-- set_fact: release_timestamp="{{ansible_date_time.epoch}}"
-- set_fact: release_deploy_path="{{ host_deploy_path }}/releases/{{release_timestamp}}"
+- include: facts.yml
+- include: create-dirs.yml
+- include: git.yml
+- include: release-dirs.yml
+- include: composer.yml
+- include: migrations.yml
+- include: ui.yml
+- include: finish-release.yml
+- include: clean-releases.yml
 
-- name: Checkout Git repository
-  git:
-    repo: git@github.com:castoredc/fair-data-point.git
-    depth: 1
-    dest: "{{ release_deploy_path }}"
-    key_file: /home/castor/.ssh/fair-data-point_github.id_ed25519
+#- name: Create var directory
+#  file:
+#    path: "{{ release_deploy_path }}/var"
+#    state: directory
 
-- name: Install Composer dependencies
-  command:
-    chdir: "{{ release_deploy_path }}"
-    cmd: "{{ host_composer_path }} install -o --no-dev"
 
-- name: Execute migrations
-  command: '{{ release_deploy_path }}/bin/console doctrine:migrations:migrate --no-interaction'
 
-- name: Install Yarn dependencies (local)
-  local_action: "shell yarn install"
-  become: no
-
-- name: Build UI (local)
-  local_action: "shell yarn production"
-  become: no
-
-- name: Copy UI
-  copy:
-    src: "../public"
-    dest: "{{ release_deploy_path }}"
-
-- name: List old releases and clean them up
-  shell: "ls -t {{host_deploy_path}}/releases | tail -n +{{releases_to_keep + 1}}"
-  register: ls_output
-
-- file: name={{host_deploy_path}}/releases/{{ item }} state=absent
-  with_items: {{ ls_output.stdout_lines }}
+#- name: Create symlink to logs
+#  file:
+#    src: "{{ host_deploy_path }}/shared/var/log"
+#    dest: "{{ release_deploy_path }}/var/log"
+#    state: link
+#    force: yes
+#    follow: no

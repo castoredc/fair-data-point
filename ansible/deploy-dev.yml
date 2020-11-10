@@ -2,6 +2,7 @@
   hosts: dev
   become: true
   become_user: castor
-
+  vars_files:
+    - vars/variables.yml
   roles:
     - deploy
