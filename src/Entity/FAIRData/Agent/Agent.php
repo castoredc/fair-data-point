@@ -27,6 +27,7 @@ abstract class Agent
 
     public function __construct(string $slug, string $name)
     {
+        $this->id = null;
         $this->slug = $slug;
         $this->name = $name;
     }
