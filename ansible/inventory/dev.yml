@@ -1,0 +1,8 @@
+all:
+  children:
+    dev:
+      hosts:
+        fdp01.ams3.do.castoredc.net:
+          host_deploy_path: /srv/www/fdp.castoredc.dev
+          host_composer_path: /home/castor/composer.phar
+          releases_to_keep: 10

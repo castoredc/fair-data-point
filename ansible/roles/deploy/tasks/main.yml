@@ -1,0 +1,24 @@
+- include: facts.yml
+- include: create-dirs.yml
+- include: git.yml
+- include: release-dirs.yml
+- include: composer.yml
+- include: migrations.yml
+- include: ui.yml
+- include: finish-release.yml
+- include: clean-releases.yml
+
+#- name: Create var directory
+#  file:
+#    path: "{{ release_deploy_path }}/var"
+#    state: directory
+
+
+
+#- name: Create symlink to logs
+#  file:
+#    src: "{{ host_deploy_path }}/shared/var/log"
+#    dest: "{{ release_deploy_path }}/var/log"
+#    state: link
+#    force: yes
+#    follow: no

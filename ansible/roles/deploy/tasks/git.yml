@@ -1,0 +1,7 @@
+- name: Checkout Git repository
+  git:
+    repo: git@github.com:castoredc/fair-data-point.git
+    depth: 1
+    dest: "{{ release_deploy_path }}"
+    key_file: "{{ host_key_file }}"
+    accept_hostkey: true

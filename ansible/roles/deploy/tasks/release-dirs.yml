@@ -1,0 +1,25 @@
+- name: Ensure shared folders are absent in release.
+  file: state=absent path="{{ release_deploy_path }}/{{ item.path }}"
+  with_items: "{{ symfony_shared_dirs }}"
+
+- name: Ensure managed folders are present.
+  file: state=directory path="{{ release_deploy_path }}/{{ item.path }}"
+  with_items: "{{ symfony_managed_dirs }}"
+
+- name: Create symlinks to shared directories.
+  file:
+    state: link
+    src: "{{ shared_dir }}/{{ item.src }}"
+    path: "{{ release_deploy_path }}/{{ item.path }}"
+  with_items: "{{ symfony_shared_dirs }}"
+
+- name: Copy Environment Variables
+  copy:
+    src: "{{ host_deploy_path }}/.env.local"
+    dest: "{{ release_deploy_path }}/.env.local"
+    remote_src: yes
+
+- name: Add version to environment variable
+  command:
+    chdir: "{{ release_deploy_path }}"
+    cmd: "echo \"APP_VERSION={{ release_timestamp }}\" > ./.env.prod.local"
