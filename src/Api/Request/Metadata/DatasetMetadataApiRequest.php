@@ -44,7 +44,7 @@ class DatasetMetadataApiRequest extends MetadataApiRequest
         return $data;
     }
 
-    public function getKeyword(): LocalizedText
+    public function getKeyword(): ?LocalizedText
     {
         return $this->generateLocalizedText($this->keyword);
     }

@@ -60,12 +60,12 @@ abstract class MetadataApiRequest extends SingleApiRequest
         $this->publishers = $this->getFromData('publishers');
     }
 
-    public function getTitle(): LocalizedText
+    public function getTitle(): ?LocalizedText
     {
         return $this->generateLocalizedText($this->title);
     }
 
-    public function getDescription(): LocalizedText
+    public function getDescription(): ?LocalizedText
     {
         return $this->generateLocalizedText($this->description);
     }
@@ -92,8 +92,12 @@ abstract class MetadataApiRequest extends SingleApiRequest
     }
 
     /** @param mixed[] $items */
-    protected function generateLocalizedText(array $items): LocalizedText
+    protected function generateLocalizedText(?array $items): ?LocalizedText
     {
+        if ($items === null) {
+            return null;
+        }
+
         $texts = new ArrayCollection();
 
         foreach ($items as $item) {
