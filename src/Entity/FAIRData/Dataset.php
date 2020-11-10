@@ -17,7 +17,7 @@ use function count;
  * @ORM\Table(name="dataset", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Dataset implements AccessibleEntity
+class Dataset implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 

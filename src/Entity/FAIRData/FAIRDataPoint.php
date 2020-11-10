@@ -14,7 +14,7 @@ use function count;
  * @ORM\Entity
  * @ORM\Table(name="fdp", indexes={@ORM\Index(name="iri", columns={"iri"})})
  */
-class FAIRDataPoint implements AccessibleEntity
+class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
 {
     /**
      * @ORM\Id

@@ -21,7 +21,7 @@ use function count;
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Distribution implements AccessibleEntity
+class Distribution implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 
