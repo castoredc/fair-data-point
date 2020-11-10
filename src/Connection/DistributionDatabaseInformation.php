@@ -18,9 +18,9 @@ use function str_replace;
  */
 class DistributionDatabaseInformation
 {
-    public const DBNAME_PREPEND = 'dist_';
-    public const DBNAME_PREPEND_ESCAPE = 'dist\_';
-    public const USERNAME_PREPEND = 'du_';
+    public const DBNAME_PREPEND = 'fdp_dist_';
+    public const DBNAME_PREPEND_ESCAPE = 'fdp\_dist\_';
+    public const USERNAME_PREPEND = 'fdp_u_';
 
     /**
      * @ORM\Id

@@ -54,7 +54,7 @@ class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterfac
 
         $databaseInformation = new DistributionDatabaseInformation($distribution);
 
-        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . bin2hex(random_bytes(13)));
+        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . bin2hex(random_bytes(10)));
         $databaseInformation->setPassword($this->encryptionService, bin2hex(random_bytes(32)));
 
         $distribution->setDatabaseInformation($databaseInformation);
