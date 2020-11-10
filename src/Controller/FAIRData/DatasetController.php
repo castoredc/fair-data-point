@@ -21,15 +21,7 @@ class DatasetController extends FAIRDataController
         $this->denyAccessUnlessGranted('view', $dataset);
 
         if ($this->acceptsHttp($request)) {
-            $metadata = $dataset->getStudy()->getLatestMetadata();
-
-            return $this->render(
-                'react.html.twig',
-                [
-                    'title' => $metadata->getBriefName(),
-                    'description' => $metadata->getBriefSummary(),
-                ],
-            );
+            return $this->render('react.html.twig', $this->getSeoTexts($dataset));
         }
 
         return new Response(

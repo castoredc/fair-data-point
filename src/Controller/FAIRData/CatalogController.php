@@ -32,13 +32,7 @@ class CatalogController extends FAIRDataController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         if ($this->acceptsHttp($request)) {
-            return $this->render(
-                'react.html.twig',
-                [
-                    'title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $catalog->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
-                ],
-            );
+            return $this->render('react.html.twig', $this->getSeoTexts($catalog));
         }
 
         return new Response(

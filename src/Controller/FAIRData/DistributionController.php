@@ -27,13 +27,7 @@ class DistributionController extends FAIRDataController
         }
 
         if ($this->acceptsHttp($request)) {
-            return $this->render(
-                'react.html.twig',
-                [
-                    'title' => $distribution->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $distribution->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
-                ],
-            );
+            return $this->render('react.html.twig', $this->getSeoTexts($distribution));
         }
 
         return new Response(

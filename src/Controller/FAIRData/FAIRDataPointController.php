@@ -29,13 +29,7 @@ class FAIRDataPointController extends FAIRDataController
         assert($fdp instanceof FAIRDataPoint);
 
         if ($this->acceptsHttp($request)) {
-            return $this->render(
-                'react.html.twig',
-                [
-                    'title' => $fdp->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
-                    'description' => $fdp->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
-                ],
-            );
+            return $this->render('react.html.twig',  $this->getSeoTexts($fdp));
         }
 
         return new Response(
