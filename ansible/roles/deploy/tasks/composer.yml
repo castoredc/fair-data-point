@@ -1,0 +1,4 @@
+- name: Install Composer dependencies
+  command:
+    chdir: "{{ release_deploy_path }}"
+    cmd: "{{ host_composer_path }} install -o --no-dev"

@@ -1,0 +1,3 @@
+- name: Cleanup releases.
+  shell: "cd {{ host_deploy_path }}/releases && ls -t1 | tail -n +$(({{ releases_to_keep }}+1)) |\
+    xargs -n1 rm -rf"

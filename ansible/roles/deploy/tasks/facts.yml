@@ -1,0 +1,8 @@
+- name: Define release name
+  set_fact: release_timestamp="{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+
+- name: Set release deploy path
+  set_fact: release_deploy_path="{{ host_deploy_path }}/releases/{{release_timestamp}}"
+
+- name: Set shared dir
+  set_fact: shared_dir="{{ host_deploy_path }}/shared"

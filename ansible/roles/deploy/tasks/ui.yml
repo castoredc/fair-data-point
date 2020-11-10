@@ -1,0 +1,12 @@
+- name: Install Yarn dependencies (local)
+  local_action: "shell yarn install"
+  become: no
+
+- name: Build UI (local)
+  local_action: "shell yarn build"
+  become: no
+
+- name: Copy UI
+  copy:
+    src: "../public/build"
+    dest: "{{ release_deploy_path }}/public"
