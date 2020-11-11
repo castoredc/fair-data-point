@@ -161,9 +161,11 @@ export default class StudyList extends Component {
 
     render() {
         const { isLoadingStudies, isLoadingMap, isLoadingFilters, filterOptions, pagination, studies, map } = this.state;
-        const { embedded, displayList, displayFilter, state, catalog } = this.props;
+        const { embedded, visible, representation, displayFilter, state, catalog } = this.props;
 
-        const displayMap = ! displayList;
+        if(!visible) {
+            return null;
+        }
 
         if(studies === null || map === null)
         {
@@ -172,8 +174,8 @@ export default class StudyList extends Component {
 
         return <StickyContainer className="StickyContainer">
                 <div className="Datasets HasFilters" ref={this.wrapperRef}>
-                    <div className={classNames('MainCol', displayMap && 'FullWidth')}>
-                        {displayList && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
+                    <div className={classNames('MainCol', representation === 'map' && 'FullWidth')}>
+                        {representation === 'list' && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
                             {studies.length > 0 ? <div>
                                 {studies.map((item, index) => {
                                     if(item.hasMetadata === false) {
@@ -217,15 +219,15 @@ export default class StudyList extends Component {
                             </div> : <div className="NoResults">No studies found.</div>}
                         </div>}
 
-                        {displayMap && <div className={classNames('Map', isLoadingMap && 'Loading')}>
+                        {representation === 'map' && <div className={classNames('Map', isLoadingMap && 'Loading')}>
                             <StudiesMap studies={map} />
                         </div>}
                     </div>
                     <div
                          className={classNames('SideCol', 'Filters',
-                             ! displayList && 'StickyDisabled',
+                             representation === 'map' && 'StickyDisabled',
                              ! displayFilter && 'Hidden',
-                             (! displayList && displayFilter) && 'Overlay')}>
+                             (representation === 'map' && displayFilter) && 'Overlay')}>
                         <Sticky>
                             {({style, isSticky}) => (
                                 <Filters filters={filterOptions}
