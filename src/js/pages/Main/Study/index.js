@@ -13,6 +13,7 @@ import DatasetList from "../../../components/List/DatasetList";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
+import {Heading} from "@castoredc/matter";
 
 export default class Study extends Component {
     constructor(props) {
@@ -87,6 +88,7 @@ export default class Study extends Component {
                             {tags.length > 0 && <div className="StudyTags"><Tags tags={tags} /></div>}
                         </div>}
 
+                        <Heading type="Subsection">Datasets</Heading>
                         <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
                     </div>
                     <div className="SideCol">

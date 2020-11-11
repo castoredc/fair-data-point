@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {localizedText} from "../../util";
+import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {Heading, Pagination} from "@castoredc/matter";
@@ -93,15 +93,18 @@ export default class DatasetList extends Component {
 
     render() {
         const {embedded, pagination, datasets} = this.state;
-        const {fdp, catalog, study, state} = this.props;
+        const {visible = true, study, state, className} = this.props;
+
+        if(!visible) {
+            return null;
+        }
 
         if (datasets === null) {
             return <InlineLoader/>;
         }
 
-        return <div className="Datasets">
+        return <div className={classNames('Datasets', className)}>
             {datasets.length > 0 ? <div>
-                <Heading type="Subsection">Datasets</Heading>
                 <div className="Description">
                     Datasets are collections of data which are available for access or download in one or more representations.
                 </div>

@@ -39,8 +39,9 @@ header {
     .HeaderUserCol {
         text-align: right;
 
-        .DropdownMenu {
+        .DropdownButtonMenuWrapper {
             margin-top: 5px;
+            right: 0;
         }
     }
 
@@ -62,7 +63,7 @@ header {
                 border-color: transparent;
                 transition: all 0.3s ease;
 
-                &:hover {
+                &:hover, &.Open {
                     background: $cobalt;
                     border-color: $cobalt;
                 }
@@ -85,6 +86,10 @@ header {
         z-index: 1001;
         padding-top: $mobileHeaderPadding;
         padding-bottom: $mobileHeaderPadding;
+
+        .HeaderBackCol {
+            width: 34px;
+        }
 
         .HeaderLogoCol {
             text-align: center;
