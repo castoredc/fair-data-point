@@ -1,0 +1,24 @@
+@import '../../scss/colors';
+
+.DropdownButtonContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.DropdownButtonMenuWrapper {
+  position: absolute;
+  z-index: 100;
+}
+
+.SubsectionSelector .DropdownButton {
+  color: $neutral-800;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.5;
+  padding: 0;
+
+  span {
+    padding: 0;
+    text-decoration: none!important;
+  }
+}
