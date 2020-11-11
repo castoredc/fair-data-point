@@ -5,8 +5,9 @@ import {Link} from "react-router-dom";
 import '../../pages/Main/Main.scss';
 import Breadcrumbs from "../Breadcrumbs";
 import './Header.scss';
-import {Button, CastorLogo, Menu, Stack} from "@castoredc/matter";
+import {Button, CastorLogo, Stack} from "@castoredc/matter";
 import LoginModal from "../../modals/LoginModal";
+import DropdownButton from "../DropdownButton";
 
 export default class Header extends Component {
     constructor(props) {
@@ -73,14 +74,6 @@ export default class Header extends Component {
         this.setState({smallHeader: distanceY > shrinkOn});
     }
 
-    toggleMenu = () => {
-        const {showMenu} = this.state;
-
-        this.setState({
-            showMenu: !showMenu,
-        });
-    };
-
     openModal = (e) => {
         e.preventDefault();
 
@@ -100,7 +93,7 @@ export default class Header extends Component {
 
     render() {
         const {embedded, className, title, badge, location, data, breadcrumbs, user, hideTitle = false, forceSmallHeader = false} = this.props;
-        const {mobile, smallHeader, showMenu, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
+        const {mobile, smallHeader, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
         const adminMenuItems = [{
             destination: '/admin',
@@ -115,12 +108,6 @@ export default class Header extends Component {
         }];
 
         const menuItems = (user && user.isAdmin) ? [...adminMenuItems, ...defaultMenuItems] : defaultMenuItems;
-
-        const menu = <div className="DropdownMenu">
-            <Menu
-                items={menuItems}
-            />
-        </div>;
 
         return <header className={classNames(className, embedded && 'Embedded', mobile ? 'Mobile' : 'Desktop')}>
             <LoginModal
@@ -143,12 +130,12 @@ export default class Header extends Component {
                             </div>
                             <div className="HeaderUserCol">
                                 {user ? <div>
-                                    <Button icon="account" onClick={this.toggleMenu} isDropdown isOpen={showMenu}>
-                                        {user.details.fullName}
-                                    </Button>
-
-                                    {showMenu && menu}
-
+                                    <DropdownButton
+                                        text={user.details.fullName}
+                                        items={menuItems}
+                                        icon="account"
+                                        buttonType="primary"
+                                    />
                                 </div> : <Button target="_blank"
                                                  href={'/login?path=' + encodeURIComponent(window.location.pathname)}
                                                  icon="account"
@@ -179,8 +166,13 @@ export default class Header extends Component {
                             </div>
                             <div className="HeaderUserCol">
                                 {user ? <div>
-                                    <Button icon="account" iconDescription={user.details.fullName} onClick={this.toggleMenu}/>
-                                    {showMenu && menu}
+                                    <DropdownButton
+                                        iconDescription={user.details.fullName}
+                                        items={menuItems}
+                                        icon="account"
+                                        buttonType="primary"
+                                        hideDropdown={true}
+                                    />
                                 </div> : <Button target="_blank"
                                                  href={'/login?path=' + encodeURIComponent(window.location.pathname)}
                                                  icon="account"
