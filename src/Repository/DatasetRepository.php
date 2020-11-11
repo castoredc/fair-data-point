@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\Metadata\DatasetMetadata;
+use App\Entity\Study;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -60,8 +61,9 @@ class DatasetRepository extends EntityRepository
     private function getDatasetQuery(QueryBuilder $qb, ?Catalog $catalog, ?array $hideCatalogs, bool $admin): QueryBuilder
     {
         if ($catalog !== null) {
-            $qb->innerJoin('dataset.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-                ->setParameter('catalog_id', $catalog->getId());
+            $qb->leftJoin(Study::class, 'study', Join::WITH, 'study.id = dataset.study');
+            $qb->leftJoin('dataset.catalogs', 'catalog1', Join::WITH, 'catalog1 MEMBER OF dataset.catalogs');
+            $qb->leftJoin('study.catalogs', 'catalog2', Join::WITH, 'catalog2 MEMBER OF study.catalogs');
         }
 
         $qb->leftJoin(DatasetMetadata::class, 'metadata', Join::WITH, 'metadata.dataset = dataset.id')
@@ -70,7 +72,15 @@ class DatasetRepository extends EntityRepository
 
         if ($hideCatalogs !== null) {
             $qb->andWhere(':catalog_ids NOT MEMBER OF dataset.catalogs')
-               ->setParameter('catalog_ids', $hideCatalogs);
+                ->setParameter('catalog_ids', $hideCatalogs);
+        }
+
+        if ($catalog !== null) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('catalog1.id', ':catalog_id'),
+                $qb->expr()->eq('catalog2.id', ':catalog_id')
+            ));
+            $qb->setParameter('catalog_id', $catalog->getId());
         }
 
         if (! $admin) {
