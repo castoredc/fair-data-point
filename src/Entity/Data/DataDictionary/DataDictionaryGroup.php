@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataDictionary;
 
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependencyGroup;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -51,10 +51,10 @@ class DataDictionaryGroup
     private bool $isDependent = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup", cascade={"persist"}, fetch = "EAGER")
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependencyGroup", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
      */
-    private ?DataModelDependencyGroup $dependencies = null;
+    private ?DataDictionaryDependencyGroup $dependencies = null;
 
     public function __construct(string $title, int $order, bool $isRepeated, bool $isDependent, DataDictionaryVersion $dataDictionaryVersion)
     {
@@ -154,12 +154,12 @@ class DataDictionaryGroup
         $this->isDependent = $isDependent;
     }
 
-    public function getDependencies(): ?DataModelDependencyGroup
+    public function getDependencies(): ?DataDictionaryDependencyGroup
     {
         return $this->dependencies;
     }
 
-    public function setDependencies(?DataModelDependencyGroup $dependencies): void
+    public function setDependencies(?DataDictionaryDependencyGroup $dependencies): void
     {
         $this->dependencies = $dependencies;
     }
