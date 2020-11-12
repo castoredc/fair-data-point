@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Institute;

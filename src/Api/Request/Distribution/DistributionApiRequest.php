@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\Distribution;
 
 use App\Api\Request\SingleApiRequest;
-use App\Encryption\SensitiveDataString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Enum\DistributionType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;

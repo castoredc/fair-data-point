@@ -5,6 +5,8 @@ namespace App\Api\Controller\Terminology;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Terminology\AnnotationApiRequest;
+use App\Command\Castor\GetCastorEntityCommand;
+use App\Command\Terminology\AddAnnotationCommand;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
@@ -13,8 +15,6 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidEntityType;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
-use App\Message\Castor\GetCastorEntityCommand;
-use App\Message\Terminology\AddAnnotationCommand;
 use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

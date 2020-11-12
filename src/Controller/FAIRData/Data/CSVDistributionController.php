@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData\Data;
 
+use App\Command\Distribution\GetRecordsCommand;
+use App\Command\Distribution\RenderCSVDistributionCommand;
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
@@ -12,8 +14,6 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
-use App\Message\Distribution\GetRecordsCommand;
-use App\Message\Distribution\RenderCSVDistributionCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

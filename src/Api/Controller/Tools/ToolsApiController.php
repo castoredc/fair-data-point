@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Controller\Tools;
 
 use App\Api\Controller\ApiController;
+use App\Command\Tools\MetadataXmlParseCommand;
 use App\Exception\NoFieldsFound;
 use App\Exception\NoMetadataTypesFound;
-use App\Message\Tools\MetadataXmlParseCommand;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

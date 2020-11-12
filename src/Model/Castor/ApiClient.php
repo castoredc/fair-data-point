@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Castor;
 
-use App\Encryption\EncryptedString;
-use App\Encryption\EncryptionService;
-use App\Encryption\SensitiveDataString;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Data\InstanceDataCollection;
 use App\Entity\Castor\Data\RecordData;
@@ -27,6 +24,8 @@ use App\Entity\Castor\Structure\StructureCollection\ReportCollection;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Entity\Castor\Structure\StructureCollection\SurveyCollection;
 use App\Entity\Castor\Structure\Survey;
+use App\Entity\Encryption\EncryptedString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
@@ -36,6 +35,7 @@ use App\Factory\Castor\InstituteFactory;
 use App\Factory\Castor\RecordFactory;
 use App\Security\ApiUser;
 use App\Security\Providers\Castor\CastorUser;
+use App\Service\EncryptionService;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;

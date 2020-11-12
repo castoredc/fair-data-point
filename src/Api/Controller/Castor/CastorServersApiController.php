@@ -5,7 +5,7 @@ namespace App\Api\Controller\Castor;
 
 use App\Api\Controller\ApiController;
 use App\Api\Resource\Security\CastorServersApiResource;
-use App\Message\Security\GetCastorServersCommand;
+use App\Command\Security\GetCastorServersCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;

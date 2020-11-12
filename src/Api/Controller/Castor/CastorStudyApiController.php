@@ -5,9 +5,9 @@ namespace App\Api\Controller\Castor;
 
 use App\Api\Controller\ApiController;
 use App\Api\Resource\Study\StudiesApiResource;
+use App\Command\Study\FindStudiesByUserCommand;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
-use App\Message\Study\FindStudiesByUserCommand;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
