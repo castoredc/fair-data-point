@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Command\Distribution;
 
 use App\Entity\Castor\Record;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 
 class RenderRDFDistributionCommand
 {

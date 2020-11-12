@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Distribution;
 
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 
 class GetRDFFromStoreCommand
 {

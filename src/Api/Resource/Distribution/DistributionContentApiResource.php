@@ -5,10 +5,10 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Data\DataModelApiResource;
-use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\CSV\CSVDistributionElementFieldId;
 use App\Entity\Data\CSV\CSVDistributionElementVariableName;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource

@@ -5,10 +5,10 @@ namespace App\Entity;
 
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataModel\Mapping\DataModelMapping;
+use App\Entity\Data\DataModel\Mapping\DataModelModuleMapping;
+use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;
 use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\DataModelMapping\DataModelMapping;
-use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
-use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Enum\StudySource;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
@@ -79,7 +79,7 @@ abstract class Study implements AccessibleEntity
     private bool $isPublished = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModelMapping\DataModelMapping", mappedBy="study", cascade={"persist", "remove"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModel\Mapping\DataModelMapping", mappedBy="study", cascade={"persist", "remove"}, fetch="EAGER")
      *
      * @var Collection<DataModelMapping>
      */

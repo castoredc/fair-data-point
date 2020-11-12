@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DistributionContentsDependency;
+namespace App\Entity\Data\DistributionContents\Dependency;
 
 use App\Entity\Enum\DependencyCombinatorType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,15 +14,15 @@ use function array_key_exists;
  * @ORM\Table(name="distribution_dependency_group")
  * @ORM\HasLifecycleCallbacks
  */
-class DistributionContentsDependencyGroup extends DistributionContentsDependency
+class DependencyGroup extends Dependency
 {
     /** @ORM\Column(type="DependencyCombinatorType") */
     private DependencyCombinatorType $combinator;
 
     /**
-     * @ORM\OneToMany(targetEntity="DistributionContentsDependency", mappedBy="group", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Dependency", mappedBy="group", cascade={"persist", "remove"})
      *
-     * @var Collection<DistributionContentsDependency>
+     * @var Collection<Dependency>
      */
     private Collection $rules;
 
@@ -43,14 +43,14 @@ class DistributionContentsDependencyGroup extends DistributionContentsDependency
     }
 
     /**
-     * @return Collection<DistributionContentsDependency>
+     * @return Collection<Dependency>
      */
     public function getRules(): Collection
     {
         return $this->rules;
     }
 
-    public function addRule(DistributionContentsDependency $rule): void
+    public function addRule(Dependency $rule): void
     {
         $this->rules->add($rule);
     }
@@ -66,7 +66,7 @@ class DistributionContentsDependencyGroup extends DistributionContentsDependency
             if (array_key_exists('combinator', $rule)) {
                 $newRule = self::fromData($rule);
             } else {
-                $newRule = DistributionContentsDependencyRule::fromData($rule);
+                $newRule = DependencyRule::fromData($rule);
             }
 
             $newRule->setGroup($group);

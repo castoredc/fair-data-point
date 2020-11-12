@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\Log;
 
-use App\Entity\Data\DistributionContents;
+use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Traits\CreatedAt;
 use Doctrine\Common\Collections\ArrayCollection;

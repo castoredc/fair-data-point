@@ -8,9 +8,9 @@ namespace App\Console;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\Data\Log\DistributionGenerationRecordLog;
-use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Model\Castor\ApiClient;
 use App\Service\CastorEntityHelper;

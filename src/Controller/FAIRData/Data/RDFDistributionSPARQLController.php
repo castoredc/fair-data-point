@@ -5,7 +5,7 @@ namespace App\Controller\FAIRData\Data;
 
 use App\Command\Distribution\GetRDFEndpointCommand;
 use App\Controller\FAIRData\FAIRDataController;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use ARC2_StoreEndpoint;

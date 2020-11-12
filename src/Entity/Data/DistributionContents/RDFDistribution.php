@@ -1,15 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\RDF;
+namespace App\Entity\Data\DistributionContents;
 
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataModel\Mapping\DataModelModuleMapping;
+use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;
 use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\DataModelMapping\DataModelModuleMapping;
-use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
-use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\ORM\Mapping as ORM;
 

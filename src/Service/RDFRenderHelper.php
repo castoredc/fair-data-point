@@ -21,9 +21,9 @@ use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Triple;
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyRule;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
+use App\Entity\Data\DistributionContents\Dependency\DependencyRule;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\DependencyOperatorType;
 use App\Entity\Enum\XsdDataType;
@@ -423,15 +423,15 @@ class RDFRenderHelper
         return $return;
     }
 
-    private function parseSubsetDependencies(DistributionContentsDependencyGroup $group, RecordData $data): bool
+    private function parseSubsetDependencies(DependencyGroup $group, RecordData $data): bool
     {
         $outcomes = [];
         $combinator = $group->getCombinator();
 
         foreach ($group->getRules() as $rule) {
-            if ($rule instanceof DistributionContentsDependencyGroup) {
+            if ($rule instanceof DependencyGroup) {
                 $outcomes[] = $this->parseSubsetDependencies($rule, $data);
-            } elseif ($rule instanceof DistributionContentsDependencyRule) {
+            } elseif ($rule instanceof DependencyRule) {
                 if ($rule->getType()->isInstitute()) {
                     $outcomes[] = $this->parseInstituteDependency($rule, $data);
                 } elseif ($rule->getType()->isValueNode()) {
@@ -451,7 +451,7 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseInstituteDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
+    private function parseInstituteDependency(DependencyRule $rule, RecordData $data): bool
     {
         $institute = $data->getRecord()->getInstitute()->getId();
 
@@ -466,7 +466,7 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseValueNodeDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
+    private function parseValueNodeDependency(DependencyRule $rule, RecordData $data): bool
     {
         $node = $rule->getNode();
         $compareValue = $this->transformValue($node->getDataType(), $rule->getValue());

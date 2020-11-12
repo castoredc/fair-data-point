@@ -8,7 +8,7 @@ use App\Command\Distribution\RenderCSVDistributionCommand;
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
-use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;

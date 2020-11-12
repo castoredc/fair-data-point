@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\Connection\DistributionDatabaseInformation;
-use App\Entity\Data\DistributionContents;
+use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Study;

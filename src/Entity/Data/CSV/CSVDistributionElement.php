@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\CSV;
 
+use App\Entity\Data\DistributionContents\CSVDistribution;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

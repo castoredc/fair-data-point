@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel;
 
 use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Enum\NodeType;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
@@ -59,7 +59,7 @@ class DataModelVersion
     private Collection $predicates;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="currentDataModelVersion")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DistributionContents\RDFDistribution", mappedBy="currentDataModelVersion")
      *
      * @var Collection<RDFDistribution>
      */

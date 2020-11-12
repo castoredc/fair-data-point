@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\ClearDistributionContentCommand;
-use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

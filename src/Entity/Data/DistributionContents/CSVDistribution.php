@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\CSV;
+namespace App\Entity\Data\DistributionContents;
 
 use App\Entity\Castor\Form\Field;
-use App\Entity\Data\DistributionContents;
+use App\Entity\Data\CSV\CSVDistributionElement;
+use App\Entity\Data\CSV\CSVDistributionElementFieldId;
+use App\Entity\Data\CSV\CSVDistributionElementVariableName;
 use App\Entity\FAIRData\Distribution;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

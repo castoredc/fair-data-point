@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Command\Distribution;
 
 use App\Entity\Castor\Record;
-use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\FAIRData\Catalog;
 
 class RenderCSVDistributionCommand

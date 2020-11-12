@@ -5,9 +5,9 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\CreateDataModelNodeMappingCommand;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Data\DataModel\Mapping\DataModelMapping;
+use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;
 use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\DataModelMapping\DataModelMapping;
-use App\Entity\Data\DataModelMapping\DataModelNodeMapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;

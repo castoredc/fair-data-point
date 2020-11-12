@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DistributionContentsDependency;
+namespace App\Entity\Data\DistributionContents\Dependency;
 
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\DependencyOperatorType;
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="distribution_dependency_rule")
  * @ORM\HasLifecycleCallbacks
  */
-class DistributionContentsDependencyRule extends DistributionContentsDependency
+class DependencyRule extends Dependency
 {
     /** @ORM\Column(type="DistributionContentsDependencyType") */
     private DistributionContentsDependencyType $type;

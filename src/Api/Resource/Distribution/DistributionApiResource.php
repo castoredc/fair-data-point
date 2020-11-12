@@ -7,8 +7,8 @@ use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Data\DataModelVersionApiResource;
 use App\Api\Resource\Study\StudyApiResource;
-use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Service\UriHelper;
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataModel;
 
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,7 +41,7 @@ class DataModel
     private Collection $versions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\RDF\RDFDistribution", mappedBy="dataModel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DistributionContents\RDFDistribution", mappedBy="dataModel")
      *
      * @var Collection<RDFDistribution>
      */

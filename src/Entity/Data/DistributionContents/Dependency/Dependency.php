@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DistributionContentsDependency;
+namespace App\Entity\Data\DistributionContents\Dependency;
 
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="distribution_dependency")
  * @ORM\HasLifecycleCallbacks
  */
-class DistributionContentsDependency
+class Dependency
 {
     use CreatedAndUpdated;
 
@@ -24,22 +24,22 @@ class DistributionContentsDependency
     private string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DistributionContentsDependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="DependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
      */
-    private ?DistributionContentsDependencyGroup $group = null;
+    private ?DependencyGroup $group = null;
 
     public function getId(): string
     {
         return $this->id;
     }
 
-    public function getGroup(): ?DistributionContentsDependencyGroup
+    public function getGroup(): ?DependencyGroup
     {
         return $this->group;
     }
 
-    public function setGroup(?DistributionContentsDependencyGroup $group): void
+    public function setGroup(?DependencyGroup $group): void
     {
         $this->group = $group;
     }

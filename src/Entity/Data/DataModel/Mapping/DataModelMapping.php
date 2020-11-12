@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DataModelMapping;
+namespace App\Entity\Data\DataModel\Mapping;
 
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Data\DataModel\DataModelVersion;

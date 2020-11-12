@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data;
+namespace App\Entity\Data\DistributionContents;
 
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
+use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\Study;
@@ -57,10 +57,10 @@ abstract class DistributionContents
     protected Collection $logs;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup", cascade={"persist"}, fetch = "EAGER")
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents\Dependency\DependencyGroup", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
      */
-    private ?DistributionContentsDependencyGroup $dependencies = null;
+    private ?DependencyGroup $dependencies = null;
 
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
@@ -130,12 +130,12 @@ abstract class DistributionContents
         return $firstLog->getCreatedAt();
     }
 
-    public function getDependencies(): ?DistributionContentsDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->dependencies;
     }
 
-    public function setDependencies(?DistributionContentsDependencyGroup $dependencies): void
+    public function setDependencies(?DependencyGroup $dependencies): void
     {
         $this->dependencies = $dependencies;
     }
