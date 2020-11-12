@@ -26,6 +26,7 @@ doctrine:
             DistributionGenerationStatusType: App\Type\Enum\DistributionGenerationStatusType
             NameOriginType: App\Type\Enum\NameOriginType
             DistributionContentsDependencyType: App\Type\Enum\DistributionContentsDependencyType
+            DataDictionaryDataType: App\Type\Enum\DataDictionaryDataType
 
     orm:
         auto_generate_proxy_classes: true
