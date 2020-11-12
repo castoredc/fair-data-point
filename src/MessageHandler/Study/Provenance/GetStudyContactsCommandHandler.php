@@ -10,9 +10,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class GetStudyContactsCommandHandler implements MessageHandlerInterface
 {
-    public function __invoke(GetStudyContactsCommand $message): PersonsApiResource
+    public function __invoke(GetStudyContactsCommand $command): PersonsApiResource
     {
-        $metadata = $message->getStudy()->getLatestMetadata();
+        $metadata = $command->getStudy()->getLatestMetadata();
         $agents = $metadata->getContacts();
 
         $persons = [];

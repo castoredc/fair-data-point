@@ -41,9 +41,9 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
     /**
      * @throws Exception
      */
-    public function __invoke(RenderCSVDistributionCommand $message): string
+    public function __invoke(RenderCSVDistributionCommand $command): string
     {
-        $contents = $message->getDistribution();
+        $contents = $command->getDistribution();
         $distribution = $contents->getDistribution();
 
         $user = $this->security->getUser();
@@ -53,11 +53,11 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             throw new NoAccessPermission();
         }
 
-        $dbStudy = $message->getDistribution()->getDistribution()->getDataset()->getStudy();
+        $dbStudy = $command->getDistribution()->getDistribution()->getDataset()->getStudy();
         assert($dbStudy instanceof CastorStudy);
 
-        if ($message->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
-            $this->apiClient->useApiUser($message->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
+        if ($command->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
+            $this->apiClient->useApiUser($command->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
         } else {
             if (! $user->hasCastorUser()) {
                 throw new UserNotACastorUser();
@@ -75,7 +75,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $columns = ['record_id'];
 
         foreach ($studyFields as $field) {
-            if (! $message->getDistribution()->isFieldIncluded($field)) {
+            if (! $command->getDistribution()->isFieldIncluded($field)) {
                 continue;
             }
 
@@ -83,7 +83,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
             $columns[$field->getId()] = $field->getVariableName() ?? $slugify->slugify($field->getFieldLabel());
         }
 
-        foreach ($message->getRecords() as $record) {
+        foreach ($command->getRecords() as $record) {
             $recordData = $this->renderRecord($fields, $columns, $study, $record);
 
             if (count($recordData) <= 0) {

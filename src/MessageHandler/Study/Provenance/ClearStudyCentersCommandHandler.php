@@ -17,9 +17,9 @@ class ClearStudyCentersCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    public function __invoke(ClearStudyCentersCommand $message): void
+    public function __invoke(ClearStudyCentersCommand $command): void
     {
-        $metadata = $message->getStudy()->getLatestMetadata();
+        $metadata = $command->getStudy()->getLatestMetadata();
         if ($metadata === null) {
             return;
         }

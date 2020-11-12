@@ -10,9 +10,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class GetStudyCentersCommandHandler implements MessageHandlerInterface
 {
-    public function __invoke(GetStudyCentersCommand $message): DepartmentsApiResource
+    public function __invoke(GetStudyCentersCommand $command): DepartmentsApiResource
     {
-        $metadata = $message->getStudy()->getLatestMetadata();
+        $metadata = $command->getStudy()->getLatestMetadata();
         $centers = [];
 
         if ($metadata !== null) {

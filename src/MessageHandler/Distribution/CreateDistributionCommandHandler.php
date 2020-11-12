@@ -34,9 +34,9 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
         $this->encryptionService = $encryptionService;
     }
 
-    public function __invoke(CreateDistributionCommand $message): Distribution
+    public function __invoke(CreateDistributionCommand $command): Distribution
     {
-        $dataset = $message->getDataset();
+        $dataset = $command->getDataset();
         $study = $dataset->getStudy();
         assert($study instanceof CastorStudy);
 
@@ -45,40 +45,40 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
         }
 
         $distribution = new Distribution(
-            $message->getSlug(),
+            $command->getSlug(),
             $dataset
         );
 
-        $license = $this->em->getRepository(License::class)->find($message->getLicense());
+        $license = $this->em->getRepository(License::class)->find($command->getLicense());
         $distribution->setLicense($license);
 
-        if ($message->getApiUser() !== null && $message->getClientId() !== null && $message->getClientSecret() !== null) {
-            $apiUser = new ApiUser($message->getApiUser(), $study->getServer());
-            $apiUser->setDecryptedClientId($this->encryptionService, $message->getClientId()->exposeAsString());
-            $apiUser->setDecryptedClientSecret($this->encryptionService, $message->getClientSecret()->exposeAsString());
+        if ($command->getApiUser() !== null && $command->getClientId() !== null && $command->getClientSecret() !== null) {
+            $apiUser = new ApiUser($command->getApiUser(), $study->getServer());
+            $apiUser->setDecryptedClientId($this->encryptionService, $command->getClientId()->exposeAsString());
+            $apiUser->setDecryptedClientSecret($this->encryptionService, $command->getClientSecret()->exposeAsString());
 
             $this->em->persist($apiUser);
 
             $distribution->setApiUser($apiUser);
         }
 
-        if ($message->getType()->isRdf()) {
-            $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
+        if ($command->getType()->isRdf()) {
+            $dataModel = $this->em->getRepository(DataModel::class)->find($command->getDataModel());
 
             $contents = new RDFDistribution(
                 $distribution,
-                $message->getAccessRights(),
+                $command->getAccessRights(),
                 false
             );
 
             $contents->setDataModel($dataModel);
             $contents->setCurrentDataModelVersion($dataModel->getLatestVersion());
-        } elseif ($message->getType()->isCsv()) {
+        } elseif ($command->getType()->isCsv()) {
             $contents = new CSVDistribution(
                 $distribution,
-                $message->getAccessRights(),
+                $command->getAccessRights(),
                 false,
-                $message->getIncludeAllData()
+                $command->getIncludeAllData()
             );
         } else {
             throw new InvalidDistributionType();

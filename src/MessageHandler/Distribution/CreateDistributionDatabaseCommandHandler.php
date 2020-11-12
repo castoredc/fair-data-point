@@ -44,9 +44,9 @@ class CreateDistributionDatabaseCommandHandler implements MessageHandlerInterfac
      * @throws CouldNotTransformEncryptedStringToJson
      * @throws Exception
      */
-    public function __invoke(CreateDistributionDatabaseCommand $message): void
+    public function __invoke(CreateDistributionDatabaseCommand $command): void
     {
-        $distribution = $message->getDistribution();
+        $distribution = $command->getDistribution();
 
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();

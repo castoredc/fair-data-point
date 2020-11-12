@@ -23,9 +23,9 @@ class ClearDistributionContentCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(ClearDistributionContentCommand $message): void
+    public function __invoke(ClearDistributionContentCommand $command): void
     {
-        $distribution = $message->getDistribution();
+        $distribution = $command->getDistribution();
 
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();

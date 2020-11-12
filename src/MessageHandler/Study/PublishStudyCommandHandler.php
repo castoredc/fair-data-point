@@ -21,9 +21,9 @@ class PublishStudyCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(PublishStudyCommand $message): void
+    public function __invoke(PublishStudyCommand $command): void
     {
-        $study = $message->getStudy();
+        $study = $command->getStudy();
 
         if (! $this->security->isGranted('edit', $study)) {
             throw new NoAccessPermission();

@@ -26,9 +26,9 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(CreateStudyMetadataCommand $message): void
+    public function __invoke(CreateStudyMetadataCommand $command): void
     {
-        $study = $message->getStudy();
+        $study = $command->getStudy();
 
         if (! $this->security->isGranted('edit', $study)) {
             throw new NoAccessPermission();
@@ -38,25 +38,25 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
 
         $metadata->setVersion(new Version(self::DEFAULT_VERSION_NUMBER));
 
-        $metadata->setBriefName($message->getBriefName());
-        $metadata->setScientificName($message->getScientificName());
-        $metadata->setBriefSummary($message->getBriefSummary());
-        $metadata->setSummary($message->getSummary());
-        $metadata->setType($message->getType());
+        $metadata->setBriefName($command->getBriefName());
+        $metadata->setScientificName($command->getScientificName());
+        $metadata->setBriefSummary($command->getBriefSummary());
+        $metadata->setSummary($command->getSummary());
+        $metadata->setType($command->getType());
 
-        if ($message->getCondition() !== null) {
-            $metadata->setCondition(new CodedText($message->getCondition()));
+        if ($command->getCondition() !== null) {
+            $metadata->setCondition(new CodedText($command->getCondition()));
         }
 
-        if ($message->getIntervention() !== null) {
-            $metadata->setCondition(new CodedText($message->getIntervention()));
+        if ($command->getIntervention() !== null) {
+            $metadata->setCondition(new CodedText($command->getIntervention()));
         }
 
-        $metadata->setEstimatedEnrollment($message->getEstimatedEnrollment());
-        $metadata->setEstimatedStudyStartDate($message->getEstimatedStudyStartDate());
-        $metadata->setEstimatedStudyCompletionDate($message->getEstimatedStudyCompletionDate());
-        $metadata->setRecruitmentStatus($message->getRecruitmentStatus());
-        $metadata->setMethodType($message->getMethodType());
+        $metadata->setEstimatedEnrollment($command->getEstimatedEnrollment());
+        $metadata->setEstimatedStudyStartDate($command->getEstimatedStudyStartDate());
+        $metadata->setEstimatedStudyCompletionDate($command->getEstimatedStudyCompletionDate());
+        $metadata->setRecruitmentStatus($command->getRecruitmentStatus());
+        $metadata->setMethodType($command->getMethodType());
 
         $study->addMetadata($metadata);
 

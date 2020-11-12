@@ -37,7 +37,7 @@ class GetFieldsForStepCommandHandler implements MessageHandlerInterface
      * @throws SessionTimedOut
      * @throws UserNotACastorUser
      */
-    public function __invoke(GetFieldsForStepCommand $message): array
+    public function __invoke(GetFieldsForStepCommand $command): array
     {
         $user = $this->security->getUser();
         assert($user instanceof User);
@@ -48,6 +48,6 @@ class GetFieldsForStepCommandHandler implements MessageHandlerInterface
 
         $this->apiClient->setUser($user->getCastorUser());
 
-        return $this->apiClient->getFieldByParent($message->getStudy(), $message->getStepId())->toArray();
+        return $this->apiClient->getFieldByParent($command->getStudy(), $command->getStepId())->toArray();
     }
 }

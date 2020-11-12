@@ -27,9 +27,9 @@ class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
     }
 
     /** @return (Concept|Individual)[] */
-    public function __invoke(FindOntologyConceptsCommand $message): array
+    public function __invoke(FindOntologyConceptsCommand $command): array
     {
-        $ontology = $this->em->getRepository(Ontology::class)->find($message->getOntologyId());
+        $ontology = $this->em->getRepository(Ontology::class)->find($command->getOntologyId());
 
         if ($ontology === null) {
             throw new OntologyNotFound();
@@ -37,10 +37,10 @@ class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
 
         $searchOptions = new SearchTermOptions([$ontology->getBioPortalId()], false, true, null, 10, null);
 
-        $results = $this->bioPortalApiWrapper->searchTerm($message->getQuery(), $searchOptions)->getCollection();
+        $results = $this->bioPortalApiWrapper->searchTerm($command->getQuery(), $searchOptions)->getCollection();
 
-        if ($message->includeIndividuals()) {
-            $individuals = $this->bioPortalApiWrapper->searchIndividual($message->getQuery(), $ontology->getBioPortalId());
+        if ($command->includeIndividuals()) {
+            $individuals = $this->bioPortalApiWrapper->searchIndividual($command->getQuery(), $ontology->getBioPortalId());
             $results = array_merge($results, $individuals);
         }
 

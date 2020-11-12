@@ -29,7 +29,7 @@ class GetStudiesCommandHandler implements MessageHandlerInterface
      *
      * @throws UserNotACastorUser
      */
-    public function __invoke(GetStudiesCommand $message): array
+    public function __invoke(GetStudiesCommand $command): array
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             $dbStudies = $this->em->getRepository(Study::class)->findAll();

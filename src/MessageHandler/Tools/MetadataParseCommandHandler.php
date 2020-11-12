@@ -19,9 +19,9 @@ class MetadataParseCommandHandler implements MessageHandlerInterface
      *
      * @throws NoMetadataTypesFound
      */
-    public function __invoke(MetadataXmlParseCommand $message): array
+    public function __invoke(MetadataXmlParseCommand $command): array
     {
-        $xml = simplexml_load_string($message->getXmlBody());
+        $xml = simplexml_load_string($command->getXmlBody());
         $return = [];
 
         if (! isset($xml->metadataTypes)) {

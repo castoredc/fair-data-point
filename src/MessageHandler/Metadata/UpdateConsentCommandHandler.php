@@ -29,17 +29,17 @@ class UpdateConsentCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(UpdateConsentCommand $message): void
+    public function __invoke(UpdateConsentCommand $command): void
     {
-        $study = $message->getStudy();
+        $study = $command->getStudy();
 
         if (! $this->security->isGranted('edit', $study)) {
             throw new NoAccessPermission();
         }
 
         $metadata = $study->getLatestMetadata();
-        $metadata->setConsentPublish($message->getPublish());
-        $metadata->setConsentSocialMedia($message->getSocialMedia());
+        $metadata->setConsentPublish($command->getPublish());
+        $metadata->setConsentSocialMedia($command->getSocialMedia());
 
         $this->em->persist($metadata);
 

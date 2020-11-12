@@ -24,18 +24,18 @@ class AddCSVDistributionContentCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(AddCSVDistributionContentCommand $message): void
+    public function __invoke(AddCSVDistributionContentCommand $command): void
     {
-        $distribution = $message->getDistribution();
+        $distribution = $command->getDistribution();
 
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
 
-        if ($message->getType() === CSVDistributionElement::FIELD_ID) {
-            $distribution->addElement(new CSVDistributionElementFieldId($message->getValue()));
-        } elseif ($message->getType() === CSVDistributionElement::VARIABLE_NAME) {
-            $distribution->addElement(new CSVDistributionElementVariableName($message->getValue()));
+        if ($command->getType() === CSVDistributionElement::FIELD_ID) {
+            $distribution->addElement(new CSVDistributionElementFieldId($command->getValue()));
+        } elseif ($command->getType() === CSVDistributionElement::VARIABLE_NAME) {
+            $distribution->addElement(new CSVDistributionElementVariableName($command->getValue()));
         }
 
         $this->em->persist($distribution);

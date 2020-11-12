@@ -35,7 +35,7 @@ class GetStudyStructureCommandHandler implements MessageHandlerInterface
      * @throws SessionTimedOut
      * @throws UserNotACastorUser
      */
-    public function __invoke(GetStudyStructureCommand $message): StructureCollection
+    public function __invoke(GetStudyStructureCommand $command): StructureCollection
     {
         $user = $this->security->getUser();
         assert($user instanceof User);
@@ -46,6 +46,6 @@ class GetStudyStructureCommandHandler implements MessageHandlerInterface
 
         $this->apiClient->setUser($user->getCastorUser());
 
-        return $this->apiClient->getStructure($message->getStudy());
+        return $this->apiClient->getStructure($command->getStudy());
     }
 }

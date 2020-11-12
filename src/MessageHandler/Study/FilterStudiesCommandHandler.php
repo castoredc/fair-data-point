@@ -22,19 +22,19 @@ class FilterStudiesCommandHandler implements MessageHandlerInterface
     }
 
     /** @return Study[] */
-    public function __invoke(FilterStudiesCommand $message): array
+    public function __invoke(FilterStudiesCommand $command): array
     {
         $datasetRepository = $this->em->getRepository(Study::class);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
         return $datasetRepository->findStudies(
-            $message->getCatalog(),
+            $command->getCatalog(),
             null,
-            $message->getSearch(),
-            $message->getStudyType(),
-            $message->getMethodType(),
-            $message->getCountry(),
+            $command->getSearch(),
+            $command->getStudyType(),
+            $command->getMethodType(),
+            $command->getCountry(),
             null,
             null,
             $isAdmin

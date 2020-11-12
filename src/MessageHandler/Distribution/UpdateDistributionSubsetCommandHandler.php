@@ -26,9 +26,9 @@ class UpdateDistributionSubsetCommandHandler implements MessageHandlerInterface
     /**
      * @throws NoAccessPermission
      */
-    public function __invoke(UpdateDistributionSubsetCommand $message): void
+    public function __invoke(UpdateDistributionSubsetCommand $command): void
     {
-        $distribution = $message->getDistribution();
+        $distribution = $command->getDistribution();
         $dataset = $distribution->getDataset();
         $study = $dataset->getStudy();
         assert($study instanceof CastorStudy);
@@ -38,7 +38,7 @@ class UpdateDistributionSubsetCommandHandler implements MessageHandlerInterface
         }
 
         $contents = $distribution->getContents();
-        $contents->setDependencies($message->getDependencies());
+        $contents->setDependencies($command->getDependencies());
 
         $this->em->persist($contents);
         $this->em->flush();

@@ -17,9 +17,9 @@ class ClearStudyContactsCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    public function __invoke(ClearStudyContactsCommand $message): void
+    public function __invoke(ClearStudyContactsCommand $command): void
     {
-        $metadata = $message->getStudy()->getLatestMetadata();
+        $metadata = $command->getStudy()->getLatestMetadata();
         $metadata->setContacts(new ArrayCollection());
 
         $this->em->persist($metadata);

@@ -26,13 +26,13 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         $this->security = $security;
     }
 
-    public function __invoke(CreateDepartmentAndOrganizationCommand $message): void
+    public function __invoke(CreateDepartmentAndOrganizationCommand $command): void
     {
-        if (! $this->security->isGranted('edit', $message->getStudy())) {
+        if (! $this->security->isGranted('edit', $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
         }
 
-        $country = $this->em->getRepository(Country::class)->find($message->getCountry());
+        $country = $this->em->getRepository(Country::class)->find($command->getCountry());
         assert($country instanceof Country || $country === null);
 
         if ($country === null) {
@@ -40,13 +40,13 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         }
 
         $organization = new Organization(
-            $message->getOrganizationSlug(),
-            $message->getName(),
-            $message->getHomepage(),
+            $command->getOrganizationSlug(),
+            $command->getName(),
+            $command->getHomepage(),
             $country->getCode(),
-            $message->getCity(),
-            $message->getCoordinatesLatitude(),
-            $message->getCoordinatesLongitude()
+            $command->getCity(),
+            $command->getCoordinatesLatitude(),
+            $command->getCoordinatesLongitude()
         );
 
         $organization->setCountry($country);
@@ -54,16 +54,16 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         $this->em->persist($organization);
 
         $department = new Department(
-            $message->getDepartmentSlug(),
-            $message->getDepartment(),
+            $command->getDepartmentSlug(),
+            $command->getDepartment(),
             $organization,
-            $message->getAdditionalInformation()
+            $command->getAdditionalInformation()
         );
 
-        $message->getStudy()->getLatestMetadata()->addCenter($department);
+        $command->getStudy()->getLatestMetadata()->addCenter($department);
 
         $this->em->persist($department);
-        $this->em->persist($message->getStudy());
+        $this->em->persist($command->getStudy());
 
         $this->em->flush();
     }

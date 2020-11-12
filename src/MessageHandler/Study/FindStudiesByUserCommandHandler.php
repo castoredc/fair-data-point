@@ -27,9 +27,9 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
      *
      * @throws UserNotACastorUser
      */
-    public function __invoke(FindStudiesByUserCommand $message): array
+    public function __invoke(FindStudiesByUserCommand $command): array
     {
-        $user = $message->getUser();
+        $user = $command->getUser();
 
         if (! $user->hasCastorUser()) {
             throw new UserNotACastorUser();
@@ -42,7 +42,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 
         $dbStudies = $this->em->getRepository(Study::class)->findBy(['id' => $castorStudyIds]);
 
-        if ($message->getLoadFromCastor() && $message->getHideExistingStudies()) {
+        if ($command->getLoadFromCastor() && $command->getHideExistingStudies()) {
             $studies = [];
 
             foreach ($castorStudies as $castorStudy) {
@@ -65,7 +65,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
             return $studies;
         }
 
-        if ($message->getLoadFromCastor() && ! $message->getHideExistingStudies()) {
+        if ($command->getLoadFromCastor() && ! $command->getHideExistingStudies()) {
             return $castorStudies;
         }
 

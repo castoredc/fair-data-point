@@ -22,7 +22,7 @@ class GetCatalogsCommandHandler implements MessageHandlerInterface
     }
 
     /** @return Catalog[] */
-    public function __invoke(GetCatalogsCommand $message): array
+    public function __invoke(GetCatalogsCommand $command): array
     {
         $catalogs = $this->em->getRepository(Catalog::class)->findAll();
 

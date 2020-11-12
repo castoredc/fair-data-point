@@ -22,34 +22,34 @@ class GetPaginatedStudiesCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(GetPaginatedStudiesCommand $message): PaginatedResultCollection
+    public function __invoke(GetPaginatedStudiesCommand $command): PaginatedResultCollection
     {
         $datasetRepository = $this->em->getRepository(Study::class);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
         $count = $datasetRepository->countStudies(
-            $message->getCatalog(),
-            $message->getHideCatalogs(),
-            $message->getSearch(),
-            $message->getStudyType(),
-            $message->getMethodType(),
-            $message->getCountry(),
+            $command->getCatalog(),
+            $command->getHideCatalogs(),
+            $command->getSearch(),
+            $command->getStudyType(),
+            $command->getMethodType(),
+            $command->getCountry(),
             $isAdmin
         );
 
         $studies = $datasetRepository->findStudies(
-            $message->getCatalog(),
-            $message->getHideCatalogs(),
-            $message->getSearch(),
-            $message->getStudyType(),
-            $message->getMethodType(),
-            $message->getCountry(),
-            $message->getPerPage(),
-            $message->getPage(),
+            $command->getCatalog(),
+            $command->getHideCatalogs(),
+            $command->getSearch(),
+            $command->getStudyType(),
+            $command->getMethodType(),
+            $command->getCountry(),
+            $command->getPerPage(),
+            $command->getPage(),
             $isAdmin
         );
 
-        return new PaginatedResultCollection($studies, $message->getPage(), $message->getPerPage(), $count);
+        return new PaginatedResultCollection($studies, $command->getPage(), $command->getPerPage(), $count);
     }
 }

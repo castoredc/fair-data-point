@@ -38,9 +38,9 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
     /**
      * @throws LanguageNotFound
      */
-    public function __invoke(UpdateDistributionCommand $message): void
+    public function __invoke(UpdateDistributionCommand $command): void
     {
-        $distribution = $message->getDistribution();
+        $distribution = $command->getDistribution();
         $dataset = $distribution->getDataset();
         $study = $dataset->getStudy();
         assert($study instanceof CastorStudy);
@@ -49,31 +49,31 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        if ($message->getApiUser() !== null && $message->getClientId() !== null && $message->getClientSecret() !== null) {
-            $apiUser = new ApiUser($message->getApiUser(), $study->getServer());
-            $apiUser->setDecryptedClientId($this->encryptionService, $message->getClientId()->exposeAsString());
-            $apiUser->setDecryptedClientSecret($this->encryptionService, $message->getClientSecret()->exposeAsString());
+        if ($command->getApiUser() !== null && $command->getClientId() !== null && $command->getClientSecret() !== null) {
+            $apiUser = new ApiUser($command->getApiUser(), $study->getServer());
+            $apiUser->setDecryptedClientId($this->encryptionService, $command->getClientId()->exposeAsString());
+            $apiUser->setDecryptedClientSecret($this->encryptionService, $command->getClientSecret()->exposeAsString());
 
             $this->em->persist($apiUser);
 
             $distribution->setApiUser($apiUser);
         }
 
-        $license = $this->em->getRepository(License::class)->find($message->getLicense());
+        $license = $this->em->getRepository(License::class)->find($command->getLicense());
 
-        $distribution->setSlug($message->getSlug());
+        $distribution->setSlug($command->getSlug());
         $distribution->setLicense($license);
 
         $contents = $distribution->getContents();
-        $contents->setAccessRights($message->getAccessRights());
-        $contents->setIsPublished($message->isPublished());
+        $contents->setAccessRights($command->getAccessRights());
+        $contents->setIsPublished($command->isPublished());
 
         if ($contents instanceof CSVDistribution) {
-            $contents->setIncludeAll($message->getIncludeAllData());
+            $contents->setIncludeAll($command->getIncludeAllData());
         } elseif ($contents instanceof RDFDistribution) {
-            $dataModel = $this->em->getRepository(DataModel::class)->find($message->getDataModel());
+            $dataModel = $this->em->getRepository(DataModel::class)->find($command->getDataModel());
 
-            $dataModelVersion = $this->em->getRepository(DataModelVersion::class)->find($message->getDataModelVersion());
+            $dataModelVersion = $this->em->getRepository(DataModelVersion::class)->find($command->getDataModelVersion());
 
             if ($dataModel === null || $dataModelVersion === null || $dataModelVersion->getDataModel() !== $dataModel) {
                 throw new InvalidDataModelVersion();

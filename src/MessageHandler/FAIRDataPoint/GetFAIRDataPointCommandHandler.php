@@ -17,7 +17,7 @@ class GetFAIRDataPointCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    public function __invoke(GetFAIRDataPointCommand $message): FAIRDataPoint
+    public function __invoke(GetFAIRDataPointCommand $command): FAIRDataPoint
     {
         /** @var FAIRDataPoint[] $fdp */
         $fdp = $this->em->getRepository(FAIRDataPoint::class)->findAll();

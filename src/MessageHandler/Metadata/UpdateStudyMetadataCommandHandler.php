@@ -22,47 +22,47 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(UpdateStudyMetadataCommand $message): void
+    public function __invoke(UpdateStudyMetadataCommand $command): void
     {
-        $study = $message->getMetadata()->getStudy();
+        $study = $command->getMetadata()->getStudy();
 
         if (! $this->security->isGranted('edit', $study)) {
             throw new NoAccessPermission();
         }
 
-        $condition = $message->getMetadata()->getCondition();
-        $intervention = $message->getMetadata()->getIntervention();
+        $condition = $command->getMetadata()->getCondition();
+        $intervention = $command->getMetadata()->getIntervention();
 
-        if ($condition === null && $message->getCondition() !== null) {
-            $condition = new CodedText($message->getCondition());
-        } elseif ($condition !== null && $message->getCondition() !== null) {
-            $condition->setText($message->getCondition());
+        if ($condition === null && $command->getCondition() !== null) {
+            $condition = new CodedText($command->getCondition());
+        } elseif ($condition !== null && $command->getCondition() !== null) {
+            $condition->setText($command->getCondition());
         } else {
             $condition = null;
         }
 
-        if ($intervention === null && $message->getIntervention() !== null) {
-            $intervention = new CodedText($message->getIntervention());
-        } elseif ($intervention !== null && $message->getIntervention() !== null) {
-            $intervention->setText($message->getIntervention());
+        if ($intervention === null && $command->getIntervention() !== null) {
+            $intervention = new CodedText($command->getIntervention());
+        } elseif ($intervention !== null && $command->getIntervention() !== null) {
+            $intervention->setText($command->getIntervention());
         } else {
             $intervention = null;
         }
 
-        $message->getMetadata()->setBriefName($message->getBriefName());
-        $message->getMetadata()->setScientificName($message->getScientificName());
-        $message->getMetadata()->setBriefSummary($message->getBriefSummary());
-        $message->getMetadata()->setSummary($message->getSummary());
-        $message->getMetadata()->setType($message->getType());
-        $message->getMetadata()->setCondition($condition);
-        $message->getMetadata()->setIntervention($intervention);
-        $message->getMetadata()->setEstimatedEnrollment($message->getEstimatedEnrollment());
-        $message->getMetadata()->setEstimatedStudyStartDate($message->getEstimatedStudyStartDate());
-        $message->getMetadata()->setEstimatedStudyCompletionDate($message->getEstimatedStudyCompletionDate());
-        $message->getMetadata()->setRecruitmentStatus($message->getRecruitmentStatus());
-        $message->getMetadata()->setMethodType($message->getMethodType());
+        $command->getMetadata()->setBriefName($command->getBriefName());
+        $command->getMetadata()->setScientificName($command->getScientificName());
+        $command->getMetadata()->setBriefSummary($command->getBriefSummary());
+        $command->getMetadata()->setSummary($command->getSummary());
+        $command->getMetadata()->setType($command->getType());
+        $command->getMetadata()->setCondition($condition);
+        $command->getMetadata()->setIntervention($intervention);
+        $command->getMetadata()->setEstimatedEnrollment($command->getEstimatedEnrollment());
+        $command->getMetadata()->setEstimatedStudyStartDate($command->getEstimatedStudyStartDate());
+        $command->getMetadata()->setEstimatedStudyCompletionDate($command->getEstimatedStudyCompletionDate());
+        $command->getMetadata()->setRecruitmentStatus($command->getRecruitmentStatus());
+        $command->getMetadata()->setMethodType($command->getMethodType());
 
-        $this->em->persist($message->getMetadata());
+        $this->em->persist($command->getMetadata());
 
         $this->em->flush();
     }

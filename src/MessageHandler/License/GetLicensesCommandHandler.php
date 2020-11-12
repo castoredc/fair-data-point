@@ -18,7 +18,7 @@ class GetLicensesCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    public function __invoke(GetLicensesCommand $message): LicensesApiResource
+    public function __invoke(GetLicensesCommand $command): LicensesApiResource
     {
         $licenses = $this->em->getRepository(License::class)->findAll();
 

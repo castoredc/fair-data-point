@@ -18,7 +18,7 @@ class GetLanguagesCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    public function __invoke(GetLanguagesCommand $message): LanguagesApiResource
+    public function __invoke(GetLanguagesCommand $command): LanguagesApiResource
     {
         $licenses = $this->em->getRepository(Language::class)->findAll();
 
