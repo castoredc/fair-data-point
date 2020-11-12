@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
+use App\Command\Data\CreateDataModelModuleCommand;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Command\Data\CreateDataModelModuleCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

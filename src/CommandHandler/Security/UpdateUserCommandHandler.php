@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Security;
 
+use App\Command\Security\UpdateUserCommand;
 use App\Entity\Enum\NameOrigin;
 use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Iri;
-use App\Command\Security\UpdateUserCommand;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

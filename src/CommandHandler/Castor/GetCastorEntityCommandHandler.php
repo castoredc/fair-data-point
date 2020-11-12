@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Castor;
 
+use App\Command\Castor\GetCastorEntityCommand;
 use App\Entity\Castor\CastorEntity;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\UserNotACastorUser;
-use App\Command\Castor\GetCastorEntityCommand;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;

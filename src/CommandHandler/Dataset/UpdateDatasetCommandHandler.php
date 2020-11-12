@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Dataset;
 
-use App\Exception\NoAccessPermission;
 use App\Command\Dataset\UpdateDatasetCommand;
+use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

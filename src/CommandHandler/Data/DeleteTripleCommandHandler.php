@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Exception\NoAccessPermission;
 use App\Command\Data\DeleteTripleCommand;
+use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

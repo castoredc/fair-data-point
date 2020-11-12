@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\CommandHandler\License;
 
 use App\Api\Resource\License\LicensesApiResource;
-use App\Entity\FAIRData\License;
 use App\Command\License\GetLicensesCommand;
+use App\Entity\FAIRData\License;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

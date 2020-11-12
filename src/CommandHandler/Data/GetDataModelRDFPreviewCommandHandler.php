@@ -5,6 +5,7 @@ namespace App\CommandHandler\Data;
 
 use App\Api\Resource\Data\DataModelModuleRDFPreviewApiResource;
 use App\Api\Resource\Data\DataModelRDFPreviewApiResource;
+use App\Command\Data\GetDataModelRDFPreviewCommand;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -15,7 +16,6 @@ use App\Entity\Data\DataModel\Triple;
 use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;
 use App\Exception\NoAccessPermission;
-use App\Command\Data\GetDataModelRDFPreviewCommand;
 use EasyRdf\Graph;
 use EasyRdf\Literal;
 use EasyRdf\RdfNamespace;

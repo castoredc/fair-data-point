@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData\Data;
 
+use App\Command\Distribution\GetRDFFromStoreCommand;
+use App\Command\Distribution\GetRecordCommand;
+use App\Command\Distribution\GetRecordsCommand;
+use App\Command\Distribution\RenderRDFDistributionCommand;
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
@@ -11,10 +15,6 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
-use App\Command\Distribution\GetRDFFromStoreCommand;
-use App\Command\Distribution\GetRecordCommand;
-use App\Command\Distribution\GetRecordsCommand;
-use App\Command\Distribution\RenderRDFDistributionCommand;
 use EasyRdf\Graph;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

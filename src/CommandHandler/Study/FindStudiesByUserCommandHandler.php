@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\FindStudiesByUserCommand;
 use App\Entity\Study;
 use App\Exception\UserNotACastorUser;
-use App\Command\Study\FindStudiesByUserCommand;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

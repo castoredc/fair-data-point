@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\GetStudyStructureCommand;
 use App\Entity\Castor\Structure\StructureCollection\StructureCollection;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\UserNotACastorUser;
-use App\Command\Study\GetStudyStructureCommand;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

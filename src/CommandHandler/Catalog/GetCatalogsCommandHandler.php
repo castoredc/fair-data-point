@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Catalog;
 
-use App\Entity\FAIRData\Catalog;
 use App\Command\Catalog\GetCatalogsCommand;
+use App\Entity\FAIRData\Catalog;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

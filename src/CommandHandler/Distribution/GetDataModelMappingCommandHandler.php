@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\GetDataModelMappingCommand;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
-use App\Command\Distribution\GetDataModelMappingCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

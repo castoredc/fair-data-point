@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
+use App\Command\Data\CreateNodeCommand;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -11,7 +12,6 @@ use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;
 use App\Exception\NoAccessPermission;
-use App\Command\Data\CreateNodeCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

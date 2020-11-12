@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Terminology;
 
+use App\Command\Terminology\AddAnnotationCommand;
 use App\Entity\Iri;
 use App\Entity\Terminology\Annotation;
 use App\Entity\Terminology\Ontology;
@@ -11,7 +12,6 @@ use App\Exception\AnnotationAlreadyExists;
 use App\Exception\NoAccessPermission;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
-use App\Command\Terminology\AddAnnotationCommand;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Doctrine\ORM\EntityManagerInterface;

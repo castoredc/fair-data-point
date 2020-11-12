@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData\Data;
 
+use App\Command\Distribution\GetRDFEndpointCommand;
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
-use App\Command\Distribution\GetRDFEndpointCommand;
 use ARC2_StoreEndpoint;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;

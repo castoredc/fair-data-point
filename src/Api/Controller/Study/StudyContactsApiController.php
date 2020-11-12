@@ -5,11 +5,11 @@ namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Study\Provenance\StudyContactApiRequest;
-use App\Entity\Study;
-use App\Exception\GroupedApiRequestParseError;
 use App\Command\Agent\AddStudyContactCommand;
 use App\Command\Study\Provenance\ClearStudyContactsCommand;
 use App\Command\Study\Provenance\GetStudyContactsCommand;
+use App\Entity\Study;
+use App\Exception\GroupedApiRequestParseError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

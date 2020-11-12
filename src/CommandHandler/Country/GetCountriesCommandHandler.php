@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\CommandHandler\Country;
 
 use App\Api\Resource\Country\CountriesApiResource;
-use App\Entity\FAIRData\Country;
 use App\Command\Country\GetCountriesCommand;
+use App\Entity\FAIRData\Country;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

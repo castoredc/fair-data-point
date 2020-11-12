@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\GetRDFFromStoreCommand;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Command\Distribution\GetRDFFromStoreCommand;
 use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use App\Service\UriHelper;

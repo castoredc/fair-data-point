@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\CreateDataModelNodeMappingCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModelMapping\DataModelMapping;
@@ -13,7 +14,6 @@ use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\UserNotACastorUser;
-use App\Command\Distribution\CreateDataModelNodeMappingCommand;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;

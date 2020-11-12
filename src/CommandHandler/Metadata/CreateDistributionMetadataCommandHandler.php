@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Metadata;
 
+use App\Command\Metadata\CreateDistributionMetadataCommand;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Exception\NoAccessPermission;
-use App\Command\Metadata\CreateDistributionMetadataCommand;
 
 class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHandler
 {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\GetRecordCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Exception\ErrorFetchingCastorData;
@@ -10,7 +11,6 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\UserNotACastorUser;
-use App\Command\Distribution\GetRecordCommand;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\EncryptionService;

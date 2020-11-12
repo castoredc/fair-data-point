@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\AddCSVDistributionContentCommand;
 use App\Entity\Data\CSV\CSVDistributionElement;
 use App\Entity\Data\CSV\CSVDistributionElementFieldId;
 use App\Entity\Data\CSV\CSVDistributionElementVariableName;
 use App\Exception\NoAccessPermission;
-use App\Command\Distribution\AddCSVDistributionContentCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

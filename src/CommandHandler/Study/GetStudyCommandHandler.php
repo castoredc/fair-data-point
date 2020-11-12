@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\GetStudyCommand;
 use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
-use App\Command\Study\GetStudyCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Metadata;
 
-use App\Exception\NoAccessPermission;
 use App\Command\Metadata\UpdateConsentCommand;
+use App\Exception\NoAccessPermission;
 use App\Model\Slack\ApiClient as SlackApiClient;
 use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;

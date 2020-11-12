@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Metadata;
 
+use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Exception\NoAccessPermission;
-use App\Command\Metadata\CreateDatasetMetadataCommand;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler

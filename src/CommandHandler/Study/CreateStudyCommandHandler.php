@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\CreateStudyCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
 use App\Exception\ErrorFetchingCastorData;
@@ -12,7 +13,6 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
-use App\Command\Study\CreateStudyCommand;
 use App\Model\Castor\ApiClient;
 use App\Security\CastorServer;
 use App\Security\User;

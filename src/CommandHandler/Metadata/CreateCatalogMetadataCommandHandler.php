@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Metadata;
 
+use App\Command\Metadata\CreateCatalogMetadataCommand;
 use App\Entity\Iri;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Exception\NoAccessPermission;
-use App\Command\Metadata\CreateCatalogMetadataCommand;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler

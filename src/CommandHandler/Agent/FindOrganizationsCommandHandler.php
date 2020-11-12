@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Agent;
 
+use App\Command\Agent\FindOrganizationsCommand;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
 use App\Entity\Grid\Institute;
 use App\Exception\CountryNotFound;
 use App\Exception\NoAccessPermission;
-use App\Command\Agent\FindOrganizationsCommand;
 use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

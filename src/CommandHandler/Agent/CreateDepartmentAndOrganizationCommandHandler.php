@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Agent;
 
+use App\Command\Agent\CreateDepartmentAndOrganizationCommand;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
 use App\Exception\CountryNotFound;
 use App\Exception\NoAccessPermissionToStudy;
-use App\Command\Agent\CreateDepartmentAndOrganizationCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

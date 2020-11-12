@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\CommandHandler\Study\Provenance;
 
 use App\Api\Resource\Agent\Person\PersonsApiResource;
-use App\Entity\FAIRData\Agent\Person;
 use App\Command\Study\Provenance\GetStudyContactsCommand;
+use App\Entity\FAIRData\Agent\Person;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class GetStudyContactsCommandHandler implements MessageHandlerInterface

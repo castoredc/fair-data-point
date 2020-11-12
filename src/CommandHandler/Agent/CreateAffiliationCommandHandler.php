@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Agent;
 
+use App\Command\Agent\CreateAffiliationCommand;
 use App\Entity\FAIRData\Agent\Affiliation;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Command\Agent\CreateAffiliationCommand;
 use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

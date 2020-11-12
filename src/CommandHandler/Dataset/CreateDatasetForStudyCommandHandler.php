@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Dataset;
 
+use App\Command\Dataset\CreateDatasetForStudyCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\NoAccessPermissionToStudy;
-use App\Command\Dataset\CreateDatasetForStudyCommand;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

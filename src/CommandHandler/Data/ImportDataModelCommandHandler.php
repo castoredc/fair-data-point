@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
+use App\Command\Data\ImportDataModelCommand;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\NoAccessPermission;
@@ -14,7 +15,6 @@ use App\Factory\Data\DataModel\NamespacePrefixFactory;
 use App\Factory\Data\DataModel\NodeFactory;
 use App\Factory\Data\DataModel\PredicateFactory;
 use App\Factory\Data\DataModel\TripleFactory;
-use App\Command\Data\ImportDataModelCommand;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

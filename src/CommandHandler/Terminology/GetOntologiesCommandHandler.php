@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Terminology;
 
-use App\Entity\Terminology\Ontology;
 use App\Command\Terminology\GetOntologiesCommand;
+use App\Entity\Terminology\Ontology;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

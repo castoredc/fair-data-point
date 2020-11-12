@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\GetOptionGroupsForStudyCommand;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Exception\UserNotACastorUser;
-use App\Command\Study\GetOptionGroupsForStudyCommand;
 use App\Model\Castor\CastorEntityCollection;
 use App\Security\User;
 use App\Service\CastorEntityHelper;

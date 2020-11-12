@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
-use App\Exception\NoAccessPermission;
 use App\Command\Distribution\GetRDFStoreCommand;
+use App\Exception\NoAccessPermission;
 use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use ARC2_Store;

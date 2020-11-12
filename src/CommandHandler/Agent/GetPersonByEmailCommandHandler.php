@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Agent;
 
+use App\Command\Agent\GetPersonByEmailCommand;
 use App\Entity\FAIRData\Agent\Person;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Command\Agent\GetPersonByEmailCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

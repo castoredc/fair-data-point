@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\GetStudiesCommand;
 use App\Entity\Study;
 use App\Exception\UserNotACastorUser;
-use App\Command\Study\GetStudiesCommand;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

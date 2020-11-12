@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Dataset;
 
-use App\Entity\PaginatedResultCollection;
 use App\Command\Dataset\GetDatasetsByStudyCommand;
+use App\Entity\PaginatedResultCollection;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function count;

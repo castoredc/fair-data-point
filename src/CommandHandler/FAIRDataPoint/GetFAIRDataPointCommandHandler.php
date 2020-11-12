@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\FAIRDataPoint;
 
-use App\Entity\FAIRData\FAIRDataPoint;
 use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
+use App\Entity\FAIRData\FAIRDataPoint;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

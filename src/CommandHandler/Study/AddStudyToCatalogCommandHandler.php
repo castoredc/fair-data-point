@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\AddStudyToCatalogCommand;
 use App\Exception\CatalogNotExceptingSubmissions;
 use App\Exception\NoAccessPermission;
-use App\Command\Study\AddStudyToCatalogCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

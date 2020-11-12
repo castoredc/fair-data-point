@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\GetDistributionGenerationRecordLogsCommand;
 use App\Entity\Data\Log\DistributionGenerationRecordLog;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
-use App\Command\Distribution\GetDistributionGenerationRecordLogsCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

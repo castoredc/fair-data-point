@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Terminology;
 
+use App\Command\Terminology\FindOntologyConceptsCommand;
 use App\Entity\Terminology\Ontology;
 use App\Exception\OntologyNotFound;
-use App\Command\Terminology\FindOntologyConceptsCommand;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Castor\BioPortal\Model\Concept;

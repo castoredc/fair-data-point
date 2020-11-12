@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\CommandHandler\Language;
 
 use App\Api\Resource\Language\LanguagesApiResource;
-use App\Entity\FAIRData\Language;
 use App\Command\Language\GetLanguagesCommand;
+use App\Entity\FAIRData\Language;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

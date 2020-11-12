@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
+use App\Command\Data\CreateDataModelCommand;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
-use App\Command\Data\CreateDataModelCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

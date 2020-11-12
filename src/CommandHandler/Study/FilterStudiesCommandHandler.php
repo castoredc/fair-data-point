@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
-use App\Entity\Study;
 use App\Command\Study\FilterStudiesCommand;
+use App\Entity\Study;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Dataset;
 
+use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\PaginatedResultCollection;
-use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

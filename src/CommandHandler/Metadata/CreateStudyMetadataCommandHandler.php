@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Metadata;
 
+use App\Command\Metadata\CreateStudyMetadataCommand;
 use App\Entity\Metadata\StudyMetadata;
 use App\Entity\Terminology\CodedText;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
-use App\Command\Metadata\CreateStudyMetadataCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

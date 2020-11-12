@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Agent;
 
+use App\Command\Agent\AddStudyContactCommand;
 use App\Entity\Enum\NameOrigin;
 use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\PersonAlreadyExists;
-use App\Command\Agent\AddStudyContactCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

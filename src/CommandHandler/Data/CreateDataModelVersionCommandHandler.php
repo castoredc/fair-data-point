@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
+use App\Command\Data\CreateDataModelVersionCommand;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
@@ -19,7 +20,6 @@ use App\Entity\Enum\VersionType;
 use App\Exception\InvalidEntityType;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
-use App\Command\Data\CreateDataModelVersionCommand;
 use App\Service\VersionNumberHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

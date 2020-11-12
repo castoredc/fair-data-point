@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
+use App\Command\Study\UpdateStudyCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
-use App\Command\Study\UpdateStudyCommand;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\UpdateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\DataModel\DataModel;
@@ -12,7 +13,6 @@ use App\Entity\FAIRData\License;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
 use App\Exception\NoAccessPermission;
-use App\Command\Distribution\UpdateDistributionCommand;
 use App\Security\ApiUser;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;

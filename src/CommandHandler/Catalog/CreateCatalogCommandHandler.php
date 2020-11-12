@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Catalog;
 
+use App\Command\Catalog\CreateCatalogCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Exception\NoAccessPermission;
-use App\Command\Catalog\CreateCatalogCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

@@ -5,8 +5,8 @@ namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\FAIRDataPointMetadataApiRequest;
-use App\Exception\ApiRequestParseError;
 use App\Command\Metadata\CreateFAIRDataPointMetadataCommand;
+use App\Exception\ApiRequestParseError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

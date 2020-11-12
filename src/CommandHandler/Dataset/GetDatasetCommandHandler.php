@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Dataset;
 
+use App\Command\Dataset\GetDatasetCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Command\Dataset\GetDatasetCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

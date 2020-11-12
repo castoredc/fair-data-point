@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Study;
 
-use App\Exception\UserNotACastorUser;
 use App\Command\Study\GetInstitutesForStudyCommand;
+use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\Common\Collections\ArrayCollection;

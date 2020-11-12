@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution;
 
+use App\Command\Distribution\RenderRDFDistributionCommand;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotACastorUser;
-use App\Command\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\CastorEntityHelper;

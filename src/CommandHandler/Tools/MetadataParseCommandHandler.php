@@ -6,9 +6,9 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Tools;
 
+use App\Command\Tools\MetadataXmlParseCommand;
 use App\Exception\NoFieldsFound;
 use App\Exception\NoMetadataTypesFound;
-use App\Command\Tools\MetadataXmlParseCommand;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use function simplexml_load_string;
 

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Metadata;
 
+use App\Command\Metadata\CreateFAIRDataPointMetadataCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Metadata\FAIRDataPointMetadata;
 use App\Exception\NoAccessPermission;
-use App\Command\Metadata\CreateFAIRDataPointMetadataCommand;
 
 class CreateFAIRDataPointMetadataCommandHandler extends CreateMetadataCommandHandler
 {

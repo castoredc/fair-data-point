@@ -5,9 +5,9 @@ namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\DatasetMetadataApiRequest;
+use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
-use App\Command\Metadata\CreateDatasetMetadataCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
