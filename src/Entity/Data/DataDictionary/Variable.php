@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataDictionary;
 
-use App\Entity\Enum\NodeType;
+use App\Entity\Enum\DataDictionaryDataType;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="data_dictionary_variable")
  * @ORM\HasLifecycleCallbacks
  */
@@ -29,16 +30,37 @@ class Variable
     private DataDictionaryGroup $group;
 
     /** @ORM\Column(type="string") */
-    private string $title;
+    private string $label;
+
+    /** @ORM\Column(type="string") */
+    private string $name;
 
     /** @ORM\Column(type="string", nullable=true) */
     private ?string $description = null;
 
-    public function __construct(DataDictionaryGroup $group, string $title, ?string $description)
+    /** @ORM\Column(type="string", nullable=true) */
+    private ?string $format = null;
+
+    /** @ORM\Column(type="DataDictionaryDataType") */
+    private DataDictionaryDataType $dataType;
+
+    /** @ORM\Column(name="`order`", type="integer") */
+    private int $order;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="distributions")
+     * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=true)
+     */
+    private ?OptionGroup $optionGroup;
+
+    public function __construct(DataDictionaryGroup $group, int $order, string $label, string $name, ?string $description, DataDictionaryDataType $dataType)
     {
         $this->group = $group;
-        $this->title = $title;
+        $this->order = $order;
+        $this->label = $label;
+        $this->name = $name;
         $this->description = $description;
+        $this->dataType = $dataType;
     }
 
     public function getId(): string
@@ -56,14 +78,34 @@ class Variable
         $this->group = $group;
     }
 
-    public function getTitle(): string
+    public function getLabel(): string
     {
-        return $this->title;
+        return $this->label;
     }
 
-    public function setTitle(string $title): void
+    public function setLabel(string $label): void
     {
-        $this->title = $title;
+        $this->label = $label;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getDataType(): DataDictionaryDataType
+    {
+        return $this->dataType;
+    }
+
+    public function setDataType(DataDictionaryDataType $dataType): void
+    {
+        $this->dataType = $dataType;
     }
 
     public function getDescription(): ?string
@@ -76,13 +118,33 @@ class Variable
         $this->description = $description;
     }
 
-    public function getType(): ?NodeType
+    public function getOrder(): int
     {
-        return null;
+        return $this->order;
     }
 
-    public function getValue(): ?string
+    public function setOrder(int $order): void
     {
-        return null;
+        $this->order = $order;
+    }
+
+    public function getFormat(): ?string
+    {
+        return $this->format;
+    }
+
+    public function setFormat(?string $format): void
+    {
+        $this->format = $format;
+    }
+
+    public function getOptionGroup(): ?OptionGroup
+    {
+        return $this->optionGroup;
+    }
+
+    public function setOptionGroup(?OptionGroup $optionGroup): void
+    {
+        $this->optionGroup = $optionGroup;
     }
 }

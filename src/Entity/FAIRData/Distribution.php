@@ -43,7 +43,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity
      */
     private ?Dataset $dataset = null;
 
-    /** @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents", mappedBy="distribution") */
+    /** @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", mappedBy="distribution") */
     private ?DistributionContents $contents = null;
 
     /** @ORM\OneToOne(targetEntity="App\Entity\Connection\DistributionDatabaseInformation", mappedBy="distribution") */

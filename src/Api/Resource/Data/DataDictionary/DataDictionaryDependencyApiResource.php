@@ -54,7 +54,7 @@ class DataDictionaryDependencyApiResource implements ApiResource
             $array['field'] = $this->dependency->getVariable()->getId();
             $array['operator'] = $this->dependency->getOperator()->toString();
             $array['value'] = $this->dependency->getValue();
-            $array['description'] = $this->dependency->getVariable()->getTitle() . ' ' . $array['operator'] . ' ' . $array['value'];
+            $array['description'] = $this->dependency->getVariable()->getLabel() . ' ' . $array['operator'] . ' ' . $array['value'];
 
             $description[] = [
                 'type' => 'rule',

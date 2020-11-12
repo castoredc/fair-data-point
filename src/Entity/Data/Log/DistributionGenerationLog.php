@@ -27,7 +27,7 @@ class DistributionGenerationLog
     private string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents", inversedBy="logs", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", inversedBy="logs", cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
      */
     private DistributionContents $distribution;
