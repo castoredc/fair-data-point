@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\CatalogMetadataApiRequest;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
-use App\Message\Metadata\CreateCatalogMetadataCommand;
+use App\Command\Metadata\CreateCatalogMetadataCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

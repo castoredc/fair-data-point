@@ -10,7 +10,7 @@ use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidNodeType;
-use App\Message\Data\CreateNodeCommand;
+use App\Command\Data\CreateNodeCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

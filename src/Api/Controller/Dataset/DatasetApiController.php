@@ -9,7 +9,7 @@ use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionsApiResource;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
-use App\Message\Dataset\UpdateDatasetCommand;
+use App\Command\Dataset\UpdateDatasetCommand;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

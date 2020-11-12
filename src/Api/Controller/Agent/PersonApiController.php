@@ -8,7 +8,7 @@ use App\Api\Request\Agent\PersonApiRequest;
 use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NotFound;
-use App\Message\Agent\GetPersonByEmailCommand;
+use App\Command\Agent\GetPersonByEmailCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

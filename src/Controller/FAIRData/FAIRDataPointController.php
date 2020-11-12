@@ -5,7 +5,7 @@ namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Graph\Resource\FAIRDataPoint\FAIRDataPointGraphResource;
-use App\Message\FAIRDataPoint\GetFAIRDataPointCommand;
+use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;

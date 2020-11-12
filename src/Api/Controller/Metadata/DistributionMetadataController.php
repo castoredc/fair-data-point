@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\DistributionMetadataApiRequest;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
-use App\Message\Metadata\CreateDistributionMetadataCommand;
+use App\Command\Metadata\CreateDistributionMetadataCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

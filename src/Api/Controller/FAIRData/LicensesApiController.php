@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\FAIRData;
 
 use App\Api\Controller\ApiController;
-use App\Message\License\GetLicensesCommand;
+use App\Command\License\GetLicensesCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;

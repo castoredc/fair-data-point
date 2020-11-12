@@ -11,7 +11,7 @@ use App\Api\Resource\Agent\Organization\OrganizationSearchApiResource;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NotFound;
-use App\Message\Agent\FindOrganizationsCommand;
+use App\Command\Agent\FindOrganizationsCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

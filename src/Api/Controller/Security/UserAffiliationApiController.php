@@ -6,7 +6,7 @@ namespace App\Api\Controller\Security;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Security\UserAffiliationApiRequest;
 use App\Exception\GroupedApiRequestParseError;
-use App\Message\Agent\CreateAffiliationCommand;
+use App\Command\Agent\CreateAffiliationCommand;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

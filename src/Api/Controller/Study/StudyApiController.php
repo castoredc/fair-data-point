@@ -8,7 +8,7 @@ use App\Api\Request\Study\StudyApiRequest;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
-use App\Message\Study\UpdateStudyCommand;
+use App\Command\Study\UpdateStudyCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

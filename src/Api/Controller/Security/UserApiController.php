@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Security\UserApiRequest;
 use App\Api\Resource\Security\UserApiResource;
 use App\Exception\ApiRequestParseError;
-use App\Message\Security\UpdateUserCommand;
+use App\Command\Security\UpdateUserCommand;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

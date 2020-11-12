@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
-use App\Message\Study\FindStudiesByUserCommand;
+use App\Command\Study\FindStudiesByUserCommand;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
