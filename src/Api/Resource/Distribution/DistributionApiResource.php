@@ -5,7 +5,8 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
-use App\Api\Resource\Data\DataModelVersionApiResource;
+use App\Api\Resource\Data\DataDictionary\DataDictionaryVersionApiResource;
+use App\Api\Resource\Data\DataModel\DataModelVersionApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
@@ -61,6 +62,7 @@ class DistributionApiResource implements ApiResource
         if ($this->distribution->hasContents()) {
             $contents = $this->distribution->getContents();
             $distribution['accessRights'] = $contents->getAccessRights();
+            $distribution['isCached'] = $contents->isCached();
 
             if ($contents instanceof RDFDistribution) {
                 $distribution['fullUrl'] = $this->uriHelper->getUri($contents) . '/';
@@ -68,14 +70,12 @@ class DistributionApiResource implements ApiResource
                 $distribution['downloadUrl'] = $contents->getRelativeUrl() . '/?download=1';
                 $distribution['type'] = 'rdf';
                 $distribution['dataModel'] = (new DataModelVersionApiResource($contents->getCurrentDataModelVersion()))->toArray();
-                $distribution['isCached'] = $contents->isCached();
             }
 
             if ($contents instanceof CSVDistribution) {
                 $distribution['downloadUrl'] = $contents->getRelativeUrl();
                 $distribution['type'] = 'csv';
-                $distribution['includeAllData'] = $contents->isIncludeAll();
-                $distribution['isCached'] = false;
+                $distribution['dataDictionary'] = (new DataDictionaryVersionApiResource($contents->getCurrentDataDictionaryVersion()))->toArray();
             }
         }
 

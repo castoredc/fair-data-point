@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Controller\Data;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\TripleApiRequest;
-use App\Api\Resource\Data\TriplesApiResource;
+use App\Api\Request\Data\DataModel\TripleApiRequest;
+use App\Api\Resource\Data\DataModel\TriplesApiResource;
 use App\Command\Data\CreateTripleCommand;
 use App\Command\Data\DeleteTripleCommand;
 use App\Command\Data\UpdateTripleCommand;

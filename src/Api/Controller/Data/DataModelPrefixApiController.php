@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Controller\Data;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataModelPrefixApiRequest;
-use App\Api\Resource\Data\DataModelPrefixesApiResource;
+use App\Api\Request\Data\DataModel\DataModelPrefixApiRequest;
+use App\Api\Resource\Data\DataModel\DataModelPrefixesApiResource;
 use App\Command\Data\CreateDataModelPrefixCommand;
 use App\Command\Data\DeleteDataModelPrefixCommand;
 use App\Command\Data\UpdateDataModelPrefixCommand;

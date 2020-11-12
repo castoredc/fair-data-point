@@ -9,6 +9,7 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
+use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
@@ -20,13 +21,13 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class UpdateDistributionCommandHandler implements MessageHandlerInterface
+abstract class UpdateDistributionCommandHandler implements MessageHandlerInterface
 {
-    private EntityManagerInterface $em;
+    protected EntityManagerInterface $em;
 
-    private Security $security;
+    protected Security $security;
 
-    private EncryptionService $encryptionService;
+    protected EncryptionService $encryptionService;
 
     public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
     {
@@ -38,7 +39,7 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
     /**
      * @throws LanguageNotFound
      */
-    public function __invoke(UpdateDistributionCommand $command): void
+    protected function handleDistributionUpdate(UpdateDistributionCommand $command): Distribution
     {
         $distribution = $command->getDistribution();
         $dataset = $distribution->getDataset();
@@ -68,33 +69,6 @@ class UpdateDistributionCommandHandler implements MessageHandlerInterface
         $contents->setAccessRights($command->getAccessRights());
         $contents->setIsPublished($command->isPublished());
 
-        if ($contents instanceof CSVDistribution) {
-            $contents->setIncludeAll($command->getIncludeAllData());
-        } elseif ($contents instanceof RDFDistribution) {
-            $dataModel = $this->em->getRepository(DataModel::class)->find($command->getDataModel());
-
-            $dataModelVersion = $this->em->getRepository(DataModelVersion::class)->find($command->getDataModelVersion());
-
-            if ($dataModel === null || $dataModelVersion === null || $dataModelVersion->getDataModel() !== $dataModel) {
-                throw new InvalidDataModelVersion();
-            }
-
-            if ($contents->getDataModel() !== $dataModel) {
-                // Switched data model, remove mappings
-                foreach ($study->getMappings() as $mapping) {
-                    $this->em->remove($mapping);
-                }
-
-                $study->getMappings()->clear();
-            }
-
-            $contents->setDataModel($dataModel);
-            $contents->setCurrentDataModelVersion($dataModelVersion);
-        }
-
-        $this->em->persist($distribution);
-        $this->em->persist($contents);
-        $this->em->persist($study);
-        $this->em->flush();
+        return $distribution;
     }
 }

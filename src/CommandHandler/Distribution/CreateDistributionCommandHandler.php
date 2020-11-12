@@ -13,28 +13,32 @@ use App\Entity\FAIRData\License;
 use App\Exception\InvalidDistributionType;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
+use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class CreateDistributionCommandHandler implements MessageHandlerInterface
+abstract class CreateDistributionCommandHandler implements MessageHandlerInterface
 {
-    private EntityManagerInterface $em;
+    protected EntityManagerInterface $em;
 
-    private Security $security;
+    protected DistributionService $distributionService;
 
-    private EncryptionService $encryptionService;
+    protected Security $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
+    protected EncryptionService $encryptionService;
+
+    public function __construct(EntityManagerInterface $em, DistributionService $distributionService, Security $security, EncryptionService $encryptionService)
     {
         $this->em = $em;
+        $this->distributionService = $distributionService;
         $this->security = $security;
         $this->encryptionService = $encryptionService;
     }
 
-    public function __invoke(CreateDistributionCommand $command): Distribution
+    protected function handleDistributionCreation(CreateDistributionCommand $command): Distribution
     {
         $dataset = $command->getDataset();
         $study = $dataset->getStudy();
@@ -61,32 +65,6 @@ class CreateDistributionCommandHandler implements MessageHandlerInterface
 
             $distribution->setApiUser($apiUser);
         }
-
-        if ($command->getType()->isRdf()) {
-            $dataModel = $this->em->getRepository(DataModel::class)->find($command->getDataModel());
-
-            $contents = new RDFDistribution(
-                $distribution,
-                $command->getAccessRights(),
-                false
-            );
-
-            $contents->setDataModel($dataModel);
-            $contents->setCurrentDataModelVersion($dataModel->getLatestVersion());
-        } elseif ($command->getType()->isCsv()) {
-            $contents = new CSVDistribution(
-                $distribution,
-                $command->getAccessRights(),
-                false,
-                $command->getIncludeAllData()
-            );
-        } else {
-            throw new InvalidDistributionType();
-        }
-
-        $this->em->persist($distribution);
-        $this->em->persist($contents);
-        $this->em->flush();
 
         return $distribution;
     }

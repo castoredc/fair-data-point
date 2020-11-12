@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData\Data;
 
 use App\Command\Distribution\GetRecordsCommand;
-use App\Command\Distribution\RenderCSVDistributionCommand;
+use App\Command\Distribution\CSV\RenderCSVDistributionCommand;
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;

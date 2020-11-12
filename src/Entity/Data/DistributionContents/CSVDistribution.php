@@ -3,13 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DistributionContents;
 
-use App\Entity\Castor\Form\Field;
-use App\Entity\Data\CSV\CSVDistributionElement;
-use App\Entity\Data\CSV\CSVDistributionElementFieldId;
-use App\Entity\Data\CSV\CSVDistributionElementVariableName;
-use App\Entity\FAIRData\Distribution;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Data\DataDictionary\DataDictionary;
+use App\Entity\Data\DataDictionary\DataDictionaryVersion;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,74 +15,35 @@ use Doctrine\ORM\Mapping as ORM;
 class CSVDistribution extends DistributionContents
 {
     /**
-     * @ORM\OneToMany(targetEntity="CSVDistributionElement", mappedBy="distribution",cascade={"persist"}, fetch="EAGER", orphanRemoval=true)
-     * @ORM\JoinColumn(name="elements", referencedColumnName="id")
-     *
-     * @var Collection<string, CSVDistributionElement>
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataDictionary\DataDictionary", inversedBy="distributions")
+     * @ORM\JoinColumn(name="data_dictionary", referencedColumnName="id", nullable=false)
      */
-    private Collection $elements;
-
-    /** @ORM\Column(type="boolean") */
-    private bool $includeAll = false;
-
-    /** @inheritDoc */
-    public function __construct(Distribution $distribution, int $accessRights, bool $isPublished, bool $includeAll)
-    {
-        parent::__construct($distribution, $accessRights, $isPublished);
-
-        $this->elements = new ArrayCollection();
-        $this->includeAll = $includeAll;
-    }
+    private DataDictionary $dataDictionary;
 
     /**
-     * @return Collection<string, CSVDistributionElement>
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataDictionary\DataDictionaryVersion", inversedBy="distributions")
+     * @ORM\JoinColumn(name="data_dictionary_version", referencedColumnName="id", nullable=false)
      */
-    public function getElements(): Collection
+    private DataDictionaryVersion $currentDataDictionaryVersion;
+
+    public function getDataDictionary(): DataDictionary
     {
-        return $this->elements;
+        return $this->dataDictionary;
     }
 
-    /**
-     * @param Collection<string, CSVDistributionElement> $elements
-     */
-    public function setElements(Collection $elements): void
+    public function setDataDictionary(DataDictionary $dataDictionary): void
     {
-        $this->elements = $elements;
+        $this->dataDictionary = $dataDictionary;
     }
 
-    public function addElement(CSVDistributionElement $element): void
+    public function getCurrentDataDictionaryVersion(): DataDictionaryVersion
     {
-        $element->setDistribution($this);
-        $this->elements->add($element);
+        return $this->currentDataDictionaryVersion;
     }
 
-    public function setIncludeAll(bool $includeAll): void
+    public function setCurrentDataDictionaryVersion(DataDictionaryVersion $currentDataDictionaryVersion): void
     {
-        $this->includeAll = $includeAll;
-    }
-
-    public function isIncludeAll(): bool
-    {
-        return $this->includeAll;
-    }
-
-    public function isFieldIncluded(Field $field): bool
-    {
-        if ($this->includeAll === true) {
-            return true;
-        }
-
-        foreach ($this->elements as $element) {
-            if ($element instanceof CSVDistributionElementFieldId && $element->getFieldId() === $field->getId()) {
-                return true;
-            }
-
-            if ($element instanceof CSVDistributionElementVariableName && $element->getVariableName() === $field->getVariableName()) {
-                return true;
-            }
-        }
-
-        return false;
+        $this->currentDataDictionaryVersion = $currentDataDictionaryVersion;
     }
 
     public function getRelativeUrl(): string

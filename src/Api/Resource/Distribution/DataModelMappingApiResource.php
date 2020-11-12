@@ -5,8 +5,8 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Castor\CastorEntityApiResource;
-use App\Api\Resource\Data\DataModelModuleApiResource;
-use App\Api\Resource\Data\NodeApiResource;
+use App\Api\Resource\Data\DataModel\DataModelModuleApiResource;
+use App\Api\Resource\Data\DataModel\NodeApiResource;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Mapping\DataModelModuleMapping;
 use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;

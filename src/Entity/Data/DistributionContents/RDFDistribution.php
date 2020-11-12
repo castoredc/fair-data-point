@@ -31,9 +31,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
      */
     private DataModelVersion $currentDataModelVersion;
 
-    /** @ORM\Column(type="boolean") */
-    private bool $isCached = false;
-
     public function getDataModel(): DataModel
     {
         return $this->dataModel;
@@ -47,16 +44,6 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getRelativeUrl(): string
     {
         return $this->getDistribution()->getRelativeUrl() . '/rdf';
-    }
-
-    public function isCached(): bool
-    {
-        return $this->isCached;
-    }
-
-    public function setIsCached(bool $isCached): void
-    {
-        $this->isCached = $isCached;
     }
 
     public function getCurrentDataModelVersion(): DataModelVersion

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Api\Resource\Data\DataModelModuleRDFPreviewApiResource;
-use App\Api\Resource\Data\DataModelRDFPreviewApiResource;
+use App\Api\Resource\Data\DataModel\DataModelModuleRDFPreviewApiResource;
+use App\Api\Resource\Data\DataModel\DataModelRDFPreviewApiResource;
 use App\Command\Data\GetDataModelRDFPreviewCommand;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;

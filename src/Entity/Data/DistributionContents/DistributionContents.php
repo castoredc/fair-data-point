@@ -48,6 +48,9 @@ abstract class DistributionContents
     /** @ORM\Column(type="boolean") */
     private bool $isPublished = false;
 
+    /** @ORM\Column(type="boolean") */
+    private bool $isCached = false;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Data\Log\DistributionGenerationLog", mappedBy="distribution", cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
@@ -138,5 +141,15 @@ abstract class DistributionContents
     public function setDependencies(?DependencyGroup $dependencies): void
     {
         $this->dependencies = $dependencies;
+    }
+
+    public function isCached(): bool
+    {
+        return $this->isCached;
+    }
+
+    public function setIsCached(bool $isCached): void
+    {
+        $this->isCached = $isCached;
     }
 }

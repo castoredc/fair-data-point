@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Controller\Data;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataModelModuleApiRequest;
-use App\Api\Resource\Data\DataModelModulesApiResource;
+use App\Api\Request\Data\DataModel\DataModelModuleApiRequest;
+use App\Api\Resource\Data\DataModel\DataModelModulesApiResource;
 use App\Command\Data\CreateDataModelModuleCommand;
 use App\Command\Data\DeleteDataModelModuleCommand;
 use App\Command\Data\UpdateDataModelModuleCommand;
