@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Command\Data\CreateDataModelPrefixCommand;
+use App\Command\Data\DataModel\CreateDataModelPrefixCommand;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Command\Data\DeleteDataModelModuleCommand;
+use App\Command\Data\DataModel\DeleteDataModelModuleCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

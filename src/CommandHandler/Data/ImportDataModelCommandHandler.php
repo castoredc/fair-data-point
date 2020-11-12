@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Command\Data\ImportDataModelCommand;
+use App\Command\Data\DataModel\ImportDataModelCommand;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\NoAccessPermission;

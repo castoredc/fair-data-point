@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Command\Data\UpdateDataModelPrefixCommand;
+use App\Command\Data\DataModel\UpdateDataModelPrefixCommand;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;

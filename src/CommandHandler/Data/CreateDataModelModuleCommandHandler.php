@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Command\Data\CreateDataModelModuleCommand;
+use App\Command\Data\DataModel\CreateDataModelModuleCommand;
 use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;

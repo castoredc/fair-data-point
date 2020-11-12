@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Command\Data\CreateNodeCommand;
+use App\Command\Data\DataModel\CreateNodeCommand;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;

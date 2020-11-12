@@ -6,7 +6,7 @@ namespace App\Api\Controller\Data;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModel\NodeApiRequest;
 use App\Api\Resource\Data\DataModel\NodesApiResource;
-use App\Command\Data\CreateNodeCommand;
+use App\Command\Data\DataModel\CreateNodeCommand;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;

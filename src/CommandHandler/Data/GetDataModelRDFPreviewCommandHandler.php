@@ -5,7 +5,7 @@ namespace App\CommandHandler\Data;
 
 use App\Api\Resource\Data\DataModel\DataModelModuleRDFPreviewApiResource;
 use App\Api\Resource\Data\DataModel\DataModelRDFPreviewApiResource;
-use App\Command\Data\GetDataModelRDFPreviewCommand;
+use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;

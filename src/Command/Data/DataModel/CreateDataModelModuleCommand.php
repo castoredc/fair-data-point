@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Command\Data;
+namespace App\Command\Data\DataModel;
 
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
