@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Controller\Data;
+namespace App\Api\Controller\Data\DataModel;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModel\DataModelPrefixApiRequest;

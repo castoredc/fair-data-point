@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\CommandHandler\Data;
+namespace App\CommandHandler\Data\DataModel;
 
-use App\Command\Data\DataModel\GetDataModelsCommand;
-use App\Entity\Data\DataModel\DataModel;
+use App\Command\Data\DataModel\UpdateDataModelPrefixCommand;
+use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class GetDataModelsCommandHandler implements MessageHandlerInterface
+class UpdateDataModelPrefixCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
 
@@ -22,13 +22,19 @@ class GetDataModelsCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /** @return DataModel[] */
-    public function __invoke(GetDataModelsCommand $command): array
+    public function __invoke(UpdateDataModelPrefixCommand $command): void
     {
         if (! $this->security->isGranted('ROLE_ADMIN')) {
             throw new NoAccessPermission();
         }
 
-        return $this->em->getRepository(DataModel::class)->findAll();
+        $prefix = $command->getDataModelPrefix();
+
+        $prefix->setPrefix($command->getPrefix());
+        $prefix->setUri(new Iri($command->getUri()));
+
+        $this->em->persist($prefix);
+
+        $this->em->flush();
     }
 }

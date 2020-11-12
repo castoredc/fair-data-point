@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\CommandHandler\Data;
+namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\ImportDataModelCommand;
 use App\Entity\Data\DataModel\DataModelVersion;

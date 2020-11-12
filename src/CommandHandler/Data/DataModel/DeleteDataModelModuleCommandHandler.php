@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\CommandHandler\Data;
+namespace App\CommandHandler\Data\DataModel;
 
-use App\Command\Data\DataModel\DeleteDataModelPrefixCommand;
+use App\Command\Data\DataModel\DeleteDataModelModuleCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class DeleteDataModelPrefixCommandHandler implements MessageHandlerInterface
+class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
 
@@ -21,15 +21,22 @@ class DeleteDataModelPrefixCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(DeleteDataModelPrefixCommand $command): void
+    public function __invoke(DeleteDataModelModuleCommand $command): void
     {
         if (! $this->security->isGranted('ROLE_ADMIN')) {
             throw new NoAccessPermission();
         }
 
-        $prefix = $command->getDataModelPrefix();
+        $module = $command->getModule();
+        $dataModel = $module->getDataModel();
+        $dataModel->removeModule($module);
 
-        $this->em->remove($prefix);
+        foreach ($module->getTriples() as $triple) {
+            $this->em->remove($triple);
+        }
+
+        $this->em->persist($module->getDataModel());
+        $this->em->remove($module);
 
         $this->em->flush();
     }

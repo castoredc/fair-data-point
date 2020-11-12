@@ -1,15 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\CommandHandler\Data;
+namespace App\CommandHandler\Data\DataModel;
 
-use App\Command\Data\DataModel\DeleteDataModelModuleCommand;
+use App\Command\Data\DataModel\CreateDataModelPrefixCommand;
+use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
+class CreateDataModelPrefixCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
 
@@ -21,22 +23,19 @@ class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    public function __invoke(DeleteDataModelModuleCommand $command): void
+    public function __invoke(CreateDataModelPrefixCommand $command): void
     {
         if (! $this->security->isGranted('ROLE_ADMIN')) {
             throw new NoAccessPermission();
         }
 
-        $module = $command->getModule();
-        $dataModel = $module->getDataModel();
-        $dataModel->removeModule($module);
+        $dataModel = $command->getDataModel();
 
-        foreach ($module->getTriples() as $triple) {
-            $this->em->remove($triple);
-        }
+        $prefix = new NamespacePrefix($command->getPrefix(), new Iri($command->getUri()));
+        $dataModel->addPrefix($prefix);
 
-        $this->em->persist($module->getDataModel());
-        $this->em->remove($module);
+        $this->em->persist($prefix);
+        $this->em->persist($dataModel);
 
         $this->em->flush();
     }

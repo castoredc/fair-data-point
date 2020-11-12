@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\CommandHandler\Data;
+namespace App\CommandHandler\Data\DataModel;
 
 use App\Api\Resource\Data\DataModel\DataModelModuleRDFPreviewApiResource;
 use App\Api\Resource\Data\DataModel\DataModelRDFPreviewApiResource;
