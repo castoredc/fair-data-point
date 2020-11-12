@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Encryption;
+namespace App\Entity\Encryption;
 
 use JsonSerializable;
 use function json_decode;

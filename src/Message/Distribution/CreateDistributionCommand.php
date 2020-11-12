@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Message\Distribution;
 
-use App\Encryption\SensitiveDataString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Enum\DistributionType;
 use App\Entity\FAIRData\Dataset;
 

@@ -6,8 +6,6 @@ declare(strict_types=1);
 
 namespace App\Console;
 
-use App\Connection\DistributionService;
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Entity\Data\Log\DistributionGenerationLog;
@@ -16,6 +14,8 @@ use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Model\Castor\ApiClient;
 use App\Service\CastorEntityHelper;
+use App\Service\DistributionService;
+use App\Service\EncryptionService;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
 use DateTimeImmutable;

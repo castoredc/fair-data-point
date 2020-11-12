@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Connection\DistributionDatabaseInformation;
-use App\Connection\DistributionService;
-use App\Encryption\EncryptionService;
+use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Exception\CouldNotConnectToMySqlServer;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\CreateDistributionDatabaseCommand;
+use App\Service\DistributionService;
+use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

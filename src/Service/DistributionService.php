@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Connection;
+namespace App\Service;
 
-use App\Encryption\EncryptionService;
+use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Exception\CouldNotConnectToMySqlServer;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;

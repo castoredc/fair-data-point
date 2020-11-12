@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Record;
 use App\Exception\ErrorFetchingCastorData;
@@ -14,6 +13,7 @@ use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\GetRecordCommand;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
+use App\Service\EncryptionService;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;

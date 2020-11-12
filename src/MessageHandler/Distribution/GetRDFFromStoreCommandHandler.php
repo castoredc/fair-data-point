@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Connection\DistributionService;
-use App\Encryption\EncryptionService;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Message\Distribution\GetRDFFromStoreCommand;
+use App\Service\DistributionService;
+use App\Service\EncryptionService;
 use App\Service\UriHelper;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Form\Field;
 use App\Entity\Castor\Record;
@@ -16,6 +15,7 @@ use App\Message\Distribution\RenderCSVDistributionCommand;
 use App\MessageHandler\CSVCommandHandler;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
+use App\Service\EncryptionService;
 use App\Type\DistributionAccessType;
 use Cocur\Slugify\Slugify;
 use Exception;

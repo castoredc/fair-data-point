@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Logging;
+namespace App\Service\Logging;
 
 use App\Model\Slack\ApiClient;
 use App\Security\User;

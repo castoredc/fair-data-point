@@ -43,7 +43,7 @@ services:
         arguments:
             - '%env(SLACK_INFO_WEBHOOK_URL)%'
 
-    App\Connection\DistributionService:
+    App\Service\DistributionService:
         arguments:
             - '%env(DB_HOST)%'
             - '%env(DB_CREATOR_USER)%'
@@ -51,7 +51,7 @@ services:
             - '%env(DB_PORT)%'
             - { 1009: '%kernel.project_dir%/certs/BaltimoreCyberTrustRoot.crt.pem' }
 
-    App\Encryption\EncryptionService:
+    App\Service\EncryptionService:
         arguments:
             - '%env(ENCRYPTION_KEY)%'
 
@@ -60,7 +60,7 @@ services:
             - { apiKey: '%env(BIOPORTAL_API_KEY)%' }
 
     custom_slack_handler:
-        class: App\Logging\SlackWebhookHandler
+        class: App\Service\Logging\SlackWebhookHandler
         arguments:
             - '%env(SLACK_DEBUG_WEBHOOK_URL)%'
             - '%kernel.project_dir%'

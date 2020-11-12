@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Encryption\EncryptionService;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\CSV\CSVDistribution;
 use App\Entity\Data\DataModel\DataModel;
@@ -15,6 +14,7 @@ use App\Exception\LanguageNotFound;
 use App\Exception\NoAccessPermission;
 use App\Message\Distribution\UpdateDistributionCommand;
 use App\Security\ApiUser;
+use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;

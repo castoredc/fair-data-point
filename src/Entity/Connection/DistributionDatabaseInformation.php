@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Connection;
+namespace App\Entity\Connection;
 
-use App\Encryption\EncryptedString;
-use App\Encryption\EncryptionService;
-use App\Encryption\SensitiveDataString;
+use App\Entity\Encryption\EncryptedString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
+use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use function json_encode;
 use function str_replace;

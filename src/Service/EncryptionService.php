@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Encryption;
+namespace App\Service;
 
+use App\Entity\Encryption\EncryptedString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Exception\CouldNotDecrypt;
 use function random_bytes;
 use function sodium_bin2hex;

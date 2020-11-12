@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
-use App\Connection\DistributionDatabaseInformation;
+use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\Metadata\DistributionMetadata;
@@ -46,7 +46,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity
     /** @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents", mappedBy="distribution") */
     private ?DistributionContents $contents = null;
 
-    /** @ORM\OneToOne(targetEntity="App\Connection\DistributionDatabaseInformation", mappedBy="distribution") */
+    /** @ORM\OneToOne(targetEntity="App\Entity\Connection\DistributionDatabaseInformation", mappedBy="distribution") */
     private ?DistributionDatabaseInformation $databaseInformation = null;
 
     /**

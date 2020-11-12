@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Encryption\EncryptedString;
-use App\Encryption\EncryptionService;
-use App\Encryption\SensitiveDataString;
+use App\Entity\Encryption\EncryptedString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
+use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use function json_encode;
 

@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\MessageHandler\Distribution;
 
-use App\Encryption\EncryptionService;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotACastorUser;
 use App\Message\Distribution\RenderRDFDistributionCommand;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
+use App\Service\EncryptionService;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
 use EasyRdf\Graph;
