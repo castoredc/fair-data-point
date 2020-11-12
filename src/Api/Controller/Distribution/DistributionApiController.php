@@ -193,7 +193,7 @@ class DistributionApiController extends ApiController
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
             assert($parsed instanceof DistributionApiRequest);
 
-            if($parsed->getType()->isCsv()) {
+            if ($parsed->getType()->isCsv()) {
                 $envelope = $bus->dispatch(
                     new CreateCSVDistributionCommand(
                         $parsed->getSlug(),
@@ -207,7 +207,7 @@ class DistributionApiController extends ApiController
                         $parsed->getDataDictionaryVersion()
                     )
                 );
-            } elseif($parsed->getType()->isRdf()) {
+            } elseif ($parsed->getType()->isRdf()) {
                 $envelope = $bus->dispatch(
                     new CreateRDFDistributionCommand(
                         $parsed->getSlug(),
@@ -261,7 +261,7 @@ class DistributionApiController extends ApiController
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
             assert($parsed instanceof DistributionApiRequest);
 
-            if($distribution->getContents() instanceof RDFDistribution) {
+            if ($distribution->getContents() instanceof RDFDistribution) {
                 $bus->dispatch(
                     new UpdateRDFDistributionCommand(
                         $distribution,
@@ -276,7 +276,7 @@ class DistributionApiController extends ApiController
                         $parsed->getDataModelVersion()
                     )
                 );
-            } elseif($distribution->getContents() instanceof CSVDistribution) {
+            } elseif ($distribution->getContents() instanceof CSVDistribution) {
                 new UpdateCSVDistributionCommand(
                     $distribution,
                     $parsed->getSlug(),

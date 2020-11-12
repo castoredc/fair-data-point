@@ -5,7 +5,6 @@ namespace App\Api\Resource\Data\DataDictionary;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataDictionary\DataDictionaryVersion;
-use App\Entity\Data\DataModel\DataModelVersion;
 use const DATE_ATOM;
 
 class DataDictionaryVersionApiResource implements ApiResource

@@ -5,13 +5,8 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\UpdateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DistributionContents\CSVDistribution;
-use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
-use App\Exception\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;

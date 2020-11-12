@@ -5,12 +5,8 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\CreateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DistributionContents\CSVDistribution;
-use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
-use App\Exception\InvalidDistributionType;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
 use App\Service\DistributionService;

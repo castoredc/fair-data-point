@@ -17,11 +17,9 @@ use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\EncryptionService;
 use App\Type\DistributionAccessType;
-use Cocur\Slugify\Slugify;
 use Exception;
 use Symfony\Component\Security\Core\Security;
 use function assert;
-use function count;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {

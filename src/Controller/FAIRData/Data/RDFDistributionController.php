@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData\Data;
 
-use App\Command\Distribution\RDF\GetRDFFromStoreCommand;
 use App\Command\Distribution\GetRecordCommand;
 use App\Command\Distribution\GetRecordsCommand;
+use App\Command\Distribution\RDF\GetRDFFromStoreCommand;
 use App\Command\Distribution\RDF\RenderRDFDistributionCommand;
 use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Data\DistributionContents\RDFDistribution;
