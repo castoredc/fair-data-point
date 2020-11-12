@@ -48,7 +48,7 @@ class Variable
     private int $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="distributions")
+     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="variables")
      * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=true)
      */
     private ?OptionGroup $optionGroup;

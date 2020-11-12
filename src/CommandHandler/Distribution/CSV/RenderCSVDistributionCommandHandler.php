@@ -97,37 +97,37 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 //        return $this->generateCsv($columns, $data);
     }
 
-    /**
-     * @param Field[]  $fields
-     * @param string[] $columns
-     *
-     * @return string[]
-     *
-     * @throws ErrorFetchingCastorData
-     * @throws NoAccessPermission
-     * @throws NotFound
-     * @throws SessionTimedOut
-     */
-    private function renderRecord(array $fields, array $columns, CastorStudy $study, Record $record): array
-    {
-        $record = $this->apiClient->getRecordDataCollection($study, $record);
-        $studyData = $record->getData()->getStudy();
-
-        $data = [];
-
-        foreach ($fields as $field) {
-            $result = $studyData->getFieldResultByFieldId($field->getId());
-
-            if ($result !== null) {
-                $value = $result->getValue();
-            } else {
-                $value = null;
-            }
-
-            $column = $columns[$field->getId()];
-            $data[$column] = $value;
-        }
-
-        return $data;
-    }
+//    /**
+//     * @param Field[]  $fields
+//     * @param string[] $columns
+//     *
+//     * @return string[]
+//     *
+//     * @throws ErrorFetchingCastorData
+//     * @throws NoAccessPermission
+//     * @throws NotFound
+//     * @throws SessionTimedOut
+//     */
+//    private function renderRecord(array $fields, array $columns, CastorStudy $study, Record $record): array
+//    {
+//        $record = $this->apiClient->getRecordDataCollection($study, $record);
+//        $studyData = $record->getData()->getStudy();
+//
+//        $data = [];
+//
+//        foreach ($fields as $field) {
+//            $result = $studyData->getFieldResultByFieldId($field->getId());
+//
+//            if ($result !== null) {
+//                $value = $result->getValue();
+//            } else {
+//                $value = null;
+//            }
+//
+//            $column = $columns[$field->getId()];
+//            $data[$column] = $value;
+//        }
+//
+//        return $data;
+//    }
 }
