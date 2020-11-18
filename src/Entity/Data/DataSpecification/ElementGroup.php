@@ -29,7 +29,7 @@ abstract class ElementGroup
 
     /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="elementGroups", cascade={"persist"})
-     * @ORM\JoinColumn(name="group", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="groupId", referencedColumnName="id", nullable=false)
      */
     private Group $group;
 

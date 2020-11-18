@@ -23,7 +23,7 @@ use function assert;
 
 /**
  * @Route("/api/model/{model}/v/{version}/module/{module}/triple")
- * @ParamConverter("module", options={"mapping": {"module": "id", "dataModel": "version"}})
+ * @ParamConverter("module", options={"mapping": {"module": "id", "version": "version"}})
  */
 class TripleApiController extends ApiController
 {

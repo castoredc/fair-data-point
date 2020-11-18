@@ -40,8 +40,8 @@ abstract class Group
     /** @ORM\Column(type="string") */
     private string $title;
 
-    /** @ORM\Column(name="`order`", type="integer") */
-    private int $order;
+    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    private ?int $order;
 
     /** @ORM\Column(type="boolean", options={"default":"0"}) */
     private bool $isRepeated = false;

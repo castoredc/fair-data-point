@@ -16,7 +16,7 @@ class GroupMapping extends Mapping
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Group")
-     * @ORM\JoinColumn(name="group", referencedColumnName="id")
+     * @ORM\JoinColumn(name="groupId", referencedColumnName="id")
      */
     private ?Group $group = null;
 

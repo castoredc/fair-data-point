@@ -11,16 +11,8 @@ use function assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NodeRepository")
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="data_model_node")
  * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorMap({
- *     "externalIri" = "ExternalIriNode",
- *     "internalIri" = "InternalIriNode",
- *     "literal" = "LiteralNode",
- *     "record" = "RecordNode",
- *     "value" = "ValueNode",
- * })
  */
 abstract class Node extends Element
 {

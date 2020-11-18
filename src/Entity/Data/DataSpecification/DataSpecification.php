@@ -6,6 +6,7 @@ namespace App\Entity\Data\DataSpecification;
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\Version as VersionNumber;
 use App\Traits\CreatedAndUpdated;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -56,6 +57,9 @@ abstract class DataSpecification
     {
         $this->title = $title;
         $this->description = $description;
+
+        $this->distributionContents = new ArrayCollection();
+        $this->versions = new ArrayCollection();
     }
 
     public function getId(): string

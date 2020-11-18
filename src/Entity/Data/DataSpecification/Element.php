@@ -13,8 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\Data\DataModel\Node\Node",
- *     "dictionary" = "App\Entity\Data\DataDictionary\Variable",
+ *     "model_externalIri" = "App\Entity\Data\DataModel\Node\ExternalIriNode",
+ *     "model_internalIri" = "App\Entity\Data\DataModel\Node\InternalIriNode",
+ *     "model_literal" = "App\Entity\Data\DataModel\Node\LiteralNode",
+ *     "model_record" = "App\Entity\Data\DataModel\Node\RecordNode",
+ *     "model_value" = "App\Entity\Data\DataModel\Node\ValueNode",
+ *     "dictionary_variable" = "App\Entity\Data\DataDictionary\Variable"
  * })
  */
 abstract class Element
@@ -30,7 +34,7 @@ abstract class Element
 
     /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="elements", cascade={"persist"})
-     * @ORM\JoinColumn(name="group", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="groupId", referencedColumnName="id", nullable=true)
      */
     protected ?Group $group = null;
 
@@ -46,8 +50,8 @@ abstract class Element
     /** @ORM\Column(type="string", nullable=true) */
     private ?string $description = null;
 
-    /** @ORM\Column(name="`order`", type="integer") */
-    protected int $order;
+    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    protected ?int $order;
 
     public function __construct(Version $version, string $title, ?string $description)
     {
@@ -101,12 +105,12 @@ abstract class Element
         $this->version = $version;
     }
 
-    public function getOrder(): int
+    public function getOrder(): ?int
     {
         return $this->order;
     }
 
-    public function setOrder(int $order): void
+    public function setOrder(?int $order): void
     {
         $this->order = $order;
     }
