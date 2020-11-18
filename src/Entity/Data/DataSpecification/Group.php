@@ -57,14 +57,14 @@ abstract class Group
     private Collection $elements;
 
     /**
-     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="elementGroup", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="group", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<ElementGroup>
      */
     private Collection $elementGroups;
 
     /**
-     * @ORM\OneToOne(targetEntity="DependencyGroup", cascade={"persist"}, fetch = "EAGER")
+     * @ORM\OneToOne(targetEntity="App\Entity\Data\DataSpecification\Dependency\DependencyGroup", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
      */
     protected ?DependencyGroup $dependencies = null;

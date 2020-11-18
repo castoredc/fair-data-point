@@ -35,7 +35,7 @@ abstract class Element
     protected ?Group $group = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Version", inversedBy="groups", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Version", inversedBy="elements", cascade={"persist"})
      * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
      */
     private Version $version;

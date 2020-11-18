@@ -6,6 +6,7 @@ namespace App\Entity\Data\DistributionContents;
 use App\Entity\Data\DataDictionary\DataDictionary;
 use App\Entity\Data\DataDictionary\DataDictionaryVersion;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 
 /**
  * @ORM\Entity
@@ -14,36 +15,28 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CSVDistribution extends DistributionContents
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataDictionary\DataDictionary", inversedBy="distributions")
-     * @ORM\JoinColumn(name="data_dictionary", referencedColumnName="id", nullable=false)
-     */
-    private DataDictionary $dataDictionary;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataDictionary\DataDictionaryVersion", inversedBy="distributions")
-     * @ORM\JoinColumn(name="data_dictionary_version", referencedColumnName="id", nullable=false)
-     */
-    private DataDictionaryVersion $currentDataDictionaryVersion;
-
     public function getDataDictionary(): DataDictionary
     {
-        return $this->dataDictionary;
+        assert($this->dataSpecification instanceof DataDictionary);
+
+        return $this->dataSpecification;
     }
 
     public function setDataDictionary(DataDictionary $dataDictionary): void
     {
-        $this->dataDictionary = $dataDictionary;
+        $this->setDataSpecification($dataDictionary);
     }
 
     public function getCurrentDataDictionaryVersion(): DataDictionaryVersion
     {
-        return $this->currentDataDictionaryVersion;
+        assert($this->currentDataSpecificationVersion instanceof DataDictionaryVersion);
+
+        return $this->currentDataSpecificationVersion;
     }
 
     public function setCurrentDataDictionaryVersion(DataDictionaryVersion $currentDataDictionaryVersion): void
     {
-        $this->currentDataDictionaryVersion = $currentDataDictionaryVersion;
+        $this->setCurrentDataSpecificationVersion($currentDataDictionaryVersion);
     }
 
     public function getRelativeUrl(): string

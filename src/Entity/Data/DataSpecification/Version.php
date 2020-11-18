@@ -43,7 +43,7 @@ abstract class Version
     private VersionNumber $version;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", mappedBy="currentVersion")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", mappedBy="currentDataSpecificationVersion")
      *
      * @var Collection<DistributionContents>
      */
