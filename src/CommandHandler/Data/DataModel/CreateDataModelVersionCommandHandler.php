@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateDataModelVersionCommand;
-use App\Entity\Data\DataModel\DataModelModule;
+use App\CommandHandler\Data\DataSpecificationVersionCommandHandler;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
 use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
@@ -17,28 +16,14 @@ use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Data\DataModel\Triple;
 use App\Entity\Enum\VersionType;
-use App\Exception\InvalidEntityType;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
-use App\Service\VersionNumberHelper;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use function assert;
 
-class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
+class CreateDataModelVersionCommandHandler extends DataSpecificationVersionCommandHandler implements MessageHandlerInterface
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private VersionNumberHelper $versionNumberHelper;
-
-    public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
-    {
-        $this->em = $em;
-        $this->security = $security;
-        $this->versionNumberHelper = $versionNumberHelper;
-    }
-
     public function __invoke(CreateDataModelVersionCommand $command): DataModelVersion
     {
         if (! $this->security->isGranted('ROLE_ADMIN')) {
@@ -47,6 +32,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
 
         $dataModel = $command->getDataModel();
         $latestVersion = $dataModel->getLatestVersion();
+        assert($latestVersion instanceof DataModelVersion);
 
         $newVersion = $this->duplicateVersion($latestVersion, $command->getVersionType());
 
@@ -74,7 +60,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         // Add nodes
         $nodes = new ArrayCollection();
 
-        foreach ($latestVersion->getNodes() as $node) {
+        foreach ($latestVersion->getElements() as $node) {
             if ($node instanceof RecordNode) {
                 $newNode = new RecordNode($newVersion);
             } elseif ($node instanceof InternalIriNode) {
@@ -101,7 +87,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
             }
 
             $nodes->set($node->getId(), $newNode);
-            $newVersion->addNode($newNode);
+            $newVersion->addElement($newNode);
         }
 
         // Add predicates
@@ -118,12 +104,13 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
         // Add modules
         $modules = new ArrayCollection();
 
-        foreach ($latestVersion->getModules() as $module) {
-            /** @var DataModelModule $module */
-            $newModule = new DataModelModule($module->getTitle(), $module->getOrder(), $module->isRepeated(), $module->isDependent(), $newVersion);
+        foreach ($latestVersion->getGroups() as $module) {
+            /** @var DataModelGroup $module */
+            $newModule = new DataModelGroup($module->getTitle(), $module->getOrder(), $module->isRepeated(), $module->isDependent(), $newVersion);
 
-            foreach ($module->getTriples() as $triple) {
-                /** @var Triple $triple */
+            foreach ($module->getElementGroups() as $triple) {
+                assert($triple instanceof Triple);
+
                 $newTriple = new Triple(
                     $newModule,
                     $nodes->get($triple->getSubject()->getId()),
@@ -131,7 +118,7 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
                     $nodes->get($triple->getObject()->getId())
                 );
 
-                $newModule->addTriple($newTriple);
+                $newModule->addElementGroup($newTriple);
             }
 
             if ($module->isDependent() && $module->getDependencies() !== null) {
@@ -144,32 +131,8 @@ class CreateDataModelVersionCommandHandler implements MessageHandlerInterface
             $modules->add($newModule);
         }
 
-        $newVersion->setModules($modules);
+        $newVersion->setGroups($modules);
 
         return $newVersion;
-    }
-
-    /**
-     * @throws InvalidEntityType
-     */
-    private function duplicateDependencies(DataModelDependencyGroup $group, ArrayCollection $nodes): DataModelDependencyGroup
-    {
-        $newGroup = new DataModelDependencyGroup($group->getCombinator());
-
-        foreach ($group->getRules() as $rule) {
-            if ($rule instanceof DataModelDependencyGroup) {
-                $newRule = $this->duplicateDependencies($rule, $nodes);
-            } elseif ($rule instanceof DataModelDependencyRule) {
-                $newRule = new DataModelDependencyRule($rule->getOperator(), $rule->getValue());
-                $newRule->setNode($nodes->get($rule->getNode()->getId()));
-            } else {
-                throw new InvalidEntityType();
-            }
-
-            $newGroup->addRule($newRule);
-            $newRule->setGroup($newGroup);
-        }
-
-        return $newGroup;
     }
 }

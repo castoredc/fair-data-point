@@ -126,7 +126,7 @@ class ImportDataModelCommandHandler implements MessageHandlerInterface
             $newModules->add($newModule);
         }
 
-        $newVersion->setModules($newModules);
+        $newVersion->setGroups($newModules);
 
         $dataModel->addVersion($newVersion);
 

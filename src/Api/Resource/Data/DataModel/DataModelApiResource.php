@@ -5,6 +5,8 @@ namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
+use function assert;
 
 class DataModelApiResource implements ApiResource
 {
@@ -33,6 +35,8 @@ class DataModelApiResource implements ApiResource
             $versions = [];
 
             foreach ($this->dataModel->getVersions() as $version) {
+                assert($version instanceof DataModelVersion);
+
                 $versions[] = (new DataModelVersionApiResource($version))->toArray();
             }
 

@@ -69,7 +69,7 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
             throw new InvalidNodeType();
         }
 
-        $dataModel->addNode($node);
+        $dataModel->addElement($node);
 
         $this->em->persist($node);
         $this->em->persist($dataModel);

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Mapping\DataModelMapping;
-use App\Entity\Data\DataModel\Mapping\DataModelModuleMapping;
-use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\Data\DataSpecification\Element;
+use App\Entity\Data\DataSpecification\Group;
+use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
+use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
+use App\Entity\Data\DataSpecification\Mapping\Mapping;
+use App\Entity\Data\DataSpecification\Version as DataSpecificationVersion;
 use App\Entity\Enum\StudySource;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
@@ -79,9 +79,9 @@ abstract class Study implements AccessibleEntity
     private bool $isPublished = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModel\Mapping\DataModelMapping", mappedBy="study", cascade={"persist", "remove"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataSpecification\Mapping\Mapping", mappedBy="study", cascade={"persist", "remove"}, fetch="EAGER")
      *
-     * @var Collection<DataModelMapping>
+     * @var Collection<Mapping>
      */
     private Collection $mappings;
 
@@ -218,7 +218,7 @@ abstract class Study implements AccessibleEntity
     }
 
     /**
-     * @return Collection<DataModelMapping>
+     * @return Collection<Mapping>
      */
     public function getMappings(): Collection
     {
@@ -226,14 +226,14 @@ abstract class Study implements AccessibleEntity
     }
 
     /**
-     * @return Collection<DataModelNodeMapping>
+     * @return Collection<ElementMapping>
      */
     public function getNodeMappings(): Collection
     {
         $return = new ArrayCollection();
 
         foreach ($this->mappings as $mapping) {
-            if (! $mapping instanceof DataModelNodeMapping) {
+            if (! $mapping instanceof ElementMapping) {
                 continue;
             }
 
@@ -244,14 +244,14 @@ abstract class Study implements AccessibleEntity
     }
 
     /**
-     * @return Collection<DataModelModuleMapping>
+     * @return Collection<GroupMapping>
      */
     public function getModuleMappings(): Collection
     {
         $return = new ArrayCollection();
 
         foreach ($this->mappings as $mapping) {
-            if (! $mapping instanceof DataModelModuleMapping) {
+            if (! $mapping instanceof GroupMapping) {
                 continue;
             }
 
@@ -261,10 +261,10 @@ abstract class Study implements AccessibleEntity
         return $return;
     }
 
-    public function getMappingByNodeAndVersion(ValueNode $node, DataModelVersion $dataModelVersion): ?DataModelNodeMapping
+    public function getMappingByNodeAndVersion(Element $element, DataSpecificationVersion $version): ?ElementMapping
     {
         foreach ($this->getNodeMappings() as $mapping) {
-            if ($mapping->getNode() === $node && $mapping->getDataModelVersion() === $dataModelVersion) {
+            if ($mapping->getElement() === $element && $mapping->getVersion() === $version) {
                 return $mapping;
             }
         }
@@ -272,10 +272,10 @@ abstract class Study implements AccessibleEntity
         return null;
     }
 
-    public function getMappingByModuleAndVersion(DataModelModule $module, DataModelVersion $dataModelVersion): ?DataModelModuleMapping
+    public function getMappingByModuleAndVersion(Group $group, DataSpecificationVersion $version): ?GroupMapping
     {
         foreach ($this->getModuleMappings() as $mapping) {
-            if ($mapping->getModule() === $module && $mapping->getDataModelVersion() === $dataModelVersion) {
+            if ($mapping->getGroup() === $group && $mapping->getVersion() === $version) {
                 return $mapping;
             }
         }

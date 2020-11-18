@@ -4,16 +4,17 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Triple;
 use function array_merge;
 use function array_values;
+use function assert;
 
 class GroupedTriplesApiResource implements ApiResource
 {
-    private DataModelModule $module;
+    private DataModelGroup $module;
 
-    public function __construct(DataModelModule $module)
+    public function __construct(DataModelGroup $module)
     {
         $this->module = $module;
     }
@@ -26,7 +27,8 @@ class GroupedTriplesApiResource implements ApiResource
         $data = [];
 
         foreach ($this->module->getTriples() as $triple) {
-            /** @var Triple $triple */
+            assert($triple instanceof Triple);
+
             $subject = $triple->getSubject();
             $predicate = $triple->getPredicate();
             $object = $triple->getObject();

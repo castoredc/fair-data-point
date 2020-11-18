@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Factory\Data\DataModel;
+namespace App\Factory\Data\DataSpecification\Dependency;
 
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
 use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
 use App\Entity\Enum\DependencyCombinatorType;
 use Doctrine\Common\Collections\ArrayCollection;
 use function array_key_exists;
 
-class DataModelDependencyGroupFactory
+class DependencyGroupFactory
 {
-    private DataModelDependencyRuleFactory $dataModelDependencyRuleFactory;
+    private DependencyRuleFactory $dataModelDependencyRuleFactory;
 
-    public function __construct(DataModelDependencyRuleFactory $dataModelDependencyRuleFactory)
+    public function __construct(DependencyRuleFactory $dataModelDependencyRuleFactory)
     {
         $this->dataModelDependencyRuleFactory = $dataModelDependencyRuleFactory;
     }
@@ -22,9 +22,9 @@ class DataModelDependencyGroupFactory
      * @param array<mixed>               $data
      * @param ArrayCollection<Node>|null $nodes
      */
-    public function createFromJson(array $data, ?ArrayCollection $nodes = null): DataModelDependencyGroup
+    public function createFromJson(array $data, ?ArrayCollection $nodes = null): DependencyGroup
     {
-        $group = new DataModelDependencyGroup(DependencyCombinatorType::fromString($data['combinator']));
+        $group = new DependencyGroup(DependencyCombinatorType::fromString($data['combinator']));
 
         foreach ($data['rules'] as $rule) {
             if (array_key_exists('combinator', $rule)) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Command\Data\DataDictionary;
 
 use App\Entity\Data\DataDictionary\DataDictionaryGroup;
-use App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependencyGroup;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
 
 class UpdateDataDictionaryGroupCommand
 {
@@ -18,9 +18,9 @@ class UpdateDataDictionaryGroupCommand
 
     private bool $isDependent;
 
-    private ?DataDictionaryDependencyGroup $dependencies = null;
+    private ?DependencyGroup $dependencies = null;
 
-    public function __construct(DataDictionaryGroup $group, string $title, int $order, bool $isRepeated, bool $isDependent, ?DataDictionaryDependencyGroup $dependencies)
+    public function __construct(DataDictionaryGroup $group, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
     {
         $this->group = $group;
         $this->title = $title;
@@ -55,7 +55,7 @@ class UpdateDataDictionaryGroupCommand
         return $this->isDependent;
     }
 
-    public function getDependencies(): ?DataDictionaryDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->dependencies;
     }

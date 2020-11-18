@@ -26,8 +26,8 @@ class DataModelVersionApiResource implements ApiResource
             'version' => $this->dataModelVersion->getVersion()->getValue(),
             'dataModel' => $this->dataModelVersion->getDataModel()->getId(),
             'count' => [
-                'modules' => $this->dataModelVersion->getModules()->count(),
-                'nodes' => $this->dataModelVersion->getNodes()->count(),
+                'modules' => $this->dataModelVersion->getGroups()->count(),
+                'nodes' => $this->dataModelVersion->getElements()->count(),
             ],
             'createdAt' => $this->dataModelVersion->getCreatedAt()->format(DATE_ATOM),
             'updatedAt' => $this->dataModelVersion->getUpdatedAt() !== null ? $this->dataModelVersion->getUpdatedAt()->format(DATE_ATOM) : null,

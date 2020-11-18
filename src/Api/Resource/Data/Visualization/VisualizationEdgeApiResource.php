@@ -20,7 +20,7 @@ class VisualizationEdgeApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $prefixes = $this->triple->getModule()->getDataModel()->getPrefixes();
+        $prefixes = $this->triple->getDataModelVersion()->getPrefixes();
 
         $predicateIri = $this->triple->getPredicate()->getIri();
 

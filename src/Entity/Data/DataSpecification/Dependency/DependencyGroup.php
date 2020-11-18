@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DataModel\Dependency;
+namespace App\Entity\Data\DataSpecification\Dependency;
 
 use App\Entity\Enum\DependencyCombinatorType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,18 +11,18 @@ use function array_key_exists;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="data_model_dependency_group")
+ * @ORM\Table(name="data_specification_dependency_group")
  * @ORM\HasLifecycleCallbacks
  */
-class DataModelDependencyGroup extends DataModelDependency
+class DependencyGroup extends Dependency
 {
     /** @ORM\Column(type="DependencyCombinatorType") */
     private DependencyCombinatorType $combinator;
 
     /**
-     * @ORM\OneToMany(targetEntity="DataModelDependency", mappedBy="group", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Dependency", mappedBy="group", cascade={"persist", "remove"})
      *
-     * @var Collection<DataModelDependency>
+     * @var Collection<Dependency>
      */
     private Collection $rules;
 
@@ -43,14 +43,14 @@ class DataModelDependencyGroup extends DataModelDependency
     }
 
     /**
-     * @return Collection<DataModelDependency>
+     * @return Collection<Dependency>
      */
     public function getRules(): Collection
     {
         return $this->rules;
     }
 
-    public function addRule(DataModelDependency $rule): void
+    public function addRule(Dependency $rule): void
     {
         $this->rules->add($rule);
     }
@@ -60,13 +60,13 @@ class DataModelDependencyGroup extends DataModelDependency
      */
     public static function fromData(array $data): self
     {
-        $group = new DataModelDependencyGroup(DependencyCombinatorType::fromString($data['combinator']));
+        $group = new self(DependencyCombinatorType::fromString($data['combinator']));
 
         foreach ($data['rules'] as $rule) {
             if (array_key_exists('combinator', $rule)) {
                 $newRule = self::fromData($rule);
             } else {
-                $newRule = DataModelDependencyRule::fromData($rule);
+                $newRule = DependencyRule::fromData($rule);
             }
 
             $newRule->setGroup($group);

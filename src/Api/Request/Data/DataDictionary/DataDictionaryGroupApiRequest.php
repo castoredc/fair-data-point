@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\Data\DataDictionary;
 
 use App\Api\Request\SingleApiRequest;
-use App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependencyGroup;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function count;
@@ -70,18 +70,18 @@ class DataDictionaryGroupApiRequest extends SingleApiRequest implements GroupSeq
         return $this->dependent;
     }
 
-    public function getDependencies(): ?DataDictionaryDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->generateDependencies();
     }
 
-    private function generateDependencies(): ?DataDictionaryDependencyGroup
+    private function generateDependencies(): ?DependencyGroup
     {
         if ($this->dependencies === null || count($this->dependencies['rules']) === 0) {
             return null;
         }
 
-        return DataDictionaryDependencyGroup::fromData($this->dependencies);
+        return DependencyGroup::fromData($this->dependencies);
     }
 
     /** @inheritDoc */

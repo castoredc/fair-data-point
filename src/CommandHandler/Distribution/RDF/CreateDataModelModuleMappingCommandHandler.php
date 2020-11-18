@@ -5,9 +5,9 @@ namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\CreateDataModelModuleMappingCommand;
 use App\Entity\Castor\CastorStudy;
-use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\Mapping\DataModelMapping;
-use App\Entity\Data\DataModel\Mapping\DataModelModuleMapping;
+use App\Entity\Data\DataModel\DataModelGroup;
+use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
+use App\Entity\Data\DataSpecification\Mapping\Mapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
@@ -41,7 +41,7 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
      * @throws InvalidEntityType
      * @throws UserNotACastorUser
      */
-    public function __invoke(CreateDataModelModuleMappingCommand $command): DataModelMapping
+    public function __invoke(CreateDataModelModuleMappingCommand $command): Mapping
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
@@ -63,7 +63,7 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
 
         assert($study instanceof CastorStudy);
 
-        $module = $this->em->getRepository(DataModelModule::class)->find($command->getModule());
+        $module = $this->em->getRepository(DataModelGroup::class)->find($command->getModule());
 
         if ($module === null || ! $module->isRepeated()) {
             throw new NotFound();
@@ -75,7 +75,7 @@ class CreateDataModelModuleMappingCommandHandler implements MessageHandlerInterf
             $mapping = $study->getMappingByModuleAndVersion($module, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelModuleMapping($study, $module, $element, $dataModelVersion);
+            $mapping = new GroupMapping($study, $module, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

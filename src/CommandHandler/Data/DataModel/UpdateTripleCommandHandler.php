@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\UpdateTripleCommand;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Iri;
@@ -32,24 +33,25 @@ class UpdateTripleCommandHandler implements MessageHandlerInterface
         }
 
         $triple = $command->getTriple();
-        $dataModel = $triple->getModule()->getDataModel();
+        $dataModelVersion = $triple->getGroup()->getVersion();
+        assert($dataModelVersion instanceof DataModelVersion);
 
         $nodeRepository = $this->em->getRepository(Node::class);
 
         if ($command->getSubjectType()->isRecord()) {
-            $subject = $nodeRepository->findRecordNodeForModel($dataModel);
+            $subject = $nodeRepository->findRecordNodeForModel($dataModelVersion);
         } else {
-            $subject = $nodeRepository->findByModelAndId($dataModel, $command->getSubjectValue());
+            $subject = $nodeRepository->findByModelAndId($dataModelVersion, $command->getSubjectValue());
         }
 
         assert($subject instanceof Node);
 
-        $predicate = new Predicate($dataModel, new Iri($command->getPredicateValue()));
+        $predicate = new Predicate($dataModelVersion, new Iri($command->getPredicateValue()));
 
         if ($command->getObjectType()->isRecord()) {
-            $object = $nodeRepository->findRecordNodeForModel($dataModel);
+            $object = $nodeRepository->findRecordNodeForModel($dataModelVersion);
         } else {
-            $object = $nodeRepository->findByModelAndId($dataModel, $command->getObjectValue());
+            $object = $nodeRepository->findByModelAndId($dataModelVersion, $command->getObjectValue());
         }
 
         assert($object instanceof Node);

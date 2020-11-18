@@ -66,9 +66,9 @@ class DataDictionaryGroupApiController extends ApiController
      */
     public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $group->getDataDictionaryVersion()->getDataDictionary());
+        $this->denyAccessUnlessGranted('edit', $group->getVersion()->getDataSpecification());
 
-        if ($group->getDataDictionaryVersion() !== $dataDictionaryVersion) {
+        if ($group->getVersion() !== $dataDictionaryVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 
@@ -97,9 +97,9 @@ class DataDictionaryGroupApiController extends ApiController
      */
     public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $group->getDataDictionaryVersion()->getDataDictionary());
+        $this->denyAccessUnlessGranted('edit', $group->getVersion()->getDataSpecification());
 
-        if ($group->getDataDictionaryVersion() !== $dataDictionaryVersion) {
+        if ($group->getVersion() !== $dataDictionaryVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 

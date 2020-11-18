@@ -28,14 +28,14 @@ class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
         }
 
         $module = $command->getModule();
-        $dataModel = $module->getDataModel();
-        $dataModel->removeModule($module);
+        $dataModel = $module->getVersion();
+        $dataModel->removeGroup($module);
 
-        foreach ($module->getTriples() as $triple) {
+        foreach ($module->getElementGroups() as $triple) {
             $this->em->remove($triple);
         }
 
-        $this->em->persist($module->getDataModel());
+        $this->em->persist($module->getVersion());
         $this->em->remove($module);
 
         $this->em->flush();

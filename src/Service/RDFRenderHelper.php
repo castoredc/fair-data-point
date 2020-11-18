@@ -11,9 +11,7 @@ use App\Entity\Castor\Instances\Instance;
 use App\Entity\Castor\Record;
 use App\Entity\Castor\Structure\Report;
 use App\Entity\Castor\Structure\Survey;
-use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -21,8 +19,10 @@ use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Triple;
-use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
-use App\Entity\Data\DistributionContents\Dependency\DependencyRule;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup as DataSpecificationDependencyGroup;
+use App\Entity\Data\DataSpecification\Dependency\DependencyRule as DataSpecificationDependencyRule;
+use App\Entity\Data\DistributionContents\Dependency\DependencyGroup as DistributionContentsDependencyGroup;
+use App\Entity\Data\DistributionContents\Dependency\DependencyRule as DistributionContentsDependencyRule;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\DependencyOperatorType;
@@ -80,11 +80,12 @@ class RDFRenderHelper
     public function renderRecord(Record $record, Graph $graph): Graph
     {
         $dataModel = $this->contents->getCurrentDataModelVersion();
-        $modules = $dataModel->getModules();
+        $modules = $dataModel->getGroups();
 
         foreach ($modules as $module) {
+            assert($module instanceof DataModelGroup);
             if ($module->isRepeated()) {
-                $mapping = $this->contents->getMappingByModuleForCurrentVersion($module);
+                $mapping = $this->contents->getMappingByGroupForCurrentVersion($module);
 
                 if ($mapping === null) {
                     continue;
@@ -135,7 +136,7 @@ class RDFRenderHelper
         return $uri;
     }
 
-    private function renderModule(RecordData $data, Graph $graph, DataModelModule $module): void
+    private function renderModule(RecordData $data, Graph $graph, DataModelGroup $module): void
     {
         if ($module->isDependent()) {
             $shouldRender = $this->parseDependencies($module->getDependencies(), $data);
@@ -147,10 +148,11 @@ class RDFRenderHelper
             return;
         }
 
-        $triples = $module->getTriples();
+        $triples = $module->getElementGroups();
 
         foreach ($triples as $triple) {
-            /** @var Triple $triple */
+            assert($triple instanceof Triple);
+
             $subject = $graph->resource($this->getURI($data, $triple->getSubject()));
             $predicate = $triple->getPredicate()->getIri()->getValue();
             $object = $triple->getObject();
@@ -216,7 +218,7 @@ class RDFRenderHelper
             return $this->getURI($data, $node);
         }
 
-        $mapping = $this->contents->getMappingByNodeForCurrentVersion($node);
+        $mapping = $this->contents->getMappingByElementForCurrentVersion($node);
 
         if ($mapping === null) {
             return null;
@@ -365,16 +367,17 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseDependencies(DataModelDependencyGroup $group, RecordData $data): bool
+    private function parseDependencies(DataSpecificationDependencyGroup $group, RecordData $data): bool
     {
         $outcomes = [];
         $combinator = $group->getCombinator();
 
         foreach ($group->getRules() as $rule) {
-            if ($rule instanceof DataModelDependencyGroup) {
+            if ($rule instanceof DataSpecificationDependencyGroup) {
                 $outcomes[] = $this->parseDependencies($rule, $data);
-            } elseif ($rule instanceof DataModelDependencyRule) {
-                $node = $rule->getNode();
+            } elseif ($rule instanceof DataSpecificationDependencyRule) {
+                $node = $rule->getElement();
+                assert($node instanceof ValueNode);
                 $operator = $rule->getOperator();
                 $compareValue = $this->transformValue($node->getDataType(), $rule->getValue());
 
@@ -423,15 +426,15 @@ class RDFRenderHelper
         return $return;
     }
 
-    private function parseSubsetDependencies(DependencyGroup $group, RecordData $data): bool
+    private function parseSubsetDependencies(DistributionContentsDependencyGroup $group, RecordData $data): bool
     {
         $outcomes = [];
         $combinator = $group->getCombinator();
 
         foreach ($group->getRules() as $rule) {
-            if ($rule instanceof DependencyGroup) {
+            if ($rule instanceof DistributionContentsDependencyGroup) {
                 $outcomes[] = $this->parseSubsetDependencies($rule, $data);
-            } elseif ($rule instanceof DependencyRule) {
+            } elseif ($rule instanceof DistributionContentsDependencyRule) {
                 if ($rule->getType()->isInstitute()) {
                     $outcomes[] = $this->parseInstituteDependency($rule, $data);
                 } elseif ($rule->getType()->isValueNode()) {
@@ -451,7 +454,7 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseInstituteDependency(DependencyRule $rule, RecordData $data): bool
+    private function parseInstituteDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
     {
         $institute = $data->getRecord()->getInstitute()->getId();
 
@@ -466,7 +469,7 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseValueNodeDependency(DependencyRule $rule, RecordData $data): bool
+    private function parseValueNodeDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
     {
         $node = $rule->getNode();
         $compareValue = $this->transformValue($node->getDataType(), $rule->getValue());

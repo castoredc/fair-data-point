@@ -1,26 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DataModel\Dependency;
+namespace App\Entity\Data\DataSpecification\Dependency;
 
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\Data\DataSpecification\Element;
 use App\Entity\Enum\DependencyOperatorType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="data_model_dependency_rule")
+ * @ORM\Table(name="data_specification_dependency_rule")
  * @ORM\HasLifecycleCallbacks
  */
-class DataModelDependencyRule extends DataModelDependency
+class DependencyRule extends Dependency
 {
-    private string $nodeId;
+    private string $elementId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\ValueNode", cascade={"persist"})
-     * @ORM\JoinColumn(name="node", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Element", cascade={"persist"})
+     * @ORM\JoinColumn(name="element", referencedColumnName="id", nullable=false)
      */
-    private ValueNode $node;
+    private Element $element;
 
     /** @ORM\Column(type="DependencyOperatorType") */
     private DependencyOperatorType $operator;
@@ -34,24 +34,24 @@ class DataModelDependencyRule extends DataModelDependency
         $this->value = $value;
     }
 
-    public function getNodeId(): string
+    public function getElementId(): string
     {
-        return $this->nodeId;
+        return $this->elementId;
     }
 
-    public function setNodeId(string $nodeId): void
+    public function setElementId(string $elementId): void
     {
-        $this->nodeId = $nodeId;
+        $this->elementId = $elementId;
     }
 
-    public function getNode(): ValueNode
+    public function getElement(): Element
     {
-        return $this->node;
+        return $this->element;
     }
 
-    public function setNode(ValueNode $node): void
+    public function setElement(Element $element): void
     {
-        $this->node = $node;
+        $this->element = $element;
     }
 
     public function getOperator(): DependencyOperatorType
@@ -79,12 +79,12 @@ class DataModelDependencyRule extends DataModelDependency
      */
     public static function fromData(array $data): self
     {
-        $rule = new DataModelDependencyRule(
+        $rule = new self(
             DependencyOperatorType::fromString($data['operator']),
             $data['value']
         );
 
-        $rule->setNodeId($data['field']);
+        $rule->setElementId($data['field']);
 
         return $rule;
     }

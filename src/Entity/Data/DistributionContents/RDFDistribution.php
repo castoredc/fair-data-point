@@ -4,41 +4,22 @@ declare(strict_types=1);
 namespace App\Entity\Data\DistributionContents;
 
 use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelModule;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Mapping\DataModelModuleMapping;
-use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;
-use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution_rdf")
  */
 class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModel", inversedBy="distributions")
-     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     */
-    private DataModel $dataModel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion", inversedBy="distributions")
-     * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
-     */
-    private DataModelVersion $currentDataModelVersion;
-
     public function getDataModel(): DataModel
     {
-        return $this->dataModel;
-    }
+        assert($this->dataSpecification instanceof DataModel);
 
-    public function setDataModel(DataModel $dataModel): void
-    {
-        $this->dataModel = $dataModel;
+        return $this->dataSpecification;
     }
 
     public function getRelativeUrl(): string
@@ -46,27 +27,20 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
         return $this->getDistribution()->getRelativeUrl() . '/rdf';
     }
 
-    public function getCurrentDataModelVersion(): DataModelVersion
+    public function setDataModel(DataModel $dataModel): void
     {
-        return $this->currentDataModelVersion;
+        $this->setDataSpecification($dataModel);
     }
 
     public function setCurrentDataModelVersion(DataModelVersion $dataModelVersion): void
     {
-        if ($dataModelVersion->getDataModel() !== $this->dataModel) {
-            return;
-        }
-
-        $this->currentDataModelVersion = $dataModelVersion;
+        $this->setCurrentDataSpecificationVersion($dataModelVersion);
     }
 
-    public function getMappingByModuleForCurrentVersion(DataModelModule $module): ?DataModelModuleMapping
+    public function getCurrentDataModelVersion(): DataModelVersion
     {
-        return $this->getStudy()->getMappingByModuleAndVersion($module, $this->currentDataModelVersion);
-    }
+        assert($this->currentDataSpecificationVersion instanceof DataModelVersion);
 
-    public function getMappingByNodeForCurrentVersion(ValueNode $node): ?DataModelNodeMapping
-    {
-        return $this->getStudy()->getMappingByNodeAndVersion($node, $this->currentDataModelVersion);
+        return $this->currentDataSpecificationVersion;
     }
 }

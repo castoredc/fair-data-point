@@ -5,6 +5,8 @@ namespace App\Api\Resource\Data\DataDictionary;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataDictionary\DataDictionary;
+use App\Entity\Data\DataDictionary\DataDictionaryVersion;
+use function assert;
 
 class DataDictionaryApiResource implements ApiResource
 {
@@ -33,6 +35,7 @@ class DataDictionaryApiResource implements ApiResource
             $versions = [];
 
             foreach ($this->dataDictionary->getVersions() as $version) {
+                assert($version instanceof DataDictionaryVersion);
                 $versions[] = (new DataDictionaryVersionApiResource($version))->toArray();
             }
 

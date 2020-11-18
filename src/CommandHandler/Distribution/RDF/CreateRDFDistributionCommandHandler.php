@@ -7,6 +7,7 @@ use App\Command\Distribution\RDF\CreateRDFDistributionCommand;
 use App\CommandHandler\Distribution\CreateDistributionCommandHandler;
 use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\CouldNotConnectToMySqlServer;
@@ -16,6 +17,7 @@ use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Exception\LanguageNotFound;
 use Exception;
 use Throwable;
+use function assert;
 use function bin2hex;
 use function random_bytes;
 
@@ -38,7 +40,10 @@ class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandl
         );
 
         $contents->setDataModel($dataModel);
-        $contents->setCurrentDataModelVersion($dataModel->getLatestVersion());
+        $version = $dataModel->getLatestVersion();
+
+        assert($version instanceof DataModelVersion);
+        $contents->setCurrentDataModelVersion($version);
 
         $distribution->setContents($contents);
 

@@ -11,7 +11,7 @@ use App\Command\Distribution\RDF\CreateDataModelModuleMappingCommand;
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
 use App\Command\Distribution\RDF\GetDataModelMappingCommand;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Mapping\DataModelMapping;
+use App\Entity\Data\DataSpecification\Mapping\Mapping;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Enum\DataModelMappingType;
 use App\Entity\FAIRData\Dataset;
@@ -110,7 +110,7 @@ class RdfDistributionApiController extends ApiController
             assert($handledStamp instanceof HandledStamp);
 
             $result = $handledStamp->getResult();
-            assert($result instanceof DataModelMapping);
+            assert($result instanceof Mapping);
 
             return new JsonResponse((new DataModelMappingApiResource($result))->toArray(), 200);
         } catch (ApiRequestParseError $e) {

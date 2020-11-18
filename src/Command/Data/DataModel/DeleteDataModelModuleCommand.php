@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 
 class DeleteDataModelModuleCommand
 {
-    private DataModelModule $module;
+    private DataModelGroup $module;
 
-    public function __construct(DataModelModule $module)
+    public function __construct(DataModelGroup $module)
     {
         $this->module = $module;
     }
 
-    public function getModule(): DataModelModule
+    public function getModule(): DataModelGroup
     {
         return $this->module;
     }

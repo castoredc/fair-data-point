@@ -1,30 +1,30 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Factory\Data\DataModel;
+namespace App\Factory\Data\DataSpecification\Dependency;
 
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyRule;
 use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\Data\DataSpecification\Dependency\DependencyRule;
 use App\Entity\Enum\DependencyOperatorType;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class DataModelDependencyRuleFactory
+class DependencyRuleFactory
 {
     /**
      * @param array<mixed>               $data
      * @param ArrayCollection<Node>|null $nodes
      */
-    public function createFromJson(array $data, ?ArrayCollection $nodes = null): DataModelDependencyRule
+    public function createFromJson(array $data, ?ArrayCollection $nodes = null): DependencyRule
     {
-        $rule = new DataModelDependencyRule(
+        $rule = new DependencyRule(
             DependencyOperatorType::fromString($data['operator']),
             $data['value']
         );
 
-        $rule->setNodeId($data['field']);
+        $rule->setElementId($data['field']);
 
         if ($nodes !== null) {
-            $rule->setNode($nodes->get($rule->getNodeId()));
+            $rule->setElement($nodes->get($rule->getElementId()));
         }
 
         return $rule;

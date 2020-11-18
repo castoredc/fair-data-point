@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Command\Data\DataModel;
 
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
 
 class CreateDataModelModuleCommand
 {
@@ -18,9 +18,9 @@ class CreateDataModelModuleCommand
 
     private bool $isDependent;
 
-    private ?DataModelDependencyGroup $dependencies = null;
+    private ?DependencyGroup $dependencies = null;
 
-    public function __construct(DataModelVersion $dataModel, string $title, int $order, bool $isRepeated, bool $isDependent, ?DataModelDependencyGroup $dependencies)
+    public function __construct(DataModelVersion $dataModel, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
     {
         $this->dataModel = $dataModel;
         $this->title = $title;
@@ -55,7 +55,7 @@ class CreateDataModelModuleCommand
         return $this->isDependent;
     }
 
-    public function getDependencies(): ?DataModelDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->dependencies;
     }

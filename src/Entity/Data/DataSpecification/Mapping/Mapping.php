@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DataModel\Mapping;
+namespace App\Entity\Data\DataSpecification\Mapping;
 
 use App\Entity\Castor\CastorEntity;
-use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataSpecification\Version;
 use App\Entity\Study;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="data_model_mappings")
+ * @ORM\Table(name="data_specification_mappings")
  * @ORM\HasLifecycleCallbacks
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"node" = "DataModelNodeMapping", "module" = "DataModelModuleMapping"})
+ * @ORM\DiscriminatorMap({"element" = "ElementMapping", "group" = "GroupMapping"})
  */
-abstract class DataModelMapping
+abstract class Mapping
 {
     use CreatedAndUpdated;
 
@@ -41,16 +41,16 @@ abstract class DataModelMapping
     private CastorEntity $entity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\DataModelVersion")
-     * @ORM\JoinColumn(name="data_model_version", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Version")
+     * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
      */
-    private DataModelVersion $dataModelVersion;
+    private Version $version;
 
-    public function __construct(Study $study, CastorEntity $entity, DataModelVersion $dataModelVersion)
+    public function __construct(Study $study, CastorEntity $entity, Version $version)
     {
         $this->study = $study;
         $this->entity = $entity;
-        $this->dataModelVersion = $dataModelVersion;
+        $this->version = $version;
     }
 
     public function getId(): string
@@ -68,9 +68,9 @@ abstract class DataModelMapping
         $this->entity = $entity;
     }
 
-    public function getDataModelVersion(): DataModelVersion
+    public function getVersion(): Version
     {
-        return $this->dataModelVersion;
+        return $this->version;
     }
 
     public function getStudy(): Study

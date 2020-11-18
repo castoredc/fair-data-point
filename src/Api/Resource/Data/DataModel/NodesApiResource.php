@@ -5,7 +5,9 @@ namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Enum\NodeType;
+use function assert;
 
 class NodesApiResource implements ApiResource
 {
@@ -32,7 +34,8 @@ class NodesApiResource implements ApiResource
             'value' => [],
         ];
 
-        foreach ($this->dataModel->getNodes() as $node) {
+        foreach ($this->dataModel->getElements() as $node) {
+            assert($node instanceof Node);
             $data[$node->getType()->toString()][] = (new NodeApiResource($node))->toArray();
         }
 

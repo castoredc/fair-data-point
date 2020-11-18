@@ -6,6 +6,7 @@ namespace App\CommandHandler\Data\DataModel;
 use App\Api\Resource\Data\DataModel\DataModelModuleRDFPreviewApiResource;
 use App\Api\Resource\Data\DataModel\DataModelRDFPreviewApiResource;
 use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
@@ -47,7 +48,7 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
         $fullGraph = new Graph();
 
         $dataModel = $command->getDataModel();
-        $modules = $dataModel->getModules();
+        $modules = $dataModel->getGroups();
         $prefixes = $dataModel->getPrefixes();
 
         $dataModelTriples = [];
@@ -57,12 +58,14 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
         }
 
         foreach ($modules as $module) {
+            assert($module instanceof DataModelGroup);
             $moduleGraph = new Graph();
 
             $triples = $module->getTriples();
 
             foreach ($triples as $triple) {
-                /** @var Triple $triple */
+                assert($triple instanceof Triple);
+
                 $subject = $triple->getSubject();
                 $subjectInFullGraph = $fullGraph->resource($this->getURI($subject));
                 $subjectInModuleGraph = $moduleGraph->resource($this->getURI($subject));

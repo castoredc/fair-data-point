@@ -9,7 +9,7 @@ use App\Api\Resource\Data\DataModel\DataModelModulesApiResource;
 use App\Command\Data\DataModel\CreateDataModelModuleCommand;
 use App\Command\Data\DataModel\DeleteDataModelModuleCommand;
 use App\Command\Data\DataModel\UpdateDataModelModuleCommand;
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -64,11 +64,11 @@ class DataModelModuleApiController extends ApiController
      * @Route("/{module}", methods={"POST"}, name="api_model_module_update")
      * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
-    public function updateModule(DataModelVersion $dataModelVersion, DataModelModule $module, Request $request, MessageBusInterface $bus): Response
+    public function updateModule(DataModelVersion $dataModelVersion, DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
-        if ($module->getDataModel() !== $dataModelVersion) {
+        if ($module->getVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 
@@ -95,11 +95,11 @@ class DataModelModuleApiController extends ApiController
      * @Route("/{module}", methods={"DELETE"}, name="api_model_module_delete")
      * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
-    public function deleteModule(DataModelVersion $dataModelVersion, DataModelModule $module, MessageBusInterface $bus): Response
+    public function deleteModule(DataModelVersion $dataModelVersion, DataModelGroup $module, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
-        if ($module->getDataModel() !== $dataModelVersion) {
+        if ($module->getVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 

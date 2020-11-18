@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use function sprintf;
 
 class DataModelModuleApiResource implements ApiResource
 {
-    private DataModelModule $module;
+    private DataModelGroup $module;
 
     private bool $groupTriples;
 
-    public function __construct(DataModelModule $module, bool $groupTriples = true)
+    public function __construct(DataModelGroup $module, bool $groupTriples = true)
     {
         $this->module = $module;
         $this->groupTriples = $groupTriples;

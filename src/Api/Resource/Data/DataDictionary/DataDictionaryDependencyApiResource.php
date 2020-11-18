@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataDictionary;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependency;
-use App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependencyGroup;
-use App\Entity\Data\DataDictionary\Dependency\DataDictionaryDependencyRule;
+use App\Entity\Data\DataSpecification\Dependency\Dependency;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
+use App\Entity\Data\DataSpecification\Dependency\DependencyRule;
 use function array_pop;
 
 class DataDictionaryDependencyApiResource implements ApiResource
 {
-    private DataDictionaryDependency $dependency;
+    private Dependency $dependency;
 
-    public function __construct(DataDictionaryDependency $dependency)
+    public function __construct(Dependency $dependency)
     {
         $this->dependency = $dependency;
     }
@@ -30,7 +30,7 @@ class DataDictionaryDependencyApiResource implements ApiResource
             'group' => $this->dependency->getGroup() !== null ? $this->dependency->getGroup()->getId() : null,
         ];
 
-        if ($this->dependency instanceof DataDictionaryDependencyGroup) {
+        if ($this->dependency instanceof DependencyGroup) {
             $array['combinator'] = $this->dependency->getCombinator()->toString();
             $array['rules'] = [];
 
@@ -50,11 +50,11 @@ class DataDictionaryDependencyApiResource implements ApiResource
             }
 
             array_pop($description);
-        } elseif ($this->dependency instanceof DataDictionaryDependencyRule) {
-            $array['field'] = $this->dependency->getVariable()->getId();
+        } elseif ($this->dependency instanceof DependencyRule) {
+            $array['field'] = $this->dependency->getElement()->getId();
             $array['operator'] = $this->dependency->getOperator()->toString();
             $array['value'] = $this->dependency->getValue();
-            $array['description'] = $this->dependency->getVariable()->getLabel() . ' ' . $array['operator'] . ' ' . $array['value'];
+            $array['description'] = $this->dependency->getElement()->getTitle() . ' ' . $array['operator'] . ' ' . $array['value'];
 
             $description[] = [
                 'type' => 'rule',

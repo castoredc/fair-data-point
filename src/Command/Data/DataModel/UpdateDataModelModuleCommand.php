@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelModule;
-use App\Entity\Data\DataModel\Dependency\DataModelDependencyGroup;
+use App\Entity\Data\DataModel\DataModelGroup;
+use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
 
 class UpdateDataModelModuleCommand
 {
-    private DataModelModule $module;
+    private DataModelGroup $module;
 
     private string $title;
 
@@ -18,9 +18,9 @@ class UpdateDataModelModuleCommand
 
     private bool $isDependent;
 
-    private ?DataModelDependencyGroup $dependencies = null;
+    private ?DependencyGroup $dependencies = null;
 
-    public function __construct(DataModelModule $module, string $title, int $order, bool $isRepeated, bool $isDependent, ?DataModelDependencyGroup $dependencies)
+    public function __construct(DataModelGroup $module, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
     {
         $this->module = $module;
         $this->title = $title;
@@ -30,7 +30,7 @@ class UpdateDataModelModuleCommand
         $this->dependencies = $dependencies;
     }
 
-    public function getModule(): DataModelModule
+    public function getModule(): DataModelGroup
     {
         return $this->module;
     }
@@ -55,7 +55,7 @@ class UpdateDataModelModuleCommand
         return $this->isDependent;
     }
 
-    public function getDependencies(): ?DataModelDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->dependencies;
     }

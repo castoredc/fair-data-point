@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\DataModelVersion;
+use function assert;
 
 class DataModelModulesApiResource implements ApiResource
 {
@@ -25,8 +27,9 @@ class DataModelModulesApiResource implements ApiResource
     {
         $data = [];
 
-        foreach ($this->dataModel->getModules() as $module) {
-            $data[] = (new DataModelModuleApiResource($module, $this->groupTriples))->toArray();
+        foreach ($this->dataModel->getGroups() as $group) {
+            assert($group instanceof DataModelGroup);
+            $data[] = (new DataModelModuleApiResource($group, $this->groupTriples))->toArray();
         }
 
         return $data;

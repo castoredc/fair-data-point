@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DistributionContents;
 
+use App\Entity\Data\DataSpecification\DataSpecification;
+use App\Entity\Data\DataSpecification\Element;
+use App\Entity\Data\DataSpecification\Group;
+use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
+use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
+use App\Entity\Data\DataSpecification\Version;
 use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Distribution;
@@ -69,6 +75,18 @@ abstract class DistributionContents
      * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
      */
     private ?DependencyGroup $dependencies = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\DataSpecification", inversedBy="distributionContents")
+     * @ORM\JoinColumn(name="data_specification", referencedColumnName="id", nullable=false)
+     */
+    protected DataSpecification $dataSpecification;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Version", inversedBy="distributionContents")
+     * @ORM\JoinColumn(name="data_specification_version", referencedColumnName="id", nullable=false)
+     */
+    protected Version $currentDataSpecificationVersion;
 
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
@@ -156,5 +174,34 @@ abstract class DistributionContents
     public function setIsCached(bool $isCached): void
     {
         $this->isCached = $isCached;
+    }
+
+    public function getDataSpecification(): DataSpecification
+    {
+        return $this->dataSpecification;
+    }
+
+    protected function setDataSpecification(DataSpecification $dataSpecification): void
+    {
+        $this->dataSpecification = $dataSpecification;
+    }
+
+    protected function setCurrentDataSpecificationVersion(Version $dataSpecificationVersion): void
+    {
+        if ($dataSpecificationVersion->getDataSpecification() !== $this->dataSpecification) {
+            return;
+        }
+
+        $this->currentDataSpecificationVersion = $dataSpecificationVersion;
+    }
+
+    public function getMappingByGroupForCurrentVersion(Group $group): ?GroupMapping
+    {
+        return $this->getStudy()->getMappingByModuleAndVersion($group, $this->currentDataSpecificationVersion);
+    }
+
+    public function getMappingByElementForCurrentVersion(Element $element): ?ElementMapping
+    {
+        return $this->getStudy()->getMappingByNodeAndVersion($element, $this->currentDataSpecificationVersion);
     }
 }

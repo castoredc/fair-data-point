@@ -27,7 +27,7 @@ class NodeApiResource implements ApiResource
         $value = $this->node->getValue() ?? null;
 
         if ($this->node instanceof ExternalIriNode) {
-            $value = (new IriApiResource($this->node->getDataModel(), $this->node->getIri()))->toArray();
+            $value = (new IriApiResource($this->node->getDataModelVersion(), $this->node->getIri()))->toArray();
         } elseif ($this->node instanceof LiteralNode || $this->node instanceof ValueNode) {
             $value = [
                 'dataType' => $this->node->getDataType() !== null ? $this->node->getDataType()->toString() : null,

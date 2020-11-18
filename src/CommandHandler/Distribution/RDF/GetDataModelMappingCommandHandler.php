@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\GetDataModelMappingCommand;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
@@ -50,9 +51,10 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
                 $results[] = $mapping ?? $valueNode;
             }
         } elseif ($command->getType()->isModule()) {
-            $repeatedModules = $command->getDataModelVersion()->getRepeatedModules();
+            $repeatedModules = $command->getDataModelVersion()->getRepeatedGroups();
 
             foreach ($repeatedModules as $repeatedModule) {
+                assert($repeatedModule instanceof DataModelGroup);
                 $mapping = $study->getMappingByModuleAndVersion($repeatedModule, $command->getDataModelVersion());
 
                 $results[] = $mapping ?? $repeatedModule;

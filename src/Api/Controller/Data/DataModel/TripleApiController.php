@@ -9,7 +9,7 @@ use App\Api\Resource\Data\DataModel\TriplesApiResource;
 use App\Command\Data\DataModel\CreateTripleCommand;
 use App\Command\Data\DataModel\DeleteTripleCommand;
 use App\Command\Data\DataModel\UpdateTripleCommand;
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Triple;
 use App\Exception\ApiRequestParseError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -30,9 +30,9 @@ class TripleApiController extends ApiController
     /**
      * @Route("", methods={"GET"}, name="api_model_module")
      */
-    public function getTriples(DataModelModule $module): Response
+    public function getTriples(DataModelGroup $module): Response
     {
-        $this->denyAccessUnlessGranted('view', $module->getDataModel()->getDataModel());
+        $this->denyAccessUnlessGranted('view', $module->getVersion()->getDataSpecification());
 
         return new JsonResponse((new TriplesApiResource($module))->toArray(), 200);
     }
@@ -40,9 +40,9 @@ class TripleApiController extends ApiController
     /**
      * @Route("", methods={"POST"}, name="api_triple_add")
      */
-    public function addTriple(DataModelModule $module, Request $request, MessageBusInterface $bus): Response
+    public function addTriple(DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
         try {
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
@@ -64,9 +64,9 @@ class TripleApiController extends ApiController
      * @Route("/{triple}", methods={"POST"}, name="api_triple_update")
      * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
      */
-    public function updateTriple(DataModelModule $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
+    public function updateTriple(DataModelGroup $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
         try {
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
@@ -91,9 +91,9 @@ class TripleApiController extends ApiController
      * @Route("/{triple}", methods={"DELETE"}, name="api_triple_delete")
      * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
      */
-    public function deleteTriple(DataModelModule $module, Triple $triple, MessageBusInterface $bus): Response
+    public function deleteTriple(DataModelGroup $module, Triple $triple, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getDataModel()->getDataModel());
+        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
         try {
             $bus->dispatch(new DeleteTripleCommand($triple));

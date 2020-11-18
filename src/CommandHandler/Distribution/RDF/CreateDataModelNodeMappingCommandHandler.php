@@ -5,9 +5,9 @@ namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
 use App\Entity\Castor\CastorStudy;
-use App\Entity\Data\DataModel\Mapping\DataModelMapping;
-use App\Entity\Data\DataModel\Mapping\DataModelNodeMapping;
 use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
+use App\Entity\Data\DataSpecification\Mapping\Mapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
 use App\Exception\InvalidEntityType;
@@ -42,7 +42,7 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
      * @throws InvalidEntityType
      * @throws UserNotACastorUser
      */
-    public function __invoke(CreateDataModelNodeMappingCommand $command): DataModelMapping
+    public function __invoke(CreateDataModelNodeMappingCommand $command): Mapping
     {
         $contents = $command->getDistribution();
         $distribution = $command->getDistribution()->getDistribution();
@@ -79,7 +79,7 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
             $mapping = $study->getMappingByNodeAndVersion($node, $dataModelVersion);
             $mapping->setEntity($element);
         } else {
-            $mapping = new DataModelNodeMapping($study, $node, $element, $dataModelVersion);
+            $mapping = new ElementMapping($study, $node, $element, $dataModelVersion);
         }
 
         $this->em->persist($element);

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Enum\NodeType;
 
 class CreateTripleCommand
 {
-    private DataModelModule $module;
+    private DataModelGroup $module;
 
     private NodeType $objectType;
 
@@ -21,7 +21,7 @@ class CreateTripleCommand
     private ?string $subjectValue = null;
 
     public function __construct(
-        DataModelModule $module,
+        DataModelGroup $module,
         NodeType $objectType,
         ?string $objectValue,
         ?string $predicateValue,
@@ -36,7 +36,7 @@ class CreateTripleCommand
         $this->subjectValue = $subjectValue;
     }
 
-    public function getModule(): DataModelModule
+    public function getModule(): DataModelGroup
     {
         return $this->module;
     }

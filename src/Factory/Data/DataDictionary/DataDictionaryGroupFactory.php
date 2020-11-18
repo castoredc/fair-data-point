@@ -5,15 +5,16 @@ namespace App\Factory\Data\DataDictionary;
 
 use App\Entity\Data\DataDictionary\DataDictionaryGroup;
 use App\Entity\Data\DataDictionary\DataDictionaryVersion;
+use App\Factory\Data\DataSpecification\Dependency\DependencyGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class DataDictionaryGroupFactory
 {
-    private DataDictionaryDependencyGroupFactory $dataDictionaryDependencyGroupFactory;
+    private DependencyGroupFactory $dependencyGroupFactory;
 
-    public function __construct(DataDictionaryDependencyGroupFactory $dataDictionaryDependencyGroupFactory)
+    public function __construct(DependencyGroupFactory $dependencyGroupFactory)
     {
-        $this->dataDictionaryDependencyGroupFactory = $dataDictionaryDependencyGroupFactory;
+        $this->dependencyGroupFactory = $dependencyGroupFactory;
     }
 
     /**
@@ -30,7 +31,7 @@ class DataDictionaryGroupFactory
         );
 
         if ($newGroup->isDependent() && $data['dependencies'] !== null) {
-            $newGroup->setDependencies($this->dataDictionaryDependencyGroupFactory->createFromJson($data['dependencies'], $nodes));
+            $newGroup->setDependencies($this->dependencyGroupFactory->createFromJson($data['dependencies'], $nodes));
         }
 
         return $newGroup;

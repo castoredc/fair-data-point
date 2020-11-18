@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateTripleCommand;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
@@ -38,7 +39,8 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         }
 
         $module = $command->getModule();
-        $dataModel = $module->getDataModel();
+        $dataModel = $module->getVersion();
+        assert($dataModel instanceof DataModelVersion);
 
         $nodeRepository = $this->em->getRepository(Node::class);
 
@@ -70,7 +72,7 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
 
         $triple = new Triple($module, $subject, $predicate, $object);
 
-        $module->addTriple($triple);
+        $module->addElementGroup($triple);
 
         $this->em->persist($predicate);
         $this->em->persist($triple);

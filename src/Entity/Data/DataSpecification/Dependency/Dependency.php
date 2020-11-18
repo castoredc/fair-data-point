@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DataModel\Dependency;
+namespace App\Entity\Data\DataSpecification\Dependency;
 
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,10 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_model_dependency")
+ * @ORM\Table(name="data_specification_dependency")
  * @ORM\HasLifecycleCallbacks
  */
-class DataModelDependency
+class Dependency
 {
     use CreatedAndUpdated;
 
@@ -24,22 +24,22 @@ class DataModelDependency
     private string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="DataModelDependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="DependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
      */
-    private ?DataModelDependencyGroup $group = null;
+    private ?DependencyGroup $group = null;
 
     public function getId(): string
     {
         return $this->id;
     }
 
-    public function getGroup(): ?DataModelDependencyGroup
+    public function getGroup(): ?DependencyGroup
     {
         return $this->group;
     }
 
-    public function setGroup(?DataModelDependencyGroup $group): void
+    public function setGroup(?DependencyGroup $group): void
     {
         $this->group = $group;
     }

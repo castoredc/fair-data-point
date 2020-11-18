@@ -46,10 +46,10 @@ class DataDictionaryVoter extends Voter
 
         $dataDictionary = $subject;
         assert($dataDictionary instanceof DataModel);
-        $distributions = $dataDictionary->getDistributions();
+        $distributions = $dataDictionary->getVersions();
 
         foreach ($distributions as $distribution) {
-            if ($this->security->isGranted('view', $distribution->getDistribution())) {
+            if ($this->security->isGranted('view', $distribution->getDistributionContents())) {
                 return true;
             }
         }
