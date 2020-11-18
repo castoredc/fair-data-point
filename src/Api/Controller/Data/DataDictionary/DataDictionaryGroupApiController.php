@@ -22,13 +22,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**
- * @Route("/api/data-dictionary/{dataDictionary}/v/{version}/group")
+ * @Route("/api/dictionary/{dataDictionary}/v/{version}/group")
  * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "data_dictionary", "version": "id"}})
  */
 class DataDictionaryGroupApiController extends ApiController
 {
     /**
-     * @Route("", methods={"GET"}, name="api_data-dictionary_groups")
+     * @Route("", methods={"GET"}, name="api_dictionary_groups")
      */
     public function getGroups(DataDictionaryVersion $dataDictionaryVersion): Response
     {
@@ -38,7 +38,7 @@ class DataDictionaryGroupApiController extends ApiController
     }
 
     /**
-     * @Route("", methods={"POST"}, name="api_data-dictionary_group_add")
+     * @Route("", methods={"POST"}, name="api_dictionary_group_add")
      */
     public function addGroup(DataDictionaryVersion $dataDictionaryVersion, Request $request, MessageBusInterface $bus): Response
     {
@@ -61,7 +61,7 @@ class DataDictionaryGroupApiController extends ApiController
     }
 
     /**
-     * @Route("/{group}", methods={"POST"}, name="api_data-dictionary_group_update")
+     * @Route("/{group}", methods={"POST"}, name="api_dictionary_group_update")
      * @ParamConverter("group", options={"mapping": {"group": "id"}})
      */
     public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, Request $request, MessageBusInterface $bus): Response
@@ -92,7 +92,7 @@ class DataDictionaryGroupApiController extends ApiController
     }
 
     /**
-     * @Route("/{group}", methods={"DELETE"}, name="api_data-dictionary_group_delete")
+     * @Route("/{group}", methods={"DELETE"}, name="api_dictionary_group_delete")
      * @ParamConverter("group", options={"mapping": {"group": "id"}})
      */
     public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, MessageBusInterface $bus): Response

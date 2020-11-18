@@ -20,6 +20,11 @@ use function assert;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution_contents")
  * @ORM\HasLifecycleCallbacks
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "csv" = "CSVDistribution",
+ *     "rdf" = "RDFDistribution",
+ * })
  */
 abstract class DistributionContents
 {

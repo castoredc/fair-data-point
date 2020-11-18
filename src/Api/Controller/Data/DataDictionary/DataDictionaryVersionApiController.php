@@ -26,13 +26,13 @@ use function sprintf;
 use const JSON_PRETTY_PRINT;
 
 /**
- * @Route("/api/data-dictionary/{dataDictionary}/v/{version}")
+ * @Route("/api/dictionary/{dataDictionary}/v/{version}")
  * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "data_dictionary", "version": "id"}})
  */
 class DataDictionaryVersionApiController extends ApiController
 {
     /**
-     * @Route("", methods={"GET"}, name="api_data-dictionary_version")
+     * @Route("", methods={"GET"}, name="api_dictionary_version")
      */
     public function dataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion): Response
     {
@@ -42,7 +42,7 @@ class DataDictionaryVersionApiController extends ApiController
     }
 
     /**
-     * @Route("", methods={"POST"}, name="api_data-dictionary_version_create")
+     * @Route("", methods={"POST"}, name="api_dictionary_version_create")
      */
     public function createDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {

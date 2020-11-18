@@ -27,13 +27,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**
- * @Route("/api/data-dictionary/{dataDictionary}")
+ * @Route("/api/dictionary/{dataDictionary}")
  * @ParamConverter("dataDictionary", options={"mapping": {"dataDictionary": "id"}})
  */
 class DataDictionaryApiController extends ApiController
 {
     /**
-     * @Route("", methods={"GET"}, name="api_data-dictionary")
+     * @Route("", methods={"GET"}, name="api_dictionary")
      */
     public function dataDictionary(DataDictionary $dataDictionary): Response
     {
@@ -43,7 +43,7 @@ class DataDictionaryApiController extends ApiController
     }
 
     /**
-     * @Route("/import", methods={"POST"}, name="api_data-dictionary_import")
+     * @Route("/import", methods={"POST"}, name="api_dictionary_import")
      */
     public function importDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {

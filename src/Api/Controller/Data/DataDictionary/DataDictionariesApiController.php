@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**
- * @Route("/api/data-dictionary")
+ * @Route("/api/dictionary")
  */
 class DataDictionariesApiController extends ApiController
 {
     /**
-     * @Route("", methods={"GET"}, name="api_data-dictionaries")
+     * @Route("", methods={"GET"}, name="api_dictionaries")
      */
     public function dataDictionaries(MessageBusInterface $bus): Response
     {
@@ -40,7 +40,7 @@ class DataDictionariesApiController extends ApiController
     }
 
     /**
-     * @Route("", methods={"POST"}, name="api_data-dictionaries_add")
+     * @Route("", methods={"POST"}, name="api_dictionaries_add")
      */
     public function addDataDictionary(Request $request, MessageBusInterface $bus): Response
     {
