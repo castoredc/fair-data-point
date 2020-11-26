@@ -86,7 +86,6 @@ final class Version20201112155800 extends AbstractMigration
         $this->addSql('ALTER TABLE fdp.distribution_dependency_group CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
         $this->addSql('ALTER TABLE fdp.distribution_dependency_rule CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
         $this->addSql('ALTER TABLE fdp.distribution_rdf CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
-        $this->addSql('ALTER TABLE fdp.doctrine_migration_versions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
         $this->addSql('ALTER TABLE fdp.fdp CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
         $this->addSql('ALTER TABLE fdp.language CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
         $this->addSql('ALTER TABLE fdp.license CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
