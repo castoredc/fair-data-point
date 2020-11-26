@@ -14,6 +14,8 @@ import Dataset from "./Dataset";
 import Datasets from "./Home/Datasets";
 import CustomIcon from "../../components/Icon/CustomIcon";
 import FAIRDataPoint from "./FAIRDataPoint";
+import DataDictionaries from "./Home/DataDictionaries";
+import DataDictionary from "./DataDictionary";
 
 export default class Admin extends Component {
     constructor(props) {
@@ -119,6 +121,22 @@ export default class Admin extends Component {
                         ),
                     },
                     {
+                        destination: <Link to={'/admin/dictionaries'}/>,
+                        icon: 'summary',
+                        label: 'Data dictionaries',
+                        isCurrent: (
+                            matchPath(window.location.pathname, {
+                                path: "/admin/dictionaries",
+                                exact: true,
+                                strict: false,
+                            }) || matchPath(window.location.pathname, {
+                                path: "/admin/dictionary/:dictionary",
+                                exact: false,
+                                strict: false,
+                            })
+                        ),
+                    },
+                    {
                         items: [
                             {
                                 isTitle: true,
@@ -155,6 +173,10 @@ export default class Admin extends Component {
                     <Route path="/admin/models" exact component={DataModels}/>
                     <Route path="/admin/model/:model/:version" component={DataModel}/>
                     <Route path="/admin/model/:model" component={DataModel}/>
+
+                    <Route path="/admin/dictionaries" exact component={DataDictionaries}/>
+                    <Route path="/admin/dictionary/:dictionary" component={DataDictionary}/>
+
                     <Route component={NotFound}/>
                 </Switch>
             </div>

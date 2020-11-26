@@ -11,9 +11,6 @@ doctrine:
         dbname: '%env(DB_DEFAULT_NAME)%'
         user: '%env(DB_DEFAULT_USER)%'
         password: '%env(DB_DEFAULT_PASS)%'
-        options:
-            # 1009: '%kernel.project_dir%/certs/DigiCertGlobalRootG2.crt.pem'
-            1009: '%kernel.project_dir%/certs/BaltimoreCyberTrustRoot.crt.pem'
         types:
             iri:  App\Type\IriType
             DistributionAccessType:  App\Type\DistributionAccessType
@@ -29,6 +26,7 @@ doctrine:
             DistributionGenerationStatusType: App\Type\Enum\DistributionGenerationStatusType
             NameOriginType: App\Type\Enum\NameOriginType
             DistributionContentsDependencyType: App\Type\Enum\DistributionContentsDependencyType
+            DataDictionaryDataType: App\Type\Enum\DataDictionaryDataType
 
     orm:
         auto_generate_proxy_classes: true

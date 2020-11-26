@@ -5,7 +5,6 @@ namespace App\Api\Controller\Distribution;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Distribution\DistributionApiRequest;
-use App\Api\Request\Distribution\DistributionContentApiRequest;
 use App\Api\Request\Distribution\DistributionGenerationLogsFilterApiRequest;
 use App\Api\Request\Distribution\DistributionSubsetApiRequest;
 use App\Api\Resource\Distribution\DistributionApiResource;
@@ -13,21 +12,19 @@ use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationLogApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationRecordLogApiResource;
 use App\Api\Resource\PaginatedApiResource;
-use App\Command\Distribution\AddCSVDistributionContentCommand;
-use App\Command\Distribution\ClearDistributionContentCommand;
-use App\Command\Distribution\CreateDistributionCommand;
-use App\Command\Distribution\CreateDistributionDatabaseCommand;
+use App\Command\Distribution\CSV\CreateCSVDistributionCommand;
+use App\Command\Distribution\CSV\UpdateCSVDistributionCommand;
 use App\Command\Distribution\GetDistributionGenerationLogsCommand;
 use App\Command\Distribution\GetDistributionGenerationRecordLogsCommand;
-use App\Command\Distribution\UpdateDistributionCommand;
+use App\Command\Distribution\RDF\CreateRDFDistributionCommand;
+use App\Command\Distribution\RDF\UpdateRDFDistributionCommand;
 use App\Command\Distribution\UpdateDistributionSubsetCommand;
-use App\Entity\Data\CSV\CSVDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Data\Log\DistributionGenerationLog;
-use App\Entity\Data\RDF\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
-use App\Exception\GroupedApiRequestParseError;
 use App\Exception\LanguageNotFound;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -186,45 +183,6 @@ class DistributionApiController extends ApiController
     }
 
     /**
-     * @Route("/{distribution}/contents", methods={"POST"}, name="api_distribution_contents_change")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function changeDistributionContents(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('edit', $distribution);
-        $contents = $distribution->getContents();
-
-        if (! $dataset->hasDistribution($distribution)) {
-            throw $this->createNotFoundException();
-        }
-
-        try {
-            /** @var DistributionContentApiRequest[] $parsed */
-            $parsed = $this->parseGroupedRequest(DistributionContentApiRequest::class, $request);
-
-            $bus->dispatch(new ClearDistributionContentCommand($distribution));
-
-            if ($contents instanceof CSVDistribution) {
-                foreach ($parsed as $item) {
-                    $bus->dispatch(new AddCSVDistributionContentCommand($contents, $item->getType(), $item->getValue()));
-                }
-            }
-
-            return new JsonResponse([], 200);
-        } catch (GroupedApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
-        } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while changing the distribution contents', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
-
-            return new JsonResponse([], 500);
-        }
-    }
-
-    /**
      * @Route("", methods={"POST"}, name="api_distribution_add")
      */
     public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
@@ -234,30 +192,43 @@ class DistributionApiController extends ApiController
         try {
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
             assert($parsed instanceof DistributionApiRequest);
-            $envelope = $bus->dispatch(
-                new CreateDistributionCommand(
-                    $parsed->getType(),
-                    $parsed->getSlug(),
-                    $parsed->getLicense(),
-                    $dataset,
-                    $parsed->getAccessRights(),
-                    $parsed->getIncludeAllData(),
-                    $parsed->getDataModel(),
-                    $parsed->getApiUser(),
-                    $parsed->getClientId(),
-                    $parsed->getClientSecret()
-                )
-            );
+
+            if ($parsed->getType()->isCsv()) {
+                $envelope = $bus->dispatch(
+                    new CreateCSVDistributionCommand(
+                        $parsed->getSlug(),
+                        $parsed->getLicense(),
+                        $dataset,
+                        $parsed->getAccessRights(),
+                        $parsed->getApiUser(),
+                        $parsed->getClientId(),
+                        $parsed->getClientSecret(),
+                        $parsed->getDataDictionary(),
+                        $parsed->getDataDictionaryVersion()
+                    )
+                );
+            } elseif ($parsed->getType()->isRdf()) {
+                $envelope = $bus->dispatch(
+                    new CreateRDFDistributionCommand(
+                        $parsed->getSlug(),
+                        $parsed->getLicense(),
+                        $dataset,
+                        $parsed->getAccessRights(),
+                        $parsed->getApiUser(),
+                        $parsed->getClientId(),
+                        $parsed->getClientSecret(),
+                        $parsed->getDataModel(),
+                        $parsed->getDataModelVersion()
+                    )
+                );
+            } else {
+                return new JsonResponse([], 500);
+            }
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
 
             $distribution = $handledStamp->getResult();
-            assert($distribution instanceof Distribution);
-
-            if ($parsed->getType()->isRdf()) {
-                $bus->dispatch(new CreateDistributionDatabaseCommand($distribution));
-            }
 
             return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
@@ -289,21 +260,38 @@ class DistributionApiController extends ApiController
         try {
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
             assert($parsed instanceof DistributionApiRequest);
-            $bus->dispatch(
-                new UpdateDistributionCommand(
+
+            if ($distribution->getContents() instanceof RDFDistribution) {
+                $bus->dispatch(
+                    new UpdateRDFDistributionCommand(
+                        $distribution,
+                        $parsed->getSlug(),
+                        $parsed->getLicense(),
+                        $parsed->getAccessRights(),
+                        $parsed->getApiUser(),
+                        $parsed->getClientId(),
+                        $parsed->getClientSecret(),
+                        $parsed->getPublished(),
+                        $parsed->getDataModel(),
+                        $parsed->getDataModelVersion()
+                    )
+                );
+            } elseif ($distribution->getContents() instanceof CSVDistribution) {
+                new UpdateCSVDistributionCommand(
                     $distribution,
                     $parsed->getSlug(),
                     $parsed->getLicense(),
                     $parsed->getAccessRights(),
-                    $parsed->getIncludeAllData(),
-                    $parsed->getDataModel(),
-                    $parsed->getDataModelVersion(),
                     $parsed->getApiUser(),
                     $parsed->getClientId(),
                     $parsed->getClientSecret(),
-                    $parsed->getPublished()
-                )
-            );
+                    $parsed->getPublished(),
+                    $parsed->getDataModel(),
+                    $parsed->getDataModelVersion()
+                );
+            } else {
+                return new JsonResponse([], 500);
+            }
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {

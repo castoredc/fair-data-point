@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Graph\Resource\Distribution;
 
-use App\Entity\Data\CSV\CSVDistribution;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\CSVDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Graph\Resource\GraphResource;
 use EasyRdf\Graph;

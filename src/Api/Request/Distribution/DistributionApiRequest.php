@@ -51,8 +51,23 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
      */
     private ?string $dataModel = null;
 
-    /** @Assert\Type("string") */
+    /**
+     * @Assert\NotBlank(groups = {"rdf"})
+     * @Assert\Type("string")
+     */
     private ?string $dataModelVersion = null;
+
+    /**
+     * @Assert\NotBlank(groups = {"csv"})
+     * @Assert\Type("string")
+     */
+    private ?string $dataDictionary = null;
+
+    /**
+     * @Assert\NotBlank(groups = {"csv"})
+     * @Assert\Type("string")
+     */
+    private ?string $dataDictionaryVersion = null;
 
     /** @Assert\Type("string") */
     private ?string $apiUser = null;
@@ -117,6 +132,16 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     public function getDataModelVersion(): ?string
     {
         return $this->dataModelVersion;
+    }
+
+    public function getDataDictionary(): ?string
+    {
+        return $this->dataDictionary;
+    }
+
+    public function getDataDictionaryVersion(): ?string
+    {
+        return $this->dataDictionaryVersion;
     }
 
     public function getApiUser(): ?string

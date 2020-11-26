@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependency;
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyRule;
+use App\Entity\Data\DistributionContents\Dependency\Dependency;
+use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
+use App\Entity\Data\DistributionContents\Dependency\DependencyRule;
 use function array_pop;
 
 class DistributionContentsDependencyApiResource implements ApiResource
 {
-    private DistributionContentsDependency $dependency;
+    private Dependency $dependency;
 
-    public function __construct(DistributionContentsDependency $dependency)
+    public function __construct(Dependency $dependency)
     {
         $this->dependency = $dependency;
     }
@@ -30,7 +30,7 @@ class DistributionContentsDependencyApiResource implements ApiResource
             'group' => $this->dependency->getGroup() !== null ? $this->dependency->getGroup()->getId() : null,
         ];
 
-        if ($this->dependency instanceof DistributionContentsDependencyGroup) {
+        if ($this->dependency instanceof DependencyGroup) {
             $array['combinator'] = $this->dependency->getCombinator()->toString();
             $array['rules'] = [];
 
@@ -50,7 +50,7 @@ class DistributionContentsDependencyApiResource implements ApiResource
             }
 
             array_pop($description);
-        } elseif ($this->dependency instanceof DistributionContentsDependencyRule) {
+        } elseif ($this->dependency instanceof DependencyRule) {
             $array['operator'] = $this->dependency->getOperator()->toString();
             $array['value'] = $this->dependency->getValue();
             $array['description'] = '';

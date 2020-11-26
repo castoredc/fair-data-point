@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace App\Command\Distribution;
 
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
+use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
 use App\Entity\FAIRData\Distribution;
 
 class UpdateDistributionSubsetCommand
 {
     private Distribution $distribution;
 
-    private ?DistributionContentsDependencyGroup $dependencies;
+    private ?DependencyGroup $dependencies;
 
     public function __construct(
         Distribution $distribution,
-        ?DistributionContentsDependencyGroup $dependencies
+        ?DependencyGroup $dependencies
     ) {
         $this->distribution = $distribution;
         $this->dependencies = $dependencies;
@@ -25,7 +25,7 @@ class UpdateDistributionSubsetCommand
         return $this->distribution;
     }
 
-    public function getDependencies(): ?DistributionContentsDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->dependencies;
     }
