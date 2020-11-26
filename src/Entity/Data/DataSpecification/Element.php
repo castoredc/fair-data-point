@@ -53,6 +53,12 @@ abstract class Element
     /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
     protected ?int $order;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="elements")
+     * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=true)
+     */
+    private ?OptionGroup $optionGroup;
+
     public function __construct(Version $version, string $title, ?string $description)
     {
         $this->version = $version;
@@ -113,5 +119,15 @@ abstract class Element
     public function setOrder(?int $order): void
     {
         $this->order = $order;
+    }
+
+    public function getOptionGroup(): ?OptionGroup
+    {
+        return $this->optionGroup;
+    }
+
+    public function setOptionGroup(?OptionGroup $optionGroup): void
+    {
+        $this->optionGroup = $optionGroup;
     }
 }

@@ -25,12 +25,6 @@ class Variable extends Element
     /** @ORM\Column(type="DataDictionaryDataType") */
     private DataDictionaryDataType $dataType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="variables")
-     * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=true)
-     */
-    private ?OptionGroup $optionGroup;
-
     public function __construct(Version $version, string $title, ?string $description, string $name, Group $group, DataDictionaryDataType $dataType, int $order)
     {
         parent::__construct($version, $title, $description);
@@ -59,16 +53,6 @@ class Variable extends Element
     public function setFormat(?string $format): void
     {
         $this->format = $format;
-    }
-
-    public function getOptionGroup(): ?OptionGroup
-    {
-        return $this->optionGroup;
-    }
-
-    public function setOptionGroup(?OptionGroup $optionGroup): void
-    {
-        $this->optionGroup = $optionGroup;
     }
 
     public function getName(): string

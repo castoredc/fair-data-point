@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\Data\DataDictionary;
+namespace App\Entity\Data\DataSpecification;
 
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -39,11 +39,11 @@ class OptionGroup
     private Collection $options;
 
     /**
-     * @ORM\OneToMany(targetEntity="Variable", mappedBy="optionGroup")
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="optionGroup")
      *
-     * @var Collection<Variable>
+     * @var Collection<Element>
      */
-    private Collection $variables;
+    private Collection $elements;
 
     public function __construct(string $id, string $title, ?string $description)
     {
@@ -106,10 +106,10 @@ class OptionGroup
     }
 
     /**
-     * @return Collection<Variable>
+     * @return Collection<Element>
      */
-    public function getVariables(): Collection
+    public function getElements(): Collection
     {
-        return $this->variables;
+        return $this->elements;
     }
 }
