@@ -241,7 +241,7 @@ export default class DistributionForm extends Component {
                                 serverError={validation.dataModel}
                             />
                         </FormItem>
-                        {distribution && <FormItem label="Data model version">
+                        {currentDataModel && <FormItem label="Data model version">
                             <Dropdown
                                 validators={['required']}
                                 errorMessages={[required]}

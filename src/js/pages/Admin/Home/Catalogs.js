@@ -71,7 +71,7 @@ export default class Catalogs extends Component {
                 item.id,
                 {
                     cells: [
-                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '',
+                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
                         item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
                     ],
                 }];

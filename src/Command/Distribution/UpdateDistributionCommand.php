@@ -6,7 +6,7 @@ namespace App\Command\Distribution;
 use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\FAIRData\Distribution;
 
-class UpdateDistributionCommand
+abstract class UpdateDistributionCommand
 {
     private Distribution $distribution;
 
@@ -15,12 +15,6 @@ class UpdateDistributionCommand
     private string $license;
 
     private int $accessRights;
-
-    private ?bool $includeAllData = null;
-
-    private ?string $dataModel = null;
-
-    private ?string $dataModelVersion = null;
 
     private ?string $apiUser = null;
 
@@ -35,9 +29,6 @@ class UpdateDistributionCommand
         string $slug,
         string $license,
         int $accessRights,
-        ?bool $includeAllData,
-        ?string $dataModel,
-        ?string $dataModelVersion,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
@@ -47,9 +38,6 @@ class UpdateDistributionCommand
         $this->slug = $slug;
         $this->license = $license;
         $this->accessRights = $accessRights;
-        $this->includeAllData = $includeAllData;
-        $this->dataModel = $dataModel;
-        $this->dataModelVersion = $dataModelVersion;
         $this->apiUser = $apiUser;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -74,21 +62,6 @@ class UpdateDistributionCommand
     public function getAccessRights(): int
     {
         return $this->accessRights;
-    }
-
-    public function getIncludeAllData(): ?bool
-    {
-        return $this->includeAllData;
-    }
-
-    public function getDataModel(): ?string
-    {
-        return $this->dataModel;
-    }
-
-    public function getDataModelVersion(): ?string
-    {
-        return $this->dataModelVersion;
     }
 
     public function getApiUser(): ?string

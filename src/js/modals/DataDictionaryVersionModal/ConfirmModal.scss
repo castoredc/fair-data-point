@@ -1,0 +1,19 @@
+.modal-backdrop.ConfirmModalBackdrop {
+  z-index: 1060;
+}
+
+.modal.ConfirmModal {
+  z-index: 1070;
+
+  .modal-dialog {
+    max-width: 400px;
+  }
+
+  .modal-body .container {
+    margin: 10px 0;
+  }
+}
+
+.HasConfirmButton.modal-footer {
+  justify-content: space-between;
+}

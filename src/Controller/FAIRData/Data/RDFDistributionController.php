@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData\Data;
 
-use App\Command\Distribution\GetRDFFromStoreCommand;
 use App\Command\Distribution\GetRecordCommand;
 use App\Command\Distribution\GetRecordsCommand;
-use App\Command\Distribution\RenderRDFDistributionCommand;
+use App\Command\Distribution\RDF\GetRDFFromStoreCommand;
+use App\Command\Distribution\RDF\RenderRDFDistributionCommand;
 use App\Controller\FAIRData\FAIRDataController;
-use App\Entity\Data\RDF\RDFDistribution;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\NoAccessPermission;

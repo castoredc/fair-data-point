@@ -1,0 +1,21 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Command\Data\DataModel;
+
+use App\Entity\Data\DataModel\DataModelVersion;
+
+class GetDataModelRDFPreviewCommand
+{
+    private DataModelVersion $dataModel;
+
+    public function __construct(DataModelVersion $dataModel)
+    {
+        $this->dataModel = $dataModel;
+    }
+
+    public function getDataModel(): DataModelVersion
+    {
+        return $this->dataModel;
+    }
+}

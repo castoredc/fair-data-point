@@ -15,7 +15,7 @@ class NodeRepository extends EntityRepository
     public function findByModelAndId(DataModelVersion $dataModel, string $nodeId): ?Node
     {
         return $this->findOneBy([
-            'dataModel' => $dataModel,
+            'version' => $dataModel,
             'id' => $nodeId,
         ]);
     }

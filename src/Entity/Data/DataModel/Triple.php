@@ -4,31 +4,17 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataModel;
 
 use App\Entity\Data\DataModel\Node\Node;
-use App\Traits\CreatedAndUpdated;
+use App\Entity\Data\DataSpecification\ElementGroup;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="data_model_triple")
  * @ORM\HasLifecycleCallbacks
  */
-class Triple
+class Triple extends ElementGroup
 {
-    use CreatedAndUpdated;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
-     */
-    private string $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="DataModelModule", inversedBy="triples", cascade={"persist"})
-     * @ORM\JoinColumn(name="module", referencedColumnName="id", nullable=false)
-     */
-    private DataModelModule $module;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", cascade={"persist"})
      * @ORM\JoinColumn(name="subject", referencedColumnName="id", nullable=false)
@@ -47,27 +33,13 @@ class Triple
      */
     private Node $object;
 
-    public function __construct(DataModelModule $module, Node $subject, Predicate $predicate, Node $object)
+    public function __construct(DataModelGroup $module, Node $subject, Predicate $predicate, Node $object)
     {
-        $this->module = $module;
+        parent::__construct($module);
+
         $this->subject = $subject;
         $this->predicate = $predicate;
         $this->object = $object;
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getModule(): DataModelModule
-    {
-        return $this->module;
-    }
-
-    public function setModule(DataModelModule $module): void
-    {
-        $this->module = $module;
     }
 
     public function getSubject(): Node
@@ -98,5 +70,13 @@ class Triple
     public function setObject(Node $object): void
     {
         $this->object = $object;
+    }
+
+    public function getDataModelVersion(): DataModelVersion
+    {
+        $version = $this->getGroup()->getVersion();
+        assert($version instanceof DataModelVersion);
+
+        return $version;
     }
 }
