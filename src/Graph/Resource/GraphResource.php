@@ -32,6 +32,11 @@ abstract class GraphResource
         return new Graph();
     }
 
+    protected function getIdentifierURL(): string
+    {
+        return $this->getUrl() . '#identifier';
+    }
+
     protected function addMetadataToGraph(Metadata $metadata, Graph $graph): Graph
     {
         foreach ($metadata->getTitle()->getTexts() as $text) {
@@ -54,7 +59,10 @@ abstract class GraphResource
 
         $graph->addResource($this->getUrl(), 'dcterms:license', $metadata->getLicense()->getUrl()->getValue());
 
-        $graph->addResource($this->getUrl(), 'fdp:metadataIdentifier', $this->getUrl());
+        $graph->addResource($this->getUrl(), 'fdp:metadataIdentifier', $this->getIdentifierURL());
+
+        $graph->addResource($this->getIdentifierURL(), 'a', 'datacite:Identifier');
+        $graph->addResource($this->getIdentifierURL(), 'dcterms:identifier', $this->getUrl());
 
         $createdAt = new Literal($metadata->getCreatedAt()->format('Y-m-d\TH:i:s'), null, 'xsd:dateTime');
 
