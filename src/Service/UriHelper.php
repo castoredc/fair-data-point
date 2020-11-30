@@ -27,6 +27,19 @@ class UriHelper
         return $fdp->getIri()->getValue();
     }
 
+    public function getBasePurl(): string
+    {
+        /** @var FAIRDataPoint[] $fdps */
+        $fdps = $this->em->getRepository(FAIRDataPoint::class)->findAll();
+        $fdp = $fdps[0];
+
+        if ($fdp->getPurl() !== null) {
+            return $fdp->getPurl()->getValue();
+        }
+
+        return $fdp->getIri()->getValue();
+    }
+
     /** @param mixed $object */
     public function getUri($object, bool $addTrailingSlash = false): ?string
     {

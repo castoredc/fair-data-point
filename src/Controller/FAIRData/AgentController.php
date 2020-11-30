@@ -20,7 +20,7 @@ class AgentController extends FAIRDataController
     public function person(Person $person): Response
     {
         return new Response(
-            (new PersonGraphResource($person, $this->baseUri))->toGraph()->serialise('turtle'),
+            (new PersonGraphResource($person, $this->basePurl))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
@@ -33,7 +33,7 @@ class AgentController extends FAIRDataController
     public function organization(Organization $organization): Response
     {
         return new Response(
-            (new OrganizationGraphResource($organization, $this->baseUri))->toGraph()->serialise('turtle'),
+            (new OrganizationGraphResource($organization, $this->basePurl))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
