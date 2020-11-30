@@ -36,7 +36,7 @@ class CatalogController extends FAIRDataController
         }
 
         return new Response(
-            (new CatalogGraphResource($catalog, $this->baseUri))->toGraph()->serialise('turtle'),
+            (new CatalogGraphResource($catalog, $this->basePurl))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
             ['content-type' => 'text/turtle']
         );
