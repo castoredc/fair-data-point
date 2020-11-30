@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelModule;
+use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Triple;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -12,7 +12,7 @@ class TripleFactory
     /**
      * @param array<mixed> $data
      */
-    public function createFromJson(DataModelModule $module, ArrayCollection $nodes, ArrayCollection $predicates, array $data): Triple
+    public function createFromJson(DataModelGroup $module, ArrayCollection $nodes, ArrayCollection $predicates, array $data): Triple
     {
         return new Triple(
             $module,

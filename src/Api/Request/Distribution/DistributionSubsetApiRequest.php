@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\Distribution;
 
 use App\Api\Request\SingleApiRequest;
-use App\Entity\Data\DistributionContentsDependency\DistributionContentsDependencyGroup;
+use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
 use function count;
 
 class DistributionSubsetApiRequest extends SingleApiRequest
@@ -17,17 +17,17 @@ class DistributionSubsetApiRequest extends SingleApiRequest
         $this->dependencies = $this->getFromData('dependencies');
     }
 
-    public function getDependencies(): ?DistributionContentsDependencyGroup
+    public function getDependencies(): ?DependencyGroup
     {
         return $this->generateDependencies();
     }
 
-    private function generateDependencies(): ?DistributionContentsDependencyGroup
+    private function generateDependencies(): ?DependencyGroup
     {
         if ($this->dependencies === null || count($this->dependencies['rules']) === 0) {
             return null;
         }
 
-        return DistributionContentsDependencyGroup::fromData($this->dependencies);
+        return DependencyGroup::fromData($this->dependencies);
     }
 }

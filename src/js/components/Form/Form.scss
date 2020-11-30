@@ -120,6 +120,7 @@
 
   .Select {
     width: 100%;
+    z-index: 101;
 
     & > div, & > div > div {
       max-width: 100%;

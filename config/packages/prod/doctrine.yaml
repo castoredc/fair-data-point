@@ -1,4 +1,7 @@
 doctrine:
+    dbal:
+        options:
+            1009: '%kernel.project_dir%/certs/BaltimoreCyberTrustRoot.crt.pem'
     orm:
         auto_generate_proxy_classes: false
         metadata_cache_driver:

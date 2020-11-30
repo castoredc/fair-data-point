@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\Log;
 
-use App\Entity\Data\DistributionContents;
+use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Traits\CreatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,7 +27,7 @@ class DistributionGenerationLog
     private string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents", inversedBy="logs", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", inversedBy="logs", cascade={"persist"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
      */
     private DistributionContents $distribution;

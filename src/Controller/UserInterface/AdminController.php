@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
+use App\Entity\Data\DataDictionary\DataDictionary;
+use App\Entity\Data\DataDictionary\DataDictionaryVersion;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\Log\DistributionGenerationLog;
@@ -67,6 +69,7 @@ class AdminController extends AbstractController
      * @Route("/models", name="admin_models")
      * @Route("/studies", name="admin_studies")
      * @Route("/datasets", name="admin_datasets")
+     * @Route("/dictionaries", name="admin_dictionaries")
      */
     public function adminModels(): Response
     {
@@ -94,6 +97,21 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/dictionary/{dataDicationary}", name="admin_dictionary")
+     * @Route("/dictionary/{dataDicationary}/versions", name="admin_dictionary_versions")
+     * @ParamConverter("dataDicationary", options={"mapping": {"dataDicationary": "id"}})
+     */
+    public function adminDataDictionary(DataDictionary $dataDicationary): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FDP Admin']
+        );
+    }
+
+    /**
      * @Route("/model/{model}/{version}/modules", name="admin_model_modules")
      * @Route("/model/{model}/{version}/prefixes", name="admin_model_prefixes")
      * @Route("/model/{model}/{version}/nodes", name="admin_model_nodes")
@@ -103,6 +121,23 @@ class AdminController extends AbstractController
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
      */
     public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FDP Admin']
+        );
+    }
+
+    /**
+     * @Route("/dictionary/{dataDictionary}/{version}/option-groups", name="admin_dictionary_modules")
+     * @Route("/dictionary/{dataDictionary}/{version}/groups", name="admin_dictionary_prefixes")
+     * @Route("/dictionary/{dataDictionary}/{version}/import-export", name="admin_dictionary_importexport")
+     * @ParamConverter("dataDicationary", options={"mapping": {"dataDictionary": "id"}})
+     * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "dataDictionary", "version": "version"}})
+     */
+    public function adminDataDictionaryVersion(DataDictionary $dataDicationary, DataDictionaryVersion $dataDictionaryVersion): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
