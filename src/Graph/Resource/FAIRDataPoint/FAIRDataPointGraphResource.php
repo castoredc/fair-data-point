@@ -26,6 +26,7 @@ class FAIRDataPointGraphResource extends GraphResource
         $graph->addResource($this->getUrl(), 'a', 'r3d:Repository');
 
         $graph = $this->addMetadataToGraph($metadata, $graph);
+        $graph->addResource($this->getUrl(), 'r3d:repositoryIdentifier', $this->getIdentifierURL());
 
         foreach ($this->fairDataPoint->getCatalogs() as $catalog) {
             /** @var Catalog $catalog */
