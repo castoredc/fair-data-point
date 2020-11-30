@@ -26,6 +26,9 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     /** @ORM\Column(type="iri") */
     private Iri $iri;
 
+    /** @ORM\Column(type="iri", nullable=true) */
+    private ?Iri $purl;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\FAIRDataPointMetadata", mappedBy="fdp", fetch="EAGER")
      * @ORM\OrderBy({"createdAt" = "ASC"})
@@ -59,6 +62,16 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     public function setIri(Iri $iri): void
     {
         $this->iri = $iri;
+    }
+
+    public function getPurl(): ?Iri
+    {
+        return $this->purl;
+    }
+
+    public function setPurl(?Iri $purl): void
+    {
+        $this->purl = $purl;
     }
 
     public function getRelativeUrl(): string

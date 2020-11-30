@@ -16,10 +16,13 @@ abstract class FAIRDataController extends AbstractController
 
     protected string $baseUri;
 
+    protected string $basePurl;
+
     public function __construct(UriHelper $uriHelper)
     {
         $this->uriHelper = $uriHelper;
         $this->baseUri = $uriHelper->getBaseUri();
+        $this->basePurl = $uriHelper->getBasePurl();
 
         $this->setNameSpaces();
     }
