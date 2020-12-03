@@ -111,6 +111,7 @@ class DistributionService
             'db_adapter' => 'doctrine',
             'connection' => $this->createDistributionConnection($databaseInformation, $encryptionService),
             'store_name' => $store,
+            'store_engine_type' => 'InnoDB',
         ];
 
         $store = ARC2::getStore($params);
@@ -134,6 +135,7 @@ class DistributionService
             'connection' => $this->createDistributionConnection($databaseInformation, $encryptionService),
 
             'store_name' => self::CURRENT_STORE,
+            'store_engine_type' => 'InnoDB',
 
             'endpoint_features' => [ 'select', 'construct', 'ask', 'describe' ],
         ];
