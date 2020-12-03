@@ -21,13 +21,13 @@ class NodeRepository extends EntityRepository
     }
 
     /** @return Node[] */
-    public function findNodesByType(DataModelVersion $dataModel, NodeType $type): array
+    public function findNodesByType(DataModelVersion $version, NodeType $type): array
     {
         return $this->createQueryBuilder('node')
                     ->select('node')
-                    ->where('node.dataModel = :dataModel')
+                    ->where('node.version = :version')
                     ->andWhere('node INSTANCE OF :type')
-                    ->setParameter('dataModel', $dataModel)
+                    ->setParameter('version', $version)
                     ->setParameter('type', $this->getEntityManager()->getClassMetadata($type->getClassName()))
                     ->orderBy('node.title', 'ASC')
                     ->getQuery()
