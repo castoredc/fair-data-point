@@ -6,6 +6,7 @@ namespace App\Controller\FAIRData;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Service\UriHelper;
 use EasyRdf\RdfNamespace;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use function in_array;
@@ -18,9 +19,13 @@ abstract class FAIRDataController extends AbstractController
 
     protected string $basePurl;
 
-    public function __construct(UriHelper $uriHelper)
+    protected LoggerInterface $logger;
+
+    public function __construct(UriHelper $uriHelper, LoggerInterface $logger)
     {
         $this->uriHelper = $uriHelper;
+        $this->logger = $logger;
+
         $this->baseUri = $uriHelper->getBaseUri();
         $this->basePurl = $uriHelper->getBasePurl();
 

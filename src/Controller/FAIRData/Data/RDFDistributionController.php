@@ -98,6 +98,12 @@ class RDFDistributionController extends FAIRDataController
                 return new JsonResponse($e->toArray(), 404);
             }
 
+            $this->logger->critical('An error occurred while loading the RDF for a distribution', [
+                'exception' => $e,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
 
