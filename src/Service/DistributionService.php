@@ -32,19 +32,30 @@ class DistributionService
 
     private int $port;
 
-    /** @var mixed[] */
-    private array $options;
+    private bool $useSsl;
 
-    /**
-     * @param mixed[] $options
-     */
-    public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306, array $options = [])
+    private string $certificate;
+
+    public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306, bool $useSsl = false, string $certificate = '')
     {
         $this->host = $host;
         $this->user = $user;
         $this->pass = $pass;
         $this->port = $port;
-        $this->options = $options;
+        $this->useSsl = $useSsl;
+        $this->certificate = $certificate;
+    }
+
+    /** @return mixed[] */
+    private function getOptions(): array
+    {
+        $options = [];
+
+        if ($this->useSsl) {
+            $options[1009] = $this->certificate;
+        }
+
+        return $options;
     }
 
     /**
@@ -61,7 +72,7 @@ class DistributionService
             'password' => $this->pass,
             'dbname' => null,
             'port' => $this->port,
-            'driverOptions' => $this->options,
+            'driverOptions' => $this->getOptions(),
         ];
 
         try {
@@ -85,7 +96,7 @@ class DistributionService
             'password' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             'dbname' => $databaseInformation->getDatabase(),
             'port' => $this->port,
-            'driverOptions' => $this->options,
+            'driverOptions' => $this->getOptions(),
         ];
 
         return DriverManager::getConnection($params, $config);
@@ -97,12 +108,8 @@ class DistributionService
     public function getArc2Store(string $store, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService, bool $setupStore = true): ARC2_Store
     {
         $params = [
-            'db_adapter' => 'pdo',
-            'db_pdo_protocol' => 'mysql',
-            'db_host' => $this->host . ':' . $this->port,
-            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
-            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
-            'db_name' => $databaseInformation->getDatabase(),
+            'db_adapter' => 'doctrine',
+            'connection' => $this->createDistributionConnection($databaseInformation, $encryptionService),
             'store_name' => $store,
         ];
 
@@ -123,12 +130,8 @@ class DistributionService
     public function getArc2Endpoint(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): ARC2_StoreEndpoint
     {
         $params = [
-            'db_adapter' => 'pdo',
-            'db_pdo_protocol' => 'mysql',
-            'db_host' => $this->host . ':' . $this->port,
-            'db_user' => $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
-            'db_pwd' => $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
-            'db_name' => $databaseInformation->getDatabase(),
+            'db_adapter' => 'doctrine',
+            'connection' => $this->createDistributionConnection($databaseInformation, $encryptionService),
 
             'store_name' => self::CURRENT_STORE,
 

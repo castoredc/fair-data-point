@@ -49,7 +49,8 @@ services:
             - '%env(DB_CREATOR_USER)%'
             - '%env(DB_CREATOR_PASS)%'
             - '%env(DB_PORT)%'
-            - { 1009: '%kernel.project_dir%/certs/BaltimoreCyberTrustRoot.crt.pem' }
+            - '%env(bool:USE_SSL)%'
+            - '%kernel.project_dir%/certs/BaltimoreCyberTrustRoot.crt.pem'
 
     App\Service\EncryptionService:
         arguments:
