@@ -33,8 +33,8 @@ services:
         tags:
             - { name: security.voter }
 
-    security.access.datamodel_voter:
-        class:      App\Security\Authorization\Voter\DataModelVoter
+    security.access.dataspecification_voter:
+        class:      App\Security\Authorization\Voter\DataSpecificationVoter
         public:     false
         tags:
             - { name: security.voter }

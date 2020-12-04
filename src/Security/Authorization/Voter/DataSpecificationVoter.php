@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataSpecification\DataSpecification;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 use function in_array;
 
-class DataModelVoter extends Voter
+class DataSpecificationVoter extends Voter
 {
     public const VIEW = 'view';
     public const ADD = 'add';
@@ -29,7 +29,7 @@ class DataModelVoter extends Voter
             return false;
         }
 
-        return $subject instanceof DataModel;
+        return $subject instanceof DataSpecification;
     }
 
     /** @inheritDoc */
@@ -43,13 +43,17 @@ class DataModelVoter extends Voter
             return false;
         }
 
-        $dataModel = $subject;
-        assert($dataModel instanceof DataModel);
-        $distributions = $dataModel->getVersions();
+        $dataSpecification = $subject;
+        assert($dataSpecification instanceof DataSpecification);
+        $versions = $dataSpecification->getVersions();
 
-        foreach ($distributions as $distribution) {
-            if ($this->security->isGranted('view', $distribution->getDistributionContents())) {
-                return true;
+        foreach ($versions as $version) {
+            foreach ($version->getDistributionContents() as $distributionContent) {
+                $distribution = $distributionContent->getDistribution();
+
+                if ($this->security->isGranted('view', $distribution)) {
+                    return true;
+                }
             }
         }
 
