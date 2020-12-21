@@ -23,7 +23,7 @@
         "symfony/flex": "^1.9.10",
         "symfony/framework-bundle": "^5.1",
         "symfony/intl": "5.1.*",
-        "symfony/maker-bundle": "^1.21",
+        "symfony/maker-bundle": "^1.26",
         "symfony/messenger": "5.1.*",
         "symfony/monolog-bundle": "^3.6",
         "symfony/orm-pack": "^2.0",
