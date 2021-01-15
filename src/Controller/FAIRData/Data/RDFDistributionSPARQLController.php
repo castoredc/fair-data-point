@@ -57,6 +57,7 @@ class RDFDistributionSPARQLController extends FAIRDataController
         } catch (Throwable $t) {
             $this->logger->critical('An error occurred while executing a query.', [
                 'exception' => $t,
+                'errorMessage' => $t->getMessage(),
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),
             ]);
