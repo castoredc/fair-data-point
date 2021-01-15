@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 use function assert;
 
 class RDFDistributionSPARQLController extends FAIRDataController
@@ -46,11 +47,22 @@ class RDFDistributionSPARQLController extends FAIRDataController
             ]);
         }
 
-        $endpoint->handleRequest();
-        $endpoint->sendHeaders();
-        echo $endpoint->getResult();
+        try {
+            $endpoint->handleRequest();
+            $endpoint->sendHeaders();
 
-        exit;
+            echo $endpoint->getResult();
+
+            exit;
+        } catch (Throwable $t) {
+            $this->logger->critical('An error occurred while executing a query.', [
+                'exception' => $t,
+                'Distribution' => $distribution->getSlug(),
+                'DistributionID' => $distribution->getId(),
+            ]);
+
+            return new Response('An error occurred while executing your query.', 400);
+        }
     }
 
     /**
