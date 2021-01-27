@@ -7,7 +7,7 @@ import Dropdown from "../../Input/Dropdown";
 import LocalizedTextInput from "../../Input/LocalizedTextInput";
 import {ValidatorForm} from "react-form-validator-core";
 import MetadataVersionModal from "../../../modals/MetadataVersionModal";
-import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Stack, Tabs} from "@castoredc/matter";
 import {mergeData, replaceAt, ucfirst} from "../../../util";
 import PublisherModal from "../../../modals/PublisherModal";
 
@@ -176,13 +176,8 @@ export default class MetadataForm extends Component {
         });
     };
 
-    handleClick = (event, rowID, index) => {
-        const {data} = this.state;
-        const publishers = data.publishers;
-
-        if (typeof index !== "undefined" && publishers.length > 0) {
-            this.openModal('publisher', index);
-        }
+    handleClick = (rowId) => {
+        this.openModal('publisher', rowId);
     };
 
     handleSubmit = (event) => {
@@ -249,7 +244,7 @@ export default class MetadataForm extends Component {
 
         const required = "This field is required";
 
-        const publisherRows = new Map(data.publishers.map((publisher, index) => {
+        const publisherRows = data.publishers.map((publisher, index) => {
             let name = '';
             let additionalInfo = '';
 
@@ -261,17 +256,12 @@ export default class MetadataForm extends Component {
                 additionalInfo = publisher.person.orcid;
             }
 
-            return [
-                index,
-                {
-                    cells: [
-                        name,
-                        ucfirst(publisher.type),
-                        additionalInfo
-                    ],
-                },
-            ];
-        }));
+            return {
+                title: <CellText>{name}</CellText>,
+                type: <CellText>{ucfirst(publisher.type)}</CellText>,
+                info: <CellText>{additionalInfo}</CellText>,
+            }
+        });
 
         return (
             <ValidatorForm
@@ -374,29 +364,25 @@ export default class MetadataForm extends Component {
                                              </Stack>
 
                                              <div className="SelectableDataTable DataTableWrapper">
-                                                 <DataTable
-                                                     emptyTableMessage="No publishers found"
-                                                     highlightRowOnHover
-                                                     cellSpacing="default"
+                                                 <DataGrid
+                                                     accessibleName="Publishers"
+                                                     emptyStateContent="No publishers found"
                                                      onClick={this.handleClick}
                                                      rows={publisherRows}
-                                                     structure={{
-                                                         title: {
+                                                     columns={[
+                                                         {
                                                              header:    'Name',
-                                                             resizable: true,
-                                                             template:  'text',
+                                                             accessor: 'title',
                                                          },
-                                                         type:  {
+                                                         {
                                                              header:    'Type',
-                                                             resizable: true,
-                                                             template:  'text',
+                                                             accessor: 'type',
                                                          },
-                                                         info:  {
+                                                         {
                                                              header:    'Additional Information',
-                                                             resizable: true,
-                                                             template:  'text',
+                                                             accessor: 'info',
                                                          },
-                                                     }}
+                                                     ]}
                                                  />
                                              </div>
                                          </div>,

@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, DataTable, Stack, ViewHeader} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Stack, ViewHeader} from "@castoredc/matter";
 import AddDataDictionaryModal from "../../../modals/AddDataDictionaryModal";
 import DocumentTitle from "../../../components/DocumentTitle";
 
@@ -57,15 +57,13 @@ export default class DataDictionaries extends Component {
         });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {dataDictionaries} = this.state;
         const {history} = this.props;
 
-        if (typeof index !== "undefined" && dataDictionaries.length > 0) {
-            const dataDictionary = dataDictionaries.find((item) => item.id === rowID);
+        const dataDictionary = dataDictionaries[rowId];
 
-            history.push(`/admin/dictionary/${dataDictionary.id}`)
-        }
+        history.push(`/admin/dictionary/${dataDictionary.id}`);
     };
 
     render() {
@@ -76,16 +74,18 @@ export default class DataDictionaries extends Component {
             return <InlineLoader/>;
         }
 
-        const rows = new Map(dataDictionaries.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.title,
-                    ],
-                },
-            ];
-        }));
+        const columns = [
+            {
+                Header: 'Title',
+                accessor: 'title',
+            }
+        ];
+
+        const rows = dataDictionaries.map((item) => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+            }
+        });
 
         return <div className="PageContainer">
             <DocumentTitle title="FDP Admin | Data Dictionaries" />
@@ -107,19 +107,12 @@ export default class DataDictionaries extends Component {
 
                     <div className="SelectableDataTable FullHeightDataTable">
                         <div className="DataTableWrapper">
-                            <DataTable
-                                emptyTableMessage="No data dictionaries found"
-                                highlightRowOnHover
-                                cellSpacing="default"
+                            <DataGrid
+                                accessibleName="Data dictionaries"
+                                emptyStateContent="No data dictionaries found"
                                 onClick={this.handleClick}
                                 rows={rows}
-                                structure={{
-                                    title: {
-                                        header:    'Title',
-                                        resizable: true,
-                                        template:  'text',
-                                    },
-                                }}
+                                columns={columns}
                             />
                         </div>
                     </div>

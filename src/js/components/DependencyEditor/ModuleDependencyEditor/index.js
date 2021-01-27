@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Dropdown from "../../Input/Dropdown";
-import {Button} from "@castoredc/matter/lib/matter.esm";
+import {Button} from "@castoredc/matter";
 import '../DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
 import {RuleGroup} from "./RuleGroup";

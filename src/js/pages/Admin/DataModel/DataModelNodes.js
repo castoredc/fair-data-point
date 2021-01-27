@@ -3,18 +3,18 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, DataTable, Stack, Tabs} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Icon, IconCell, Stack, Tabs} from "@castoredc/matter";
 import AddNodeModal from "../../../modals/AddNodeModal";
 
 export default class DataModelNodes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:      false,
+            showModal: false,
             isLoadingNodes: true,
             hasLoadedNodes: false,
-            nodes:          null,
-            selectedType:   'internal',
+            nodes: null,
+            selectedType: 'internal',
         };
     }
 
@@ -32,7 +32,7 @@ export default class DataModelNodes extends Component {
         axios.get('/api/model/' + dataModel.id + '/v/' + version + '/node')
             .then((response) => {
                 this.setState({
-                    nodes:          response.data,
+                    nodes: response.data,
                     isLoadingNodes: false,
                     hasLoadedNodes: true,
                 });
@@ -81,62 +81,38 @@ export default class DataModelNodes extends Component {
             return <InlineLoader/>;
         }
 
-        const internalNodeRows = new Map(nodes.internal.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.title,
-                        item.value,
-                        item.repeated ? {
-                            type: 'tickSmall',
-                        } : undefined,
-                    ],
-                },
-            ];
-        }));
+        const internalNodeRows = nodes.internal.map((item) => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+                value: <CellText>{item.value}</CellText>,
+                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+            };
+        });
 
-        const externalNodeRows = new Map(nodes.external.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.title,
-                        item.value.prefixedValue,
-                        item.value.value,
-                    ],
-                },
-            ];
-        }));
+        const externalNodeRows = nodes.external.map((item) => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+                short: <CellText>{item.value.prefixedValue}</CellText>,
+                uri: <CellText>{item.value.value}</CellText>,
+            };
+        });
 
-        const literalNodeRows = new Map(nodes.literal.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.title,
-                        item.value.value,
-                        item.value.dataType,
-                    ],
-                },
-            ];
-        }));
+        const literalNodeRows = nodes.literal.map((item) => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+                value: <CellText>{item.value.value}</CellText>,
+                dataType: <CellText>{item.value.dataType}</CellText>,
+            };
+        });
 
-        const valueNodeRows = new Map(nodes.value.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.title,
-                        item.value.value,
-                        item.value.dataType,
-                        item.repeated ? {
-                            type: 'tickSmall',
-                        } : undefined,
-                    ],
-                },
-            ];
-        }));
+        const valueNodeRows = nodes.value.map((item) => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+                type: <CellText>{item.value.value}</CellText>,
+                dataType: <CellText>{item.value.dataType}</CellText>,
+                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+            };
+        });
 
         return <div className="PageBody">
             <AddNodeModal
@@ -160,109 +136,102 @@ export default class DataModelNodes extends Component {
                     selected={selectedType}
                     tabs={{
                         internal: {
-                            title:   'Internal',
-                            content: <DataTable
-                                         emptyTableMessage="This data model does not have internal nodes"
-                                         cellSpacing="default"
-                                         rows={internalNodeRows}
-                                         structure={{
-                                             id:       {
-                                                 header:    'Title',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             title:    {
-                                                 header:    'Slug',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             repeated: {
-                                                 header:    'Repeated',
-                                                 resizable: true,
-                                                 template:  'icon',
-                                             },
-                                         }}
-                                     />,
+                            title: 'Internal',
+                            content: <DataGrid
+                                accessibleName="Internal nodes"
+                                emptyStateContent="This data model does not have internal nodes"
+                                rows={internalNodeRows}
+                                columns={[
+                                    {
+                                        Header: 'Title',
+                                        accessor: 'title',
+                                    },
+                                    {
+                                        Header: 'Slug',
+                                        accessor: 'value',
+                                    },
+                                    {
+                                        Header: <Icon description="Repeated" type="tickSmall"/>,
+                                        accessor: 'repeated',
+                                        disableResizing: true,
+                                        isInteractive: true,
+                                        width: 32
+                                    },
+                                ]}
+                            />,
                         },
                         external: {
-                            title:   'External',
-                            content: <DataTable
-                                         emptyTableMessage="This data model does not have external nodes"
-                                         cellSpacing="default"
-                                         rows={externalNodeRows}
-                                         structure={{
-                                             id:    {
-                                                 header:    'Title',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             short: {
-                                                 header:    'Short',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             title: {
-                                                 header:    'URI',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                         }}
-                                     />,
+                            title: 'External',
+                            content: <DataGrid
+                                accessibleName="External nodes"
+                                emptyStateContent="This data model does not have external nodes"
+                                rows={externalNodeRows}
+                                columns={[
+                                    {
+                                        Header: 'Title',
+                                        accessor: 'title',
+                                    },
+                                    {
+                                        Header: 'Short',
+                                        accessor: 'short',
+                                    },
+                                    {
+                                        Header: 'URI',
+                                        accessor: 'uri',
+                                    },
+                                ]}
+                            />,
                         },
-                        literal:  {
-                            title:   'Literal',
-                            content: <DataTable
-                                         emptyTableMessage="This data model does not have literal nodes"
-                                         cellSpacing="default"
-                                         rows={literalNodeRows}
-                                         structure={{
-                                             id:       {
-                                                 header:    'Title',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             type:     {
-                                                 header:    'Value',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             dataType: {
-                                                 header:    'Data type',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                         }}
-                                     />,
+                        literal: {
+                            title: 'Literal',
+                            content: <DataGrid
+                                accessibleName="Literal nodes"
+                                emptyStateContent="This data model does not have literal nodes"
+                                rows={literalNodeRows}
+                                columns={[
+                                    {
+                                        Header: 'Title',
+                                        accessor: 'title',
+                                    },
+                                    {
+                                        Header: 'Value',
+                                        accessor: 'value',
+                                    },
+                                    {
+                                        Header: 'Data type',
+                                        accessor: 'dataType',
+                                    },
+                                ]}
+                            />,
                         },
-                        value:    {
-                            title:   'Value',
-                            content: <DataTable
-                                         emptyTableMessage="This data model does not have value nodes"
-                                         cellSpacing="default"
-                                         rows={valueNodeRows}
-                                         structure={{
-                                             id:       {
-                                                 header:    'Title',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             type:     {
-                                                 header:    'Type of value',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             dataType: {
-                                                 header:    'Data type',
-                                                 resizable: true,
-                                                 template:  'fixed',
-                                             },
-                                             repeated: {
-                                                 header:    'Repeated',
-                                                 resizable: true,
-                                                 template:  'icon',
-                                             },
-                                         }}
-                                     />,
+                        value: {
+                            title: 'Value',
+                            content: <DataGrid
+                                accessibleName="Value nodes"
+                                emptyStateContent="This data model does not have value nodes"
+                                rows={valueNodeRows}
+                                columns={[
+                                    {
+                                        Header: 'Title',
+                                        accessor: 'title',
+                                    },
+                                    {
+                                        Header: 'Type of value',
+                                        accessor: 'type',
+                                    },
+                                    {
+                                        Header: 'Data type',
+                                        accessor: 'dataType',
+                                    },
+                                    {
+                                        Header: <Icon description="Repeated" type="tickSmall"/>,
+                                        accessor: 'repeated',
+                                        disableResizing: true,
+                                        isInteractive: true,
+                                        width: 32
+                                    },
+                                ]}
+                            />,
                         },
                     }}
                 />

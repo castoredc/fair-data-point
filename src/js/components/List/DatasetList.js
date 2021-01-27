@@ -6,6 +6,7 @@ import ToastContent from "../ToastContent";
 import {Heading, Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import DatasetListItem from "../ListItem/DatasetListItem";
+import DataGridHelper from "../DataTable/DataGridHelper";
 
 export default class DatasetList extends Component {
     constructor(props) {
@@ -14,13 +15,7 @@ export default class DatasetList extends Component {
         this.state = {
             isLoadingDatasets: true,
             datasets:          null,
-            pagination:        {
-                currentPage:  1,
-                start:        0,
-                perPage:      props.embedded ? 5 : 10,
-                totalResults: null,
-                totalPages:   null,
-            },
+            pagination: DataGridHelper.getDefaultState(props.embedded ? 5 : 10),
         };
     }
 
@@ -57,13 +52,7 @@ export default class DatasetList extends Component {
 
                 this.setState({
                     datasets:          datasets,
-                    pagination:        {
-                        currentPage:  response.data.currentPage,
-                        perPage:      response.data.perPage,
-                        start:        response.data.start,
-                        totalResults: response.data.totalResults,
-                        totalPages:   response.data.totalPages,
-                    },
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingDatasets: false,
                 });
             })

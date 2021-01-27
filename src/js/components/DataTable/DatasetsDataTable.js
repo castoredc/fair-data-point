@@ -3,8 +3,9 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {DataTable, Pagination} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, Pagination} from "@castoredc/matter";
 import {classNames, localizedText} from "../../util";
+import DataGridHelper from "./DataGridHelper";
 
 export default class DatasetsDataTable extends Component {
     constructor(props) {
@@ -12,14 +13,8 @@ export default class DatasetsDataTable extends Component {
         this.state = {
             isLoadingDatasets: true,
             hasLoadedDatasets: false,
-            datasets:          [],
-            pagination:        {
-                currentPage:  1,
-                start:        1,
-                perPage:      25,
-                totalResults: null,
-                totalPages:   null,
-            },
+            datasets: [],
+            pagination: DataGridHelper.getDefaultState(25),
         };
 
         this.tableRef = React.createRef();
@@ -46,7 +41,7 @@ export default class DatasetsDataTable extends Component {
         });
 
         const filters = {
-            page:    pagination.currentPage,
+            page: pagination.currentPage,
             perPage: pagination.perPage,
         };
 
@@ -71,14 +66,8 @@ export default class DatasetsDataTable extends Component {
         axios.get(url, {params: filters})
             .then((response) => {
                 this.setState({
-                    datasets:          response.data.results,
-                    pagination:        {
-                        currentPage:  response.data.currentPage,
-                        perPage:      response.data.perPage,
-                        start:        response.data.start,
-                        totalResults: response.data.totalResults,
-                        totalPages:   response.data.totalPages,
-                    },
+                    datasets: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingDatasets: false,
                     hasLoadedDatasets: true,
                 });
@@ -100,28 +89,26 @@ export default class DatasetsDataTable extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getDatasets();
         });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {datasets} = this.state;
         const {catalog, history, onClick} = this.props;
 
-        if (typeof index !== "undefined" && datasets.length > 0) {
-            const dataset = datasets.find((item) => item.id === rowID);
+        const dataset = datasets[rowId];
 
-            if (onClick) {
-                onClick(dataset);
-            } else {
-                history.push({
-                    pathname: '/admin/dataset/' + dataset.slug,
-                    state:    {catalog: catalog},
-                });
-            }
+        if (onClick) {
+            onClick(dataset);
+        } else {
+            history.push({
+                pathname: '/admin/dataset/' + dataset.slug,
+                state: {catalog: catalog},
+            });
         }
     };
 
@@ -132,58 +119,54 @@ export default class DatasetsDataTable extends Component {
             return <InlineLoader/>;
         }
 
-        const rows = new Map(datasets.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                        item.hasMetadata ? item.metadata.language : '',
-                        item.hasMetadata ? item.metadata.license : '',
-                        item.published ? {
-                            type: 'view',
-                        } : undefined,
-                    ],
-                }];
-        }));
+        const columns = [
+            {
+                header: 'Title',
+                accessor: 'title',
+            },
+            {
+                header: 'Description',
+                accessor: 'description',
+            },
+            {
+                header: 'Language',
+                accessor: 'language',
+            },
+            {
+                header: 'License',
+                accessor: 'license',
+            },
+            {
+                Header: <Icon description="Published" type="view"/>,
+                accessor: 'published',
+                disableResizing: true,
+                width: 32
+            }
+        ];
+
+        const rows = datasets.map((item) => {
+            return {
+                title: <CellText>
+                    {item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}
+                </CellText>,
+                description: <CellText>
+                    {item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}
+                </CellText>,
+                language: <CellText>{item.hasMetadata ? item.metadata.language : ''}</CellText>,
+                license: <CellText>{item.hasMetadata ? item.metadata.license : ''}</CellText>,
+                published: item.published ? <IconCell icon={{type: 'view'}}/> : undefined,
+            }
+        });
 
         return <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDatasets && 'Loading')}
                     ref={this.tableRef}>
             <div className="DataTableWrapper">
-                <DataTable
-                    emptyTableMessage="No datasets found"
-                    highlightRowOnHover
-                    cellSpacing="default"
+                <DataGrid
+                    accessibleName="Datasets"
+                    emptyStateContent="No datasets found"
                     onClick={this.handleClick}
                     rows={rows}
-                    structure={{
-                        title:       {
-                            header:    'Title',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        description: {
-                            header:    'Description',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        language:    {
-                            header:    'Language',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        license:     {
-                            header:    'License',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        published:   {
-                            header:   'Published',
-                            icon:     'view',
-                            template: 'icon',
-                        },
-                    }}
+                    columns={columns}
                 />
             </div>
 

@@ -3,11 +3,12 @@ import axios from "axios/index";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {DataTable, Heading, Pagination} from "@castoredc/matter/lib/matter.esm";
+import {CellText, DataGrid, DataTable, Heading, Pagination} from "@castoredc/matter";
 import {classNames} from "../../util";
 import moment from "moment/moment";
 import DistributionGenerationStatus from "../Status/DistributionGenerationStatus";
 import FormItem from "../Form/FormItem";
+import DataGridHelper from "./DataGridHelper";
 
 export default class DistributionRecordLogsDataTable extends Component {
     constructor(props) {
@@ -15,15 +16,9 @@ export default class DistributionRecordLogsDataTable extends Component {
         this.state = {
             isLoadingLogs: true,
             hasLoadedLogs: false,
-            logs:          [],
-            pagination:    {
-                currentPage:  1,
-                start:        1,
-                perPage:      25,
-                totalResults: null,
-                totalPages:   null,
-            },
-            selectedLog:   null,
+            logs: [],
+            pagination: DataGridHelper.getDefaultState(25),
+            selectedLog: null,
         };
 
         this.tableRef = React.createRef();
@@ -50,7 +45,7 @@ export default class DistributionRecordLogsDataTable extends Component {
         });
 
         const filters = {
-            page:    pagination.currentPage,
+            page: pagination.currentPage,
             perPage: pagination.perPage,
         };
 
@@ -61,14 +56,8 @@ export default class DistributionRecordLogsDataTable extends Component {
         axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + log + '/records', {params: filters})
             .then((response) => {
                 this.setState({
-                    logs:          response.data.results,
-                    pagination:    {
-                        currentPage:  response.data.currentPage,
-                        perPage:      response.data.perPage,
-                        start:        response.data.start,
-                        totalResults: response.data.totalResults,
-                        totalPages:   response.data.totalPages,
-                    },
+                    logs: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingLogs: false,
                     hasLoadedLogs: true,
                 });
@@ -90,21 +79,19 @@ export default class DistributionRecordLogsDataTable extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getLogs();
         });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {logs} = this.state;
 
-        if (typeof index !== "undefined" && logs.length > 0) {
-            const log = logs.find((item) => item.id === rowID);
+        const log = logs[rowId];
 
-            this.setState({selectedLog: log});
-        }
+        this.setState({selectedLog: log});
     };
 
     render() {
@@ -117,46 +104,40 @@ export default class DistributionRecordLogsDataTable extends Component {
         const selectedLogItem = selectedLog !== null ? selectedLog : null;
         const selectedLogItemHasErrors = selectedLogItem !== null && (selectedLogItem.errors !== null && (Array.isArray(selectedLogItem.errors) && selectedLogItem.errors.length > 0));
 
-        const rows = new Map(logs.map((log) => {
-            return [
-                log.id,
-                {
-                    cells: [
-                        log.record.id,
-                        <DistributionGenerationStatus status={log.status}/>,
-                        moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss'),
-                    ],
-                }];
-        }));
+        const columns = [
+            {
+                Header: 'Record',
+                accessor: 'record',
+            },
+            {
+                Header: 'Status',
+                accessor: 'status',
+            },
+            {
+                Header: 'Date and time',
+                accessor: 'createdAt',
+            },
+        ]
+
+        const rows = logs.map((log) => {
+            return {
+                record: <CellText>{log.record.id}</CellText>,
+                status: <CellText><DistributionGenerationStatus status={log.status}/></CellText>,
+                createdAt: <CellText>{moment(log.createdAt).format('DD-MM-YYYY HH:mm:ss')}</CellText>,
+            };
+        });
 
         return <div className="RecordLogs">
             <div
                 className={classNames('SelectableDataTable FullHeightDataTable RecordLogsDataTable', isLoadingLogs && 'Loading')}
                 ref={this.tableRef}>
                 <div className="DataTableWrapper">
-                    <DataTable
-                        emptyTableMessage="No logs found"
-                        highlightRowOnHover
-                        cellSpacing="default"
+                    <DataGrid
+                        accessibleName="Log items"
+                        emptyStateContent="No logs found"
                         onClick={this.handleClick}
                         rows={rows}
-                        structure={{
-                            title:       {
-                                header:    'Record',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            description: {
-                                header:    'Status',
-                                resizable: true,
-                                template:  'text',
-                            },
-                            language:    {
-                                header:    'Date and time',
-                                resizable: true,
-                                template:  'text',
-                            },
-                        }}
+                        columns={columns}
                     />
                 </div>
 

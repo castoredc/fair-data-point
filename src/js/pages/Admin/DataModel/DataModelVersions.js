@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, DataTable, Stack} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import DataModelVersionModal from "../../../modals/DataModelVersionModal";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -52,18 +52,28 @@ export default class DataModelVersions extends Component {
 
         const latestVersion = dataModel.versions.slice(-1)[0].version;
 
-        const rows = new Map(dataModel.versions.map((version) => {
-            return [
-                version.id,
-                {
-                    cells: [
-                        version.version,
-                        version.count.modules,
-                        version.count.nodes,
-                    ],
-                },
-            ];
-        }));
+        const columns = [
+            {
+                Header: 'Version',
+                accessor: 'version',
+            },
+            {
+                Header: 'Groups',
+                accessor: 'moduleCount',
+            },
+            {
+                Header: 'Nodes',
+                accessor: 'nodeCount',
+            }
+        ];
+
+        const rows = dataModel.versions.map((version) => {
+            return {
+                version: <CellText>{version.version}</CellText>,
+                moduleCount: <CellText>{version.count.modules}</CellText>,
+                nodeCount: <CellText>{version.count.nodes}</CellText>,
+            }
+        });
 
         return <div className="PageBody">
             <DataModelVersionModal
@@ -81,27 +91,11 @@ export default class DataModelVersions extends Component {
                 </Stack>
             </div>
 
-            <DataTable
-                emptyTableMessage="This data model does not have any versions"
-                cellSpacing="default"
+            <DataGrid
+                accessibleName="Data model versions"
+                emptyStateContent="This data model does not have any versions"
                 rows={rows}
-                structure={{
-                    version:     {
-                        header:    'Version',
-                        resizable: true,
-                        template:  'fixed',
-                    },
-                    moduleCount: {
-                        header:    'Groups',
-                        resizable: true,
-                        template:  'fixed',
-                    },
-                    nodeCount:   {
-                        header:    'Nodes',
-                        resizable: true,
-                        template:  'fixed',
-                    },
-                }}
+                columns={columns}
             />
         </div>;
     }
