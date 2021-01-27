@@ -15,7 +15,7 @@ export default class Catalogs extends Component {
         this.state = {
             isLoading: true,
             hasError:  false,
-            catalogs:  {},
+            catalogs:  [],
             showModal: false,
         };
     }

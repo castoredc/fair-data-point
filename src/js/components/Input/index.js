@@ -24,7 +24,7 @@ class Input extends ValidatorComponent {
                     /> : <TextInput
                         {...rest}
                         invalid={!isValid}
-                        ref={(r) => { this.input = r; }}
+                        forwardRef={(r) => { this.input = r; }}
                     />
                 }
                 {this.errorText()}
