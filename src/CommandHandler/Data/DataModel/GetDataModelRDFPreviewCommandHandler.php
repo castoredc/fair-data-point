@@ -78,8 +78,6 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                 $isLiteral = ($object instanceof LiteralNode || ($object instanceof ValueNode && ! $object->isAnnotatedValue()));
 
                 if ($isLiteral) {
-                    assert($object instanceof LiteralNode || $object instanceof ValueNode);
-
                     $literal = new Literal($this->getValue($object));
                     $fullGraph->addLiteral($subjectInFullGraph, $predicateUri, $literal);
                     $moduleGraph->addLiteral($subjectInModuleGraph, $predicateUri, $literal);

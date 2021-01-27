@@ -165,8 +165,6 @@ class RDFRenderHelper
             }
 
             if ($isLiteral) {
-                assert($object instanceof LiteralNode || $object instanceof ValueNode);
-
                 $literal = new Literal($value, null, 'xsd:' . $object->getDataType()->toString());
                 $graph->addLiteral($subject, $predicate, $literal);
             } else {
