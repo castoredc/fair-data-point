@@ -37,56 +37,69 @@ class AgentArrayValidator extends ConstraintValidator
                 $this->context->buildViolation($constraint->noTypeMessage)->addViolation();
             } else {
                 if ($agent['type'] === Organization::TYPE) {
-                    $collection = new Assert\Collection(
-                        [
-                            'name' => [
-                                new Assert\NotBlank(),
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'country' => [
-                                new Assert\NotBlank(),
-                                new Assert\Country(),
-                            ],
-                            'city' => [
-                                new Assert\NotBlank(),
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'department' => [
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'additionalInformation' => [
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'coordinatesLatitude' => [
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'coordinatesLongitude' => [
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                        ]
-                    );
+                    $collection = new Assert\Collection([
+                        'allowExtraFields' => true,
+                        'fields' => [
+                            'department' => new Assert\Collection([
+                                'allowExtraFields' => true,
+                                'fields' => [
+                                    'name' => [
+                                        new Assert\Type(['type' => 'string']),
+                                    ],
+                                    'additionalInformation' => [
+                                        new Assert\Type(['type' => 'string']),
+                                    ],
+                                ],
+                            ]),
+                            'organization' => new Assert\Collection([
+                                'allowExtraFields' => true,
+                                'fields' => [
+                                    'name' => [
+                                        new Assert\NotBlank(),
+                                        new Assert\Type(['type' => 'string']),
+                                    ],
+                                    'country' => [
+                                        new Assert\NotBlank(),
+                                        new Assert\Country(),
+                                    ],
+                                    'city' => [
+                                        new Assert\NotBlank(),
+                                        new Assert\Type(['type' => 'string']),
+                                    ],
+                                ],
+                            ]),
+                        ],
+                    ]);
 
                     $this->mergeViolations($index, $agent, $collection, $constraint);
                 } elseif ($agent['type'] === Person::TYPE) {
                     $collection = new Assert\Collection(
                         [
-                            'firstName' => [
-                                new Assert\NotBlank(),
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'middleName' => [
-                                new Assert\NotBlank(),
-                            ],
-                            'lastName' => [
-                                new Assert\NotBlank(),
-                                new Assert\Type(['type' => 'string']),
-                            ],
-                            'email' => [
-                                new Assert\NotBlank(),
-                                new Assert\Email(),
-                            ],
-                            'orcid' => [
-                                new Assert\Type(['type' => 'string']),
+                            'allowExtraFields' => true,
+                            'fields' => [
+                                'person' => new Assert\Collection([
+                                    'allowExtraFields' => true,
+                                    'fields' => [
+                                        'firstName' => [
+                                            new Assert\NotBlank(),
+                                            new Assert\Type(['type' => 'string']),
+                                        ],
+                                        'middleName' => [
+                                            new Assert\Type(['type' => 'string']),
+                                        ],
+                                        'lastName' => [
+                                            new Assert\NotBlank(),
+                                            new Assert\Type(['type' => 'string']),
+                                        ],
+                                        'email' => [
+                                            new Assert\NotBlank(),
+                                            new Assert\Email(),
+                                        ],
+                                        'orcid' => [
+                                            new Assert\Type(['type' => 'string']),
+                                        ],
+                                    ],
+                                ]),
                             ],
                         ]
                     );
@@ -110,14 +123,12 @@ class AgentArrayValidator extends ConstraintValidator
             return;
         }
 
-        foreach ($violations as $violationInstance) {
-            foreach ($violationInstance as $violation) {
-                /** @var ConstraintViolation $violation */
-                $this->context->buildViolation($constraint->validationError)
-                    ->setParameter('%number%', (string) $index)
-                    ->setParameter('%message%', (string) $violation->getMessage())
-                              ->addViolation();
-            }
+        foreach ($violations as $violation) {
+            /** @var ConstraintViolation $violation */
+            $this->context->buildViolation($constraint->validationError)
+                ->setParameter('%number%', (string) ($index + 1))
+                ->setParameter('%message%', (string) $violation->getMessage())
+                ->addViolation();
         }
     }
 }
