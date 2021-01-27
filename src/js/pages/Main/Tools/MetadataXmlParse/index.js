@@ -5,8 +5,7 @@ import ToastContent from "../../../../components/ToastContent";
 import Layout from "../../../../components/Layout";
 import MainBody from "../../../../components/Layout/MainBody";
 import {Button, CellText, DataGrid, FileSelector, Stack} from "@castoredc/matter";
-import {classNames, downloadFile} from "../../../../util";
-import InlineLoader from "../../../../components/LoadingScreen/InlineLoader";
+import {downloadFile} from "../../../../util";
 import './MetadataXmlParse.scss';
 import DataGridContainer from "../../../../components/DataTable/DataGridContainer";
 

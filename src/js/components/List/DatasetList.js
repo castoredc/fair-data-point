@@ -3,7 +3,7 @@ import axios from "axios";
 import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Heading, Pagination} from "@castoredc/matter";
+import {Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import DatasetListItem from "../ListItem/DatasetListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";

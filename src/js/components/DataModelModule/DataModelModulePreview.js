@@ -1,4 +1,4 @@
-import React, {Component, createRef} from 'react'
+import React, {Component} from 'react'
 import Highlight from "../Highlight";
 import {Tabs} from "@castoredc/matter";
 import Alert from "../Alert";

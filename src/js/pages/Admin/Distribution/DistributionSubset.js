@@ -6,7 +6,6 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import DistributionContentsDependencyEditor
     from "../../../components/DependencyEditor/DistributionContentsDependencyEditor";
 import {formatQuery} from "react-querybuilder";
-import ModuleDependencyEditor from "../../../components/DependencyEditor/ModuleDependencyEditor";
 
 export default class DistributionSubset extends Component {
     constructor(props) {

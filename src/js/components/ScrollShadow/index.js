@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { classNames, cloneIfComposite } from '../../util';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {classNames, cloneIfComposite} from '../../util';
 import EventListener from '../EventListener';
 import './ScrollShadow.scss';
 

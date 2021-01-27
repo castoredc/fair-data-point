@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {DataGrid, DataTable, Link} from "@castoredc/matter";
+import {DataGrid, Link} from "@castoredc/matter";
 
 export default class SPARQLDataTable extends Component {
     constructor(props) {

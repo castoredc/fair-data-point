@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {classNames, localizedText} from "../../../util";
+import {localizedText} from "../../../util";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, CellText, DataGrid, DataTable, Stack, ViewHeader} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Stack, ViewHeader} from "@castoredc/matter";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import AddCatalogModal from "../../../modals/AddCatalogModal";

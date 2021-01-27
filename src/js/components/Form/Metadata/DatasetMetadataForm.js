@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import MetadataForm from "./MetadataForm";
 import OntologyConceptFormBlock from "../OntologyConceptFormBlock";
-import Input from "../../Input";
 import FormItem from "../FormItem";
 import LocalizedTextInput from "../../Input/LocalizedTextInput";
 

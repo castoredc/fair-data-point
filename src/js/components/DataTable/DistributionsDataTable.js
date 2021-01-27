@@ -3,8 +3,8 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, DataTable, Icon, IconCell} from "@castoredc/matter";
-import {classNames, localizedText} from "../../util";
+import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {localizedText} from "../../util";
 import DataGridContainer from "./DataGridContainer";
 
 export default class DistributionsDataTable extends Component {

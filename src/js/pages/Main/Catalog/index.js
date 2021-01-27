@@ -4,7 +4,7 @@ import {classNames, localizedText} from "../../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import StudyList from "../../../components/List/StudyList";
-import {ActionMenu, Button, ButtonGroup, Heading, Stack} from "@castoredc/matter";
+import {Button, ButtonGroup, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import Header from "../../../components/Layout/Header";
 import MainBody from "../../../components/Layout/MainBody";

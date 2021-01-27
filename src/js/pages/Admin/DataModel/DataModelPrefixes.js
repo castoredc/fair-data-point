@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
