@@ -19,20 +19,20 @@
         "semsol/arc2": "^2.5.5",
         "sensio/framework-extra-bundle": "^5.6",
         "stof/doctrine-extensions-bundle": "^1.4",
-        "symfony/console": "^5.1",
+        "symfony/console": "^5.2",
         "symfony/flex": "^1.9.10",
-        "symfony/framework-bundle": "^5.1",
-        "symfony/intl": "5.1.*",
+        "symfony/framework-bundle": "^5.2",
+        "symfony/intl": "^5.2",
         "symfony/maker-bundle": "^1.21",
-        "symfony/messenger": "5.1.*",
+        "symfony/messenger": "^5.2",
         "symfony/monolog-bundle": "^3.6",
         "symfony/orm-pack": "^2.0",
-        "symfony/security-bundle": "^5.1",
-        "symfony/twig-bundle": "^5.1",
+        "symfony/security-bundle": "^5.2",
+        "symfony/twig-bundle": "^5.2",
         "symfony/webpack-encore-bundle": "^1.6",
-        "symfony/yaml": "^5.1",
+        "symfony/yaml": "^5.2",
         "twig/twig": "^3.0",
-        "symfony/dotenv": "^5.1"
+        "symfony/dotenv": "^5.2"
     },
     "require-dev": {
         "castor/coding-standard": "^5.0",
@@ -87,7 +87,7 @@
         "symfony": {
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
             "allow-contrib": false,
-            "require": "5.1.*"
+            "require": "5.2.*"
         }
     },
     "repositories": [

@@ -12,9 +12,6 @@ parameters:
 		-
 			message: '#should be covariant#'
 			path: %currentWorkingDirectory%/src/Security/Providers/*
-		-
-			message: '#Unable to resolve the template type T in call#'
-			path: %currentWorkingDirectory%/src/Service/*
 	symfony:
 		container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
 		console_application_loader: tests/console-application.php
