@@ -122,19 +122,19 @@ export default class DatasetsDataTable extends Component {
 
         const columns = [
             {
-                header: 'Title',
+                Header: 'Title',
                 accessor: 'title',
             },
             {
-                header: 'Description',
+                Header: 'Description',
                 accessor: 'description',
             },
             {
-                header: 'Language',
+                Header: 'Language',
                 accessor: 'language',
             },
             {
-                header: 'License',
+                Header: 'License',
                 accessor: 'license',
             },
             {

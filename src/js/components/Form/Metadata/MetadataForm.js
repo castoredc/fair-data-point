@@ -382,15 +382,15 @@ export default class MetadataForm extends Component {
                                             rows={publisherRows}
                                             columns={[
                                                 {
-                                                    header: 'Name',
+                                                    Header: 'Name',
                                                     accessor: 'title',
                                                 },
                                                 {
-                                                    header: 'Type',
+                                                    Header: 'Type',
                                                     accessor: 'type',
                                                 },
                                                 {
-                                                    header: 'Additional Information',
+                                                    Header: 'Additional Information',
                                                     accessor: 'info',
                                                 },
                                             ]}
