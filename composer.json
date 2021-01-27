@@ -36,7 +36,7 @@
     },
     "require-dev": {
         "castor/coding-standard": "^5.0",
-        "phpstan/extension-installer": "^1.0",
+        "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.58",
         "phpstan/phpstan-deprecation-rules": "^0.12.2",
         "phpstan/phpstan-doctrine": "^0.12.21",
