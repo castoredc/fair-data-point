@@ -2,10 +2,10 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, DataTable, Stack} from "@castoredc/matter";
+import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class DataModelPrefixes extends Component {
     constructor(props) {
@@ -98,33 +98,49 @@ export default class DataModelPrefixes extends Component {
         const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
         const {dataModel, version} = this.props;
 
-        const rows = new Map(prefixes.map((item) => {
+        const columns = [
+            {
+                Header: 'Prefix',
+                accessor: 'prefix',
+            },
+            {
+                Header: 'URI',
+                accessor: 'uri',
+            },
+            {
+                accessor: 'menu',
+                disableGroupBy: true,
+                disableResizing: true,
+                isInteractive: true,
+                isSticky: true,
+                maxWidth: 34,
+                minWidth: 34,
+                width: 34
+            }
+        ]
+
+        const rows = prefixes.map((item) => {
             const data = {id: item.id, prefix: item.prefix, uri: item.uri};
 
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.prefix,
-                        item.uri,
-                        [
-                            {
-                                destination: () => {
-                                    this.openModal('add', data)
-                                },
-                                label:       'Edit prefix',
-                            },
-                            {
-                                destination: () => {
-                                    this.openModal('remove', data)
-                                },
-                                label:       'Delete prefix',
-                            },
-                        ],
-                    ],
-                },
-            ];
-        }));
+            return {
+                prefix: <CellText>{item.prefix}</CellText>,
+                uri: <CellText>{item.uri}</CellText>,
+                menu: <ActionsCell items={[
+                    {
+                        destination: () => {
+                            this.openModal('add', data)
+                        },
+                        label:       'Edit prefix',
+                    },
+                    {
+                        destination: () => {
+                            this.openModal('remove', data)
+                        },
+                        label:       'Delete prefix',
+                    },
+                ]} />,
+            }
+        });
 
         return <div className="PageBody">
             <DataModelPrefixModal
@@ -161,32 +177,19 @@ export default class DataModelPrefixes extends Component {
                 </Stack>
             </div>
 
-            <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
-                {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
-                    <DataTable
-                        anchorRight={1}
-                        emptyTableMessage="This data model does not have prefixes"
-                        cellSpacing="default"
-                        rows={rows}
-                        structure={{
-                            id:      {
-                                header:    'Prefix',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                            title:   {
-                                header:    'URI',
-                                resizable: true,
-                                template:  'fixed',
-                            },
-                            actions: {
-                                header:   '',
-                                template: 'rowAction',
-                            },
-                        }}
-                    />
-                </div>}
-            </div>
+            <DataGridContainer
+                fullHeight
+                isLoading={isLoadingContents}
+                ref={this.tableRef}
+            >
+                <DataGrid
+                    accessibleName="Prefixes"
+                    anchorRightColumns={1}
+                    emptyStateContent="This data model does not have prefixes"
+                    rows={rows}
+                    columns={columns}
+                />
+            </DataGridContainer>
         </div>;
     }
 }

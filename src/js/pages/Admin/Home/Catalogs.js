@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {classNames, localizedText} from "../../../util";
+import {localizedText} from "../../../util";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, DataTable, Stack, ViewHeader} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Stack, ViewHeader} from "@castoredc/matter";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import AddCatalogModal from "../../../modals/AddCatalogModal";
 import DocumentTitle from "../../../components/DocumentTitle";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class Catalogs extends Component {
     constructor(props) {
@@ -49,14 +50,12 @@ export default class Catalogs extends Component {
         });
     };
 
-    onRowClick = (event, rowID, index) => {
+    onRowClick = (rowId) => {
         const {catalogs} = this.state;
         const {history} = this.props;
 
-        if (typeof index !== "undefined") {
-            const catalog = catalogs.find((item) => item.id === rowID);
-            history.push(`/admin/catalog/${catalog.slug}`)
-        }
+        const catalog = catalogs[rowId];
+        history.push(`/admin/catalog/${catalog.slug}`)
     };
 
     render() {
@@ -66,16 +65,31 @@ export default class Catalogs extends Component {
             return <InlineLoader/>;
         }
 
-        const rows = new Map(catalogs.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                    ],
-                }];
-        }));
+        const columns = [
+            {
+                Header: 'Title',
+                accessor: 'title',
+                resizable: true,
+                template: 'text',
+            },
+            {
+                Header: 'Description',
+                accessor: 'description',
+                resizable: true,
+                template: 'text',
+            },
+        ];
+
+        const rows = catalogs.map((item) => {
+            return {
+                title: <CellText>
+                    {item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}
+                </CellText>,
+                description: <CellText>
+                    {item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}
+                </CellText>,
+            };
+        });
 
         return <div className="PageContainer">
             <DocumentTitle title="FDP Admin | Catalogs"/>
@@ -95,29 +109,15 @@ export default class Catalogs extends Component {
                         </Stack>
                     </div>
 
-                    <div className={classNames('SelectableDataTable FullHeightDataTable', isLoading && 'Loading')}>
-                        <div className="DataTableWrapper">
-                            <DataTable
-                                emptyTableMessage="No catalogs found"
-                                highlightRowOnHover
-                                cellSpacing="default"
-                                onClick={this.onRowClick}
-                                rows={rows}
-                                structure={{
-                                    title: {
-                                        header:    'Name',
-                                        resizable: true,
-                                        template:  'text',
-                                    },
-                                    type:  {
-                                        header:    'Description',
-                                        resizable: true,
-                                        template:  'text',
-                                    },
-                                }}
-                            />
-                        </div>
-                    </div>
+                    <DataGridContainer fullHeight isLoading={isLoading}>
+                        <DataGrid
+                            accessibleName="Catalogs"
+                            emptyStateContent="No catalogs found"
+                            onClick={this.onRowClick}
+                            rows={rows}
+                            columns={columns}
+                        />
+                    </DataGridContainer>
                 </div>
             </div>
         </div>;

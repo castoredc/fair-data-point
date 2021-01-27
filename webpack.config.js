@@ -29,6 +29,11 @@ Encore
         loader: 'svg-inline-loader'
     })
 
+    .addLoader({
+        test: /\.(eot|woff|woff2)$/,
+        loader: 'file-loader'
+    })
+
     .addPlugin(new ManifestPlugin({
         fileName: path.resolve(__dirname, 'public/build/manifest.json')
     }))

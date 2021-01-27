@@ -9,6 +9,7 @@ import Filters from "../Filters";
 import StudiesMap from "../Map/StudiesMap";
 import {Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
+import DataGridHelper from "../DataTable/DataGridHelper";
 
 export default class StudyList extends Component {
     constructor(props) {
@@ -59,13 +60,7 @@ export default class StudyList extends Component {
 
                 this.setState({
                     studies: studies,
-                    pagination:       {
-                        currentPage: response.data.currentPage,
-                        perPage: response.data.perPage,
-                        start: response.data.start,
-                        totalResults: response.data.totalResults,
-                        totalPages: response.data.totalPages
-                    },
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingStudies: false
                 });
             })

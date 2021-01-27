@@ -3,8 +3,9 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {DataTable} from "@castoredc/matter";
-import {classNames, localizedText} from "../../util";
+import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {localizedText} from "../../util";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DistributionsDataTable extends Component {
     constructor(props) {
@@ -12,7 +13,7 @@ export default class DistributionsDataTable extends Component {
         this.state = {
             isLoadingDistributions: true,
             hasLoadedDistributions: false,
-            distributions:          [],
+            distributions: [],
         };
 
         this.tableRef = React.createRef();
@@ -37,7 +38,7 @@ export default class DistributionsDataTable extends Component {
         axios.get(dataset ? '/api/dataset/' + dataset.slug + '/distribution' : '/api/distribution')
             .then((response) => {
                 this.setState({
-                    distributions:          response.data,
+                    distributions: response.data,
                     isLoadingDistributions: false,
                     hasLoadedDistributions: true,
                 });
@@ -52,15 +53,12 @@ export default class DistributionsDataTable extends Component {
             });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {distributions} = this.state;
         const {history, dataset} = this.props;
+        const distribution = distributions[rowId];
 
-        if (typeof index !== "undefined" && distributions.length > 0) {
-            const distribution = distributions.find((item) => item.id === rowID);
-
-            history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distribution.slug)
-        }
+        history.push('/admin' + (dataset ? '/dataset/' + dataset.slug : '') + '/distribution/' + distribution.slug);
     };
 
     render() {
@@ -70,67 +68,62 @@ export default class DistributionsDataTable extends Component {
             return <InlineLoader/>;
         }
 
-        const rows = new Map(distributions.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)',
-                        item.hasMetadata ? localizedText(item.metadata.description, 'en') : '',
-                        item.type ? item.type.toUpperCase() : '',
-                        item.hasMetadata ? item.metadata.language : '',
-                        item.hasMetadata ? item.metadata.license : '',
-                        item.published ? {
-                            type: 'view',
-                        } : undefined,
-                    ],
-                }];
-        }));
+        const columns = [
+            {
+                Header: 'Title',
+                accessor: 'title',
+            },
+            {
+                Header: 'Description',
+                accessor: 'description',
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+            },
+            {
+                Header: 'Language',
+                accessor: 'language',
+            },
+            {
+                Header: 'License',
+                accessor: 'license',
+            },
+            {
+                Header: <Icon description="Published" type="view"/>,
+                accessor: 'published',
+                disableResizing: true,
+                width: 32
+            }
+        ];
 
-        return <div
-            className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDistributions && 'Loading')}
-            ref={this.tableRef}>
-            <div className="DataTableWrapper">
-                <DataTable
-                    emptyTableMessage="No distributions found"
-                    highlightRowOnHover
-                    cellSpacing="default"
-                    onClick={this.handleClick}
-                    rows={rows}
-                    structure={{
-                        title:       {
-                            header:    'Title',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        description: {
-                            header:    'Description',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        type:        {
-                            header:    'Type',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        language:    {
-                            header:    'Language',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        license:     {
-                            header:    'License',
-                            resizable: true,
-                            template:  'text',
-                        },
-                        published:   {
-                            header:   'Published',
-                            icon:     'view',
-                            template: 'icon',
-                        },
-                    }}
-                />
-            </div>
-        </div>;
+        const rows = distributions.map((item) => {
+            return {
+                title: <CellText>
+                    {item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}
+                </CellText>,
+                description: <CellText>
+                    {item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}
+                </CellText>,
+                type: <CellText>{item.type ? item.type.toUpperCase() : ''}</CellText>,
+                language: <CellText>{item.hasMetadata ? item.metadata.language : ''}</CellText>,
+                license: <CellText>{item.hasMetadata ? item.metadata.license : ''}</CellText>,
+                published: item.published ? <IconCell icon={{type: 'view'}}/> : undefined,
+            };
+        });
+
+        return <DataGridContainer
+            fullHeight
+            isLoading={isLoadingDistributions}
+            ref={this.tableRef}
+        >
+            <DataGrid
+                accessibleName="Distributions"
+                emptyStateContent="No distributions found"
+                onClick={this.handleClick}
+                rows={rows}
+                columns={columns}
+            />
+        </DataGridContainer>;
     }
 }

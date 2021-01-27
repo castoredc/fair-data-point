@@ -3,11 +3,12 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {DataTable, Pagination} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import Filters from "../Filters";
-import {classNames} from "../../util";
 import './DataTable.scss';
+import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class StudiesDataTable extends Component {
     constructor(props) {
@@ -15,18 +16,12 @@ export default class StudiesDataTable extends Component {
         this.state = {
             isLoadingStudies: true,
             hasLoadedStudies: false,
-            studies:          [],
-            pagination:       {
-                currentPage:  1,
-                start:        1,
-                perPage:      25,
-                totalResults: null,
-                totalPages:   null,
-            },
+            studies: [],
+            pagination: DataGridHelper.getDefaultState(25),
             isLoadingFilters: true,
             hasLoadedFilters: false,
-            filterOptions:    [],
-            appliedFilters:   {},
+            filterOptions: [],
+            appliedFilters: {},
         };
 
         this.tableRef = React.createRef();
@@ -69,14 +64,8 @@ export default class StudiesDataTable extends Component {
         axios.get(catalog ? '/api/catalog/' + catalog.slug + '/study' : '/api/study', {params: filters})
             .then((response) => {
                 this.setState({
-                    studies:          response.data.results,
-                    pagination:       {
-                        currentPage:  response.data.currentPage,
-                        perPage:      response.data.perPage,
-                        start:        response.data.start,
-                        totalResults: response.data.totalResults,
-                        totalPages:   response.data.totalPages,
-                    },
+                    studies: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingStudies: false,
                     hasLoadedStudies: true,
                 });
@@ -101,7 +90,7 @@ export default class StudiesDataTable extends Component {
         axios.get(catalog ? '/api/catalog/' + catalog.slug + '/study/filters' : '/api/study/filters')
             .then((response) => {
                 this.setState({
-                    filterOptions:    response.data,
+                    filterOptions: response.data,
                     isLoadingFilters: false,
                     hasLoadedFilters: true,
                 });
@@ -121,7 +110,7 @@ export default class StudiesDataTable extends Component {
 
         this.setState({
             appliedFilters: filters,
-            pagination:     {
+            pagination: {
                 ...pagination,
                 currentPage: 1,
             },
@@ -137,25 +126,23 @@ export default class StudiesDataTable extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getStudies();
         });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {studies} = this.state;
         const {history, onClick} = this.props;
 
-        if (typeof index !== "undefined" && studies.length > 0) {
-            const study = studies.find((item) => item.id === rowID);
+        const study = studies[rowId];
 
-            if (onClick) {
-                onClick(study);
-            } else {
-                history.push(`/admin/study/${study.id}`)
-            }
+        if (onClick) {
+            onClick(study);
+        } else {
+            history.push(`/admin/study/${study.id}`)
         }
     };
 
@@ -168,83 +155,69 @@ export default class StudiesDataTable extends Component {
             return <InlineLoader/>;
         }
 
-        const rows = new Map(studies.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.hasMetadata ? item.metadata.briefName : item.name,
-                        item.hasMetadata ? StudyType[item.metadata.studyType] : null,
-                        item.hasMetadata ? MethodType[item.metadata.methodType] : null,
-                        item.hasMetadata && item.consent.publish ? {
-                            type: 'tickSmall',
-                        } : undefined,
-                        item.hasMetadata && item.consent.socialMedia ? {
-                            type: 'tickSmall',
-                        } : undefined,
-                        item.published ? {
-                            type: 'view',
-                        } : undefined,
-                    ],
-                },
-            ];
-        }));
+        const columns = [
+            {
+                Header: 'Name',
+                accessor: 'title',
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+            },
+            {
+                Header: 'Method',
+                accessor: 'method',
+            },
+            {
+                Header: <Icon description="Publish consent" type="globe"/>,
+                accessor: 'consentPublish',
+                disableResizing: true,
+                width: 32
+            },
+            {
+                Header: <Icon description="Social consent" type="share"/>,
+                accessor: 'consentSocial',
+                disableResizing: true,
+                width: 32
+            },
+            {
+                Header: <Icon description="Published" type="view"/>,
+                accessor: 'published',
+                disableResizing: true,
+                width: 32
+            },
+        ];
+
+        const rows = studies.map((item) => {
+            return {
+                title: <CellText>{item.hasMetadata ? item.metadata.briefName : item.name}</CellText>,
+                type: <CellText>{item.hasMetadata ? StudyType[item.metadata.studyType] : null}</CellText>,
+                method: <CellText>{item.hasMetadata ? MethodType[item.metadata.methodType] : null}</CellText>,
+                consentPublish: item.hasMetadata && item.consent.publish ?
+                    <IconCell icon={{type: 'tickSmall'}}/> : undefined,
+                consentSocial: item.hasMetadata && item.consent.socialMedia ?
+                    <IconCell icon={{type: 'tickSmall'}}/> : undefined,
+                published: item.published ? <IconCell icon={{type: 'view'}}/> : undefined,
+            };
+        });
 
         return <div className="DataTableContainer">
             <div className="TableCol">
-                <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingStudies && 'Loading')}
-                     ref={this.tableRef}>
-                    <div className="DataTableWrapper">
-                        <DataTable
-                            emptyTableMessage="No studies found"
-                            highlightRowOnHover
-                            cellSpacing="default"
-                            onClick={this.handleClick}
-                            rows={rows}
-                            structure={{
-                                title:          {
-                                    header:    'Name',
-                                    resizable: true,
-                                    template:  'text',
-                                },
-                                type:           {
-                                    header:    'Type',
-                                    resizable: true,
-                                    template:  'text',
-                                },
-                                method:         {
-                                    header:    'Method',
-                                    resizable: true,
-                                    template:  'text',
-                                },
-                                consentPublish: {
-                                    header:   'Publish consent',
-                                    icon:     'globe',
-                                    template: 'icon',
-                                },
-                                consentSocial:  {
-                                    header:   'Social consent',
-                                    icon:     'share',
-                                    template: 'icon',
-                                },
-                                published:      {
-                                    header:   'Published',
-                                    icon:     'view',
-                                    template: 'icon',
-                                },
-                            }}
-                        />
-                    </div>
-
-                    <Pagination
-                        accessibleName="Pagination"
-                        onChange={this.handlePagination}
-                        pageLimit={pagination.perPage}
-                        start={pagination.start}
-                        totalItems={pagination.totalResults}
+                <DataGridContainer
+                    pagination={pagination}
+                    handlePageChange={this.handlePagination}
+                    fullHeight
+                    isLoading={isLoadingStudies}
+                    ref={this.tableRef}
+                >
+                    <DataGrid
+                        accessibleName="Studies"
+                        emptyStateContent="No studies found"
+                        onClick={this.handleClick}
+                        rows={rows}
+                        columns={columns}
                     />
-
-                </div>
+                </DataGridContainer>
             </div>
             <div className="Filters FilterCol">
                 <Filters filters={filterOptions}

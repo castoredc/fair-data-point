@@ -3,9 +3,10 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {DataTable, Pagination} from "@castoredc/matter";
-import {classNames, ucfirst} from "../../util";
+import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
 import {DataType, ValueType} from "../MetadataItem/EnumMappings";
+import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DataModelMappingsDataTable extends Component {
     constructor(props) {
@@ -13,14 +14,8 @@ export default class DataModelMappingsDataTable extends Component {
         this.state = {
             isLoadingMappings: true,
             hasLoadedMappings: false,
-            mappings:          [],
-            pagination:        {
-                currentPage:  1,
-                start:        1,
-                perPage:      25,
-                totalResults: null,
-                totalPages:   null,
-            },
+            mappings: [],
+            pagination: DataGridHelper.getDefaultState(25),
         };
 
         this.tableRef = React.createRef();
@@ -49,7 +44,7 @@ export default class DataModelMappingsDataTable extends Component {
         });
 
         const filters = {
-            page:    pagination.currentPage,
+            page: pagination.currentPage,
             perPage: pagination.perPage,
         };
 
@@ -60,14 +55,8 @@ export default class DataModelMappingsDataTable extends Component {
         axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId + '/' + type, {params: filters})
             .then((response) => {
                 this.setState({
-                    mappings:          response.data.results,
-                    pagination:        {
-                        currentPage:  response.data.currentPage,
-                        perPage:      response.data.perPage,
-                        start:        response.data.start,
-                        totalResults: response.data.totalResults,
-                        totalPages:   response.data.totalPages,
-                    },
+                    mappings: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingMappings: false,
                     hasLoadedMappings: type,
                 });
@@ -89,26 +78,19 @@ export default class DataModelMappingsDataTable extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getMappings();
         });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {mappings} = this.state;
         const {onClick, type} = this.props;
 
-        if (typeof index !== "undefined" && mappings.length > 0) {
-            if(type === 'node') {
-                const mapping = mappings.find((item) => item.node.id === rowID);
-                onClick(mapping);
-            } else if(type === 'module') {
-                const mapping = mappings.find((item) => item.module.id === rowID);
-                onClick(mapping);
-            }
-        }
+        const mapping = mappings[rowId];
+        onClick(mapping);
     };
 
     render() {
@@ -122,124 +104,94 @@ export default class DataModelMappingsDataTable extends Component {
         let rows = null;
 
         if (type === 'node') {
-            rows = new Map(mappings.map((item) => {
-                return [
-                    item.node.id,
-                    {
-                        cells: [
-                            !item.element ? {
-                                type: 'errorCircledInverted',
-                            } : undefined,
-                            item.node.title,
-                            ValueType[item.node.value.value],
-                            DataType[item.node.value.dataType],
-                            item.node.repeated ? {
-                                type: 'tickSmall',
-                            } : undefined,
-                            item.element ? item.element.label : '',
-                        ],
-                    },
-                ];
-            }));
+            rows = mappings.map((item) => {
+                return {
+                    mapped: !item.element ? <IconCell icon={{type: 'errorCircledInverted'}}/> : undefined,
+                    title: <CellText>{item.node.title}</CellText>,
+                    valueType: <CellText>{ValueType[item.node.value.value]}</CellText>,
+                    dataType: <CellText>{DataType[item.node.value.dataType]}</CellText>,
+                    repeated: item.node.repeated ? <IconCell icon={{type: 'tickSmall'}}/> : undefined,
+                    mappedElement: <CellText>{item.element ? item.element.label : ''}</CellText>,
+                }
+            });
         } else if (type === 'module') {
-            rows = new Map(mappings.map((item) => {
-                return [
-                    item.module.id,
-                    {
-                        cells: [
-                            !item.element ? {
-                                type: 'errorCircledInverted',
-                            } : undefined,
-                            item.module.displayName,
-                            item.element ? item.element.label : '',
-                            item.element ? ucfirst(item.element.structureType) : '',
-                        ],
-                    },
-                ];
-            }));
+            rows = mappings.map((item) => {
+                return {
+                    mapped: !item.element ? <IconCell icon={{type: 'errorCircledInverted'}}/> : undefined,
+                    title: <CellText>{item.module.displayName}</CellText>,
+                    mappedElement: <CellText>{item.element ? item.element.label : ''}</CellText>,
+                    mappedElementType: <CellText>{item.element ? item.element.structureType : ''}</CellText>,
+                }
+            });
         } else {
             return null;
         }
 
-        return <>
-            <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingMappings && 'Loading')}
-                 ref={this.tableRef}>
-                <div className="DataTableWrapper">
-                    <DataTable
-                        emptyTableMessage="No mappings found"
-                        highlightRowOnHover
-                        cellSpacing="default"
-                        onClick={this.handleClick}
-                        rows={rows}
-                        structure={structure[type]}
-                    />
-                </div>
-
-                <Pagination
-                    accessibleName="Pagination"
-                    onChange={this.handlePagination}
-                    pageLimit={pagination.perPage}
-                    start={pagination.start}
-                    totalItems={pagination.totalResults}
-                />
-            </div>
-        </>;
+        return <DataGridContainer
+            pagination={pagination}
+            handlePageChange={this.handlePagination}
+            fullHeight
+            isLoading={isLoadingMappings}
+            ref={this.tableRef}
+        >
+            <DataGrid
+                accessibleName="Mappings"
+                emptyStateContent="No mappings found"
+                onClick={this.handleClick}
+                rows={rows}
+                columns={columns[type]}
+            />
+        </DataGridContainer>;
     }
 }
 
-const structure = {
-    node:   {
-        mapped:        {
-            header:    '',
-            resizable: true,
-            template:  'icon',
+const columns = {
+    node: [
+        {
+            Header: '',
+            accessor: 'mapped',
+            disableResizing: true,
+            width: 32
         },
-        title:         {
-            header:    'Title',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Title',
+            accessor: 'title',
         },
-        valueType:     {
-            header:    'Value type',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Value type',
+            accessor: 'valueType',
         },
-        dataType:      {
-            header:    'Data type',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Data type',
+            accessor: 'dataType',
         },
-        repeated:      {
-            header:   'Repeated',
-            icon:     'copy',
-            template: 'icon',
+        {
+            Header: <Icon description="Repeated" type="copy"/>,
+            accessor: 'repeated',
+            disableResizing: true,
+            width: 32
         },
-        mappedElement: {
-            header:    'Mapped field',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Mapped field',
+            accessor: 'mappedElement',
         },
-    },
-    module: {
-        mapped:            {
-            header:    '',
-            resizable: true,
-            template:  'icon',
+    ],
+    module: [
+        {
+            Header: '',
+            accessor: 'mapped',
         },
-        title:             {
-            header:    'Title',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Title',
+            accessor: 'title',
         },
-        mappedElement:     {
-            header:    'Mapped',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Mapped',
+            accessor: 'mappedElement',
         },
-        mappedElementType: {
-            header:    'Type',
-            resizable: true,
-            template:  'text',
+        {
+            Header: 'Type',
+            accessor: 'mappedElementType',
         },
-    },
+    ],
 };

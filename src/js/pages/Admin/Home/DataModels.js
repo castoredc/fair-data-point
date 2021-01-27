@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import axios from "axios";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, DataTable, Stack, ViewHeader} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Stack, ViewHeader} from "@castoredc/matter";
 import AddDataModelModal from "../../../modals/AddDataModelModal";
 import DocumentTitle from "../../../components/DocumentTitle";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class DataModels extends Component {
     constructor(props) {
@@ -13,8 +13,8 @@ export default class DataModels extends Component {
         this.state = {
             isLoadingDataModels: true,
             hasLoadedDataModels: false,
-            dataModels:          [],
-            showModal:           false,
+            dataModels: [],
+            showModal: false,
         };
     }
 
@@ -30,7 +30,7 @@ export default class DataModels extends Component {
         axios.get('/api/model')
             .then((response) => {
                 this.setState({
-                    dataModels:          response.data,
+                    dataModels: response.data,
                     isLoadingDataModels: false,
                     hasLoadedDataModels: true,
                 });
@@ -57,38 +57,33 @@ export default class DataModels extends Component {
         });
     };
 
-    handleClick = (event, rowID, index) => {
+    handleClick = (rowId) => {
         const {dataModels} = this.state;
         const {history} = this.props;
 
-        if (typeof index !== "undefined" && dataModels.length > 0) {
-            const dataModel = dataModels.find((item) => item.id === rowID);
+        const dataModel = dataModels[rowId];
 
-            history.push(`/admin/model/${dataModel.id}`)
-        }
+        history.push(`/admin/model/${dataModel.id}`);
     };
 
     render() {
         const {dataModels, isLoadingDataModels, showModal} = this.state;
-        const {history} = this.props;
 
-        if (isLoadingDataModels) {
-            return <InlineLoader/>;
-        }
+        const columns = [
+            {
+                Header: 'Title',
+                accessor: 'title',
+            }
+        ];
 
-        const rows = new Map(dataModels.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.title,
-                    ],
-                },
-            ];
-        }));
+        const rows = dataModels.map((item) => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+            }
+        });
 
         return <div className="PageContainer">
-            <DocumentTitle title="FDP Admin | Data Models" />
+            <DocumentTitle title="FDP Admin | Data Models"/>
             <AddDataModelModal
                 show={showModal}
                 handleClose={this.closeModal}
@@ -105,24 +100,15 @@ export default class DataModels extends Component {
                         </Stack>
                     </div>
 
-                    <div className="SelectableDataTable FullHeightDataTable">
-                        <div className="DataTableWrapper">
-                            <DataTable
-                                emptyTableMessage="No data models found"
-                                highlightRowOnHover
-                                cellSpacing="default"
-                                onClick={this.handleClick}
-                                rows={rows}
-                                structure={{
-                                    title: {
-                                        header:    'Title',
-                                        resizable: true,
-                                        template:  'text',
-                                    },
-                                }}
-                            />
-                        </div>
-                    </div>
+                    <DataGridContainer fullHeight isLoading={isLoadingDataModels}>
+                        <DataGrid
+                            accessibleName="Data Models"
+                            emptyStateContent="No data models found"
+                            onClick={this.handleClick}
+                            rows={rows}
+                            columns={columns}
+                        />
+                    </DataGridContainer>
                 </div>
             </div>
         </div>;

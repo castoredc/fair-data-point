@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {DataTable, Link} from "@castoredc/matter";
+import {DataGrid, Link} from "@castoredc/matter";
 
 export default class SPARQLDataTable extends Component {
     constructor(props) {
@@ -9,14 +9,12 @@ export default class SPARQLDataTable extends Component {
     getColumns = () => {
         const {vars} = this.props;
 
-        return vars.reduce(function (map, variable) {
-            map[variable] = {
-                header:    variable,
-                resizable: true,
-                template:  'text',
+        return vars.map((variable) => {
+            return {
+                Header:    variable,
+                accessor: variable,
             };
-            return map;
-        }, {});
+        });
     };
 
     getRows = () => {
@@ -95,7 +93,11 @@ export default class SPARQLDataTable extends Component {
         const columns = this.getColumns();
 
         return <div className="DataTableWrapper">
-            <DataTable structure={columns} rows={rows}/>
+            <DataGrid
+                accessibleName="SPARQL query results"
+                columns={columns}
+                rows={rows}
+            />
         </div>;
     }
 

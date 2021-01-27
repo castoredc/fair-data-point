@@ -4,10 +4,10 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
 import Layout from "../../../../components/Layout";
 import MainBody from "../../../../components/Layout/MainBody";
-import {Button, DataTable, FileSelector, Stack} from "@castoredc/matter";
-import {classNames, downloadFile} from "../../../../util";
-import InlineLoader from "../../../../components/LoadingScreen/InlineLoader";
+import {Button, CellText, DataGrid, FileSelector, Stack} from "@castoredc/matter";
+import {downloadFile} from "../../../../util";
 import './MetadataXmlParse.scss';
+import DataGridContainer from "../../../../components/DataTable/DataGridContainer";
 
 export default class MetadataXmlParse extends Component {
     constructor(props) {
@@ -83,19 +83,33 @@ export default class MetadataXmlParse extends Component {
 
         const title = 'Convert Metadata XML to CSV';
 
-        const rows = new Map(data.map((item) => {
-            return [
-                item.id,
-                {
-                    cells: [
-                        item.variableName,
-                        item.type,
-                        item.value,
-                        item.description
-                    ],
-                },
-            ];
-        }));
+        const columns = [
+            {
+                Header: 'Variable',
+                accessor: 'variable',
+            },
+            {
+                Header: 'Metadata Type',
+                accessor: 'type',
+            },
+            {
+                Header: 'Metadata Value',
+                accessor: 'value',
+            },
+            {
+                Header: 'Metadata Description',
+                accessor: 'description',
+            },
+        ]
+
+        const rows = data.map((item) => {
+            return {
+                variable: <CellText>{item.variableName}</CellText>,
+                type: <CellText>{item.type}</CellText>,
+                value: <CellText>{item.value}</CellText>,
+                description: <CellText>{item.description}</CellText>
+            }
+        });
 
         return <Layout
             className="MetadataXmlParse"
@@ -116,40 +130,14 @@ export default class MetadataXmlParse extends Component {
                     </Stack>
                 </div>
 
-                <div className={classNames('DataTable FullHeightDataTable', isLoading && 'Loading', !isLoaded && 'NotLoaded')}>
-                    {isLoading && <InlineLoader overlay={true} />}
-                    <div className="DataTableWrapper">
-                        <DataTable
-                            emptyTableMessage="No metadata found"
-                            highlightRowOnHover
-                            cellSpacing="default"
-                            onClick={this.onRowClick}
-                            rows={rows}
-                            structure={{
-                                variable: {
-                                    header: 'Variable',
-                                    resizable: true,
-                                    template: 'text',
-                                },
-                                type: {
-                                    header: 'Metadata Type',
-                                    resizable: true,
-                                    template: 'text',
-                                },
-                                value: {
-                                    header: 'Metadata Value',
-                                    resizable: true,
-                                    template: 'text',
-                                },
-                                description: {
-                                    header: 'Metadata Description',
-                                    resizable: true,
-                                    template: 'text',
-                                },
-                            }}
-                        />
-                    </div>
-                </div>
+                <DataGridContainer fullHeight isLoading={isLoading}>
+                    <DataGrid
+                        accessibleName="Metadata"
+                        emptyStateContent="No metadata found"
+                        rows={rows}
+                        columns={columns}
+                    />
+                </DataGridContainer>
             </MainBody>
         </Layout>;
     }
