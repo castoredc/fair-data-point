@@ -3,12 +3,12 @@ import axios from "axios/index";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, DataTable, Heading, Pagination} from "@castoredc/matter";
-import {classNames} from "../../util";
+import {CellText, DataGrid, Heading} from "@castoredc/matter";
 import moment from "moment/moment";
 import DistributionGenerationStatus from "../Status/DistributionGenerationStatus";
 import FormItem from "../Form/FormItem";
 import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DistributionRecordLogsDataTable extends Component {
     constructor(props) {
@@ -128,27 +128,22 @@ export default class DistributionRecordLogsDataTable extends Component {
         });
 
         return <div className="RecordLogs">
-            <div
-                className={classNames('SelectableDataTable FullHeightDataTable RecordLogsDataTable', isLoadingLogs && 'Loading')}
-                ref={this.tableRef}>
-                <div className="DataTableWrapper">
-                    <DataGrid
-                        accessibleName="Log items"
-                        emptyStateContent="No logs found"
-                        onClick={this.handleClick}
-                        rows={rows}
-                        columns={columns}
-                    />
-                </div>
-
-                <Pagination
-                    accessibleName="Pagination"
-                    onChange={this.handlePagination}
-                    pageLimit={pagination.perPage}
-                    start={pagination.start}
-                    totalItems={pagination.totalResults}
+            <DataGridContainer
+                pagination={pagination}
+                handlePageChange={this.handlePagination}
+                fullHeight
+                isLoading={isLoadingLogs}
+                ref={this.tableRef}
+                inFlexContainer
+            >
+                <DataGrid
+                    accessibleName="Log items"
+                    emptyStateContent="No logs found"
+                    onClick={this.handleClick}
+                    rows={rows}
+                    columns={columns}
                 />
-            </div>
+            </DataGridContainer>
 
             <div className="RecordLogsDetails">
                 {selectedLogItem !== null ? <div>

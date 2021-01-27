@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {CellText, DataGrid, DataTable, Icon, IconCell} from "@castoredc/matter";
 import {classNames, localizedText} from "../../util";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DistributionsDataTable extends Component {
     constructor(props) {
@@ -111,18 +112,18 @@ export default class DistributionsDataTable extends Component {
             };
         });
 
-        return <div
-            className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDistributions && 'Loading')}
-            ref={this.tableRef}>
-            <div className="DataTableWrapper">
-                <DataGrid
-                    accessibleName="Distributions"
-                    emptyStateContent="No distributions found"
-                    onClick={this.handleClick}
-                    rows={rows}
-                    columns={columns}
-                />
-            </div>
-        </div>;
+        return <DataGridContainer
+            fullHeight
+            isLoading={isLoadingDistributions}
+            ref={this.tableRef}
+        >
+            <DataGrid
+                accessibleName="Distributions"
+                emptyStateContent="No distributions found"
+                onClick={this.handleClick}
+                rows={rows}
+                columns={columns}
+            />
+        </DataGridContainer>;
     }
 }

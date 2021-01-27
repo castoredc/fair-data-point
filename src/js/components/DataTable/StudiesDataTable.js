@@ -9,6 +9,7 @@ import Filters from "../Filters";
 import {classNames} from "../../util";
 import './DataTable.scss';
 import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class StudiesDataTable extends Component {
     constructor(props) {
@@ -203,27 +204,21 @@ export default class StudiesDataTable extends Component {
 
         return <div className="DataTableContainer">
             <div className="TableCol">
-                <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingStudies && 'Loading')}
-                     ref={this.tableRef}>
-                    <div className="DataTableWrapper">
-                        <DataGrid
-                            accessibleName="Studies"
-                            emptyStateContent="No studies found"
-                            onClick={this.handleClick}
-                            rows={rows}
-                            columns={columns}
-                        />
-                    </div>
-
-                    <Pagination
-                        accessibleName="Pagination"
-                        onChange={this.handlePagination}
-                        pageLimit={pagination.perPage}
-                        start={pagination.start}
-                        totalItems={pagination.totalResults}
+                <DataGridContainer
+                    pagination={pagination}
+                    handlePageChange={this.handlePagination}
+                    fullHeight
+                    isLoading={isLoadingStudies}
+                    ref={this.tableRef}
+                >
+                    <DataGrid
+                        accessibleName="Studies"
+                        emptyStateContent="No studies found"
+                        onClick={this.handleClick}
+                        rows={rows}
+                        columns={columns}
                     />
-
-                </div>
+                </DataGridContainer>
             </div>
             <div className="Filters FilterCol">
                 <Filters filters={filterOptions}

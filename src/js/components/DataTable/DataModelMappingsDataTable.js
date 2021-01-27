@@ -7,6 +7,7 @@ import {CellText, DataGrid, Icon, IconCell, Pagination} from "@castoredc/matter"
 import {classNames} from "../../util";
 import {DataType, ValueType} from "../MetadataItem/EnumMappings";
 import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DataModelMappingsDataTable extends Component {
     constructor(props) {
@@ -127,28 +128,21 @@ export default class DataModelMappingsDataTable extends Component {
             return null;
         }
 
-        return <>
-            <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingMappings && 'Loading')}
-                 ref={this.tableRef}>
-                <div className="DataTableWrapper">
-                    <DataGrid
-                        accessibleName="Mappings"
-                        emptyStateContent="No mappings found"
-                        onClick={this.handleClick}
-                        rows={rows}
-                        columns={columns[type]}
-                    />
-                </div>
-
-                <Pagination
-                    accessibleName="Pagination"
-                    onChange={this.handlePagination}
-                    pageLimit={pagination.perPage}
-                    start={pagination.start}
-                    totalItems={pagination.totalResults}
-                />
-            </div>
-        </>;
+        return <DataGridContainer
+            pagination={pagination}
+            handlePageChange={this.handlePagination}
+            fullHeight
+            isLoading={isLoadingMappings}
+            ref={this.tableRef}
+        >
+            <DataGrid
+                accessibleName="Mappings"
+                emptyStateContent="No mappings found"
+                onClick={this.handleClick}
+                rows={rows}
+                columns={columns[type]}
+            />
+        </DataGridContainer>;
     }
 }
 

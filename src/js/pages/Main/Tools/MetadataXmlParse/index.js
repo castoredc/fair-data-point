@@ -8,6 +8,7 @@ import {Button, CellText, DataGrid, FileSelector, Stack} from "@castoredc/matter
 import {classNames, downloadFile} from "../../../../util";
 import InlineLoader from "../../../../components/LoadingScreen/InlineLoader";
 import './MetadataXmlParse.scss';
+import DataGridContainer from "../../../../components/DataTable/DataGridContainer";
 
 export default class MetadataXmlParse extends Component {
     constructor(props) {
@@ -130,17 +131,14 @@ export default class MetadataXmlParse extends Component {
                     </Stack>
                 </div>
 
-                <div className={classNames('DataTable FullHeightDataTable', isLoading && 'Loading', !isLoaded && 'NotLoaded')}>
-                    {isLoading && <InlineLoader overlay={true} />}
-                    <div className="DataTableWrapper">
-                        <DataGrid
-                            accessibleName="Metadata"
-                            emptyStateContent="No metadata found"
-                            rows={rows}
-                            columns={columns}
-                        />
-                    </div>
-                </div>
+                <DataGridContainer fullHeight isLoading={isLoading}>
+                    <DataGrid
+                        accessibleName="Metadata"
+                        emptyStateContent="No metadata found"
+                        rows={rows}
+                        columns={columns}
+                    />
+                </DataGridContainer>
             </MainBody>
         </Layout>;
     }

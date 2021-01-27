@@ -6,6 +6,7 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class DataModelPrefixes extends Component {
     constructor(props) {
@@ -177,17 +178,19 @@ export default class DataModelPrefixes extends Component {
                 </Stack>
             </div>
 
-            <div className="SelectableDataTable FullHeightDataTable" ref={this.tableRef}>
-                {isLoadingContents ? <InlineLoader/> : <div className="DataTableWrapper">
-                    <DataGrid
-                        accessibleName="Prefixes"
-                        anchorRightColumns={1}
-                        emptyStateContent="This data model does not have prefixes"
-                        rows={rows}
-                        columns={columns}
-                    />
-                </div>}
-            </div>
+            <DataGridContainer
+                fullHeight
+                isLoading={isLoadingContents}
+                ref={this.tableRef}
+            >
+                <DataGrid
+                    accessibleName="Prefixes"
+                    anchorRightColumns={1}
+                    emptyStateContent="This data model does not have prefixes"
+                    rows={rows}
+                    columns={columns}
+                />
+            </DataGridContainer>
         </div>;
     }
 }

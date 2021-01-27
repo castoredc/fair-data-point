@@ -6,6 +6,7 @@ import ToastContent from "../ToastContent";
 import {CellText, DataGrid, Icon, IconCell, Pagination} from "@castoredc/matter";
 import {classNames, localizedText} from "../../util";
 import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DatasetsDataTable extends Component {
     constructor(props) {
@@ -158,26 +159,20 @@ export default class DatasetsDataTable extends Component {
             }
         });
 
-        return <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingDatasets && 'Loading')}
-                    ref={this.tableRef}>
-            <div className="DataTableWrapper">
-                <DataGrid
-                    accessibleName="Datasets"
-                    emptyStateContent="No datasets found"
-                    onClick={this.handleClick}
-                    rows={rows}
-                    columns={columns}
-                />
-            </div>
-
-            <Pagination
-                accessibleName="Pagination"
-                onChange={this.handlePagination}
-                pageLimit={pagination.perPage}
-                start={pagination.start}
-                totalItems={pagination.totalResults}
+        return <DataGridContainer
+            pagination={pagination}
+            handlePageChange={this.handlePagination}
+            fullHeight
+            isLoading={isLoadingDatasets}
+            ref={this.tableRef}
+        >
+            <DataGrid
+                accessibleName="Datasets"
+                emptyStateContent="No datasets found"
+                onClick={this.handleClick}
+                rows={rows}
+                columns={columns}
             />
-
-        </div>;
+        </DataGridContainer>;
     }
 }

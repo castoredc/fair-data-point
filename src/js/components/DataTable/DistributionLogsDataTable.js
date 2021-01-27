@@ -3,11 +3,11 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Pagination} from "@castoredc/matter";
-import {classNames} from "../../util";
+import {CellText, DataGrid} from "@castoredc/matter";
 import moment from "moment";
 import DistributionGenerationStatus from "../Status/DistributionGenerationStatus";
 import DataGridHelper from "./DataGridHelper";
+import DataGridContainer from "./DataGridContainer";
 
 export default class DistributionLogsDataTable extends Component {
     constructor(props) {
@@ -125,26 +125,20 @@ export default class DistributionLogsDataTable extends Component {
             };
         });
 
-        return <div className={classNames('SelectableDataTable FullHeightDataTable', isLoadingLogs && 'Loading')}
-                    ref={this.tableRef}>
-            <div className="DataTableWrapper">
-                <DataGrid
-                    accessibleName="Distribution logs"
-                    emptyStateContent="No logs found"
-                    onClick={this.handleClick}
-                    rows={rows}
-                    columns={columns}
-                />
-            </div>
-
-            <Pagination
-                accessibleName="Pagination"
-                onChange={this.handlePagination}
-                pageLimit={pagination.perPage}
-                start={pagination.start}
-                totalItems={pagination.totalResults}
+        return <DataGridContainer
+            pagination={pagination}
+            handlePageChange={this.handlePagination}
+            fullHeight
+            isLoading={isLoadingLogs}
+            ref={this.tableRef}
+        >
+            <DataGrid
+                accessibleName="Distribution logs"
+                emptyStateContent="No logs found"
+                onClick={this.handleClick}
+                rows={rows}
+                columns={columns}
             />
-
-        </div>;
+        </DataGridContainer>;
     }
 }

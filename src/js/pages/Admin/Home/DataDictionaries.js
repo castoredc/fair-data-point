@@ -6,6 +6,7 @@ import ToastContent from "../../../components/ToastContent";
 import {Button, CellText, DataGrid, Stack, ViewHeader} from "@castoredc/matter";
 import AddDataDictionaryModal from "../../../modals/AddDataDictionaryModal";
 import DocumentTitle from "../../../components/DocumentTitle";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class DataDictionaries extends Component {
     constructor(props) {
@@ -68,11 +69,6 @@ export default class DataDictionaries extends Component {
 
     render() {
         const {dataDictionaries, isLoadingDataDictionaries, showModal} = this.state;
-        const {history} = this.props;
-
-        if (isLoadingDataDictionaries) {
-            return <InlineLoader/>;
-        }
 
         const columns = [
             {
@@ -105,17 +101,15 @@ export default class DataDictionaries extends Component {
                         </Stack>
                     </div>
 
-                    <div className="SelectableDataTable FullHeightDataTable">
-                        <div className="DataTableWrapper">
-                            <DataGrid
-                                accessibleName="Data dictionaries"
-                                emptyStateContent="No data dictionaries found"
-                                onClick={this.handleClick}
-                                rows={rows}
-                                columns={columns}
-                            />
-                        </div>
-                    </div>
+                    <DataGridContainer fullHeight isLoading={isLoadingDataDictionaries}>
+                        <DataGrid
+                            accessibleName="Data dictionaries"
+                            emptyStateContent="No data dictionaries found"
+                            onClick={this.handleClick}
+                            rows={rows}
+                            columns={columns}
+                        />
+                    </DataGridContainer>
                 </div>
             </div>
         </div>;

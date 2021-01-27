@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import AddCatalogModal from "../../../modals/AddCatalogModal";
 import DocumentTitle from "../../../components/DocumentTitle";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class Catalogs extends Component {
     constructor(props) {
@@ -108,17 +109,15 @@ export default class Catalogs extends Component {
                         </Stack>
                     </div>
 
-                    <div className={classNames('SelectableDataTable FullHeightDataTable', isLoading && 'Loading')}>
-                        <div className="DataTableWrapper">
-                            <DataGrid
-                                accessibleName="Catalogs"
-                                emptyStateContent="No catalogs found"
-                                onClick={this.onRowClick}
-                                rows={rows}
-                                columns={columns}
-                            />
-                        </div>
-                    </div>
+                    <DataGridContainer fullHeight isLoading={isLoading}>
+                        <DataGrid
+                            accessibleName="Catalogs"
+                            emptyStateContent="No catalogs found"
+                            onClick={this.onRowClick}
+                            rows={rows}
+                            columns={columns}
+                        />
+                    </DataGridContainer>
                 </div>
             </div>
         </div>;

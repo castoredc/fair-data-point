@@ -6,6 +6,7 @@ import ToastContent from "../../../components/ToastContent";
 import {Button, CellText, DataGrid, DataTable, Stack, ViewHeader} from "@castoredc/matter";
 import AddDataModelModal from "../../../modals/AddDataModelModal";
 import DocumentTitle from "../../../components/DocumentTitle";
+import DataGridContainer from "../../../components/DataTable/DataGridContainer";
 
 export default class DataModels extends Component {
     constructor(props) {
@@ -68,11 +69,6 @@ export default class DataModels extends Component {
 
     render() {
         const {dataModels, isLoadingDataModels, showModal} = this.state;
-        const {history} = this.props;
-
-        if (isLoadingDataModels) {
-            return <InlineLoader/>;
-        }
 
         const columns = [
             {
@@ -105,17 +101,15 @@ export default class DataModels extends Component {
                         </Stack>
                     </div>
 
-                    <div className="SelectableDataTable FullHeightDataTable">
-                        <div className="DataTableWrapper">
-                            <DataGrid
-                                accessibleName="Data Models"
-                                emptyStateContent="No data models found"
-                                onClick={this.handleClick}
-                                rows={rows}
-                                columns={columns}
-                            />
-                        </div>
-                    </div>
+                    <DataGridContainer fullHeight isLoading={isLoadingDataModels}>
+                        <DataGrid
+                            accessibleName="Data Models"
+                            emptyStateContent="No data models found"
+                            onClick={this.handleClick}
+                            rows={rows}
+                            columns={columns}
+                        />
+                    </DataGridContainer>
                 </div>
             </div>
         </div>;
