@@ -17,10 +17,20 @@
 
   &.Disabled {
     opacity: 0.4;
-    cursor: initial;
+    cursor: not-allowed;
 
     &:hover {
       background: none;
+    }
+  }
+
+  &.Selected {
+    background: $pale-grey;
+
+    .FieldNumber {
+      border-color: $cobalt;
+      background: $azul;
+      color: $generic-white;
     }
   }
 }

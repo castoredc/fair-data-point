@@ -22,38 +22,6 @@ export default class CSVStudyStructure extends Component {
         };
     }
 
-    componentDidMount() {
-        this.getStructure();
-    }
-
-    getStructure = () => {
-        const {studyId} = this.props;
-
-        this.setState({
-            isLoadingStructure: true,
-        });
-
-        axios.get('/api/castor/study/' + studyId + '/structure/')
-            .then((response) => {
-                this.setState({
-                    structure: response.data,
-                    isLoadingStructure: false,
-                    hasLoadedStructure: true,
-                });
-            })
-            .catch((error) => {
-                if (error.response && typeof error.response.data.error !== "undefined") {
-                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred"/>);
-                }
-
-                this.setState({
-                    isLoadingStructure: false,
-                });
-            });
-    };
-
     handleSelect = (event, field, selectValue) => {
         if (event.target.tagName.toUpperCase() !== 'INPUT') {
             let {distributionContents} = this.state;

@@ -9,38 +9,20 @@ export default class FieldListItem extends Component {
     render() {
         const { id, type, label, stepNumber, number, variableName, selectable, selected, onSelect, exportable, dataFormat, dataType}  = this.props;
 
-        const data = {
-            id,
-            type,
-            label,
-            stepNumber,
-            number,
-            variableName
-        };
-
         let isExportable = exportable.exportable;
 
-        if(isExportable && dataFormat)
-        {
+        if(isExportable && dataFormat) {
             isExportable = exportable[dataFormat];
         }
 
-        if(isExportable && dataType)
-        {
+        if(isExportable && dataType) {
             isExportable = exportable.dataTypes.includes(dataType);
         }
 
-        const changeFunction = (typeof onSelect !== 'undefined' && isExportable) ? (event) => { onSelect(event, data, !selected) } : null;
-
-        return <div className={classNames('ListItem FieldListItem', ! isExportable && 'Disabled')} onClick={changeFunction}>
-            {selectable && <div className="FieldCheckbox">
-                {isExportable && <Checkbox
-                    value={selected}
-                    required={false}
-                    name={id}
-                    onChange={() => {}}
-                />}
-            </div>}
+        return <div
+            className={classNames('ListItem FieldListItem', ! isExportable && 'Disabled', selected && 'Selected')}
+            onClick={isExportable ? () => onSelect(id, variableName, label) : undefined}
+        >
             <div className="FieldNumber">
                 {stepNumber}.{number}
             </div>
