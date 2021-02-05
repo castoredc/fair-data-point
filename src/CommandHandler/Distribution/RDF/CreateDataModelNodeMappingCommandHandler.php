@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
-use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
 use App\Entity\Data\DataSpecification\Mapping\Mapping;
@@ -14,28 +13,9 @@ use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\UserNotACastorUser;
-use App\Security\User;
-use App\Service\CastorEntityHelper;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
-use function assert;
 
-class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterface
+class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCommandHandler
 {
-    private EntityManagerInterface $em;
-
-    private Security $security;
-
-    private CastorEntityHelper $entityHelper;
-
-    public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
-    {
-        $this->em = $em;
-        $this->security = $security;
-        $this->entityHelper = $entityHelper;
-    }
-
     /**
      * @throws NoAccessPermission
      * @throws NotFound
@@ -44,42 +24,33 @@ class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterfac
      */
     public function __invoke(CreateDataModelNodeMappingCommand $command): Mapping
     {
-        $contents = $command->getDistribution();
-        $distribution = $command->getDistribution()->getDistribution();
-        $study = $distribution->getStudy();
+        parent::setup($command);
         $dataModelVersion = $command->getDataModelVersion();
-
-        if (! $this->security->isGranted('edit', $distribution)) {
-            throw new NoAccessPermission();
-        }
-
-        $user = $this->security->getUser();
-        assert($user instanceof User);
-
-        if (! $user->hasCastorUser()) {
-            throw new UserNotACastorUser();
-        }
-
-        $this->entityHelper->useUser($user->getCastorUser());
-
-        assert($study instanceof CastorStudy);
 
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
         if ($node === null) {
             throw new NotFound();
         }
 
-        $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
-
-        if ($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
-            throw new InvalidEntityType();
-        }
-
-        if ($study->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
-            $mapping = $study->getMappingByNodeAndVersion($node, $dataModelVersion);
-            $mapping->setEntity($element);
+        if ($command->isTransform()) {
+            exit;
         } else {
-            $mapping = new ElementMapping($study, $node, $element, $dataModelVersion);
+            $element = $this->entityHelper->getEntityByTypeAndId(
+                $this->study,
+                CastorEntityType::field(),
+                $command->getElements()[0]
+            );
+
+            if ($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
+                throw new InvalidEntityType();
+            }
+
+            if ($this->study->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
+                $mapping = $this->study->getMappingByNodeAndVersion($node, $dataModelVersion);
+                $mapping->setEntity($element);
+            } else {
+                $mapping = new ElementMapping($this->study, $node, $element, $dataModelVersion);
+            }
         }
 
         $this->em->persist($element);

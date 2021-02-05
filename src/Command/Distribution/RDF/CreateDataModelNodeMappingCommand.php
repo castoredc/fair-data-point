@@ -6,27 +6,34 @@ namespace App\Command\Distribution\RDF;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 
-class CreateDataModelNodeMappingCommand
+class CreateDataModelNodeMappingCommand extends CreateDataModelMappingCommand
 {
-    private RDFDistribution $distribution;
-
     private string $node;
 
-    private string $element;
+    /** @var string[] */
+    private array $elements;
 
-    private DataModelVersion $dataModelVersion;
+    private bool $transform;
 
-    public function __construct(RDFDistribution $distribution, string $node, string $element, DataModelVersion $dataModelVersion)
-    {
-        $this->distribution = $distribution;
+    private ?string $transformSyntax;
+
+    /**
+     * @param string[] $elements
+     */
+    public function __construct(
+        RDFDistribution $distribution,
+        string $node,
+        array $elements,
+        bool $transform,
+        ?string $transformSyntax,
+        DataModelVersion $dataModelVersion
+    ) {
+        parent::__construct($distribution, $dataModelVersion);
+
         $this->node = $node;
-        $this->element = $element;
-        $this->dataModelVersion = $dataModelVersion;
-    }
-
-    public function getDistribution(): RDFDistribution
-    {
-        return $this->distribution;
+        $this->elements = $elements;
+        $this->transform = $transform;
+        $this->transformSyntax = $transformSyntax;
     }
 
     public function getNode(): string
@@ -34,13 +41,21 @@ class CreateDataModelNodeMappingCommand
         return $this->node;
     }
 
-    public function getElement(): string
+    /**
+     * @return string[]
+     */
+    public function getElements(): array
     {
-        return $this->element;
+        return $this->elements;
     }
 
-    public function getDataModelVersion(): DataModelVersion
+    public function isTransform(): bool
     {
-        return $this->dataModelVersion;
+        return $this->transform;
+    }
+
+    public function getTransformSyntax(): ?string
+    {
+        return $this->transformSyntax;
     }
 }

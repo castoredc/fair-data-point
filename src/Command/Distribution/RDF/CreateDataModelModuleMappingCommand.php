@@ -7,30 +7,21 @@ use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Enum\StructureType;
 
-class CreateDataModelModuleMappingCommand
+class CreateDataModelModuleMappingCommand extends CreateDataModelMappingCommand
 {
-    private RDFDistribution $distribution;
-
     private string $module;
 
     private string $element;
 
     private StructureType $structureType;
 
-    private DataModelVersion $dataModelVersion;
-
     public function __construct(RDFDistribution $distribution, string $module, string $element, StructureType $structureType, DataModelVersion $dataModelVersion)
     {
-        $this->distribution = $distribution;
+        parent::__construct($distribution, $dataModelVersion);
+
         $this->module = $module;
         $this->element = $element;
         $this->structureType = $structureType;
-        $this->dataModelVersion = $dataModelVersion;
-    }
-
-    public function getDistribution(): RDFDistribution
-    {
-        return $this->distribution;
     }
 
     public function getModule(): string
@@ -46,10 +37,5 @@ class CreateDataModelModuleMappingCommand
     public function getElement(): string
     {
         return $this->element;
-    }
-
-    public function getDataModelVersion(): DataModelVersion
-    {
-        return $this->dataModelVersion;
     }
 }

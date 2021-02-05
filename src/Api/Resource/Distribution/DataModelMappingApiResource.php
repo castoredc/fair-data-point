@@ -37,12 +37,13 @@ class DataModelMappingApiResource implements ApiResource
             assert($node instanceof Node);
 
             $return['node'] = (new NodeApiResource($node))->toArray();
-            $return['element'] = (new CastorEntityApiResource($element->getEntity()))->toArray();
+            $return['elements'] = [(new CastorEntityApiResource($element->getEntity()))->toArray()];
+            $return['transformed'] = false;
         } elseif ($element instanceof ValueNode) {
             $return['type'] = 'node';
 
             $return['node'] = (new NodeApiResource($element))->toArray();
-            $return['element'] = null;
+            $return['elements'] = null;
         } elseif ($element instanceof GroupMapping) {
             $return['type'] = 'module';
             $group = $element->getGroup();

@@ -96,7 +96,14 @@ class RdfDistributionApiController extends ApiController
 
             if ($type->isNode()) {
                 $envelope = $bus->dispatch(
-                    new CreateDataModelNodeMappingCommand($contents, $parsed->getNode(), $parsed->getElement(), $dataModelVersion)
+                    new CreateDataModelNodeMappingCommand(
+                        $contents,
+                        $parsed->getNode(),
+                        $parsed->getElements(),
+                        $parsed->getTransform(),
+                        $parsed->getTransformSyntax(),
+                        $dataModelVersion
+                    )
                 );
             } elseif ($type->isModule()) {
                 $envelope = $bus->dispatch(
