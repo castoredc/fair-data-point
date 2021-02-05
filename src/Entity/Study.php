@@ -37,7 +37,7 @@ abstract class Study implements AccessibleEntity
      * @ORM\Column(type="guid", length=190)
      * @ORM\GeneratedValue(strategy="UUID")
      */
-    private string $id;
+    private ?string $id = null;
 
     /** @ORM\Column(type="string", length=255, nullable=TRUE) */
     private ?string $sourceId = null;
