@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"element" = "ElementMapping", "group" = "GroupMapping"})
+ * @ORM\DiscriminatorMap({"element" = "ElementMapping", "group" = "GroupMapping", "transformation" = "DataTransformationMapping"})
  */
 abstract class Mapping
 {
