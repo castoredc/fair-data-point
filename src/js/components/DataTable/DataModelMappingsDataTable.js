@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, TextStyle} from "@castoredc/matter";
 import {DataType, ValueType} from "../MetadataItem/EnumMappings";
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
@@ -107,7 +107,7 @@ export default class DataModelMappingsDataTable extends Component {
                     valueType: <CellText>{ValueType[item.node.value.value]}</CellText>,
                     dataType: <CellText>{DataType[item.node.value.dataType]}</CellText>,
                     repeated: item.node.repeated ? <IconCell icon={{type: 'tickSmall'}}/> : undefined,
-                    ...(item.transformed) && {mappedElement: <CellText>Transformed value</CellText>},
+                    ...(item.transformed) && {mappedElement: <CellText><TextStyle variation="italic">Transformed value</TextStyle></CellText>},
                     ...(! item.transformed) && {mappedElement: <CellText>{item.elements ? item.elements[0].label : ''}</CellText>},
                 }
             });

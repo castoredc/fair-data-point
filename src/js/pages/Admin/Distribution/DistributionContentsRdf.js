@@ -64,6 +64,7 @@ export default class DistributionContentsRdf extends Component {
 
         this.setState({
             addedMapping: selectedMapping,
+            selectedMapping: null,
         });
     };
 

@@ -30,6 +30,7 @@
         "@triply/yasgui": "^4.0.124",
         "axios": "^0.21.1",
         "babel-polyfill": "^6.26.0",
+        "codemirror": "^5.59.2",
         "history": "^4.10.1",
         "jquery": "^3.4.1",
         "js-yaml": "3.14.0",

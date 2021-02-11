@@ -7,16 +7,16 @@ import {Icon} from "@castoredc/matter";
 
 export default class FieldListItem extends Component {
     render() {
-        const { id, type, label, stepNumber, number, variableName, selectable, selected, onSelect, exportable, dataFormat, dataType}  = this.props;
+        const { id, type, label, stepNumber, number, variableName, selected, onSelect, exportable, dataFormat, dataType, dataTransformation}  = this.props;
 
         let isExportable = exportable.exportable;
 
-        if(isExportable && dataFormat) {
-            isExportable = exportable[dataFormat];
-        }
-
-        if(isExportable && dataType) {
+        if(isExportable && dataTransformation) {
+            isExportable = true;
+        } else if(isExportable && dataType) {
             isExportable = exportable.dataTypes.includes(dataType);
+        } else if(isExportable && dataFormat) {
+            isExportable = exportable[dataFormat];
         }
 
         return <div

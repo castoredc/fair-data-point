@@ -1,16 +1,19 @@
 import React, {Component} from 'react'
-import {Button, ChoiceOption, Heading, Stack} from "@castoredc/matter";
+import {Button, ChoiceOption, Heading, List, ListItem, Stack} from "@castoredc/matter";
 import StudyStructure from "../../StudyStructure/StudyStructure";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
+import NodeMappingInterfaceFooter from "./NodeMappingInterfaceFooter";
+import TwigEditor from "../../Input/CodeEditor/TwigEditor";
 
 export default class NodeMappingInterface extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedElements: [],
-            dataTransformation: false,
+            selectedElements: (props.mapping && props.mapping.elements) ? props.mapping.elements : [],
+            dataTransformation: props.mapping ? props.mapping.transformed : false,
+            transformSyntax: props.mapping ? (props.mapping.transformed ? props.mapping.syntax : '') : '',
             step: 'elements',
         };
     }
@@ -21,10 +24,12 @@ export default class NodeMappingInterface extends Component {
         if (prevProps.mapping === mapping) {
             return;
         }
+
         this.setState({
             selectedElements: (mapping && mapping.elements) ? mapping.elements : [],
             dataTransformation: mapping ? mapping.transformed : false,
             step: 'elements',
+            transformSyntax: '',
         });
     }
 
@@ -33,7 +38,7 @@ export default class NodeMappingInterface extends Component {
 
         let newSelectedElements = selectedElements;
         const field = {id: fieldId, variableName, label};
-        const index = selectedElements.indexOf(field);
+        const index = selectedElements.findIndex((selectedElement) => selectedElement.id === fieldId);
 
         if (index !== -1) {
             newSelectedElements.splice(index, 1);
@@ -59,6 +64,12 @@ export default class NodeMappingInterface extends Component {
         })
     }
 
+    handleSyntaxChange = (syntax) => {
+        this.setState({
+            transformSyntax: syntax
+        })
+    }
+
     setStep = (step) => {
         const {selectedElements, dataTransformation} = this.state;
 
@@ -70,7 +81,7 @@ export default class NodeMappingInterface extends Component {
     }
 
     handleSubmit = () => {
-        const {selectedElements, dataTransformation} = this.state;
+        const {selectedElements, dataTransformation, transformSyntax} = this.state;
         const {mapping, dataset, distribution, onSave, versionId} = this.props;
 
         this.setState({
@@ -82,7 +93,7 @@ export default class NodeMappingInterface extends Component {
             node: mapping.node.id,
             transform: dataTransformation,
             elements: selectedElements.map((element) => element.id),
-            ...dataTransformation && {transformSyntax: ''},
+            ...dataTransformation && {transformSyntax: transformSyntax},
         })
             .then((response) => {
                 this.setState({
@@ -106,7 +117,7 @@ export default class NodeMappingInterface extends Component {
 
     render() {
         const {studyId, mapping, type} = this.props;
-        const {structure, selectedElements, isLoading, dataTransformation, step} = this.state;
+        const {selectedElements, isLoading, dataTransformation, step, transformSyntax} = this.state;
 
         let valueDescription = '';
         const fieldDescription = <span>{mapping.node.repeated && <b>repeated</b>} fields</span>;
@@ -125,6 +136,14 @@ export default class NodeMappingInterface extends Component {
 
         const dataFormat = mapping.node.value.value;
         const dataType = mapping.node.value.dataType;
+
+        const variables = selectedElements.map((element) => {
+            if(element.variableName) {
+                return element.variableName;
+            }
+
+            return element.id;
+        })
 
         return <>
             <Stack distribution="equalSpacing">
@@ -149,63 +168,29 @@ export default class NodeMappingInterface extends Component {
                     dataFormat={dataFormat}
                     dataType={dataType}
                     types={types}
+                    dataTransformation={dataTransformation}
                 />
             </div>
+
             <div style={{overflow: 'auto', flex: 1, display: (step === 'syntax' ? 'block' : 'none')}}>
                 <span>
                     The data will be transformed to <b>{valueDescription}</b>.
                 </span>
+
+                <List>
+                    {variables.map((variable) => {
+                        return <ListItem key={variable}>{variable}</ListItem>
+                    })}
+                </List>
+
+                <TwigEditor label="Twig template" value={transformSyntax} onChange={this.handleSyntaxChange}/>
             </div>
 
-
-            {!dataTransformation && <div className="FormButtons">
-                <Stack distribution="equalSpacing">
-                         <span>
-                            Only {fieldDescription} supporting <b>{valueDescription}</b> can be selected.
-                        </span>
-                    <Stack distribution="trailing" alignment="end">
-                            <span className="FieldCount">
-                                {selectedElements.length} field{selectedElements.length !== 1 && 's'} selected
-                            </span>
-
-                        <Button onClick={this.handleSubmit} disabled={(isLoading || selectedElements.length === 0)}>
-                            Save mapping
-                        </Button>
-                    </Stack>
-                </Stack>
-            </div>}
-
-            {dataTransformation && <div className="FormButtons">
-                {step === 'elements' && <Stack distribution="equalSpacing">
-                            <span>
-                                The data will be transformed to <b>{valueDescription}</b>.
-                            </span>
-                    <Stack distribution="trailing" alignment="end">
-                                <span className="FieldCount">
-                                    {selectedElements.length} field{selectedElements.length !== 1 && 's'} selected
-                                </span>
-
-                        <Button
-                            onClick={() => this.setStep('syntax')}
-                            disabled={(isLoading || selectedElements.length === 0)}>
-                            Next
-                        </Button>
-                    </Stack>
-                </Stack>
-                }
-                {step === 'syntax' && <Stack distribution="equalSpacing">
-                    <Button
-                        buttonType="secondary"
-                        onClick={() => this.setStep('elements')}
-                        disabled={(isLoading)}>
-                        Back
-                    </Button>
-
-                    <Button onClick={this.handleSubmit} disabled={(isLoading || selectedElements.length === 0)}>
-                        Save mapping
-                    </Button>
-                </Stack>}
-            </div>}
+            <NodeMappingInterfaceFooter dataTransformation={dataTransformation} step={step}
+                                        fieldDescription={fieldDescription} valueDescription={valueDescription}
+                                        selectedElements={selectedElements} isLoading={isLoading}
+                                        setStep={this.setStep} handleSubmit={this.handleSubmit}
+            />
         </>
     }
 }

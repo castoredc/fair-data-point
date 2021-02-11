@@ -131,7 +131,7 @@ export default class StudyStructure extends Component {
     };
 
     render() {
-        const {selectable, selection, onSelect, dataFormat, dataType} = this.props;
+        const {selectable, selection, onSelect, dataFormat, dataType, dataTransformation} = this.props;
         const {structure, isLoadingFields, fields, selectedStep, selectedType, isLoadingStructure, selectableTypes} = this.state;
 
         if (isLoadingStructure) {
@@ -168,6 +168,7 @@ export default class StudyStructure extends Component {
                             exportable={field.exportable}
                             dataFormat={dataFormat}
                             dataType={dataType}
+                            dataTransformation={dataTransformation}
                         />;
                     })}
                 </div>
