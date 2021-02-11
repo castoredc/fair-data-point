@@ -52,12 +52,19 @@ class RDFRenderHelper
     private RDFDistribution $contents;
     private UriHelper $uriHelper;
     private CastorEntityCollection $optionGroups;
+    private DataTransformationService $dataTransformationService;
 
-    public function __construct(Distribution $distribution, ApiClient $apiClient, CastorEntityHelper $entityHelper, UriHelper $uriHelper)
-    {
+    public function __construct(
+        Distribution $distribution,
+        ApiClient $apiClient,
+        CastorEntityHelper $entityHelper,
+        UriHelper $uriHelper,
+        DataTransformationService $dataTransformationService
+    ) {
         $this->apiClient = $apiClient;
         $this->entityHelper = $entityHelper;
         $this->uriHelper = $uriHelper;
+        $this->dataTransformationService = $dataTransformationService;
 
         $contents = $distribution->getContents();
         assert($contents instanceof RDFDistribution);
@@ -222,39 +229,49 @@ class RDFRenderHelper
             return null;
         }
 
-        $entity = $mapping->getEntity();
-        $fieldResult = $data->getFieldResultByFieldId($entity->getId());
+        if ($mapping->shouldTransformData()) {
+            $variables = [];
 
-        if ($fieldResult !== null) {
-            if ($node->isAnnotatedValue()) {
-                // Annotated value
-                $optionGroup = $this->optionGroups->getById($fieldResult->getField()->getOptionGroupId());
-
-                if ($optionGroup === null) {
-                    return null;
-                }
-
-                assert($optionGroup instanceof FieldOptionGroup);
-                $option = $optionGroup->getOptionByValue($fieldResult->getValue());
-
-                if ($option === null) {
-                    return null;
-                }
-
-                $annotations = $option->getAnnotations();
-
-                if (count($annotations) === 0) {
-                    return null;
-                }
-
-                $annotation = $annotations->first();
-                assert($annotation instanceof Annotation);
-
-                return $annotation->getConcept()->getUrl()->getValue();
+            foreach ($mapping->getEntities() as $entity) {
+                $variables[$entity->getSlug()] = $data->getFieldResultByFieldId($entity->getId())->getValue();
             }
 
-            // 'Plain' value
-            return $this->transformValue($node->getDataType(), $fieldResult->getValue());
+            return $this->dataTransformationService->render($mapping->getSyntax(), $variables);
+        } else {
+            $entity = $mapping->getEntities()[0];
+            $fieldResult = $data->getFieldResultByFieldId($entity->getId());
+
+            if ($fieldResult !== null) {
+                if ($node->isAnnotatedValue()) {
+                    // Annotated value
+                    $optionGroup = $this->optionGroups->getById($fieldResult->getField()->getOptionGroupId());
+
+                    if ($optionGroup === null) {
+                        return null;
+                    }
+
+                    assert($optionGroup instanceof FieldOptionGroup);
+                    $option = $optionGroup->getOptionByValue($fieldResult->getValue());
+
+                    if ($option === null) {
+                        return null;
+                    }
+
+                    $annotations = $option->getAnnotations();
+
+                    if (count($annotations) === 0) {
+                        return null;
+                    }
+
+                    $annotation = $annotations->first();
+                    assert($annotation instanceof Annotation);
+
+                    return $annotation->getConcept()->getUrl()->getValue();
+                }
+
+                // 'Plain' value
+                return $this->transformValue($node->getDataType(), $fieldResult->getValue());
+            }
         }
 
         return null;

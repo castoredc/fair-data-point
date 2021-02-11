@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Castor\CastorEntitiesApiResource;
 use App\Api\Resource\Castor\CastorEntityApiResource;
 use App\Api\Resource\Data\DataModel\DataModelModuleApiResource;
 use App\Api\Resource\Data\DataModel\NodeApiResource;
@@ -37,12 +38,14 @@ class DataModelMappingApiResource implements ApiResource
             assert($node instanceof Node);
 
             $return['node'] = (new NodeApiResource($node))->toArray();
-            $return['element'] = (new CastorEntityApiResource($element->getEntity()))->toArray();
+            $return['elements'] = (new CastorEntitiesApiResource($element->getEntities()->toArray()))->toArray();
+            $return['transformed'] = $element->shouldTransformData();
+            $return['syntax'] = $element->shouldTransformData() ? $element->getSyntax() : null;
         } elseif ($element instanceof ValueNode) {
             $return['type'] = 'node';
 
             $return['node'] = (new NodeApiResource($element))->toArray();
-            $return['element'] = null;
+            $return['elements'] = null;
         } elseif ($element instanceof GroupMapping) {
             $return['type'] = 'module';
             $group = $element->getGroup();

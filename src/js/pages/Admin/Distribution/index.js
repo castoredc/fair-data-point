@@ -15,6 +15,7 @@ import DistributionLog from "./DistributionLog";
 import DocumentTitle from "../../../components/DocumentTitle";
 import SideBar from "../../../components/SideBar";
 import DistributionSubset from "./DistributionSubset";
+import './Distribution.scss';
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -130,7 +131,7 @@ export default class Distribution extends Component {
                 items={sidebarItems}
             />
 
-            <div className="Page">
+            <div className="Page Distribution">
                 <div className="PageTitle">
                     <ViewHeader>{title ? title : 'Distribution'}</ViewHeader>
                 </div>

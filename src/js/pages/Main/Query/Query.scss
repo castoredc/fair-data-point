@@ -10,39 +10,6 @@
     flex: 1;
     overflow: auto;
 
-    .Split {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: row;
-
-      .gutter {
-        .chip {
-          background: $neutral-40;
-          border-radius: 4px;
-          opacity: 0;
-        }
-
-        &:hover {
-          .chip {
-            opacity: 1;
-          }
-        }
-      }
-
-      .gutter.gutter-horizontal {
-        cursor: col-resize;
-        display: flex;
-        align-items: center;
-
-        .chip {
-          width: 4px;
-          height: 80%;
-          margin: auto;
-        }
-      }
-    }
-
     .QueryTools, .QueryResults, .QueryResults .DataTableWrapper {
       height: 100%;
     }

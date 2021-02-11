@@ -4,85 +4,102 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
-use App\Entity\Castor\CastorStudy;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
 use App\Entity\Data\DataSpecification\Mapping\Mapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
+use App\Exception\Distribution\RDF\InvalidSyntax;
+use App\Exception\Distribution\RDF\VariableNotSelected;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\UserNotACastorUser;
-use App\Security\User;
-use App\Service\CastorEntityHelper;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
-use function assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use function array_key_exists;
 
-class CreateDataModelNodeMappingCommandHandler implements MessageHandlerInterface
+class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCommandHandler
 {
-    private EntityManagerInterface $em;
-
-    private Security $security;
-
-    private CastorEntityHelper $entityHelper;
-
-    public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
-    {
-        $this->em = $em;
-        $this->security = $security;
-        $this->entityHelper = $entityHelper;
-    }
-
     /**
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws InvalidEntityType
      * @throws UserNotACastorUser
+     * @throws VariableNotSelected
+     * @throws InvalidSyntax
      */
     public function __invoke(CreateDataModelNodeMappingCommand $command): Mapping
     {
-        $contents = $command->getDistribution();
-        $distribution = $command->getDistribution()->getDistribution();
-        $study = $distribution->getStudy();
+        parent::setup($command);
         $dataModelVersion = $command->getDataModelVersion();
 
-        if (! $this->security->isGranted('edit', $distribution)) {
-            throw new NoAccessPermission();
-        }
-
-        $user = $this->security->getUser();
-        assert($user instanceof User);
-
-        if (! $user->hasCastorUser()) {
-            throw new UserNotACastorUser();
-        }
-
-        $this->entityHelper->useUser($user->getCastorUser());
-
-        assert($study instanceof CastorStudy);
-
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
+
         if ($node === null) {
             throw new NotFound();
         }
 
-        $element = $this->entityHelper->getEntityByTypeAndId($study, CastorEntityType::field(), $command->getElement());
+        $mapping = $this->study->getMappingByNodeAndVersion($node, $dataModelVersion);
 
-        if ($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
-            throw new InvalidEntityType();
+        if ($mapping === null) {
+            $mapping = new ElementMapping($this->study, $node, $dataModelVersion);
         }
 
-        if ($study->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
-            $mapping = $study->getMappingByNodeAndVersion($node, $dataModelVersion);
-            $mapping->setEntity($element);
+        if ($command->isTransform()) {
+            $elements = [];
+
+            foreach ($command->getElements() as $elementId) {
+                $element = $this->entityHelper->getEntityByTypeAndId(
+                    $this->study,
+                    CastorEntityType::field(),
+                    $elementId
+                );
+
+                $elements[$element->getSlug()] = $element;
+                $this->em->persist($element);
+            }
+
+            $variables = $this->dataTransformationService->parseSyntax($command->getTransformSyntax());
+
+            if ($variables === false) {
+                throw new InvalidSyntax();
+            }
+
+            $selectedEntities = new ArrayCollection();
+
+            foreach ($variables as $variable) {
+                if (! array_key_exists($variable, $elements)) {
+                    throw new VariableNotSelected($variable);
+                }
+
+                $selectedEntities->add($elements[$variable]);
+            }
+
+            if ($selectedEntities->count() === 0) {
+                throw new InvalidEntityType();
+            }
+
+            $mapping->setEntities($selectedEntities);
+            $mapping->setTransformData(true);
+            $mapping->setSyntax($command->getTransformSyntax());
         } else {
-            $mapping = new ElementMapping($study, $node, $element, $dataModelVersion);
+            $element = $this->entityHelper->getEntityByTypeAndId(
+                $this->study,
+                CastorEntityType::field(),
+                $command->getElements()[0]
+            );
+
+            if ($node->isRepeated() && $element->getStructureType() === StructureType::study()) {
+                throw new InvalidEntityType();
+            }
+
+            $mapping->setEntities(new ArrayCollection([$element]));
+            $mapping->setTransformData(false);
+            $mapping->setSyntax(null);
+
+            $this->em->persist($element);
         }
 
-        $this->em->persist($element);
         $this->em->persist($mapping);
         $this->em->flush();
 

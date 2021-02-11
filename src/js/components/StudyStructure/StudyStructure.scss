@@ -1,102 +1,111 @@
 @import '../../scss/colors';
 
 .StudyStructure {
-  display: flex;
-  overflow: auto;
-  height: 100%;
-}
-
-.StudyStructureNavigator {
-  width: 250px;
-  flex: 0 0 250px;
-  height: 100%;
-  overflow: auto;
-}
-
-.StudyStructureContents {
-  display: flex;
   flex: 1;
-  overflow: auto;
-  margin: 0 32px;
-  height: 100%;
-}
-
-.StructureElement {
-  margin-bottom: 15px;
-  border-radius: 3px;
   overflow: hidden;
-  background: $neutral-20;
 
-  &:last-child {
-    padding-bottom: 0;
-    margin-bottom: 0;
-    border-bottom: none;
+  .StudyStructureType {
+    display: flex;
+    overflow: auto;
+    height: 100%;
   }
 
-  .StructureElementName {
-    font-weight: 700;
-    padding: 10px 15px;
-    color: $generic-white;
-    background: $mid-blue;
+  .StudyStructureNavigator {
+    width: 250px;
+    flex: 0 0 250px;
+    height: 100%;
+    overflow: auto;
   }
 
-  .Steps {
-    margin: 3px 15px 10px 15px;
+  .StudyStructureContents {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+    margin-left: 32px;
+    height: 100%;
+  }
 
-    .Step {
-      display: block;
-      color: $neutral-500;
-      text-decoration: none;
-      text-align: left;
-      width: 100%;
-      border: none;
-      padding: 10px 0;
-      background: none;
-      position: relative;
-      font-weight: 700;
+  .StructureElement {
+    margin-bottom: 15px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: $neutral-20;
 
-      &.active, &:hover {
-        color: $azul;
+    &:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .StructureElementName {
+      padding: 6px 10px;
+      color: $generic-white;
+      background: $mid-blue;
+    }
+
+    .Steps {
+      margin: 3px 10px 10px 10px;
+
+      .Step {
+        display: block;
+        color: $neutral-500;
+        text-decoration: none;
+        text-align: left;
+        width: 100%;
+        border: none;
+        padding: 7px 5px;
+        background: none;
+        position: relative;
+        border-radius: 3px;
+        margin: 3px 0;
+
+        &.active, &:hover {
+          color: $azul;
+        }
+
+        &:hover {
+          background: $neutral-30;
+        }
       }
     }
   }
-}
 
-.Fields {
-  width: 100%;
+  .Fields {
+    width: 100%;
 
-  .FieldCheckbox {
-    margin-right: 5px;
-    min-width: 22px;
-  }
-
-  .FieldIcon {
-    margin-right: 10px;
-    width: 16px;
-
-    .FieldIcon path {
-      fill: black!important;
+    .FieldCheckbox {
+      margin-right: 5px;
+      min-width: 22px;
     }
-  }
 
-  .FieldNumber {
-    min-width: 35px;
-    font-size: 12px;
-    color: $neutral-100;
-    border-radius: 7px;
-    border: 1px solid $neutral-40;
-    text-align: center;
-    margin-right: 10px;
-  }
+    .FieldIcon {
+      margin-right: 10px;
+      width: 16px;
 
-  .FieldLabel {
-    color: $neutral-800;
-  }
+      .FieldIcon path {
+        fill: black !important;
+      }
+    }
 
-  .FieldVariableName {
-    font-size: 12px;
-    line-height: 11px;
-    color: $neutral-90;
+    .FieldNumber {
+      min-width: 35px;
+      font-size: 12px;
+      color: $neutral-100;
+      border-radius: 7px;
+      border: 1px solid $neutral-40;
+      text-align: center;
+      margin-right: 10px;
+    }
+
+    .FieldLabel {
+      color: $neutral-800;
+    }
+
+    .FieldVariableName {
+      font-size: 12px;
+      line-height: 11px;
+      color: $neutral-90;
+    }
   }
 }
 
@@ -167,4 +176,11 @@
   .OptionGroupItem, .OptionGroupTableHeader {
     color: $neutral-800;
   }
+}
+
+.MappingInterface {
+  width: 50%;
+  min-width: 650px;
+  display: flex;
+  flex-direction: column;
 }

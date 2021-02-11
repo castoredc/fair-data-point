@@ -1,25 +1,25 @@
 import React, {Component} from "react";
 import DataModelMappingsDataTable from "../../../components/DataTable/DataModelMappingsDataTable";
-import DataModelMappingModal from "../../../modals/DataModelMappingModal";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Dropdown as CastorDropdown, Stack, Tabs} from "@castoredc/matter";
 import FormItem from "../../../components/Form/FormItem";
+import MappingInterface from "../../../components/MappingInterface";
+import Split from "../../../components/Layout/Split";
 
 export default class DistributionContentsRdf extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:          false,
-            selectedMapping:    null,
-            addedMapping:       null,
+            selectedMapping: null,
+            addedMapping: null,
             isLoadingDataModel: true,
             hasLoadedDataModel: false,
-            currentVersion:     null,
-            dataModel:          null,
-            selectedType:       'node',
+            currentVersion: null,
+            dataModel: null,
+            selectedType: 'node',
         };
     }
 
@@ -37,10 +37,10 @@ export default class DistributionContentsRdf extends Component {
         axios.get('/api/model/' + distribution.dataModel.dataModel)
             .then((response) => {
                 this.setState({
-                    dataModel:          response.data,
+                    dataModel: response.data,
                     isLoadingDataModel: false,
                     hasLoadedDataModel: true,
-                    currentVersion:     distribution.dataModel.id,
+                    currentVersion: distribution.dataModel.id,
                 });
             })
             .catch((error) => {
@@ -53,23 +53,18 @@ export default class DistributionContentsRdf extends Component {
             });
     };
 
-    openModal = (mapping) => {
+    selectMapping = (mapping) => {
         this.setState({
-            showModal:       true,
             selectedMapping: mapping,
         });
     };
 
-    closeModal = () => {
-        this.setState({
-            showModal: false,
-        });
-    };
+    onSave = () => {
+        const { selectedMapping } = this.state;
 
-    onSave = (mapping) => {
         this.setState({
-            showModal:    false,
-            addedMapping: mapping,
+            addedMapping: selectedMapping,
+            selectedMapping: null,
         });
     };
 
@@ -81,13 +76,20 @@ export default class DistributionContentsRdf extends Component {
 
     changeTab = (tabIndex) => {
         this.setState({
-            selectedType:    tabIndex,
+            selectedType: tabIndex,
             selectedMapping: null,
         });
     };
 
     render() {
-        const {showModal, selectedMapping, addedMapping, isLoadingDataModel, dataModel, currentVersion, selectedType} = this.state;
+        const {
+            selectedMapping,
+            addedMapping,
+            isLoadingDataModel,
+            dataModel,
+            currentVersion,
+            selectedType
+        } = this.state;
         const {distribution, dataset} = this.props;
 
         if (isLoadingDataModel) {
@@ -100,18 +102,6 @@ export default class DistributionContentsRdf extends Component {
         });
 
         return <div className="PageBody">
-            <DataModelMappingModal
-                dataset={dataset}
-                distribution={distribution}
-                studyId={distribution.study.id}
-                show={showModal}
-                handleClose={this.closeModal}
-                mapping={selectedMapping}
-                onSave={this.onSave}
-                versionId={currentVersion}
-                type={selectedType}
-            />
-
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
                     <FormItem label="Data model version" inline align="right">
@@ -131,35 +121,49 @@ export default class DistributionContentsRdf extends Component {
                 </Stack>
             </div>
 
-            <div className="PageTabs">
-                <Tabs
-                    onChange={this.changeTab}
-                    selected={selectedType}
-                    tabs={{
-                        node:   {
-                            title:   'Nodes',
-                            content: <DataModelMappingsDataTable
-                                         dataset={dataset}
-                                         distribution={distribution}
-                                         onClick={this.openModal}
-                                         lastHandledMapping={addedMapping}
-                                         versionId={currentVersion}
-                                         type="node"
-                                     />,
-                        },
-                        module: {
-                            title:   'Groups',
-                            content: <DataModelMappingsDataTable
-                                         dataset={dataset}
-                                         distribution={distribution}
-                                         onClick={this.openModal}
-                                         lastHandledMapping={addedMapping}
-                                         versionId={currentVersion}
-                                         type="module"
-                                     />,
-                        },
-                    }}
-                />
+            <div className="Mappings">
+                <Split sizes={[50, 50]}>
+                    <div className="PageTabs">
+                        <Tabs
+                            onChange={this.changeTab}
+                            selected={selectedType}
+                            tabs={{
+                                node: {
+                                    title: 'Nodes',
+                                    content: <DataModelMappingsDataTable
+                                        dataset={dataset}
+                                        distribution={distribution}
+                                        onClick={this.selectMapping}
+                                        lastHandledMapping={addedMapping}
+                                        versionId={currentVersion}
+                                        type="node"
+                                    />,
+                                },
+                                module: {
+                                    title: 'Groups',
+                                    content: <DataModelMappingsDataTable
+                                        dataset={dataset}
+                                        distribution={distribution}
+                                        onClick={this.selectMapping}
+                                        lastHandledMapping={addedMapping}
+                                        versionId={currentVersion}
+                                        type="module"
+                                    />,
+                                },
+                            }}
+                        />
+                    </div>
+
+                    <MappingInterface
+                        dataset={dataset}
+                        distribution={distribution}
+                        studyId={distribution.study.id}
+                        mapping={selectedMapping}
+                        onSave={this.onSave}
+                        versionId={currentVersion}
+                        type={selectedType}
+                    />
+                </Split>
             </div>
         </div>;
     }

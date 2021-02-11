@@ -16,7 +16,7 @@ export default class AddStudy extends Component {
 
         this.state = {
             selectedStudy:  null,
-            studies:        {},
+            studies:        [],
             isLoading:      true,
             isSaved:        false,
             submitDisabled: true,

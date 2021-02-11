@@ -1,67 +1,5 @@
 @import '../../scss/colors';
 
-$labelLineHeight: 1.5;
-$labelFontSize: 16px;
-$checkboxDimensions: 16px;
-$checkboxTop: (($labelLineHeight * $labelFontSize) - $checkboxDimensions) / 2;
-
-.Checkbox {
-  position: relative;
-  padding-left: $checkboxDimensions + 8px;
-  font-size: 16px;
-  line-height: $labelLineHeight;
-  color: $generic-black;
-  display: block;
-
-  &.error .icon {
-    border-color: $red-700;
-  }
-
-  input {
-    height: $checkboxDimensions;
-    width: $checkboxDimensions;
-    position: absolute;
-    top: $checkboxTop;
-    left: 0;
-    opacity: 0;
-
-    + .icon {
-      content: '';
-      height: $checkboxDimensions;
-      width: $checkboxDimensions;
-      position: absolute;
-      top: $checkboxTop;
-      border: 1px solid $neutral-50;
-      border-radius: 3px;
-      box-sizing: border-box;
-      left: 0;
-    }
-
-    &:checked + .icon {
-      background: $azul;
-      border-color: $azul;
-    }
-
-    &:checked + .icon:after {
-      content: '';
-      position: absolute;
-      top: 1px;
-      left: 5px;
-      border: 2px solid #fff;
-      border-left: 0;
-      border-top: 0;
-      height: 10px;
-      width: 4px;
-      transform: rotate(45deg);
-    }
-
-    &:active + .icon,
-    &:focus + .icon {
-      border-color: $azul;
-    }
-  }
-}
-
 .CheckboxesGroup {
   label {
     margin-bottom: 8px;
@@ -75,5 +13,9 @@ $checkboxTop: (($labelLineHeight * $labelFontSize) - $checkboxDimensions) / 2;
 .CheckboxFormGroup {
   label span::after {
     box-sizing: initial!important;
+  }
+
+  &.HeadingCheckboxFormGroup {
+    margin: 2.4rem 0 1.6rem;
   }
 }

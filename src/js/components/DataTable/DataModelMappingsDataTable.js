@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, TextStyle} from "@castoredc/matter";
 import {DataType, ValueType} from "../MetadataItem/EnumMappings";
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
@@ -48,10 +48,6 @@ export default class DataModelMappingsDataTable extends Component {
             perPage: pagination.perPage,
         };
 
-        // if(hasLoadedMappings) {
-        //     window.scrollTo(0, this.tableRef.current.offsetTop - 35);
-        // }
-
         axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/contents/rdf/v/' + versionId + '/' + type, {params: filters})
             .then((response) => {
                 this.setState({
@@ -87,7 +83,7 @@ export default class DataModelMappingsDataTable extends Component {
 
     handleClick = (rowId) => {
         const {mappings} = this.state;
-        const {onClick, type} = this.props;
+        const {onClick} = this.props;
 
         const mapping = mappings[rowId];
         onClick(mapping);
@@ -106,12 +102,13 @@ export default class DataModelMappingsDataTable extends Component {
         if (type === 'node') {
             rows = mappings.map((item) => {
                 return {
-                    mapped: !item.element ? <IconCell icon={{type: 'errorCircledInverted'}}/> : undefined,
+                    mapped: !item.elements ? <IconCell icon={{type: 'errorCircledInverted'}}/> : undefined,
                     title: <CellText>{item.node.title}</CellText>,
                     valueType: <CellText>{ValueType[item.node.value.value]}</CellText>,
                     dataType: <CellText>{DataType[item.node.value.dataType]}</CellText>,
                     repeated: item.node.repeated ? <IconCell icon={{type: 'tickSmall'}}/> : undefined,
-                    mappedElement: <CellText>{item.element ? item.element.label : ''}</CellText>,
+                    ...(item.transformed) && {mappedElement: <CellText><TextStyle variation="italic">Transformed value</TextStyle></CellText>},
+                    ...(! item.transformed) && {mappedElement: <CellText>{item.elements ? item.elements[0].label : ''}</CellText>},
                 }
             });
         } else if (type === 'module') {
@@ -180,6 +177,8 @@ const columns = {
         {
             Header: '',
             accessor: 'mapped',
+            disableResizing: true,
+            width: 32
         },
         {
             Header: 'Title',

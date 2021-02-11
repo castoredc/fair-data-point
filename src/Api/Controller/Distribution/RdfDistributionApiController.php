@@ -18,6 +18,8 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
+use App\Exception\Distribution\RDF\InvalidSyntax;
+use App\Exception\Distribution\RDF\VariableNotSelected;
 use App\Exception\InvalidDistributionType;
 use App\Exception\InvalidEntityType;
 use App\Exception\MappingAlreadyExists;
@@ -32,6 +34,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function dump;
 
 /**
  * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}")
@@ -96,7 +99,14 @@ class RdfDistributionApiController extends ApiController
 
             if ($type->isNode()) {
                 $envelope = $bus->dispatch(
-                    new CreateDataModelNodeMappingCommand($contents, $parsed->getNode(), $parsed->getElement(), $dataModelVersion)
+                    new CreateDataModelNodeMappingCommand(
+                        $contents,
+                        $parsed->getNode(),
+                        $parsed->getElements(),
+                        $parsed->getTransform(),
+                        $parsed->getTransformSyntax(),
+                        $dataModelVersion
+                    )
                 );
             } elseif ($type->isModule()) {
                 $envelope = $bus->dispatch(
@@ -130,11 +140,21 @@ class RdfDistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), 404);
             }
 
+            if ($e instanceof InvalidSyntax) {
+                return new JsonResponse($e->toArray(), 400);
+            }
+
+            if ($e instanceof VariableNotSelected) {
+                return new JsonResponse($e->toArray(), 400);
+            }
+
             $this->logger->critical('An error occurred while adding a mapping to an RDF distribution', [
                 'exception' => $e,
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),
             ]);
+
+            dump($e);
 
             return new JsonResponse([], 500);
         }

@@ -7,40 +7,22 @@ import {Icon} from "@castoredc/matter";
 
 export default class FieldListItem extends Component {
     render() {
-        const { id, type, label, stepNumber, number, variableName, selectable, selected, onSelect, exportable, dataFormat, dataType}  = this.props;
-
-        const data = {
-            id,
-            type,
-            label,
-            stepNumber,
-            number,
-            variableName
-        };
+        const { id, type, label, stepNumber, number, variableName, selected, onSelect, exportable, dataFormat, dataType, dataTransformation}  = this.props;
 
         let isExportable = exportable.exportable;
 
-        if(isExportable && dataFormat)
-        {
+        if(isExportable && dataTransformation) {
+            isExportable = true;
+        } else if(isExportable && dataType) {
+            isExportable = exportable.dataTypes.includes(dataType);
+        } else if(isExportable && dataFormat) {
             isExportable = exportable[dataFormat];
         }
 
-        if(isExportable && dataType)
-        {
-            isExportable = exportable.dataTypes.includes(dataType);
-        }
-
-        const changeFunction = (typeof onSelect !== 'undefined' && isExportable) ? (event) => { onSelect(event, data, !selected) } : null;
-
-        return <div className={classNames('ListItem FieldListItem', ! isExportable && 'Disabled')} onClick={changeFunction}>
-            {selectable && <div className="FieldCheckbox">
-                {isExportable && <Checkbox
-                    value={selected}
-                    required={false}
-                    name={id}
-                    onChange={() => {}}
-                />}
-            </div>}
+        return <div
+            className={classNames('ListItem FieldListItem', ! isExportable && 'Disabled', selected && 'Selected')}
+            onClick={isExportable ? () => onSelect(id, variableName, label) : undefined}
+        >
             <div className="FieldNumber">
                 {stepNumber}.{number}
             </div>

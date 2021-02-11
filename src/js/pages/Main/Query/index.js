@@ -5,7 +5,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {classNames, localizedText} from "../../../util";
 import Yasqe from "@triply/yasqe";
-import "@triply/yasgui/build/yasgui.min.css";
 import './Query.scss';
 import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
 import Alert from "../../../components/Alert";
@@ -13,8 +12,7 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Button, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
-import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
-import Split from 'react-split'
+import Split from "../../../components/Layout/Split";
 
 export default class Query extends Component {
     constructor(props) {
@@ -170,8 +168,6 @@ export default class Query extends Component {
         const {hasDistribution, isLoading, distribution, prefixes, columns, rows, queryExecuted, error, message, isExecutingQuery, showEditor, executionTime} = this.state;
         const {location, user, embedded} = this.props;
 
-        const breadcrumbs = getBreadCrumbs(location, {distribution, query: true});
-
         let title = (hasDistribution && !isLoading) ? localizedText(distribution.metadata.title, 'en') : 'Query';
         const executedWithoutErrors = (queryExecuted && !error);
 
@@ -185,22 +181,7 @@ export default class Query extends Component {
             <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true} />
 
             <MainBody isLoading={isLoading} className="QueryComponent">
-                <Split
-                    className="Split"
-                    sizes={[40, 60]}
-                    cursor="col-resize"
-                    gutterSize={20}
-                    gutter={(index, direction) => {
-                        const gutter = document.createElement('div')
-                        const chip = document.createElement('div');
-
-                        gutter.className = `gutter gutter-${direction}`
-                        chip.className = `chip`
-
-                        gutter.appendChild(chip);
-                        return gutter
-                    }}
-                >
+                <Split sizes={[40, 60]}>
                     <div className="QueryTools">
                         <div className={classNames('QueryEditor', !showEditor && 'Hide')} id="query"/>
                         <Stack className="QueryButtons"

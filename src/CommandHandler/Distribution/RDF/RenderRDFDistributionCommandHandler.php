@@ -9,6 +9,7 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
+use App\Service\DataTransformationService;
 use App\Service\EncryptionService;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
@@ -35,13 +36,16 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
 
     private LoggerInterface $logger;
 
+    private DataTransformationService $dataTransformationService;
+
     public function __construct(
         ApiClient $apiClient,
         Security $security,
         CastorEntityHelper $entityHelper,
         UriHelper $uriHelper,
         EncryptionService $encryptionService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        DataTransformationService $dataTransformationService
     ) {
         $this->apiClient = $apiClient;
         $this->security = $security;
@@ -49,6 +53,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $this->uriHelper = $uriHelper;
         $this->encryptionService = $encryptionService;
         $this->logger = $logger;
+        $this->dataTransformationService = $dataTransformationService;
     }
 
     /**
@@ -80,7 +85,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
             $this->entityHelper->useUser($user->getCastorUser());
         }
 
-        $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
+        $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService);
 
         $graph = new Graph();
 

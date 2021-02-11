@@ -38,6 +38,8 @@ export default class Admin extends Component {
     };
 
     render() {
+        const {history} = this.props;
+
         return <div className="Admin">
             <CastorBar
                 items={[
@@ -47,7 +49,7 @@ export default class Admin extends Component {
                         type: 'brand',
                     },
                     {
-                        destination: <Link to={'/admin/fdp/metadata'}/>,
+                        destination: () => history.push('/admin/fdp/metadata'),
                         icon: <CustomIcon type="fair"/>,
                         label: 'FAIR Data Point',
                         isCurrent: matchPath(window.location.pathname, {
@@ -57,7 +59,7 @@ export default class Admin extends Component {
                         }),
                     },
                     {
-                        destination: <Link to={'/admin/catalogs'}/>,
+                        destination: () => history.push('/admin/catalogs'),
                         icon: <CustomIcon type="catalog"/>,
                         label: 'Catalogs',
                         isCurrent: (
@@ -73,7 +75,7 @@ export default class Admin extends Component {
                         ),
                     },
                     {
-                        destination: <Link to={'/admin/datasets'}/>,
+                        destination: () => history.push('/admin/datasets'),
                         icon: <CustomIcon type="dataset"/>,
                         label: 'Datasets',
                         isCurrent: (
@@ -89,7 +91,7 @@ export default class Admin extends Component {
                         ),
                     },
                     {
-                        destination: <Link to={'/admin/studies'}/>,
+                        destination: () => history.push('/admin/studies'),
                         icon: 'study',
                         label: 'Studies',
                         isCurrent: (
@@ -105,7 +107,7 @@ export default class Admin extends Component {
                         ),
                     },
                     {
-                        destination: <Link to={'/admin/models'}/>,
+                        destination: () => history.push('/admin/models'),
                         icon: 'structure',
                         label: 'Data models',
                         isCurrent: (
@@ -121,7 +123,7 @@ export default class Admin extends Component {
                         ),
                     },
                     {
-                        destination: <Link to={'/admin/dictionaries'}/>,
+                        destination: () => history.push('/admin/dictionaries'),
                         icon: 'summary',
                         label: 'Data dictionaries',
                         isCurrent: (

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {DataGrid, Link} from "@castoredc/matter";
+import {CellText, DataGrid, Link} from "@castoredc/matter";
 
 export default class SPARQLDataTable extends Component {
     constructor(props) {
@@ -27,11 +27,7 @@ export default class SPARQLDataTable extends Component {
             let row = [];
             for (let colId = 0; colId < vars.length; colId++) {
                 const sparqlVar = vars[colId];
-                if (sparqlVar in binding) {
-                    row.push(this.getCellContent(binding, sparqlVar, prefixes));
-                } else {
-                    row.push("");
-                }
+                row.push(<CellText>{sparqlVar in binding ? this.getCellContent(binding, sparqlVar, prefixes) : ''}</CellText>)
             }
             rows.set(rowId, {cells: row});
         }

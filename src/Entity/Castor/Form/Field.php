@@ -143,6 +143,12 @@ class Field extends CastorEntity
         $this->units = $units;
         $this->parentId = $parentId;
         $this->optionGroupId = $optionGroupId;
+
+        if ($variableName === null) {
+            return;
+        }
+
+        $this->slug = $variableName;
     }
 
     public function getType(): ?string
