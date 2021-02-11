@@ -5,7 +5,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {classNames, localizedText} from "../../../util";
 import Yasqe from "@triply/yasqe";
-import "@triply/yasgui/build/yasgui.min.css";
 import './Query.scss';
 import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
 import Alert from "../../../components/Alert";

@@ -34,12 +34,8 @@ export default class LocalizedTextInput extends Component {
     addInput = () => {
         const { inputData } = this.state;
 
-        console.log(inputData);
-
         const newInputData = inputData;
         newInputData.push(defaultData);
-
-        console.log(newInputData);
 
         this.setState({
             inputData: newInputData,
