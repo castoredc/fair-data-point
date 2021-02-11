@@ -11,7 +11,7 @@ export default class SPARQLDataTable extends Component {
 
         return vars.map((variable) => {
             return {
-                Header:    variable,
+                Header:   variable,
                 accessor: variable,
             };
         });
@@ -20,17 +20,21 @@ export default class SPARQLDataTable extends Component {
     getRows = () => {
         const {vars, bindings, prefixes} = this.props;
 
-        let rows = new Map();
+        let rows = [];
 
         for (let rowId = 0; rowId < bindings.length; rowId++) {
             const binding = bindings[rowId];
-            let row = [];
+
+            let row = {};
+
             for (let colId = 0; colId < vars.length; colId++) {
                 const sparqlVar = vars[colId];
-                row.push(<CellText>{sparqlVar in binding ? this.getCellContent(binding, sparqlVar, prefixes) : ''}</CellText>)
+                row[sparqlVar] = (<CellText>{sparqlVar in binding ? this.getCellContent(binding, sparqlVar, prefixes) : ''}</CellText>)
             }
-            rows.set(rowId, {cells: row});
+
+            rows.push(row);
         }
+
         return rows;
     };
 
