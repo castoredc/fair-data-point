@@ -9,10 +9,14 @@ use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
 use App\Entity\Data\DataSpecification\Mapping\Mapping;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
+use App\Exception\Distribution\RDF\InvalidSyntax;
+use App\Exception\Distribution\RDF\VariableNotSelected;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\UserNotACastorUser;
+use Doctrine\Common\Collections\ArrayCollection;
+use function array_key_exists;
 
 class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCommandHandler
 {
@@ -21,6 +25,8 @@ class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCom
      * @throws NotFound
      * @throws InvalidEntityType
      * @throws UserNotACastorUser
+     * @throws VariableNotSelected
+     * @throws InvalidSyntax
      */
     public function __invoke(CreateDataModelNodeMappingCommand $command): Mapping
     {
@@ -28,12 +34,54 @@ class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCom
         $dataModelVersion = $command->getDataModelVersion();
 
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());
+
         if ($node === null) {
             throw new NotFound();
         }
 
+        $mapping = $this->study->getMappingByNodeAndVersion($node, $dataModelVersion);
+
+        if ($mapping === null) {
+            $mapping = new ElementMapping($this->study, $node, $dataModelVersion);
+        }
+
         if ($command->isTransform()) {
-            exit;
+            $elements = [];
+
+            foreach ($command->getElements() as $elementId) {
+                $element = $this->entityHelper->getEntityByTypeAndId(
+                    $this->study,
+                    CastorEntityType::field(),
+                    $elementId
+                );
+
+                $elements[$element->getSlug()] = $element;
+                $this->em->persist($element);
+            }
+
+            $variables = $this->dataTransformationService->parseSyntax($command->getTransformSyntax());
+
+            if ($variables === false) {
+                throw new InvalidSyntax();
+            }
+
+            $selectedEntities = new ArrayCollection();
+
+            foreach ($variables as $variable) {
+                if (! array_key_exists($variable, $elements)) {
+                    throw new VariableNotSelected($variable);
+                }
+
+                $selectedEntities->add($elements[$variable]);
+            }
+
+            if ($selectedEntities->count() === 0) {
+                throw new InvalidEntityType();
+            }
+
+            $mapping->setEntities($selectedEntities);
+            $mapping->setTransformData(true);
+            $mapping->setSyntax($command->getTransformSyntax());
         } else {
             $element = $this->entityHelper->getEntityByTypeAndId(
                 $this->study,
@@ -45,15 +93,13 @@ class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCom
                 throw new InvalidEntityType();
             }
 
-            if ($this->study->getMappingByNodeAndVersion($node, $dataModelVersion) !== null) {
-                $mapping = $this->study->getMappingByNodeAndVersion($node, $dataModelVersion);
-                $mapping->setEntity($element);
-            } else {
-                $mapping = new ElementMapping($this->study, $node, $element, $dataModelVersion);
-            }
+            $mapping->setEntities(new ArrayCollection([$element]));
+            $mapping->setTransformData(false);
+            $mapping->setSyntax(null);
+
+            $this->em->persist($element);
         }
 
-        $this->em->persist($element);
         $this->em->persist($mapping);
         $this->em->flush();
 

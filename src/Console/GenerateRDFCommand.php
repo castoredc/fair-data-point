@@ -14,6 +14,7 @@ use App\Entity\Data\Log\DistributionGenerationRecordLog;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Model\Castor\ApiClient;
 use App\Service\CastorEntityHelper;
+use App\Service\DataTransformationService;
 use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use App\Service\RDFRenderHelper;
@@ -46,6 +47,7 @@ class GenerateRDFCommand extends Command
     private DistributionService $distributionService;
     private EncryptionService $encryptionService;
     private LoggerInterface $logger;
+    private DataTransformationService $dataTransformationService;
 
     public function __construct(
         ApiClient $apiClient,
@@ -54,7 +56,8 @@ class GenerateRDFCommand extends Command
         UriHelper $uriHelper,
         DistributionService $distributionService,
         EncryptionService $encryptionService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        DataTransformationService $dataTransformationService
     ) {
         $this->apiClient = $apiClient;
         $this->em = $em;
@@ -63,6 +66,7 @@ class GenerateRDFCommand extends Command
         $this->distributionService = $distributionService;
         $this->encryptionService = $encryptionService;
         $this->logger = $logger;
+        $this->dataTransformationService = $dataTransformationService;
 
         parent::__construct();
     }
@@ -143,7 +147,7 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
-            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper);
+            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService);
 
             $recordsSubset = $helper->getSubset($records);
             $output->writeln(sprintf("Subset: \t %s record(s)", count($recordsSubset)));

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="data_specification_mappings_group")
  */
 class GroupMapping extends Mapping
 {
@@ -20,11 +21,28 @@ class GroupMapping extends Mapping
      */
     private ?Group $group = null;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity")
+     * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
+     */
+    private CastorEntity $entity;
+
     public function __construct(Study $study, Group $group, CastorEntity $entity, Version $version)
     {
-        parent::__construct($study, $entity, $version);
+        parent::__construct($study, $version);
 
+        $this->entity = $entity;
         $this->group = $group;
+    }
+
+    public function getEntity(): CastorEntity
+    {
+        return $this->entity;
+    }
+
+    public function setEntity(CastorEntity $entity): void
+    {
+        $this->entity = $entity;
     }
 
     public function getGroup(): ?Group

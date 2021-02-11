@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataSpecification\Mapping;
 
-use App\Entity\Castor\CastorEntity;
 use App\Entity\Data\DataSpecification\Version;
 use App\Entity\Study;
 use App\Traits\CreatedAndUpdated;
@@ -13,9 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="data_specification_mappings")
  * @ORM\HasLifecycleCallbacks
- * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"element" = "ElementMapping", "group" = "GroupMapping", "transformation" = "DataTransformationMapping"})
+ * @ORM\DiscriminatorMap({"element" = "ElementMapping", "group" = "GroupMapping"})
  */
 abstract class Mapping
 {
@@ -35,37 +34,20 @@ abstract class Mapping
     private Study $study;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity")
-     * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
-     */
-    private CastorEntity $entity;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Version")
      * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
      */
     private Version $version;
 
-    public function __construct(Study $study, CastorEntity $entity, Version $version)
+    public function __construct(Study $study, Version $version)
     {
         $this->study = $study;
-        $this->entity = $entity;
         $this->version = $version;
     }
 
     public function getId(): string
     {
         return $this->id;
-    }
-
-    public function getEntity(): CastorEntity
-    {
-        return $this->entity;
-    }
-
-    public function setEntity(CastorEntity $entity): void
-    {
-        $this->entity = $entity;
     }
 
     public function getVersion(): Version

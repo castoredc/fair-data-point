@@ -9,6 +9,7 @@ use App\Exception\NoAccessPermission;
 use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
+use App\Service\DataTransformationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -24,11 +25,14 @@ abstract class CreateDataModelMappingCommandHandler implements MessageHandlerInt
 
     protected CastorStudy $study;
 
-    public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper)
+    protected DataTransformationService $dataTransformationService;
+
+    public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper, DataTransformationService $dataTransformationService)
     {
         $this->em = $em;
         $this->security = $security;
         $this->entityHelper = $entityHelper;
+        $this->dataTransformationService = $dataTransformationService;
     }
 
     protected function setup(CreateDataModelMappingCommand $command): void
