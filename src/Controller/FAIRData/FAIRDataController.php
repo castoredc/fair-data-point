@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller\FAIRData;
 
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Service\UriHelper;
 use EasyRdf\RdfNamespace;
@@ -67,6 +68,13 @@ abstract class FAIRDataController extends AbstractController
         return [
             'title' => $entity->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
             'description' => $entity->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
+        ];
+    }
+
+    protected function getAgentSeoTexts(Agent $agent): array
+    {
+        return [
+            'title' => $agent->getName(),
         ];
     }
 }

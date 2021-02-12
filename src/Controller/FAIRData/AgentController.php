@@ -8,17 +8,22 @@ use App\Entity\FAIRData\Agent\Person;
 use App\Graph\Resource\Agent\Organization\OrganizationGraphResource;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AgentController extends FAIRDataController
 {
     /**
-     * @Route("/agent/person/{person}", name="agent_person")
+     * @Route("/fdp/person/{person}", name="agent_person")
      * @ParamConverter("person", options={"mapping": {"person": "slug"}})
      */
-    public function person(Person $person): Response
+    public function person(Person $person, Request $request): Response
     {
+        if ($this->acceptsHttp($request)) {
+            return $this->render('react.html.twig', $this->getAgentSeoTexts($person));
+        }
+
         return new Response(
             (new PersonGraphResource($person, $this->basePurl))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,
@@ -27,11 +32,15 @@ class AgentController extends FAIRDataController
     }
 
     /**
-     * @Route("/agent/organization/{organization}", name="agent_organization")
+     * @Route("/fdp/organization/{organization}", name="agent_organization")
      * @ParamConverter("organization", options={"mapping": {"organization": "slug"}})
      */
-    public function organization(Organization $organization): Response
+    public function organization(Organization $organization, Request $request): Response
     {
+        if ($this->acceptsHttp($request)) {
+            return $this->render('react.html.twig', $this->getAgentSeoTexts($organization));
+        }
+
         return new Response(
             (new OrganizationGraphResource($organization, $this->basePurl))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,

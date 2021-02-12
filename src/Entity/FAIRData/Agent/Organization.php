@@ -67,7 +67,7 @@ class Organization extends Agent
 
     public function getRelativeUrl(): string
     {
-        return '/agent/organization/' . $this->getSlug();
+        return '/fdp/organization/' . $this->getSlug();
     }
 
     public function getHomepage(): ?Iri
