@@ -12,15 +12,19 @@ class Organizations extends Component {
 
         const label = 'Organization' + (organizations.length > 1 ? 's' : '');
 
-        const coordinates = organizations.filter((organization) => {
-            return ! (organization.coordinates === null);
-        }).map((organization)  => {
-            return [organization.coordinates.lat, organization.coordinates.long];
+        const coordinates = organizations.filter((agent) => {
+            return ! (agent.organization.coordinates === null);
+        }).map((agent)  => {
+            return [agent.organization.coordinates.lat, agent.organization.coordinates.long];
         });
 
         return <MetadataItem label={label} className="Organizations">
-            {organizations.map((organization, index) => {
-                return <Organization key={index} {...organization} />
+            {organizations.map((agent, index) => {
+                return <Organization
+                    key={index}
+                    organization={agent.organization}
+                    department={agent.hasDepartment && agent.department}
+                />
             })}
 
             {coordinates.length > 0 && <div className="Map">

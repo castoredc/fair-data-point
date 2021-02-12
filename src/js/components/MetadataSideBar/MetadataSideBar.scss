@@ -1,0 +1,43 @@
+@import '../../scss/colors';
+
+.MetadataSideBar {
+  .Publishers {
+    .Publisher {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid $neutral-30;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      a {
+        color: $neutral-700;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .Organization {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .Department {
+      color: $neutral-90;
+    }
+
+    .Location {
+      font-size: 12px;
+    }
+  }
+
+  hr {
+    border-color: $neutral-40;
+    border-style: solid;
+    border-top: 0;
+    margin: 20px 0;
+  }
+}

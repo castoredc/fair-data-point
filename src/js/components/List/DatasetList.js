@@ -93,7 +93,7 @@ export default class DatasetList extends Component {
         }
 
         return <div className={classNames('Datasets', className)}>
-            {datasets.length > 0 ? <div>
+            {datasets.length > 0 ? <>
                 <div className="Description">
                     Datasets are collections of data which are available for access or download in one or more representations.
                 </div>
@@ -119,7 +119,7 @@ export default class DatasetList extends Component {
                     totalItems={pagination.totalResults}
                 />
 
-            </div> : <div className="NoResults">This {study ? 'study' : 'catalog'} does not have any associated datasets.</div>}
+            </> : <div className="NoResults">This {study ? 'study' : 'catalog'} does not have any associated datasets.</div>}
         </div>;
     }
 }

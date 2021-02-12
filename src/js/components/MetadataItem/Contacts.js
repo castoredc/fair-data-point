@@ -2,12 +2,7 @@ import React, {Component} from 'react'
 
 import './MetadataItem.scss'
 import {Button} from "@castoredc/matter";
-
-const Contact = ({name, url, type, email}) => {
-    return <span className="Contact">
-        {name}
-    </span>;
-};
+import Person from "./Person";
 
 class Contacts extends Component {
     render() {
@@ -18,12 +13,12 @@ class Contacts extends Component {
             <span>By </span>
 
             {contacts.map((contact, index) => {
-                if (contact.email) {
-                    emails.push(contact.email);
+                if (contact.type === 'person' && contact.person.email) {
+                    emails.push(contact.person.email);
                 }
 
-                return <span key={index}>
-                    <Contact name={contact.name} url={contact.url} type={contact.type} email={contact.email}/>
+                return <span className="Contact" key={index}>
+                    {contact.type === 'person' && <Person person={contact.person} />}
                     {index !== (contacts.length - 1) && ', '}
                 </span>
             })}

@@ -1,11 +1,9 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {classNames} from "../../util";
-import {Sticky, StickyContainer} from 'react-sticky';
 import StudyListItem from "../ListItem/StudyListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import Filters from "../Filters";
 import StudiesMap from "../Map/StudiesMap";
 import {Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
@@ -16,21 +14,18 @@ export default class StudyList extends Component {
         super(props);
 
         this.state = {
-            isLoadingStudies:   true,
-            isLoadingMap:       true,
-            showMap:            false,
-            studies:           null,
-            map:                null,
-            pagination:       {
+            isLoadingStudies: true,
+            isLoadingMap: true,
+            showMap: false,
+            studies: null,
+            map: null,
+            pagination: {
                 currentPage: 1,
                 start: 1,
                 perPage: props.embedded ? 5 : 10,
                 totalResults: null,
                 totalPages: null
             },
-            isLoadingFilters: true,
-            filterOptions:    [],
-            appliedFilters:   {},
         };
 
         this.wrapperRef = React.createRef();
@@ -39,12 +34,35 @@ export default class StudyList extends Component {
     componentDidMount() {
         this.getStudies();
         this.getMap();
-        this.getFilters();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {appliedFilters} = this.props;
+
+        if (prevProps.appliedFilters !== appliedFilters) {
+            this.handleFilter();
+        }
+    }
+
+    handleFilter = () => {
+        const {pagination} = this.state;
+
+        this.setState({
+            pagination: {
+                ...pagination,
+                currentPage: 1
+            }
+        }, () => {
+            this.getStudies();
+            this.getMap();
+            window.scrollTo(0, this.wrapperRef.current.offsetTop + 50);
+        });
+    };
+
+
     getStudies = () => {
-        const { appliedFilters, pagination } = this.state;
-        const { catalog } = this.props;
+        const {pagination} = this.state;
+        const {catalog, appliedFilters} = this.props;
 
         this.setState({
             isLoadingStudies: true,
@@ -54,9 +72,11 @@ export default class StudyList extends Component {
         filters['page'] = pagination.currentPage;
         filters['perPage'] = pagination.perPage;
 
-        axios.get('/api/catalog/' + catalog.slug + '/study', { params: filters })
+        axios.get('/api/catalog/' + catalog.slug + '/study', {params: filters})
             .then((response) => {
-                const studies = response.data.results.filter((study) => { return study.hasMetadata });
+                const studies = response.data.results.filter((study) => {
+                    return study.hasMetadata
+                });
 
                 this.setState({
                     studies: studies,
@@ -70,19 +90,18 @@ export default class StudyList extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the studies';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     getMap = () => {
-        const { appliedFilters } = this.state;
-        const { catalog } = this.props;
+        const {catalog, appliedFilters} = this.props;
 
         this.setState({
             isLoadingMap: true
         });
 
-        axios.get('/api/catalog/' + catalog.slug + '/map', { params: appliedFilters })
+        axios.get('/api/catalog/' + catalog.slug + '/map', {params: appliedFilters})
             .then((response) => {
                 this.setState({
                     map: response.data,
@@ -96,51 +115,12 @@ export default class StudyList extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the map';
-                toast.error(<ToastContent type="error" message={message} />);
-            });
-    };
-
-    getFilters = () => {
-        const { catalog } = this.props;
-
-        this.setState({
-            isLoadingStudies: true,
-        });
-
-        axios.get('/api/catalog/' + catalog.slug + '/study/filters')
-            .then((response) => {
-                this.setState({
-                    filterOptions:    response.data,
-                    isLoadingFilters: false,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingFilters: false,
-                });
-
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the filters';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
-    handleFilter = (filters) => {
-        const { pagination } = this.state;
-
-        this.setState({
-            appliedFilters: filters,
-            pagination: {
-                ...pagination,
-                currentPage: 1
-            }
-        }, () => {
-            this.getStudies();
-            window.scrollTo(0, this.wrapperRef.current.offsetTop - 130);
-        });
-    };
-
     handlePagination = (paginationCount) => {
-        const { pagination } = this.state;
+        const {pagination} = this.state;
 
         this.setState({
             pagination: {
@@ -150,91 +130,71 @@ export default class StudyList extends Component {
             }
         }, () => {
             this.getStudies();
-            window.scrollTo(0, this.wrapperRef.current.offsetTop - 130);
+            window.scrollTo(0, this.wrapperRef.current.offsetTop + 50);
         });
     };
 
     render() {
-        const { isLoadingStudies, isLoadingMap, isLoadingFilters, filterOptions, pagination, studies, map } = this.state;
-        const { embedded, visible, representation, displayFilter, state, catalog } = this.props;
+        const {isLoadingStudies, isLoadingMap, pagination, studies, map} = this.state;
+        const {embedded, visible, representation, state, catalog} = this.props;
 
-        if(!visible) {
+        if (!visible) {
             return null;
         }
 
-        if(studies === null || map === null)
-        {
-            return <InlineLoader />;
+        if (studies === null || map === null) {
+            return <InlineLoader/>;
         }
 
-        return <StickyContainer className="StickyContainer">
-                <div className="Datasets HasFilters" ref={this.wrapperRef}>
-                    <div className={classNames('MainCol', representation === 'map' && 'FullWidth')}>
-                        {representation === 'list' && <div className={classNames('Datasets', isLoadingStudies && 'Loading')}>
-                            {studies.length > 0 ? <div>
-                                {studies.map((item, index) => {
-                                    if(item.hasMetadata === false) {
-                                        return null;
-                                    }
-                                    return <StudyListItem key={index}
-                                                          newWindow={embedded}
-                                                          state={state}
-                                                          catalog={catalog}
-                                                          link={`/study/${item.slug}`}
-                                                          name={item.metadata.briefName}
-                                                          description={item.metadata.briefSummary}
-                                                          recruitmentStatus={item.metadata.recruitmentStatus}
-                                                          intervention={item.metadata.intervention}
-                                                          condition={item.metadata.condition}
-                                    />
-                                })}
+        return <div className="Studies HasFilters" ref={this.wrapperRef}>
+            {representation === 'list' &&
+            <div className={classNames('LargeList', isLoadingStudies && 'Loading')}>
+                {studies.length > 0 ? <div>
+                    {studies.map((item, index) => {
+                        if (item.hasMetadata === false) {
+                            return null;
+                        }
+                        return <StudyListItem key={index}
+                                              newWindow={embedded}
+                                              state={state}
+                                              catalog={catalog}
+                                              link={`/study/${item.slug}`}
+                                              name={item.metadata.briefName}
+                                              description={item.metadata.briefSummary}
+                                              recruitmentStatus={item.metadata.recruitmentStatus}
+                                              intervention={item.metadata.intervention}
+                                              condition={item.metadata.condition}
+                        />
+                    })}
 
-                                <Pagination
-                                    accessibleName="Pagination"
-                                    onChange={this.handlePagination}
-                                    pageLimit={pagination.perPage}
-                                    start={pagination.start}
-                                    totalItems={pagination.totalResults}
-                                    itemsPerPageOptions={[
-                                        {
-                                            label: '10',
-                                            value: '10'
-                                        },
-                                        {
-                                            label: '25',
-                                            value: '25'
-                                        },
-                                        {
-                                            label: '50',
-                                            value: '50'
-                                        }
-                                    ]}
-                                />
+                    <Pagination
+                        accessibleName="Pagination"
+                        onChange={this.handlePagination}
+                        pageLimit={pagination.perPage}
+                        start={pagination.start}
+                        totalItems={pagination.totalResults}
+                        itemsPerPageOptions={[
+                            {
+                                label: '10',
+                                value: '10'
+                            },
+                            {
+                                label: '25',
+                                value: '25'
+                            },
+                            {
+                                label: '50',
+                                value: '50'
+                            }
+                        ]}
+                    />
 
-                            </div> : <div className="NoResults">No studies found.</div>}
-                        </div>}
+                </div> : <div className="NoResults">No studies found.</div>}
+            </div>}
 
-                        {representation === 'map' && <div className={classNames('Map', isLoadingMap && 'Loading')}>
-                            <StudiesMap studies={map} />
-                        </div>}
-                    </div>
-                    <div
-                         className={classNames('SideCol', 'Filters',
-                             representation === 'map' && 'StickyDisabled',
-                             ! displayFilter && 'Hidden',
-                             (representation === 'map' && displayFilter) && 'Overlay')}>
-                        <Sticky>
-                            {({style, isSticky}) => (
-                                <Filters filters={filterOptions}
-                                         isLoading={isLoadingFilters}
-                                         style={style}
-                                         sticky={isSticky}
-                                         onFilter={(filter) => this.handleFilter(filter)}
-                                 />
-                            )}
-                        </Sticky>
-                    </div>
-                </div>
-            </StickyContainer>;
+            {representation === 'map' && <div className={classNames('Map', isLoadingMap && 'Loading')}>
+                <StudiesMap studies={map}/>
+            </div>}
+        </div>;
     }
 }

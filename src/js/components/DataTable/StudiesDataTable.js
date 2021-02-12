@@ -3,12 +3,12 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Heading, Icon, IconCell} from "@castoredc/matter";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
-import Filters from "../Filters";
 import './DataTable.scss';
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
+import StudyFilters from "../Filters/StudyFilters";
 
 export default class StudiesDataTable extends Component {
     constructor(props) {
@@ -220,7 +220,9 @@ export default class StudiesDataTable extends Component {
                 </DataGridContainer>
             </div>
             <div className="Filters FilterCol">
-                <Filters filters={filterOptions}
+                <Heading type="Subsection">Search studies</Heading>
+
+                <StudyFilters filters={filterOptions}
                          onFilter={(filter) => this.handleFilter(filter)}
                 />
             </div>

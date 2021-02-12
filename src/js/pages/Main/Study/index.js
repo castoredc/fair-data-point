@@ -13,7 +13,9 @@ import DatasetList from "../../../components/List/DatasetList";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
-import {Heading} from "@castoredc/matter";
+import {Heading, Tooltip} from "@castoredc/matter";
+import MetadataItemGroup from "../../../components/MetadataItem/MetadataItemGroup";
+import moment from "moment";
 
 export default class Study extends Component {
     constructor(props) {
@@ -92,16 +94,32 @@ export default class Study extends Component {
                         <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
                     </div>
                     <div className="SideCol">
-                        {study.metadata.logo && <div className="InformationLogo">
-                            <img src={study.metadata.logo} alt={'Logo'}/>
-                        </div>}
-                        {study.metadata.studyType && <MetadataItem label="Type" value={StudyType[study.metadata.studyType]} />}
-                        {study.metadata.methodType && <MetadataItem label="Method" value={MethodType[study.metadata.methodType]} />}
-                        {study.metadata.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={study.metadata.estimatedEnrollment} />}
-                        {study.metadata.organizations.length > 0 && <Organizations organizations={study.metadata.organizations} />}
+                        <div className="MetadataSideBar">
+                            {study.metadata.logo && <div className="InformationLogo">
+                                <img src={study.metadata.logo} alt={'Logo'}/>
+                            </div>}
+                            {study.metadata.studyType && <MetadataItem label="Type" value={StudyType[study.metadata.studyType]} />}
+                            {study.metadata.methodType && <MetadataItem label="Method" value={MethodType[study.metadata.methodType]} />}
+                            {study.metadata.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={study.metadata.estimatedEnrollment} />}
+                            {study.metadata.organizations.length > 0 && <Organizations organizations={study.metadata.organizations} />}
+                            {study.metadata.version && <>
+                                <hr />
+                                <MetadataItem label="Metadata version" value={study.metadata.version.metadata}/>
+                            </>}
 
-                        {/*{study.language && <MetadataItem label="Language" url={study.language.url} value={study.language.name} />}*/}
-                        {/*{study.landingPage && <MetadataItem label="Landing page" value={study.landingPage} />}*/}
+                            {(study.issued || study.modified) && <MetadataItemGroup>
+                                {study.issued && <MetadataItem label="Issued">
+                                    <Tooltip content={moment(study.issued).format('DD-MM-YYYY HH:mm:ss')}>
+                                        {moment(study.issued).format('DD-MM-YYYY')}
+                                    </Tooltip>
+                                </MetadataItem>}
+                                {study.modified && <MetadataItem label="Modified">
+                                    <Tooltip content={moment(study.modified).format('DD-MM-YYYY HH:mm:ss')}>
+                                        {moment(study.modified).format('DD-MM-YYYY')}
+                                    </Tooltip>
+                                </MetadataItem>}
+                            </MetadataItemGroup>}
+                        </div>
                     </div>
                 </>}
             </MainBody>

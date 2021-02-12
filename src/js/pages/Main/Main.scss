@@ -3,6 +3,7 @@
 .MainApp {
     .StickyContainer {
         width: 100%;
+        display: flex;
     }
 
     &.Embedded .container {
@@ -12,6 +13,15 @@
     .MainCol, .SideCol {
         position: relative;
         width: 100%;
+    }
+
+    .SideCol {
+        .SideColItem {
+            margin-top: 24px;
+            &.Hidden {
+                display: none;
+            }
+        }
     }
 
     @media (min-width: 768px) {
@@ -91,60 +101,21 @@
         color: $neutral-90;
     }
 
-    .Department {
-        font-size: 12px;
-        color: #8c95a4;
-        border-radius: 5px;
-        border: solid 1px #b5bac4;
-        background-color: #ffffff;
-        padding: 4px 8px;
-        display: none;
-    }
-
-    .Department.Show {
-        display: inline-block;
-    }
-
     .Contacts {
         margin-bottom: 18px;
     }
 
-    .Organization {
-        margin-bottom: 10px;
+    .LargeList {
+        width: 100%;
+        transition: all 0.3s ease;
 
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        .Center {
-            &.HasDepartment {
-                cursor: pointer;
-                -khtml-user-select: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-            }
-
-            .ToggleArrow {
-                float: none;
-                display: inline-block;
-                margin-left: 3px;
-                width: 12px;
-                height: 12px;
-
-                svg {
-                    vertical-align: initial;
-                }
-            }
+        &.Loading {
+            opacity: 0.5;
         }
     }
 
-    .Datasets {
-        transition: all 0.3s ease;
-
-        .Loading {
-            opacity: 0.5;
-        }
+    .Map {
+        width: 100%;
     }
 
     main {

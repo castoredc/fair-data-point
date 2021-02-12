@@ -3,44 +3,34 @@ import React, {Component} from 'react'
 import './MetadataItem.scss'
 import {classNames} from "../../util";
 import {Icon} from "@castoredc/matter";
+import Department from "./Department";
 
 export default class Organization extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            showDepartment: false,
-        };
-    }
-
-    toggleDepartment = () => {
-        const { showDepartment } = this.state;
-        const { department } = this.props;
-
-        if(!department) {
-            return false;
-        }
-
-        this.setState({
-            showDepartment: !showDepartment,
-        });
-    };
-
     render() {
-        const { name, department, country, city } = this.props;
-        const { showDepartment } = this.state;
+        const { organization, department, small } = this.props;
+
+        const {name, country, city} = organization;
+
+        if(small) {
+            return <div className="Organization">
+                <div className={classNames('Center')}>
+                    {name}
+
+                    {department && <>,&nbsp;
+                        <Department small={small} {...department} />
+                    </>}
+                </div>
+            </div>;
+        }
 
         return <div className="Organization">
             <div className={classNames('Center', department && 'HasDepartment')} onClick={this.toggleDepartment}>
                 {name}
 
-                {department && <div className={classNames('ToggleArrow', showDepartment && 'Active')}>
-                    <Icon type="arrowBottom" width="12px" height="12px" />
-                </div>}
+                {department && <>,&nbsp;
+                    <Department small={small} {...department} />
+                </>}
             </div>
-            {department && <div className={classNames('Department', showDepartment && 'Show')}>
-                {department}
-            </div>}
             <div className="Location">
                 {city}, {country}
             </div>

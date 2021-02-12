@@ -9,6 +9,11 @@ import Header from "../../../components/Layout/Header";
 import MainBody from "../../../components/Layout/MainBody";
 import {Heading} from "@castoredc/matter";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
+import MetadataItem from "../../../components/MetadataItem";
+import Publishers from "../../../components/MetadataItem/Publishers";
+import Language from "../../../components/MetadataItem/Language";
+import License from "../../../components/MetadataItem/License";
+import MetadataSideBar from "../../../components/MetadataSideBar";
 
 export default class FAIRDataPointMain extends Component {
     constructor(props) {
@@ -43,7 +48,7 @@ export default class FAIRDataPointMain extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the FAIR Data Point information';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
@@ -62,13 +67,13 @@ export default class FAIRDataPointMain extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalogs';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     render() {
-        const { fdp, catalogs, isLoadingFDP, isLoadingCatalogs } = this.state;
-        const { user, embedded, location } = this.props;
+        const {fdp, catalogs, isLoadingFDP, isLoadingCatalogs} = this.state;
+        const {user, embedded, location} = this.props;
 
         const breadcrumbs = getBreadCrumbs(location, {fdp});
 
@@ -80,31 +85,36 @@ export default class FAIRDataPointMain extends Component {
             embedded={embedded}
             isLoading={(isLoadingFDP || isLoadingCatalogs)}
         >
-            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
+            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title}/>
 
             <MainBody isLoading={(isLoadingFDP || isLoadingCatalogs)}>
-                <div className="MainCol">
-                    {(fdp && fdp.metadata.description && !embedded) &&
+                {fdp && <>
+                    <div className="MainCol">
+                        {(fdp.metadata.description && !embedded) &&
                         <div className="InformationDescription">
                             {localizedText(fdp.metadata.description, 'en', true)}
                         </div>}
 
-                    <Heading type="Subsection">Catalogs</Heading>
-                    <div className="Description">
-                        Catalogs are collections metadata about resources, such as studies or datasets.
-                    </div>
+                        <Heading type="Subsection">Catalogs</Heading>
+                        <div className="Description">
+                            Catalogs are collections metadata about resources, such as studies or datasets.
+                        </div>
 
-                    {catalogs.length > 0 ? catalogs.map((item, index) => {
-                        if(item.hasMetadata === false) {
-                            return null;
-                        }
-                        return <ListItem key={index}
-                                         newWindow={embedded}
-                                         link={item.relativeUrl}
-                                         title={localizedText(item.metadata.title, 'en')}
-                                         description={localizedText(item.metadata.description, 'en')} />
-                    }) : <div className="NoResults">No catalogs found.</div>}
-                </div>
+                        {catalogs.length > 0 ? catalogs.map((item, index) => {
+                            if (item.hasMetadata === false) {
+                                return null;
+                            }
+                            return <ListItem key={index}
+                                             newWindow={embedded}
+                                             link={item.relativeUrl}
+                                             title={localizedText(item.metadata.title, 'en')}
+                                             description={localizedText(item.metadata.description, 'en')}/>
+                        }) : <div className="NoResults">No catalogs found.</div>}
+                    </div>
+                    <div className="SideCol">
+                        <MetadataSideBar type="fdp" metadata={fdp.metadata} />
+                    </div>
+                </>}
             </MainBody>
         </Layout>;
     }
