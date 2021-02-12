@@ -6,6 +6,7 @@ namespace App\Api\Resource\FAIRDataPoint;
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\FAIRDataPoint;
+use const DATE_ATOM;
 
 class FAIRDataPointApiResource implements ApiResource
 {
@@ -28,6 +29,7 @@ class FAIRDataPointApiResource implements ApiResource
         ];
 
         if ($this->fairDataPoint->hasMetadata()) {
+            $first = $this->fairDataPoint->getFirstMetadata();
             $metadata = $this->fairDataPoint->getLatestMetadata();
 
             $fdp['metadata'] = [
@@ -39,8 +41,8 @@ class FAIRDataPointApiResource implements ApiResource
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
                 'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
                 'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
-                'created' => $metadata->getCreatedAt(),
-                'updated' => $metadata->getUpdatedAt(),
+                'issued' => $first->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

@@ -84,7 +84,7 @@ class Person extends Agent
 
     public function getRelativeUrl(): string
     {
-        return '/agent/person/' . $this->getSlug();
+        return '/fdp/person/' . $this->getSlug();
     }
 
     public function getFirstName(): string

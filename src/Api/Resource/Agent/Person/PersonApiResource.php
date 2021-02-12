@@ -29,6 +29,7 @@ class PersonApiResource implements ApiResource
         return [
             'type' => 'person',
             'id' => $this->person->getId(),
+            'slug' => $this->person->getSlug(),
             'name' => $this->person->getName(),
             'firstName' => $this->person->getFirstName(),
             'middleName' => $this->person->getMiddleName(),

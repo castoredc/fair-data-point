@@ -11,6 +11,7 @@ use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
+use function array_merge;
 
 class AgentsApiResource implements ApiResource
 {
@@ -30,28 +31,32 @@ class AgentsApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $data = [];
+        $organizations = [];
+        $departments = [];
+        $persons = [];
 
         foreach ($this->agents as $agent) {
             if ($agent instanceof Organization) {
-                $data[] = [
+                $organizations[] = [
                     'type' => 'organization',
+                    'hasDepartment' => false,
                     'organization' => (new OrganizationApiResource($agent))->toArray(),
                 ];
             } elseif ($agent instanceof Department) {
-                $data[] = [
+                $departments[] = [
                     'type' => 'organization',
+                    'hasDepartment' => true,
                     'department' => (new DepartmentApiResource($agent, false))->toArray(),
                     'organization' => (new OrganizationApiResource($agent->getOrganization()))->toArray(),
                 ];
             } elseif ($agent instanceof Person) {
-                $data[] = [
+                $persons[] = [
                     'type' => 'person',
                     'person' => (new PersonApiResource($agent))->toArray(),
                 ];
             }
         }
 
-        return $data;
+        return array_merge($persons, $departments, $organizations);
     }
 }

@@ -145,6 +145,11 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity
         return $this->databaseInformation;
     }
 
+    public function getFirstMetadata(): ?DistributionMetadata
+    {
+        return $this->metadata->isEmpty() ? null : $this->metadata->first();
+    }
+
     public function getLatestMetadata(): ?DistributionMetadata
     {
         return $this->metadata->isEmpty() ? null : $this->metadata->last();

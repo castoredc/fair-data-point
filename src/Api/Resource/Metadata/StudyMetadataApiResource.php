@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Metadata;
 
-use App\Api\Resource\Agent\Department\DepartmentApiResource;
-use App\Api\Resource\Agent\Person\PersonApiResource;
+use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
-use App\Entity\FAIRData\Agent\Department;
-use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Metadata\StudyMetadata;
 
 class StudyMetadataApiResource implements ApiResource
@@ -24,21 +21,6 @@ class StudyMetadataApiResource implements ApiResource
      */
     public function toArray(): array
     {
-        $contacts = [];
-        foreach ($this->studyMetadata->getContacts() as $contact) {
-            if (! $contact instanceof Person) {
-                continue;
-            }
-
-            $contacts[] = (new PersonApiResource($contact))->toArray();
-        }
-
-        $organizations = [];
-        foreach ($this->studyMetadata->getDepartments() as $department) {
-            /** @var Department $department */
-            $organizations[] = (new DepartmentApiResource($department, true))->toArray();
-        }
-
         return [
             'studyId' => $this->studyMetadata->getStudy()->getId(),
             'id' => $this->studyMetadata->getId(),
@@ -55,8 +37,8 @@ class StudyMetadataApiResource implements ApiResource
             'recruitmentStatus' => $this->studyMetadata->getRecruitmentStatus() !== null ? $this->studyMetadata->getRecruitmentStatus()->toString() : null,
             'methodType' => $this->studyMetadata->getMethodType()->toString(),
             'logo' => $this->studyMetadata->getLogo() !== null ? $this->studyMetadata->getLogo()->getValue() : null,
-            'contacts' => $contacts,
-            'organizations' => $organizations,
+            'contacts' => (new AgentsApiResource($this->studyMetadata->getContacts()->toArray()))->toArray(),
+            'organizations' => (new AgentsApiResource($this->studyMetadata->getCenters()->toArray()))->toArray(),
             'version' => [
                 'metadata' => $this->studyMetadata->getVersion()->getValue(),
             ],

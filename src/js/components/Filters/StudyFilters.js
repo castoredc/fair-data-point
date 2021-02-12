@@ -14,13 +14,13 @@ import {classNames} from "../../util";
 import Dropdown from "../Input/Dropdown";
 import {Heading} from "@castoredc/matter";
 
-export default class Filters extends Component {
+export default class StudyFilters extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isLoadingCountries: true,
-            hasLoadedCountries: false,
+            isLoadingFilters: true,
             data: {
                 search: '',
                 country: [],
@@ -39,72 +39,17 @@ export default class Filters extends Component {
     }
 
     componentDidMount() {
-        const { isLoading } = this.props;
-
-        if(! isLoading) {
-            this.parseOptions();
-        }
-    };
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { isLoading } = this.props;
-
-        if(! isLoading && prevProps.isLoading !== isLoading) {
-            this.parseOptions();
-        }
-    }
-
-    parseOptions = () => {
-        const { filters } = this.props;
-        const { options } = this.state;
-
-        const studyTypes = filters.studyType.map((studyType) => {
-            return {
-                value: studyType,
-                label: StudyType[studyType]
-            }
-        });
-
-        const methodTypes = filters.methodType.map((methodType) => {
-            return {
-                value: methodType,
-                label: MethodType[methodType]
-            }
-        });
-
-        this.setState({
-            options: {
-                ...options,
-                studyType: studyTypes,
-                methodType: methodTypes
-            },
-        }, () => {
-            this.getCountries();
-        });
+        this.getCountries();
     };
 
     getCountries = () => {
-        const { filters } = this.props;
-        const { options } = this.state;
-
         axios.get('/api/countries')
             .then((response) => {
-                const countries = response.data;
-
-                const countryOptions = filters.country.map((country) => {
-                    return {
-                        value: country,
-                        label: countries.filter(({value}) => value === country)[0].label,
-                    }
-                });
-
                 this.setState({
-                    options: {
-                        ...options,
-                        country: countryOptions
-                    },
+                    countries: response.data,
                     isLoadingCountries: false,
-                    hasLoadedCountries: true
+                }, () => {
+                    this.getFilters();
                 });
             })
             .catch((error) => {
@@ -118,6 +63,54 @@ export default class Filters extends Component {
                 } else {
                     toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
+            });
+    };
+
+    getFilters = () => {
+        const {catalog} = this.props;
+        const {countries} = this.state;
+
+        axios.get(catalog ? '/api/catalog/' + catalog.slug + '/study/filters' : '/api/study/filters')
+            .then((response) => {
+                const filters = response.data;
+
+                const studyTypes = filters.studyType.map((studyType) => {
+                    return {
+                        value: studyType,
+                        label: StudyType[studyType]
+                    }
+                });
+
+                const methodTypes = filters.methodType.map((methodType) => {
+                    return {
+                        value: methodType,
+                        label: MethodType[methodType]
+                    }
+                });
+
+                const countryOptions = filters.country.map((country) => {
+                    return {
+                        value: country,
+                        label: countries.filter(({value}) => value === country)[0].label,
+                    }
+                });
+
+                this.setState({
+                    options: {
+                        studyType: studyTypes,
+                        methodType: methodTypes,
+                        country: countryOptions
+                    },
+                    isLoadingFilters: false,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoadingFilters: false,
+                });
+
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the filters';
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
@@ -150,7 +143,7 @@ export default class Filters extends Component {
     };
 
     render() {
-        const { style, className, overlay, sticky, hidden, filters, isLoading } = this.props;
+        const { style, className, overlay, sticky, hidden, isLoading } = this.props;
         const { isLoadingCountries, data, options } = this.state;
 
         if(isLoadingCountries || isLoading)
@@ -158,11 +151,11 @@ export default class Filters extends Component {
             return <InlineLoader />;
         }
 
-        const showStudyType = filters.studyType.length > 0;
-        const showMethodType = filters.methodType.length > 0;
-        const showCountry = filters.country.length > 0;
+        const showStudyType = options.studyType.length > 0;
+        const showMethodType = options.methodType.length > 0;
+        const showCountry = options.country.length > 0;
 
-        const showFilters = (filters.studyType.length + filters.methodType.length + filters.country.length) > 0;
+        const showFilters = (options.studyType.length + options.methodType.length + options.country.length) > 0;
 
         if(hidden) {
             return null;
@@ -174,8 +167,6 @@ export default class Filters extends Component {
                 onSubmit={() => {}}
             >
                 <div className="FilterBlock">
-                    <Heading type="Subsection">Search studies</Heading>
-
                     <Input
                         name="search"
                         onChange={this.handleChange}

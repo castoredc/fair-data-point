@@ -162,6 +162,11 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity
         return $this->distributions->contains($distribution);
     }
 
+    public function getFirstMetadata(): ?DatasetMetadata
+    {
+        return $this->metadata->isEmpty() ? null : $this->metadata->first();
+    }
+
     public function getLatestMetadata(): ?DatasetMetadata
     {
         return $this->metadata->isEmpty() ? null : $this->metadata->last();

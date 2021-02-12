@@ -12,6 +12,7 @@ use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Service\UriHelper;
+use const DATE_ATOM;
 
 class DistributionApiResource implements ApiResource
 {
@@ -43,6 +44,7 @@ class DistributionApiResource implements ApiResource
         ];
 
         if ($this->distribution->hasMetadata()) {
+            $first = $this->distribution->getFirstMetadata();
             $metadata = $this->distribution->getLatestMetadata();
 
             $distribution['metadata'] = [
@@ -54,8 +56,8 @@ class DistributionApiResource implements ApiResource
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
                 'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
                 'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
-                'created' => $metadata->getCreatedAt(),
-                'updated' => $metadata->getUpdatedAt(),
+                'issued' => $first->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

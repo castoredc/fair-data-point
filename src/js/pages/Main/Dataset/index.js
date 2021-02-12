@@ -10,6 +10,11 @@ import Header from "../../../components/Layout/Header";
 import MainBody from "../../../components/Layout/MainBody";
 import {Heading} from "@castoredc/matter";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
+import Publishers from "../../../components/MetadataItem/Publishers";
+import MetadataItem from "../../../components/MetadataItem";
+import Language from "../../../components/MetadataItem/Language";
+import License from "../../../components/MetadataItem/License";
+import MetadataSideBar from "../../../components/MetadataSideBar";
 
 export default class Dataset extends Component {
     constructor(props) {
@@ -86,32 +91,39 @@ export default class Dataset extends Component {
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title}/>
 
             <MainBody isLoading={isLoadingDataset}>
-                {dataset && <div className="MainCol">
-                    {dataset.metadata.description && <div
-                        className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>}
+                {dataset && <>
+                    <div className="MainCol">
+                        {dataset.metadata.description && <div
+                            className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>}
 
-                    {isLoadingDistributions ? <InlineLoader/> : distributions.length > 0 ? <div>
-                        <Heading type="Subsection">Distributions</Heading>
-                        <div className="Description">
-                            Distributions represent a specific available form of a dataset. Each dataset might be
-                            available in different forms, these forms might represent different formats of the dataset
-                            or different endpoints.
-                        </div>
-                        {distributions.map((distribution) => {
-                                return <ListItem key={distribution.id}
-                                                 newWindow={embedded}
-                                                 link={{
-                                                     pathname: distribution.relativeUrl,
-                                                     state: breadcrumbs.current ? breadcrumbs.current.state : null
-                                                 }}
-                                                 title={localizedText(distribution.metadata.title, 'en')}
-                                                 description={localizedText(distribution.metadata.description, 'en')}
-                                                 smallIcon={(distribution.accessRights === 2 || distribution.accessRights === 3) && 'lock'}
-                                />
-                            }
-                        )}
-                    </div> : <div className="NoResults">This dataset does not have any associated distributions.</div>}
-                </div>}
+                        {isLoadingDistributions ? <InlineLoader/> : distributions.length > 0 ? <div>
+                                <Heading type="Subsection">Distributions</Heading>
+                                <div className="Description">
+                                    Distributions represent a specific available form of a dataset. Each dataset might be
+                                    available in different forms, these forms might represent different formats of the
+                                    dataset
+                                    or different endpoints.
+                                </div>
+                                {distributions.map((distribution) => {
+                                        return <ListItem key={distribution.id}
+                                                         newWindow={embedded}
+                                                         link={{
+                                                             pathname: distribution.relativeUrl,
+                                                             state: breadcrumbs.current ? breadcrumbs.current.state : null
+                                                         }}
+                                                         title={localizedText(distribution.metadata.title, 'en')}
+                                                         description={localizedText(distribution.metadata.description, 'en')}
+                                                         smallIcon={(distribution.accessRights === 2 || distribution.accessRights === 3) && 'lock'}
+                                        />
+                                    }
+                                )}
+                            </div> :
+                            <div className="NoResults">This dataset does not have any associated distributions.</div>}
+                    </div>
+                    <div className="SideCol">
+                        <MetadataSideBar type="dataset" metadata={dataset.metadata} />
+                    </div>
+                </>}
             </MainBody>
         </Layout>;
     }

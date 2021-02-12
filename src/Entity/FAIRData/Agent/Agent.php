@@ -69,6 +69,6 @@ abstract class Agent
 
     public function getRelativeUrl(): string
     {
-        return '/agent/generic/' . $this->getSlug();
+        return '/fdp/agent/' . $this->getSlug();
     }
 }

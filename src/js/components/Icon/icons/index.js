@@ -18,6 +18,7 @@ import repeated from './repeated.svg'
 import versions from './versions.svg'
 import warning from './warning.svg'
 import fair from './fair.svg'
+import orcid from './orcid.svg'
 
 export default {
     flagNL,
@@ -39,5 +40,6 @@ export default {
     repeated,
     versions,
     warning,
-    fair
+    fair,
+    orcid
 };

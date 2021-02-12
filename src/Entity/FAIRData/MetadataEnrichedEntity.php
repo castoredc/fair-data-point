@@ -9,5 +9,7 @@ interface MetadataEnrichedEntity
 {
     public function hasMetadata(): bool;
 
+    public function getFirstMetadata(): ?Metadata;
+
     public function getLatestMetadata(): ?Metadata;
 }

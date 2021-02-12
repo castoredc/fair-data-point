@@ -27,6 +27,7 @@ class DepartmentApiResource implements ApiResource
         $data = [
             'type' => 'department',
             'id' => $this->department->getId(),
+            'slug' => $this->department->getSlug(),
             'name' => $this->department->getName(),
             'additionalInformation' => $this->department->getAdditionalInformation(),
         ];
