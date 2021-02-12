@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\Api\Controller\FAIRData;
 
 use App\Api\Controller\ApiController;
+use App\Api\Resource\Language\LanguageApiResource;
 use App\Command\Language\GetLanguagesCommand;
+use App\Entity\FAIRData\Language;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -17,7 +20,7 @@ class LanguagesApiController extends ApiController
     /**
      * @Route("/api/languages", name="api_languages")
      */
-    public function countries(MessageBusInterface $bus): Response
+    public function languages(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetLanguagesCommand());
 
@@ -25,5 +28,14 @@ class LanguagesApiController extends ApiController
         assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse($handledStamp->getResult()->toArray());
+    }
+
+    /**
+     * @Route("/api/language/{code}", name="api_language")
+     * @ParamConverter("language", options={"mapping": {"code": "code"}})
+     */
+    public function language(Language $language): Response
+    {
+        return new JsonResponse((new LanguageApiResource($language))->toArray());
     }
 }
