@@ -100,6 +100,11 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
         $this->catalogs->add($catalog);
     }
 
+    public function getFirstMetadata(): ?FAIRDataPointMetadata
+    {
+        return $this->metadata->isEmpty() ? null : $this->metadata->first();
+    }
+
     public function getLatestMetadata(): ?FAIRDataPointMetadata
     {
         return $this->metadata->isEmpty() ? null : $this->metadata->last();

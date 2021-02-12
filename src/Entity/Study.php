@@ -133,6 +133,11 @@ abstract class Study implements AccessibleEntity
         return $this->metadata;
     }
 
+    public function getFirstMetadata(): ?StudyMetadata
+    {
+        return $this->metadata->isEmpty() ? null : $this->metadata->first();
+    }
+
     public function getLatestMetadata(): ?StudyMetadata
     {
         return $this->metadata->isEmpty() ? null : $this->metadata->last();

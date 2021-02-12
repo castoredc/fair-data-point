@@ -211,6 +211,11 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity
         $this->submissionAccessesData = $submissionAccessesData;
     }
 
+    public function getFirstMetadata(): ?CatalogMetadata
+    {
+        return $this->metadata->isEmpty() ? null : $this->metadata->first();
+    }
+
     public function getLatestMetadata(): ?CatalogMetadata
     {
         return $this->metadata->isEmpty() ? null : $this->metadata->last();
