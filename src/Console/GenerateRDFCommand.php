@@ -73,13 +73,15 @@ class GenerateRDFCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption(
-            'force',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'Force update',
-            false
-        );
+        $this
+            ->setDescription('Generates and stores RDF of cached distributions')
+            ->addOption(
+                'force',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Force update',
+                false
+            );
     }
 
     /** @inheritDoc */
@@ -293,6 +295,6 @@ class GenerateRDFCommand extends Command
             $this->em->flush();
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
