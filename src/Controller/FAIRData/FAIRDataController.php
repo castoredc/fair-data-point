@@ -71,6 +71,7 @@ abstract class FAIRDataController extends AbstractController
         ];
     }
 
+    /** @return mixed[] */
     protected function getAgentSeoTexts(Agent $agent): array
     {
         return [
