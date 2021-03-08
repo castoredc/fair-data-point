@@ -2879,27 +2879,22 @@
         },
         {
             "name": "psr/container",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=7.2.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Psr\\Container\\": "src/"
@@ -2912,7 +2907,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common Container Interface (PHP FIG PSR-11)",
@@ -2926,9 +2921,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/master"
+                "source": "https://github.com/php-fig/container/tree/1.1.1"
             },
-            "time": "2017-02-14T16:28:37+00:00"
+            "time": "2021-03-05T17:36:06+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -3414,16 +3409,16 @@
         },
         {
             "name": "symfony/amqp-messenger",
-            "version": "v5.2.1",
+            "version": "v5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/amqp-messenger.git",
-                "reference": "a7f681b022f9cfb88febc12face05b12a47232c1"
+                "reference": "cf309a35ed08caa77886ee6a352b8491c7681424"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/amqp-messenger/zipball/a7f681b022f9cfb88febc12face05b12a47232c1",
-                "reference": "a7f681b022f9cfb88febc12face05b12a47232c1",
+                "url": "https://api.github.com/repos/symfony/amqp-messenger/zipball/cf309a35ed08caa77886ee6a352b8491c7681424",
+                "reference": "cf309a35ed08caa77886ee6a352b8491c7681424",
                 "shasum": ""
             },
             "require": {
@@ -3463,7 +3458,7 @@
             "description": "Symfony AMQP extension Messenger Bridge",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/amqp-messenger/tree/v5.2.1"
+                "source": "https://github.com/symfony/amqp-messenger/tree/v5.2.4"
             },
             "funding": [
                 {
@@ -3479,7 +3474,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-15T11:52:46+00:00"
+            "time": "2021-01-27T11:19:04+00:00"
         },
         {
             "name": "symfony/asset",
@@ -4169,16 +4164,16 @@
         },
         {
             "name": "symfony/doctrine-messenger",
-            "version": "v5.2.1",
+            "version": "v5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/doctrine-messenger.git",
-                "reference": "8ad222fc5abce88f2b7c9cb91aa53b9f445a5889"
+                "reference": "0b983f2db726ea39aa4884b24f52b9f990f2f864"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/8ad222fc5abce88f2b7c9cb91aa53b9f445a5889",
-                "reference": "8ad222fc5abce88f2b7c9cb91aa53b9f445a5889",
+                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/0b983f2db726ea39aa4884b24f52b9f990f2f864",
+                "reference": "0b983f2db726ea39aa4884b24f52b9f990f2f864",
                 "shasum": ""
             },
             "require": {
@@ -4222,7 +4217,7 @@
             "description": "Symfony Doctrine Messenger Bridge",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/doctrine-messenger/tree/v5.2.1"
+                "source": "https://github.com/symfony/doctrine-messenger/tree/v5.2.4"
             },
             "funding": [
                 {
@@ -4238,7 +4233,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-10T19:16:15+00:00"
+            "time": "2021-03-04T17:38:24+00:00"
         },
         {
             "name": "symfony/dotenv",
@@ -5323,16 +5318,16 @@
         },
         {
             "name": "symfony/messenger",
-            "version": "v5.2.1",
+            "version": "v5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/messenger.git",
-                "reference": "3fc7766f5fa6c21096fa962a01684868b68f1f3c"
+                "reference": "50eab3bf8f110a17335654c06eb52c5152974a73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/messenger/zipball/3fc7766f5fa6c21096fa962a01684868b68f1f3c",
-                "reference": "3fc7766f5fa6c21096fa962a01684868b68f1f3c",
+                "url": "https://api.github.com/repos/symfony/messenger/zipball/50eab3bf8f110a17335654c06eb52c5152974a73",
+                "reference": "50eab3bf8f110a17335654c06eb52c5152974a73",
                 "shasum": ""
             },
             "require": {
@@ -5350,7 +5345,7 @@
                 "symfony/http-kernel": "<4.4"
             },
             "require-dev": {
-                "psr/cache": "~1.0",
+                "psr/cache": "^1.0|^2.0|^3.0",
                 "symfony/console": "^4.4|^5.0",
                 "symfony/dependency-injection": "^4.4|^5.0",
                 "symfony/event-dispatcher": "^4.4|^5.0",
@@ -5388,10 +5383,10 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Messenger Component",
+            "description": "Helps applications send and receive messages to/from other applications or via message queues",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/messenger/tree/v5.2.1"
+                "source": "https://github.com/symfony/messenger/tree/v5.2.4"
             },
             "funding": [
                 {
@@ -5407,7 +5402,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-18T07:27:35+00:00"
+            "time": "2021-02-05T17:02:58+00:00"
         },
         {
             "name": "symfony/monolog-bridge",
@@ -6274,7 +6269,7 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -6337,7 +6332,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.22.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.22.1"
             },
             "funding": [
                 {
@@ -6598,16 +6593,16 @@
         },
         {
             "name": "symfony/redis-messenger",
-            "version": "v5.2.1",
+            "version": "v5.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/redis-messenger.git",
-                "reference": "c9ab1c7467657661554e7010a59f47f723f69c93"
+                "reference": "7e68914bf35cda948ee4d9081b8eaed9fd783fe5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/redis-messenger/zipball/c9ab1c7467657661554e7010a59f47f723f69c93",
-                "reference": "c9ab1c7467657661554e7010a59f47f723f69c93",
+                "url": "https://api.github.com/repos/symfony/redis-messenger/zipball/7e68914bf35cda948ee4d9081b8eaed9fd783fe5",
+                "reference": "7e68914bf35cda948ee4d9081b8eaed9fd783fe5",
                 "shasum": ""
             },
             "require": {
@@ -6645,7 +6640,7 @@
             "description": "Symfony Redis extension Messenger Bridge",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/redis-messenger/tree/v5.2.1"
+                "source": "https://github.com/symfony/redis-messenger/tree/v5.2.4"
             },
             "funding": [
                 {
@@ -6661,7 +6656,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-15T11:52:46+00:00"
+            "time": "2021-01-27T11:24:50+00:00"
         },
         {
             "name": "symfony/routing",
