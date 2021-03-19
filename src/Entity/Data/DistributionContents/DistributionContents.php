@@ -64,6 +64,7 @@ abstract class DistributionContents
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Data\Log\DistributionGenerationLog", mappedBy="distribution", cascade={"persist"})
+     * @ORM\OrderBy({"createdAt" = "ASC"})
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Collection<DistributionGenerationLog>
