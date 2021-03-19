@@ -233,7 +233,13 @@ class RDFRenderHelper
             $variables = [];
 
             foreach ($mapping->getEntities() as $entity) {
-                $variables[$entity->getSlug()] = $data->getFieldResultByFieldId($entity->getId())->getValue();
+                $fieldResult = $data->getFieldResultByFieldId($entity->getId());
+
+                if ($fieldResult === null) {
+                    return null;
+                }
+
+                $variables[$entity->getSlug()] = $fieldResult->getValue();
             }
 
             return $this->dataTransformationService->render($mapping->getSyntax(), $variables);
