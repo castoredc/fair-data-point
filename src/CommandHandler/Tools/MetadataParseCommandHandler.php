@@ -34,6 +34,8 @@ class MetadataParseCommandHandler implements MessageHandlerInterface
         }
 
         $fieldContainers = $xml->xpath('//fields');
+
+        /** @phpstan-ignore-next-line */
         if ($fieldContainers === false) {
             throw new NoFieldsFound();
         }
