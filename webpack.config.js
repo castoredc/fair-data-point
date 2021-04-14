@@ -1,6 +1,4 @@
 const Encore = require('@symfony/webpack-encore');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const path = require('path');
 
 Encore
 // The project directory where compiled assets will be stored
@@ -28,15 +26,6 @@ Encore
         test: /\.svg$/,
         loader: 'svg-inline-loader'
     })
-
-    .addLoader({
-        test: /\.(eot|woff|woff2)$/,
-        loader: 'file-loader'
-    })
-
-    .addPlugin(new ManifestPlugin({
-        fileName: path.resolve(__dirname, 'public/build/manifest.json')
-    }))
 
     .enableSingleRuntimeChunk()
 
