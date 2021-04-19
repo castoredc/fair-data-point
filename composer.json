@@ -29,7 +29,7 @@
         "symfony/orm-pack": "^2.0",
         "symfony/security-bundle": "^5.2",
         "symfony/twig-bundle": "^5.2",
-        "symfony/webpack-encore-bundle": "^1.6",
+        "symfony/webpack-encore-bundle": "^1.11",
         "symfony/yaml": "^5.2",
         "twig/twig": "^3.0",
         "symfony/dotenv": "^5.2"
