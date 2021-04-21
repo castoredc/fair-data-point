@@ -5,11 +5,14 @@ namespace App\Command\Study;
 
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudyType;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
 
 class GetPaginatedStudiesCommand
 {
     private ?Catalog $catalog = null;
+
+    private ?Agent $agent = null;
 
     private ?string $search = null;
 
@@ -35,9 +38,10 @@ class GetPaginatedStudiesCommand
      * @param string[]|null     $country
      * @param string[]|null     $hideCatalogs
      */
-    public function __construct(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?array $hideCatalogs, int $perPage, int $page)
+    public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?array $hideCatalogs, int $perPage, int $page)
     {
         $this->catalog = $catalog;
+        $this->agent = $agent;
         $this->search = $search;
         $this->studyType = $studyType;
         $this->methodType = $methodType;
@@ -50,6 +54,11 @@ class GetPaginatedStudiesCommand
     public function getCatalog(): ?Catalog
     {
         return $this->catalog;
+    }
+
+    public function getAgent(): ?Agent
+    {
+        return $this->agent;
     }
 
     public function getSearch(): ?string

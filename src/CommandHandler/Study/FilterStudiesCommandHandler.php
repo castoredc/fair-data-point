@@ -30,6 +30,7 @@ class FilterStudiesCommandHandler implements MessageHandlerInterface
 
         return $datasetRepository->findStudies(
             $command->getCatalog(),
+            $command->getAgent(),
             null,
             $command->getSearch(),
             $command->getStudyType(),

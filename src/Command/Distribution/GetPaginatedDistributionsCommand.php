@@ -1,14 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Command\Dataset;
+namespace App\Command\Distribution;
 
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\Dataset;
 
-class GetPaginatedDatasetsCommand
+class GetPaginatedDistributionsCommand
 {
     private ?Catalog $catalog;
+
+    private ?Dataset $dataset;
 
     private ?Agent $agent;
 
@@ -18,18 +21,12 @@ class GetPaginatedDatasetsCommand
 
     private int $page;
 
-    /** @var string[]|null */
-    private ?array $hideCatalogs = null;
-
-    /**
-     * @param string[]|null $hideCatalogs
-     */
-    public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $hideCatalogs, int $perPage, int $page)
+    public function __construct(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?string $search, int $perPage, int $page)
     {
         $this->catalog = $catalog;
+        $this->dataset = $dataset;
         $this->agent = $agent;
         $this->search = $search;
-        $this->hideCatalogs = $hideCatalogs;
         $this->perPage = $perPage;
         $this->page = $page;
     }
@@ -37,6 +34,11 @@ class GetPaginatedDatasetsCommand
     public function getCatalog(): ?Catalog
     {
         return $this->catalog;
+    }
+
+    public function getDataset(): ?Dataset
+    {
+        return $this->dataset;
     }
 
     public function getAgent(): ?Agent
@@ -57,13 +59,5 @@ class GetPaginatedDatasetsCommand
     public function getPage(): int
     {
         return $this->page;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getHideCatalogs(): ?array
-    {
-        return $this->hideCatalogs;
     }
 }
