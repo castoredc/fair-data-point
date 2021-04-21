@@ -8,7 +8,6 @@ use App\Api\Resource\Metadata\StudyMetadataApiResource;
 use App\Api\Resource\RoleBasedApiResource;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
-use const DATE_ATOM;
 
 class StudyApiResource extends RoleBasedApiResource
 {
@@ -47,8 +46,9 @@ class StudyApiResource extends RoleBasedApiResource
             'sourceId' => $this->study->getSourceId(),
             'sourceServer' => $sourceServer,
             'published' => $this->study->isPublished(),
-            'issued' => $hasMetadata ? $firstMetadata->getCreatedAt()->format(DATE_ATOM) : null,
-            'modified' => $hasMetadata ? $dbMetadata->getCreatedAt()->format(DATE_ATOM) : null,
+            'count' => [
+                'dataset' => $this->study->getDatasets()->count(),
+            ],
         ];
 
         if ($this->isAdmin) {

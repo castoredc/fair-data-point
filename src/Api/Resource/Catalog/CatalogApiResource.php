@@ -7,6 +7,7 @@ use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Catalog;
+use function count;
 use const DATE_ATOM;
 
 class CatalogApiResource implements ApiResource
@@ -29,6 +30,10 @@ class CatalogApiResource implements ApiResource
             'slug' => $this->catalog->getSlug(),
             'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
             'hasMetadata' => $this->catalog->hasMetadata(),
+            'count' => [
+                'study' => count($this->catalog->getStudies(false)),
+                'dataset' => count($this->catalog->getDatasets(false)),
+            ],
         ];
 
         if ($this->catalog->hasMetadata()) {

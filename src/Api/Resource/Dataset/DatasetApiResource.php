@@ -31,6 +31,9 @@ class DatasetApiResource implements ApiResource
             'hasMetadata' => $this->dataset->hasMetadata(),
             'published' => $this->dataset->isPublished(),
             'study' => $this->dataset->getStudy() !== null ? (new StudyApiResource($this->dataset->getStudy()))->toArray() : null,
+            'count' => [
+                'distribution' => $this->dataset->getDistributions()->count(),
+            ],
         ];
 
         if ($this->dataset->hasMetadata()) {
