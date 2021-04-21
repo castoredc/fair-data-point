@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Agent\Person;
 
-use App\Api\Resource\ApiResource;
+use App\Api\Resource\Agent\AgentApiResource;
 use App\Entity\FAIRData\Agent\Person;
+use function array_merge;
+use function assert;
 
-class PersonApiResource implements ApiResource
+class PersonApiResource extends AgentApiResource
 {
-    private Person $person;
-
     public function __construct(Person $person)
     {
-        $this->person = $person;
+        $this->agent = $person;
     }
 
     /**
@@ -20,25 +20,25 @@ class PersonApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $agent = $this->agent;
+        assert($agent instanceof Person);
+
         $affiliations = [];
 
-        foreach ($this->person->getAffiliations() as $affiliation) {
+        foreach ($agent->getAffiliations() as $affiliation) {
             $affiliations[] = (new AffiliationApiResource($affiliation))->toArray();
         }
 
-        return [
+        return array_merge(parent::toArray(), [
             'type' => 'person',
-            'id' => $this->person->getId(),
-            'slug' => $this->person->getSlug(),
-            'name' => $this->person->getName(),
-            'firstName' => $this->person->getFirstName(),
-            'middleName' => $this->person->getMiddleName(),
-            'lastName' => $this->person->getLastName(),
-            'fullName' => $this->person->getFullName(),
-            'nameOrigin' => $this->person->getNameOrigin()->toString(),
-            'email' => $this->person->getEmail(),
-            'orcid' => $this->person->getOrcid() !== null ? $this->person->getOrcid()->getValue() : null,
+            'firstName' => $agent->getFirstName(),
+            'middleName' => $agent->getMiddleName(),
+            'lastName' => $agent->getLastName(),
+            'fullName' => $agent->getFullName(),
+            'nameOrigin' => $agent->getNameOrigin()->toString(),
+            'email' => $agent->getEmail(),
+            'orcid' => $agent->getOrcid() !== null ? $agent->getOrcid()->getValue() : null,
             'affiliations' => $affiliations,
-        ];
+        ]);
     }
 }

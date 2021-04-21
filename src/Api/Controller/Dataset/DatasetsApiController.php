@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Dataset;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
+use App\Api\Request\Metadata\MetadataFilterApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Command\Dataset\GetPaginatedDatasetsCommand;
@@ -29,17 +29,15 @@ class DatasetsApiController extends ApiController
     public function datasets(Request $request, MessageBusInterface $bus): Response
     {
         try {
-            $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
-            assert($parsed instanceof StudyMetadataFilterApiRequest);
+            $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof MetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(
                 new GetPaginatedDatasetsCommand(
                     null,
+                    null,
                     $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry(),
-                    $parsed->getHideCatalogs(),
+                    $parsed->getHideParents(),
                     $parsed->getPerPage(),
                     $parsed->getPage()
                 )

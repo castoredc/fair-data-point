@@ -6,11 +6,11 @@ import moment from "moment";
 
 class MetadataItem extends Component {
     render() {
-        const { label, url, value, children, className, type = "text" } = this.props;
+        const { label, url, value, children, className, type = "text", table } = this.props;
 
         if(children)
         {
-            return <div className={classNames('MetadataItem', className)}>
+            return <div className={classNames('MetadataItem', className, table && 'Table')}>
                 <div className="MetadataItemLabel">{label}</div>
                 <div className="MetadataItemValue">{children}</div>
             </div>;
@@ -32,7 +32,7 @@ class MetadataItem extends Component {
             display = <span>{date.format("MMMM D, YYYY [at] HH:mm")}</span>;
         }
 
-        return <div className={classNames('MetadataItem', className)}>
+        return <div className={classNames('MetadataItem', className, table && 'Table')}>
             <div className="MetadataItemLabel">{label}</div>
             <div className="MetadataItemValue">{display}</div>
         </div>;

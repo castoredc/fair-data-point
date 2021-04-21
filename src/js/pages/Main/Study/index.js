@@ -1,21 +1,18 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {paragraphText} from "../../../util";
-import MetadataItem from "../../../components/MetadataItem";
 import Header from "../../../components/Layout/Header";
-import {MethodType, RecruitmentStatus, StudyType} from "../../../components/MetadataItem/EnumMappings";
+import {RecruitmentStatus} from "../../../components/MetadataItem/EnumMappings";
 import Tags from "../../../components/Tags";
 import Contacts from "../../../components/MetadataItem/Contacts";
-import Organizations from "../../../components/MetadataItem/Organizations";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import DatasetList from "../../../components/List/DatasetList";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
-import {Heading, Tooltip} from "@castoredc/matter";
-import MetadataItemGroup from "../../../components/MetadataItem/MetadataItemGroup";
-import moment from "moment";
+import AssociatedItemsBar from "../../../components/AssociatedItemsBar";
+import MetadataSideBar from "../../../components/MetadataSideBar";
 
 export default class Study extends Component {
     constructor(props) {
@@ -90,36 +87,12 @@ export default class Study extends Component {
                             {tags.length > 0 && <div className="StudyTags"><Tags tags={tags} /></div>}
                         </div>}
 
-                        <Heading type="Subsection">Datasets</Heading>
+                        <AssociatedItemsBar items={study.count} current="dataset" />
+
                         <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
                     </div>
                     <div className="SideCol">
-                        <div className="MetadataSideBar">
-                            {study.metadata.logo && <div className="InformationLogo">
-                                <img src={study.metadata.logo} alt={'Logo'}/>
-                            </div>}
-                            {study.metadata.studyType && <MetadataItem label="Type" value={StudyType[study.metadata.studyType]} />}
-                            {study.metadata.methodType && <MetadataItem label="Method" value={MethodType[study.metadata.methodType]} />}
-                            {study.metadata.estimatedEnrollment && <MetadataItem label="Estimated Enrollment" value={study.metadata.estimatedEnrollment} />}
-                            {study.metadata.organizations.length > 0 && <Organizations organizations={study.metadata.organizations} />}
-                            {study.metadata.version && <>
-                                <hr />
-                                <MetadataItem label="Metadata version" value={study.metadata.version.metadata}/>
-                            </>}
-
-                            {(study.issued || study.modified) && <MetadataItemGroup>
-                                {study.issued && <MetadataItem label="Issued">
-                                    <Tooltip content={moment(study.issued).format('DD-MM-YYYY HH:mm:ss')}>
-                                        {moment(study.issued).format('DD-MM-YYYY')}
-                                    </Tooltip>
-                                </MetadataItem>}
-                                {study.modified && <MetadataItem label="Modified">
-                                    <Tooltip content={moment(study.modified).format('DD-MM-YYYY HH:mm:ss')}>
-                                        {moment(study.modified).format('DD-MM-YYYY')}
-                                    </Tooltip>
-                                </MetadataItem>}
-                            </MetadataItemGroup>}
-                        </div>
+                        <MetadataSideBar type="study" metadata={study.metadata} name={title} />
                     </div>
                 </>}
             </MainBody>

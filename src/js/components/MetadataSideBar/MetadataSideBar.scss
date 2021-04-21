@@ -1,6 +1,6 @@
 @import '../../scss/colors';
 
-.MetadataSideBar {
+.MetadataSideBar, .MetadataModal {
   .Publishers {
     .Publisher {
       margin-bottom: 5px;
@@ -33,7 +33,16 @@
       font-size: 12px;
     }
   }
+}
 
+.MetadataSideBar {
+  button {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.MetadataModal {
   hr {
     border-color: $neutral-40;
     border-style: solid;

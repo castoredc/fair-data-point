@@ -9,6 +9,8 @@ import axios from "axios";
 import ToastContent from "../ToastContent";
 import LoadingScreen from "../LoadingScreen";
 import {withRouter} from "react-router-dom";
+import queryString from "query-string";
+import {classNames} from "../../util";
 
 class App extends Component {
     constructor(props) {
@@ -64,8 +66,13 @@ class App extends Component {
     };
 
     render() {
+        const {isLoading, user} = this.state;
+
+        const params = queryString.parse(window.location.search);
+        const embedded = (typeof params.embed !== 'undefined');
+
         return (
-            <div className={this.state.isLoading ? 'App Loading' : 'App Loaded'}>
+            <div className={classNames('App', isLoading && 'Loading', !isLoading && 'Loaded', embedded && 'Embedded')}>
                 <ToastContainer
                     position="top-center"
                     autoClose={5000}
@@ -77,7 +84,7 @@ class App extends Component {
                     draggable={false}
                     pauseOnHover
                 />
-                {this.state.isLoading ? <LoadingScreen showLoading={true}/> : <Routes user={this.state.user} />}
+                {isLoading ? <LoadingScreen showLoading={true} /> : <Routes user={user} embedded={embedded} />}
             </div>
         );
     }

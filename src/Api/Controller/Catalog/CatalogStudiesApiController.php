@@ -48,6 +48,7 @@ class CatalogStudiesApiController extends ApiController
             $envelope = $bus->dispatch(
                 new GetPaginatedStudiesCommand(
                     $catalog,
+                    null,
                     $parsed->getSearch(),
                     $parsed->getStudyType(),
                     $parsed->getMethodType(),

@@ -8,7 +8,7 @@ import Organization from "./Organization";
 
 class Organizations extends Component {
     render() {
-        const { organizations } = this.props;
+        const { organizations, table } = this.props;
 
         const label = 'Organization' + (organizations.length > 1 ? 's' : '');
 
@@ -18,7 +18,7 @@ class Organizations extends Component {
             return [agent.organization.coordinates.lat, agent.organization.coordinates.long];
         });
 
-        return <MetadataItem label={label} className="Organizations">
+        return <MetadataItem label={label} className="Organizations" table={table}>
             {organizations.map((agent, index) => {
                 return <Organization
                     key={index}

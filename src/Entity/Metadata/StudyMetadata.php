@@ -119,7 +119,6 @@ class StudyMetadata
         $this->study = $study;
         $this->centers = new ArrayCollection();
         $this->contacts = new ArrayCollection();
-        $this->centers = new ArrayCollection();
     }
 
     public function getStudy(): Study

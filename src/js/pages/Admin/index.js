@@ -1,5 +1,5 @@
 import React, {Component, createRef} from "react";
-import {Link, matchPath, Redirect, Route, Switch} from "react-router-dom";
+import {matchPath, Redirect, Route, Switch} from "react-router-dom";
 import './Admin.scss';
 import NotFound from "../NotFound";
 import Study from "./Study";

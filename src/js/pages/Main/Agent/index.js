@@ -1,19 +1,15 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {paragraphText} from "../../../util";
-import MetadataItem from "../../../components/MetadataItem";
 import Header from "../../../components/Layout/Header";
-import {MethodType, RecruitmentStatus, StudyType} from "../../../components/MetadataItem/EnumMappings";
-import Tags from "../../../components/Tags";
-import Contacts from "../../../components/MetadataItem/Contacts";
-import Organizations from "../../../components/MetadataItem/Organizations";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import DatasetList from "../../../components/List/DatasetList";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
-import {Heading} from "@castoredc/matter";
+import AssociatedItemsBar from "../../../components/AssociatedItemsBar";
+import DatasetList from "../../../components/List/DatasetList";
+import CatalogList from "../../../components/List/CatalogList";
+import DistributionList from "../../../components/List/DistributionList";
 
 export default class Agent extends Component {
     constructor(props) {
@@ -21,6 +17,7 @@ export default class Agent extends Component {
         this.state = {
             isLoading:       true,
             agent:           null,
+            currentItem:     null,
         };
     }
 
@@ -29,12 +26,13 @@ export default class Agent extends Component {
     }
 
     getAgent = () => {
-        const { match, type } = this.props;
+        const { match } = this.props;
 
-        axios.get('/api/agent/details/' + type + '/' + match.params.slug)
+        axios.get('/api/agent/details/' + match.params.slug)
             .then((response) => {
                 this.setState({
-                    agent:      response.data,
+                    agent:     response.data,
+                    currentItem: Object.keys(response.data.count).find(key => response.data.count[key] > 0) ?? null,
                     isLoading: false,
                 });
             })
@@ -48,11 +46,19 @@ export default class Agent extends Component {
             });
     };
 
+    handleItemChange = (item) => {
+        this.setState({
+            currentItem: item
+        });
+    }
+
     render() {
-        const { isLoading, agent } = this.state;
-        const { user, embedded } = this.props;
+        const { isLoading, agent, currentItem } = this.state;
+        const { user, embedded, location } = this.props;
 
         const title = agent ? agent.name : null;
+
+        const breadcrumbs = getBreadCrumbs(location, {agent});
 
         return <Layout
             className="Agent"
@@ -63,7 +69,33 @@ export default class Agent extends Component {
             <Header user={user} embedded={embedded} title={title} />
 
             <MainBody isLoading={isLoading}>
-                test
+                {agent && (<>
+                    <AssociatedItemsBar items={agent.count} current={currentItem} onClick={this.handleItemChange} />
+
+                    <CatalogList
+                        visible={currentItem === 'catalog'}
+                        agent={agent}
+                        state={breadcrumbs.current ? breadcrumbs.current.state : null}
+                        embedded={embedded}
+                        className="MainCol"
+                    />
+
+                    <DatasetList
+                        visible={currentItem === 'dataset'}
+                        agent={agent}
+                        state={breadcrumbs.current ? breadcrumbs.current.state : null}
+                        embedded={embedded}
+                        className="MainCol"
+                    />
+
+                    <DistributionList
+                        visible={currentItem === 'distribution'}
+                        agent={agent}
+                        state={breadcrumbs.current ? breadcrumbs.current.state : null}
+                        embedded={embedded}
+                        className="MainCol"
+                    />
+                </>)}
             </MainBody>
         </Layout>;
     }

@@ -5,11 +5,14 @@ namespace App\Command\Study;
 
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudyType;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
 
 class FilterStudiesCommand
 {
     private ?Catalog $catalog = null;
+
+    private ?Agent $agent = null;
 
     private ?string $search = null;
 
@@ -27,9 +30,10 @@ class FilterStudiesCommand
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function __construct(?Catalog $catalog, ?string $search, ?array $studyType, ?array $methodType, ?array $country)
+    public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $studyType, ?array $methodType, ?array $country)
     {
         $this->catalog = $catalog;
+        $this->agent = $agent;
         $this->search = $search;
         $this->studyType = $studyType;
         $this->methodType = $methodType;
@@ -39,6 +43,11 @@ class FilterStudiesCommand
     public function getCatalog(): ?Catalog
     {
         return $this->catalog;
+    }
+
+    public function getAgent(): ?Agent
+    {
+        return $this->agent;
     }
 
     public function getSearch(): ?string

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import './FieldListItem.scss'
-import Checkbox from "../Input/Checkbox";
 import {FieldIcons} from "../Icon/FieldIcons";
 import {classNames} from "../../util";
 import {Icon} from "@castoredc/matter";

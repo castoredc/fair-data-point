@@ -67,10 +67,18 @@ export default class StudyFilters extends Component {
     };
 
     getFilters = () => {
-        const {catalog} = this.props;
+        const {catalog, agent} = this.props;
         const {countries} = this.state;
 
-        axios.get(catalog ? '/api/catalog/' + catalog.slug + '/study/filters' : '/api/study/filters')
+        let url = '/api/study/filters';
+
+        if(catalog) {
+            url = '/api/catalog/' + catalog.slug + '/study/filters';
+        } else if(agent) {
+            url = '/api/agent/details/' + agent.slug + '/study/filters'
+        }
+
+        axios.get(url)
             .then((response) => {
                 const filters = response.data;
 

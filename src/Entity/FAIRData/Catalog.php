@@ -14,7 +14,7 @@ use function array_merge;
 use function count;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CatalogRepository")
  * @ORM\Table(name="catalog", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */

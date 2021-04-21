@@ -8,15 +8,11 @@ import Distribution from "./Distribution";
 import Query from "./Query";
 import MetadataXmlParse from "./Tools/MetadataXmlParse";
 import {PrivateRoute} from "../../components/Route";
-import queryString from "query-string";
 import Agent from "./Agent";
 
 export default class Main extends Component {
     render() {
-        const {user} = this.props;
-
-        const params = queryString.parse(this.props.location.search);
-        const embedded = (typeof params.embed !== 'undefined');
+        const {user, embedded} = this.props;
 
         return <Switch>
             <Route path="/fdp" exact render={(props) => <FAIRDataPointMain {...props} embedded={embedded} user={user} />} />

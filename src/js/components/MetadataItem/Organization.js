@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 
 import './MetadataItem.scss'
 import {classNames} from "../../util";
-import {Icon} from "@castoredc/matter";
 import Department from "./Department";
 
 export default class Organization extends Component {

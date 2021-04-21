@@ -9,10 +9,6 @@ import ToastContent from "../../../components/ToastContent";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
-import MetadataItem from "../../../components/MetadataItem";
-import Publishers from "../../../components/MetadataItem/Publishers";
-import Language from "../../../components/MetadataItem/Language";
-import License from "../../../components/MetadataItem/License";
 import MetadataSideBar from "../../../components/MetadataSideBar";
 
 export default class Distribution extends Component {
@@ -142,7 +138,7 @@ export default class Distribution extends Component {
                         />}
                     </div>
                     <div className="SideCol">
-                        <MetadataSideBar type="distribution" metadata={distribution.metadata} />
+                        <MetadataSideBar type="distribution" metadata={distribution.metadata} name={title} />
                     </div>
                 </>}
             </MainBody>

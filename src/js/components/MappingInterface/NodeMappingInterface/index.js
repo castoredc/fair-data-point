@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, ChoiceOption, Heading, List, ListItem, Stack} from "@castoredc/matter";
+import {ChoiceOption, Heading, List, ListItem, Stack} from "@castoredc/matter";
 import StudyStructure from "../../StudyStructure/StudyStructure";
 import axios from "axios";
 import {toast} from "react-toastify";

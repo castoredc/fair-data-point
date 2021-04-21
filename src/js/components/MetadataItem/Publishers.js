@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 
 import './MetadataItem.scss'
-import CustomIcon from "../Icon/CustomIcon";
 import Organization from "./Organization";
 import Person from "./Person";
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource;
 
 use App\Entity\PaginatedResultCollection;
+use App\Service\UriHelper;
 
 class PaginatedApiResource implements ApiResource
 {
@@ -14,11 +15,14 @@ class PaginatedApiResource implements ApiResource
 
     private bool $isAdmin;
 
-    public function __construct(string $apiResourceType, PaginatedResultCollection $results, bool $isAdmin = false)
+    private ?UriHelper $uriHelper;
+
+    public function __construct(string $apiResourceType, PaginatedResultCollection $results, bool $isAdmin = false, ?UriHelper $uriHelper = null)
     {
         $this->apiResourceType = $apiResourceType;
         $this->results = $results;
         $this->isAdmin = $isAdmin;
+        $this->uriHelper = $uriHelper;
     }
 
     /**
@@ -29,7 +33,11 @@ class PaginatedApiResource implements ApiResource
         $results = [];
 
         foreach ($this->results as $result) {
-            $resource = new $this->apiResourceType($result);
+            if ($this->uriHelper !== null) {
+                $resource = new $this->apiResourceType($result, $this->uriHelper);
+            } else {
+                $resource = new $this->apiResourceType($result);
+            }
 
             if ($resource instanceof RoleBasedApiResource) {
                 $resource->setAdmin($this->isAdmin);

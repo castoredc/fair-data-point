@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudySource;
 use App\Entity\Enum\StudyType;
+use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Catalog;
@@ -29,6 +30,7 @@ class StudyRepository extends EntityRepository
      */
     public function findStudies(
         ?Catalog $catalog,
+        ?Agent $agent,
         ?array $hideCatalogs,
         ?string $search,
         ?array $studyType,
@@ -41,7 +43,7 @@ class StudyRepository extends EntityRepository
         $qb = $this->createQueryBuilder('study')
                    ->select('study');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -53,18 +55,29 @@ class StudyRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /** @return Study[] */
+    public function getByAgent(Agent $agent): array
+    {
+        $qb = $this->createQueryBuilder('study')
+            ->select('study');
+
+        $qb = $this->getStudyQuery($qb, null, $agent, null, null, null, null, null, false);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * @param StudyType[]|null  $studyType
      * @param string[]|null     $hideCatalogs
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function countStudies(?Catalog $catalog, ?array $hideCatalogs, ?string $search, ?array $studyType, ?array $methodType, ?array $country, bool $admin): int
+    public function countStudies(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, ?string $search, ?array $studyType, ?array $methodType, ?array $country, bool $admin): int
     {
         $qb = $this->createQueryBuilder('study')
                    ->select('count(study.id)');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -73,6 +86,11 @@ class StudyRepository extends EntityRepository
         } catch (NonUniqueResultException $e) {
             return 0;
         }
+    }
+
+    public function countByAgent(Agent $agent): int
+    {
+        return $this->countStudies(null, $agent, null, null, null, null, null, false);
     }
 
     /**
@@ -84,6 +102,7 @@ class StudyRepository extends EntityRepository
     private function getStudyQuery(
         QueryBuilder $qb,
         ?Catalog $catalog,
+        ?Agent $agent,
         ?array $hideCatalogs,
         ?string $search,
         ?array $studyType,
@@ -93,7 +112,7 @@ class StudyRepository extends EntityRepository
     ): QueryBuilder {
         if ($catalog !== null) {
             $qb->innerJoin('study.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
-               ->setParameter('catalog_id', $catalog->getId());
+                ->setParameter('catalog_id', $catalog->getId());
         }
 
         $qb->leftJoin(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
@@ -130,13 +149,26 @@ class StudyRepository extends EntityRepository
             $qb->setParameter('methodType', $methodType);
         }
 
-        if ($country !== null) {
+        if ($agent !== null || $country !== null) {
             $qb->innerJoin('metadata.centers', 'agent')
-               ->join(Department::class, 'department', Join::WITH, 'agent.id = department.id')
-               ->join(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id')
-               ->andWhere('organization.country IN (:country)');
+                ->leftJoin(Department::class, 'department', Join::WITH, 'agent.id = department.id')
+                ->leftJoin(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id');
 
-            $qb->setParameter('country', $country);
+            if ($agent !== null) {
+                $qb->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->eq('department.id', ':agent_id'),
+                        $qb->expr()->eq('organization.id', ':agent_id'),
+                        $qb->expr()->eq('agent.id', ':agent_id'),
+                    )
+                );
+                $qb->setParameter('agent_id', $agent->getId());
+            }
+
+            if ($country !== null) {
+                $qb->andWhere('organization.country IN (:country)');
+                $qb->setParameter('country', $country);
+            }
         }
 
         $qb->orderBy('metadata.briefName', 'ASC');

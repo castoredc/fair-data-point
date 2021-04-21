@@ -25,7 +25,7 @@ export default class DatasetList extends Component {
 
     getDatasets = () => {
         const {pagination} = this.state;
-        const {catalog, study} = this.props;
+        const {catalog, study, agent} = this.props;
 
         this.setState({
             isLoadingDatasets: true,
@@ -42,6 +42,8 @@ export default class DatasetList extends Component {
             url = '/api/study/' + study.id + '/dataset'
         } else if(catalog) {
             url = '/api/catalog/' + catalog.slug + '/dataset'
+        } else if(agent) {
+            url = '/api/agent/details/' + agent.slug + '/dataset'
         }
 
         axios.get(url, {params: filters})
@@ -94,9 +96,9 @@ export default class DatasetList extends Component {
 
         return <div className={classNames('Datasets', className)}>
             {datasets.length > 0 ? <>
-                <div className="Description">
-                    Datasets are collections of data which are available for access or download in one or more representations.
-                </div>
+                {/*<div className="Description">*/}
+                {/*    Datasets are collections of data which are available for access or download in one or more representations.*/}
+                {/*</div>*/}
 
                 {datasets.map((dataset) => {
                     if (dataset.hasMetadata === false) {

@@ -22,15 +22,15 @@ axios.interceptors.response.use(function (response) {
     }
 });
 
-export default ({user}) =>
+export default ({user, embedded}) =>
     <Switch>
         <Redirect exact from="/" to="/fdp" />
         <Route path="/login" exact component={Login} />
         <Route path="/login/:catalogSlug" exact component={Login} />
 
         /* FAIR Data Point */
-        <Route path="/fdp" render={(props) => <Main {...props} user={user} />} />
-        <Route path="/study" render={(props) => <Main {...props} user={user} />} />
+        <Route path="/fdp" render={(props) => <Main {...props} embedded={embedded} user={user} />} />
+        <Route path="/study" render={(props) => <Main {...props} embedded={embedded} user={user} />} />
         <Route path="/tools" render={(props) => <Main {...props} user={user} />} />
 
         /* My studies */

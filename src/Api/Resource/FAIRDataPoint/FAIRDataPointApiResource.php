@@ -26,6 +26,9 @@ class FAIRDataPointApiResource implements ApiResource
             'relativeUrl' => $this->fairDataPoint->getRelativeUrl(),
             'iri' => $this->fairDataPoint->getIri(),
             'hasMetadata' => $this->fairDataPoint->hasMetadata(),
+            'count' => [
+                'catalog' => $this->fairDataPoint->getCatalogs()->count(),
+            ],
         ];
 
         if ($this->fairDataPoint->hasMetadata()) {

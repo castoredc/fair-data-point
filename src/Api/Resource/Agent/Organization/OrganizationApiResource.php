@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Agent\Organization;
 
-use App\Api\Resource\ApiResource;
+use App\Api\Resource\Agent\AgentApiResource;
 use App\Entity\FAIRData\Agent\Organization;
+use function array_merge;
+use function assert;
 
-class OrganizationApiResource implements ApiResource
+class OrganizationApiResource extends AgentApiResource
 {
-    private Organization $organization;
-
     public function __construct(Organization $organization)
     {
-        $this->organization = $organization;
+        $this->agent = $organization;
     }
 
     /**
@@ -20,23 +20,24 @@ class OrganizationApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $agent = $this->agent;
+        assert($agent instanceof Organization);
+
         $coordinates = null;
 
-        if ($this->organization->hasCoordinates()) {
+        if ($agent->hasCoordinates()) {
             $coordinates = [
-                'lat' => $this->organization->getCoordinatesLatitude(),
-                'long' => $this->organization->getCoordinatesLongitude(),
+                'lat' => $agent->getCoordinatesLatitude(),
+                'long' => $agent->getCoordinatesLongitude(),
             ];
         }
 
-        return [
-            'id' => $this->organization->getId(),
-            'slug' => $this->organization->getSlug(),
-            'name' => $this->organization->getName(),
-            'country' => $this->organization->getCountry()->getCode(),
-            'city' => $this->organization->getCity(),
-            'homepage' => $this->organization->getHomepage() !== null ? $this->organization->getHomepage()->getValue() : null,
+        return array_merge(parent::toArray(), [
+            'type' => 'organization',
+            'country' => $agent->getCountry()->getCode(),
+            'city' => $agent->getCity(),
+            'homepage' => $agent->getHomepage() !== null ? $agent->getHomepage()->getValue() : null,
             'coordinates' => $coordinates,
-        ];
+        ]);
     }
 }

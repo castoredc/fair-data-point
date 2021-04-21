@@ -5,6 +5,7 @@ namespace App\Api\Controller\Catalog;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\CatalogApiRequest;
+use App\Api\Request\Metadata\MetadataFilterApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
@@ -79,16 +80,14 @@ class CatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
-            $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
-            assert($parsed instanceof StudyMetadataFilterApiRequest);
+            $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof MetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
                 $catalog,
-                $parsed->getSearch(),
-                $parsed->getStudyType(),
-                $parsed->getMethodType(),
-                $parsed->getCountry(),
                 null,
+                $parsed->getSearch(),
+                $parsed->getHideParents(),
                 $parsed->getPerPage(),
                 $parsed->getPage()
             ));
@@ -124,7 +123,7 @@ class CatalogApiController extends ApiController
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new FilterStudiesCommand($catalog, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
+            $envelope = $bus->dispatch(new FilterStudiesCommand($catalog, null, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
