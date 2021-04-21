@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Agent\Department;
 
+use App\Api\Resource\Agent\AgentApiResource;
 use App\Api\Resource\Agent\Organization\OrganizationApiResource;
-use App\Api\Resource\ApiResource;
 use App\Entity\FAIRData\Agent\Department;
 use function array_merge;
+use function assert;
 
-class DepartmentApiResource implements ApiResource
+class DepartmentApiResource extends AgentApiResource
 {
-    private Department $department;
     private bool $includeOrganization;
 
     public function __construct(Department $department, bool $includeOrganization)
     {
-        $this->department = $department;
+        $this->agent = $department;
         $this->includeOrganization = $includeOrganization;
     }
 
@@ -24,18 +24,18 @@ class DepartmentApiResource implements ApiResource
      */
     public function toArray(): array
     {
+        $agent = $this->agent;
+        assert($agent instanceof Department);
+
         $data = [
             'type' => 'department',
-            'id' => $this->department->getId(),
-            'slug' => $this->department->getSlug(),
-            'name' => $this->department->getName(),
-            'additionalInformation' => $this->department->getAdditionalInformation(),
+            'additionalInformation' => $agent->getAdditionalInformation(),
         ];
 
         if ($this->includeOrganization) {
-            $data = array_merge($data, (new OrganizationApiResource($this->department->getOrganization()))->toArray());
+            $data = array_merge($data, (new OrganizationApiResource($agent->getOrganization()))->toArray());
         }
 
-        return $data;
+        return array_merge(parent::toArray(), $data);
     }
 }
