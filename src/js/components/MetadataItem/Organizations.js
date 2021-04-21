@@ -27,7 +27,7 @@ class Organizations extends Component {
                 />
             })}
 
-            {coordinates.length > 0 && <div className="Map">
+            {(coordinates.length > 0 && !table) && <div className="Map">
                 <Map
                     center={getCenterFromDegrees(coordinates)}
                     zoom={7}
