@@ -5,10 +5,11 @@ namespace App\Api\Controller\Catalog;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\CatalogApiRequest;
+use App\Api\Request\Metadata\MetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
-use App\Api\Resource\Catalog\CatalogsApiResource;
+use App\Api\Resource\PaginatedApiResource;
 use App\Command\Catalog\CreateCatalogCommand;
-use App\Command\Catalog\GetCatalogsCommand;
+use App\Command\Catalog\GetPaginatedCatalogsCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,15 +29,32 @@ class CatalogsApiController extends ApiController
     /**
      * @Route("", methods={"GET"}, name="api_catalogs")
      */
-    public function catalogs(MessageBusInterface $bus): Response
+    public function catalogs(Request $request, MessageBusInterface $bus): Response
     {
-        $envelope = $bus->dispatch(new GetCatalogsCommand());
+        try {
+            $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof MetadataFilterApiRequest);
 
-        $handledStamp = $envelope->last(HandledStamp::class);
-        assert($handledStamp instanceof HandledStamp);
-        $catalogs = $handledStamp->getResult();
+            $envelope = $bus->dispatch(new GetPaginatedCatalogsCommand(
+                null,
+                $parsed->getSearch(),
+                $parsed->getPerPage(),
+                $parsed->getPage()
+            ));
 
-        return new JsonResponse((new CatalogsApiResource($catalogs))->toArray());
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            $results = $handledStamp->getResult();
+
+            return new JsonResponse((new PaginatedApiResource(CatalogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
+
+            return new JsonResponse([], 500);
+        }
     }
 
     /**
