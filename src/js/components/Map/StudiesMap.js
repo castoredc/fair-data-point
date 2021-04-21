@@ -14,6 +14,10 @@ export default class StudiesMap extends Component {
             return [study.coordinates.lat, study.coordinates.long];
         });
 
+        if(studies.length === 0) {
+            return <div className="NoResults">There is no map data available.</div>;
+        }
+
         return <div className="DatasetMap">
             <Map
                 center={getCenterFromDegrees(coordinates)}

@@ -6,6 +6,7 @@ import ToastContent from "../ToastContent";
 import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
 import {localizedText} from "../../util";
 import DataGridContainer from "./DataGridContainer";
+import DataGridHelper from "./DataGridHelper";
 
 export default class DistributionsDataTable extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ export default class DistributionsDataTable extends Component {
             isLoadingDistributions: true,
             hasLoadedDistributions: false,
             distributions: [],
+            pagination: DataGridHelper.getDefaultState(25),
         };
 
         this.tableRef = React.createRef();
@@ -31,14 +33,20 @@ export default class DistributionsDataTable extends Component {
             isLoadingDistributions: true,
         });
 
+        const filters = {
+            page: pagination.currentPage,
+            perPage: pagination.perPage,
+        };
+
         if (hasLoadedDistributions) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
-        axios.get(dataset ? '/api/dataset/' + dataset.slug + '/distribution' : '/api/distribution')
+        axios.get(dataset ? '/api/dataset/' + dataset.slug + '/distribution' : '/api/distribution', {params: filters})
             .then((response) => {
                 this.setState({
-                    distributions: response.data,
+                    distributions: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoadingDistributions: false,
                     hasLoadedDistributions: true,
                 });
@@ -53,6 +61,20 @@ export default class DistributionsDataTable extends Component {
             });
     };
 
+    handlePagination = (paginationCount) => {
+        const {pagination} = this.state;
+
+        this.setState({
+            pagination: {
+                ...pagination,
+                currentPage: paginationCount.currentPage,
+                perPage: paginationCount.pageLimit,
+            },
+        }, () => {
+            this.getDistributions();
+        });
+    };
+
     handleClick = (rowId) => {
         const {distributions} = this.state;
         const {history, dataset} = this.props;
@@ -62,7 +84,7 @@ export default class DistributionsDataTable extends Component {
     };
 
     render() {
-        const {distributions, isLoadingDistributions, hasLoadedDistributions} = this.state;
+        const {distributions, isLoadingDistributions, hasLoadedDistributions, pagination} = this.state;
 
         if (!hasLoadedDistributions) {
             return <InlineLoader/>;
@@ -113,6 +135,8 @@ export default class DistributionsDataTable extends Component {
         });
 
         return <DataGridContainer
+            pagination={pagination}
+            handlePageChange={this.handlePagination}
             fullHeight
             isLoading={isLoadingDistributions}
             ref={this.tableRef}

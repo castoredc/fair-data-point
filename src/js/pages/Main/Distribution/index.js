@@ -142,7 +142,7 @@ export default class Distribution extends Component {
                         />}
                     </div>
                     <div className="SideCol">
-                        <MetadataSideBar type="distribution" metadata={distribution.metadata} />
+                        <MetadataSideBar type="distribution" metadata={distribution.metadata} name={title} />
                     </div>
                 </>}
             </MainBody>

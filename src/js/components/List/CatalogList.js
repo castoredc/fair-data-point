@@ -5,30 +5,30 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
-import DatasetListItem from "../ListItem/DatasetListItem";
+import CatalogListItem from "../ListItem/CatalogListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
 
-export default class DatasetList extends Component {
+export default class CatalogList extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoadingDatasets: true,
-            datasets:          null,
+            isLoadingCatalogs: true,
+            catalogs:          null,
             pagination: DataGridHelper.getDefaultState(props.embedded ? 5 : 10),
         };
     }
 
     componentDidMount() {
-        this.getDatasets();
+        this.getCatalogs();
     }
 
-    getDatasets = () => {
+    getCatalogs = () => {
         const {pagination} = this.state;
         const {catalog, study, agent} = this.props;
 
         this.setState({
-            isLoadingDatasets: true,
+            isLoadingCatalogs: true,
         });
 
         let filters = {
@@ -36,34 +36,30 @@ export default class DatasetList extends Component {
             perPage: pagination.perPage,
         };
 
-        let url = '';
+        let url = '/api/catalog/';
 
-        if(study) {
-            url = '/api/study/' + study.id + '/dataset'
-        } else if(catalog) {
-            url = '/api/catalog/' + catalog.slug + '/dataset'
-        } else if(agent) {
-            url = '/api/agent/details/' + agent.slug + '/dataset'
+        if(agent) {
+            url = '/api/agent/details/' + agent.slug + '/catalog'
         }
 
         axios.get(url, {params: filters})
             .then((response) => {
-                const datasets = response.data.results.filter((dataset) => {
-                    return dataset.hasMetadata
+                const catalogs = response.data.results.filter((catalog) => {
+                    return catalog.hasMetadata
                 });
 
                 this.setState({
-                    datasets:          datasets,
+                    catalogs:          catalogs,
                     pagination: DataGridHelper.parseResults(response.data),
-                    isLoadingDatasets: false,
+                    isLoadingCatalogs: false,
                 });
             })
             .catch((error) => {
                 this.setState({
-                    isLoadingDatasets: false,
+                    isLoadingCatalogs: false,
                 });
 
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the datasets';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalogs';
                 toast.error(<ToastContent type="error" message={message}/>);
             });
     };
@@ -78,38 +74,38 @@ export default class DatasetList extends Component {
                 perPage:     paginationCount.pageLimit,
             },
         }, () => {
-            this.getDatasets();
+            this.getCatalogs();
         });
     };
 
     render() {
-        const {embedded, pagination, datasets} = this.state;
+        const {embedded, pagination, catalogs} = this.state;
         const {visible = true, study, state, className} = this.props;
 
         if(!visible) {
             return null;
         }
 
-        if (datasets === null) {
+        if (catalogs === null) {
             return <InlineLoader/>;
         }
 
-        return <div className={classNames('Datasets', className)}>
-            {datasets.length > 0 ? <>
+        return <div className={classNames('Catalogs', className)}>
+            {catalogs.length > 0 ? <>
                 {/*<div className="Description">*/}
-                {/*    Datasets are collections of data which are available for access or download in one or more representations.*/}
+                {/*    Catalogs are collections metadata about resources, such as studies or datasets.*/}
                 {/*</div>*/}
 
-                {datasets.map((dataset) => {
-                    if (dataset.hasMetadata === false) {
+                {catalogs.map((catalog) => {
+                    if (catalog.hasMetadata === false) {
                         return null;
                     }
-                    return <DatasetListItem key={dataset.id}
+                    return <CatalogListItem key={catalog.id}
                                             newWindow={embedded}
                                             state={state}
-                                            link={dataset.relativeUrl}
-                                            name={localizedText(dataset.metadata.title, 'en')}
-                                            description={localizedText(dataset.metadata.description, 'en')}
+                                            link={catalog.relativeUrl}
+                                            name={localizedText(catalog.metadata.title, 'en')}
+                                            description={localizedText(catalog.metadata.description, 'en')}
                     />
                 })}
 
@@ -121,7 +117,7 @@ export default class DatasetList extends Component {
                     totalItems={pagination.totalResults}
                 />
 
-            </> : <div className="NoResults">This {study ? 'study' : 'catalog'} does not have any associated datasets.</div>}
+            </> : <div className="NoResults">This {study ? 'study' : 'FAIR Data Point'} does not have any associated catalogs.</div>}
         </div>;
     }
 }

@@ -1,41 +1,15 @@
 import React, {Component} from "react";
-import axios from "axios";
-import {localizedText} from "../../../util";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, CellText, DataGrid, Stack, ViewHeader} from "@castoredc/matter";
-import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
+import {Button, Stack, ViewHeader} from "@castoredc/matter";
 import AddCatalogModal from "../../../modals/AddCatalogModal";
 import DocumentTitle from "../../../components/DocumentTitle";
-import DataGridContainer from "../../../components/DataTable/DataGridContainer";
+import CatalogsDataTable from "../../../components/DataTable/CatalogsDataTable";
 
 export default class Catalogs extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            hasError:  false,
-            catalogs:  [],
             showModal: false,
         };
-    }
-
-    componentDidMount() {
-        axios.get('/api/catalog')
-            .then((response) => {
-                this.setState({
-                    catalogs:  response.data,
-                    isLoading: false,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the catalogs';
-                toast.error(<ToastContent type="error" message={message}/>);
-            });
     }
 
     openModal = () => {
@@ -50,46 +24,9 @@ export default class Catalogs extends Component {
         });
     };
 
-    onRowClick = (rowId) => {
-        const {catalogs} = this.state;
-        const {history} = this.props;
-
-        const catalog = catalogs[rowId];
-        history.push(`/admin/catalog/${catalog.slug}`)
-    };
-
     render() {
-        const {catalogs, isLoading, showModal} = this.state;
-
-        if (isLoading) {
-            return <InlineLoader/>;
-        }
-
-        const columns = [
-            {
-                Header: 'Title',
-                accessor: 'title',
-                resizable: true,
-                template: 'text',
-            },
-            {
-                Header: 'Description',
-                accessor: 'description',
-                resizable: true,
-                template: 'text',
-            },
-        ];
-
-        const rows = catalogs.map((item) => {
-            return {
-                title: <CellText>
-                    {item.hasMetadata ? localizedText(item.metadata.title, 'en') : '(no title)'}
-                </CellText>,
-                description: <CellText>
-                    {item.hasMetadata ? localizedText(item.metadata.description, 'en') : ''}
-                </CellText>,
-            };
-        });
+        const { history } = this.props;
+        const {showModal} = this.state;
 
         return <div className="PageContainer">
             <DocumentTitle title="FDP Admin | Catalogs"/>
@@ -109,15 +46,9 @@ export default class Catalogs extends Component {
                         </Stack>
                     </div>
 
-                    <DataGridContainer fullHeight isLoading={isLoading}>
-                        <DataGrid
-                            accessibleName="Catalogs"
-                            emptyStateContent="No catalogs found"
-                            onClick={this.onRowClick}
-                            rows={rows}
-                            columns={columns}
-                        />
-                    </DataGridContainer>
+                    <CatalogsDataTable
+                        history={history}
+                    />
                 </div>
             </div>
         </div>;

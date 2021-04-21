@@ -1,6 +1,8 @@
 @import '../../scss/colors';
 
 .MetadataItem {
+  margin-bottom: 16px;
+
   .MetadataItemLabel {
     font-size: 14px;
     font-weight: 600;
@@ -36,7 +38,14 @@
       }
     }
   }
-  margin-bottom: 16px;
+
+  &.Table {
+    display: flex;
+
+    .MetadataItemLabel {
+      width: 200px;
+    }
+  }
 }
 
 .Footer .MetadataItem {

@@ -47,7 +47,7 @@ export default class DatasetsDataTable extends Component {
         };
 
         if (hideCatalog) {
-            filters['hideCatalogs'] = [hideCatalog.id];
+            filters['hideParents'] = [hideCatalog.id];
         }
 
         if (hasLoadedDatasets) {

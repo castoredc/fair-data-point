@@ -5,9 +5,11 @@ import StudyListItem from "../ListItem/StudyListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import StudiesMap from "../Map/StudiesMap";
-import {Pagination} from "@castoredc/matter";
+import {Button, Heading, Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import DataGridHelper from "../DataTable/DataGridHelper";
+import {Sticky, StickyContainer} from "react-sticky";
+import StudyFilters from "../Filters/StudyFilters";
 
 export default class StudyList extends Component {
     constructor(props) {
@@ -26,6 +28,12 @@ export default class StudyList extends Component {
                 totalResults: null,
                 totalPages: null
             },
+
+
+            representation: 'list',
+            displaySideBar: false,
+            appliedFilters: {},
+            mobile: true,
         };
 
         this.wrapperRef = React.createRef();
@@ -34,35 +42,53 @@ export default class StudyList extends Component {
     componentDidMount() {
         this.getStudies();
         this.getMap();
+
+        window.addEventListener("resize", this.resize.bind(this));
+        this.resize();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const {appliedFilters} = this.props;
+    resize() {
+        const {mobile, displaySideBar} = this.state;
 
-        if (prevProps.appliedFilters !== appliedFilters) {
-            this.handleFilter();
-        }
+        const isMobile = window.innerWidth <= 767;
+
+        this.setState({
+            displaySideBar: isMobile ? (mobile ? displaySideBar : false) : true,
+            mobile: isMobile
+        });
     }
 
-    handleFilter = () => {
+    changeRepresentation = (representation) => {
+        this.setState({
+            representation: representation,
+        });
+    };
+
+    toggleFilter = () => {
+        this.setState({
+            displaySideBar: !this.state.displaySideBar
+        });
+    };
+
+    handleFilter = (filters) => {
         const {pagination} = this.state;
 
         this.setState({
             pagination: {
                 ...pagination,
                 currentPage: 1
-            }
+            },
+            appliedFilters: filters,
         }, () => {
             this.getStudies();
             this.getMap();
-            window.scrollTo(0, this.wrapperRef.current.offsetTop + 50);
+            window.scrollTo(0, this.wrapperRef.current.offsetTop - 55);
         });
     };
 
-
     getStudies = () => {
-        const {pagination} = this.state;
-        const {catalog, appliedFilters} = this.props;
+        const {pagination, appliedFilters} = this.state;
+        const {catalog, agent} = this.props;
 
         this.setState({
             isLoadingStudies: true,
@@ -72,7 +98,15 @@ export default class StudyList extends Component {
         filters['page'] = pagination.currentPage;
         filters['perPage'] = pagination.perPage;
 
-        axios.get('/api/catalog/' + catalog.slug + '/study', {params: filters})
+        let url = '';
+
+        if (catalog) {
+            url = '/api/catalog/' + catalog.slug + '/study';
+        } else if (agent) {
+            url = '/api/agent/details/' + agent.slug + '/study';
+        }
+
+        axios.get(url, {params: filters})
             .then((response) => {
                 const studies = response.data.results.filter((study) => {
                     return study.hasMetadata
@@ -95,13 +129,22 @@ export default class StudyList extends Component {
     };
 
     getMap = () => {
-        const {catalog, appliedFilters} = this.props;
+        const {appliedFilters} = this.state;
+        const {catalog, agent} = this.props;
 
         this.setState({
             isLoadingMap: true
         });
 
-        axios.get('/api/catalog/' + catalog.slug + '/map', {params: appliedFilters})
+        let url = '';
+
+        if (catalog) {
+            url = '/api/catalog/' + catalog.slug + '/map';
+        } else if (agent) {
+            url = '/api/agent/details/' + agent.slug + '/map';
+        }
+
+        axios.get(url, {params: appliedFilters})
             .then((response) => {
                 this.setState({
                     map: response.data,
@@ -130,13 +173,24 @@ export default class StudyList extends Component {
             }
         }, () => {
             this.getStudies();
-            window.scrollTo(0, this.wrapperRef.current.offsetTop + 50);
+            window.scrollTo(0, this.wrapperRef.current.offsetTop - 55);
         });
     };
 
     render() {
-        const {isLoadingStudies, isLoadingMap, pagination, studies, map} = this.state;
-        const {embedded, visible, representation, state, catalog} = this.props;
+        const {
+            isLoadingStudies,
+            representation,
+            displaySideBar,
+            mobile,
+            isLoadingMap,
+            pagination,
+            studies,
+            map
+        } = this.state;
+        const {embedded, visible, state, catalog, agent, className} = this.props;
+
+        const allowFilterOverlay = mobile;
 
         if (!visible) {
             return null;
@@ -146,55 +200,85 @@ export default class StudyList extends Component {
             return <InlineLoader/>;
         }
 
-        return <div className="Studies HasFilters" ref={this.wrapperRef}>
-            {representation === 'list' &&
-            <div className={classNames('LargeList', isLoadingStudies && 'Loading')}>
-                {studies.length > 0 ? <div>
-                    {studies.map((item, index) => {
-                        if (item.hasMetadata === false) {
-                            return null;
-                        }
-                        return <StudyListItem key={index}
-                                              newWindow={embedded}
-                                              state={state}
-                                              catalog={catalog}
-                                              link={`/study/${item.slug}`}
-                                              name={item.metadata.briefName}
-                                              description={item.metadata.briefSummary}
-                                              recruitmentStatus={item.metadata.recruitmentStatus}
-                                              intervention={item.metadata.intervention}
-                                              condition={item.metadata.condition}
-                        />
-                    })}
-
-                    <Pagination
-                        accessibleName="Pagination"
-                        onChange={this.handlePagination}
-                        pageLimit={pagination.perPage}
-                        start={pagination.start}
-                        totalItems={pagination.totalResults}
-                        itemsPerPageOptions={[
-                            {
-                                label: '10',
-                                value: '10'
-                            },
-                            {
-                                label: '25',
-                                value: '25'
-                            },
-                            {
-                                label: '50',
-                                value: '50'
+        return <StickyContainer className="StickyContainer">
+            <div className={classNames('Studies HasFilters', className)} ref={this.wrapperRef}>
+                {representation === 'list' &&
+                <div className={classNames('LargeList', isLoadingStudies && 'Loading')}>
+                    {studies.length > 0 ? <div>
+                        {studies.map((item, index) => {
+                            if (item.hasMetadata === false) {
+                                return null;
                             }
-                        ]}
-                    />
+                            return <StudyListItem key={index}
+                                                  newWindow={embedded}
+                                                  state={state}
+                                                  catalog={catalog}
+                                                  link={`/study/${item.slug}`}
+                                                  name={item.metadata.briefName}
+                                                  description={item.metadata.briefSummary}
+                                                  recruitmentStatus={item.metadata.recruitmentStatus}
+                                                  intervention={item.metadata.intervention}
+                                                  condition={item.metadata.condition}
+                            />
+                        })}
 
-                </div> : <div className="NoResults">No studies found.</div>}
-            </div>}
+                        <Pagination
+                            accessibleName="Pagination"
+                            onChange={this.handlePagination}
+                            pageLimit={pagination.perPage}
+                            start={pagination.start}
+                            totalItems={pagination.totalResults}
+                            itemsPerPageOptions={[
+                                {
+                                    label: '10',
+                                    value: '10'
+                                },
+                                {
+                                    label: '25',
+                                    value: '25'
+                                },
+                                {
+                                    label: '50',
+                                    value: '50'
+                                }
+                            ]}
+                        />
 
-            {representation === 'map' && <div className={classNames('Map', isLoadingMap && 'Loading')}>
-                <StudiesMap studies={map}/>
-            </div>}
-        </div>;
+                    </div> : <div className="NoResults">No studies found.</div>}
+                </div>}
+
+                {representation === 'map' && <div className={classNames('Map', isLoadingMap && 'Loading')}>
+                    <StudiesMap studies={map}/>
+                </div>}
+            </div>
+
+            <div className={classNames('SideCol', !displaySideBar && 'Hidden', allowFilterOverlay && 'Overlay')}>
+                <Sticky>
+                    {({style, isSticky}) => {
+                        return <div
+                            className={classNames('StickySideCol', (!allowFilterOverlay && isSticky) && 'Sticky')}
+                            style={allowFilterOverlay ? undefined : style}
+                        >
+                            {allowFilterOverlay ? <div className="OverlayHeader">
+                                <Heading type="Subsection">Search studies</Heading>
+                                <Button icon="cross" className="CloseButton" onClick={this.toggleFilter}
+                                        iconDescription="Close"/>
+                            </div> : <div>
+                                <Heading type="Subsection">Search studies</Heading>
+                            </div>}
+
+                            <div className="SideColItem">
+                                <StudyFilters catalog={catalog} agent={agent}
+                                              onFilter={(filter) => this.handleFilter(filter)}/>
+                            </div>
+
+                            {allowFilterOverlay && <div className="OverlayFooter">
+                                <Button fullWidth onClick={this.toggleFilter}>View studies</Button>
+                            </div>}
+                        </div>
+                    }}
+                </Sticky>
+            </div>
+        </StickyContainer>;
     }
 }
