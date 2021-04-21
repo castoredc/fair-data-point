@@ -10,7 +10,6 @@ import AssociatedItemsBar from "../../../components/AssociatedItemsBar";
 import DatasetList from "../../../components/List/DatasetList";
 import CatalogList from "../../../components/List/CatalogList";
 import DistributionList from "../../../components/List/DistributionList";
-import StudyList from "../../../components/List/StudyList";
 
 export default class Agent extends Component {
     constructor(props) {

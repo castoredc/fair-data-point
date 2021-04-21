@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import './StudyListItem.scss'
 import ListItem from "./index";
-import {localizedText} from "../../util";
 
 export default class DistributionListItem extends Component {
     render() {

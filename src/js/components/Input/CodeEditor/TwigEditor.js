@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './CodeEditor.scss'
 import CodeMirror from 'codemirror';
 import {FormLabel} from "@castoredc/matter";
+
 require('codemirror/mode/twig/twig');
 require('codemirror/addon/display/autorefresh');
 

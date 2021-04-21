@@ -1,17 +1,13 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
-import ListItem from "../../../components/ListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import Layout from "../../../components/Layout";
 import Header from "../../../components/Layout/Header";
 import MainBody from "../../../components/Layout/MainBody";
-import {Heading} from "@castoredc/matter";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
 import MetadataSideBar from "../../../components/MetadataSideBar";
-import CatalogList from "../../../components/List/CatalogList";
 import DistributionList from "../../../components/List/DistributionList";
 import AssociatedItemsBar from "../../../components/AssociatedItemsBar";
 
