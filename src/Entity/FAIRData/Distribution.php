@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function count;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\DistributionRepository")
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
