@@ -142,6 +142,10 @@ export default class NodeMappingInterface extends Component {
                 return element.variableName;
             }
 
+            if(element.slug) {
+                return element.slug;
+            }
+
             return element.id;
         })
 

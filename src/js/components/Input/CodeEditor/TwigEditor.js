@@ -33,7 +33,7 @@ export default class TwigEditor extends Component {
 
         return <div className="TwigEditor">
             {label && <FormLabel>{label}</FormLabel>}
-            <textarea ref={this.ref} autoComplete="off">{value}</textarea>
+            <textarea ref={this.ref} autoComplete="off" defaultValue={value} />
         </div>;
     }
 }
