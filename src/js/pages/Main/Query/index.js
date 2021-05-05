@@ -87,12 +87,20 @@ export default class Query extends Component {
                             this.createYasgui()
                         });
                     }).catch((error) => {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading the prefixes"/>);
+                    toast.error(<ToastContent type="error" message="An error occurred while loading the prefixes from prefix.cc"/>);
+
+                    this.setState({
+                        prefixes: prefixes,
+                    }, () => {
+                        this.createYasgui()
+                    });
                 });
             })
             .catch((error) => {
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the prefixes';
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the prefixes from the data model';
                 toast.error(<ToastContent type="error" message={message}/>);
+
+                this.createYasgui();
             });
     };
 
