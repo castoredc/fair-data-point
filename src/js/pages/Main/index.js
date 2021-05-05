@@ -7,7 +7,6 @@ import Dataset from "./Dataset";
 import Distribution from "./Distribution";
 import Query from "./Query";
 import MetadataXmlParse from "./Tools/MetadataXmlParse";
-import {PrivateRoute} from "../../components/Route";
 import Agent from "./Agent";
 
 export default class Main extends Component {
@@ -27,7 +26,7 @@ export default class Main extends Component {
             <Route path="/fdp/dataset/:dataset/distribution/:distribution" exact render={(props) => <Distribution {...props} embedded={embedded} user={user} />} />
 
             /* Query */
-            <PrivateRoute path="/fdp/dataset/:dataset/distribution/:distribution/query" exact component={Query} embedded={embedded} user={user} />
+            <Route path="/fdp/dataset/:dataset/distribution/:distribution/query" exact component={Query} embedded={embedded} user={user} />
 
             /* Tools */
             <Route path="/tools/metadata-xml-parse" exact render={(props) => <MetadataXmlParse {...props} embedded={embedded} user={user} />} />

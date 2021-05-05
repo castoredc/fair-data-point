@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace App\Api\Controller;
 
 use App\Api\Request\ApiRequest;
+use App\Api\Resource\ApiResource;
+use App\Api\Resource\Security\PermissionsApiResource;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Model\Castor\ApiClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function count;
@@ -71,5 +74,28 @@ abstract class ApiController extends AbstractController
         }
 
         return $return;
+    }
+
+    protected function getResponse(ApiResource $resource, ?object $object, ?array $attributes): JsonResponse
+    {
+        if($object === null || $attributes === null) {
+            return new JsonResponse($resource->toArray());
+        }
+
+        return new JsonResponse(array_merge($resource->toArray(), $this->getPermissionArray($object, $attributes)));
+    }
+
+    protected function getPermissionArray($object, array $attributes): array
+    {
+        $permissions = [];
+
+        foreach($attributes as $attribute)
+        {
+            if($this->isGranted($attribute, $object)) {
+                $permissions[] = $attribute;
+            }
+        }
+
+        return (new PermissionsApiResource($permissions))->toArray();
     }
 }
