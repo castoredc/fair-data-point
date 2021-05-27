@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
 use function in_array;
 use function strrchr;
+use function strtolower;
 use function substr;
 
 /**
@@ -48,8 +49,13 @@ class User implements UserInterface
      * @ORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
      */
     private ?OrcidUser $orcid = null;
+
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
+    ];
+
+    public const EMAILS = [
+        'bruna.dossantosvieira@radboudumc.nl' => ['ROLE_ADMIN'],
     ];
 
     public function __construct(?Person $person)
@@ -76,7 +82,8 @@ class User implements UserInterface
         if ($this->hasCastorUser()) {
             $roles[] = 'ROLE_CASTOR_USER';
 
-            $domain = strrchr($this->castorUser->getEmailAddress(), '@');
+            $email = strtolower($this->castorUser->getEmailAddress());
+            $domain = strrchr($email, '@');
 
             if ($domain !== false) {
                 $domain = substr($domain, 1);
@@ -84,6 +91,10 @@ class User implements UserInterface
 
             if (isset($this::DOMAINS[$domain])) {
                 $roles = array_merge($roles, $this::DOMAINS[$domain]);
+            }
+
+            if (isset($this::EMAILS[$email])) {
+                $roles = array_merge($roles, $this::EMAILS[$email]);
             }
         }
 
