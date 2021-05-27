@@ -7,21 +7,24 @@ use App\Api\Resource\ApiResource;
 
 class PermissionsApiResource implements ApiResource
 {
-    /** @var array<string, bool> */
+    /** @var string[] */
     protected array $permissions;
 
     /**
-     * @param array<string, bool> $permissions
+     * @param string[] $permissions
      */
     public function __construct(array $permissions)
     {
         $this->permissions = $permissions;
     }
 
+    /**
+     * @return array<string, string[]>
+     */
     public function toArray(): array
     {
         return [
-            'permissions' => $this->permissions
+            'permissions' => $this->permissions,
         ];
     }
 }

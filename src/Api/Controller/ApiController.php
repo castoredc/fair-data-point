@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use function array_merge;
 use function count;
 use function json_decode;
 
@@ -76,24 +77,33 @@ abstract class ApiController extends AbstractController
         return $return;
     }
 
+    /**
+     * @param string[]|null $attributes
+     */
     protected function getResponse(ApiResource $resource, ?object $object, ?array $attributes): JsonResponse
     {
-        if($object === null || $attributes === null) {
+        if ($object === null || $attributes === null) {
             return new JsonResponse($resource->toArray());
         }
 
         return new JsonResponse(array_merge($resource->toArray(), $this->getPermissionArray($object, $attributes)));
     }
 
-    protected function getPermissionArray($object, array $attributes): array
+    /**
+     * @param string[] $attributes
+     *
+     * @return array<string, string[]>
+     */
+    protected function getPermissionArray(object $object, array $attributes): array
     {
         $permissions = [];
 
-        foreach($attributes as $attribute)
-        {
-            if($this->isGranted($attribute, $object)) {
-                $permissions[] = $attribute;
+        foreach ($attributes as $attribute) {
+            if (! $this->isGranted($attribute, $object)) {
+                continue;
             }
+
+            $permissions[] = $attribute;
         }
 
         return (new PermissionsApiResource($permissions))->toArray();
