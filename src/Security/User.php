@@ -55,6 +55,7 @@ class User implements UserInterface
     ];
 
     public const EMAILS = [
+        'bruna.dossantosvieira@radboudumc.nl' => ['ROLE_ADMIN'],
     ];
 
     public function __construct(?Person $person)
