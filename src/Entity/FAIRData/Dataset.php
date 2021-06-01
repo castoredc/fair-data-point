@@ -21,6 +21,8 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 
+    public const URL_PATH = '/fdp/dataset/';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -139,7 +141,7 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity
 
     public function getRelativeUrl(): string
     {
-        return '/fdp/dataset/' . $this->slug;
+        return self::URL_PATH . $this->slug;
     }
 
     public function isPublished(): bool

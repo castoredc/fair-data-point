@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  *     "model_literal" = "App\Entity\Data\DataModel\Node\LiteralNode",
  *     "model_record" = "App\Entity\Data\DataModel\Node\RecordNode",
  *     "model_value" = "App\Entity\Data\DataModel\Node\ValueNode",
- *     "dictionary_variable" = "App\Entity\Data\DataDictionary\Variable"
+ *     "dictionary_variable" = "App\Entity\Data\DataDictionary\Variable",
+ *     "node" = "App\Entity\Data\DataModel\Node\Node"
  * })
  */
 abstract class Element
