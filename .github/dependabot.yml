@@ -1,0 +1,22 @@
+version: 2
+registries:
+  composer-repository-packages-ciwit-nl:
+    type: composer-repository
+    url: https://packages.ciwit.nl
+    username: ci-agent
+    password: "${{secrets.COMPOSER_REPOSITORY_PACKAGES_CIWIT_NL_PASSWORD}}"
+
+updates:
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "13:30"
+    timezone: Europe/Amsterdam
+  open-pull-requests-limit: 10
+  target-branch: master
+  reviewers:
+  - martijnkersloot
+  versioning-strategy: increase
+  registries:
+  - composer-repository-packages-ciwit-nl
