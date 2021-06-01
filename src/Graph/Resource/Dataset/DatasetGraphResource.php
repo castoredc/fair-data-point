@@ -29,6 +29,7 @@ class DatasetGraphResource extends GraphResource
         }
 
         $graph->addResource($this->getUrl(), 'a', 'dcat:Dataset');
+        $graph->addResource($this->getUrl(), 'a', 'dcat:Resource');
 
         $graph = $this->addMetadataToGraph($metadata, $graph);
 
@@ -36,9 +37,16 @@ class DatasetGraphResource extends GraphResource
             $graph->addResource($this->getUrl(), 'dcat:theme', $theme->getUrl()->getValue());
         }
 
+        $graph->addResource($this->baseUrl . Distribution::URL_PATH, 'a', 'ldp:DirectContainer');
+        $graph->addLiteral($this->baseUrl . Distribution::URL_PATH, 'dcterms:title', 'Distributions');
+        $graph->addResource($this->baseUrl . Distribution::URL_PATH, 'ldp:hasMemberRelation', 'dcat:distribution');
+        $graph->addResource($this->baseUrl . Distribution::URL_PATH, 'ldp:membershipResource', $this->getUrl());
+
         foreach ($this->dataset->getDistributions() as $distribution) {
             /** @var Distribution $distribution */
             $graph->addResource($this->getUrl(), 'dcat:distribution', $this->baseUrl . $distribution->getRelativeUrl());
+
+            $graph->addResource($this->baseUrl . Distribution::URL_PATH, 'ldp:contains', $this->baseUrl . $distribution->getRelativeUrl());
         }
 
         foreach ($this->dataset->getCatalogs() as $catalog) {
@@ -51,6 +59,8 @@ class DatasetGraphResource extends GraphResource
                 $graph->addLiteral($this->getUrl(), 'dcat:keyword', $text->getText(), $text->getLanguage()->getCode());
             }
         }
+
+        // accessRights
 
         return $graph;
     }

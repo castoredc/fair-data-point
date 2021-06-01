@@ -22,6 +22,8 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 
+    public const URL_PATH = '/fdp/catalog/';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
@@ -183,7 +185,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity
 
     public function getRelativeUrl(): string
     {
-        return '/fdp/catalog/' . $this->slug;
+        return self::URL_PATH . $this->slug;
     }
 
     public function getBaseUrl(): string
