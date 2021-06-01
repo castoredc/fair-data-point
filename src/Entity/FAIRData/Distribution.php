@@ -25,8 +25,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 
-    public const TYPE_RDF = 'rdf';
-    public const TYPE_CSV = 'csv';
+    public const URL_PATH = '/fdp/distribution/';
 
     /**
      * @ORM\Id
