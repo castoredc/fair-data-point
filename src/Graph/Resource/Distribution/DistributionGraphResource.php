@@ -25,6 +25,7 @@ class DistributionGraphResource extends GraphResource
         $metadata = $this->distribution->getLatestMetadata();
 
         $graph->addResource($this->getUrl(), 'a', 'dcat:Distribution');
+        $graph->addResource($this->getUrl(), 'a', 'dcat:Resource');
 
         $graph = $this->addMetadataToGraph($metadata, $graph);
 
@@ -42,6 +43,8 @@ class DistributionGraphResource extends GraphResource
         }
 
         $graph->addResource($this->getUrl(), 'dcterms:isPartOf', $this->baseUrl . $dataset->getRelativeUrl());
+
+        // accessRights
 
         return $graph;
     }

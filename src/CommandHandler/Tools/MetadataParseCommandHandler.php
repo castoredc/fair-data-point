@@ -1,6 +1,6 @@
 <?php
 /**
- * @phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+ * @phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
  */
 declare(strict_types=1);
 
