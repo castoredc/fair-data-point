@@ -6,6 +6,13 @@
     text-align: center;
   }
 
+  &.Compact {
+    .LoginButton {
+      text-align: left;
+      margin-top: 10px;
+    }
+  }
+
   .Servers {
     margin-top: 20px;
     padding-top: 20px;

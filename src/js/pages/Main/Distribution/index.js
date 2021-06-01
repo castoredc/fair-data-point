@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {localizedText} from "../../../util";
+import {classNames, localizedText} from "../../../util";
 import ListItem from "../../../components/ListItem";
 import Alert from "../../../components/Alert";
 import Header from "../../../components/Layout/Header";
@@ -10,6 +10,9 @@ import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
 import MetadataSideBar from "../../../components/MetadataSideBar";
+import './Distribution.scss';
+import {isGranted} from "../../../utils/PermissionHelper";
+import {Button, CastorNest} from "@castoredc/matter";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -48,22 +51,15 @@ export default class Distribution extends Component {
             });
     };
 
-    checkIfLoggedIn = (e, url) => {
-        e.preventDefault();
-
-        const {user} = this.props;
+    showLoginModal = () => {
         const {distribution} = this.state;
 
-        if (user === null) {
-            this.setState({
-                showLoginModal: true,
-                loginModalUrl: url,
-                loginModalView: 'distribution',
-                server: distribution.study.sourceServer,
-            })
-        } else {
-            window.location.href = url;
-        }
+        this.setState({
+            showLoginModal: true,
+            loginModalUrl: null,
+            loginModalView: 'distribution',
+            server: distribution.study.sourceServer,
+        })
     };
 
     closeModal = () => {
@@ -99,46 +95,67 @@ export default class Distribution extends Component {
                     <div className="MainCol">
                         {distribution.metadata.description && <div
                             className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>}
-
-                        {restricted && <Alert
-                            variant="info"
-                            icon="lock">
-                            The access to this distribution is restricted. When you try to access the data, you will be
-                            redirected to Castor EDC to authenticate yourself.
-                        </Alert>
-                        }
-                        {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
-                                                            title="Query the data"
-                                                            description="Use SPARQL queries to extract specific information from this distribution."
-                                                            smallIcon={restricted && 'lock'}
-                                                            newWindow
-                                                            onClick={(e) => {
-                                                                this.checkIfLoggedIn(e, distribution.relativeUrl + '/query')
-                                                            }}
-                        />}
-
-                        {distribution.accessUrl && <ListItem link={distribution.accessUrl}
-                                                             title="Access the data"
-                                                             description="Get access to the distribution."
-                                                             smallIcon={restricted && 'lock'}
-                                                             newWindow
-                                                             onClick={(e) => {
-                                                                 this.checkIfLoggedIn(e, distribution.accessUrl)
-                                                             }}
-                        />}
-
-                        {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
-                                                               title="Download the data"
-                                                               description="Get a downloadable file for this distribution."
-                                                               smallIcon={restricted && 'lock'}
-                                                               newWindow
-                                                               onClick={(e) => {
-                                                                   this.checkIfLoggedIn(e, distribution.downloadUrl)
-                                                               }}
-                        />}
                     </div>
+
                     <div className="SideCol">
                         <MetadataSideBar type="distribution" metadata={distribution.metadata} name={title} />
+                    </div>
+
+                    <hr className="Separator" />
+
+                    <div className={classNames('MainCol DistributionAccess', !isGranted('access_data', distribution.permissions) && 'Restricted')}>
+                        {(!user && !isGranted('access_data', distribution.permissions)) && <div className="Overlay">
+                            <Alert
+                                variant="info"
+                                icon="lock">
+                                <strong>The access to the data in this distribution is restricted.</strong>
+                                In order to access the data, please log in with your Castor EDC account.
+
+                                <div className="LoginForm Compact">
+                                    <div className="LoginButton">
+                                        <Button href={'/connect/castor/' + distribution.study.sourceServer + '?target_path=' + distribution.relativeUrl}>
+                                            <CastorNest className="LoginButtonLogo" />
+                                            Log in with Castor
+                                        </Button>
+                                    </div>
+                                </div>
+                            </Alert>
+                        </div>
+                        }
+
+                        {user && !isGranted('access_data', distribution.permissions) && <div className="Overlay">
+                            <Alert
+                                variant="error"
+                                icon="lock">
+                                <strong>You do not have access to the data inside this distribution.</strong>
+
+                                The access to the data is restricted and your account has not been granted access.
+                            </Alert>
+                        </div>
+                        }
+
+                        {isGranted('access_data', distribution.permissions) && <div className="DistributionAccessButtons">
+                            {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
+                                                                title="Query the data"
+                                                                description="Use SPARQL queries to extract specific information from this distribution."
+                                                                smallIcon={restricted && (isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                                                newWindow
+                            />}
+
+                            {distribution.accessUrl && <ListItem link={distribution.accessUrl}
+                                                                 title="Access the data"
+                                                                 description="Get access to the distribution."
+                                                                 smallIcon={restricted && (isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                                                 newWindow
+                            />}
+
+                            {distribution.downloadUrl && <ListItem link={distribution.downloadUrl}
+                                                                   title="Download the data"
+                                                                   description="Get a downloadable file for this distribution."
+                                                                   smallIcon={restricted && (isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                                                   newWindow
+                            />}
+                        </div>}
                     </div>
                 </>}
             </MainBody>

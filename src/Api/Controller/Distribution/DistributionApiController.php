@@ -26,6 +26,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Exception\LanguageNotFound;
+use App\Security\Authorization\Voter\DistributionVoter;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +56,11 @@ class DistributionApiController extends ApiController
             throw $this->createNotFoundException();
         }
 
-        return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray());
+        return $this->getResponse(
+            new DistributionApiResource($distribution, $uriHelper),
+            $distribution,
+            [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::ACCESS_DATA]
+        );
     }
 
     /**
