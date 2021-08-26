@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 Encore
 // The project directory where compiled assets will be stored
@@ -17,10 +18,12 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
 
     // Main scripts and styles definition
-    .addEntry('app', './src/js/index.js')
+    .addEntry('app', './src/js/index.tsx')
 
     // Use Sass/SCSS files (node-sass, sass-loader)
     .enableSassLoader()
+
+    .enableTypeScriptLoader()
 
     .addLoader({
         test: /\.svg$/,
@@ -35,5 +38,9 @@ Encore
 const config = Encore.getWebpackConfig();
 
 config.module.rules[0].exclude = /node_modules\/(?!(autotrack|dom-utils))/;
+
+config.resolve.plugins = [new TsconfigPathsPlugin({
+    extensions: [".js", ".jsx", ".ts", ".tsx"]
+})];
 
 module.exports = config;
