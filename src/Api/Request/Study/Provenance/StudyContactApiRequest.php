@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Api\Request\Study\Provenance;
 
-use App\Api\Request\GroupedApiRequest;
+use App\Api\Request\SingleApiRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class StudyContactApiRequest extends GroupedApiRequest
+class StudyContactApiRequest extends SingleApiRequest
 {
     /** @Assert\Type("string") */
     private ?string $id = null;

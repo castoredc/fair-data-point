@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
+use App\Api\Resource\Study\StudiesApiResource;
 use App\Command\Study\FindStudiesByUserCommand;
+use App\Exception\SessionTimedOut;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,11 +30,24 @@ class MyStudiesApiController extends ApiController
 
         $user = $this->getUser();
         assert($user instanceof User);
-        $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
 
-        $handledStamp = $envelope->last(HandledStamp::class);
-        assert($handledStamp instanceof HandledStamp);
+        try {
+            $envelope = $bus->dispatch(new FindStudiesByUserCommand($user, false));
 
-        return new JsonResponse($handledStamp->getResult());
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            return new JsonResponse((new StudiesApiResource($handledStamp->getResult(), false))->toArray());
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof SessionTimedOut) {
+                return new JsonResponse($e->toArray(), 401);
+            }
+
+            $this->logger->critical('An error occurred while loading the studies', ['exception' => $e]);
+        }
+
+        return new JsonResponse([], 500);
     }
 }

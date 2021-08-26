@@ -5,10 +5,13 @@ namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Study\StudyApiRequest;
+use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Study\UpdateStudyCommand;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DistributionVoter;
+use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +34,11 @@ class StudyApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $study);
 
-        return new JsonResponse((new StudyApiResource($study))->toArray());
+        return $this->getResponse(
+            new StudyApiResource($study),
+            $study,
+            [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
+        );
     }
 
     /**
@@ -42,7 +49,11 @@ class StudyApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $study);
 
-        return new JsonResponse((new StudyApiResource($study, $this->isGranted('ROLE_ADMIN')))->toArray());
+        return $this->getResponse(
+            new StudyApiResource($study, $this->isGranted('ROLE_ADMIN')),
+            $study,
+            [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
+        );
     }
 
     /**

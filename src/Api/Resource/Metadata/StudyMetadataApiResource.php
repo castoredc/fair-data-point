@@ -38,8 +38,8 @@ class StudyMetadataApiResource implements ApiResource
             'recruitmentStatus' => $this->studyMetadata->getRecruitmentStatus() !== null ? $this->studyMetadata->getRecruitmentStatus()->toString() : null,
             'methodType' => $this->studyMetadata->getMethodType()->toString(),
             'logo' => $this->studyMetadata->getLogo() !== null ? $this->studyMetadata->getLogo()->getValue() : null,
-            'contacts' => (new AgentsApiResource($this->studyMetadata->getContacts()->toArray()))->toArray(),
-            'organizations' => (new AgentsApiResource($this->studyMetadata->getCenters()->toArray()))->toArray(),
+            'contacts' => (new AgentsApiResource($this->studyMetadata->getContacts()))->toArray(),
+            'organizations' => (new AgentsApiResource($this->studyMetadata->getOrganizations()))->toArray(),
             'version' => [
                 'metadata' => $this->studyMetadata->getVersion()->getValue(),
             ],

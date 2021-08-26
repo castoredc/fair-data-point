@@ -5,11 +5,13 @@ namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Study\Provenance\StudyCenterApiRequest;
-use App\Command\Agent\CreateDepartmentAndOrganizationCommand;
-use App\Command\Study\Provenance\ClearStudyCentersCommand;
+use App\Api\Resource\Metadata\ParticipatingCentersApiResource;
+use App\Command\Agent\AddStudyCenterCommand;
+use App\Command\Agent\CreateStudyCenterCommand;
+use App\Command\Agent\RemoveStudyCenterCommand;
 use App\Command\Study\Provenance\GetStudyCentersCommand;
 use App\Entity\Study;
-use App\Exception\GroupedApiRequestParseError;
+use App\Exception\ApiRequestParseError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +38,7 @@ class StudyCentersApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
 
-            return new JsonResponse($handledStamp->getResult()->toArray());
+            return new JsonResponse((new ParticipatingCentersApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);
         }
@@ -51,31 +53,56 @@ class StudyCentersApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $study);
 
         try {
-            /** @var StudyCenterApiRequest[] $parsed */
-            $parsed = $this->parseGroupedRequest(StudyCenterApiRequest::class, $request);
+            $parsed = $this->parseRequest(StudyCenterApiRequest::class, $request);
+            assert($parsed instanceof StudyCenterApiRequest);
 
-            $bus->dispatch(new ClearStudyCentersCommand($study));
-
-            foreach ($parsed as $item) {
+            if ($parsed->getSource()->isDatabase()) {
                 $bus->dispatch(
-                    new CreateDepartmentAndOrganizationCommand(
+                    new AddStudyCenterCommand(
                         $study,
-                        null,
-                        null,
-                        $item->getName(),
-                        null,
-                        $item->getCountry(),
-                        $item->getCity(),
-                        $item->getDepartment(),
-                        $item->getAdditionalInformation(),
-                        $this->isGranted('ROLE_ADMIN') ? $item->getCoordinatesLatitude() : null,
-                        $this->isGranted('ROLE_ADMIN') ? $item->getCoordinatesLongitude() : null,
+                        $parsed->getId()
+                    )
+                );
+            } elseif ($parsed->getSource()->isManual()) {
+                $bus->dispatch(
+                    new CreateStudyCenterCommand(
+                        $study,
+                        $parsed->getName(),
+                        $parsed->getCountry(),
+                        $parsed->getCity(),
                     )
                 );
             }
 
             return new JsonResponse([], 200);
-        } catch (GroupedApiRequestParseError $e) {
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/api/study/{studyId}/centers/remove", methods={"POST"}, name="api_remove_centers")
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
+     */
+    public function removeCenters(Study $study, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $study);
+
+        try {
+            $parsed = $this->parseRequest(StudyCenterApiRequest::class, $request);
+            assert($parsed instanceof StudyCenterApiRequest);
+
+            $bus->dispatch(
+                new RemoveStudyCenterCommand(
+                    $study,
+                    $parsed->getId()
+                )
+            );
+
+            return new JsonResponse([], 200);
+        } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
             return new JsonResponse([], 500);

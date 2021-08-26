@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Agent;
 
-use App\Command\Agent\CreateDepartmentAndOrganizationCommand;
-use App\Entity\FAIRData\Agent\Department;
+use App\Command\Agent\CreateStudyCenterCommand;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
 use App\Exception\CountryNotFound;
@@ -14,7 +13,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInterface
+class CreateStudyCenterCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
 
@@ -26,7 +25,7 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         $this->security = $security;
     }
 
-    public function __invoke(CreateDepartmentAndOrganizationCommand $command): void
+    public function __invoke(CreateStudyCenterCommand $command): void
     {
         if (! $this->security->isGranted('edit', $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
@@ -40,29 +39,21 @@ class CreateDepartmentAndOrganizationCommandHandler implements MessageHandlerInt
         }
 
         $organization = new Organization(
-            $command->getOrganizationSlug(),
+            null,
             $command->getName(),
-            $command->getHomepage(),
+            null,
             $country->getCode(),
             $command->getCity(),
-            $command->getCoordinatesLatitude(),
-            $command->getCoordinatesLongitude()
+            null,
+            null,
         );
 
         $organization->setCountry($country);
 
         $this->em->persist($organization);
 
-        $department = new Department(
-            $command->getDepartmentSlug(),
-            $command->getDepartment(),
-            $organization,
-            $command->getAdditionalInformation()
-        );
+        $command->getStudy()->getLatestMetadata()->addCenter($organization);
 
-        $command->getStudy()->getLatestMetadata()->addCenter($department);
-
-        $this->em->persist($department);
         $this->em->persist($command->getStudy());
 
         $this->em->flush();
