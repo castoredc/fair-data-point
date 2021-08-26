@@ -11,7 +11,7 @@ import Input from "../../Input";
 import Dropdown from "../../Input/Dropdown";
 import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
-import {Button, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import FormHeading from "../FormHeading";
 import InlineLoader from "../../LoadingScreen/InlineLoader";
 
@@ -194,7 +194,7 @@ export default class DistributionForm extends Component {
         }
 
         if (!hasLoadedLanguages || !hasLoadedLicenses || !hasLoadedDataModels) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading distribution"/>;
         }
 
         const currentDataModel = dataModels.find(({value}) => value === data.dataModel);

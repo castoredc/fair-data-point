@@ -1,0 +1,20 @@
+@import '../../../scss/const';
+@import '../../../scss/colors';
+
+.DashboardHeader {
+  .HeaderTitle {
+    //border-bottom: 1px solid $neutral-40;
+    margin-bottom: 10px;
+
+    h2 {
+      font-size: 16px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: $neutral-800;
+      margin-bottom: 0;
+    }
+  }
+}

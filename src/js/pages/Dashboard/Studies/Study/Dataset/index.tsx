@@ -1,0 +1,133 @@
+import React, {Component} from "react";
+import axios from "axios";
+import {toast} from "react-toastify";
+import ToastContent from "components/ToastContent";
+import {LoadingOverlay} from "@castoredc/matter";
+import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import DocumentTitle from "components/DocumentTitle";
+import {localizedText} from "../../../../../util";
+import Header from "components/Layout/Dashboard/Header";
+import Body from "components/Layout/Dashboard/Body";
+import DatasetForm from "components/Form/Admin/DatasetForm";
+import DatasetMetadataForm from "components/Form/Metadata/DatasetMetadataForm";
+import SideBar from "components/SideBar";
+import NotFound from "pages/NotFound";
+import Distributions from "pages/Dashboard/Studies/Study/Dataset/Distributions";
+
+interface DatasetProps extends RouteComponentProps<any> {
+    study: any,
+}
+
+interface DatasetState {
+    dataset: any,
+    isLoading: boolean,
+}
+
+export default class Dataset extends Component<DatasetProps, DatasetState> {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            dataset: null,
+            isLoading: true,
+        };
+    }
+
+    getDataset = () => {
+        this.setState({
+            isLoading: true,
+        });
+
+        const {match} = this.props;
+
+        axios.get('/api/dataset/' + match.params.dataset)
+            .then((response) => {
+                this.setState({
+                    dataset: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred while loading your dataset"/>);
+                }
+            });
+    };
+
+    componentDidMount() {
+        this.getDataset();
+    }
+
+    render() {
+        const {history, location, match, study} = this.props;
+        const {isLoading, dataset} = this.state;
+
+        if (isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading dataset"/>;
+        }
+
+        const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
+
+        return <>
+            <DocumentTitle title={title}/>
+
+            <SideBar
+                back={{
+                    to: `/dashboard/studies/${match.params.study}`,
+                    title: 'Back to study'
+                }}
+                location={location}
+                items={[
+                    {
+                        to: '/dashboard/studies/' + match.params.study + '/datasets/' + dataset.slug,
+                        exact: true,
+                        title: 'Dataset',
+                        customIcon: 'dataset'
+                    },
+                    {
+                        to: '/dashboard/studies/' + match.params.study + '/datasets/' + dataset.slug + '/metadata',
+                        exact: true,
+                        title: 'Metadata',
+                        customIcon: 'metadata'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        to: '/dashboard/studies/' + match.params.study + '/datasets/' + dataset.slug + '/distributions',
+                        exact: true,
+                        title: 'Distributions',
+                        customIcon: 'distribution'
+                    }
+                ]}
+            />
+
+            <Body>
+                <Header title={title} />
+
+                <Switch>
+                    <Route path="/dashboard/studies/:study/datasets/:dataset" exact
+                           render={(props) => <div>
+                               <DatasetForm
+                                   dataset={dataset}
+                               />
+                           </div>}/>
+                    <Route path="/dashboard/studies/:study/datasets/:dataset/metadata" exact
+                           render={(props) => <div>
+                               <DatasetMetadataForm dataset={dataset} onSave={this.getDataset} />
+                           </div>}/>
+                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions" exact
+                           render={(props) => <Distributions {...props} study={study} dataset={dataset}/>}/>
+
+                    <Route component={NotFound}/>
+                </Switch>
+            </Body>
+        </>;
+    }
+}

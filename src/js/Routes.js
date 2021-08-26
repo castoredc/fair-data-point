@@ -3,11 +3,10 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import axios from "axios";
-import StudyMetadataWrapper from "./pages/StudyMetadata/StudyMetadataWrapper";
-import {PrivateRoute, ProtectedRoute} from "./components/Route";
-import Admin from "./pages/Admin";
+import {ProtectedRoute} from "components/Route";
 import Main from "./pages/Main";
 import Wizard from "./pages/Wizard";
+import Dashboard from "pages/Dashboard";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -33,17 +32,8 @@ export default ({user, embedded}) =>
         <Route path="/study" render={(props) => <Main {...props} embedded={embedded} user={user} />} />
         <Route path="/tools" render={(props) => <Main {...props} user={user} />} />
 
-        /* My studies */
-        {/*<PrivateRoute path="/my-studies" exact user={user} component={MyStudies} />*/}
-        <PrivateRoute path="/my-studies/:catalog/study/add" exact user={user} component={StudyMetadataWrapper} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/details" exact user={user} component={StudyMetadataWrapper} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/centers" exact user={user} component={StudyMetadataWrapper} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/contacts" exact user={user} component={StudyMetadataWrapper} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/consent" exact user={user} component={StudyMetadataWrapper} />
-        <PrivateRoute path="/my-studies/:catalog/study/:studyId/metadata/finished" exact user={user} component={StudyMetadataWrapper} />
-
-        /* Admin */
-        <ProtectedRoute path="/admin" user={user} component={Admin} />
+        /* Dashboard */
+        <ProtectedRoute path="/dashboard" user={user} component={Dashboard} />
 
         <Route path="/wizard" render={(props) => <Wizard {...props} user={user} />} />
 

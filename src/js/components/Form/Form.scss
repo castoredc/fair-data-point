@@ -147,3 +147,16 @@
     color: $neutral-800;
   }
 }
+
+.FormGroup {
+  padding: 20px 0;
+
+  .FormHeading {
+    border-bottom: 1px solid $neutral-40;
+    margin-bottom: 10px;
+
+    h2 {
+      margin-bottom: 10px;
+    }
+  }
+}

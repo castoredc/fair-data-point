@@ -5,8 +5,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Dropdown from "../../components/Input/Dropdown";
 import FormItem from "../../components/Form/FormItem";
-import {Button} from "@castoredc/matter";
-import Modal from "../Modal";
+import {Button, Modal} from "@castoredc/matter";
 import CheckboxGroup from "../../components/Input/CheckboxGroup";
 
 export default class AddAnnotationModal extends Component {
@@ -166,7 +165,7 @@ export default class AddAnnotationModal extends Component {
     };
 
     render() {
-        const {show, handleClose} = this.props;
+        const {show, handleClose, entity} = this.props;
         const {data, ontologies, isLoading} = this.state;
 
         const required = "This field is required";
@@ -176,17 +175,16 @@ export default class AddAnnotationModal extends Component {
             return {value: ontology.id, label: ontology.name};
         });
 
+        if(!entity) {
+            return null;
+        }
+
         return <Modal
-            show={show}
-            handleClose={handleClose}
+            accessibleName="Test"
+            open={show}
+            title={`Add annotation for ${entity.title}`}
+            onClose={handleClose}
             className="AddAnnotationModal"
-            title="Add annotation"
-            closeButton
-            footer={(
-                <Button type="submit" disabled={isLoading} onClick={() => this.form.submit()}>
-                    Add annotation
-                </Button>
-            )}
         >
             <ValidatorForm
                 ref={node => (this.form = node)}
@@ -224,6 +222,10 @@ export default class AddAnnotationModal extends Component {
                         onChange={this.handleChange}
                     />
                 </FormItem>
+
+                <Button type="submit" disabled={data.ontology === null || isLoading}>
+                    Add annotation
+                </Button>
             </ValidatorForm>
         </Modal>
     }
