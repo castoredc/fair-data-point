@@ -70,6 +70,7 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity
         $this->slug = $slug;
         $this->catalogs = new ArrayCollection();
         $this->metadata = new ArrayCollection();
+        $this->distributions = new ArrayCollection();
     }
 
     public function getId(): string

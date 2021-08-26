@@ -21,7 +21,6 @@ class LocalizedText
 
     /**
      * @ORM\OneToMany(targetEntity="LocalizedTextItem", mappedBy="parent", cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinColumn(name="texts", referencedColumnName="id")
      *
      * @var Collection<mixed, LocalizedTextItem>
      */

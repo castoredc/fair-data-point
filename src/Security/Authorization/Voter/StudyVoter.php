@@ -15,7 +15,8 @@ class StudyVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
-    public const ACCESS_DATA = 'access_data';
+    public const EDIT_SOURCE_SYSTEM = 'edit_source_system';
+
     private Security $security;
 
     public function __construct(Security $security)
@@ -26,7 +27,7 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA], true)) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::EDIT_SOURCE_SYSTEM], true)) {
             return false;
         }
 
@@ -45,6 +46,9 @@ class StudyVoter extends Voter
 
             case self::EDIT:
                 return $this->canEdit($study, $token);
+
+            case self::EDIT_SOURCE_SYSTEM:
+                return $this->canEditInSourceSystem($study, $token);
         }
 
         return false;
@@ -63,7 +67,7 @@ class StudyVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (! $user instanceof User) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -71,10 +75,25 @@ class StudyVoter extends Voter
             return true;
         }
 
-        if (! $user->hasCastorUser()) {
+        return $this->canEditInSourceSystem($study, $token);
+    }
+
+    private function canEditInSourceSystem(Study $study, TokenInterface $token): bool
+    {
+        $user = $token->getUser();
+
+        if (!$user instanceof User) {
             return false;
         }
 
-        return $user->getCastorUser()->hasAccessToStudy($study->getSourceId());
+        if (!$user->hasCastorUser()) {
+            return false;
+        }
+
+        if ($study->getSource()->isCastor()) {
+            return $user->getCastorUser()->hasAccessToStudy($study->getSourceId());
+        }
+
+        return false;
     }
 }

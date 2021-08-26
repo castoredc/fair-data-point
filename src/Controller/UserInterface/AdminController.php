@@ -131,23 +131,6 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/dictionary/{dataDictionary}/{version}/option-groups", name="admin_dictionary_modules")
-     * @Route("/dictionary/{dataDictionary}/{version}/groups", name="admin_dictionary_prefixes")
-     * @Route("/dictionary/{dataDictionary}/{version}/import-export", name="admin_dictionary_importexport")
-     * @ParamConverter("dataDicationary", options={"mapping": {"dataDictionary": "id"}})
-     * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "dataDictionary", "version": "version"}})
-     */
-    public function adminDataDictionaryVersion(DataDictionary $dataDicationary, DataDictionaryVersion $dataDictionaryVersion): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'FDP Admin']
-        );
-    }
-
-    /**
      * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_catalog_dataset")
      * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_catalog_dataset_metadata")
      * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_catalog_dataset_distributions")
@@ -158,66 +141,6 @@ class AdminController extends AbstractController
     public function adminCatalogDataset(Catalog $catalog, Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'FDP Admin']
-        );
-    }
-
-    /**
-     * @Route("/dataset/{dataset}", name="admin_dataset")
-     * @Route("/dataset/{dataset}/metadata", name="admin_dataset_metadata")
-     * @Route("/dataset/{dataset}/distributions", name="admin_dataset_distributions")
-     * @Route("/dataset/{dataset}/distributions/add", name="admin_dataset_distribution_add")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     */
-    public function adminDataset(Dataset $dataset): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'FDP Admin']
-        );
-    }
-
-    /**
-     * @Route("/dataset/{dataset}/distribution/{distribution}", name="admin_study_distribution")
-     * @Route("/dataset/{dataset}/distribution/{distribution}/metadata", name="admin_study_distribution_metadata")
-     * @Route("/dataset/{dataset}/distribution/{distribution}/contents", name="admin_study_distribution_content")
-     * @Route("/dataset/{dataset}/distribution/{distribution}/log", name="admin_study_distribution_log")
-     * @Route("/dataset/{dataset}/distribution/{distribution}/subset", name="admin_study_distribution_subset")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function adminDistribution(Dataset $dataset, Distribution $distribution): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        if (! $dataset->hasDistribution($distribution)) {
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'FDP Admin']
-        );
-    }
-
-    /**
-     * @Route("/dataset/{dataset}/distribution/{distribution}/log/{log}", name="admin_study_distribution_log_records")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     * @ParamConverter("log", options={"mapping": {"log": "id"}})
-     */
-    public function adminDistributionLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
-            throw $this->createNotFoundException();
-        }
 
         return $this->render(
             'react.html.twig',

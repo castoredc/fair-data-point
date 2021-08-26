@@ -13,6 +13,7 @@ use App\Api\Resource\Data\DataModel\DataModelVersionApiResource;
 use App\Api\Resource\Data\DataModel\DataModelVersionExportApiResource;
 use App\Command\Data\DataModel\CreateDataModelCommand;
 use App\Command\Data\DataModel\CreateDataModelVersionCommand;
+use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
 use App\Command\Data\DataModel\GetDataModelsCommand;
 use App\Command\Data\DataModel\ImportDataModelCommand;
@@ -20,10 +21,12 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidDataModelVersion;
+use App\Exception\SessionTimedOut;
 use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
 use App\Exception\Upload\NoFileSpecified;
+use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -83,6 +86,36 @@ class DataModelApiController extends ApiController
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * @Route("/my", methods={"GET"}, name="api_my_data_models")
+     */
+    public function myDataModels(MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        assert($user instanceof User);
+
+        try {
+            $envelope = $bus->dispatch(new FindDataModelsByUserCommand($user));
+
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            return new JsonResponse((new DataModelsApiResource($handledStamp->getResult()))->toArray());
+        } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof SessionTimedOut) {
+                return new JsonResponse($e->toArray(), 401);
+            }
+
+            $this->logger->critical('An error occurred while loading the data models', ['exception' => $e]);
+        }
+
+        return new JsonResponse([], 500);
     }
 
     /**
