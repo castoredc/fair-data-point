@@ -11,23 +11,23 @@ export default class DatasetMetadataForm extends Component {
         return <MetadataForm type="dataset" object={dataset} onSave={onSave}
                              defaultData={defaultData}
         >
-            {(handleChange, data, validation, languages) => (<div>
-                <FormItem label="Keywords">
-                    <LocalizedTextInput
-                        name="keyword"
-                        onChange={handleChange}
-                        value={data.keyword}
-                        serverError={validation.keyword}
-                        languages={languages}
-                    />
-                </FormItem>
+            {(validation, languages) => (<div>
+                {/*<FormItem label="Keywords">*/}
+                {/*    <LocalizedTextInput*/}
+                {/*        name="keyword"*/}
+                {/*        onChange={handleChange}*/}
+                {/*        value={data.keyword}*/}
+                {/*        serverError={validation.keyword}*/}
+                {/*        languages={languages}*/}
+                {/*    />*/}
+                {/*</FormItem>*/}
 
-                <OntologyConceptFormBlock
-                    label="Themes"
-                    value={data.theme}
-                    name="theme"
-                    handleChange={handleChange}
-                />
+                {/*<OntologyConceptFormBlock*/}
+                {/*    label="Themes"*/}
+                {/*    value={data.theme}*/}
+                {/*    name="theme"*/}
+                {/*    handleChange={handleChange}*/}
+                {/*/>*/}
             </div>)}
         </MetadataForm>;
     }

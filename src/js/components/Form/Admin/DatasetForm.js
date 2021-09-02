@@ -112,7 +112,7 @@ export default class DatasetForm extends Component {
                                             <dd>{dataset.study.name}</dd>
                                         </dl>
                                     </div>
-                                    <Link to={`/admin/study/${dataset.study.id}`}>
+                                    <Link to={`/dashboard/studies/${dataset.study.id}`}>
                                         <Button buttonType="secondary">Open study</Button>
                                     </Link>
                                 </div>

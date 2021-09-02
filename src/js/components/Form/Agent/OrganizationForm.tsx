@@ -14,13 +14,12 @@ import {OrganizationType} from "../../../types/OrganizationType";
 import {ActionMeta, OptionsType, ValueType} from "react-select/src/types";
 import debounce from 'lodash.debounce';
 import Input from "components/Input/Formik/Input";
+import {FormikHelpers} from "formik/dist/types";
 
 
 type OrganizationFormProps = {
-    studyId: string,
-    id?: string,
     countries: any,
-    onSubmit: () => void
+    handleSubmit: (values: any, formikHelpers: FormikHelpers<any>) => void,
 }
 
 type OrganizationFormState = {
@@ -98,63 +97,15 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
         };
     };
 
-    handleSubmit = (values, { setSubmitting }) => {
-        const {studyId, onSubmit} = this.props;
-
-        window.onbeforeunload = null;
-
-        this.setState({
-            isLoading:      true,
-        });
-
-        axios.post('/api/study/' + studyId + '/centers/add', {
-            source: values.source,
-            country: values.country.value,
-            ...values.source !== 'database' ? {
-                name: values.name,
-                city: values.city,
-            } : {
-                id: values.id,
-            }
-        })
-            .then((response) => {
-                this.setState({
-                    isLoading:      false,
-                });
-
-                toast.success(<ToastContent type="success" message={`The ${values.name} center was successfully added.`}/>, {
-                    position: "top-right",
-                });
-
-                onSubmit();
-            })
-            .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    this.setState({
-                        validation: error.response.data.fields,
-                    });
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                        position: "top-center",
-                    });
-                }
-                this.setState({
-                    isLoading:      false,
-                }, () => {
-                    setSubmitting(false);
-                });
-            });
-    }
-
     render() {
-        const {countries} = this.props;
+        const {countries, handleSubmit} = this.props;
         const {initialValues, defaultOptions, validation, cachedOptions} = this.state;
 
         return (
             <Formik
                 initialValues={initialValues}
                 validationSchema={OrganizationSchema}
-                onSubmit={this.handleSubmit}
+                onSubmit={handleSubmit}
             >
                 {({
                       values,

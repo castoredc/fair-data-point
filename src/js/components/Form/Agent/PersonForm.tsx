@@ -10,11 +10,12 @@ import {Field, Form, Formik} from 'formik';
 import Input from "components/Input/Formik/Input";
 import * as Yup from 'yup';
 import {Button} from "@castoredc/matter";
+import {FormikHelpers} from "formik/dist/types";
 
 type PersonFormProps = {
     email?: string,
-    studyId: string,
-    onSubmit: () => void,
+    studyId?: string,
+    handleSubmit: (values: any, formikHelpers: FormikHelpers<any>) => void,
 }
 
 type PersonFormState = {
@@ -52,47 +53,6 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                 initialValues: defaultData,
             });
         }
-    }
-
-    handleSubmit = (values, {setSubmitting}) => {
-        const {studyId, onSubmit} = this.props;
-
-        window.onbeforeunload = null;
-
-        const name = [values.firstName, values.middleName, values.lastName].filter(Boolean).join(' ');
-        this.setState({
-            isLoading: true,
-        });
-
-        axios.post('/api/study/' + studyId + '/team/add', values)
-            .then((response) => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                toast.success(<ToastContent type="success"
-                                            message={`${name} was successfully added as study contact`}/>, {
-                    position: "top-right",
-                });
-
-                onSubmit();
-            })
-            .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    this.setState({
-                        validation: error.response.data.fields,
-                    });
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                        position: "top-center",
-                    });
-                }
-                this.setState({
-                    isLoading: false,
-                }, () => {
-                    setSubmitting(false);
-                });
-            });
     }
 
     getPersonInformation = (email: string, callback?: (data: PersonType) => void) => {
@@ -161,7 +121,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
 
     render() {
         const {checkedForExistingEmail, hasExistingEmail, initialValues, isLoading, validation} = this.state;
-        const {email} = this.props;
+        const {email, handleSubmit} = this.props;
 
         const edit = !!email;
 
@@ -169,7 +129,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
             <Formik
                 initialValues={initialValues}
                 validationSchema={PersonSchema}
-                onSubmit={this.handleSubmit}
+                onSubmit={handleSubmit}
             >
                 {({
                       values,

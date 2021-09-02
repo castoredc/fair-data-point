@@ -1,7 +1,8 @@
 import React, {ChangeEvent, FC} from 'react'
 
-import {Space, TextInput, ValidationMessage} from "@castoredc/matter";
-import {ErrorMessage, FieldProps} from "formik";
+import {TextInput} from "@castoredc/matter";
+import {FieldProps} from "formik";
+import FieldErrors from "components/Input/Formik/Errors";
 
 interface InputProps extends FieldProps {
     readOnly?: boolean,
@@ -13,7 +14,7 @@ interface InputProps extends FieldProps {
 const Input: FC<InputProps> = ({field, form, meta, readOnly, onChange, autoFocus, serverError}) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
-    const serverErrors = serverError[field.name];
+    const serverErrors = serverError ? serverError[field.name] : undefined;
 
     return <>
         <TextInput
@@ -29,21 +30,7 @@ const Input: FC<InputProps> = ({field, form, meta, readOnly, onChange, autoFocus
             autoFocus={autoFocus}
         />
 
-        <ErrorMessage
-            name={field.name}
-            render={msg => <>
-                <Space bottom="default"/>
-                <ValidationMessage type="error">{msg}</ValidationMessage>
-            </>}
-        />
-
-        {serverErrors && <ValidationMessage type="error">
-            {serverErrors.map((errorText, index) => (
-                <div key={index}>
-                    {errorText}
-                </div>
-            ))}
-        </ValidationMessage>}
+        <FieldErrors field={field} serverErrors={serverErrors}/>
     </>;
 }
 

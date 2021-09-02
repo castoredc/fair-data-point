@@ -6,7 +6,6 @@ import ToastContent from "../../ToastContent";
 import axios from "axios";
 import Avatar from "react-avatar";
 import ConfirmModal from "../../../modals/ConfirmModal";
-import ContactModal from "../../../modals/ContactModal";
 import OrganizationModal from "../../../modals/OrganizationModal";
 import {OrganizationType} from "../../../types/OrganizationType";
 

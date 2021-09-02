@@ -99,6 +99,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
 
                 {datasets.map((dataset) => {
                     return <ListItem
+                        key={dataset.id}
                         selectable={false}
                         link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`} title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
                     />

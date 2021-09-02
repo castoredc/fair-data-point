@@ -90,6 +90,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             <Dropdown
                 options={options}
                 menuPlacement={"auto"}
+                menuPosition="fixed"
                 getOptionLabel={({label}) => label }
                 getOptionValue={({value}) => value }
                 onChange={this.updateSelection}

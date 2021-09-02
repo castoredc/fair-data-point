@@ -45,9 +45,9 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
 
         return <div className="OptionGroupTable LargeTable">
             <AddAnnotationModal
-                show={showModal}
+                open={showModal}
                 entity={modalData}
-                handleClose={this.closeModal}
+                onClose={this.closeModal}
                 studyId={studyId}
                 onSaved={onUpdate}
             />

@@ -74,6 +74,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
             <div>
                 {studies.map((study) => {
                     return <ListItem
+                        key={study.id}
                         selectable={false}
                         link={`/dashboard/studies/${study.id}`} title={study.hasMetadata ? study.metadata.briefName : study.name}
                     />
