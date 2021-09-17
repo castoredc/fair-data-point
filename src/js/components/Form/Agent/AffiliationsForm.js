@@ -10,108 +10,107 @@ import {Button, Stack} from "@castoredc/matter";
 import AffiliationForm from "./AffiliationForm";
 import InlineLoader from "../../LoadingScreen/InlineLoader";
 import Toggle from "../../Toggle";
+import AffiliationOrganizationModal from "../../../modals/AffiliationOrganizationModal";
+import {Formik} from "formik";
 
 export default class AffiliationsForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            affiliations: [
-                defaultData,
-            ],
+            // affiliations: [],
             countries: null,
-            metadataSource: null,
-            visitedFields: {},
+            // metadataSource: null,
+            // visitedFields: {},
             validation: [
                 defaultValidation,
             ],
             isSaved: false,
-            submitDisabled: false,
             isLoading: true,
         };
     }
 
-    handleNewAffiliation = (e) => {
-        e.preventDefault();
+    // handleNewAffiliation = (e) => {
+    //     e.preventDefault();
+    //
+    //     this.form.isFormValid(false).then(valid => {
+    //         if (valid) {
+    //             this.setState({
+    //                 affiliations: [
+    //                     ...this.state.affiliations,
+    //                     defaultData,
+    //                 ],
+    //                 validation: [
+    //                     ...this.state.validation,
+    //                     defaultValidation,
+    //                 ],
+    //             });
+    //         }
+    //     });
+    // };
 
-        this.form.isFormValid(false).then(valid => {
-            if (valid) {
-                this.setState({
-                    affiliations: [
-                        ...this.state.affiliations,
-                        defaultData,
-                    ],
-                    validation: [
-                        ...this.state.validation,
-                        defaultValidation,
-                    ],
-                });
-            }
-        });
-    };
+    // removeAffiliation = (e, index) => {
+    //     const {affiliations, validation} = this.state;
+    //     e.preventDefault();
+    //
+    //     affiliations.splice(index, 1);
+    //     validation.splice(index, 1);
+    //
+    //     this.setState({
+    //         affiliations: affiliations,
+    //         validation: validation,
+    //     });
+    // };
 
-    removeAffiliation = (e, index) => {
-        const {affiliations, validation} = this.state;
-        e.preventDefault();
+    // handleChange = (index, event, group, callback = () => {
+    // }) => {
+    //     const {affiliations, validation} = this.state;
+    //
+    //     let newAffiliation = {
+    //         ...affiliations[index],
+    //         [group]: {
+    //             ...affiliations[index][group],
+    //             [event.target.name]: event.target.value,
+    //         }
+    //     };
+    //
+    //     const newAffiliations = replaceAt(affiliations, index, newAffiliation);
+    //
+    //     const newValidation = replaceAt(validation, index, {
+    //         ...validation[index],
+    //         [event.target.name]: false,
+    //     });
+    //
+    //     this.setState({
+    //         affiliations: newAffiliations,
+    //         validation: newValidation,
+    //     }, callback);
+    // };
 
-        affiliations.splice(index, 1);
-        validation.splice(index, 1);
-
-        this.setState({
-            affiliations: affiliations,
-            validation: validation,
-        });
-    };
-
-    handleChange = (index, event, group, callback = () => {
-    }) => {
-        const {affiliations, validation} = this.state;
-
-        let newAffiliation = {
-            ...affiliations[index],
-            [group]: {
-                ...affiliations[index][group],
-                [event.target.name]: event.target.value,
-            }
-        };
-
-        const newAffiliations = replaceAt(affiliations, index, newAffiliation);
-
-        const newValidation = replaceAt(validation, index, {
-            ...validation[index],
-            [event.target.name]: false,
-        });
-
-        this.setState({
-            affiliations: newAffiliations,
-            validation: newValidation,
-        }, callback);
-    };
-
-    handleDataChange = (index, group, newData) => {
-        const {affiliations} = this.state;
-
-        let newAffiliation = {
-            ...affiliations[index],
-            [group]: {
-                ...affiliations[index][group],
-                ...newData
-            }
-        };
-
-        if(group === 'organization') {
-            newAffiliation.department = {
-                ...defaultData.department,
-                source: newAffiliation.organization.id === null ? 'manual' : 'database'
-            };
-        }
-
-        const newAffiliations = replaceAt(affiliations, index, newAffiliation);
-
-        this.setState({
-            affiliations: newAffiliations,
-        });
-    };
+    // handleDataChange = (index, group, newData) => {
+    //     const {affiliations} = this.state;
+    //
+    //     let newAffiliation = {
+    //         ...affiliations[index],
+    //         [group]: {
+    //             ...affiliations[index][group],
+    //             ...newData
+    //         }
+    //     };
+    //
+    //     if (group === 'organization') {
+    //         newAffiliation.department = {
+    //             ...defaultData.department,
+    //             source: newAffiliation.organization.id === null ? 'manual' : 'database'
+    //         };
+    //     }
+    //
+    //     const newAffiliations = replaceAt(affiliations, index, newAffiliation);
+    //
+    //     this.setState({
+    //         affiliations: newAffiliations,
+    //     });
+    // };
 
     getCountries = () => {
         axios.get('/api/countries')
@@ -135,95 +134,114 @@ export default class AffiliationsForm extends Component {
     }
 
     handleSubmit = (event) => {
-        const {affiliations} = this.state;
-        const {onSaved} = this.props;
-
-        event.preventDefault();
-
-        if (this.form.isFormValid()) {
-            this.setState({
-                isLoading: true,
-            });
-
-            axios.post('/api/user/affiliations', affiliations)
-                .then(() => {
-                    this.setState({
-                        isLoading: false,
-                    }, () => {
-                        onSaved();
-                    });
-                })
-                .catch((error) => {
-                    if (error.response && error.response.status === 400) {
-                        this.setState({
-                            validation: error.response.data.fields,
-                        });
-                    } else {
-                        toast.error(<ToastContent type="error"
-                                                  message="An error occurred while updating your affiliations"/>, {
-                            position: "top-center",
-                        });
-                    }
-                    this.setState({
-                        isLoading: false,
-                    });
-                });
-        }
-
-        return false;
+        // const {affiliations} = this.state;
+        // const {onSaved} = this.props;
+        //
+        // event.preventDefault();
+        //
+        // if (this.form.isFormValid()) {
+        //     this.setState({
+        //         isLoading: true,
+        //     });
+        //
+        //     axios.post('/api/user/affiliations', affiliations)
+        //         .then(() => {
+        //             this.setState({
+        //                 isLoading: false,
+        //             }, () => {
+        //                 onSaved();
+        //             });
+        //         })
+        //         .catch((error) => {
+        //             if (error.response && error.response.status === 400) {
+        //                 this.setState({
+        //                     validation: error.response.data.fields,
+        //                 });
+        //             } else {
+        //                 toast.error(<ToastContent type="error"
+        //                                           message="An error occurred while updating your affiliations"/>, {
+        //                     position: "top-center",
+        //                 });
+        //             }
+        //             this.setState({
+        //                 isLoading: false,
+        //             });
+        //         });
+        // }
+        //
+        // return false;
     };
 
     render() {
         const {affiliations, validation, countries, isLoading} = this.state;
 
-        if(isLoading && countries == null) {
-            return <InlineLoader />;
+        if (isLoading && countries == null) {
+            return <InlineLoader/>;
         }
 
-        return <ValidatorForm
-            className="FullHeightForm"
-            ref={node => (this.form = node)}
-            onSubmit={this.handleSubmit}
-            method="post"
-        >
-            <div className="FormContent">
-                <div className="Organizations">
-                    {affiliations.map((affiliation, index) => {
-                        const title = 'Affiliation ' + (index + 1) + (affiliation.organization.name.length > 0 ? ': ' + affiliation.organization.name : '');
+        return <>
+            {/*<AffiliationOrganizationModal open={} onClose={} studyId={} countries={} handleSubmit={}/>*/}
 
-                        return <Toggle key={index} title={title} expanded={affiliations.length === (index + 1)}>
-                            <AffiliationForm
-                                data={affiliation}
-                                validation={validation[index]}
-                                countries={countries}
-                                handleChange={(group, event, callback) => this.handleChange(index, event, group, callback)}
-                                handleDataChange={(group, newData) => this.handleDataChange(index, group, newData)}
-                            />
 
-                            {index > 0 && <Stack alignment="end" distribution="trailing">
-                                <Button buttonType="danger" className="RemoveButton" icon="cross"
-                                        onClick={(e) => {
-                                            this.removeAffiliation(e, index)
-                                        }}>Delete affiliation</Button>
-                            </Stack>}
-                        </Toggle>;
-                    })}
-                </div>
-                <Stack distribution="trailing" alignment="end">
-                    <Button buttonType="secondary" icon="add" onClick={this.handleNewAffiliation}>
-                        Add another affiliation
-                    </Button>
-                </Stack>
-            </div>
+            <Formik
+                initialValues={initialValues}
+                onSubmit={this.handleSubmit}
+            >
+                {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting,
+                      setValues,
+                      setFieldValue
+                  }) => {
+                    return <>
+                        <div className="FormContent">
+                            <div className="Organizations">
+                                {affiliations.map((affiliation, index) => {
+                                    const title = 'Affiliation ' + (index + 1) + (affiliation.organization.name.length > 0 ? ': ' + affiliation.organization.name : '');
 
-            <div className="FormButtons">
-                <Stack distribution="trailing">
-                    <Button type="submit" disabled={isLoading}>
-                        Save details
-                    </Button>
-                </Stack>
-            </div>
-        </ValidatorForm>;
+                                    return <div>{title}</div>
+
+                                    // return <>
+                                    //     <AffiliationForm
+                                    //         data={affiliation}
+                                    //         validation={validation[index]}
+                                    //         countries={countries}
+                                    //         handleChange={(group, event, callback) => this.handleChange(index, event, group, callback)}
+                                    //         handleDataChange={(group, newData) => this.handleDataChange(index, group, newData)}
+                                    //     />
+                                    //
+                                    //     {index > 0 && <Stack alignment="end" distribution="trailing">
+                                    //         <Button buttonType="danger" className="RemoveButton" icon="cross"
+                                    //                 onClick={(e) => {
+                                    //                     this.removeAffiliation(e, index)
+                                    //                 }}>Delete affiliation</Button>
+                                    //     </Stack>}
+                                    // </>;
+                                })}
+                            </div>
+                            <Stack distribution="trailing" alignment="end">
+                                <Button buttonType="secondary" icon="add" onClick={this.handleNewAffiliation}>
+                                    Add another affiliation
+                                </Button>
+                            </Stack>
+                        </div>
+
+                        <div className="FormButtons">
+                            <Stack distribution="trailing">
+                                <Button type="submit" disabled={isLoading}>
+                                    Save details
+                                </Button>
+                            </Stack>
+                        </div>
+                    </>;
+                }}
+            </Formik>
+        </>;
     }
 }
 

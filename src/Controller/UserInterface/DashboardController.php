@@ -58,6 +58,19 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/fdp", name="dashboard_fdp")
+     */
+    public function fdp(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FAIR Data Point']
+        );
+    }
+
+    /**
      * @Route("/dashboard/studies/add/{catalog}", name="dashboard_study_add_catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      */
@@ -134,7 +147,7 @@ class DashboardController extends AbstractController
      */
     public function adminDistributionLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
             throw $this->createNotFoundException();
@@ -145,4 +158,52 @@ class DashboardController extends AbstractController
             ['title' => 'FDP Admin']
         );
     }
+
+    /**
+     * @Route("/dashboard/catalogs", name="dashboard_catalogs")
+     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
+     */
+    public function catalogs(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Catalogs']
+        );
+    }
+
+    /**
+     * @Route("/dashboard/catalogs/{catalog}", name="dashboard_catalog")
+     * @Route("/dashboard/catalogs/{catalog}/metadata", name="dashboard_catalog_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/datasets", name="dashboard_catalog_datasets")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/add", name="dashboard_catalog_dataset_add")
+     * @Route("/dashboard/catalogs/{catalog}/studies", name="dashboard_catalog_studies")
+     * @Route("/dashboard/catalogs/{catalog}/studies/add", name="dashboard_catalog_study_add")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function catalog(Catalog $catalog): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $catalog);
+
+        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
+    }
+
+//    /**
+//     * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_catalog_dataset")
+//     * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_catalog_dataset_metadata")
+//     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_catalog_dataset_distributions")
+//     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_catalog_dataset_distribution_add")
+//     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+//     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
+//     */
+//    public function dataset(Catalog $catalog, Dataset $dataset): Response
+//    {
+//        $this->denyAccessUnlessGranted('edit', $dataset);
+//
+//        return $this->render(
+//            'react.html.twig',
+//            ['title' => 'FDP Admin']
+//        );
+//    }
 }

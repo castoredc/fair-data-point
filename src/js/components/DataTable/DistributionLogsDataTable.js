@@ -91,7 +91,7 @@ export default class DistributionLogsDataTable extends Component {
         const log = logs[rowId];
 
         history.push({
-            pathname: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + log.id,
+            pathname: '/dashboard/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + log.id,
         });
     };
 

@@ -1,12 +1,7 @@
 import React, {Component} from 'react';
-import {toast} from "react-toastify";
-import ToastContent from "components/ToastContent";
-import axios from "axios";
 import FormItem from "components/Form/FormItem";
-import {Button, CellText, DataGrid, Stack, Tabs} from "@castoredc/matter";
-import {mergeData, replaceAt, ucfirst} from "../../../../util";
 // import PublisherModal from "../../../modals/PublisherModal";
-import {Field, Formik, FormikValues} from "formik";
+import {Field, FormikValues} from "formik";
 import Select from "components/Input/Formik/Select";
 import LocalizedTextInput from "components/Input/Formik/LocalizedTextInput";
 
@@ -15,7 +10,8 @@ type GeneralMetadataProps = {
     licenses: any,
     countries: any,
     validation: any,
-    values: FormikValues
+    values: FormikValues,
+    children: React.ReactNode,
 }
 
 type GeneralMetadataState = {
@@ -27,7 +23,7 @@ export default class GeneralMetadata extends Component<GeneralMetadataProps, Gen
             validation,
             languages,
             licenses,
-            values
+            children
         } = this.props;
 
         return <div>
@@ -35,9 +31,6 @@ export default class GeneralMetadata extends Component<GeneralMetadataProps, Gen
                     <Field
                         component={LocalizedTextInput}
                         name="title"
-                        // onChange={this.handleChange}
-                        // value={values.title}
-                        // serverError={validation.title}
                         languages={languages}
                         serverError={validation}
                     />
@@ -46,9 +39,6 @@ export default class GeneralMetadata extends Component<GeneralMetadataProps, Gen
                     <Field
                         component={LocalizedTextInput}
                         name="description"
-                        // onChange={this.handleChange}
-                        // value={values.description}
-                        // serverError={validation.description}
                         languages={languages}
                         serverError={validation}
                         multiline
@@ -74,6 +64,8 @@ export default class GeneralMetadata extends Component<GeneralMetadataProps, Gen
                         serverError={validation}
                     />
                 </FormItem>
+
+                {children}
             </div>;
     }
 }

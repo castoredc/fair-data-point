@@ -3,7 +3,7 @@ import {Redirect, Route, Switch} from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import axios from "axios";
-import {ProtectedRoute} from "components/Route";
+import {PrivateRoute} from "components/Route";
 import Main from "./pages/Main";
 import Wizard from "./pages/Wizard";
 import Dashboard from "pages/Dashboard";
@@ -33,7 +33,7 @@ export default ({user, embedded}) =>
         <Route path="/tools" render={(props) => <Main {...props} user={user} />} />
 
         /* Dashboard */
-        <ProtectedRoute path="/dashboard" user={user} component={Dashboard} />
+        <PrivateRoute path="/dashboard" user={user} component={Dashboard} />
 
         <Route path="/wizard" render={(props) => <Wizard {...props} user={user} />} />
 

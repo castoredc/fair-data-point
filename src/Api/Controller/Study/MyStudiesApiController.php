@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
-use App\Api\Resource\Study\StudiesApiResource;
+use App\Api\Resource\PaginatedApiResource;
+use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Study\FindStudiesByUserCommand;
+use App\Entity\PaginatedResultCollection;
 use App\Exception\SessionTimedOut;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +39,17 @@ class MyStudiesApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
 
-            return new JsonResponse((new StudiesApiResource($handledStamp->getResult(), false))->toArray());
+            return new JsonResponse(
+                (new PaginatedApiResource(
+                    StudyApiResource::class,
+                    new PaginatedResultCollection(
+                        $handledStamp->getResult(),
+                        1,
+                        count($handledStamp->getResult()),
+                        count($handledStamp->getResult())
+                    ),
+                    false
+                ))->toArray());
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 

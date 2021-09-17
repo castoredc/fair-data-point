@@ -26,7 +26,7 @@ interface AsyncSelectProps extends SelectProps, AsyncProps<OptionType> {
     cachedOptions: OptionsType<OptionType>,
 }
 
-function isMultipleOption(value: OptionsType<OptionType> | OptionType): value is OptionsType<OptionType> {
+export function isMultipleOption(value: OptionsType<OptionType> | OptionType): value is OptionsType<OptionType> {
     return Array.isArray(value);
 }
 

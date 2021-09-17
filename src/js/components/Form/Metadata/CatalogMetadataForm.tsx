@@ -2,10 +2,16 @@ import React, {Component} from 'react';
 import '../Form.scss'
 import MetadataForm from "./MetadataForm";
 import FormItem from "../FormItem";
-import Input from "../../Input";
-import OntologyConceptFormBlock from "../OntologyConceptFormBlock";
+import {Field} from "formik";
+import OntologyConceptFormBlock from "components/Input/Formik/OntologyConceptFormBlock";
+import Input from "components/Input/Formik/Input";
 
-export default class CatalogMetadataForm extends Component {
+type CatalogMetadataFormProps = {
+    catalog: any,
+    onSave: () => void,
+}
+
+export default class CatalogMetadataForm extends Component<CatalogMetadataFormProps> {
     render() {
         const { catalog, onSave } = this.props;
 
@@ -15,30 +21,27 @@ export default class CatalogMetadataForm extends Component {
                 object={catalog}
                 onSave={onSave}
                 defaultData={defaultData}
-            >{(handleChange, data, validation, languages) => (<div>
+            >{(validation, languages) => (<div>
                 <FormItem label="Homepage">
-                    <Input
+                    <Field
+                        component={Input}
                         name="homepage"
-                        onChange={handleChange}
-                        value={data.homepage}
-                        serverError={validation.homepage}
+                        serverError={validation}
                     />
                 </FormItem>
 
                 <FormItem label="Logo">
-                    <Input
+                    <Field
+                        component={Input}
                         name="logo"
-                        onChange={handleChange}
-                        value={data.logo}
-                        serverError={validation.logo}
+                        serverError={validation}
                     />
                 </FormItem>
 
-                <OntologyConceptFormBlock
+                <Field
+                    component={OntologyConceptFormBlock}
                     label="Theme taxonomy"
-                    value={data.themeTaxonomy}
                     name="themeTaxonomy"
-                    handleChange={handleChange}
                 />
             </div>)}
             </MetadataForm>

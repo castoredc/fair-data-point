@@ -54,14 +54,14 @@ export default class StudiesDataTable extends Component {
         filters['perPage'] = pagination.perPage;
 
         if (hideCatalog) {
-            filters['hideCatalogs'] = [hideCatalog.id];
+            filters['hideCatalogs'] = [hideCatalog];
         }
 
         if (hasLoadedStudies) {
             window.scrollTo(0, this.tableRef.current.offsetTop - 35);
         }
 
-        axios.get(catalog ? '/api/catalog/' + catalog.slug + '/study' : '/api/study', {params: filters})
+        axios.get(catalog ? '/api/catalog/' + catalog + '/study' : '/api/study', {params: filters})
             .then((response) => {
                 this.setState({
                     studies: response.data.results,
@@ -87,7 +87,7 @@ export default class StudiesDataTable extends Component {
             isLoadingStudies: true,
         });
 
-        axios.get(catalog ? '/api/catalog/' + catalog.slug + '/study/filters' : '/api/study/filters')
+        axios.get(catalog ? '/api/catalog/' + catalog + '/study/filters' : '/api/study/filters')
             .then((response) => {
                 this.setState({
                     filterOptions: response.data,
@@ -142,7 +142,7 @@ export default class StudiesDataTable extends Component {
         if (onClick) {
             onClick(study);
         } else {
-            history.push(`/admin/study/${study.id}`)
+            history.push(`/dashboard/studies/${study.id}`)
         }
     };
 

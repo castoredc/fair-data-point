@@ -13,7 +13,8 @@ type MetadataFormProps = {
     object: any,
     type: any,
     onSave: () => void,
-    children(validation: any, languages: any): React.ReactNode;
+    children?(validation: any, languages: any): React.ReactNode;
+    defaultData?: any,
 }
 
 type MetadataFormState = {
@@ -176,8 +177,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             showModal,
         } = this.state;
 
-        return <>
+        const { children } = this.props;
 
+        return <>
             <Formik
                 initialValues={data}
                 onSubmit={this.handleSubmit}
@@ -208,7 +210,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                                         content: <>
                                             <GeneralMetadata values={values}
                                                              languages={languages} licenses={licenses}
-                                                             countries={countries} validation={validation}/>
+                                                             countries={countries} validation={validation}>
+                                                {children && children(validation, languages)}
+                                            </GeneralMetadata>
                                         </>,
                                     },
                                     publishers: {

@@ -47,7 +47,7 @@ export default class DatasetsDataTable extends Component {
         };
 
         if (hideCatalog) {
-            filters['hideParents'] = [hideCatalog.id];
+            filters['hideParents'] = [hideCatalog];
         }
 
         if (hasLoadedDatasets) {
@@ -57,11 +57,11 @@ export default class DatasetsDataTable extends Component {
         let url = '/api/dataset';
 
         if (catalog) {
-            url = '/api/catalog/' + catalog.slug + '/dataset';
+            url = '/api/catalog/' + catalog + '/dataset';
         }
 
         if (study) {
-            url = '/api/study/' + study.id + '/dataset';
+            url = '/api/study/' + study + '/dataset';
         }
 
         axios.get(url, {params: filters})
@@ -107,7 +107,7 @@ export default class DatasetsDataTable extends Component {
             onClick(dataset);
         } else {
             history.push({
-                pathname: '/admin/dataset/' + dataset.slug,
+                pathname: '/dashboard/catalogs/' + catalog + '/datasets/' + dataset.slug,
                 state: {catalog: catalog},
             });
         }

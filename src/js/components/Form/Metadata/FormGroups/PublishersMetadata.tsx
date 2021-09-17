@@ -3,6 +3,8 @@ import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter"
 import {ucfirst} from "../../../../util";
 import PublisherModal from "../../../../modals/PublisherModal";
 import ConfirmModal from "../../../../modals/ConfirmModal";
+import {toast} from "react-toastify";
+import ToastContent from "components/ToastContent";
 
 type PublishersMetadataProps = {
     languages: any,
@@ -43,13 +45,26 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
         });
     };
 
-    handleUpdate = (publisher) => {
+    handleUpdate = (newPublisher) => {
         const {publishers, setValue} = this.props;
 
-        let newPublishers = publishers;
-        newPublishers.push(publisher);
+        const exists = newPublisher.id !== '' ? !! publishers.find((publisher) => {
+            if(publisher.type !== newPublisher.type) {
+                return false;
+            }
 
-        setValue('publishers', newPublishers);
+            return publisher[publisher.type].id === newPublisher[newPublisher.type].id
+        }) : false;
+        console.log(publishers.find((publisher) => publisher.id === newPublisher.id));
+
+        if (!exists) {
+            let newPublishers = publishers;
+            newPublishers.push(newPublisher);
+
+            setValue('publishers', newPublishers);
+        } else {
+            toast.error(<ToastContent type="error" message="The publisher was already associated with this metadata and was, therefore, not added again." />);
+        }
 
         this.closeModal();
     };
@@ -61,10 +76,11 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
         });
     }
 
-    handleDelete = (publisher) => {
+    handleDelete = () => {
         const {publishers, setValue} = this.props;
+        const {selectedPublisher} = this.state;
 
-        const index = publishers.indexOf(publisher);
+        const index = publishers.indexOf(selectedPublisher);
 
         if (index > -1) {
             let newPublishers = publishers;

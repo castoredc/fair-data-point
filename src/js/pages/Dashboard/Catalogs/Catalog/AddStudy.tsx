@@ -1,13 +1,23 @@
 import React, {Component} from "react";
-import StudiesDataTable from "../../../components/DataTable/StudiesDataTable";
+import StudiesDataTable from "components/DataTable/StudiesDataTable";
 import {Button, Stack} from "@castoredc/matter";
-import AddStudyModal from "../../../modals/AddStudyModal";
-import ConfirmModal from "../../../modals/ConfirmModal";
+import AddStudyModal from "../../../../modals/AddStudyModal";
+import ConfirmModal from "../../../../modals/ConfirmModal";
 import axios from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
+import ToastContent from "components/ToastContent";
 
-export default class CatalogAddStudy extends Component {
+interface AddStudyProps {
+    catalog: string,
+}
+
+interface AddStudyState {
+    showModal: any,
+    selectedStudy: any,
+    addedStudy: any,
+}
+
+export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,7 +64,7 @@ export default class CatalogAddStudy extends Component {
         const { catalog } = this.props;
         const { selectedStudy } = this.state;
 
-        axios.post('/api/catalog/' + catalog.slug + '/study/add', {
+        axios.post('/api/catalog/' + catalog + '/study/add', {
             studyId: selectedStudy.id
         })
             .then((response) => {

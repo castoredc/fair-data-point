@@ -1,12 +1,24 @@
 import React, {Component} from "react";
-import ConfirmModal from "../../../modals/ConfirmModal";
+import ConfirmModal from "../../../../modals/ConfirmModal";
 import axios from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
-import DatasetsDataTable from "../../../components/DataTable/DatasetsDataTable";
-import {localizedText} from "../../../util";
+import ToastContent from "components/ToastContent";
+import DatasetsDataTable from "components/DataTable/DatasetsDataTable";
+import {localizedText} from "../../../../util";
+import * as H from "history";
 
-export default class CatalogAddDataset extends Component {
+interface AddDatasetProps {
+    catalog: string,
+    history: H.History;
+}
+
+interface AddDatasetState {
+    showModal: any,
+    selectedDataset: any,
+    addedDataset: any,
+}
+
+export default class AddDataset extends Component<AddDatasetProps, AddDatasetState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -53,7 +65,7 @@ export default class CatalogAddDataset extends Component {
         const { catalog } = this.props;
         const { selectedDataset } = this.state;
 
-        axios.post('/api/catalog/' + catalog.slug + '/dataset/add', {
+        axios.post('/api/catalog/' + catalog + '/dataset/add', {
             datasetId: selectedDataset.id
         })
             .then((response) => {

@@ -1,11 +1,10 @@
 import React, {FC} from 'react'
 
 import {Button, Dropdown, TextInput} from "@castoredc/matter";
-import {FieldInputProps, FieldProps, FormikHelpers, FormikSharedConfig} from "formik";
+import {FieldInputProps, FieldProps, FormikHelpers} from "formik";
 import FieldErrors from "components/Input/Formik/Errors";
 import {replaceAt} from "../../../util";
 import {FormikProps} from "formik/dist/types";
-import {ActionMeta, ValueType} from "react-select/src/types";
 import {OptionType} from "components/Input/Formik/Select";
 
 interface LocalizedTextInputProps extends FieldProps {
@@ -15,8 +14,10 @@ interface LocalizedTextInputProps extends FieldProps {
 }
 
 const handleChange = (field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>, index: number, name: string, value: string) => {
-    const newData = replaceAt(field.value, index, {
-        ...field.value[index],
+    const data = field.value ? field.value : [defaultData];
+
+    const newData = replaceAt(data, index, {
+        ...data[index],
         [name]: value,
     });
 
@@ -24,14 +25,14 @@ const handleChange = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 };
 
 const handleAdd = (field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>) => {
-    const newData = field.value;
+    const newData = field.value ? field.value : [defaultData];
     newData.push(defaultData);
 
     form.setFieldValue(field.name, newData);
 };
 
 const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>, index: number) => {
-    let newData = field.value;
+    let newData = field.value ? field.value : [defaultData];
     newData.splice(index, 1);
 
     form.setFieldValue(field.name, newData);
@@ -40,9 +41,11 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 const LocalizedTextInput: FC<LocalizedTextInputProps> = ({field, form, languages, multiline, serverError}) => {
     const serverErrors = serverError[field.name];
 
+    const value = field.value ? field.value : [defaultData];
+
     return <div className="Input LocalizedTextInput">
         <div className="LocalizedTextInputItems">
-            {field.value.map((localizedTextItem, index) => {
+            {value.map((localizedTextItem, index) => {
                 const first = index === 0;
 
                 return <div key={`${field.name}-${index}`} className="LocalizedTextInputItem">

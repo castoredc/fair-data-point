@@ -2,10 +2,11 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, Heading, LoadingOverlay, Stack} from "@castoredc/matter";
+import {Button, Heading, LoadingOverlay, Pagination, Stack} from "@castoredc/matter";
 import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
+import DataGridHelper from "components/DataTable/DataGridHelper";
 
 interface StudiesProps extends RouteComponentProps<any> {
 }
@@ -13,6 +14,7 @@ interface StudiesProps extends RouteComponentProps<any> {
 interface StudiesState {
     studies: any,
     isLoading: boolean,
+    pagination: any,
 }
 
 export default class Studies extends Component<StudiesProps, StudiesState> {
@@ -22,6 +24,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
         this.state = {
             studies: [],
             isLoading: false,
+            pagination: DataGridHelper.getDefaultState(25),
         };
     }
 
@@ -33,7 +36,8 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
         axios.get('/api/study/my')
             .then((response) => {
                 this.setState({
-                    studies: response.data,
+                    studies: response.data.results,
+                    pagination: DataGridHelper.parseResults(response.data),
                     isLoading: false,
                 });
             })
@@ -50,13 +54,28 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
             });
     };
 
+    handlePagination = (paginationCount) => {
+        const {pagination} = this.state;
+
+        this.setState({
+            pagination: {
+                ...pagination,
+                currentPage: paginationCount.currentPage,
+                perPage: paginationCount.pageLimit,
+            },
+        }, () => {
+            this.getStudies();
+        });
+    };
+
+
     componentDidMount() {
         this.getStudies();
     }
 
     render() {
         const {history} = this.props;
-        const {isLoading, studies} = this.state;
+        const {isLoading, studies, pagination} = this.state;
 
         return <div>
             <DocumentTitle title="Studies" />
@@ -79,6 +98,14 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                         link={`/dashboard/studies/${study.id}`} title={study.hasMetadata ? study.metadata.briefName : study.name}
                     />
                 })}
+
+                {pagination && <Pagination
+                    accessibleName="Pagination"
+                    onChange={this.handlePagination}
+                    pageLimit={pagination.perPage}
+                    start={pagination.start}
+                    totalItems={pagination.totalResults}
+                />}
             </div>
         </div>;
     }

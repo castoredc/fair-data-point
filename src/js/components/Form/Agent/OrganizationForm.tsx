@@ -130,8 +130,6 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
                         });
                     };
 
-                    console.log(errors);
-
                     return <Form>
                         <FormItem label="Country">
                             <Field
@@ -205,10 +203,7 @@ const defaultData = {
 
 const OrganizationSchema = Yup.object().shape({
     source: Yup.string().required(),
-    country: Yup.object().shape({
-        label: Yup.string().required("Please select a country"),
-        value: Yup.string().required("Please select a country")
-    }).required('Please select a country'),
+    country: Yup.string().required("Please select a country"),
     name: Yup.string().when('source', {
         is: 'manual',
         then: Yup.string().required('Please enter a name'),

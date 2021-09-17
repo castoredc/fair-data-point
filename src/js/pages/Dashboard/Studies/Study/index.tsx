@@ -58,7 +58,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                 if (error.response && typeof error.response.data.error !== "undefined") {
                     toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading your study"/>);
+                    toast.error(<ToastContent type="error" message="An error occurred while loading the study"/>);
                 }
             });
     };

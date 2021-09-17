@@ -1,36 +1,46 @@
 import React, {Component} from 'react'
-import axios from "axios";
+import axios, {CancelTokenSource} from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../ToastContent";
-import Dropdown from "../../Input/Dropdown";
-import FormItem from "../FormItem";
-import {Button} from "@castoredc/matter";
-import CheckboxGroup from "../../Input/CheckboxGroup";
-import './OntologyConceptFormBlock.scss';
+import ToastContent from "components/ToastContent";
+import FormItem from "components/Form/FormItem";
+import {Button, Choice, Dropdown, dropdownStyle} from "@castoredc/matter";
+import {FieldProps} from "formik";
+import Async from "react-select/async";
+import {ActionMeta, ValueType} from "react-select/src/types";
+import {isMultipleOption, OptionType} from "components/Input/Formik/Select";
 
-export default class OntologyConceptFormBlock extends Component {
+interface OntologyConceptFormBlockProps extends FieldProps {
+    // open: boolean,
+    // onClose: () => void,
+    // entity: any,
+    // onSaved: () => void,
+    // studyId: string,
+    label: string,
+}
+
+type IsMulti = boolean;
+
+type OntologyConceptFormBlockState = {
+    ontologies: any,
+    axiosCancel: CancelTokenSource | null,
+    includeIndividuals: boolean,
+    selectedOntology: OptionType | null,
+}
+
+export default class OntologyConceptFormBlock extends Component<OntologyConceptFormBlockProps, OntologyConceptFormBlockState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: defaultData,
-            validation: {},
             ontologies: [],
             axiosCancel: null,
-            isLoading: false,
+            includeIndividuals: false,
+            selectedOntology: null,
         };
     }
 
     componentDidMount() {
         this.getOntologies();
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.entity !== prevProps.entity) {
-            this.setState({
-                data: defaultData,
-            })
-        }
     }
 
     getOntologies = () => {
@@ -50,10 +60,10 @@ export default class OntologyConceptFormBlock extends Component {
     };
 
     loadConcepts = (inputValue, callback) => {
-        const {data, axiosCancel} = this.state;
+        const {selectedOntology, axiosCancel, includeIndividuals} = this.state;
 
-        if (data.ontology === null) {
-            return null;
+        if (selectedOntology === null) {
+            return;
         }
 
         if (axiosCancel !== null) {
@@ -70,9 +80,9 @@ export default class OntologyConceptFormBlock extends Component {
         axios.get('/api/terminology/concepts', {
             cancelToken: source.token,
             params: {
-                ontology: data.ontology.value,
+                ontology: selectedOntology.value,
                 query: inputValue,
-                includeIndividuals: data.includeIndividuals
+                includeIndividuals: includeIndividuals
             },
         }).then((response) => {
             callback(response.data);
@@ -89,59 +99,48 @@ export default class OntologyConceptFormBlock extends Component {
             });
     };
 
-    handleChange = (event) => {
-        const {data} = this.state;
+    setIncludeIndividuals = () => {
+        const {includeIndividuals} = this.state;
+
         this.setState({
-            data: {
-                ...data,
-                [event.target.name]: event.target.value,
-            },
-            validation: {
-                [event.target.name]: false,
-            },
+            includeIndividuals: !includeIndividuals,
+        })
+    };
+
+    handleOntologyChange = (ontology) => {
+        this.setState({
+            selectedOntology: ontology
         });
     };
 
-    handleOntologyChange = (event) => {
-        const {data} = this.state;
-
-        this.setState({
-            data: {
-                ...data,
-                ontology: event,
-            },
-        });
-    };
-
-    handleConceptChange = (concept) => {
-        const {value, handleChange, name} = this.props;
-        const {data} = this.state;
+    addConcept = (field, form, concept) => {
+        const {selectedOntology} = this.state;
 
         const newConcept = {
             code: concept.code,
             url: concept.url,
             displayName: concept.label,
-            ontology: data.ontology
+            ontology: selectedOntology
         };
 
-        let newConcepts = value;
+        let newConcepts = field.value;
         newConcepts.push(newConcept);
 
-        handleChange({target: {name: name, value: newConcepts}});
+        form.setFieldValue(field.name, newConcepts);
     };
 
-    removeConcept = (index) => {
-        const {value, handleChange} = this.props;
-
-        let newConcepts = value;
+    removeConcept = (field, form, index) => {
+        let newConcepts = field.value;
         newConcepts.splice(index, 1);
 
-        handleChange({target: {name: name, value: newConcepts}});
+        form.setFieldValue(field.name, newConcepts);
     };
 
     render() {
-        const {label, value} = this.props;
-        const {data, ontologies} = this.state;
+        const {label, field, form} = this.props;
+        const {includeIndividuals, selectedOntology, ontologies} = this.state;
+
+        const value = field.value ? field.value : [defaultData];
 
         const options = ontologies.map((ontology) => {
             return {...ontology, value: ontology.id, label: ontology.name};
@@ -172,7 +171,7 @@ export default class OntologyConceptFormBlock extends Component {
                             </div>
                             <div className="Buttons">
                                 <Button buttonType="contentOnly" icon="cross" className="RemoveButton"
-                                        onClick={() => this.removeConcept(index)} iconDescription="Remove"/>
+                                        onClick={() => this.removeConcept(field, form, index)} iconDescription="Remove"/>
                             </div>
                         </div>
                     })}
@@ -182,29 +181,40 @@ export default class OntologyConceptFormBlock extends Component {
                     <div className="Ontology">
                         <Dropdown
                             options={options}
-                            name="ontology"
-                            value={data.ontology}
-                            onChange={this.handleOntologyChange}
-                            menuPosition="fixed"
+                            value={selectedOntology}
+                            onChange={(value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => {
+                                const returnValue = value && (isMultipleOption(value) ? value[0] : value);
+                                this.handleOntologyChange(returnValue);
+                            }}
                             width="tiny"
+                            menuPlacement={"auto"}
+                            menuPosition="fixed"
+                            getOptionLabel={({label}) => label }
+                            getOptionValue={({value}) => value }
                         />
                     </div>
                     <div className="Concept">
-                        <Dropdown
-                            name="concept"
-                            value={data.concept}
+                        <Async
+                            openMenuOnClick={false}
+                            styles={dropdownStyle}
                             async
+                            value={null}
                             loadOptions={this.loadConcepts}
-                            onChange={this.handleConceptChange}
-                            isDisabled={data.ontology === null}
+                            onChange={(value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => {
+                                const returnValue = value && (isMultipleOption(value) ? value[0] : value);
+                                this.addConcept(field, form, returnValue);
+                            }}
+                            isDisabled={selectedOntology === null}
                             menuPosition="fixed"
                         />
 
-                        <CheckboxGroup
-                            options={[{value: '1', label: 'Include individuals'}]}
-                            value={data.includeIndividuals}
+                        <Choice
+                            options={[{value: '1', labelText: 'Include individuals', checked: includeIndividuals}]}
                             name="includeIndividuals"
-                            onChange={this.handleChange}
+                            onChange={this.setIncludeIndividuals}
+                            hideLabel={true}
+                            labelText=""
+                            multiple={true}
                         />
                     </div>
                 </div>

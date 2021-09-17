@@ -19,7 +19,6 @@ import DistributionLogs from "pages/Dashboard/Studies/Study/Dataset/Distribution
 
 interface DistributionProps extends RouteComponentProps<any> {
     dataset: any,
-    study: any,
 }
 
 interface DistributionState {
@@ -59,7 +58,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 if (error.response && typeof error.response.data.error !== "undefined") {
                     toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading your distribution"/>);
+                    toast.error(<ToastContent type="error"
+                                              message="An error occurred while loading your distribution"/>);
                 }
             });
     };
@@ -69,30 +69,33 @@ export default class Distribution extends Component<DistributionProps, Distribut
     }
 
     render() {
-        const {history, location, match, study} = this.props;
+        const {history, location, match} = this.props;
         const {isLoading, distribution} = this.state;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading distribution"/>;
         }
 
+        const study = match.params.study;
+        const dataset = match.params.dataset;
+
         const title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
 
         let sidebarItems = [
             {
-                to: '/dashboard/studies/' + match.params.study + '/datasets/' + match.params.dataset + '/distributions/' + distribution.slug,
+                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug,
                 exact: true,
                 title: 'Distribution',
                 customIcon: 'distribution'
             },
             {
-                to: '/dashboard/studies/' + match.params.study + '/datasets/' + match.params.dataset + '/distributions/' + distribution.slug + '/metadata',
+                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/metadata',
                 exact: true,
                 title: 'Metadata',
                 customIcon: 'metadata'
             },
             {
-                to: '/dashboard/studies/' + match.params.study + '/datasets/' + match.params.dataset + '/distributions/' + distribution.slug + '/subset',
+                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/subset',
                 exact: true,
                 title: 'Subset',
                 icon: 'selectList'
@@ -105,7 +108,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         if (distribution.type === 'rdf') {
             sidebarItems.push(
                 {
-                    to: '/dashboard/studies/' + match.params.study + '/datasets/' + match.params.dataset + '/distributions/' + distribution.slug + '/contents',
+                    to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Mappings',
                     icon: 'order'
@@ -115,7 +118,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
             if (distribution.isCached) {
                 sidebarItems.push(
                     {
-                        to: '/dashboard/studies/' + match.params.study + '/datasets/' + match.params.dataset + '/distributions/' + distribution.slug + '/log',
+                        to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/log',
                         exact: true,
                         title: 'Log',
                         icon: 'summary'
@@ -125,7 +128,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         } else if (distribution.type === 'csv') {
             sidebarItems.push(
                 {
-                    to: '/dashboard/studies/' + match.params.study + '/datasets/' + match.params.dataset + '/distributions/' + distribution.slug + '/contents',
+                    to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Contents',
                     icon: 'order'
@@ -138,7 +141,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             <SideBar
                 back={{
-                    to: `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}`,
+                    to: `/dashboard/studies/${study}/datasets/${dataset}`,
                     title: 'Back to dataset'
                 }}
                 location={location}
@@ -146,27 +149,37 @@ export default class Distribution extends Component<DistributionProps, Distribut
             />
 
             <Body>
-                <Header title={title} />
+                <Header title={title}/>
 
                 <Switch>
                     <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution" exact
                            render={(props) => <DistributionDetails {...props}
+                                                                   dataset={dataset}
                                                                    distribution={distribution}/>}/>
                     <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/metadata" exact
                            render={(props) => <DistributionMetadata {...props}
+                                                                    dataset={dataset}
                                                                     distribution={distribution}
                                                                     onSave={this.getDistribution}/>}/>
                     <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/contents" exact
                            render={(props) => <DistributionContents {...props}
-                                                                    distribution={distribution}/>}/>
+                                                                    dataset={dataset} distribution={distribution}/>}/>
                     <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log/:log" exact
                            render={(props) => <DistributionLog {...props}
+                                                               dataset={dataset}
                                                                distribution={distribution}/>}/>
                     <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log" exact
-                           render={(props) => <DistributionLogs {...props}
-                                                                distribution={distribution}/>}/>
+                           render={(props) => (
+                               <DistributionLogs {...props}
+                                                 dataset={dataset}
+                                                 distribution={distribution}
+                                                 study={study}
+                               />
+                           )}
+                    />
                     <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/subset" exact
                            render={(props) => <DistributionSubset {...props}
+                                                                  dataset={dataset}
                                                                   distribution={distribution}/>}/>
                     <Route component={NotFound}/>
                 </Switch>

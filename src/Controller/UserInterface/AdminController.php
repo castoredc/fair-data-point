@@ -31,40 +31,6 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/catalog/{catalog}", name="admin_catalog")
-     * @Route("/catalog/{catalog}/metadata", name="admin_catalog_metadata")
-     * @Route("/catalog/{catalog}/datasets", name="admin_catalog_datasets")
-     * @Route("/catalog/{catalog}/datasets/add", name="admin_catalog_dataset_add")
-     * @Route("/catalog/{catalog}/studies", name="admin_catalog_studies")
-     * @Route("/catalog/{catalog}/studies/add", name="admin_catalog_study_add")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function adminCatalog(Catalog $catalog): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
-    }
-
-    /**
-     * @Route("/study/{studyId}", name="admin_study")
-     * @Route("/study/{studyId}/metadata", name="admin_study_metadata")
-     * @Route("/study/{studyId}/contacts", name="admin_study_contacts")
-     * @Route("/study/{studyId}/organizations", name="admin_study_organizations")
-     * @Route("/study/{studyId}/consent", name="admin_study_consent")
-     * @Route("/study/{studyId}/annotations", name="admin_study_annotations")
-     * @Route("/study/{studyId}/datasets", name="admin_study_datasets")
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     */
-    public function adminStudy(Study $study): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
-    }
-
-    /**
-     * @Route("/fdp/metadata", name="admin_fdp_metadata")
      * @Route("/catalogs", name="admin_catalogs")
      * @Route("/models", name="admin_models")
      * @Route("/studies", name="admin_studies")
@@ -121,24 +87,6 @@ class AdminController extends AbstractController
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
      */
     public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'FDP Admin']
-        );
-    }
-
-    /**
-     * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_catalog_dataset")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_catalog_dataset_metadata")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_catalog_dataset_distributions")
-     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_catalog_dataset_distribution_add")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     */
-    public function adminCatalogDataset(Catalog $catalog, Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 

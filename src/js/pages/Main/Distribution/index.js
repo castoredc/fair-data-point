@@ -11,7 +11,7 @@ import MainBody from "../../../components/Layout/MainBody";
 import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
 import MetadataSideBar from "../../../components/MetadataSideBar";
 import './Distribution.scss';
-import {isGranted} from "../../../utils/PermissionHelper";
+import {isGranted} from "utils/PermissionHelper";
 import {Button, CastorNest} from "@castoredc/matter";
 
 export default class Distribution extends Component {

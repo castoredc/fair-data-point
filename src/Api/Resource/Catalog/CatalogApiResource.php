@@ -29,6 +29,7 @@ class CatalogApiResource implements ApiResource
             'id' => $this->catalog->getId(),
             'slug' => $this->catalog->getSlug(),
             'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
+            'submissionAccessesData' => $this->catalog->isSubmissionAccessingData(),
             'hasMetadata' => $this->catalog->hasMetadata(),
             'count' => [
                 'study' => count($this->catalog->getStudies(false)),
