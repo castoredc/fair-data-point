@@ -75,7 +75,7 @@ class Record
 
     public function hasData(): bool
     {
-        return $this->data === null;
+        return $this->data !== null;
     }
 
     public function setData(RecordDataCollection $data): void
