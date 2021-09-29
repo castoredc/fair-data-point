@@ -433,7 +433,7 @@ class RDFRenderHelper
         $return = [];
 
         foreach ($records as $record) {
-            $newRecord = $this->apiClient->getRecordDataCollection($this->study, $record);
+            $newRecord = $record->hasData() ? $record : $this->apiClient->getRecordDataCollection($this->study, $record);
 
             if ($this->contents->getDependencies() === null) {
                 $return[] = $newRecord;
