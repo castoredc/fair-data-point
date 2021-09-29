@@ -109,10 +109,11 @@ class GenerateRDFCommand extends Command
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
             $dbStudy = $distribution->getDataset()->getStudy();
-            $study = $this->apiClient->getStudy($dbStudy->getSourceId());
 
             $apiUser = $distribution->getApiUser();
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
+            
+            $study = $this->apiClient->getStudy($dbStudy->getSourceId());
 
             /** @var Record[] $records */
             $records = $this->entityHelper->getRecords($study)->toArray();
