@@ -156,11 +156,12 @@ class GenerateRDFCommand extends Command
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
             $this->entityHelper->useApiUser($apiUser);
 
-            $study = $studies[$distribution->getDataset()->getStudy()->getId()];
+            $dbStudy = $distribution->getDataset()->getStudy();
+            $study = $studies[$dbStudy->getId()];
             assert($study instanceof CastorStudy);
 
             /** @var Record[] $records */
-            $records = $studyRecordData[$study->getId()];
+            $records = $studyRecordData[$dbStudy->getId()];
 
             $distributionUri = $this->uriHelper->getUri($rdfDistributionContent);
             $graphUri = $distributionUri . '/g';
