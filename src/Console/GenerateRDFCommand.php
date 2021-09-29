@@ -127,15 +127,19 @@ class GenerateRDFCommand extends Command
                 continue;
             }
 
-            $output->writeln('- Get study (meta)data for ' . $dbStudy->getName() . ' <' . $dbStudy->getId() . '>');
+            $output->writeln('- Getting study (meta)data for ' . $dbStudy->getName() . ' <' . $dbStudy->getId() . '>');
 
             // Cache study information
             $study = $this->apiClient->getStudy($dbStudy->getSourceId());
+            $output->writeln('  - Study information and records');
+
             $studies[$dbStudy->getId()] = $study;
             $studyOptionGroups[$dbStudy->getId()] = $this->entityHelper->getEntitiesByType($dbStudy, CastorEntityType::fieldOptionGroup());
+            $output->writeln('  - Option groups');
 
             /** @var Record[] $records */
             $records = $this->entityHelper->getRecords($dbStudy)->toArray();
+            $output->writeln('  - Record data');
 
             foreach ($records as $record) {
                 $studyRecordData[$dbStudy->getId()][$record->getId()] = $this->apiClient->getRecordDataCollection($study, $record);
@@ -191,7 +195,14 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
+
+
+            $output->writeln('- Setting up RDFRenderHelper');
+            $output->writeln('  - Study: ' . $study->getName() . ' <' . $study->getId() . '>');
+            $output->writeln('  - Option groups: ' . count($optionGroups));
+
             $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, $study, $optionGroups);
+            $output->writeln('');
 
             $recordsSubset = $helper->getSubset($records);
             $output->writeln(sprintf("Subset: \t %s record(s)", count($recordsSubset)));
