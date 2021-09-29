@@ -11,6 +11,7 @@ use App\Entity\Castor\Record;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\Data\Log\DistributionGenerationRecordLog;
+use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Model\Castor\ApiClient;
 use App\Service\CastorEntityHelper;
@@ -106,6 +107,13 @@ class GenerateRDFCommand extends Command
 
         $studies = [];
         $studyRecordData = [];
+        $studyOptionGroups = [];
+
+        $output->writeln('');
+        $output->writeln('======');
+        $output->writeln('Setting up');
+        $output->writeln('======');
+        $output->writeln('');
 
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
@@ -119,8 +127,12 @@ class GenerateRDFCommand extends Command
                 continue;
             }
 
+            $output->writeln('- Get study (meta)data for ' . $dbStudy->getName() . ' <' . $dbStudy->getId() . '>');
+
+            // Cache study information
             $study = $this->apiClient->getStudy($dbStudy->getSourceId());
             $studies[$dbStudy->getId()] = $study;
+            $studyOptionGroups[$dbStudy->getId()] = $this->entityHelper->getEntitiesByType($dbStudy, CastorEntityType::fieldOptionGroup());
 
             /** @var Record[] $records */
             $records = $this->entityHelper->getRecords($dbStudy)->toArray();
@@ -134,7 +146,11 @@ class GenerateRDFCommand extends Command
             $distribution = $rdfDistributionContent->getDistribution();
             $log = new DistributionGenerationLog($rdfDistributionContent);
 
-            $output->writeln('== ' . $distribution->getSlug() . ' ==');
+            $output->writeln('');
+            $output->writeln('======');
+            $output->writeln('Distribution ' . $distribution->getSlug());
+            $output->writeln('======');
+            $output->writeln('');
 
             $lastImport = $rdfDistributionContent->getLastGenerationDate();
 
@@ -159,6 +175,7 @@ class GenerateRDFCommand extends Command
             $dbStudy = $distribution->getDataset()->getStudy();
             $study = $studies[$dbStudy->getId()];
             assert($study instanceof CastorStudy);
+            $optionGroups = $studyOptionGroups[$dbStudy->getId()];
 
             /** @var Record[] $records */
             $records = $studyRecordData[$dbStudy->getId()];
@@ -174,7 +191,7 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
-            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, $study);
+            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, $study, $optionGroups);
 
             $recordsSubset = $helper->getSubset($records);
             $output->writeln(sprintf("Subset: \t %s record(s)", count($recordsSubset)));

@@ -60,7 +60,8 @@ class RDFRenderHelper
         CastorEntityHelper $entityHelper,
         UriHelper $uriHelper,
         DataTransformationService $dataTransformationService,
-        ?CastorStudy $study
+        ?CastorStudy $study,
+        ?CastorEntityCollection $optionGroups
     ) {
         $this->apiClient = $apiClient;
         $this->entityHelper = $entityHelper;
@@ -78,7 +79,7 @@ class RDFRenderHelper
 
         assert($dbStudy instanceof CastorStudy);
 
-        $this->optionGroups = $this->entityHelper->getEntitiesByType($dbStudy, CastorEntityType::fieldOptionGroup());
+        $this->optionGroups = $optionGroups ?? $this->entityHelper->getEntitiesByType($dbStudy, CastorEntityType::fieldOptionGroup());
     }
 
     /**

@@ -85,7 +85,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
             $this->entityHelper->useUser($user->getCastorUser());
         }
 
-        $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService);
+        $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, null, null);
 
         $graph = new Graph();
 
