@@ -104,11 +104,13 @@ class GenerateRDFCommand extends Command
         /** @var RDFDistribution[] $rdfDistributionContents */
         $rdfDistributionContents = $this->em->getRepository(RDFDistribution::class)->findBy(['isCached' => true]);
 
+        $studies = [];
         $studyRecordData = [];
 
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
             $dbStudy = $distribution->getDataset()->getStudy();
+            assert($dbStudy instanceof CastorStudy);
 
             $apiUser = $distribution->getApiUser();
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
@@ -118,9 +120,10 @@ class GenerateRDFCommand extends Command
             }
 
             $study = $this->apiClient->getStudy($dbStudy->getSourceId());
+            $studies[$dbStudy->getId()] = $study;
 
             /** @var Record[] $records */
-            $records = $this->entityHelper->getRecords($study)->toArray();
+            $records = $this->entityHelper->getRecords($dbStudy)->toArray();
 
             foreach ($records as $record) {
                 $studyRecordData[$dbStudy->getId()][$record->getId()] = $this->apiClient->getRecordDataCollection($study, $record);
@@ -153,7 +156,7 @@ class GenerateRDFCommand extends Command
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
             $this->entityHelper->useApiUser($apiUser);
 
-            $study = $distribution->getDataset()->getStudy();
+            $study = $studies[$distribution->getDataset()->getStudy()->getId()];
             assert($study instanceof CastorStudy);
 
             /** @var Record[] $records */
@@ -170,7 +173,7 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
-            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService);
+            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, $study);
 
             $recordsSubset = $helper->getSubset($records);
             $output->writeln(sprintf("Subset: \t %s record(s)", count($recordsSubset)));
