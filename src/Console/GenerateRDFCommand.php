@@ -19,7 +19,6 @@ use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use App\Service\RDFRenderHelper;
 use App\Service\UriHelper;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
@@ -105,6 +104,24 @@ class GenerateRDFCommand extends Command
         /** @var RDFDistribution[] $rdfDistributionContents */
         $rdfDistributionContents = $this->em->getRepository(RDFDistribution::class)->findBy(['isCached' => true]);
 
+        $studyRecordData = [];
+
+        foreach ($rdfDistributionContents as $rdfDistributionContent) {
+            $distribution = $rdfDistributionContent->getDistribution();
+            $study = $distribution->getDataset()->getStudy();
+            assert($study instanceof CastorStudy);
+
+            $apiUser = $distribution->getApiUser();
+            $this->apiClient->useApiUser($apiUser, $this->encryptionService);
+
+            /** @var Record[] $records */
+            $records = $this->entityHelper->getRecords($study)->toArray();
+
+            foreach ($records as $record) {
+                $studyRecordData[$study->getId()][$record->getId()] = $this->apiClient->getRecordDataCollection($study, $record);
+            }
+        }
+
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
             $log = new DistributionGenerationLog($rdfDistributionContent);
@@ -135,11 +152,10 @@ class GenerateRDFCommand extends Command
             assert($study instanceof CastorStudy);
 
             /** @var Record[] $records */
-            $records = $this->entityHelper->getRecords($study)->toArray();
+            $records = $studyRecordData[$study->getId()];
 
             $distributionUri = $this->uriHelper->getUri($rdfDistributionContent);
             $graphUri = $distributionUri . '/g';
-            $timeStamp = new DateTimeImmutable();
 
             $store = $this->distributionService->duplicateArc2Store($dbInformation, $this->encryptionService);
 

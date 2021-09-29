@@ -41,7 +41,7 @@ class Record
      */
     private Institute $institute;
 
-    private RecordDataCollection $data;
+    private ?RecordDataCollection $data = null;
 
     /** @ORM\Column(type="datetime_immutable") */
     private DateTimeImmutable $createdOn;
@@ -68,9 +68,14 @@ class Record
         return $this->study;
     }
 
-    public function getData(): RecordDataCollection
+    public function getData(): ?RecordDataCollection
     {
         return $this->data;
+    }
+
+    public function hasData(): bool
+    {
+        return $this->data === null;
     }
 
     public function setData(RecordDataCollection $data): void
