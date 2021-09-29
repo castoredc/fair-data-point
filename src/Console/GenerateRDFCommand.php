@@ -112,14 +112,18 @@ class GenerateRDFCommand extends Command
 
             $apiUser = $distribution->getApiUser();
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
-            
+
+            if (isset($studyRecordData[$dbStudy->getId()])) {
+                continue;
+            }
+
             $study = $this->apiClient->getStudy($dbStudy->getSourceId());
 
             /** @var Record[] $records */
             $records = $this->entityHelper->getRecords($study)->toArray();
 
             foreach ($records as $record) {
-                $studyRecordData[$study->getId()][$record->getId()] = $this->apiClient->getRecordDataCollection($study, $record);
+                $studyRecordData[$dbStudy->getId()][$record->getId()] = $this->apiClient->getRecordDataCollection($study, $record);
             }
         }
 
