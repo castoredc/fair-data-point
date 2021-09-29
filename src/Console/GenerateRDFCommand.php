@@ -108,8 +108,8 @@ class GenerateRDFCommand extends Command
 
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
-            $study = $distribution->getDataset()->getStudy();
-            assert($study instanceof CastorStudy);
+            $dbStudy = $distribution->getDataset()->getStudy();
+            $study = $this->apiClient->getStudy($dbStudy->getSourceId());
 
             $apiUser = $distribution->getApiUser();
             $this->apiClient->useApiUser($apiUser, $this->encryptionService);
