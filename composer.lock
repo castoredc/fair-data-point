@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f72e67afc158683badb51543b452851f",
+    "content-hash": "081844ae9bd327f21d6e820a2c42a056",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -132,9 +132,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.ciwit.nl/dist/ciwit/bioportal-browser/ciwit-bioportal-browser-76e5e0e03c3d3021b774d94d6bd2d5c1c6d11f9f-zip-02dfb3.zip",
+                "url": "https://satis.castoredc.net/dist/ciwit/bioportal-browser/ciwit-bioportal-browser-76e5e0e03c3d3021b774d94d6bd2d5c1c6d11f9f-zip-02dfb3.zip",
                 "reference": "76e5e0e03c3d3021b774d94d6bd2d5c1c6d11f9f",
-                "shasum": "3d91e62eaf0e83e004d6381567833a5a730a48e3"
+                "shasum": "fdfd3678f2f5623d3fb8c3c8e13f3c019653ab4a"
             },
             "require": {
                 "ext-json": "*",
@@ -167,9 +167,6 @@
                 }
             ],
             "description": "PHP Client for the Bioportal API",
-            "support": {
-                "source": "https://github.com/castoredc/bioportal-browser/tree/1.1.1"
-            },
             "time": "2020-07-15T06:44:28+00:00"
         },
         {
@@ -8248,9 +8245,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packages.ciwit.nl/dist/castor/coding-standard/castor-coding-standard-fa4b184b114b240a0958287255764fc59e1f2782-zip-02ae5e.zip",
+                "url": "https://satis.castoredc.net/dist/castor/coding-standard/castor-coding-standard-fa4b184b114b240a0958287255764fc59e1f2782-zip-02ae5e.zip",
                 "reference": "fa4b184b114b240a0958287255764fc59e1f2782",
-                "shasum": "58549d2ed5fdc34d7be7268eec46822abf65b6fa"
+                "shasum": "aa8da447fcdd6ade1aeb843bde10e4a072546604"
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
@@ -8270,10 +8267,6 @@
                 }
             },
             "description": "Castor's Coding Standard",
-            "support": {
-                "source": "https://github.com/castoredc/coding-standard/tree/master",
-                "issues": "https://github.com/castoredc/coding-standard/issues"
-            },
             "time": "2020-10-26T15:39:46+00:00"
         },
         {
@@ -11232,5 +11225,5 @@
         "ext-sodium": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
