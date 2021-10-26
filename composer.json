@@ -93,7 +93,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packages.ciwit.nl/"
+            "url": "https://satis.castoredc.net/"
         },
         {
             "type": "vcs",
