@@ -27,7 +27,7 @@ class StudyVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::EDIT_SOURCE_SYSTEM], true)) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT, self::EDIT_SOURCE_SYSTEM], true)) {
             return false;
         }
 
@@ -67,7 +67,7 @@ class StudyVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
 
@@ -82,11 +82,11 @@ class StudyVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
 
-        if (!$user->hasCastorUser()) {
+        if (! $user->hasCastorUser()) {
             return false;
         }
 
