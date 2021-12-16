@@ -6,15 +6,20 @@ namespace App\Repository;
 use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\EntityRepository;
+use function assert;
 
 class CastorEntityRepository extends EntityRepository
 {
     public function findByIdAndStudy(CastorStudy $study, string $id): ?CastorEntity
     {
-        return $this->findOneBy([
+        $entity = $this->findOneBy([
             'study' => $study,
             'id' => $id,
         ]);
+
+        assert($entity instanceof CastorEntity || $entity === null);
+
+        return $entity;
     }
 
     /** @return CastorEntity[] */
@@ -33,9 +38,12 @@ class CastorEntityRepository extends EntityRepository
     /** @return CastorEntity[] */
     public function findByStudyAndParent(CastorStudy $study, CastorEntity $parent): array
     {
-        return $this->findBy([
+        /** @var CastorEntity[] $entities */
+        $entities = $this->findBy([
             'study' => $study,
             'parent' => $parent,
         ]);
+
+        return $entities;
     }
 }

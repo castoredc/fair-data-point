@@ -22,6 +22,9 @@ class GetCastorServersCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetCastorServersCommand $command): array
     {
-        return $this->em->getRepository(CastorServer::class)->findAll();
+        /** @var CastorServer[] $servers */
+        $servers = $this->em->getRepository(CastorServer::class)->findAll();
+
+        return $servers;
     }
 }

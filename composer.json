@@ -10,6 +10,10 @@
         "beberlei/assert": "^3.3",
         "ciwit/bioportal-browser": "^1.1.1",
         "cocur/slugify": "^4.0",
+        "composer/package-versions-deprecated": "1.11.99.4",
+        "doctrine/doctrine-bundle": "^2.5",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.10",
         "easyrdf/easyrdf": "^1.0.0",
         "fresh/doctrine-enum-bundle": "^7.1",
         "guzzlehttp/guzzle": "~6.5",
@@ -19,20 +23,20 @@
         "semsol/arc2": "^2.5.5",
         "sensio/framework-extra-bundle": "^5.6",
         "stof/doctrine-extensions-bundle": "^1.4",
-        "symfony/console": "^5.2",
+        "symfony/console": "^5.4",
+        "symfony/dotenv": "^5.4",
         "symfony/flex": "^1.9.10",
-        "symfony/framework-bundle": "^5.2",
-        "symfony/intl": "^5.2",
+        "symfony/framework-bundle": "^5.4",
+        "symfony/intl": "^5.4",
         "symfony/maker-bundle": "^1.30",
-        "symfony/messenger": "^5.2",
+        "symfony/messenger": "^5.4",
         "symfony/monolog-bundle": "^3.6",
-        "symfony/orm-pack": "^2.0",
-        "symfony/security-bundle": "^5.2",
-        "symfony/twig-bundle": "^5.2",
+        "symfony/proxy-manager-bridge": "5.4.*",
+        "symfony/security-bundle": "^5.4",
+        "symfony/twig-bundle": "^5.4",
         "symfony/webpack-encore-bundle": "^1.6",
-        "symfony/yaml": "^5.2",
-        "twig/twig": "^3.0",
-        "symfony/dotenv": "^5.2"
+        "symfony/yaml": "^5.4",
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "castor/coding-standard": "^5.0",
@@ -87,7 +91,7 @@
         "symfony": {
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.4.*"
         }
     },
     "repositories": [

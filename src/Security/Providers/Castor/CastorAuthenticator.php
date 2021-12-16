@@ -145,6 +145,8 @@ class CastorAuthenticator extends Authenticator
                 $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $request->attributes->get('catalog')]);
             }
 
+            assert($catalog instanceof Catalog || $catalog === null);
+
             if ($catalog !== null && $catalog->isAcceptingSubmissions()) {
                 $url .= '/' . $catalog->getSlug();
             }
@@ -159,6 +161,8 @@ class CastorAuthenticator extends Authenticator
             } else {
                 $dataset = $this->em->getRepository(Dataset::class)->findOneBy(['slug' => $request->attributes->get('dataset')]);
             }
+
+            assert($dataset instanceof Dataset || $dataset === null);
 
             $study = $dataset !== null ? $dataset->getStudy() : null;
 

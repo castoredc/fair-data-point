@@ -10,6 +10,7 @@ use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class AddStudyCenterCommandHandler implements MessageHandlerInterface
 {
@@ -37,6 +38,7 @@ class AddStudyCenterCommandHandler implements MessageHandlerInterface
             throw new NotFound();
         }
 
+        assert($organization instanceof Organization);
         $command->getStudy()->getLatestMetadata()->addCenter($organization);
 
         $this->em->persist($organization);

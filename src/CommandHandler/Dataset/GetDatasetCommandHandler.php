@@ -10,6 +10,7 @@ use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetDatasetCommandHandler implements MessageHandlerInterface
 {
@@ -34,6 +35,8 @@ class GetDatasetCommandHandler implements MessageHandlerInterface
         if (! $this->security->isGranted('view', $dataset)) {
             throw new NoAccessPermission();
         }
+
+        assert($dataset instanceof Dataset);
 
         return $dataset;
     }

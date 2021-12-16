@@ -14,10 +14,14 @@ class NodeRepository extends EntityRepository
 {
     public function findByModelAndId(DataModelVersion $dataModel, string $nodeId): ?Node
     {
-        return $this->findOneBy([
+        $node = $this->findOneBy([
             'version' => $dataModel,
             'id' => $nodeId,
         ]);
+
+        assert($node instanceof Node || $node === null);
+
+        return $node;
     }
 
     /** @return Node[] */
