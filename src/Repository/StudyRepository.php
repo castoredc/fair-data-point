@@ -17,6 +17,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use function assert;
 
 class StudyRepository extends EntityRepository
 {
@@ -186,9 +187,13 @@ class StudyRepository extends EntityRepository
 
     public function findStudyBySourceAndId(StudySource $source, string $sourceId): ?Study
     {
-        return $this->findOneBy([
+        $study = $this->findOneBy([
             'source' => $source,
             'sourceId' => $sourceId,
         ]);
+
+        assert($study instanceof Study || $study === null);
+
+        return $study;
     }
 }

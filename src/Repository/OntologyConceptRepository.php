@@ -6,14 +6,19 @@ namespace App\Repository;
 use App\Entity\Terminology\Ontology;
 use App\Entity\Terminology\OntologyConcept;
 use Doctrine\ORM\EntityRepository;
+use function assert;
 
 class OntologyConceptRepository extends EntityRepository
 {
     public function findByOntologyAndCode(Ontology $ontology, string $code): ?OntologyConcept
     {
-        return $this->findOneBy([
+        $concept = $this->findOneBy([
             'ontology' => $ontology,
             'code' => $code,
         ]);
+
+        assert($concept instanceof OntologyConcept || $concept === null);
+
+        return $concept;
     }
 }

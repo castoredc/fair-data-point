@@ -56,6 +56,7 @@ class CreateAffiliationCommandHandler implements MessageHandlerInterface
             $mainAddress = $gridInstitute->getMainAddress();
 
             $country = $this->em->getRepository(Country::class)->find($mainAddress->getCountryCode());
+            assert($country instanceof Country);
 
             $organization = new Organization(
                 null,
@@ -70,6 +71,7 @@ class CreateAffiliationCommandHandler implements MessageHandlerInterface
             $organization->setCountry($country);
         } else {
             $country = $this->em->getRepository(Country::class)->find($command->getOrganizationCountry());
+            assert($country instanceof Country);
 
             $organization = new Organization(
                 null,

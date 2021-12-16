@@ -120,6 +120,8 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
             $server = $serverRepository->findServerByUrl($castorUser->getServer());
         }
 
+        assert($server instanceof CastorServer);
+
         $study->setServer($server);
 
         return $study;

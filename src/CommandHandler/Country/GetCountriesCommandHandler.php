@@ -20,6 +20,7 @@ class GetCountriesCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetCountriesCommand $command): CountriesApiResource
     {
+        /** @var Country[] $countries */
         $countries = $this->em->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
 
         return new CountriesApiResource($countries);

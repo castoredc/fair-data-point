@@ -8,7 +8,7 @@ use App\Security\User as AppUser;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
-use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use function assert;
@@ -34,7 +34,7 @@ abstract class UserProvider extends AbstractProvider implements UserProviderInte
 
     public function loadUserByUsername(string $username): UserInterface
     {
-        return new User(null, null);
+        return new InMemoryUser(null, null);
     }
 
     /**

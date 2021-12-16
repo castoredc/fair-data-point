@@ -32,6 +32,7 @@ class GetStudiesCommandHandler implements MessageHandlerInterface
     public function __invoke(GetStudiesCommand $command): array
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
+            /** @var Study[] $dbStudies */
             $dbStudies = $this->em->getRepository(Study::class)->findAll();
         } else {
             $user = $this->security->getUser();
@@ -42,6 +43,8 @@ class GetStudiesCommandHandler implements MessageHandlerInterface
             }
 
             $userStudies = $user->getCastorUser()->getStudies();
+
+            /** @var Study[] $dbStudies */
             $dbStudies = $this->em->getRepository(Study::class)->findBy(['id' => $userStudies]);
         }
 
