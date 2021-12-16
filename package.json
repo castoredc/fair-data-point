@@ -9,7 +9,6 @@
         "babel-plugin-inline-react-svg": "^1.1.0",
         "core-js": "^3.10.1",
         "file-loader": "^6.2.0",
-        "react-svg-loader": "^3.0.3",
         "sass": "^1.45.0",
         "sass-loader": "^9.0.3",
         "ts-loader": "^8.0.1",
