@@ -2,9 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import InlineLoader from "components/LoadingScreen/InlineLoader";
-import DistributionContentsDependencyEditor
-    from "components/DependencyEditor/DistributionContentsDependencyEditor";
+import DistributionContentsDependencyEditor from "components/DependencyEditor/DistributionContentsDependencyEditor";
 import {formatQuery} from "react-querybuilder";
 import {LoadingOverlay} from "@castoredc/matter";
 

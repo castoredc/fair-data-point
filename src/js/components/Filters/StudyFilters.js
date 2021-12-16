@@ -9,7 +9,6 @@ import ToastContent from "../ToastContent";
 import FormItem from "../Form/FormItem";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import CheckboxGroup from "../Input/CheckboxGroup";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {classNames} from "../../util";
 import Dropdown from "../Input/Dropdown";
 import {Heading, LoadingOverlay} from "@castoredc/matter";

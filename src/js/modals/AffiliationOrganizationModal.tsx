@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import {Modal} from "@castoredc/matter";
 import OrganizationForm from "components/Form/Agent/OrganizationForm";
-import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "components/ToastContent";
 
 type AffiliationOrganizationModalProps = {
     id?: string,

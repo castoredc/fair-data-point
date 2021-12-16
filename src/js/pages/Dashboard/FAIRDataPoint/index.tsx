@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
-import InlineLoader from "components/LoadingScreen/InlineLoader";
 import {RouteComponentProps} from "react-router-dom";
 import {Heading, LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";

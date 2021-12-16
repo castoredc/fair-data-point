@@ -3,7 +3,6 @@ import DataModelModuleModal from "../../../modals/DataModelModuleModal";
 import './DataModelModules.scss';
 import axios from "axios";
 import {toast} from "react-toastify";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import DataModelModule from "../../../components/DataModelModule/DataModelModule";
 import ToastContent from "../../../components/ToastContent";
 import TripleModal from "../../../modals/TripleModal";

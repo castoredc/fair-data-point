@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import Select, {AsyncSelect, OptionType} from "components/Input/Formik/Select";
 import {OrganizationType} from "../../../types/OrganizationType";
-import {ActionMeta, OptionsType, ValueType} from "react-select/src/types";
+import {OptionsType} from "react-select/src/types";
 import debounce from 'lodash.debounce';
 import Input from "components/Input/Formik/Input";
 import {FormikHelpers} from "formik/dist/types";

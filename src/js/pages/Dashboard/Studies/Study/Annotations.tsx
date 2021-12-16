@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Dropdown, FormLabel, LoadingOverlay, Separator, Stack, StackItem} from "@castoredc/matter";
+import {Dropdown, FormLabel, LoadingOverlay, Separator} from "@castoredc/matter";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";

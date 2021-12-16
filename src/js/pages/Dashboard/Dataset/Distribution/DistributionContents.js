@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import InlineLoader from "components/LoadingScreen/InlineLoader";
 import DistributionContentsRdf from "./DistributionContentsRdf";
 import DistributionContentsCsv from "./DistributionContentsCsv";
 import {LoadingOverlay} from "@castoredc/matter";

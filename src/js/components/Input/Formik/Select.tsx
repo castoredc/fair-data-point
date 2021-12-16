@@ -1,10 +1,10 @@
-import React, {FC, useEffect, useState} from 'react'
+import React, {FC} from 'react'
 
-import {Dropdown, DropdownProps, dropdownStyle, Icon, Space, ValidationMessage} from "@castoredc/matter";
-import {ErrorMessage, FieldInputProps, FieldProps} from "formik";
-import {ActionMeta, OptionsType, OptionTypeBase, ValueType} from "react-select/src/types";
+import {Dropdown, Icon} from "@castoredc/matter";
+import {FieldProps} from "formik";
+import {ActionMeta, OptionsType, ValueType} from "react-select/src/types";
 import {components} from "react-select";
-import Async, {AsyncProps} from 'react-select/async';
+import {AsyncProps} from 'react-select/async';
 import FieldErrors from "components/Input/Formik/Errors";
 import {BaseDropdownProps} from "@castoredc/matter/lib/types/src/Dropdown/types";
 

@@ -13,7 +13,6 @@ import RadioGroup from "../../Input/RadioGroup";
 import {mergeData} from "../../../util";
 import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import FormHeading from "../FormHeading";
-import InlineLoader from "../../LoadingScreen/InlineLoader";
 
 export default class DistributionForm extends Component {
     constructor(props) {

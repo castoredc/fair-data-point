@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ToastContent from "../../../components/ToastContent";
 import SideTabs from "../../../components/SideTabs";
 import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";

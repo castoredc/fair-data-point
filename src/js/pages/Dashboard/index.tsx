@@ -1,7 +1,7 @@
 import React, {Component, FunctionComponent} from "react";
 import {Redirect, Route, RouteComponentProps, Switch} from "react-router-dom";
 import NotFound from "../NotFound";
-import {CastorBar, Stack, StackItem, Tabs} from "@castoredc/matter";
+import {CastorBar, Tabs} from "@castoredc/matter";
 import Studies from "./Studies";
 import './Dashboard.scss';
 import {toRem} from '@castoredc/matter-utils';

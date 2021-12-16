@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../../util";
 import {Route, RouteComponentProps, Switch} from 'react-router-dom';
-import {LoadingOverlay, ViewHeader} from "@castoredc/matter";
+import {LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";

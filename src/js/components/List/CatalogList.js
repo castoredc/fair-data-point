@@ -4,7 +4,6 @@ import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {LoadingOverlay, Pagination} from "@castoredc/matter";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import CatalogListItem from "../ListItem/CatalogListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
 

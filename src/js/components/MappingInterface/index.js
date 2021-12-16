@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import ModuleMappingInterface from "./ModuleMappingInterface";
 import NodeMappingInterface from "./NodeMappingInterface";
 import {LoadingOverlay} from "@castoredc/matter";

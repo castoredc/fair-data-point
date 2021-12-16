@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Modal, Stack} from "@castoredc/matter";
+import {Modal} from "@castoredc/matter";
 import PersonForm from "../components/Form/Agent/PersonForm";
 import axios from "axios";
 import {toast} from "react-toastify";

@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {CellText, DataGrid, LoadingOverlay} from "@castoredc/matter";

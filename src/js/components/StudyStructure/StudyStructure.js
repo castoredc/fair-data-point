@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import './StudyStructure.scss';
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";

@@ -3,7 +3,6 @@ import DataModelMappingsDataTable from "components/DataTable/DataModelMappingsDa
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import InlineLoader from "components/LoadingScreen/InlineLoader";
 import {Dropdown as CastorDropdown, LoadingOverlay, Stack, Tabs} from "@castoredc/matter";
 import FormItem from "components/Form/FormItem";
 import MappingInterface from "components/MappingInterface";

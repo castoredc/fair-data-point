@@ -2,10 +2,9 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {Button, Heading, LoadingOverlay, Stack} from "@castoredc/matter";
+import {LoadingOverlay, Stack} from "@castoredc/matter";
 import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
-import * as H from "history";
 import {localizedText} from "../../../util";
 import {RouteComponentProps} from "react-router-dom";
 

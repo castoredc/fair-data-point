@@ -10,7 +10,6 @@ import ToastContent from "../ToastContent";
 import axios from "axios";
 import FormItem from "./FormItem";
 import RadioGroup from "../Input/RadioGroup";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 
 export default class ConsentForm extends Component {
     constructor(props) {

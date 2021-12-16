@@ -6,7 +6,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import StudiesMap from "../Map/StudiesMap";
 import {Button, Heading, LoadingOverlay, Pagination} from "@castoredc/matter";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import DataGridHelper from "../DataTable/DataGridHelper";
 import {Sticky, StickyContainer} from "react-sticky";
 import StudyFilters from "../Filters/StudyFilters";

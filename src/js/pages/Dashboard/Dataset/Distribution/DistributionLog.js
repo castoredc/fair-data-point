@@ -4,7 +4,6 @@ import {Heading, LoadingOverlay, Tabs} from "@castoredc/matter";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import InlineLoader from "components/LoadingScreen/InlineLoader";
 
 export default class DistributionLog extends Component {
     constructor(props) {

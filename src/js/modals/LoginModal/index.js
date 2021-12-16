@@ -4,7 +4,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Modal from "../Modal";
 import LoginForm from "../../components/Form/LoginForm";
-import InlineLoader from "../../components/LoadingScreen/InlineLoader";
 import {LoadingOverlay} from "@castoredc/matter";
 
 export default class LoginModal extends Component {

@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
-import { format } from 'date-fns'
-
-import moment from "moment";
+import {format} from 'date-fns'
 import {toast} from "react-toastify";
 import axios from "axios";
 

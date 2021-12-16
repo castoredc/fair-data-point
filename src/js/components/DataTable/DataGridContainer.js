@@ -1,6 +1,5 @@
 import React from "react";
 import {LoadingOverlay, Pagination} from "@castoredc/matter";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 
 export default React.forwardRef(({
                                      fullHeight = false,

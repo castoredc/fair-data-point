@@ -1,15 +1,10 @@
 import React, {Component} from 'react';
 
 import '../Form.scss'
-import {replaceAt} from "../../../util";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
-import {ValidatorForm} from "react-form-validator-core";
 import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
-import AffiliationForm from "./AffiliationForm";
-import InlineLoader from "../../LoadingScreen/InlineLoader";
-import Toggle from "../../Toggle";
 import AffiliationOrganizationModal from "../../../modals/AffiliationOrganizationModal";
 import {Formik} from "formik";
 

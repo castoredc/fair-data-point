@@ -3,7 +3,6 @@ import {Button, LoadingOverlay} from "@castoredc/matter";
 import './Modal.scss';
 import {Portal} from "react-portal";
 import {classNames} from "../util";
-import InlineLoader from "../components/LoadingScreen/InlineLoader";
 
 export default class Modal extends Component {
     handleClick = (event) => {

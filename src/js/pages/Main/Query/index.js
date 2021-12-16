@@ -8,7 +8,6 @@ import Yasqe from "@triply/yasqe";
 import './Query.scss';
 import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
 import Alert from "../../../components/Alert";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";

@@ -4,7 +4,6 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import StudyStructure from "./StudyStructure";
 import {Redirect} from "react-router-dom";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {ValidatorForm} from "react-form-validator-core";
 import {Button, LoadingOverlay, Stack, Tabs} from "@castoredc/matter";
 

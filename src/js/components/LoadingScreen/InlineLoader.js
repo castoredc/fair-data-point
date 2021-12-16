@@ -1,6 +1,5 @@
 import React from 'react';
 import './InlineLoader.scss';
-import LoadingSpinner from "./LoadingSpinner";
 import {classNames} from "../../util";
 import {Spinner} from "@castoredc/matter";
 
