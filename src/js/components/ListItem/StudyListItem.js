@@ -30,10 +30,8 @@ export default class StudyListItem extends Component {
             description={description}
             badge={badgeText}
             tags={tags}
-            link={newWindow ? link : {
-                pathname: link,
-                state: state
-            }}
+            link={link}
+            state={state}
             newWindow={newWindow}
         />;
     }

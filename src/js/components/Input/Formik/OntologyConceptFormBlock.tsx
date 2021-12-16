@@ -3,9 +3,8 @@ import axios, {CancelTokenSource} from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import FormItem from "components/Form/FormItem";
-import {Button, Choice, Dropdown, dropdownStyle} from "@castoredc/matter";
+import {Button, Choice, Dropdown} from "@castoredc/matter";
 import {FieldProps} from "formik";
-import Async from "react-select/async";
 import {ActionMeta, ValueType} from "react-select/src/types";
 import {isMultipleOption, OptionType} from "components/Input/Formik/Select";
 
@@ -194,22 +193,23 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                         />
                     </div>
                     <div className="Concept">
-                        <Async
+                        <Dropdown
                             openMenuOnClick={false}
-                            styles={dropdownStyle}
-                            async
                             value={null}
                             loadOptions={this.loadConcepts}
+                            options={[]}
                             onChange={(value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => {
                                 const returnValue = value && (isMultipleOption(value) ? value[0] : value);
                                 this.addConcept(field, form, returnValue);
                             }}
                             isDisabled={selectedOntology === null}
                             menuPosition="fixed"
+                            getOptionLabel={({label}) => label }
+                            getOptionValue={({value}) => value }
                         />
 
                         <Choice
-                            options={[{value: '1', labelText: 'Include individuals', checked: includeIndividuals}]}
+                            options={[{value: '1', labelText: 'Include individuals'}]}
                             name="includeIndividuals"
                             onChange={this.setIncludeIndividuals}
                             hideLabel={true}

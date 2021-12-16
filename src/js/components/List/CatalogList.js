@@ -3,7 +3,7 @@ import axios from "axios";
 import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Pagination} from "@castoredc/matter";
+import {LoadingOverlay, Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import CatalogListItem from "../ListItem/CatalogListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
@@ -36,7 +36,7 @@ export default class CatalogList extends Component {
             perPage: pagination.perPage,
         };
 
-        let url = '/api/catalog/';
+        let url = '/api/catalog';
 
         if(agent) {
             url = '/api/agent/details/' + agent.slug + '/catalog'
@@ -70,7 +70,7 @@ export default class CatalogList extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage:     paginationCount.pageLimit,
             },
         }, () => {
@@ -87,15 +87,11 @@ export default class CatalogList extends Component {
         }
 
         if (catalogs === null) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading catalogs" content="" />;
         }
 
         return <div className={classNames('Catalogs', className)}>
             {catalogs.length > 0 ? <>
-                {/*<div className="Description">*/}
-                {/*    Catalogs are collections metadata about resources, such as studies or datasets.*/}
-                {/*</div>*/}
-
                 {catalogs.map((catalog) => {
                     if (catalog.hasMetadata === false) {
                         return null;
@@ -112,8 +108,8 @@ export default class CatalogList extends Component {
                 <Pagination
                     accessibleName="Pagination"
                     onChange={this.handlePagination}
-                    pageLimit={pagination.perPage}
-                    start={pagination.start}
+                    pageSize={pagination.perPage}
+                    currentPage={pagination.start - 1}
                     totalItems={pagination.totalResults}
                 />
 

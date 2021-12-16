@@ -1,6 +1,17 @@
 @import '../../../scss/const';
 @import '../../../scss/colors';
 
+.DashboardTab {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .DashboardList {
+    flex: 1;
+    overflow: auto;
+  }
+}
+
 .DashboardHeader {
   .HeaderTitle {
     //border-bottom: 1px solid $neutral-40;

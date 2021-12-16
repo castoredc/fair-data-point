@@ -112,7 +112,7 @@ export default class StudiesDataTable extends Component {
             appliedFilters: filters,
             pagination: {
                 ...pagination,
-                currentPage: 1,
+                currentPage: 0,
             },
         }, () => {
             this.getStudies();
@@ -125,7 +125,7 @@ export default class StudiesDataTable extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage: paginationCount.pageLimit,
             },
         }, () => {

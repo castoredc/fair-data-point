@@ -10,9 +10,11 @@ const Body: FC<BodyProps> = ({children}) => {
         <Stack distribution="center">
             <StackItem style={{
                 width: toRem(960),
+                maxWidth: '100%',
                 // marginTop: '3.2rem',
                 overflow: 'hidden',
-                height: '100%'
+                height: '100%',
+                padding: '0 3.2rem'
             }}>
                 {children}
             </StackItem>

@@ -9,17 +9,23 @@ type HeaderProps = {
 }
 
 const Header: FC<HeaderProps> = ({ title, badge, children }) => {
-    return <Stack distribution="center">
-        <StackItem className="DashboardHeader" style={{width: toRem(960), marginTop: '3.2rem'}}>
-        <div className="HeaderTitle">
-            <h2>{title}</h2>
-            {badge && badge}
-        </div>
-        <div className="HeaderActions">
-            {children}
-        </div>
-        </StackItem>
-    </Stack>;
+    return <div className="DashboardHeader" style={{
+        width: toRem(960),
+        maxWidth: '100%',
+        paddingTop: '3.2rem'
+    }}>
+        <Stack distribution="equalSpacing">
+            <StackItem className="HeaderTitle">
+                <Stack>
+                    <h2>{title}</h2>
+                    {badge && badge}
+                </Stack>
+            </StackItem>
+            <StackItem className="HeaderActions">
+                {children}
+            </StackItem>
+        </Stack>
+    </div>;
 }
 
 export default Header;

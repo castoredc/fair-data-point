@@ -3,7 +3,7 @@ import axios from "axios";
 import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Pagination} from "@castoredc/matter";
+import {LoadingOverlay, Pagination} from "@castoredc/matter";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import DistributionListItem from "../ListItem/DistributionListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
@@ -72,7 +72,7 @@ export default class DistributionList extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage: paginationCount.pageLimit,
             },
         }, () => {
@@ -89,7 +89,7 @@ export default class DistributionList extends Component {
         }
 
         if (distributions === null) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading distributions" content="" />;
         }
 
         return <div className={classNames('Distributions', className)}>
@@ -118,8 +118,8 @@ export default class DistributionList extends Component {
                 <Pagination
                     accessibleName="Pagination"
                     onChange={this.handlePagination}
-                    pageLimit={pagination.perPage}
-                    start={pagination.start}
+                    pageSize={pagination.perPage}
+                    currentPage={pagination.start - 1}
                     totalItems={pagination.totalResults}
                 />
 

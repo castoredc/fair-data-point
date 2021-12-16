@@ -102,7 +102,7 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
         this.closeModal();
 
         if(selectedOrganization) {
-            axios.post('/api/study/' + studyId + '/centers/remove', {source: 'database', ...selectedOrganization})
+            axios.post('/api/study/' + studyId + '/centers/remove', selectedOrganization)
                 .then((response) => {
                     toast.success(<ToastContent type="success" message={`${selectedOrganization.name} was successfully removed`}/>, {
                         position: "top-right",

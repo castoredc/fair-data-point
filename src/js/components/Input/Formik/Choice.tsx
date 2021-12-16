@@ -25,12 +25,19 @@ const Choice: FC<ChoiceProps> = ({
                                  }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
+    const renderedOptions = options.map((option) => {
+        return {
+            ...option,
+            defaultChecked: multiple ? field.value.includes(option.value) : field.value === option.value
+        };
+    });
+
     return <>
         <MatterChoice
             hideLabel
             labelText={field.name}
             name={field.name}
-            options={options}
+            options={renderedOptions}
             collapse={collapse}
             onChange={onChange ? (event) => {
                 onChange(event);

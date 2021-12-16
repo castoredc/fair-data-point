@@ -1,4 +1,4 @@
-import React, {Component, FC} from 'react'
+import React, {FC} from 'react'
 import {Link} from "react-router-dom";
 import './ListItem.scss'
 import {classNames, isURL} from "../../util";
@@ -6,11 +6,13 @@ import Tags from "../Tags";
 import {Icon} from "@castoredc/matter";
 import CustomIcon from "../Icon/CustomIcon";
 import {MatterIcon} from "@castoredc/matter-icons";
+import {LocationState} from "history";
 
 type ListItemProps = {
     title: string;
     description?: string;
     link?: string;
+    state?: LocationState;
     icon?: MatterIcon;
     customIcon?: string;
     smallIcon?: boolean;
@@ -28,6 +30,7 @@ const ListItem: FC<ListItemProps> = ({
                                          title,
                                          description,
                                          link,
+                                         state,
                                          icon,
                                          customIcon,
                                          smallIcon,
@@ -72,7 +75,7 @@ const ListItem: FC<ListItemProps> = ({
         return <a href={link} onClick={onClick} target="_blank" className="ListItem">{children}</a>;
     }
 
-    return <Link to={{ pathname: link }} className="ListItem" onClick={onClick}>{children}</Link>;
+    return <Link to={{pathname: link, state: state}} className="ListItem" onClick={onClick}>{children}</Link>;
 }
 
 ListItem.defaultProps = {

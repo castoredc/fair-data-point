@@ -6,6 +6,7 @@ import {ActionMeta, OptionsType, OptionTypeBase, ValueType} from "react-select/s
 import {components} from "react-select";
 import Async, {AsyncProps} from 'react-select/async';
 import FieldErrors from "components/Input/Formik/Errors";
+import {BaseDropdownProps} from "@castoredc/matter/lib/types/src/Dropdown/types";
 
 export type OptionType = {
     value: string;
@@ -14,9 +15,9 @@ export type OptionType = {
 
 type IsMulti = boolean;
 
-interface SelectProps extends FieldProps, DropdownProps {
+interface SelectProps extends FieldProps, BaseDropdownProps {
     readOnly?: boolean,
-    onChange?: (value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => void,
+    // onChange?: (value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => void,
     autoFocus?: boolean,
     serverError?: any,
     options: OptionsType<OptionType>,
@@ -38,7 +39,6 @@ const Select: FC<SelectProps> = ({
                                      onChange,
                                      autoFocus,
                                      serverError,
-                                     menuPlacement,
                                      options,
                                      ...rest
                                  }) => {
@@ -60,8 +60,9 @@ const Select: FC<SelectProps> = ({
             }}
             onBlur={field.onBlur}
             invalid={touched && !!errors}
-            menuPlacement={menuPlacement ? menuPlacement : "auto"}
             options={options}
+            // getOptionLabel={({label}) => label }
+            // getOptionValue={({value}) => value }
             {...rest}
         />
 
@@ -77,7 +78,6 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
                                                       onChange,
                                                       autoFocus,
                                                       serverError,
-                                                      menuPlacement,
                                                       loadOptions,
                                                       cachedOptions,
                                                         options,
@@ -86,41 +86,6 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
     const serverErrors = serverError[field.name];
-
-    const [modalOverflow, setModalOverflow] = useState<string>('');
-    const [withinModal, setWithinModal] = useState<HTMLElement | null>(null);
-
-    useEffect(() => {
-        /**
-         * Check if the Dropdown component is being rendered within a Modal and append
-         * the menu to the document body
-         */
-        const modal = document.querySelector('[aria-modal=true]');
-        if (!modal) return;
-
-        /**
-         * If the component is being used on a Next.js application, we will target
-         * the mounting div to avoid issues with event bubbling and React Portals
-         */
-        const bodyFirstChild = document.body.firstElementChild as HTMLElement;
-        const isNextJs = bodyFirstChild.id === '__next';
-        const targetNode = isNextJs ? bodyFirstChild : document.body;
-
-        setWithinModal(targetNode);
-
-        // Prevent scrolling on a scrollable container when the dropdown menu is open
-        const scrollableContainer = modal.querySelector<HTMLDivElement>('[data-scrollable-container]');
-        if (!scrollableContainer) return;
-
-        scrollableContainer.style.overflow = modalOverflow;
-
-        /**
-         * If the menu is open, the focus will move to the select control on window resize to avoid
-         * mispositioning the menu when portaling
-         */
-        if (modalOverflow === 'hidden') return;
-
-    }, [modalOverflow, withinModal]);
 
     const DropdownIndicator = props => {
         return (
@@ -131,11 +96,10 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
     };
 
     return <div className="Select">
-        <Async
+        <Dropdown
             loadOptions={loadOptions}
             options={cachedOptions}
             openMenuOnClick={false}
-            styles={dropdownStyle}
             components={{DropdownIndicator}}
             placeholder=""
             value={field.value}
@@ -147,11 +111,9 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
             }}
             onBlur={field.onBlur}
             invalid={touched && !!errors}
-            menuPlacement={"auto"}
             defaultOptions
-            menuPortalTarget={withinModal}
-            onMenuOpen={(): void => setModalOverflow('hidden')}
-            onMenuClose={(): void => setModalOverflow('auto')}
+            // getOptionLabel={({label}) => label }
+            // getOptionValue={({value}) => value }
             {...rest}
         />
 

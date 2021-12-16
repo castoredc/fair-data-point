@@ -12,6 +12,28 @@
     .Back {
       padding: 0 1.6rem;
     }
+
+    .DashboardTabs {
+      margin-left: auto;
+      margin-right: auto;
+      overflow: auto;
+
+      > div {
+        height: 100%;
+
+        // TabsWrapper
+        > div {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+
+          > div[role="tabpanel"] {
+            flex: 1;
+            overflow: auto;
+          }
+        }
+      }
+    }
   }
 
   .DashboardBody {

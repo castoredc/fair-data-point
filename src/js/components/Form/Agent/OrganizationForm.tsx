@@ -49,7 +49,7 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
         this.loadOrganizations = debounce(this.loadOrganizations, 1000)
     }
 
-    loadOrganizations = (country: OptionType, input: string, callback: (options) => void) => {
+    loadOrganizations = (country: string, input: string, callback: (options) => void) => {
         const {axiosCancel} = this.state;
 
         if (axiosCancel !== null) {
@@ -66,7 +66,7 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
         axios.get('/api/agent/organization', {
             cancelToken: source.token,
             params: {
-                country: country.value,
+                country: country,
                 search: input,
             },
         }).then((response) => {

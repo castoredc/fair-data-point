@@ -9,7 +9,6 @@ type AffiliationOrganizationModalProps = {
     id?: string,
     open: boolean,
     onClose: () => void,
-    studyId: string,
     countries: any,
     handleSubmit: (values) => void,
 }

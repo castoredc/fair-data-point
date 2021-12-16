@@ -7,8 +7,6 @@ const FieldErrors: FC<{ field: FieldInputProps<any>, serverErrors: any }> = ({fi
         <ErrorMessage
             name={field.name}
             render={msg => {
-                console.log(msg);
-
                 if (typeof msg === 'object') {
                     return Object.values(msg).map((message: string) => (
                         <>

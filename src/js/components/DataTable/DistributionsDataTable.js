@@ -67,7 +67,7 @@ export default class DistributionsDataTable extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage: paginationCount.pageLimit,
             },
         }, () => {

@@ -33,8 +33,8 @@ export default React.forwardRef(({
             {pagination && <Pagination
                 accessibleName="Pagination"
                 onChange={handlePageChange}
-                pageLimit={pagination.perPage}
-                start={pagination.start}
+                pageSize={pagination.perPage}
+                currentPage={pagination.start - 1}
                 totalItems={pagination.totalResults}
             />}
         </div>

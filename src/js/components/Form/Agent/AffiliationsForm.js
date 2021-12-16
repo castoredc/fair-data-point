@@ -6,7 +6,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
 import {ValidatorForm} from "react-form-validator-core";
-import {Button, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import AffiliationForm from "./AffiliationForm";
 import InlineLoader from "../../LoadingScreen/InlineLoader";
 import Toggle from "../../Toggle";
@@ -27,8 +27,21 @@ export default class AffiliationsForm extends Component {
             ],
             isSaved: false,
             isLoading: true,
+            openModal: false,
         };
     }
+
+    openModal = () => {
+        this.setState({
+            openModal: true
+        })
+    };
+
+    closeModal = () => {
+        this.setState({
+            openModal: false
+        })
+    };
 
     // handleNewAffiliation = (e) => {
     //     e.preventDefault();
@@ -173,15 +186,18 @@ export default class AffiliationsForm extends Component {
     };
 
     render() {
-        const {affiliations, validation, countries, isLoading} = this.state;
+        const {affiliations, validation, countries, isLoading, openModal} = this.state;
 
         if (isLoading && countries == null) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading"/>;
         }
 
-        return <>
-            {/*<AffiliationOrganizationModal open={} onClose={} studyId={} countries={} handleSubmit={}/>*/}
+        const initialValues = {
+            affiliations: [defaultData]
+        };
 
+        return <>
+            <AffiliationOrganizationModal open={openModal} onClose={this.closeModal} countries={countries} handleSubmit={() => {}}/>
 
             <Formik
                 initialValues={initialValues}
@@ -201,7 +217,7 @@ export default class AffiliationsForm extends Component {
                     return <>
                         <div className="FormContent">
                             <div className="Organizations">
-                                {affiliations.map((affiliation, index) => {
+                                {values.affiliations.map((affiliation, index) => {
                                     const title = 'Affiliation ' + (index + 1) + (affiliation.organization.name.length > 0 ? ': ' + affiliation.organization.name : '');
 
                                     return <div>{title}</div>
@@ -225,7 +241,7 @@ export default class AffiliationsForm extends Component {
                                 })}
                             </div>
                             <Stack distribution="trailing" alignment="end">
-                                <Button buttonType="secondary" icon="add" onClick={this.handleNewAffiliation}>
+                                <Button buttonType="secondary" icon="add" onClick={this.openModal}>
                                     Add another affiliation
                                 </Button>
                             </Stack>

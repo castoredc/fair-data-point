@@ -30,7 +30,7 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
 
     const tabs = {
         studies: {
-            content: <Studies history={history} location={location} match={match}/>,
+            content: <Studies history={history} location={location} match={match} user={user} />,
             title: 'Studies',
         },
         catalogs: {
@@ -47,19 +47,22 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
         }})
     };
 
-    return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-        <Stack distribution="center">
-            <StackItem style={{width: toRem(960), marginTop: '3.2rem'}}>
-                <Tabs
-                    tabs={tabs}
-                    selected={urls[location.pathname]}
-                    onChange={(selectedKey) => {
-                        const newUrl = Object.keys(urls).find(key => urls[key] === selectedKey) ?? '/dashboard/studies';
-                        history.push(newUrl);
-                    }}
-                />
-            </StackItem>
-        </Stack>
+    return <div className="DashboardTabs">
+        <div style={{
+            width: toRem(960),
+            maxWidth: '100%',
+            padding: '3.2rem 3.2rem 0 3.2rem'
+        }}
+        >
+            <Tabs
+                tabs={tabs}
+                selected={urls[location.pathname]}
+                onChange={(selectedKey) => {
+                    const newUrl = Object.keys(urls).find(key => urls[key] === selectedKey) ?? '/dashboard/studies';
+                    history.push(newUrl);
+                }}
+            />
+        </div>
     </div>
 }
 

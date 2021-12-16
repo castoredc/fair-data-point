@@ -55,8 +55,6 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
 
             return publisher[publisher.type].id === newPublisher[newPublisher.type].id
         }) : false;
-        console.log(publishers.find((publisher) => publisher.id === newPublisher.id));
-
         if (!exists) {
             let newPublishers = publishers;
             newPublishers.push(newPublisher);

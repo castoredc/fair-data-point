@@ -1,11 +1,20 @@
 import React, {Component} from "react";
-import './Affiliations.scss';
-import Emoji from "../../../components/Emoji";
+import Emoji from "components/Emoji";
 import {CastorLogo} from "@castoredc/matter";
 import queryString from "query-string";
-import AffiliationsForm from "../../../components/Form/Agent/AffiliationsForm";
+import AffiliationsForm from "components/Form/Agent/AffiliationsForm";
+import {RouteComponentProps} from "react-router-dom";
 
-export default class Affiliations extends Component {
+interface AffiliationsProps extends RouteComponentProps<any> {
+    user: any,
+}
+
+interface AffiliationsState {
+    isSaved: boolean,
+}
+
+
+export default class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
     constructor(props) {
         super(props);
 
@@ -26,7 +35,7 @@ export default class Affiliations extends Component {
 
         if (isSaved) {
             const params = queryString.parse(location.search);
-            window.location.href = (typeof params.origin !== 'undefined') ? params.origin : '/';
+            window.location.href = (typeof params.origin !== 'undefined') ? String(params.origin) : '/';
         }
 
         return <>
@@ -49,7 +58,7 @@ export default class Affiliations extends Component {
                 </div>
             </header>
 
-            <AffiliationsForm onSaved={this.handleSave}/>
+            <AffiliationsForm onSaved={this.handleSave} />
         </>;
     }
 }

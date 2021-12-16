@@ -6,7 +6,7 @@ import {LoadingOverlay} from "@castoredc/matter";
 import {Route, RouteComponentProps, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
-import StudyDetailsForm from "components/Form/StudyDetailsForm";
+import StudyDetailsForm from "components/Form/Study/StudyDetailsForm";
 import ContactsForm from "components/Form/Study/ContactsForm";
 import OrganizationsForm from "components/Form/Study/OrganizationsForm";
 import Header from "components/Layout/Dashboard/Header";
