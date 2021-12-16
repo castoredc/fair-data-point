@@ -194,7 +194,8 @@ class AgentApiController extends ApiController
                 $agent,
                 $parsed->getSearch(),
                 $parsed->getPerPage(),
-                $parsed->getPage()
+                $parsed->getPage(),
+                null
             ));
 
             $handledStamp = $envelope->last(HandledStamp::class);

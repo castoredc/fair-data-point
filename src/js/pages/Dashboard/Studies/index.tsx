@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, ChoiceOption, LoadingOverlay, Pagination} from "@castoredc/matter";
+import {Button, ChoiceOption, LoadingOverlay, Pagination, Space} from "@castoredc/matter";
 import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
@@ -103,8 +103,11 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
+            <Space bottom="comfortable" />
+
             <Header
                 title="My studies"
+                type="Section"
                 badge={isAdmin(user) ? <ChoiceOption
                     labelText="View all studies"
                     checked={viewAll}

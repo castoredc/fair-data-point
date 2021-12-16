@@ -18,12 +18,12 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
     /**
      * @return Catalog[]
      */
-    public function findCatalogs(?Agent $agent, ?int $perPage, ?int $page): array
+    public function findCatalogs(?Agent $agent, ?bool $acceptSubmissions, ?int $perPage, ?int $page): array
     {
         $qb = $this->createQueryBuilder('catalog')
             ->select('catalog');
 
-        $qb = $this->getCatalogQuery($qb, $agent);
+        $qb = $this->getCatalogQuery($qb, $agent, $acceptSubmissions);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -35,12 +35,12 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countCatalogs(?Agent $agent): int
+    public function countCatalogs(?Agent $agent, ?bool $acceptSubmissions): int
     {
         $qb = $this->createQueryBuilder('catalog')
             ->select('count(catalog.id)');
 
-        $qb = $this->getCatalogQuery($qb, $agent);
+        $qb = $this->getCatalogQuery($qb, $agent, $acceptSubmissions);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -51,12 +51,17 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
         }
     }
 
-    private function getCatalogQuery(QueryBuilder $qb, ?Agent $agent): QueryBuilder
+    private function getCatalogQuery(QueryBuilder $qb, ?Agent $agent, ?bool $acceptSubmissions): QueryBuilder
     {
         $qb = $this->getQuery($qb);
 
         if ($agent !== null) {
             $qb = $this->getAgentQuery($qb, $agent);
+        }
+
+        if ($acceptSubmissions !== null) {
+            $qb = $qb->where('catalog.acceptSubmissions = :acceptSubmissions');
+            $qb->setParameter('acceptSubmissions', $acceptSubmissions);
         }
 
         $qb->orderBy('metadata.title', 'ASC');

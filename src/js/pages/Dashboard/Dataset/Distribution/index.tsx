@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {LoadingOverlay} from "@castoredc/matter";
+import {Button, LoadingOverlay} from "@castoredc/matter";
 import {Route, RouteComponentProps, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
@@ -141,7 +141,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             <SideBar
                 back={{
-                    to: `/dashboard/studies/${study}/datasets/${dataset}`,
+                    to: match.params.study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${match.params.catalog}/datasets/${dataset}`,
                     title: 'Back to dataset'
                 }}
                 location={location}
@@ -149,7 +149,16 @@ export default class Distribution extends Component<DistributionProps, Distribut
             />
 
             <Body>
-                <Header title={title}/>
+                <Header title={title}>
+                    <Button
+                        buttonType="contentOnly"
+                        icon="openNewWindow"
+                        href={`/fdp/dataset/${dataset}/distribution/${distribution.slug}`}
+                        target="_blank"
+                    >
+                        View
+                    </Button>
+                </Header>
 
                 <Switch>
                     <Route

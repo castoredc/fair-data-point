@@ -23,10 +23,10 @@ class GetPaginatedCatalogsCommandHandler implements MessageHandlerInterface
         $catalogRepository = $this->em->getRepository(Catalog::class);
 
         return new PaginatedResultCollection(
-            $catalogRepository->findCatalogs($command->getAgent(), $command->getPerPage(), $command->getPage()),
+            $catalogRepository->findCatalogs($command->getAgent(), $command->getAcceptSubmissions(), $command->getPerPage(), $command->getPage()),
             $command->getPage(),
             $command->getPerPage(),
-            $catalogRepository->countCatalogs($command->getAgent())
+            $catalogRepository->countCatalogs($command->getAgent(), $command->getAcceptSubmissions())
         );
     }
 }

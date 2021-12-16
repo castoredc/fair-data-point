@@ -5,7 +5,7 @@ namespace App\Api\Controller\Catalog;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\CatalogApiRequest;
-use App\Api\Request\Metadata\MetadataFilterApiRequest;
+use App\Api\Request\Metadata\CatalogMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Command\Catalog\CreateCatalogCommand;
@@ -32,14 +32,15 @@ class CatalogsApiController extends ApiController
     public function catalogs(Request $request, MessageBusInterface $bus): Response
     {
         try {
-            $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
-            assert($parsed instanceof MetadataFilterApiRequest);
+            $parsed = $this->parseRequest(CatalogMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof CatalogMetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(new GetPaginatedCatalogsCommand(
                 null,
                 $parsed->getSearch(),
                 $parsed->getPerPage(),
-                $parsed->getPage()
+                $parsed->getPage(),
+                $parsed->getAcceptSubmissions()
             ));
 
             $handledStamp = $envelope->last(HandledStamp::class);

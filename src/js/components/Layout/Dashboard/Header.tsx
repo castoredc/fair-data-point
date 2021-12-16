@@ -1,23 +1,24 @@
 import React, {FC, ReactElement} from 'react';
 import './Dashboard.scss';
-import {Stack, StackItem} from "@castoredc/matter";
+import {Heading, Stack, StackItem} from "@castoredc/matter";
 import {toRem} from "@castoredc/matter-utils";
+import {HeadingType} from "@castoredc/matter/lib/types/types/heading";
 
 type HeaderProps = {
     title: string,
-    badge?: ReactElement
+    badge?: ReactElement,
+    type?: HeadingType
 }
 
-const Header: FC<HeaderProps> = ({ title, badge, children }) => {
+const Header: FC<HeaderProps> = ({ title, badge, children, type }) => {
     return <div className="DashboardHeader" style={{
         width: toRem(960),
         maxWidth: '100%',
-        paddingTop: '3.2rem'
     }}>
         <Stack distribution="equalSpacing">
             <StackItem className="HeaderTitle">
                 <Stack>
-                    <h2>{title}</h2>
+                    <Heading type={type ?? 'Subsection'} style={{ margin: 0 }}>{title}</Heading>
                     {badge && badge}
                 </Stack>
             </StackItem>

@@ -2,25 +2,24 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, ChoiceOption, Heading, LoadingOverlay, Pagination, Space, Stack} from "@castoredc/matter";
+import {Button, Heading, LoadingOverlay, Pagination, Separator, Space, Stack, StackItem} from "@castoredc/matter";
 import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
-import DocumentTitle from "components/DocumentTitle";
-import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
-import Header from "components/Layout/Dashboard/Header";
-import {isAdmin} from "utils/PermissionHelper";
+import {toRem} from "@castoredc/matter-utils";
+import DataGridHelper from "components/DataTable/DataGridHelper";
+import DocumentTitle from "components/DocumentTitle";
 
-interface CatalogsProps extends RouteComponentProps<any> {
+interface SelectCatalogProps extends RouteComponentProps<any> {
 }
 
-interface CatalogsState {
+interface SelectCatalogState {
     catalogs: any,
     isLoading: boolean,
     pagination: any,
 }
 
-export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
+export default class SelectCatalog extends Component<SelectCatalogProps, SelectCatalogState> {
     constructor(props) {
         super(props);
 
@@ -41,6 +40,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
         let filters = {
             page : pagination.currentPage,
             perPage : pagination.perPage,
+            acceptSubmissions : true,
         };
 
         axios.get('/api/catalog', {params: filters})
@@ -59,7 +59,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                 if (error.response && typeof error.response.data.error !== "undefined") {
                     toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading your catalogs"/>);
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
                 }
             });
     };
@@ -83,41 +83,42 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
     }
 
     render() {
-        const {history} = this.props;
         const {isLoading, catalogs, pagination} = this.state;
 
-        return <div>
-            <DocumentTitle title="Catalogs" />
+        return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
+            <DocumentTitle title="Add a study" />
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs"/>}
 
-            <Space bottom="comfortable" />
+            <Stack distribution="center">
+                <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
+                    <Heading type="Section">Choose a Catalog</Heading>
 
-           <Header
-                title="My catalogs"
-                type="Section"
-            >
-                <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
-                    Add catalog
-                </Button>
-            </Header>
+                    <p>
+                        Please choose a catalog where you would like to add your study to.
+                    </p>
 
-            <div>
-                {catalogs.map((catalog) => {
-                    return <ListItem
-                        selectable={false}
-                        link={`/dashboard/catalogs/${catalog.slug}`} title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
-                    />
-                })}
+                    <Separator />
 
-                {pagination && <Pagination
-                    accessibleName="Pagination"
-                    onChange={this.handlePagination}
-                    pageSize={pagination.perPage}
-                    currentPage={pagination.currentPage - 1}
-                    totalItems={pagination.totalResults}
-                />}
-            </div>
+                    {catalogs.length > 0 ? catalogs.map((catalog) => {
+                            return <ListItem key={catalog.id}
+                                             title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
+                                             link={`/dashboard/studies/add/${catalog.slug}`}
+                                             customIcon="catalog"
+                            />
+                        },
+                    ) : <div className="NoResults">No catalogs found.</div>}
+
+                    {pagination && <Pagination
+                        accessibleName="Pagination"
+                        onChange={this.handlePagination}
+                        pageSize={pagination.perPage}
+                        currentPage={pagination.currentPage - 1}
+                        totalItems={pagination.totalResults}
+                    />}
+
+                </StackItem>
+            </Stack>
         </div>;
     }
 }

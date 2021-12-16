@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
-import {LoadingOverlay} from "@castoredc/matter";
+import {Button, LoadingOverlay} from "@castoredc/matter";
 import {Route, RouteComponentProps, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
@@ -127,7 +127,16 @@ export default class Study extends Component<StudyProps, StudyState> {
             />
 
             <Body>
-                <Header title={title}/>
+                <Header title={title}>
+                    <Button
+                        buttonType="contentOnly"
+                        icon="openNewWindow"
+                        href={`/study/${study.slug}`}
+                        target="_blank"
+                    >
+                        View
+                    </Button>
+                </Header>
 
                 <Switch>
                     <Route path="/dashboard/studies/:study" exact

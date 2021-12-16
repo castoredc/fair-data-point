@@ -7,6 +7,7 @@ import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import {localizedText} from "../../../util";
 import {toRem} from "@castoredc/matter-utils";
+import DocumentTitle from "components/DocumentTitle";
 
 interface AddStudyProps extends RouteComponentProps<any> {
 }
@@ -15,7 +16,7 @@ interface AddStudyState {
     studies: any,
     isLoading: boolean,
     selectedStudyId: string | null,
-    catalog: any | null,
+    catalog: any,
     submitDisabled: boolean
 }
 
@@ -79,11 +80,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     componentDidMount() {
         const {match} = this.props;
 
-        if (match.params.catalog) {
-            this.getCatalog();
-        } else {
-            this.getStudies();
-        }
+        this.getCatalog();
     }
 
     handleStudySelect = (studyId: string | null) => {
@@ -122,23 +119,24 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     };
 
     render() {
-        const {history} = this.props;
         const {isLoading, studies, selectedStudyId, catalog, submitDisabled} = this.state;
 
         const selectedStudy = selectedStudyId ? studies.find((study) => study.sourceId == selectedStudyId) : null;
 
-        return <>
-            {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
+        if(isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading studies"/>;
+        }
+
+        return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
+            <DocumentTitle title="Add a study" />
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
                     <Heading type="Section">Choose a Study</Heading>
 
-                    {catalog ? <p>
+                    <p>
                         {`Please choose an item from your list of studies that you’d like to include in the ${localizedText(catalog.metadata.title, 'en')}.`}
-                    </p> : <p>
-                        Please choose an item from your list of studies that you’d like to add.
-                    </p>}
+                    </p>
 
                     <Separator />
 
@@ -176,6 +174,6 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     {studies.length == 0 && <div className="NoResults">No studies found.</div>}
                 </StackItem>
             </Stack>
-        </>;
+        </div>;
     }
 }

@@ -18,7 +18,7 @@ type ListItemProps = {
     smallIcon?: boolean;
     fill?: boolean;
     newWindow?: boolean;
-    selectable: boolean;
+    selectable?: boolean;
     active?: boolean;
     className?: string;
     onClick?: (e) => void;
