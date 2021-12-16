@@ -93,7 +93,7 @@ class CastorAuthenticator extends Authenticator
             null,
             NameOrigin::castor()
         );
-        
+
         return new User($person);
     }
 
