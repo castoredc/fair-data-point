@@ -178,7 +178,6 @@ class GenerateRDFCommand extends Command
 
             $dbStudy = $distribution->getDataset()->getStudy();
             $study = $studies[$dbStudy->getId()];
-            assert($study instanceof CastorStudy);
             $optionGroups = $studyOptionGroups[$dbStudy->getId()];
 
             /** @var Record[] $records */
@@ -195,7 +194,6 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
-
 
             $output->writeln('- Setting up RDFRenderHelper');
             $output->writeln('  - Study: ' . $study->getName() . ' <' . $study->getId() . '>');

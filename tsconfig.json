@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["es2018", "dom"],
+    "module": "es6",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "paths": {
+      "components/*": ["./src/js/components/*"],
+//      "config/*": ["./src/js/config/*"],
+//      "modules/*": ["./src/js/modules/*"],
+//      "hooks/*": ["./src/js/hooks/*"],
+      "pages/*": ["./src/js/pages/*"],
+//      "services/*": ["./src/js/services/*"],
+//      "store/*": ["./src/js/store/*"],
+//      "types/*": ["./src/js/types/*"],
+      "utils/*": ["./src/js/utils/*"]
+    },
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "es5",
+    "checkJs": false,
+    "skipLibCheck": true
+  },
+  "include": ["./src/js"]
+}

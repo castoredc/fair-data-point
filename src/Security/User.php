@@ -54,9 +54,7 @@ class User implements UserInterface
         'castoredc.com' => ['ROLE_ADMIN'],
     ];
 
-    public const EMAILS = [
-        'bruna.dossantosvieira@radboudumc.nl' => ['ROLE_ADMIN'],
-    ];
+    public const EMAILS = [];
 
     public function __construct(?Person $person)
     {

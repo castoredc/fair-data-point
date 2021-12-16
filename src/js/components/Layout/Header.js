@@ -95,17 +95,20 @@ export default class Header extends Component {
         const {embedded, className, title, badge, location, data, breadcrumbs, user, hideTitle = false, forceSmallHeader = false} = this.props;
         const {mobile, smallHeader, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
-        const adminMenuItems = [{
-            destination: '/admin',
-            icon:        'settings',
-            label:       'Admin',
-        }];
+        const adminMenuItems = [];
 
-        const defaultMenuItems = [{
-            destination: '/logout',
-            icon:        'logOut',
-            label:       'Log out',
-        }];
+        const defaultMenuItems = [
+            {
+                destination: '/dashboard',
+                icon:        'settings',
+                label:       'Dashboard',
+            },
+            {
+                destination: '/logout',
+                icon:        'logOut',
+                label:       'Log out',
+            },
+        ];
 
         const menuItems = (user && user.isAdmin) ? [...adminMenuItems, ...defaultMenuItems] : defaultMenuItems;
 

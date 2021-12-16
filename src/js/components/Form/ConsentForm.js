@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import {ValidatorForm} from 'react-form-validator-core';
 
 import './Form.scss'
@@ -10,7 +10,6 @@ import ToastContent from "../ToastContent";
 import axios from "axios";
 import FormItem from "./FormItem";
 import RadioGroup from "../Input/RadioGroup";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 
 export default class ConsentForm extends Component {
     constructor(props) {
@@ -149,7 +148,7 @@ export default class ConsentForm extends Component {
         }
 
         if(isLoading && !isSaved) {
-            return <InlineLoader />;
+            return <LoadingOverlay accessibleLabel="Loading"/>;
         }
 
         return (

@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid} from "@castoredc/matter";
+import {CellText, DataGrid, LoadingOverlay} from "@castoredc/matter";
 import moment from "moment";
 import DistributionGenerationStatus from "../Status/DistributionGenerationStatus";
 import DataGridHelper from "./DataGridHelper";
@@ -76,7 +75,7 @@ export default class DistributionLogsDataTable extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage:     paginationCount.pageLimit,
             },
         }, () => {
@@ -91,7 +90,7 @@ export default class DistributionLogsDataTable extends Component {
         const log = logs[rowId];
 
         history.push({
-            pathname: '/admin/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + log.id,
+            pathname: '/dashboard/dataset/' + dataset + '/distribution/' + distribution.slug + '/log/' + log.id,
         });
     };
 
@@ -99,7 +98,7 @@ export default class DistributionLogsDataTable extends Component {
         const {logs, isLoadingLogs, hasLoadedLogs, pagination} = this.state;
 
         if (!hasLoadedLogs) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading logs"/>;
         }
 
         const columns = [

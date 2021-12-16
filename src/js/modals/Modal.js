@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
-import {Button} from "@castoredc/matter";
+import {Button, LoadingOverlay} from "@castoredc/matter";
 import './Modal.scss';
 import {Portal} from "react-portal";
 import {classNames} from "../util";
-import InlineLoader from "../components/LoadingScreen/InlineLoader";
 
 export default class Modal extends Component {
     handleClick = (event) => {
@@ -28,7 +27,7 @@ export default class Modal extends Component {
                     {title && <header>{title}</header>}
                     {closeButton && <Button icon="cross" className="CloseButton" onClick={handleClose} iconDescription="Close" />}
                     <main>
-                        {isLoading && <InlineLoader overlay />}
+                        {isLoading && <LoadingOverlay accessibleLabel="Loading"/>}
                         {children}
                     </main>
                     {footer && <footer>

@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import {Button, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import {ValidatorForm} from 'react-form-validator-core';
 
 import './Form.scss'
-import {Redirect} from "react-router-dom";
-import {LinkContainer} from "react-router-bootstrap";
 import moment from "moment";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
@@ -12,34 +10,33 @@ import axios from "axios";
 import FormItem from "./FormItem";
 import Input from "../Input";
 import Dropdown from "../Input/Dropdown";
-import FormHeading from "./FormHeading";
-import InlineLoader from "../LoadingScreen/InlineLoader";
+import RadioGroup from "components/Input/RadioGroup";
+import FormGroup from "components/Form/FormGroup";
 
 export default class StudyDetailsForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data:           {
-                id:                           null,
-                briefName:                    '',
-                scientificName:               '',
-                briefSummary:                 '',
-                studyType:                    '',
-                condition:                    '',
-                intervention:                 '',
-                estimatedEnrollment:          '',
-                estimatedStudyStartDate:      '',
+            data: {
+                id: null,
+                briefName: '',
+                scientificName: '',
+                briefSummary: '',
+                studyType: '',
+                condition: '',
+                intervention: '',
+                estimatedEnrollment: '',
+                estimatedStudyStartDate: '',
                 estimatedStudyCompletionDate: '',
-                summary:                      '',
-                recruitmentStatus:            null,
-                methodType:                   '',
+                summary: '',
+                recruitmentStatus: null,
+                methodType: '',
             },
-            visitedFields:  {},
-            validation:     {},
-            isSaved:        false,
+            validation: {},
+            isSaved: false,
             submitDisabled: false,
-            isLoading:      false,
+            isLoading: false,
         };
     }
 
@@ -67,7 +64,7 @@ export default class StudyDetailsForm extends Component {
                 }
 
                 this.setState({
-                    data:      {...data, ...metadata},
+                    data: {...data, ...metadata},
                     isLoading: false,
                 });
             })
@@ -97,7 +94,7 @@ export default class StudyDetailsForm extends Component {
     })) => {
         const {data, changedFieldsSinceFormSubmission} = this.state;
         this.setState({
-            data:                             {
+            data: {
                 ...data,
                 [event.target.name]: event.target.value,
             },
@@ -105,7 +102,7 @@ export default class StudyDetailsForm extends Component {
                 ...changedFieldsSinceFormSubmission,
                 [event.target.name]: true,
             },
-            validation:                       {
+            validation: {
                 [event.target.name]: false,
             },
         }, callback);
@@ -114,18 +111,8 @@ export default class StudyDetailsForm extends Component {
     handleSelectChange = (name, event) => {
         this.handleChange({
             target: {
-                name:  name,
+                name: name,
                 value: event.value,
-            },
-        });
-    };
-
-    handleFieldVisit = (event) => {
-        const {visitedFields} = this.state;
-        this.setState({
-            visitedFields: {
-                ...visitedFields,
-                [event.target.name]: true,
             },
         });
     };
@@ -139,30 +126,30 @@ export default class StudyDetailsForm extends Component {
         if (this.form.isFormValid()) {
             this.setState({
                 submitDisabled: true,
-                isLoading:      true,
+                isLoading: true,
             });
 
             let estimatedStudyStartDate = moment(data.estimatedStudyStartDate, 'DD-MM-YYYY');
             let estimatedStudyCompletionDate = moment(data.estimatedStudyCompletionDate, 'DD-MM-YYYY');
 
             axios.post('/api/study/' + studyId + '/metadata' + (data.id ? '/' + data.id : ''), {
-                briefName:                    data.briefName,
-                scientificName:               data.scientificName,
-                briefSummary:                 data.briefSummary,
-                type:                         data.studyType,
-                condition:                    data.condition,
-                intervention:                 data.intervention,
-                estimatedEnrollment:          data.estimatedEnrollment,
-                estimatedStudyStartDate:      estimatedStudyStartDate.format('YYYY-MM-DD'),
+                briefName: data.briefName,
+                scientificName: data.scientificName,
+                briefSummary: data.briefSummary,
+                type: data.studyType,
+                condition: data.condition,
+                intervention: data.intervention,
+                estimatedEnrollment: data.estimatedEnrollment,
+                estimatedStudyStartDate: estimatedStudyStartDate.format('YYYY-MM-DD'),
                 estimatedStudyCompletionDate: estimatedStudyCompletionDate.format('YYYY-MM-DD'),
-                summary:                      data.summary,
-                recruitmentStatus:            data.recruitmentStatus,
-                methodType:                   data.methodType,
+                summary: data.summary,
+                recruitmentStatus: data.recruitmentStatus,
+                methodType: data.methodType,
             })
                 .then((response) => {
                     this.setState({
-                        isSaved:        true,
-                        isLoading:      false,
+                        isSaved: true,
+                        isLoading: false,
                         submitDisabled: false,
                     });
 
@@ -188,7 +175,7 @@ export default class StudyDetailsForm extends Component {
                     }
                     this.setState({
                         submitDisabled: false,
-                        isLoading:      false,
+                        isLoading: false,
                     });
                 });
         }
@@ -199,19 +186,11 @@ export default class StudyDetailsForm extends Component {
     render() {
         const {catalog, studyId, admin = false} = this.props;
         const {isSaved, isLoading, submitDisabled} = this.state;
-
-        const backUrl = '/my-studies/' + catalog + '/study/add';
-        const nextUrl = '/my-studies/' + catalog + '/study/' + studyId + '/metadata/centers';
-
         const required = "This field is required";
         const invalid = "This value is invalid";
 
-        if (isSaved && !admin) {
-            return <Redirect push to={nextUrl}/>;
-        }
-
         if (isLoading && !submitDisabled) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading study information" />;
         }
 
         return (
@@ -222,137 +201,58 @@ export default class StudyDetailsForm extends Component {
                 method="post"
             >
                 <div className="FormContent">
-                    <FormHeading label="Overview"/>
-                    <FormItem label="Brief Name">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="briefName"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.briefName}
-                            serverError={this.state.validation.briefName}
-                        />
-                    </FormItem>
-                    <FormItem label="Scientific Name">
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="scientificName"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.scientificName}
-                            serverError={this.state.validation.scientificName}
-                        />
-                    </FormItem>
-                    <FormItem label="Brief Summary">
-                        <p>
-                            Please include the objective, design, research question and the population of your study.
-                        </p>
-                        <Input
-                            validators={['required']}
-                            errorMessages={[required]}
-                            name="briefSummary"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.briefSummary}
-                            serverError={this.state.validation.briefSummary}
-                            as="textarea" rows="5"
-                        />
-                    </FormItem>
-                    <FormItem label="Type">
-                        <Dropdown
-                            validators={['required']}
-                            errorMessages={[required]}
-                            options={studyTypes}
-                            name="studyType"
-                            onChange={(e) => {
-                                this.handleSelectChange('studyType', e)
-                            }}
-                            onBlur={this.handleFieldVisit}
-                            value={studyTypes.filter(({value}) => value === this.state.data.studyType)}
-                            serverError={this.state.validation.studyType}
-                        />
-                    </FormItem>
-                    <FormItem label="Method">
-                        <Dropdown
-                            validators={['required']}
-                            errorMessages={[required]}
-                            options={methodTypes}
-                            name="methodType"
-                            onChange={(e) => {
-                                this.handleSelectChange('methodType', e)
-                            }}
-                            onBlur={this.handleFieldVisit}
-                            value={methodTypes.filter(({value}) => value === this.state.data.methodType)}
-                            serverError={this.state.validation.methodType}
-                        />
-                    </FormItem>
-                    <FormItem label="Condition">
-                        <Input
-                            name="condition"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.condition}
-                            serverError={this.state.validation.condition}
-                        />
-                    </FormItem>
-                    <FormItem label="Intervention">
-                        <Input
-                            name="intervention"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.intervention}
-                            serverError={this.state.validation.intervention}
-                        />
-                    </FormItem>
+                    <FormGroup label="Study Identification">
 
-                    <FormHeading label="Enrollment"/>
-                    <FormItem label="Estimated Number of Patients">
-                        <Input
-                            validators={['required', 'isNumber']}
-                            errorMessages={[required, invalid]}
-                            name="estimatedEnrollment"
-                            onChange={this.handleChange}
-                            onBlur={this.handleFieldVisit}
-                            value={this.state.data.estimatedEnrollment}
-                            serverError={this.state.validation.estimatedEnrollment}
-                        />
-                    </FormItem>
-
-                    <FormHeading label="Duration"/>
-                    <Stack>
-                        <FormItem label="Estimated Start Date">
+                        <FormItem label="Brief study title">
                             <Input
-                                placeholder="DD-MM-YYYY"
-                                validators={['required', 'isDate']}
-                                errorMessages={[required, invalid]}
-                                name="estimatedStudyStartDate"
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="briefName"
                                 onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.estimatedStudyStartDate}
-                                mask={[/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                                serverError={this.state.validation.estimatedStudyStartDate}
+                                value={this.state.data.briefName}
+                                serverError={this.state.validation.briefName}
+                            />
+                        </FormItem>
+                        <FormItem label="Official (scientific) study title">
+                            <Input
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="scientificName"
+                                onChange={this.handleChange}
+                                value={this.state.data.scientificName}
+                                serverError={this.state.validation.scientificName}
                             />
                         </FormItem>
 
-                        <FormItem label="Estimated Completion Date">
-                            <Input
-                                placeholder="DD-MM-YYYY"
-                                validators={['required', 'isDate']}
-                                errorMessages={[required, invalid]}
-                                name="estimatedStudyCompletionDate"
+                        <FormItem label="Study type">
+                            <RadioGroup
+                                variant="horizontal"
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={studyTypes}
+                                name="studyType"
                                 onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.estimatedStudyCompletionDate}
-                                mask={[/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                                serverError={this.state.validation.estimatedStudyCompletionDate}
+                                value={this.state.data.studyType}
+                                serverError={this.state.validation.studyType}
                             />
                         </FormItem>
-                    </Stack>
 
-                    {admin && <div>
-                        <FormHeading label="Admin"/>
+                        <FormItem label="Method">
+                            <RadioGroup
+                                variant="horizontal"
+                                validators={['required']}
+                                errorMessages={[required]}
+                                options={methodTypes}
+                                name="methodType"
+                                onChange={this.handleChange}
+                                value={this.state.data.methodType}
+                                serverError={this.state.validation.methodType}
+                            />
+                        </FormItem>
+                    </FormGroup>
+
+                    <FormGroup label="Study Status">
+
                         <FormItem label="Status">
                             <Dropdown
                                 options={recruitmentStatus}
@@ -360,35 +260,100 @@ export default class StudyDetailsForm extends Component {
                                 onChange={(e) => {
                                     this.handleSelectChange('recruitmentStatus', e)
                                 }}
-                                onBlur={this.handleFieldVisit}
                                 value={recruitmentStatus.filter(({value}) => value === this.state.data.recruitmentStatus)}
                                 serverError={this.state.validation.recruitmentStatus}
                             />
                         </FormItem>
-                        <FormItem label="Long Summary">
+
+                        <Stack>
+                            <FormItem label="Estimated Start Date">
+                                <Input
+                                    placeholder="DD-MM-YYYY"
+                                    validators={['required', 'isDate']}
+                                    errorMessages={[required, invalid]}
+                                    name="estimatedStudyStartDate"
+                                    onChange={this.handleChange}
+                                    value={this.state.data.estimatedStudyStartDate}
+                                    mask={[/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                                    serverError={this.state.validation.estimatedStudyStartDate}
+                                />
+                            </FormItem>
+
+                            <FormItem label="Estimated Completion Date">
+                                <Input
+                                    placeholder="DD-MM-YYYY"
+                                    validators={['required', 'isDate']}
+                                    errorMessages={[required, invalid]}
+                                    name="estimatedStudyCompletionDate"
+                                    onChange={this.handleChange}
+                                    value={this.state.data.estimatedStudyCompletionDate}
+                                    mask={[/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                                    serverError={this.state.validation.estimatedStudyCompletionDate}
+                                />
+                            </FormItem>
+                        </Stack>
+                    </FormGroup>
+
+                    <FormGroup label="Study Description">
+
+                        <FormItem label="Brief Summary">
+                            <p>
+                                Please include the objective, design, research question and the population of your
+                                study.
+                            </p>
                             <Input
-                                name="summary"
+                                validators={['required']}
+                                errorMessages={[required]}
+                                name="briefSummary"
                                 onChange={this.handleChange}
-                                onBlur={this.handleFieldVisit}
-                                value={this.state.data.summary}
-                                serverError={this.state.validation.summary}
-                                as="textarea" rows="15"
+                                value={this.state.data.briefSummary}
+                                serverError={this.state.validation.briefSummary}
+                                as="textarea" rows="5"
                             />
                         </FormItem>
-                    </div>}
+                    </FormGroup>
+
+                    <FormGroup label="Conditions and Keywords">
+
+                        <FormItem
+                            label="Primary Disease or Condition Being Studied in the Trial, or the Focus of the Study">
+                            <Input
+                                name="condition"
+                                onChange={this.handleChange}
+                                value={this.state.data.condition}
+                                serverError={this.state.validation.condition}
+                            />
+                        </FormItem>
+                        {/*Keywords*/}
+                        <FormItem label="Intervention">
+                            <Input
+                                name="intervention"
+                                onChange={this.handleChange}
+                                value={this.state.data.intervention}
+                                serverError={this.state.validation.intervention}
+                            />
+                        </FormItem>
+                    </FormGroup>
+
+                    <FormGroup label="Enrollment">
+                        <FormItem label="Estimated total number of participants">
+                            <Input
+                                validators={['required', 'isNumber']}
+                                errorMessages={[required, invalid]}
+                                name="estimatedEnrollment"
+                                onChange={this.handleChange}
+                                value={this.state.data.estimatedEnrollment}
+                                serverError={this.state.validation.estimatedEnrollment}
+                            />
+                        </FormItem>
+                    </FormGroup>
                 </div>
 
                 <div className="FormButtons">
-                    <Stack distribution={admin ? 'trailing' : 'equalSpacing'}>
-                        {!admin && <LinkContainer to={backUrl}>
-                            <Button buttonType="secondary">Back</Button>
-                        </LinkContainer>}
-
-                        {admin ? <Button type="submit" disabled={this.state.submitDisabled}>
+                    <Stack distribution="trailing">
+                        <Button type="submit" disabled={this.state.submitDisabled}>
                             Save
-                        </Button> : <Button type="submit" disabled={this.state.submitDisabled}>
-                            Next
-                        </Button>}
+                        </Button>
                     </Stack>
                 </div>
 

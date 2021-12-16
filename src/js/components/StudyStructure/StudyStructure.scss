@@ -133,7 +133,7 @@
     width: 100%;
 
     .OptionGroupTableOption, .OptionGroupTableValue, .OptionGroupTableAnnotations {
-      padding: 0 10px;
+      padding: 0 0.8rem;
     }
 
     .OptionGroupTableOption {
@@ -158,6 +158,9 @@
 
   .OptionGroupTableHeader {
     font-weight: bold;
+    background-color: $pale-grey;
+    border-bottom: 0.2rem solid $neutral-40;
+    padding: 0.8rem 0;
   }
 
   .OptionGroupItem {

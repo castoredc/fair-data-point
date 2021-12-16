@@ -2,8 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, CellText, DataGrid, Icon, IconCell, Stack, Tabs} from "@castoredc/matter";
+import {Button, CellText, DataGrid, Icon, IconCell, LoadingOverlay, Stack, Tabs} from "@castoredc/matter";
 import AddNodeModal from "../../../modals/AddNodeModal";
 
 export default class DataModelNodes extends Component {
@@ -78,7 +77,7 @@ export default class DataModelNodes extends Component {
         const {dataModel, version} = this.props;
 
         if (isLoadingNodes) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading nodes"/>;
         }
 
         const internalNodeRows = nodes.internal.map((item) => {

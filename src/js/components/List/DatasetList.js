@@ -3,8 +3,7 @@ import axios from "axios";
 import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {Pagination} from "@castoredc/matter";
-import InlineLoader from "../LoadingScreen/InlineLoader";
+import {LoadingOverlay, Pagination} from "@castoredc/matter";
 import DatasetListItem from "../ListItem/DatasetListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
 
@@ -74,7 +73,7 @@ export default class DatasetList extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage:     paginationCount.pageLimit,
             },
         }, () => {
@@ -91,7 +90,7 @@ export default class DatasetList extends Component {
         }
 
         if (datasets === null) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading datasets" content="" />;
         }
 
         return <div className={classNames('Datasets', className)}>
@@ -116,8 +115,8 @@ export default class DatasetList extends Component {
                 <Pagination
                     accessibleName="Pagination"
                     onChange={this.handlePagination}
-                    pageLimit={pagination.perPage}
-                    start={pagination.start}
+                    pageSize={pagination.perPage}
+                    currentPage={pagination.currentPage - 1}
                     totalItems={pagination.totalResults}
                 />
 

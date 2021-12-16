@@ -5,8 +5,7 @@ import StudyListItem from "../ListItem/StudyListItem";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import StudiesMap from "../Map/StudiesMap";
-import {Button, Heading, Pagination} from "@castoredc/matter";
-import InlineLoader from "../LoadingScreen/InlineLoader";
+import {Button, Heading, LoadingOverlay, Pagination} from "@castoredc/matter";
 import DataGridHelper from "../DataTable/DataGridHelper";
 import {Sticky, StickyContainer} from "react-sticky";
 import StudyFilters from "../Filters/StudyFilters";
@@ -22,7 +21,7 @@ export default class StudyList extends Component {
             studies: null,
             map: null,
             pagination: {
-                currentPage: 1,
+                currentPage: 0,
                 start: 1,
                 perPage: props.embedded ? 5 : 10,
                 totalResults: null,
@@ -76,7 +75,7 @@ export default class StudyList extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: 1
+                currentPage: 0
             },
             appliedFilters: filters,
         }, () => {
@@ -168,7 +167,7 @@ export default class StudyList extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage: paginationCount.pageLimit
             }
         }, () => {
@@ -197,7 +196,7 @@ export default class StudyList extends Component {
         }
 
         if (studies === null || map === null) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading studies" content="" />;
         }
 
         return <StickyContainer className="StickyContainer">
@@ -225,8 +224,8 @@ export default class StudyList extends Component {
                         <Pagination
                             accessibleName="Pagination"
                             onChange={this.handlePagination}
-                            pageLimit={pagination.perPage}
-                            start={pagination.start}
+                            pageSize={pagination.perPage}
+                            currentPage={pagination.currentPage - 1}
                             totalItems={pagination.totalResults}
                             itemsPerPageOptions={[
                                 {

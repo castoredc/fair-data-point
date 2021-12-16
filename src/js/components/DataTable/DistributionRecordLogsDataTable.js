@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios/index";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Heading} from "@castoredc/matter";
+import {CellText, DataGrid, Heading, LoadingOverlay} from "@castoredc/matter";
 import moment from "moment/moment";
 import DistributionGenerationStatus from "../Status/DistributionGenerationStatus";
 import FormItem from "../Form/FormItem";
@@ -78,7 +77,7 @@ export default class DistributionRecordLogsDataTable extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage: paginationCount.pageLimit,
             },
         }, () => {
@@ -98,7 +97,7 @@ export default class DistributionRecordLogsDataTable extends Component {
         const {logs, isLoadingLogs, hasLoadedLogs, pagination, selectedLog} = this.state;
 
         if (!hasLoadedLogs) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading logs"/>;
         }
 
         const selectedLogItem = selectedLog !== null ? selectedLog : null;

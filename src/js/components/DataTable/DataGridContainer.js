@@ -1,6 +1,5 @@
 import React from "react";
-import {Pagination} from "@castoredc/matter";
-import InlineLoader from "../LoadingScreen/InlineLoader";
+import {LoadingOverlay, Pagination} from "@castoredc/matter";
 
 export default React.forwardRef(({
                                      fullHeight = false,
@@ -26,15 +25,15 @@ export default React.forwardRef(({
             position: 'relative',
             ...(inFlexContainer && {flex: 1})
         }} ref={ref}>
-            {isLoading && <InlineLoader overlay={true}/>}
+            {isLoading && <LoadingOverlay accessibleLabel="Loading"/>}
 
             {grid}
 
             {pagination && <Pagination
                 accessibleName="Pagination"
                 onChange={handlePageChange}
-                pageLimit={pagination.perPage}
-                start={pagination.start}
+                pageSize={pagination.perPage}
+                currentPage={pagination.currentPage - 1}
                 totalItems={pagination.totalResults}
             />}
         </div>

@@ -6,18 +6,23 @@ namespace App\Entity\Metadata;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
-use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
+use App\Entity\FAIRData\LocalizedText;
 use App\Entity\Iri;
+use App\Entity\Metadata\StudyMetadata\ParticipatingCenter;
+use App\Entity\Metadata\StudyMetadata\StudyTeamMember;
 use App\Entity\Study;
 use App\Entity\Terminology\CodedText;
+use App\Entity\Terminology\OntologyConcept;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function array_merge;
 
 /**
  * @ORM\Entity
@@ -63,13 +68,13 @@ class StudyMetadata
     private MethodType $methodType;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText", cascade={"persist"})
      * @ORM\JoinColumn(name="studied_condition", referencedColumnName="id", nullable=true)
      */
     private ?CodedText $condition = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText",cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText", cascade={"persist"})
      * @ORM\JoinColumn(name="intervention", referencedColumnName="id", nullable=true)
      */
     private ?CodedText $intervention = null;
@@ -96,20 +101,32 @@ class StudyMetadata
     private ?DateTimeImmutable $studyCompletionDate = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
-     * @ORM\JoinTable(name="study_contacts")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata\StudyTeamMember", mappedBy="metadata", cascade={"persist", "remove"}, fetch = "EAGER")
      *
-     * @var Collection<Agent>
+     * @var Collection<StudyTeamMember>
      */
-    private Collection $contacts;
+    private Collection $studyTeamMembers;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
-     * @ORM\JoinTable(name="study_centers")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata\ParticipatingCenter", mappedBy="metadata", cascade={"persist", "remove"}, fetch = "EAGER")
      *
-     * @var Collection<Agent>
+     * @var Collection<ParticipatingCenter>
      */
-    private Collection $centers;
+    private Collection $participatingCenters;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
+     * @ORM\JoinTable(name="metadata_study_conditions")
+     *
+     * @var Collection<OntologyConcept>
+     */
+    private Collection $conditions;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
+     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
+     */
+    private ?LocalizedText $keyword = null;
 
     /** @ORM\Column(type="iri", nullable=true) */
     private ?Iri $logo = null;
@@ -117,8 +134,8 @@ class StudyMetadata
     public function __construct(Study $study)
     {
         $this->study = $study;
-        $this->centers = new ArrayCollection();
-        $this->contacts = new ArrayCollection();
+        $this->studyTeamMembers = new ArrayCollection();
+        $this->participatingCenters = new ArrayCollection();
     }
 
     public function getStudy(): Study
@@ -262,37 +279,55 @@ class StudyMetadata
     }
 
     /**
-     * @return Collection<Agent>
+     * @return Collection<StudyTeamMember>
      */
-    public function getContacts(): Collection
+    public function getStudyTeam(): Collection
     {
-        return $this->contacts;
+        return $this->studyTeamMembers;
     }
 
     /**
-     * @param Collection<Agent> $contacts
+     * @return Person[]
      */
-    public function setContacts(Collection $contacts): void
+    public function getContacts(): array
     {
-        $this->contacts = $contacts;
-    }
+        $contacts = [];
 
-    public function addContact(Agent $contact): void
-    {
-        $this->contacts->add($contact);
-    }
+        foreach ($this->studyTeamMembers as $studyTeamMember) {
+            if (! $studyTeamMember->isContact()) {
+                continue;
+            }
 
-    public function removeContact(Agent $contact): void
-    {
-        $this->contacts->removeElement($contact);
+            $contacts[] = $studyTeamMember->getPerson();
+        }
+
+        return $contacts;
     }
 
     /**
-     * @return Collection<Agent>
+     * @param Collection<StudyTeamMember> $studyTeamMembers
+     */
+    public function setStudyTeam(Collection $studyTeamMembers): void
+    {
+        $this->studyTeamMembers = $studyTeamMembers;
+    }
+
+    public function addStudyTeamMember(Person $person, bool $isContact): void
+    {
+        $this->studyTeamMembers->add(new StudyTeamMember($this, $person, $isContact));
+    }
+
+    public function removeStudyTeamMember(StudyTeamMember $studyTeamMember): void
+    {
+        $this->studyTeamMembers->removeElement($studyTeamMember);
+    }
+
+    /**
+     * @return Collection<ParticipatingCenter>
      */
     public function getCenters(): Collection
     {
-        return $this->centers;
+        return $this->participatingCenters;
     }
 
     /**
@@ -302,12 +337,8 @@ class StudyMetadata
     {
         $departments = [];
 
-        foreach ($this->centers as $center) {
-            if (! $center instanceof Department) {
-                continue;
-            }
-
-            $departments[] = $center;
+        foreach ($this->participatingCenters as $participatingCenter) {
+            $departments = array_merge($departments, $participatingCenter->getDepartments()->toArray());
         }
 
         return $departments;
@@ -320,32 +351,41 @@ class StudyMetadata
     {
         $organizations = [];
 
-        foreach ($this->centers as $center) {
-            if (! $center instanceof Organization) {
-                continue;
-            }
-
-            $organizations[] = $center;
-        }
-
-        foreach ($this->getDepartments() as $department) {
-            $organizations[] = $department->getOrganization();
+        foreach ($this->participatingCenters as $participatingCenter) {
+            $organizations[] = $participatingCenter->getOrganization();
         }
 
         return $organizations;
     }
 
     /**
-     * @param Agent[]|ArrayCollection $centers
+     * @param ArrayCollection<ParticipatingCenter> $centers
      */
-    public function setCenters($centers): void
+    public function setCenters(Collection $centers): void
     {
-        $this->centers = $centers;
+        $this->participatingCenters = $centers;
     }
 
-    public function addCenter(Agent $center): void
+    public function addCenter(Organization $center): void
     {
-        $this->centers[] = $center;
+        $this->participatingCenters->add(new ParticipatingCenter($this, $center));
+    }
+
+    public function removeParticipatingCenter(ParticipatingCenter $participatingCenter): void
+    {
+        $this->participatingCenters->removeElement($participatingCenter);
+    }
+
+    public function removeParticipatingCenterByOrganization(Organization $organization): void
+    {
+        $element = null;
+
+        foreach ($this->participatingCenters as $participatingCenter) {
+            if ($participatingCenter->getOrganization() === $organization) {
+                $this->participatingCenters->removeElement($participatingCenter);
+                break;
+            }
+        }
     }
 
     public function getId(): string
@@ -391,5 +431,41 @@ class StudyMetadata
     public function setMethodType(MethodType $methodType): void
     {
         $this->methodType = $methodType;
+    }
+
+    /**
+     * @return Collection<OntologyConcept>
+     */
+    public function getConditions(): Collection
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * @param Collection<OntologyConcept> $conditions
+     */
+    public function setConditions(Collection $conditions): void
+    {
+        $this->conditions = $conditions;
+    }
+
+    public function addCondition(OntologyConcept $condition): void
+    {
+        $this->conditions->add($condition);
+    }
+
+    public function removeCondition(OntologyConcept $condition): void
+    {
+        $this->conditions->removeElement($condition);
+    }
+
+    public function getKeywords(): ?LocalizedText
+    {
+        return $this->keyword;
+    }
+
+    public function setKeywords(?LocalizedText $keywords): void
+    {
+        $this->keyword = $keywords;
     }
 }

@@ -56,7 +56,9 @@ export default class SideBar extends Component {
                                 {item.icon && <Icon type={item.icon}/>}
                                 {item.customIcon && <CustomIcon type={item.customIcon}/>}
                             </span>
+                                <span className="SideBarNavItemTitle">
                                 {item.title}
+                                </span>
                             </Link>
                         }
                     })}

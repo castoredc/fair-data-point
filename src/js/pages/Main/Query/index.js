@@ -8,8 +8,7 @@ import Yasqe from "@triply/yasqe";
 import './Query.scss';
 import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
 import Alert from "../../../components/Alert";
-import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
-import {Button, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import Split from "../../../components/Layout/Split";
@@ -218,7 +217,7 @@ export default class Query extends Component {
                     </div>
 
                     <div className="QueryResults">
-                        {isExecutingQuery && <InlineLoader/>}
+                        {isExecutingQuery && <LoadingOverlay accessibleLabel="Loading"/>}
                         {executedWithoutErrors && <SPARQLDataTable
                             vars={columns}
                             bindings={rows}

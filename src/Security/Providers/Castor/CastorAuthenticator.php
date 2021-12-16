@@ -84,19 +84,15 @@ class CastorAuthenticator extends Authenticator
 
     private function createNewUser(CastorUser $castorUser): User
     {
-        $person = $this->em->getRepository(Person::class)->findOneBy(['email' => $castorUser->getEmailAddress()]);
-
-        if ($person === null) {
-            $person = new Person(
-                $castorUser->getNameFirst(),
-                $castorUser->getNameMiddle(),
-                $castorUser->getNameLast(),
-                $castorUser->getEmailAddress(),
-                null,
-                null,
-                NameOrigin::castor()
-            );
-        }
+        $person = new Person(
+            $castorUser->getNameFirst(),
+            $castorUser->getNameMiddle(),
+            $castorUser->getNameLast(),
+            $castorUser->getEmailAddress(),
+            null,
+            null,
+            NameOrigin::castor()
+        );
 
         return new User($person);
     }

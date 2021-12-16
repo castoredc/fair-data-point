@@ -9,10 +9,9 @@ import ToastContent from "../ToastContent";
 import FormItem from "../Form/FormItem";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import CheckboxGroup from "../Input/CheckboxGroup";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {classNames} from "../../util";
 import Dropdown from "../Input/Dropdown";
-import {Heading} from "@castoredc/matter";
+import {Heading, LoadingOverlay} from "@castoredc/matter";
 
 export default class StudyFilters extends Component {
     constructor(props) {
@@ -156,7 +155,7 @@ export default class StudyFilters extends Component {
 
         if(isLoadingCountries || isLoading)
         {
-            return <InlineLoader />;
+            return <LoadingOverlay accessibleLabel="Loading filters" content="" />;
         }
 
         const showStudyType = options.studyType.length > 0;

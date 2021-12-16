@@ -9,6 +9,8 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function strcmp;
+use function usort;
 
 class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 {
@@ -40,7 +42,7 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
         $castorStudies = $this->apiClient->getStudies();
         $castorStudyIds = $this->apiClient->getStudyIds($castorStudies);
 
-        $dbStudies = $this->em->getRepository(Study::class)->findBy(['id' => $castorStudyIds]);
+        $dbStudies = $this->em->getRepository(Study::class)->findBy(['sourceId' => $castorStudyIds]);
 
         if ($command->getLoadFromCastor() && $command->getHideExistingStudies()) {
             $studies = [];
@@ -61,14 +63,16 @@ class FindStudiesByUserCommandHandler implements MessageHandlerInterface
 
                 $studies[] = $castorStudy;
             }
-
-            return $studies;
+        } elseif ($command->getLoadFromCastor() && ! $command->getHideExistingStudies()) {
+            $studies = $castorStudies;
+        } else {
+            $studies = $dbStudies;
         }
 
-        if ($command->getLoadFromCastor() && ! $command->getHideExistingStudies()) {
-            return $castorStudies;
-        }
+        usort($studies, static function (Study $a, Study $b): int {
+            return strcmp($a->getName(), $b->getName());
+        });
 
-        return $dbStudies;
+        return $studies;
     }
 }

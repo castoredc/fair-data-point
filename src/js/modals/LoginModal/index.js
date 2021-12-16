@@ -4,7 +4,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
 import Modal from "../Modal";
 import LoginForm from "../../components/Form/LoginForm";
-import InlineLoader from "../../components/LoadingScreen/InlineLoader";
+import {LoadingOverlay} from "@castoredc/matter";
 
 export default class LoginModal extends Component {
     constructor(props) {
@@ -49,7 +49,7 @@ export default class LoginModal extends Component {
             title="Log in"
             closeButton
         >
-            {isLoading ? <InlineLoader /> : <LoginForm path={path} modal={true} server={server} serverLocked={!!server} servers={servers} view={view} />}
+            {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> : <LoginForm path={path} modal={true} server={server} serverLocked={!!server} servers={servers} view={view} />}
         </Modal>
     }
 }

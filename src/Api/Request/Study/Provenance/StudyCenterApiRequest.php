@@ -3,47 +3,59 @@ declare(strict_types=1);
 
 namespace App\Api\Request\Study\Provenance;
 
-use App\Api\Request\GroupedApiRequest;
+use App\Api\Request\SingleApiRequest;
+use App\Entity\Enum\OrganizationSource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
-class StudyCenterApiRequest extends GroupedApiRequest
+class StudyCenterApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
-    private string $name;
+    private string $source;
+
+    /**
+     * @Assert\NotBlank(groups = {"database"})
+     * @Assert\Type("string")
+     */
+    private ?string $id;
 
     /** @Assert\Country() */
     private string $country;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups = {"manual"})
      * @Assert\Type("string")
      */
-    private string $city;
+    private ?string $name;
 
-    /** @Assert\Type("string") */
-    private ?string $department = null;
-
-    /** @Assert\Type("string") */
-    private ?string $additionalInformation = null;
-
-    /** @Assert\Type("string") */
-    private ?string $coordinatesLatitude = null;
-
-    /** @Assert\Type("string") */
-    private ?string $coordinatesLongitude = null;
+    /**
+     * @Assert\NotBlank(groups = {"manual"})
+     * @Assert\Type("string")
+     */
+    private ?string $city;
 
     protected function parse(): void
     {
-        $this->name = $this->getFromData('name');
+        $this->source = $this->getFromData('source');
         $this->country = $this->getFromData('country');
+
+        $this->id = $this->getFromData('id');
+
+        $this->name = $this->getFromData('name');
         $this->city = $this->getFromData('city');
-        $this->department = $this->getFromData('department');
-        $this->additionalInformation = $this->getFromData('additionalInformation');
-        $this->coordinatesLatitude = $this->getFromData('coordinatesLatitude');
-        $this->coordinatesLongitude = $this->getFromData('coordinatesLongitude');
+    }
+
+    public function getSource(): OrganizationSource
+    {
+        return OrganizationSource::fromString($this->source);
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getName(): string
@@ -61,23 +73,17 @@ class StudyCenterApiRequest extends GroupedApiRequest
         return $this->city;
     }
 
-    public function getDepartment(): ?string
+    /** @inheritDoc */
+    public function getGroupSequence()
     {
-        return $this->department;
-    }
+        $sequence = ['StudyCenterApiRequest'];
 
-    public function getAdditionalInformation(): ?string
-    {
-        return $this->additionalInformation;
-    }
+        if ($this->getSource()->isDatabase()) {
+            $sequence[] = 'database';
+        } elseif ($this->getSource()->isManual()) {
+            $sequence[] = 'manual';
+        }
 
-    public function getCoordinatesLatitude(): ?string
-    {
-        return $this->coordinatesLatitude !== '' ? $this->coordinatesLatitude : null;
-    }
-
-    public function getCoordinatesLongitude(): ?string
-    {
-        return $this->coordinatesLongitude !== '' ? $this->coordinatesLongitude : null;
+        return $sequence;
     }
 }

@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import ModuleMappingInterface from "./ModuleMappingInterface";
 import NodeMappingInterface from "./NodeMappingInterface";
+import {LoadingOverlay} from "@castoredc/matter";
 
 export default class MappingInterface extends Component {
     constructor(props) {
@@ -48,7 +48,7 @@ export default class MappingInterface extends Component {
         const {structure, isLoadingStructure} = this.state;
 
         return <div className="MappingInterface">
-            {isLoadingStructure && <InlineLoader/>}
+            {isLoadingStructure && <LoadingOverlay accessibleLabel="Loading structure"/>}
 
             {(structure && mapping && type === 'node') && (
                 <NodeMappingInterface

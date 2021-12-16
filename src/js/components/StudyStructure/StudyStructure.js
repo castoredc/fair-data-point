@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import './StudyStructure.scss';
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import FieldListItem from "../ListItem/FieldListItem";
 import StudyStructureNavigator from "./StudyStructureNavigator";
-import {Tabs} from "@castoredc/matter";
+import {LoadingOverlay, Tabs} from "@castoredc/matter";
 
 export default class StudyStructure extends Component {
     constructor(props) {
@@ -135,7 +134,7 @@ export default class StudyStructure extends Component {
         const {structure, isLoadingFields, fields, selectedStep, selectedType, isLoadingStructure, selectableTypes} = this.state;
 
         if (isLoadingStructure) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading structure"/>;
         }
 
         const cannotBeSelected = <div className="StudyStructureType">
@@ -151,7 +150,7 @@ export default class StudyStructure extends Component {
 
             <div className="StudyStructureContents">
                 <div className="Fields">
-                    {isLoadingFields ? <InlineLoader/> : fields.map((field) => {
+                    {isLoadingFields ? <LoadingOverlay accessibleLabel="Loading fields"/> : fields.map((field) => {
                         const selected = selection.filter((id) => id === field.id).length > 0;
 
                         return <FieldListItem

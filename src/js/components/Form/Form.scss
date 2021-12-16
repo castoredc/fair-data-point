@@ -147,3 +147,63 @@
     color: $neutral-800;
   }
 }
+
+.FormGroup {
+  padding: 20px 0;
+
+  .FormHeading {
+    border-bottom: 1px solid $neutral-40;
+    margin-bottom: 10px;
+
+    h2 {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+
+
+.OntologyConceptFormBlock {
+  border: 1px solid $neutral-50;
+  border-radius: 3px;
+  width: 610px;
+  padding: 5px 15px;
+  position: relative;
+
+  .Header {
+    color: $neutral-600;
+    font-weight: 700;
+  }
+
+  .AddNew {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-bottom: none!important;
+  }
+
+  .Row {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px solid $neutral-50;
+
+    .Ontology {
+      width: 160px;
+      margin-right: 16px;
+    }
+
+    .Concept {
+      flex: 1;
+    }
+
+    .ConceptCode {
+      width: 80px;
+      margin-right: 10px;
+    }
+
+    .RemoveButton svg {
+      width: 12px;
+      height: 12px;
+      margin: 0;
+    }
+  }
+}

@@ -15,12 +15,15 @@ class GetPaginatedCatalogsCommand
 
     private int $page;
 
-    public function __construct(?Agent $agent, ?string $search, int $perPage, int $page)
+    private ?bool $acceptSubmissions;
+
+    public function __construct(?Agent $agent, ?string $search, int $perPage, int $page, ?bool $acceptSubmissions)
     {
         $this->agent = $agent;
         $this->search = $search;
         $this->perPage = $perPage;
         $this->page = $page;
+        $this->acceptSubmissions = $acceptSubmissions;
     }
 
     public function getAgent(): ?Agent
@@ -41,5 +44,10 @@ class GetPaginatedCatalogsCommand
     public function getPage(): int
     {
         return $this->page;
+    }
+
+    public function getAcceptSubmissions(): ?bool
+    {
+        return $this->acceptSubmissions;
     }
 }

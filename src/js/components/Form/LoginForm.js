@@ -82,10 +82,9 @@ export default class LoginForm extends Component {
                                              onClick={() => {
                                                  this.handleServerSelect(server.id)
                                              }}
-                                             leftIcon={'flag' + server.flag.toUpperCase()}
+                                             customIcon={'flag' + server.flag.toUpperCase()}
                                              className="ServerListItem"
                                              fill={false}
-                                             customIcon={true}
                             />
                         })}
                     </div>

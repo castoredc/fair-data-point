@@ -34,7 +34,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function dump;
 
 /**
  * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}")
@@ -153,8 +152,6 @@ class RdfDistributionApiController extends ApiController
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),
             ]);
-
-            dump($e);
 
             return new JsonResponse([], 500);
         }

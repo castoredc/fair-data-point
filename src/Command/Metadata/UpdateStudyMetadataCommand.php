@@ -6,7 +6,9 @@ namespace App\Command\Metadata;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
+use App\Entity\FAIRData\LocalizedText;
 use App\Entity\Metadata\StudyMetadata;
+use App\Entity\Terminology\OntologyConcept;
 use DateTimeImmutable;
 
 class UpdateStudyMetadataCommand
@@ -23,11 +25,9 @@ class UpdateStudyMetadataCommand
 
     private StudyType $type;
 
-    private ?string $condition = null;
-
     private ?string $intervention = null;
 
-    private int $estimatedEnrollment;
+    private ?int $estimatedEnrollment;
 
     private ?DateTimeImmutable $estimatedStudyStartDate = null;
 
@@ -37,6 +37,14 @@ class UpdateStudyMetadataCommand
 
     private ?MethodType $methodType = null;
 
+    /** @var OntologyConcept[] */
+    private array $conditions;
+
+    private ?LocalizedText $keywords = null;
+
+    /**
+     * @param OntologyConcept[] $conditions
+     */
     public function __construct(
         StudyMetadata $metadata,
         string $briefName,
@@ -44,13 +52,14 @@ class UpdateStudyMetadataCommand
         string $briefSummary,
         ?string $summary,
         StudyType $type,
-        ?string $condition,
+        array $conditions,
         ?string $intervention,
-        int $estimatedEnrollment,
+        ?int $estimatedEnrollment,
         ?DateTimeImmutable $estimatedStudyStartDate,
         ?DateTimeImmutable $estimatedStudyCompletionDate,
         ?RecruitmentStatus $recruitmentStatus,
-        ?MethodType $methodType
+        ?MethodType $methodType,
+        ?LocalizedText $keywords
     ) {
         $this->metadata = $metadata;
         $this->briefName = $briefName;
@@ -58,13 +67,14 @@ class UpdateStudyMetadataCommand
         $this->briefSummary = $briefSummary;
         $this->summary = $summary;
         $this->type = $type;
-        $this->condition = $condition;
+        $this->conditions = $conditions;
         $this->intervention = $intervention;
         $this->estimatedEnrollment = $estimatedEnrollment;
         $this->estimatedStudyStartDate = $estimatedStudyStartDate;
         $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
         $this->recruitmentStatus = $recruitmentStatus;
         $this->methodType = $methodType;
+        $this->keywords = $keywords;
     }
 
     public function getMetadata(): StudyMetadata
@@ -97,9 +107,12 @@ class UpdateStudyMetadataCommand
         return $this->type;
     }
 
-    public function getCondition(): ?string
+    /**
+     * @return OntologyConcept[]
+     */
+    public function getConditions(): array
     {
-        return $this->condition;
+        return $this->conditions;
     }
 
     public function getIntervention(): ?string
@@ -107,7 +120,7 @@ class UpdateStudyMetadataCommand
         return $this->intervention;
     }
 
-    public function getEstimatedEnrollment(): int
+    public function getEstimatedEnrollment(): ?int
     {
         return $this->estimatedEnrollment;
     }
@@ -130,5 +143,10 @@ class UpdateStudyMetadataCommand
     public function getMethodType(): ?MethodType
     {
         return $this->methodType;
+    }
+
+    public function getKeywords(): ?LocalizedText
+    {
+        return $this->keywords;
     }
 }

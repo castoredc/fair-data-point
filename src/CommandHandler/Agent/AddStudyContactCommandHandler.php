@@ -56,7 +56,7 @@ class AddStudyContactCommandHandler implements MessageHandlerInterface
             );
         }
 
-        $command->getStudy()->getLatestMetadata()->addContact($contact);
+        $command->getStudy()->getLatestMetadata()->addStudyTeamMember($contact, true);
 
         $this->em->persist($contact);
         $this->em->persist($command->getStudy());

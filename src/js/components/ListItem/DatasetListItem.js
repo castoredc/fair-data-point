@@ -9,10 +9,8 @@ export default class DatasetListItem extends Component {
         return <ListItem
             title={name}
             description={description}
-            link={newWindow ? link : {
-                pathname: link,
-                state: state
-            }}
+            link={link}
+            state={state}
             newWindow={newWindow}
         />;
     }

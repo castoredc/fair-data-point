@@ -1,7 +1,7 @@
 const DataGridHelper = {
     getDefaultState: function(perPage) {
         return {
-            currentPage: 1,
+            currentPage: 0,
             start: 1,
             perPage: perPage,
             totalResults: null,

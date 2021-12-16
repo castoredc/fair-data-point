@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, LoadingOverlay} from "@castoredc/matter";
 import {localizedText} from "../../util";
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
@@ -47,7 +46,7 @@ export default class DatasetsDataTable extends Component {
         };
 
         if (hideCatalog) {
-            filters['hideParents'] = [hideCatalog.id];
+            filters['hideParents'] = [hideCatalog];
         }
 
         if (hasLoadedDatasets) {
@@ -57,11 +56,11 @@ export default class DatasetsDataTable extends Component {
         let url = '/api/dataset';
 
         if (catalog) {
-            url = '/api/catalog/' + catalog.slug + '/dataset';
+            url = '/api/catalog/' + catalog + '/dataset';
         }
 
         if (study) {
-            url = '/api/study/' + study.id + '/dataset';
+            url = '/api/study/' + study + '/dataset';
         }
 
         axios.get(url, {params: filters})
@@ -89,7 +88,7 @@ export default class DatasetsDataTable extends Component {
         this.setState({
             pagination: {
                 ...pagination,
-                currentPage: paginationCount.currentPage,
+                currentPage: paginationCount.currentPage + 1,
                 perPage: paginationCount.pageLimit,
             },
         }, () => {
@@ -107,7 +106,7 @@ export default class DatasetsDataTable extends Component {
             onClick(dataset);
         } else {
             history.push({
-                pathname: '/admin/dataset/' + dataset.slug,
+                pathname: '/dashboard/catalogs/' + catalog + '/datasets/' + dataset.slug,
                 state: {catalog: catalog},
             });
         }
@@ -117,7 +116,7 @@ export default class DatasetsDataTable extends Component {
         const {datasets, isLoadingDatasets, hasLoadedDatasets, pagination} = this.state;
 
         if (!hasLoadedDatasets) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading datasets"/>;
         }
 
         const columns = [

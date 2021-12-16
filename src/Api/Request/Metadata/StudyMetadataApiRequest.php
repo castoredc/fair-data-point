@@ -7,7 +7,12 @@ use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
 use App\Entity\Enum\StudyType;
+use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\LocalizedTextItem;
+use App\Entity\Terminology\OntologyConcept;
+use App\Validator\Constraints as AppAssert;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class StudyMetadataApiRequest extends SingleApiRequest
@@ -36,11 +41,8 @@ class StudyMetadataApiRequest extends SingleApiRequest
     /** @Assert\Type("string") */
     private ?string $intervention = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("integer")
-     */
-    private int $estimatedEnrollment;
+    /** @Assert\Type("integer") */
+    private ?string $estimatedEnrollment;
 
     /** @Assert\Date() */
     private ?string $estimatedStudyStartDate = null;
@@ -57,6 +59,18 @@ class StudyMetadataApiRequest extends SingleApiRequest
     /** @Assert\Type("string") */
     private ?string $methodType = null;
 
+    /**
+     * @var mixed[]
+     * @Assert\Type("array")
+     */
+    private array $conditions;
+
+    /**
+     * @var mixed[]|null
+     * @AppAssert\LocalizedText
+     */
+    private ?array $keywords = null;
+
     protected function parse(): void
     {
         $this->briefName = $this->getFromData('briefName');
@@ -65,12 +79,14 @@ class StudyMetadataApiRequest extends SingleApiRequest
         $this->type = $this->getFromData('type');
         $this->condition = $this->getFromData('condition');
         $this->intervention = $this->getFromData('intervention');
-        $this->estimatedEnrollment = (int) $this->getFromData('estimatedEnrollment');
+        $this->estimatedEnrollment = $this->getFromData('estimatedEnrollment');
         $this->estimatedStudyStartDate = $this->getFromData('estimatedStudyStartDate');
         $this->estimatedStudyCompletionDate = $this->getFromData('estimatedStudyCompletionDate');
         $this->summary = $this->getFromData('summary');
         $this->recruitmentStatus = $this->getFromData('recruitmentStatus');
         $this->methodType = $this->getFromData('methodType');
+        $this->conditions = $this->getFromData('conditions');
+        $this->keywords = $this->getFromData('keywords');
     }
 
     public function getBriefName(): string
@@ -103,9 +119,11 @@ class StudyMetadataApiRequest extends SingleApiRequest
         return $this->intervention !== '' ? $this->intervention : null;
     }
 
-    public function getEstimatedEnrollment(): int
+    public function getEstimatedEnrollment(): ?int
     {
-        return $this->estimatedEnrollment;
+        $parsed = (int) $this->estimatedEnrollment;
+
+        return $parsed > 0 ? $parsed : null;
     }
 
     public function getEstimatedStudyStartDate(): ?DateTimeImmutable
@@ -139,5 +157,43 @@ class StudyMetadataApiRequest extends SingleApiRequest
     public function getMethodType(): ?MethodType
     {
         return $this->methodType !== null ? MethodType::fromString($this->methodType) : null;
+    }
+
+    /**
+     * @return OntologyConcept[]
+     */
+    public function getConditions(): array
+    {
+        $data = [];
+
+        foreach ($this->conditions as $theme) {
+            $data[] = OntologyConcept::fromData($theme);
+        }
+
+        return $data;
+    }
+
+    public function getKeywords(): ?LocalizedText
+    {
+        return $this->generateLocalizedText($this->keywords);
+    }
+
+    /** @param mixed[] $items */
+    protected function generateLocalizedText(?array $items): ?LocalizedText
+    {
+        if ($items === null) {
+            return null;
+        }
+
+        $texts = new ArrayCollection();
+
+        foreach ($items as $item) {
+            $text = new LocalizedTextItem($item['text']);
+            $text->setLanguageCode($item['language']);
+
+            $texts->add($text);
+        }
+
+        return new LocalizedText($texts);
     }
 }

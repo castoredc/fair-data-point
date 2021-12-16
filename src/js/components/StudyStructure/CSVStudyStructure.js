@@ -4,9 +4,8 @@ import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import StudyStructure from "./StudyStructure";
 import {Redirect} from "react-router-dom";
-import InlineLoader from "../LoadingScreen/InlineLoader";
 import {ValidatorForm} from "react-form-validator-core";
-import {Button, Stack, Tabs} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack, Tabs} from "@castoredc/matter";
 
 export default class CSVStudyStructure extends Component {
     constructor(props) {
@@ -70,7 +69,7 @@ export default class CSVStudyStructure extends Component {
         const {structure, distributionContents, submitDisabled, isSaved, selectedType} = this.state;
 
         if (!this.state.hasLoadedStructure) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading structure"/>;
         }
 
         if (isSaved) {
