@@ -32,6 +32,10 @@ class OrganizationGraphResource extends AgentGraphResource
             $graph->addResource($subject, $predicate, $url);
         }
 
+        if ($this->organization->getCountry() !== null) {
+            $graph->addResource($url, 'dcterms:spacial', $this->baseUrl . '/fdp/country/' . $this->organization->getCountry()->getCode());
+        }
+
         return $graph;
     }
 }

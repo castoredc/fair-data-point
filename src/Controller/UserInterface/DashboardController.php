@@ -138,6 +138,7 @@ class DashboardController extends AbstractController
             ['title' => 'Dataset']
         );
     }
+
     /**
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="admin_study_distribution_log_records")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})

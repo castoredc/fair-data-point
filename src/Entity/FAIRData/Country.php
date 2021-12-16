@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\CountryRepository")
  * @ORM\Table(name="country", indexes={@ORM\Index(name="castorCountryId", columns={"castor_country_id"})})
  */
-class Country
+class Country implements AccessibleEntity
 {
     /**
      * @ORM\Id
@@ -74,5 +74,10 @@ class Country
     public function getTld(): string
     {
         return $this->tld;
+    }
+
+    public function getRelativeUrl(): string
+    {
+        return '/fdp/country/' . $this->getCode();
     }
 }

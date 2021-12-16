@@ -20,9 +20,9 @@ class AgentController extends FAIRDataController
      */
     public function person(Person $person, Request $request): Response
     {
-        if ($this->acceptsHttp($request)) {
-            return $this->render('react.html.twig', $this->getAgentSeoTexts($person));
-        }
+//        if ($this->acceptsHttp($request)) {
+//            return $this->render('react.html.twig', $this->getAgentSeoTexts($person));
+//        }
 
         return new Response(
             (new PersonGraphResource($person, $this->basePurl))->toGraph()->serialise('turtle'),
@@ -37,9 +37,9 @@ class AgentController extends FAIRDataController
      */
     public function organization(Organization $organization, Request $request): Response
     {
-        if ($this->acceptsHttp($request)) {
-            return $this->render('react.html.twig', $this->getAgentSeoTexts($organization));
-        }
+//        if ($this->acceptsHttp($request)) {
+//            return $this->render('react.html.twig', $this->getAgentSeoTexts($organization));
+//        }
 
         return new Response(
             (new OrganizationGraphResource($organization, $this->basePurl))->toGraph()->serialise('turtle'),

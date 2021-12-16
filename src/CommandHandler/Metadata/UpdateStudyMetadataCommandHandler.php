@@ -6,22 +6,10 @@ namespace App\CommandHandler\Metadata;
 use App\Command\Metadata\UpdateStudyMetadataCommand;
 use App\Entity\Terminology\CodedText;
 use App\Exception\NoAccessPermission;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
+class UpdateStudyMetadataCommandHandler extends CreateMetadataCommandHandler
 {
-    private EntityManagerInterface $em;
-
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
-    {
-        $this->em = $em;
-        $this->security = $security;
-    }
-
     public function __invoke(UpdateStudyMetadataCommand $command): void
     {
         $study = $command->getMetadata()->getStudy();
@@ -33,13 +21,13 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
         $condition = $command->getMetadata()->getCondition();
         $intervention = $command->getMetadata()->getIntervention();
 
-        if ($condition === null && $command->getCondition() !== null) {
-            $condition = new CodedText($command->getCondition());
-        } elseif ($condition !== null && $command->getCondition() !== null) {
-            $condition->setText($command->getCondition());
-        } else {
-            $condition = null;
-        }
+//        if ($condition === null && $command->getCondition() !== null) {
+//            $condition = new CodedText($command->getCondition());
+//        } elseif ($condition !== null && $command->getCondition() !== null) {
+//            $condition->setText($command->getCondition());
+//        } else {
+//            $condition = null;
+//        }
 
         if ($intervention === null && $command->getIntervention() !== null) {
             $intervention = new CodedText($command->getIntervention());
@@ -54,13 +42,17 @@ class UpdateStudyMetadataCommandHandler implements MessageHandlerInterface
         $command->getMetadata()->setBriefSummary($command->getBriefSummary());
         $command->getMetadata()->setSummary($command->getSummary());
         $command->getMetadata()->setType($command->getType());
-        $command->getMetadata()->setCondition($condition);
         $command->getMetadata()->setIntervention($intervention);
         $command->getMetadata()->setEstimatedEnrollment($command->getEstimatedEnrollment());
         $command->getMetadata()->setEstimatedStudyStartDate($command->getEstimatedStudyStartDate());
         $command->getMetadata()->setEstimatedStudyCompletionDate($command->getEstimatedStudyCompletionDate());
         $command->getMetadata()->setRecruitmentStatus($command->getRecruitmentStatus());
         $command->getMetadata()->setMethodType($command->getMethodType());
+
+        $conditions = $this->parseOntologyConcepts($command->getConditions());
+
+        $command->getMetadata()->setConditions(new ArrayCollection($conditions));
+        $command->getMetadata()->setKeywords($this->parseLocalizedText($command->getKeywords()));
 
         $this->em->persist($command->getMetadata());
 

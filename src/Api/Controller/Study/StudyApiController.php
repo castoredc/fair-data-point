@@ -5,12 +5,10 @@ namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Study\StudyApiRequest;
-use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Study\UpdateStudyCommand;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
-use App\Security\Authorization\Voter\DistributionVoter;
 use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;

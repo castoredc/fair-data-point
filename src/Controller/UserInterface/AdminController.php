@@ -4,14 +4,8 @@ declare(strict_types=1);
 namespace App\Controller\UserInterface;
 
 use App\Entity\Data\DataDictionary\DataDictionary;
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\Log\DistributionGenerationLog;
-use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Distribution;
-use App\Entity\Study;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

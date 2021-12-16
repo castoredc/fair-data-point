@@ -57,13 +57,14 @@ class StudyMetadataApiController extends ApiController
                     $parsed->getBriefSummary(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getSummary() : null,
                     $parsed->getType(),
-                    $parsed->getCondition(),
+                    $parsed->getConditions(),
                     $parsed->getIntervention(),
                     $parsed->getEstimatedEnrollment(),
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
-                    $parsed->getMethodType()
+                    $parsed->getMethodType(),
+                    $parsed->getKeywords()
                 )
             );
 
@@ -95,13 +96,14 @@ class StudyMetadataApiController extends ApiController
                     $parsed->getBriefSummary(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getSummary() : null,
                     $parsed->getType(),
-                    $parsed->getCondition(),
+                    $parsed->getConditions(),
                     $parsed->getIntervention(),
                     $parsed->getEstimatedEnrollment(),
                     $parsed->getEstimatedStudyStartDate(),
                     $parsed->getEstimatedStudyCompletionDate(),
                     $this->isGranted('ROLE_ADMIN') ? $parsed->getRecruitmentStatus() : null,
-                    $parsed->getMethodType()
+                    $parsed->getMethodType(),
+                    $parsed->getKeywords()
                 )
             );
 

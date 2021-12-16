@@ -42,6 +42,10 @@ class Iri
 
     public function getPrefix(): string
     {
+        if (strrpos($this->value, $this->getBase()) === false) {
+            return '';
+        }
+
         return substr_replace($this->value, '', strrpos($this->value, $this->getBase()), strlen($this->value));
     }
 }

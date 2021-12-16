@@ -9,11 +9,13 @@ use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
+use App\Entity\FAIRData\LocalizedText;
 use App\Entity\Iri;
 use App\Entity\Metadata\StudyMetadata\ParticipatingCenter;
 use App\Entity\Metadata\StudyMetadata\StudyTeamMember;
 use App\Entity\Study;
 use App\Entity\Terminology\CodedText;
+use App\Entity\Terminology\OntologyConcept;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
@@ -111,6 +113,20 @@ class StudyMetadata
      * @var Collection<ParticipatingCenter>
      */
     private Collection $participatingCenters;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
+     * @ORM\JoinTable(name="metadata_study_conditions")
+     *
+     * @var Collection<OntologyConcept>
+     */
+    private Collection $conditions;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
+     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
+     */
+    private ?LocalizedText $keyword = null;
 
     /** @ORM\Column(type="iri", nullable=true) */
     private ?Iri $logo = null;
@@ -415,5 +431,41 @@ class StudyMetadata
     public function setMethodType(MethodType $methodType): void
     {
         $this->methodType = $methodType;
+    }
+
+    /**
+     * @return Collection<OntologyConcept>
+     */
+    public function getConditions(): Collection
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * @param Collection<OntologyConcept> $conditions
+     */
+    public function setConditions(Collection $conditions): void
+    {
+        $this->conditions = $conditions;
+    }
+
+    public function addCondition(OntologyConcept $condition): void
+    {
+        $this->conditions->add($condition);
+    }
+
+    public function removeCondition(OntologyConcept $condition): void
+    {
+        $this->conditions->removeElement($condition);
+    }
+
+    public function getKeywords(): ?LocalizedText
+    {
+        return $this->keyword;
+    }
+
+    public function setKeywords(?LocalizedText $keywords): void
+    {
+        $this->keyword = $keywords;
     }
 }

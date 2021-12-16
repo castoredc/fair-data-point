@@ -5,6 +5,7 @@ namespace App\Api\Resource\Metadata;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\Metadata\StudyMetadata;
 use const DATE_ATOM;
 
@@ -45,6 +46,8 @@ class StudyMetadataApiResource implements ApiResource
             ],
             'issued' => $this->studyMetadata->getStudy()->getFirstMetadata()->getCreatedAt()->format(DATE_ATOM),
             'modified' => $this->studyMetadata->getCreatedAt()->format(DATE_ATOM),
+            'conditions' => (new OntologyConceptsApiResource($this->studyMetadata->getConditions()->toArray()))->toArray(),
+            'keywords' => $this->studyMetadata->getKeywords() !== null ? $this->studyMetadata->getKeywords()->toArray() : null,
         ];
     }
 }

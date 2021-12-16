@@ -8,23 +8,11 @@ use App\Entity\Metadata\StudyMetadata;
 use App\Entity\Terminology\CodedText;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
+class CreateStudyMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';
-
-    private EntityManagerInterface $em;
-
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
-    {
-        $this->em = $em;
-        $this->security = $security;
-    }
 
     public function __invoke(CreateStudyMetadataCommand $command): void
     {
@@ -44,9 +32,10 @@ class CreateStudyMetadataCommandHandler implements MessageHandlerInterface
         $metadata->setSummary($command->getSummary());
         $metadata->setType($command->getType());
 
-        if ($command->getCondition() !== null) {
-            $metadata->setCondition(new CodedText($command->getCondition()));
-        }
+        $conditions = $this->parseOntologyConcepts($command->getConditions());
+
+        $metadata->setConditions(new ArrayCollection($conditions));
+        $metadata->setKeywords($this->parseLocalizedText($command->getKeywords()));
 
         if ($command->getIntervention() !== null) {
             $metadata->setCondition(new CodedText($command->getIntervention()));
