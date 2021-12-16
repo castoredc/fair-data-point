@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid} from "@castoredc/matter";
+import {CellText, DataGrid, LoadingOverlay} from "@castoredc/matter";
 import moment from "moment";
 import DistributionGenerationStatus from "../Status/DistributionGenerationStatus";
 import DataGridHelper from "./DataGridHelper";
@@ -99,7 +99,7 @@ export default class DistributionLogsDataTable extends Component {
         const {logs, isLoadingLogs, hasLoadedLogs, pagination} = this.state;
 
         if (!hasLoadedLogs) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading logs"/>;
         }
 
         const columns = [

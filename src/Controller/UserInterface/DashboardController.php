@@ -103,13 +103,19 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}", name="dashboard_dataset")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/metadata", name="dashboard_dataset_metadata")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions", name="dashboard_dataset_distributions")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}", name="dashboard_study_dataset")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/metadata", name="dashboard_study_dataset_metadata")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions", name="dashboard_study_dataset_distributions")
+     *
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}", name="dashboard_catalog_dataset")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/metadata", name="dashboard_catalog_dataset_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions", name="dashboard_catalog_dataset_distributions")
+     *
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      */
-    public function dataset(Study $study, Dataset $dataset): Response
+    public function dataset(Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
 
@@ -125,11 +131,19 @@ class DashboardController extends AbstractController
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents", name="admin_study_distribution_content")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log", name="admin_study_distribution_log")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/subset", name="admin_study_distribution_subset")
+     *
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}", name="dashboard_dataset_distribution")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/metadata", name="admin_study_distribution_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents", name="admin_study_distribution_content")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log", name="admin_study_distribution_log")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset", name="admin_study_distribution_subset")
+     *
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distribution(Study $study, Dataset $dataset, Distribution $distribution): Response
+    public function distribution(Dataset $dataset, Distribution $distribution): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
 
@@ -141,6 +155,9 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="admin_study_distribution_log_records")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="admin_catalog_distribution_log_records")
+     *
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})

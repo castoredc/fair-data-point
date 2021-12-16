@@ -8,8 +8,8 @@ import {toRem} from '@castoredc/matter-utils';
 import AddStudy from "pages/Dashboard/Studies/AddStudy";
 import DataModels from "pages/Dashboard/DataModels";
 import Study from "pages/Dashboard/Studies/Study";
-import Dataset from "pages/Dashboard/Studies/Study/Dataset";
-import Distribution from "pages/Dashboard/Studies/Study/Dataset/Distribution";
+import Dataset from "pages/Dashboard/Dataset";
+import Distribution from "pages/Dashboard/Dataset/Distribution";
 import Catalogs from "pages/Dashboard/Catalogs";
 import Catalog from "pages/Dashboard/Catalogs/Catalog";
 import FAIRDataPoint from "pages/Dashboard/FAIRDataPoint";
@@ -114,6 +114,8 @@ export default class Dashboard extends Component<DashboardProps> {
                     <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/studies/:study" component={Study} user={user} />
 
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution" component={Distribution} user={user} />
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/catalogs" exact component={DashboardTabs} user={user} />
                     <PrivateRoute path="/dashboard/catalogs/:catalog" component={Catalog} user={user} />
 

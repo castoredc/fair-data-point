@@ -66,10 +66,10 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
-                <Button icon="add" className="AddButton" disabled={isLoading}>New dataset</Button>
+                {/*<Button icon="add" className="AddButton" disabled={isLoading}>New dataset</Button>*/}
 
-                <Button buttonType="primary" disabled={isLoading} onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}>
-                    Add catalog
+                <Button icon="add" buttonType="primary" disabled={isLoading} onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}>
+                    Add dataset
                 </Button>
             </Stack>
 

@@ -6,12 +6,10 @@ import {Button, Heading, LoadingOverlay, Stack} from "@castoredc/matter";
 import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import * as H from "history";
-import {localizedText} from "../../../../../util";
+import {localizedText} from "../../../util";
 import {RouteComponentProps} from "react-router-dom";
 
 interface DistributionsProps extends RouteComponentProps<any> {
-    study: any,
-    dataset: any
 }
 
 interface DistributionsState {

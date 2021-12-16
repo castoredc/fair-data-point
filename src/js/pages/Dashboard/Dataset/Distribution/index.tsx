@@ -5,17 +5,17 @@ import ToastContent from "components/ToastContent";
 import {LoadingOverlay} from "@castoredc/matter";
 import {Route, RouteComponentProps, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
-import {localizedText} from "../../../../../../util";
+import {localizedText} from "../../../../util";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";
-import DistributionDetails from "pages/Dashboard/Studies/Study/Dataset/Distribution/DistributionDetails";
-import DistributionMetadata from "pages/Dashboard/Studies/Study/Dataset/Distribution/DistributionMetadata";
-import DistributionContents from "pages/Dashboard/Studies/Study/Dataset/Distribution/DistributionContents";
-import DistributionSubset from "pages/Dashboard/Studies/Study/Dataset/Distribution/DistributionSubset";
-import DistributionLog from "pages/Dashboard/Studies/Study/Dataset/Distribution/DistributionLog";
-import DistributionLogs from "pages/Dashboard/Studies/Study/Dataset/Distribution/DistributionLogs";
+import DistributionDetails from "pages/Dashboard/Dataset/Distribution/DistributionDetails";
+import DistributionMetadata from "pages/Dashboard/Dataset/Distribution/DistributionMetadata";
+import DistributionContents from "pages/Dashboard/Dataset/Distribution/DistributionContents";
+import DistributionSubset from "pages/Dashboard/Dataset/Distribution/DistributionSubset";
+import DistributionLog from "pages/Dashboard/Dataset/Distribution/DistributionLog";
+import DistributionLogs from "pages/Dashboard/Dataset/Distribution/DistributionLogs";
 
 interface DistributionProps extends RouteComponentProps<any> {
     dataset: any,
@@ -152,35 +152,96 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 <Header title={title}/>
 
                 <Switch>
-                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution" exact
-                           render={(props) => <DistributionDetails {...props}
-                                                                   dataset={dataset}
-                                                                   distribution={distribution}/>}/>
-                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/metadata" exact
-                           render={(props) => <DistributionMetadata {...props}
-                                                                    dataset={dataset}
-                                                                    distribution={distribution}
-                                                                    onSave={this.getDistribution}/>}/>
-                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/contents" exact
-                           render={(props) => <DistributionContents {...props}
-                                                                    dataset={dataset} distribution={distribution}/>}/>
-                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log/:log" exact
-                           render={(props) => <DistributionLog {...props}
-                                                               dataset={dataset}
-                                                               distribution={distribution}/>}/>
-                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log" exact
-                           render={(props) => (
-                               <DistributionLogs {...props}
-                                                 dataset={dataset}
-                                                 distribution={distribution}
-                                                 study={study}
-                               />
-                           )}
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"
+                        ]}
+                        exact
+                        render={(props) => (
+                            <DistributionDetails
+                                {...props}
+                                dataset={dataset}
+                                distribution={distribution}
+                            />
+                        )}
                     />
-                    <Route path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/subset" exact
-                           render={(props) => <DistributionSubset {...props}
-                                                                  dataset={dataset}
-                                                                  distribution={distribution}/>}/>
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/metadata",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/metadata"
+                        ]}
+                        exact
+                        render={(props) => (
+                            <DistributionMetadata
+                                {...props}
+                                dataset={dataset}
+                                distribution={distribution}
+                                onSave={this.getDistribution}/>
+                        )}
+                    />
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/contents",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/contents"
+                        ]}
+                        exact
+                        render={(props) => (
+                            <DistributionContents
+                                {...props}
+                                dataset={dataset}
+                                distribution={distribution}
+                            />
+                        )}
+                    />
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log/:log",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log/:log"
+                        ]}
+                        exact
+                        render={(props) => (
+                            <DistributionLog
+                                {...props}
+                                dataset={dataset}
+                                distribution={distribution}
+                            />
+                        )}
+                    />
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log"
+                        ]}
+                        exact
+                        render={(props) => (
+                            <DistributionLogs
+                                {...props}
+                                dataset={dataset}
+                                distribution={distribution}
+                            />
+                        )}
+                    />
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/subset",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/subset"
+                        ]}
+                        exact
+                        render={(props) => (
+                            <DistributionSubset
+                                {...props}
+                                dataset={dataset}
+                                distribution={distribution}
+                            />
+                        )}
+                    />
+
                     <Route component={NotFound}/>
                 </Switch>
             </Body>

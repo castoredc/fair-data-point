@@ -9,7 +9,7 @@ import ToastContent from "../../../components/ToastContent";
 import TripleModal from "../../../modals/TripleModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import SideTabs from "../../../components/SideTabs";
-import {Button} from "@castoredc/matter";
+import {Button, LoadingOverlay} from "@castoredc/matter";
 
 export default class DataModelModules extends Component {
     constructor(props) {
@@ -223,7 +223,7 @@ export default class DataModelModules extends Component {
         const {showModal, hasLoadedModules, hasLoadedNodes, hasLoadedPrefixes, modules, nodes, prefixes, currentModule, moduleModalData, tripleModalData} = this.state;
 
         if (!hasLoadedModules || !hasLoadedNodes || !hasLoadedPrefixes) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading"/>;
         }
 
         const orderOptions = this.getOrderOptions();

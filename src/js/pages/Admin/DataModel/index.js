@@ -9,7 +9,7 @@ import DataModelPrefixes from "./DataModelPrefixes";
 import DataModelModules from "./DataModelModules";
 import DataModelDetails from "./DataModelDetails";
 import DataModelNodes from "./DataModelNodes";
-import {ViewHeader} from "@castoredc/matter";
+import {LoadingOverlay, ViewHeader} from "@castoredc/matter";
 import DataModelPreview from "./DataModelPreview";
 import DataModelVersions from "./DataModelVersions";
 import DataModelImportExport from "./DataModelImportExport";
@@ -106,7 +106,7 @@ export default class DataModel extends Component {
         const {dataModel, isLoadingDataModel, versions, currentVersion} = this.state;
 
         if (!dataModel && isLoadingDataModel) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading data model"/>;
         }
 
         return <div className="PageContainer">
@@ -183,7 +183,7 @@ export default class DataModel extends Component {
                     <ViewHeader>{dataModel.title}</ViewHeader>
                 </div>
 
-                {isLoadingDataModel ? <InlineLoader/> : <Switch>
+                {isLoadingDataModel ? <LoadingOverlay accessibleLabel="Loading data model"/> : <Switch>
                     <Route path="/admin/model/:model" exact
                            render={(props) => <DataModelDetails {...props} dataModel={dataModel}
                                                                 version={currentVersion.value}/>}/>

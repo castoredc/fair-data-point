@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, LoadingOverlay} from "@castoredc/matter";
 import {localizedText} from "../../util";
 import DataGridContainer from "./DataGridContainer";
 import DataGridHelper from "./DataGridHelper";
@@ -87,7 +87,7 @@ export default class DistributionsDataTable extends Component {
         const {distributions, isLoadingDistributions, hasLoadedDistributions, pagination} = this.state;
 
         if (!hasLoadedDistributions) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading distributions"/>;
         }
 
         const columns = [

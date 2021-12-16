@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Heading, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Heading, Icon, IconCell, LoadingOverlay} from "@castoredc/matter";
 import {MethodType, StudyType} from "../MetadataItem/EnumMappings";
 import './DataTable.scss';
 import DataGridHelper from "./DataGridHelper";
@@ -152,7 +152,7 @@ export default class StudiesDataTable extends Component {
         const hasLoaded = (hasLoadedStudies && hasLoadedFilters);
 
         if (!hasLoaded) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading studies"/>;
         }
 
         const columns = [

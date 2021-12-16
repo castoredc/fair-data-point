@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell, TextStyle} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, LoadingOverlay, TextStyle} from "@castoredc/matter";
 import {DataType, ValueType} from "../MetadataItem/EnumMappings";
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
@@ -94,7 +94,7 @@ export default class DataModelMappingsDataTable extends Component {
         const {type} = this.props;
 
         if (!hasLoadedMappings || hasLoadedMappings !== type) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading mappings"/>;
         }
 
         let rows = null;

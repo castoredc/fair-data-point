@@ -3,7 +3,7 @@ import axios from "axios";
 import InlineLoader from "../LoadingScreen/InlineLoader";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
-import {CellText, DataGrid, Icon, IconCell} from "@castoredc/matter";
+import {CellText, DataGrid, Icon, IconCell, LoadingOverlay} from "@castoredc/matter";
 import {localizedText} from "../../util";
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
@@ -117,7 +117,7 @@ export default class DatasetsDataTable extends Component {
         const {datasets, isLoadingDatasets, hasLoadedDatasets, pagination} = this.state;
 
         if (!hasLoadedDatasets) {
-            return <InlineLoader/>;
+            return <LoadingOverlay accessibleLabel="Loading datasets"/>;
         }
 
         const columns = [

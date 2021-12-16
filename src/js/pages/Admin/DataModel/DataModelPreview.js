@@ -5,6 +5,7 @@ import InlineLoader from "../../../components/LoadingScreen/InlineLoader";
 import ToastContent from "../../../components/ToastContent";
 import SideTabs from "../../../components/SideTabs";
 import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";
+import {LoadingOverlay} from "@castoredc/matter";
 
 export default class DataModelPreview extends Component {
     constructor(props) {
@@ -52,7 +53,7 @@ export default class DataModelPreview extends Component {
         const { hasLoadedPreviews, previews } = this.state;
 
         if (!hasLoadedPreviews) {
-            return <InlineLoader />;
+            return <LoadingOverlay accessibleLabel="Loading preview"/>;
         }
 
         const tabs = previews.modules.map((element) => {

@@ -109,7 +109,7 @@ export default class CatalogList extends Component {
                     accessibleName="Pagination"
                     onChange={this.handlePagination}
                     pageSize={pagination.perPage}
-                    currentPage={pagination.start - 1}
+                    currentPage={pagination.currentPage - 1}
                     totalItems={pagination.totalResults}
                 />
 
