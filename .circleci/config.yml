@@ -16,7 +16,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+      - run: composer config --global http-basic.satis.castoredc.net "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
       - run: composer install -n -a
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.lock" }}
@@ -34,7 +34,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+      - run: composer config --global http-basic.satis.castoredc.net "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
       - run: composer install -n -a
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.lock" }}
@@ -52,7 +52,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+      - run: composer config --global http-basic.satis.castoredc.net "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
       - run: composer install -n -a
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.lock" }}
@@ -70,7 +70,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer config --global http-basic.packages.ciwit.nl "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
+      - run: composer config --global http-basic.satis.castoredc.net "${COMPOSER_USER}" "${COMPOSER_PASSWORD}"
       - run: composer install -n -a
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.lock" }}

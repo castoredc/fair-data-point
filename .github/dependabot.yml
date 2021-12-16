@@ -1,8 +1,8 @@
 version: 2
 registries:
-  composer-repository-packages-ciwit-nl:
+  composer-repository-castor:
     type: composer-repository
-    url: https://packages.ciwit.nl
+    url: https://satis.castoredc.net
     username: ci-agent
     password: "${{secrets.COMPOSER_REPOSITORY_PACKAGES_CIWIT_NL_PASSWORD}}"
 
@@ -19,4 +19,4 @@ updates:
   - martijnkersloot
   versioning-strategy: increase
   registries:
-  - composer-repository-packages-ciwit-nl
+  - composer-repository-castor
