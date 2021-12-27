@@ -39,7 +39,7 @@
         "twig/twig": "^3.0"
     },
     "require-dev": {
-        "castor/coding-standard": "^5.0",
+        "castor/coding-standard": "^7.0",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.83",
         "phpstan/phpstan-deprecation-rules": "^0.12.2",
