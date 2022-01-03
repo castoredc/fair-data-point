@@ -36,7 +36,7 @@
         "symfony/twig-bundle": "^5.4",
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "^5.4",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.3"
     },
     "require-dev": {
         "castor/coding-standard": "^5.0",
