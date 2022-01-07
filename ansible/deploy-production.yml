@@ -1,7 +1,6 @@
 - name: deploy to production
   hosts: production
-  become: true
-  become_user: castor
+  remote_user: castor
   vars_files:
     - vars/variables.yml
   roles:
