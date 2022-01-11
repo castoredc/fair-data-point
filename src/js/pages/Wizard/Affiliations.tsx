@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Emoji from "components/Emoji";
-import {CastorLogo} from "@castoredc/matter";
 import queryString from "query-string";
 import AffiliationsForm from "components/Form/Agent/AffiliationsForm";
 import {RouteComponentProps} from "react-router-dom";
@@ -39,15 +38,6 @@ export default class Affiliations extends Component<AffiliationsProps, Affiliati
         }
 
         return <>
-            <div className="WizardBrand">
-                <div className="WizardBrandLogo">
-                    <CastorLogo className="Logo"/>
-                </div>
-                <div className="WizardBrandText">
-                    FAIR Data Point
-                </div>
-            </div>
-
             <header>
                 <h1>
                     <Emoji symbol="🏥"/>&nbsp;
@@ -58,7 +48,10 @@ export default class Affiliations extends Component<AffiliationsProps, Affiliati
                 </div>
             </header>
 
-            <AffiliationsForm onSaved={this.handleSave} />
+            <AffiliationsForm
+                user={user}
+                onSaved={this.handleSave}
+            />
         </>;
     }
 }

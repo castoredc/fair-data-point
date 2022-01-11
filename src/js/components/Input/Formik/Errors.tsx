@@ -2,7 +2,7 @@ import React, {FC} from "react";
 import {ErrorMessage, FieldInputProps} from "formik";
 import {Space, ValidationMessage} from "@castoredc/matter";
 
-const FieldErrors: FC<{ field: FieldInputProps<any>, serverErrors: any }> = ({field, serverErrors}) => {
+const FieldErrors: FC<{ field: FieldInputProps<any>, serverErrors?: any }> = ({field, serverErrors}) => {
     return <>
         <ErrorMessage
             name={field.name}

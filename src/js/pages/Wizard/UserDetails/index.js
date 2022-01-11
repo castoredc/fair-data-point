@@ -110,16 +110,6 @@ export default class UserDetails extends Component {
         }
 
         return <>
-
-            <div className="WizardBrand">
-                <div className="WizardBrandLogo">
-                    <CastorLogo className="Logo"/>
-                </div>
-                <div className="WizardBrandText">
-                    FAIR Data Point
-                </div>
-            </div>
-
             <header>
                 <h1>
                     <Emoji symbol="👋"/>&nbsp;
@@ -129,7 +119,6 @@ export default class UserDetails extends Component {
                     Before you continue, please check your details below.
                 </div>
             </header>
-
 
             <ValidatorForm
                 className="FullHeightForm"

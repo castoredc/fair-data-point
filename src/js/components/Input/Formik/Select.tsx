@@ -87,20 +87,12 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
     const errors = form.errors[field.name];
     const serverErrors = serverError[field.name];
 
-    const DropdownIndicator = props => {
-        return (
-            <components.DropdownIndicator {...props}>
-                <Icon type="search"/>
-            </components.DropdownIndicator>
-        );
-    };
-
     return <div className="Select">
         <Dropdown
             loadOptions={loadOptions}
             options={cachedOptions}
             openMenuOnClick={false}
-            components={{DropdownIndicator}}
+            components={{DropdownIndicator: AsyncDropdownIndicator}}
             placeholder=""
             value={field.value}
             onChange={(value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => {
@@ -120,5 +112,15 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
         <FieldErrors field={field} serverErrors={serverErrors}/>
     </div>;
 }
+
+export const AsyncDropdownIndicator = (props) => {
+    return (
+        <components.DropdownIndicator {...props}>
+            <Icon type="search" style={{
+                transform: props.selectProps.menuIsOpen ? 'rotate(180deg)' : '',
+            }} />
+        </components.DropdownIndicator>
+    );
+};
 
 export default Select;

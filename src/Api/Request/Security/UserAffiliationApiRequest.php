@@ -73,12 +73,12 @@ class UserAffiliationApiRequest extends GroupedApiRequest implements GroupSequen
         $this->organizationId = $this->getFromNestedData('organization', 'id');
         $this->organizationName = $this->getFromNestedData('organization', 'name');
         $this->organizationCity = $this->getFromNestedData('organization', 'city');
-        $this->organizationCountry = $this->getFromNestedData('organization', 'country');
+        $this->organizationCountry = $this->getFromData('country');
 
         $this->departmentId = $this->getFromNestedData('department', 'id');
         $this->departmentName = $this->getFromNestedData('department', 'name');
 
-        $this->position = $this->getFromNestedData('position', 'position');
+        $this->position = $this->getFromData('position');
     }
 
     public function getOrganizationId(): ?string
