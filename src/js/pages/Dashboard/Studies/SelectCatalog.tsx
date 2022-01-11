@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, Heading, LoadingOverlay, Pagination, Separator, Space, Stack, StackItem} from "@castoredc/matter";
+import {Heading, LoadingOverlay, Pagination, Separator, Stack, StackItem} from "@castoredc/matter";
 import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import {localizedText} from "../../../util";

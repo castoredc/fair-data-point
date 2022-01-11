@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import './UserDetails.scss';
 import Emoji from "../../../components/Emoji";
-import {Button, CastorLogo, Stack} from "@castoredc/matter";
+import {Button, Stack} from "@castoredc/matter";
 import FormItem from "../../../components/Form/FormItem";
 import Input from "../../../components/Input";
 import {ValidatorForm} from "react-form-validator-core";
