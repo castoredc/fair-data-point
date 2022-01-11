@@ -2,14 +2,13 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
-import {Button, ChoiceOption, Heading, LoadingOverlay, Pagination, Space, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Pagination, Space} from "@castoredc/matter";
 import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
 import Header from "components/Layout/Dashboard/Header";
-import {isAdmin} from "utils/PermissionHelper";
 
 interface CatalogsProps extends RouteComponentProps<any> {
 }

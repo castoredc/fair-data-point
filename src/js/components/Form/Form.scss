@@ -207,3 +207,29 @@
     }
   }
 }
+
+.Affiliations {
+  .AffiliationForm {
+    margin-bottom: 15px;
+    border: 1px solid $neutral-50;
+    border-radius: 3px;
+    padding: 15px;
+
+    .AffiliationAvatar {
+      width: 48px;
+      margin-right: 10px;
+    }
+  }
+
+  .BlankAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    background-color: $blue-50;
+    padding: 10px;
+
+    .Icon path {
+      fill: $blue-700;
+    }
+  }
+}

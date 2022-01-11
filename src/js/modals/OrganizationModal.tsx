@@ -23,7 +23,7 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const {studyId} = this.props;
+        const {studyId, onClose} = this.props;
 
         window.onbeforeunload = null;
 
@@ -32,13 +32,13 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
         });
 
         axios.post('/api/study/' + studyId + '/centers/add', {
-            source: values.source,
-            country: values.country.value,
-            ...values.source !== 'database' ? {
-                name: values.name,
-                city: values.city,
+            source: values.organization.source,
+            country: values.country,
+            ...values.organization.source !== 'database' ? {
+                name: values.organization.name,
+                city: values.organization.city,
             } : {
-                id: values.id,
+                id: values.organization.id,
             }
         })
             .then((response) => {
@@ -46,7 +46,9 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
                     isLoading:      false,
                 });
 
-                toast.success(<ToastContent type="success" message={`The ${values.name} center was successfully added.`}/>, {
+                onClose();
+
+                toast.success(<ToastContent type="success" message={`The ${values.organization.name} center was successfully added.`}/>, {
                     position: "top-right",
                 });
             })
