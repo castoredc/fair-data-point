@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {LoadingOverlay, Stack} from "@castoredc/matter";
+import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
@@ -58,7 +58,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
 
     render() {
         const {isLoading, distributions} = this.state;
-        const {match} = this.props;
+        const {match, history} = this.props;
 
         const mainUrl = match.params.study ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}` :`/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
 
@@ -66,7 +66,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
-                {/*<Button icon="add" className="AddButton" disabled={isLoading} onClick={this.handleCreate}>New distribution</Button>*/}
+                <Button icon="add" className="AddButton" disabled={isLoading} onClick={() => history.push(`${mainUrl}/distributions/add`)}>New distribution</Button>
             </Stack>
 
             <div>

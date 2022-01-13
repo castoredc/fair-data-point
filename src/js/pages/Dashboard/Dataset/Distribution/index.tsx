@@ -10,12 +10,12 @@ import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";
-import DistributionDetails from "pages/Dashboard/Dataset/Distribution/DistributionDetails";
 import DistributionMetadata from "pages/Dashboard/Dataset/Distribution/DistributionMetadata";
 import DistributionContents from "pages/Dashboard/Dataset/Distribution/DistributionContents";
 import DistributionSubset from "pages/Dashboard/Dataset/Distribution/DistributionSubset";
 import DistributionLog from "pages/Dashboard/Dataset/Distribution/DistributionLog";
 import DistributionLogs from "pages/Dashboard/Dataset/Distribution/DistributionLogs";
+import Details from "pages/Dashboard/Dataset/Distribution/Details";
 
 interface DistributionProps extends RouteComponentProps<any> {
     dataset: any,
@@ -76,6 +76,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
             return <LoadingOverlay accessibleLabel="Loading distribution"/>;
         }
 
+        const catalog = match.params.catalog;
         const study = match.params.study;
         const dataset = match.params.dataset;
 
@@ -141,7 +142,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             <SideBar
                 back={{
-                    to: match.params.study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${match.params.catalog}/datasets/${dataset}`,
+                    to: study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`,
                     title: 'Back to dataset'
                 }}
                 location={location}
@@ -168,8 +169,10 @@ export default class Distribution extends Component<DistributionProps, Distribut
                         ]}
                         exact
                         render={(props) => (
-                            <DistributionDetails
+                            <Details
                                 {...props}
+                                catalog={catalog}
+                                study={study}
                                 dataset={dataset}
                                 distribution={distribution}
                             />

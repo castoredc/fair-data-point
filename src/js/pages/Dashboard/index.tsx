@@ -111,10 +111,12 @@ export default class Dashboard extends Component<DashboardProps> {
                     <PrivateRoute path="/dashboard/studies/add" exact component={SelectCatalog} user={user} />
                     <PrivateRoute path="/dashboard/studies/add/:catalog" exact component={AddStudy} user={user} />
 
+                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/add" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution" component={Distribution} user={user} />
                     <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/studies/:study" component={Study} user={user} />
 
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution" component={Distribution} user={user} />
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/catalogs" exact component={DashboardTabs} user={user} />

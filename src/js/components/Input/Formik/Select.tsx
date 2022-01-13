@@ -61,8 +61,6 @@ const Select: FC<SelectProps> = ({
             onBlur={field.onBlur}
             invalid={touched && !!errors}
             options={options}
-            // getOptionLabel={({label}) => label }
-            // getOptionValue={({value}) => value }
             {...rest}
         />
 

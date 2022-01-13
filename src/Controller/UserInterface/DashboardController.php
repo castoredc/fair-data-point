@@ -106,9 +106,11 @@ class DashboardController extends AbstractController
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}", name="dashboard_study_dataset")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/metadata", name="dashboard_study_dataset_metadata")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions", name="dashboard_study_dataset_distributions")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/add", name="dashboard_study_dataset_distributions_add")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}", name="dashboard_catalog_dataset")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/metadata", name="dashboard_catalog_dataset_metadata")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions", name="dashboard_catalog_dataset_distributions")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add", name="dashboard_catalog_dataset_distributions_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
@@ -124,7 +126,7 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}", name="dashboard_dataset_distribution")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}", name="dashboard_study_dataset_distribution")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/metadata", name="admin_study_distribution_metadata")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents", name="admin_study_distribution_content")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log", name="admin_study_distribution_log")
@@ -201,22 +203,4 @@ class DashboardController extends AbstractController
 
         return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }
-
-//    /**
-//     * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_catalog_dataset")
-//     * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_catalog_dataset_metadata")
-//     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_catalog_dataset_distributions")
-//     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_catalog_dataset_distribution_add")
-//     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-//     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-//     */
-//    public function dataset(Catalog $catalog, Dataset $dataset): Response
-//    {
-//        $this->denyAccessUnlessGranted('edit', $dataset);
-//
-//        return $this->render(
-//            'react.html.twig',
-//            ['title' => 'FDP Admin']
-//        );
-//    }
 }
