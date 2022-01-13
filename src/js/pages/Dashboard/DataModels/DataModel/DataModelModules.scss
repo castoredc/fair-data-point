@@ -1,4 +1,4 @@
-@import '../../../scss/colors';
+@import '../../../../scss/colors';
 
 .DataModelTableHeader {
   font-weight: bold;
@@ -34,8 +34,8 @@
     }
 
     .DataModelPredicateObjects {
-       width: 66%;
-       flex: 0 0 66%;
+      width: 66%;
+      flex: 0 0 66%;
 
       .TriplePredicateObject {
         display: flex;
@@ -68,7 +68,7 @@
           }
         }
       }
-     }
+    }
   }
 }
 
@@ -100,6 +100,7 @@
     margin: 4px;
     display: inline-block;
   }
+
   .DependencyCombinator {
     margin: 0 5px;
     font-weight: 700;

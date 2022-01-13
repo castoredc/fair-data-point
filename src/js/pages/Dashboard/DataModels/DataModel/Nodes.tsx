@@ -1,69 +1,43 @@
 import React, {Component} from "react";
-import axios from "axios";
-import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
-import {Button, CellText, DataGrid, Icon, IconCell, LoadingOverlay, Stack, Tabs} from "@castoredc/matter";
-import AddNodeModal from "../../../modals/AddNodeModal";
+import {Button, CellText, DataGrid, Icon, IconCell, Stack, Tabs} from "@castoredc/matter";
+import {RouteComponentProps} from "react-router-dom";
+import AddNodeModal from "../../../../modals/AddNodeModal";
 
-export default class DataModelNodes extends Component {
+interface NodesProps extends RouteComponentProps<any> {
+    nodes: any,
+    getNodes: () => void,
+    dataModel: any,
+    version: any,
+}
+
+interface NodesState {
+    showModal: boolean,
+    selectedType: string,
+}
+
+export default class Nodes extends Component<NodesProps, NodesState> {
     constructor(props) {
         super(props);
         this.state = {
             showModal: false,
-            isLoadingNodes: true,
-            hasLoadedNodes: false,
-            nodes: null,
             selectedType: 'internal',
         };
     }
 
-    componentDidMount() {
-        this.getNodes();
-    }
-
-    getNodes = () => {
-        const {dataModel, version} = this.props;
-
-        this.setState({
-            isLoadingNodes: true,
-        });
-
-        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/node')
-            .then((response) => {
-                this.setState({
-                    nodes: response.data,
-                    isLoadingNodes: false,
-                    hasLoadedNodes: true,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingNodes: false,
-                });
-
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the nodes';
-                toast.error(<ToastContent type="error" message={message}/>);
-            });
-    };
-
     openModal = () => {
-        this.setState({
-            showModal: true,
-        });
+        this.setState({showModal: true});
     };
 
     closeModal = () => {
-        this.setState({
-            showModal: false,
-        });
+        this.setState({showModal: false});
     };
 
     onSaved = () => {
-        this.setState({
-            showModal: false,
-        });
+        const {getNodes} = this.props;
 
-        this.getNodes();
+        this.closeModal();
+
+        getNodes();
     };
 
     changeTab = (tabIndex) => {
@@ -73,18 +47,18 @@ export default class DataModelNodes extends Component {
     };
 
     render() {
-        const {showModal, isLoadingNodes, nodes, selectedType} = this.state;
-        const {dataModel, version} = this.props;
+        const {showModal, selectedType} = this.state;
+        const {dataModel, nodes, version} = this.props;
 
-        if (isLoadingNodes) {
-            return <LoadingOverlay accessibleLabel="Loading nodes"/>;
+        if (nodes === null) {
+            return null;
         }
 
         const internalNodeRows = nodes.internal.map((item) => {
             return {
                 title: <CellText>{item.title}</CellText>,
                 value: <CellText>{item.value}</CellText>,
-                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                repeated: item.repeated ? <IconCell icon={{type: 'tickSmall'}}/> : undefined,
             };
         });
 
@@ -109,7 +83,7 @@ export default class DataModelNodes extends Component {
                 title: <CellText>{item.title}</CellText>,
                 type: <CellText>{item.value.value}</CellText>,
                 dataType: <CellText>{item.value.dataType}</CellText>,
-                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                repeated: item.repeated ? <IconCell icon={{type: 'tickSmall'}}/> : undefined,
             };
         });
 

@@ -46,7 +46,8 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
                 if (error.response && typeof error.response.data.error !== "undefined") {
                     toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading your data models"/>);
+                    toast.error(<ToastContent type="error"
+                                              message="An error occurred while loading your data models"/>);
                 }
             });
     };
@@ -60,11 +61,11 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
         const {isLoading, dataModels} = this.state;
 
         return <div>
-            <DocumentTitle title="Data models" />
+            <DocumentTitle title="Data models"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading data models"/>}
 
-            <Space bottom="comfortable" />
+            <Space bottom="comfortable"/>
 
             <Header
                 title="My data models"

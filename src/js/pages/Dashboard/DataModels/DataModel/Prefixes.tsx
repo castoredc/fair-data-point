@@ -1,61 +1,46 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
-import DataModelPrefixModal from "../../../modals/DataModelPrefixModal";
-import ConfirmModal from "../../../modals/ConfirmModal";
-import DataGridContainer from "../../../components/DataTable/DataGridContainer";
+import {RouteComponentProps} from "react-router-dom";
+import ToastContent from "components/ToastContent";
+import DataModelPrefixModal from "../../../../modals/DataModelPrefixModal";
+import ConfirmModal from "../../../../modals/ConfirmModal";
+import DataGridContainer from "components/DataTable/DataGridContainer";
 
-export default class DataModelPrefixes extends Component {
+interface PrefixesProps extends RouteComponentProps<any> {
+    prefixes: any,
+    getPrefixes: () => void,
+    dataModel: any,
+    version: any,
+}
+
+interface PrefixesState {
+    showModal: any,
+    prefixModalData: any,
+}
+
+export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
+    private tableRef: React.RefObject<unknown>;
+
     constructor(props) {
         super(props);
         this.state = {
-            showModal:         {
-                add:    false,
+            showModal: {
+                add: false,
                 remove: false,
             },
-            isLoadingContents: true,
-            hasLoadedContents: false,
-            prefixes:          [],
-            prefixModalData:   null,
+            prefixModalData: null,
         };
+
+        this.tableRef = React.createRef();
     }
-
-    componentDidMount() {
-        this.getContents();
-    }
-
-    getContents = () => {
-        const {dataModel, version} = this.props;
-
-        this.setState({
-            isLoadingContents: true,
-        });
-
-        axios.get('/api/model/' + dataModel.id + '/v/' + version + '/prefix')
-            .then((response) => {
-                this.setState({
-                    prefixes:          response.data,
-                    isLoadingContents: false,
-                    hasLoadedContents: true,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoadingContents: false,
-                });
-
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
-                toast.error(<ToastContent type="error" message={message}/>);
-            });
-    };
 
     openModal = (type, data) => {
         const {showModal} = this.state;
 
         this.setState({
-            showModal:       {
+            showModal: {
                 ...showModal,
                 [type]: true,
             },
@@ -75,8 +60,9 @@ export default class DataModelPrefixes extends Component {
     };
 
     onSaved = (type) => {
+        const {getPrefixes} = this.props;
         this.closeModal(type);
-        this.getContents();
+        getPrefixes();
     };
 
     removePrefix = () => {
@@ -95,8 +81,8 @@ export default class DataModelPrefixes extends Component {
     };
 
     render() {
-        const {showModal, isLoadingContents, prefixes, prefixModalData} = this.state;
-        const {dataModel, version} = this.props;
+        const {showModal, prefixModalData} = this.state;
+        const {dataModel, prefixes, version} = this.props;
 
         const columns = [
             {
@@ -130,15 +116,15 @@ export default class DataModelPrefixes extends Component {
                         destination: () => {
                             this.openModal('add', data)
                         },
-                        label:       'Edit prefix',
+                        label: 'Edit prefix',
                     },
                     {
                         destination: () => {
                             this.openModal('remove', data)
                         },
-                        label:       'Delete prefix',
+                        label: 'Delete prefix',
                     },
-                ]} />,
+                ]}/>,
             }
         });
 
@@ -179,7 +165,6 @@ export default class DataModelPrefixes extends Component {
 
             <DataGridContainer
                 fullHeight
-                isLoading={isLoadingContents}
                 ref={this.tableRef}
             >
                 <DataGrid

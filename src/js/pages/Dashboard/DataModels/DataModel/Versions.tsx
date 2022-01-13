@@ -1,11 +1,21 @@
 import React, {Component} from "react";
 import {Button, CellText, DataGrid, Stack} from "@castoredc/matter";
-import DataModelVersionModal from "../../../modals/DataModelVersionModal";
 import axios from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
+import {RouteComponentProps} from "react-router-dom";
+import ToastContent from "components/ToastContent";
+import DataModelVersionModal from "../../../../modals/DataModelVersionModal";
 
-export default class DataModelVersions extends Component {
+interface VersionsProps extends RouteComponentProps<any> {
+    getDataModel: () => void,
+    dataModel: any,
+}
+
+interface VersionsState {
+    showModal: boolean,
+}
+
+export default class Versions extends Component<VersionsProps, VersionsState> {
     constructor(props) {
         super(props);
         this.state = {

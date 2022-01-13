@@ -1,18 +1,28 @@
 import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
-import SideTabs from "../../../components/SideTabs";
-import DataModelModulePreview from "../../../components/DataModelModule/DataModelModulePreview";
 import {LoadingOverlay} from "@castoredc/matter";
+import {RouteComponentProps} from "react-router-dom";
+import ToastContent from "components/ToastContent";
+import DataModelModulePreview from "components/DataModelModule/DataModelModulePreview";
+import SideTabs from "components/SideTabs";
 
-export default class DataModelPreview extends Component {
+interface PreviewProps extends RouteComponentProps<any> {
+    dataModel: any,
+    version: any,
+}
+
+interface PreviewState {
+    isLoading: boolean,
+    previews: any,
+}
+
+export default class Preview extends Component<PreviewProps, PreviewState> {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingPreviews:     true,
-            hasLoadedPreviews:     false,
-            previews:              [],
+            isLoading: true,
+            previews: [],
         };
     }
 
@@ -21,18 +31,17 @@ export default class DataModelPreview extends Component {
     }
 
     getPreviews = () => {
-        const { dataModel, version } = this.props;
+        const {dataModel, version} = this.props;
 
         this.setState({
-            isLoadingPreviews: true,
+            isLoading: true,
         });
 
         axios.get('/api/model/' + dataModel.id + '/v/' + version + '/rdf')
             .then((response) => {
                 this.setState({
-                    previews:          response.data,
-                    isLoadingPreviews: false,
-                    hasLoadedPreviews: true,
+                    previews: response.data,
+                    isLoading: false,
                 });
             })
             .catch((error) => {
@@ -43,20 +52,24 @@ export default class DataModelPreview extends Component {
                 }
 
                 this.setState({
-                    isLoadingPreviews: false,
+                    isLoading: false,
                 });
             });
     };
 
     render() {
-        const { hasLoadedPreviews, previews } = this.state;
+        const {isLoading, previews} = this.state;
 
-        if (!hasLoadedPreviews) {
+        if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading preview"/>;
         }
 
+        if (previews.modules.length === 0) {
+            return <div className="NoResults">This data model does not have groups.</div>;
+        }
+
         const tabs = previews.modules.map((element) => {
-            let icons = [];
+            let icons = [] as any;
 
             if (element.repeated) {
                 icons.push({
@@ -73,28 +86,30 @@ export default class DataModelPreview extends Component {
             }
 
             return {
-                number:  element.order,
-                title:   element.title,
-                icons:   icons,
-                content: <DataModelModulePreview repeated={element.repeated} dependent={element.dependent} dependencies={element.dependencies} rdf={element.rdf} visualization={element.visualization} />
+                number: element.order,
+                title: element.title,
+                icons: icons,
+                content: <DataModelModulePreview repeated={element.repeated} dependent={element.dependent}
+                                                 dependencies={element.dependencies} rdf={element.rdf}
+                                                 visualization={element.visualization}/>
             }
         });
 
         return <div className="PageBody">
-            {previews.modules.length === 0 ? <div className="NoResults">This data model does not have groups.</div> : <SideTabs
+            <SideTabs
                 hasTabs
                 title="Groups"
                 tabs={[
                     {
                         title: 'Full data model',
-                        content: <DataModelModulePreview rdf={previews.full} visualization={previews.visualization} />
+                        content: <DataModelModulePreview rdf={previews.full} visualization={previews.visualization}/>
                     },
                     {
                         type: 'separator'
                     },
                     ...tabs
                 ]}
-            />}
+            />
         </div>;
     }
 }

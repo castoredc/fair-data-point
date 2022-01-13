@@ -16,6 +16,7 @@ import FAIRDataPoint from "pages/Dashboard/FAIRDataPoint";
 import {PrivateRoute, ProtectedRoute} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
 import SelectCatalog from "pages/Dashboard/Studies/SelectCatalog";
+import DataModel from "pages/Dashboard/DataModels/DataModel";
 
 interface DashboardProps extends RouteComponentProps<any> {
     user: any,
@@ -125,6 +126,8 @@ export default class Dashboard extends Component<DashboardProps> {
                     <ProtectedRoute path="/dashboard/fdp" exact component={DashboardTabs} user={user} />
 
                     <PrivateRoute path="/dashboard/data-models" exact component={DashboardTabs} user={user} />
+
+                    <PrivateRoute path="/dashboard/data-models/:model" component={DataModel} user={user} />
 
                     <Route component={NotFound}/>
                 </Switch>
