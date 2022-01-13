@@ -220,17 +220,31 @@ class DashboardController extends AbstractController
             ['title' => $dataModel->getTitle()]
         );
     }
-    
+
     /**
      * @Route("/dashboard/data-models/{model}/{version}/modules", name="dashboard_model_modules")
      * @Route("/dashboard/data-models/{model}/{version}/prefixes", name="dashboard_model_prefixes")
-     * @Route("/dashboard/data-models/{model}/{version}/nodes", name="dashboard_model_nodes")
      * @Route("/dashboard/data-models/{model}/{version}/preview", name="dashboard_model_preview")
      * @Route("/dashboard/data-models/{model}/{version}/import-export", name="dashboard_model_importexport")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
      */
     public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FDP Admin']
+        );
+    }
+
+    /**
+     * @Route("/dashboard/data-models/{model}/{version}/nodes/{nodeType}", name="dashboard_model_nodes")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
+     */
+    public function adminModelVersionNodes(DataModel $dataModel, DataModelVersion $dataModelVersion, string $nodeType): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 

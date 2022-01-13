@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Controller\UserInterface;
 
 use App\Entity\Data\DataDictionary\DataDictionary;
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

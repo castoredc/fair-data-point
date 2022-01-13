@@ -71,6 +71,13 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
 
         axios.delete('/api/model/' + dataModel.id + '/v/' + version + '/prefix/' + prefixModalData.id)
             .then(() => {
+                toast.success(<ToastContent type="success" message={<>
+                    The <strong>{prefixModalData.title}</strong> prefix was successfully removed
+                </>}
+                />, {
+                    position: "top-right",
+                });
+
                 this.onSaved('remove');
             })
             .catch((error) => {

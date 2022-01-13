@@ -227,7 +227,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                         customIcon: 'modules'
                     },
                     {
-                        to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/nodes',
+                        to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/nodes/internal',
                         exact: true,
                         title: 'Nodes',
                         customIcon: 'node'
@@ -291,13 +291,13 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                />
                            )}
                     />
-                    <Route path="/dashboard/data-models/:model/:version/nodes" exact
+                    <Route path="/dashboard/data-models/:model/:version/nodes/:nodeType" exact
                            render={(props) => (
                                <Nodes
                                    nodes={nodes}
                                    getNodes={this.getNodes}
                                    dataModel={dataModel}
-                                   version={currentVersion.value}
+                                   version={currentVersion}
                                    {...props}
                                />
                            )}
