@@ -33,7 +33,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
 
     getOptionGroups = () => {
         const { studyId } = this.props;
-
+        const { selectedOptionGroup } = this.state;
         this.setState({
             isLoading: true,
         });
@@ -42,7 +42,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             .then((response) => {
                 this.setState({
                     optionGroups: response.data,
-                    selectedOptionGroup: response.data.length > 0 ? response.data[0].id : '',
+                    selectedOptionGroup: selectedOptionGroup !== '' ? selectedOptionGroup : (response.data.length > 0 ? response.data[0].id : ''),
                     isLoading: false,
                 });
             })

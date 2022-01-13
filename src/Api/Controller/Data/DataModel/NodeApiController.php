@@ -91,6 +91,10 @@ class NodeApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
+        if ($node->getDataModelVersion() !== $dataModelVersion) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
+
         try {
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
@@ -120,6 +124,10 @@ class NodeApiController extends ApiController
     public function removeNode(DataModelVersion $dataModelVersion, string $type, Node $node, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+
+        if ($node->getDataModelVersion() !== $dataModelVersion) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
 
         try {
             $bus->dispatch(new RemoveNodeCommand($node));

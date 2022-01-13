@@ -150,9 +150,10 @@
       flex: 1;
     }
 
-    .OptionGroupTableButton {
-      width: 60px;
-      flex: 0 0 60px;
+    .DeleteAnnotation {
+      width: 34px;
+      flex: 0 0 34px;
+      margin-left: 5px;
     }
   }
 
@@ -165,7 +166,6 @@
 
   .OptionGroupItem {
     padding-top: 10px;
-    padding-bottom: 10px;
 
     &:hover {
       background: $neutral-20;

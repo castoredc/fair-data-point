@@ -5,7 +5,7 @@ import Annotation from "./Annotation";
 
 export default class Annotations extends Component {
     render() {
-        const { annotations } = this.props;
+        const { annotations, handleRemove } = this.props;
 
         return <div className="Annotations">
             {annotations.map((annotation) => {
@@ -15,6 +15,7 @@ export default class Annotations extends Component {
                     conceptCode={annotation.concept.code}
                     displayName={annotation.concept.displayName}
                     ontology={annotation.concept.ontology.name}
+                    handleRemove={() => handleRemove(annotation)}
                 />;
             })}
         </div>;
