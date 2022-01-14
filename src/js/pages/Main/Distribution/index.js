@@ -107,14 +107,13 @@ export default class Distribution extends Component {
                         className={classNames('MainCol DistributionAccess', !isGranted('access_data', distribution.permissions) && 'Restricted')}>
                         {(!user && !isGranted('access_data', distribution.permissions)) && <div className="Overlay">
                             <Banner
-                                type="info"
                                 customIcon={<LockIcon/>}
                                 title="The access to the data in this distribution is restricted"
                                 description="In order to access the data, please log in with your Castor EDC account."
                                 actions={[
                                     {
                                         label: 'Log in with Castor',
-                                        onClick: () => history.push('/connect/castor/' + distribution.study.sourceServer + '?target_path=' + distribution.relativeUrl)
+                                        onClick: () => window.location.href = '/connect/castor/' + distribution.study.sourceServer + '?target_path=' + distribution.relativeUrl
                                     }
                                 ]}
                             />
