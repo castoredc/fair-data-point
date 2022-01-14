@@ -8,13 +8,13 @@ import {Link} from "react-router-dom";
 
 export default class StudiesMap extends Component {
     render() {
-        const { studies } = this.props;
+        const {studies} = this.props;
 
         const coordinates = studies.map((study) => {
             return [study.coordinates.lat, study.coordinates.long];
         });
 
-        if(studies.length === 0) {
+        if (studies.length === 0) {
             return <div className="NoResults">There is no map data available.</div>;
         }
 
@@ -37,7 +37,7 @@ export default class StudiesMap extends Component {
                                     <h3>{study.title}</h3>
                                 </Link>
                                 <div className="PopupOrganization">
-                                    <strong>{study.organization}</strong><br />
+                                    <strong>{study.organization}</strong><br/>
                                     {study.city}, {study.country}
                                 </div>
                             </Popup>
@@ -45,7 +45,7 @@ export default class StudiesMap extends Component {
                     })}
                 </MarkerClusterGroup>
 
-                <AttributionControl position="bottomright" prefix={false} />
+                <AttributionControl position="bottomright" prefix={false}/>
             </Map>
         </div>
     }

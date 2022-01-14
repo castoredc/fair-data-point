@@ -78,7 +78,7 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
                                                       serverError,
                                                       loadOptions,
                                                       cachedOptions,
-                                                        options,
+                                                      options,
                                                       ...rest
                                                   }) => {
     const touched = form.touched[field.name];
@@ -116,7 +116,7 @@ export const AsyncDropdownIndicator = (props) => {
         <components.DropdownIndicator {...props}>
             <Icon type="search" style={{
                 transform: props.selectProps.menuIsOpen ? 'rotate(180deg)' : '',
-            }} />
+            }}/>
         </components.DropdownIndicator>
     );
 };

@@ -3,7 +3,7 @@ import {ActionMenu, Icon} from "@castoredc/matter";
 
 export default class TripleGroup extends Component {
     render() {
-        const { id, type, title, repeated, value, predicates, openTripleModal, openRemoveTripleModal } = this.props;
+        const {id, type, title, repeated, value, predicates, openTripleModal, openRemoveTripleModal} = this.props;
 
         const newData = {
             subjectType: type,
@@ -34,7 +34,7 @@ export default class TripleGroup extends Component {
 
 export class TriplePredicate extends Component {
     render() {
-        const { id, value, objects, data, openTripleModal, openRemoveTripleModal } = this.props;
+        const {id, value, objects, data, openTripleModal, openRemoveTripleModal} = this.props;
 
         const newData = {
             ...data,
@@ -74,7 +74,7 @@ export class TripleObject extends Component {
     }
 
     render() {
-        const { tripleId, id, type, title, repeated, value, openTripleModal, data, openRemoveTripleModal } = this.props;
+        const {tripleId, id, type, title, repeated, value, openTripleModal, data, openRemoveTripleModal} = this.props;
 
         const newData = {
             ...data,
@@ -93,11 +93,15 @@ export class TripleObject extends Component {
                     container={this.ref.current}
                     items={[
                         {
-                            destination: () => {openTripleModal(newData)},
+                            destination: () => {
+                                openTripleModal(newData)
+                            },
                             label: 'Edit triple'
                         },
                         {
-                            destination: () => {openRemoveTripleModal(newData)},
+                            destination: () => {
+                                openRemoveTripleModal(newData)
+                            },
                             label: 'Delete triple'
                         }
                     ]}
@@ -116,7 +120,7 @@ export const Node = (title, type, value, repeated) => {
         {(type === "external") && <div className="NodeInfo PrefixedUri">
             <span>
                 {value.prefixedValue !== null ? value.prefixedValue : `...:${value.base}`}
-                &nbsp;<Icon type="openNewWindow" width="8px" height="8px" />
+                &nbsp;<Icon type="openNewWindow" width="8px" height="8px"/>
             </span>
         </div>}
         {(type === "value") && <div className="NodeInfo Value">

@@ -18,12 +18,13 @@ class Contacts extends Component {
                 }
 
                 return <span className="Contact" key={index}>
-                    {contact.type === 'person' && <Person person={contact.person} />}
+                    {contact.type === 'person' && <Person person={contact.person}/>}
                     {index !== (contacts.length - 1) && ', '}
                 </span>
             })}
 
-            {emails.length > 0 && <Button buttonType="contentOnly" icon="email" href={`mailto:${emails[0]}`}>Get in touch</Button>}
+            {emails.length > 0 &&
+            <Button buttonType="contentOnly" icon="email" href={`mailto:${emails[0]}`}>Get in touch</Button>}
         </div>
     }
 }

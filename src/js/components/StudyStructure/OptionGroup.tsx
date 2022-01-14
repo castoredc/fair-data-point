@@ -36,7 +36,7 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
     }
 
     openModal = (type, data) => {
-        const { modalData, showModal } = this.state;
+        const {modalData, showModal} = this.state;
 
         this.setState({
             modalData: {
@@ -51,7 +51,7 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
     };
 
     closeModal = (type) => {
-        const { modalData, showModal } = this.state;
+        const {modalData, showModal} = this.state;
 
         this.setState({
             showModal: {
@@ -86,8 +86,8 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
     };
 
     render() {
-        const { studyId, id, options, onUpdate} = this.props;
-        const { showModal, modalData } = this.state;
+        const {studyId, id, options, onUpdate} = this.props;
+        const {showModal, modalData} = this.state;
 
         return <div className="OptionGroupTable LargeTable">
             <AddAnnotationModal
@@ -129,9 +129,9 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
                     <div className="NoResults">This option group does not contain options.</div> : <div>
                         {options.map((option) => {
                             const data = {
-                                type:   "field_option",
-                                id:     option.id,
-                                title:  option.name,
+                                type: "field_option",
+                                id: option.id,
+                                title: option.name,
                                 parent: id,
                             };
 
@@ -140,13 +140,16 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
                                 <div className="OptionGroupTableValue">{option.value}</div>
                                 <div className="OptionGroupTableAnnotations">
                                     <Annotations annotations={option.annotations}
-                                                 handleRemove={(annotation) => this.openModal('remove', {annotation, option})}/>
+                                                 handleRemove={(annotation) => this.openModal('remove', {
+                                                     annotation,
+                                                     option
+                                                 })}/>
 
                                     <div className="OptionGroupTableButton">
                                         <Stack distribution="trailing">
-                                        <Button onClick={() => {
-                                            this.openModal('add', data)
-                                        }} icon="add" buttonType="secondary" iconDescription="Add annotation" />
+                                            <Button onClick={() => {
+                                                this.openModal('add', data)
+                                            }} icon="add" buttonType="secondary" iconDescription="Add annotation"/>
                                         </Stack>
                                     </div>
                                 </div>

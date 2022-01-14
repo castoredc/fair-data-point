@@ -13,7 +13,7 @@
 
 .CannotFind {
   float: right;
-  padding: 0!important;
+  padding: 0 !important;
 }
 
 .StudyLink {
@@ -49,6 +49,7 @@
         margin: 0;
         padding: 0 16px 0 0;
       }
+
       dd {
         margin: 0 0 0 100px;
         padding: 0 0 8px;
@@ -64,8 +65,7 @@
   height: 60px;
   flex: 0 1 70px;
 
-  & > div:nth-child(2)
-  {
+  & > div:nth-child(2) {
     text-align: right;
   }
 }
@@ -77,7 +77,7 @@
 }
 
 .FormLoader {
-    margin: auto;
+  margin: auto;
 }
 
 .FormItem {
@@ -162,7 +162,6 @@
 }
 
 
-
 .OntologyConceptFormBlock {
   border: 1px solid $neutral-50;
   border-radius: 3px;
@@ -178,7 +177,7 @@
   .AddNew {
     margin-top: 10px;
     padding-top: 10px;
-    border-bottom: none!important;
+    border-bottom: none !important;
   }
 
   .Row {

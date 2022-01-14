@@ -16,28 +16,26 @@ export default class UserDetails extends Component {
 
 
         this.state = {
-            data:      this.parseUserDetails(props.user),
+            data: this.parseUserDetails(props.user),
             isLoading: false,
-            isSaved:   false,
+            isSaved: false,
         };
     }
 
     parseUserDetails = (user) => {
         let details = {
-            firstName:  '',
+            firstName: '',
             middleName: '',
-            lastName:   '',
-            email:      '',
+            lastName: '',
+            email: '',
         }
 
-        if(typeof user.suggestions.details !== "undefined")
-        {
+        if (typeof user.suggestions.details !== "undefined") {
             details.firstName = user.suggestions.details.firstName;
             details.lastName = user.suggestions.details.lastName;
         }
 
-        if(user.details !== null)
-        {
+        if (user.details !== null) {
             details.firstName = user.details.firstName;
             details.middleName = user.details.middleName;
             details.lastName = user.details.lastName;
@@ -73,7 +71,7 @@ export default class UserDetails extends Component {
             axios.post('/api/user', data)
                 .then((response) => {
                     this.setState({
-                        isSaved:   true,
+                        isSaved: true,
                         isLoading: false,
                     });
                 })

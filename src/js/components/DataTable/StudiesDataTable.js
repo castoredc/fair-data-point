@@ -222,7 +222,7 @@ export default class StudiesDataTable extends Component {
                 <Heading type="Subsection">Search studies</Heading>
 
                 <StudyFilters filters={filterOptions}
-                         onFilter={(filter) => this.handleFilter(filter)}
+                              onFilter={(filter) => this.handleFilter(filter)}
                 />
             </div>
         </div>;

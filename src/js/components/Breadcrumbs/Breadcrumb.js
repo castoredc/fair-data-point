@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 class Breadcrumb extends Component {
     render() {
-        const { children, to } = this.props;
+        const {children, to} = this.props;
 
         return <div className="Breadcrumb">
             {to ? <Link to={to}>{children}</Link> : children}

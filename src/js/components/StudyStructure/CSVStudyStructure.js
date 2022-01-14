@@ -78,47 +78,47 @@ export default class CSVStudyStructure extends Component {
 
         return <div className="PageBody">
             <ValidatorForm
-            className="FullHeightForm"
-            ref={node => (this.form = node)}
-            onSubmit={this.saveDistribution}
-        >
-            <div className="PageTabs">
-                <Tabs
-                    onChange={this.changeTab}
-                    selected={selectedType}
-                    tabs={{
-                        study: {
-                            title: 'Study',
-                            content: <StudyStructure
-                                selectable onSelect={this.handleSelect} selection={distributionContents}
-                                studyId={studyId} contents={structure.study}
-                            />,
-                        },
-                        report: {
-                            title: 'Reports',
-                            content: <StudyStructure
-                                selectable onSelect={this.handleSelect} selection={distributionContents}
-                                studyId={studyId} contents={structure.report}
-                            />,
-                        },
-                        survey: {
-                            title: 'Surveys',
-                            content: <StudyStructure
-                                selectable onSelect={this.handleSelect} selection={distributionContents}
-                                studyId={studyId} contents={structure.survey}/>,
-                        },
-                    }}
-                />
-            </div>
+                className="FullHeightForm"
+                ref={node => (this.form = node)}
+                onSubmit={this.saveDistribution}
+            >
+                <div className="PageTabs">
+                    <Tabs
+                        onChange={this.changeTab}
+                        selected={selectedType}
+                        tabs={{
+                            study: {
+                                title: 'Study',
+                                content: <StudyStructure
+                                    selectable onSelect={this.handleSelect} selection={distributionContents}
+                                    studyId={studyId} contents={structure.study}
+                                />,
+                            },
+                            report: {
+                                title: 'Reports',
+                                content: <StudyStructure
+                                    selectable onSelect={this.handleSelect} selection={distributionContents}
+                                    studyId={studyId} contents={structure.report}
+                                />,
+                            },
+                            survey: {
+                                title: 'Surveys',
+                                content: <StudyStructure
+                                    selectable onSelect={this.handleSelect} selection={distributionContents}
+                                    studyId={studyId} contents={structure.survey}/>,
+                            },
+                        }}
+                    />
+                </div>
 
-            <div className="FormButtons">
-                <Stack distribution="trailing" alignment="end">
+                <div className="FormButtons">
+                    <Stack distribution="trailing" alignment="end">
                     <span
                         className="FieldCount">{distributionContents.length} field{distributionContents.length !== 1 && 's'} selected</span>
-                    <Button onClick={this.saveDistribution} disabled={submitDisabled}>Save distribution</Button>
-                </Stack>
-            </div>
-        </ValidatorForm>
+                        <Button onClick={this.saveDistribution} disabled={submitDisabled}>Save distribution</Button>
+                    </Stack>
+                </div>
+            </ValidatorForm>
         </div>
     }
 

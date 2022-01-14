@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import {ValidatorForm} from "react-form-validator-core";
 import FormItem from "components/Form/FormItem";
-import axios, {CancelTokenSource} from "axios";
+import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import {Button, Modal} from "@castoredc/matter";
@@ -45,7 +44,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
 
         let initialValues = (data ? mergeData(defaultData, data) : defaultData);
 
-        if(initialValues.value !== '') {
+        if (initialValues.value !== '') {
             if (type === 'external') {
                 initialValues.value = initialValues.value.value;
             } else if (type === 'literal' || type === 'value') {

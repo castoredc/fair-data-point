@@ -10,7 +10,7 @@ type HeaderProps = {
     type?: HeadingType
 }
 
-const Header: FC<HeaderProps> = ({ title, badge, children, type }) => {
+const Header: FC<HeaderProps> = ({title, badge, children, type}) => {
     return <div className="DashboardHeader" style={{
         width: toRem(960),
         maxWidth: '100%',
@@ -18,7 +18,7 @@ const Header: FC<HeaderProps> = ({ title, badge, children, type }) => {
         <Stack distribution="equalSpacing">
             <StackItem className="HeaderTitle">
                 <Stack>
-                    <Heading type={type ?? 'Subsection'} style={{ margin: 0 }}>{title}</Heading>
+                    <Heading type={type ?? 'Subsection'} style={{margin: 0}}>{title}</Heading>
                     {badge && badge}
                 </Stack>
             </StackItem>

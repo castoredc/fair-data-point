@@ -24,7 +24,7 @@ export default class Login extends Component {
     }
 
     componentDidMount() {
-        if(typeof this.props.match.params.catalogSlug !== 'undefined') {
+        if (typeof this.props.match.params.catalogSlug !== 'undefined') {
             this.getCatalog(this.props.match.params.catalogSlug, () => {
                 this.getServers();
             });
@@ -45,7 +45,7 @@ export default class Login extends Component {
                 const selectedServer = (urlParamServer !== null && serverIds.includes(urlParamServer)) ? urlParamServer : defaultServer;
 
                 this.setState({
-                    servers:   response.data,
+                    servers: response.data,
                     isLoading: false,
                     selectedServer: selectedServer,
                     serverLocked: serverLocked,
@@ -63,13 +63,13 @@ export default class Login extends Component {
     getCatalog = (catalog, callback) => {
         axios.get('/api/brand/' + catalog)
             .then((response) => {
-                if(typeof callback === "function") {
+                if (typeof callback === "function") {
                     this.setState({
-                        catalog:   response.data,
+                        catalog: response.data,
                     }, callback);
                 } else {
                     this.setState({
-                        catalog:   response.data,
+                        catalog: response.data,
                         isLoading: false
                     });
                 }
@@ -83,29 +83,29 @@ export default class Login extends Component {
     };
 
     render() {
-        const { serverLocked, view, servers, selectedServer, catalog, isLoading } = this.state;
+        const {serverLocked, view, servers, selectedServer, catalog, isLoading} = this.state;
 
         const params = queryString.parse(this.props.location.search);
         const path = typeof params.path !== 'undefined' ? params.path : '';
 
-        if(isLoading)
-        {
+        if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading"/>;
         }
 
         return (
             <div className="Login TopLevelContainer">
-                <DocumentTitle title="FAIR Data Point | Log in" />
+                <DocumentTitle title="FAIR Data Point | Log in"/>
 
                 <div className="Skip"/>
 
                 <div className="LoginContainer">
 
                     <div className="LoginLogo">
-                        <CastorLogo className="Logo" />
+                        <CastorLogo className="Logo"/>
                     </div>
 
-                    <LoginForm path={path} server={selectedServer} serverLocked={serverLocked} servers={servers} catalog={catalog} view={view} />
+                    <LoginForm path={path} server={selectedServer} serverLocked={serverLocked} servers={servers}
+                               catalog={catalog} view={view}/>
 
                 </div>
             </div>

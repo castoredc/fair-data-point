@@ -28,8 +28,8 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
 
         this.state = {
             organizations: [],
-            countries:      [],
-            isLoading:      false,
+            countries: [],
+            isLoading: false,
             openModal: false,
             openRemoveModal: false,
             selectedOrganization: null,
@@ -96,15 +96,16 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
     }
 
     removeOrganization = () => {
-        const { studyId } = this.props;
-        const { selectedOrganization } = this.state;
+        const {studyId} = this.props;
+        const {selectedOrganization} = this.state;
 
         this.closeModal();
 
-        if(selectedOrganization) {
+        if (selectedOrganization) {
             axios.post('/api/study/' + studyId + '/centers/remove', selectedOrganization)
                 .then((response) => {
-                    toast.success(<ToastContent type="success" message={`${selectedOrganization.name} was successfully removed`}/>, {
+                    toast.success(<ToastContent type="success"
+                                                message={`${selectedOrganization.name} was successfully removed`}/>, {
                         position: "top-right",
                     });
 
@@ -131,25 +132,26 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
     }
 
     render() {
-        const { studyId } = this.props;
+        const {studyId} = this.props;
         const {organizations, countries, isLoading, openModal, openRemoveModal, selectedOrganization} = this.state;
 
-        if(isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading organizations" />;
+        if (isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading organizations"/>;
         }
 
         const organizationRows = organizations.map((organization) => {
             return {
                 name: <CellText>
                     <Stack wrap={false}>
-                        <Avatar name={organization.name} size="35px" round />
+                        <Avatar name={organization.name} size="35px" round/>
                         <span>
                             {organization.name}
                         </span>
                     </Stack>
                 </CellText>,
                 location: <CellText>{organization.city}, {organization.country}</CellText>,
-                menu: <ActionsCell items={[{destination: () => this.handleRemove(organization), label: 'Remove center'}]} />,
+                menu: <ActionsCell
+                    items={[{destination: () => this.handleRemove(organization), label: 'Remove center'}]}/>,
             }
         });
 
@@ -169,7 +171,8 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
                 onCancel={this.closeModal}
                 show={openRemoveModal}
             >
-                Are you sure you want remove the <strong>{selectedOrganization && selectedOrganization.name}</strong> center?
+                Are you sure you want remove
+                the <strong>{selectedOrganization && selectedOrganization.name}</strong> center?
             </ConfirmModal>
 
             <Stack distribution="trailing" alignment="end">

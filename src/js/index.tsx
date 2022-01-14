@@ -10,7 +10,7 @@ import App from "./components/App";
 ReactDOM.render(
     <Router>
         <AppProvider>
-            <App />
+            <App/>
         </AppProvider>
     </Router>,
     document.getElementById('root')

@@ -170,7 +170,8 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                             </div>
                             <div className="Buttons">
                                 <Button buttonType="contentOnly" icon="cross" className="RemoveButton"
-                                        onClick={() => this.removeConcept(field, form, index)} iconDescription="Remove"/>
+                                        onClick={() => this.removeConcept(field, form, index)}
+                                        iconDescription="Remove"/>
                             </div>
                         </div>
                     })}
@@ -188,8 +189,8 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                             width="tiny"
                             menuPlacement={"auto"}
                             menuPosition="fixed"
-                            getOptionLabel={({label}) => label }
-                            getOptionValue={({value}) => value }
+                            getOptionLabel={({label}) => label}
+                            getOptionValue={({value}) => value}
                         />
                     </div>
                     <div className="Concept">
@@ -204,8 +205,8 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                             }}
                             isDisabled={selectedOntology === null}
                             menuPosition="fixed"
-                            getOptionLabel={({label}) => label }
-                            getOptionValue={({value}) => value }
+                            getOptionLabel={({label}) => label}
+                            getOptionValue={({value}) => value}
                         />
 
                         <Choice

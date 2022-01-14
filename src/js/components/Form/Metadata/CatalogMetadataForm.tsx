@@ -13,7 +13,7 @@ type CatalogMetadataFormProps = {
 
 export default class CatalogMetadataForm extends Component<CatalogMetadataFormProps> {
     render() {
-        const { catalog, onSave } = this.props;
+        const {catalog, onSave} = this.props;
 
         return (
             <MetadataForm
@@ -51,6 +51,6 @@ export default class CatalogMetadataForm extends Component<CatalogMetadataFormPr
 
 const defaultData = {
     'homepage': '',
-    'logo' : '',
+    'logo': '',
     'themeTaxonomy': []
 };

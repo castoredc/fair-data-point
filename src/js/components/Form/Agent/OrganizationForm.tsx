@@ -21,7 +21,7 @@ type OrganizationFormState = {
     validation: any,
 }
 
-export default class OrganizationForm extends Component<OrganizationFormProps, OrganizationFormState>  {
+export default class OrganizationForm extends Component<OrganizationFormProps, OrganizationFormState> {
     constructor(props) {
         super(props);
 

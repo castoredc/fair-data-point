@@ -60,7 +60,7 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
                         options: options,
                         isLoading: false,
                     }, () => {
-                        if(options.length === 0) {
+                        if (options.length === 0) {
                             form.setFieldValue(field.name, {...defaultData, source: 'manual'});
                         }
                     });
@@ -76,8 +76,7 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
                         toast.error(<ToastContent type="error" message="An error occurred"/>);
                     }
                 });
-        }
-        else {
+        } else {
             this.setState({
                 options: [],
             }, () => {
@@ -107,50 +106,50 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
         const manual = organization.source === 'manual' || value.source === 'manual';
 
         return <div>
-                {!manual && <FormItem label="Department">
-                    <Dropdown
-                        name="organization"
-                        options={options}
-                        menuPosition="fixed"
-                        isDisabled={disabled}
-                        onChange={(value: OptionType, action: ActionMeta<OptionType>) => {
-                            const department = options.find((option: OptionType) => value.value === option.value);
-                            form.setFieldValue(field.name, {...department.data, source: 'database'});
+            {!manual && <FormItem label="Department">
+                <Dropdown
+                    name="organization"
+                    options={options}
+                    menuPosition="fixed"
+                    isDisabled={disabled}
+                    onChange={(value: OptionType, action: ActionMeta<OptionType>) => {
+                        const department = options.find((option: OptionType) => value.value === option.value);
+                        form.setFieldValue(field.name, {...department.data, source: 'database'});
+                    }}
+                    getOptionLabel={({label}) => label}
+                    getOptionValue={({value}) => value}
+                    value={value.id && options.find((option: OptionType) => value.id === option.value)}
+                />
+
+                <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
+                    I cannot find my department
+                </Button>
+            </FormItem>}
+
+            {manual && <>
+                <FormItem label="Department Name">
+                    <TextInput
+                        value={value.name}
+                        onChange={(event) => {
+                            form.setFieldValue(field.name, {
+                                ...value,
+                                name: event.target.value
+                            });
                         }}
-                        getOptionLabel={({label}) => label }
-                        getOptionValue={({value}) => value }
-                        value={value.id && options.find((option: OptionType) => value.id === option.value)}
+                        disabled={disabled}
+                        autoFocus={value.source === 'manual'}
                     />
 
-                    <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
-                        I cannot find my department
+                    <Button buttonType="contentOnly" className="CannotFind"
+                            onClick={this.toggleManual}
+                            disabled={disabled}>
+                        Search for a department
                     </Button>
-                </FormItem>}
+                </FormItem>
+            </>}
 
-                {manual && <>
-                    <FormItem label="Department Name">
-                        <TextInput
-                            value={value.name}
-                            onChange={(event) => {
-                                form.setFieldValue(field.name, {
-                                    ...value,
-                                    name: event.target.value
-                                });
-                            }}
-                            disabled={disabled}
-                            autoFocus={value.source === 'manual'}
-                        />
-
-                        <Button buttonType="contentOnly" className="CannotFind"
-                                onClick={this.toggleManual}
-                                disabled={disabled}>
-                            Search for a department
-                        </Button>
-                    </FormItem>
-                </>}
-
-                <FieldErrors field={field} />
-            </div>
+            <FieldErrors field={field}/>
+        </div>
     }
 }
 

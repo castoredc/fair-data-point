@@ -25,7 +25,7 @@ export default class DistributionSubset extends Component {
     componentDidMount() {
         const {distribution} = this.props;
 
-        if(distribution.type === 'rdf') {
+        if (distribution.type === 'rdf') {
             this.getDataModel();
             this.getNodes();
         }
@@ -118,7 +118,7 @@ export default class DistributionSubset extends Component {
         axios.get('/api/dataset/' + this.props.match.params.dataset + '/distribution/' + this.props.match.params.distribution + '/contents')
             .then((response) => {
                 this.setState({
-                    contents:          response.data,
+                    contents: response.data,
                     isLoadingContents: false,
                 });
             })
@@ -146,7 +146,7 @@ export default class DistributionSubset extends Component {
         const replaced = sqlQuery.replace(/\(|\)|and|or| /ig, '');
 
         this.setState({
-            isLoading:      true,
+            isLoading: true,
             submitDisabled: true,
         });
 
@@ -155,7 +155,7 @@ export default class DistributionSubset extends Component {
         })
             .then(() => {
                 this.setState({
-                    isLoading:      false,
+                    isLoading: false,
                     submitDisabled: false,
                 });
 
@@ -178,13 +178,21 @@ export default class DistributionSubset extends Component {
                 }
                 this.setState({
                     submitDisabled: false,
-                    isLoading:      false,
+                    isLoading: false,
                 });
             });
     };
 
     render() {
-        const {isLoadingNodes, isLoadingDataModel, isLoadingInstitutes, isLoadingContents, nodes, institutes, contents} = this.state;
+        const {
+            isLoadingNodes,
+            isLoadingDataModel,
+            isLoadingInstitutes,
+            isLoadingContents,
+            nodes,
+            institutes,
+            contents
+        } = this.state;
         const {distribution} = this.props;
 
         if (isLoadingInstitutes || isLoadingContents) {

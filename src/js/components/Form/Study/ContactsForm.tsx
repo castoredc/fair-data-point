@@ -36,7 +36,7 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
     }
 
     getContacts = () => {
-        const { studyId } = this.props;
+        const {studyId} = this.props;
 
         this.setState({
             isLoading: true,
@@ -45,7 +45,7 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
         axios.get('/api/study/' + studyId + '/team')
             .then((response) => {
                 this.setState({
-                    contacts:   response.data,
+                    contacts: response.data,
                     isLoading: false,
                 });
             })
@@ -80,17 +80,18 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
     }
 
     removeContact = () => {
-        const { studyId } = this.props;
-        const { selectedContact } = this.state;
+        const {studyId} = this.props;
+        const {selectedContact} = this.state;
 
         this.closeModal();
 
-        if(selectedContact) {
+        if (selectedContact) {
             const name = [selectedContact.firstName, selectedContact.middleName, selectedContact.lastName].filter(Boolean).join(' ');
 
             axios.post('/api/study/' + studyId + '/team/remove', selectedContact)
                 .then((response) => {
-                    toast.success(<ToastContent type="success" message={`${name} was successfully removed as study contact`}/>, {
+                    toast.success(<ToastContent type="success"
+                                                message={`${name} was successfully removed as study contact`}/>, {
                         position: "top-right",
                     });
 
@@ -120,8 +121,8 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
         const {studyId} = this.props;
         const {contacts, isLoading, openModal, openRemoveModal, selectedContact} = this.state;
 
-        if(isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading contacts" />;
+        if (isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading contacts"/>;
         }
 
         const contactRows = contacts.map((contact) => {
@@ -130,7 +131,7 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
             return {
                 name: <CellText>
                     <Stack wrap={false}>
-                        <Avatar name={name} size="35px" round />
+                        <Avatar name={name} size="35px" round/>
                         <span>
                             {name}
                         </span>
@@ -138,14 +139,15 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
                 </CellText>,
                 email: <CellText>{contact.email}</CellText>,
                 orcid: <CellText>{contact.orcid}</CellText>,
-                menu: <ActionsCell items={[{destination: () => this.handleRemove(contact), label: 'Remove contact'}]} />,
+                menu: <ActionsCell items={[{destination: () => this.handleRemove(contact), label: 'Remove contact'}]}/>,
             }
         });
 
         const name = selectedContact && [selectedContact.firstName, selectedContact.middleName, selectedContact.lastName].filter(Boolean).join(' ');
 
         return <div>
-            <ContactModal open={openModal} email={selectedContact ? selectedContact.email : undefined} onClose={this.closeModal} studyId={studyId} />
+            <ContactModal open={openModal} email={selectedContact ? selectedContact.email : undefined}
+                          onClose={this.closeModal} studyId={studyId}/>
 
             <ConfirmModal
                 title="Remove contact"

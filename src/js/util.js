@@ -62,7 +62,7 @@ export const localizedText = (texts, language = 'en', paragraph = false) => {
 };
 
 export const isURL = (str) => {
-    if(typeof str !== 'string') {
+    if (typeof str !== 'string') {
         return false;
     }
 
@@ -76,7 +76,7 @@ export const isURL = (str) => {
 };
 
 export const getCenterFromDegrees = (data) => {
-    if (!(data.length > 0)){
+    if (!(data.length > 0)) {
         return false;
     }
 
@@ -86,7 +86,7 @@ export const getCenterFromDegrees = (data) => {
     let Y = 0.0;
     let Z = 0.0;
 
-    for(let i = 0; i < data.length; i++){
+    for (let i = 0; i < data.length; i++) {
         let lat = data[i][0] * Math.PI / 180;
         let lon = data[i][1] * Math.PI / 180;
 
@@ -121,8 +121,8 @@ export const replaceAt = (array, index, value) => {
 
 export const mergeData = (defaultData, newData) => {
     return Object.keys(defaultData).reduce((a, key) => (
-        { ...a, [key]: (key in newData ? newData[key] : defaultData[key])}
-        ), defaultData);
+        {...a, [key]: (key in newData ? newData[key] : defaultData[key])}
+    ), defaultData);
 };
 
 export const ucfirst = (text) => {

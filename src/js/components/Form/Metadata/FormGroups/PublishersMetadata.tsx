@@ -48,8 +48,8 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
     handleUpdate = (newPublisher) => {
         const {publishers, setValue} = this.props;
 
-        const exists = newPublisher.id !== '' ? !! publishers.find((publisher) => {
-            if(publisher.type !== newPublisher.type) {
+        const exists = newPublisher.id !== '' ? !!publishers.find((publisher) => {
+            if (publisher.type !== newPublisher.type) {
                 return false;
             }
 
@@ -61,7 +61,8 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
 
             setValue('publishers', newPublishers);
         } else {
-            toast.error(<ToastContent type="error" message="The publisher was already associated with this metadata and was, therefore, not added again." />);
+            toast.error(<ToastContent type="error"
+                                      message="The publisher was already associated with this metadata and was, therefore, not added again."/>);
         }
 
         this.closeModal();

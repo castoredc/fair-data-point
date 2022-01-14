@@ -11,8 +11,8 @@ export default class LoginModal extends Component {
         super(props);
 
         this.state = {
-            servers:        [],
-            isLoading:      true,
+            servers: [],
+            isLoading: true,
         };
     }
 
@@ -21,13 +21,13 @@ export default class LoginModal extends Component {
     }
 
     getServers = () => {
-        const {server } = this.props;
+        const {server} = this.props;
 
         axios.get('/api/castor/servers')
             .then((response) => {
                 this.setState({
-                    servers:        response.data,
-                    isLoading:      false,
+                    servers: response.data,
+                    isLoading: false,
                 });
             })
             .catch((error) => {
@@ -49,7 +49,9 @@ export default class LoginModal extends Component {
             title="Log in"
             closeButton
         >
-            {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> : <LoginForm path={path} modal={true} server={server} serverLocked={!!server} servers={servers} view={view} />}
+            {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> :
+                <LoginForm path={path} modal={true} server={server} serverLocked={!!server} servers={servers}
+                           view={view}/>}
         </Modal>
     }
 }

@@ -106,8 +106,12 @@ export default class DataModelMappingsDataTable extends Component {
                     valueType: <CellText>{ValueType[item.node.value.value]}</CellText>,
                     dataType: <CellText>{DataType[item.node.value.dataType]}</CellText>,
                     repeated: item.node.repeated ? <IconCell icon={{type: 'tickSmall'}}/> : undefined,
-                    ...(item.transformed) && {mappedElement: <CellText><TextStyle variation="italic">Transformed value</TextStyle></CellText>},
-                    ...(! item.transformed) && {mappedElement: <CellText>{item.elements ? item.elements[0].label : ''}</CellText>},
+                    ...(item.transformed) && {
+                        mappedElement: <CellText><TextStyle variation="italic">Transformed value</TextStyle></CellText>
+                    },
+                    ...(!item.transformed) && {
+                        mappedElement: <CellText>{item.elements ? item.elements[0].label : ''}</CellText>
+                    },
                 }
             });
         } else if (type === 'module') {

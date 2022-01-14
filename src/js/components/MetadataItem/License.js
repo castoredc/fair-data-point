@@ -20,7 +20,7 @@ export default class License extends Component {
     }
 
     getLicense = () => {
-        const { slug } = this.props;
+        const {slug} = this.props;
 
         axios.get('/api/license/' + slug)
             .then((response) => {
@@ -39,9 +39,9 @@ export default class License extends Component {
     };
 
     render() {
-        const { license, isLoading } = this.state;
+        const {license, isLoading} = this.state;
 
-        if(isLoading || ! license) {
+        if (isLoading || !license) {
             return <div className="License">&nbsp;</div>;
         }
 

@@ -32,7 +32,7 @@ class DropdownButton extends Component {
     }
 
     closeMenuOnOutsideClick = (event) => {
-        const { current: menuElement } = this.menuRef;
+        const {current: menuElement} = this.menuRef;
         if (!menuElement) return;
 
         const targetElement = event.target;
@@ -44,8 +44,16 @@ class DropdownButton extends Component {
     };
 
     render() {
-        const { isOpen } = this.state;
-        const { className, icon, iconDescription, text, buttonType = 'contentOnly', hideDropdown = false, items } = this.props;
+        const {isOpen} = this.state;
+        const {
+            className,
+            icon,
+            iconDescription,
+            text,
+            buttonType = 'contentOnly',
+            hideDropdown = false,
+            items
+        } = this.props;
 
         return <div className={classNames('DropdownButtonContainer', className)}>
             <Button
@@ -55,7 +63,7 @@ class DropdownButton extends Component {
                 onClick={() => this.setMenuStatus(!isOpen)}
                 aria-expanded={hideDropdown ? undefined : isOpen}
                 buttonType={buttonType}
-                isDropdown={! hideDropdown}
+                isDropdown={!hideDropdown}
                 isOpen={hideDropdown ? undefined : isOpen}
             >
                 {text}
@@ -63,8 +71,8 @@ class DropdownButton extends Component {
 
             {isOpen && (
                 <div className="DropdownButtonMenuWrapper" ref={this.contentRef}>
-                    <EventListener target={document} type="click" listener={this.closeMenuOnOutsideClick} />
-                    <Menu forwardRef={this.menuRef} trapFocus onEscape={this.closeMenu} items={items} />
+                    <EventListener target={document} type="click" listener={this.closeMenuOnOutsideClick}/>
+                    <Menu forwardRef={this.menuRef} trapFocus onEscape={this.closeMenu} items={items}/>
                 </div>
             )}
         </div>

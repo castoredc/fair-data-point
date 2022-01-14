@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
-import {Button, LoadingOverlay} from "@castoredc/matter";
+import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
 import {Route, RouteComponentProps, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
@@ -13,7 +13,6 @@ import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import Annotations from "pages/Dashboard/Studies/Study/Annotations";
 import {isGranted} from "utils/PermissionHelper";
-import Alert from "components/Alert";
 import Datasets from "pages/Dashboard/Studies/Study/Datasets";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";
@@ -160,9 +159,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                            render={(props) => isGranted('edit_source_system', study.permissions) ? <div>
                                <Annotations studyId={study.id}/>
                            </div> : <div>
-                               <Alert variant="error" icon="errorCircled">
-                                   You do not have permission to access this study in Castor.
-                               </Alert>
+                               <Banner type="error" title="You do not have permission to access this study in Castor"/>
                            </div>
                            }/>
                     <Route path="/dashboard/studies/:study/datasets" exact

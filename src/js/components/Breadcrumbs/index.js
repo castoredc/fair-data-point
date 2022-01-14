@@ -6,7 +6,7 @@ import {localizedText} from "../../util";
 
 class Breadcrumbs extends Component {
     render() {
-        const { breadcrumbs } = this.props;
+        const {breadcrumbs} = this.props;
 
         return <div className="Breadcrumbs">
             <div className="container">

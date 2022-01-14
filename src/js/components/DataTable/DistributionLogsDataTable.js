@@ -14,7 +14,7 @@ export default class DistributionLogsDataTable extends Component {
         this.state = {
             isLoadingLogs: true,
             hasLoadedLogs: false,
-            logs:          [],
+            logs: [],
             pagination: DataGridHelper.getDefaultState(25),
         };
 
@@ -42,7 +42,7 @@ export default class DistributionLogsDataTable extends Component {
         });
 
         const filters = {
-            page:    pagination.currentPage,
+            page: pagination.currentPage,
             perPage: pagination.perPage,
         };
 
@@ -53,7 +53,7 @@ export default class DistributionLogsDataTable extends Component {
         axios.get('/api/dataset/' + dataset + '/distribution/' + distribution.slug + '/log', {params: filters})
             .then((response) => {
                 this.setState({
-                    logs:          response.data.results,
+                    logs: response.data.results,
                     pagination: DataGridHelper.parseResults(response.data),
                     isLoadingLogs: false,
                     hasLoadedLogs: true,
@@ -76,7 +76,7 @@ export default class DistributionLogsDataTable extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage + 1,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getLogs();
@@ -103,15 +103,15 @@ export default class DistributionLogsDataTable extends Component {
 
         const columns = [
             {
-                Header:    'Date and time',
+                Header: 'Date and time',
                 accessor: 'createdAt',
             },
             {
-                Header:    'Status',
+                Header: 'Status',
                 accessor: 'status',
             },
             {
-                Header:    'Records',
+                Header: 'Records',
                 accessor: 'records',
             },
         ]

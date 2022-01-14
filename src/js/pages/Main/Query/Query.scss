@@ -6,7 +6,7 @@
   flex-direction: column;
 
   .QueryComponent {
-    padding: 30px!important;
+    padding: 30px !important;
     flex: 1;
     overflow: auto;
 
@@ -50,7 +50,7 @@
   }
 
   .Children {
-    padding-top: 10px!important;
+    padding-top: 10px !important;
 
     display: flex;
     flex-flow: column;
@@ -63,13 +63,13 @@
   }
 
   .yasqe_queryButton {
-    display: none!important;
+    display: none !important;
   }
 
   .CodeMirror {
     font-family: 'Fira Code', monospace;
     font-size: 13px;
-    height: 100%!important;
+    height: 100% !important;
     border-radius: 4px;
   }
 
@@ -82,7 +82,7 @@
 
   .QueryEditor.Hide {
     .yasqe {
-      max-height: 0!important;
+      max-height: 0 !important;
     }
   }
 

@@ -6,11 +6,11 @@ import Department from "./Department";
 
 export default class Organization extends Component {
     render() {
-        const { organization, department, small } = this.props;
+        const {organization, department, small} = this.props;
 
         const {name, country, city} = organization;
 
-        if(small) {
+        if (small) {
             return <div className="Organization">
                 <div className={classNames('Center')}>
                     {name}

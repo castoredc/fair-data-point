@@ -12,8 +12,7 @@ type ContactModalProps = {
     studyId: string
 }
 
-type ContactModalState = {
-}
+type ContactModalState = {}
 
 
 export default class ContactModal extends Component<ContactModalProps, ContactModalState> {
@@ -65,16 +64,16 @@ export default class ContactModal extends Component<ContactModalProps, ContactMo
     render() {
         const {open, email, onClose, studyId} = this.props;
 
-        const edit = !! email;
+        const edit = !!email;
         const title = edit ? `Edit contact` : 'Add contact';
-        
+
         return <Modal
             open={open}
             title={title}
             accessibleName={title}
             onClose={onClose}
         >
-            <PersonForm email={email} studyId={studyId} handleSubmit={this.handleSubmit} />
+            <PersonForm email={email} studyId={studyId} handleSubmit={this.handleSubmit}/>
         </Modal>
     }
 }

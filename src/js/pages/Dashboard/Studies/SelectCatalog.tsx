@@ -9,6 +9,7 @@ import {localizedText} from "../../../util";
 import {toRem} from "@castoredc/matter-utils";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import DocumentTitle from "components/DocumentTitle";
+import BackButton from "components/BackButton";
 
 interface SelectCatalogProps extends RouteComponentProps<any> {
 }
@@ -38,9 +39,9 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         });
 
         let filters = {
-            page : pagination.currentPage,
-            perPage : pagination.perPage,
-            acceptSubmissions : true,
+            page: pagination.currentPage,
+            perPage: pagination.perPage,
+            acceptSubmissions: true,
         };
 
         axios.get('/api/catalog', {params: filters})
@@ -86,19 +87,21 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         const {isLoading, catalogs, pagination} = this.state;
 
         return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-            <DocumentTitle title="Add a study" />
+            <DocumentTitle title="Add a study"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs"/>}
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
+                    <BackButton to="/dashboard/studies">Back to studies</BackButton>
+
                     <Heading type="Section">Choose a Catalog</Heading>
 
                     <p>
                         Please choose a catalog where you would like to add your study to.
                     </p>
 
-                    <Separator />
+                    <Separator/>
 
                     {catalogs.length > 0 ? catalogs.map((catalog) => {
                             return <ListItem key={catalog.id}

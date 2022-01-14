@@ -7,8 +7,8 @@ export default class MainBody extends Component {
     render() {
         const {children, isLoading, className} = this.props;
 
-        if(isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading" content="" />;
+        if (isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading" content=""/>;
         }
 
         return <main className={classNames('container', className)}>

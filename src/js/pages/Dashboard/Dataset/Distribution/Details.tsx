@@ -11,9 +11,9 @@ interface DetailsProps extends RouteComponentProps<any> {
 
 export default class Details extends Component<DetailsProps> {
     render() {
-        const { distribution, catalog, dataset, study, history } = this.props;
+        const {distribution, catalog, dataset, study, history} = this.props;
 
-        const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` :`/dashboard/catalogs/${catalog}/datasets/${dataset}`;
+        const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
 
         return <div className="PageBody">
             <DistributionForm

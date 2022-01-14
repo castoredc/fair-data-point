@@ -34,7 +34,7 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
 
     const tabs = {
         studies: {
-            content: <Studies history={history} location={location} match={match} user={user} />,
+            content: <Studies history={history} location={location} match={match} user={user}/>,
             title: 'Studies',
         },
         catalogs: {
@@ -45,10 +45,12 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
             content: <DataModels history={history} location={location} match={match}/>,
             title: 'Data models',
         },
-        ...(isAdmin(user) && { fdp: {
-            content: <FAIRDataPoint history={history} location={location} match={match}/>,
-            title: 'FAIR Data Point',
-        }})
+        ...(isAdmin(user) && {
+            fdp: {
+                content: <FAIRDataPoint history={history} location={location} match={match}/>,
+                title: 'FAIR Data Point',
+            }
+        })
     };
 
     return <div className="DashboardTabs">
@@ -109,29 +111,34 @@ export default class Dashboard extends Component<DashboardProps> {
                 <Switch>
                     <Redirect exact from="/dashboard" to="/dashboard/studies"/>
 
-                    <PrivateRoute path="/dashboard/studies" exact component={DashboardTabs} user={user} />
+                    <PrivateRoute path="/dashboard/studies" exact component={DashboardTabs} user={user}/>
 
-                    <PrivateRoute path="/dashboard/studies/add" exact component={SelectCatalog} user={user} />
-                    <PrivateRoute path="/dashboard/studies/add/:catalog" exact component={AddStudy} user={user} />
+                    <PrivateRoute path="/dashboard/studies/add" exact component={SelectCatalog} user={user}/>
+                    <PrivateRoute path="/dashboard/studies/add/:catalog" exact component={AddStudy} user={user}/>
 
-                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/add" component={Dataset} user={user} />
-                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution" component={Distribution} user={user} />
-                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" component={Dataset} user={user} />
-                    <PrivateRoute path="/dashboard/studies/:study" component={Study} user={user} />
+                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/add"
+                                  component={Dataset} user={user}/>
+                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset/distributions/:distribution"
+                                  component={Distribution} user={user}/>
+                    <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" component={Dataset} user={user}/>
+                    <PrivateRoute path="/dashboard/studies/:study" component={Study} user={user}/>
 
-                    <PrivateRoute path="/dashboard/catalogs/add" exact component={AddCatalog} user={user} />
-                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add" component={Dataset} user={user} />
-                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution" component={Distribution} user={user} />
-                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" component={Dataset} user={user} />
-                    <PrivateRoute path="/dashboard/catalogs" exact component={DashboardTabs} user={user} />
-                    <PrivateRoute path="/dashboard/catalogs/:catalog" component={Catalog} user={user} />
+                    <PrivateRoute path="/dashboard/catalogs/add" exact component={AddCatalog} user={user}/>
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add"
+                                  component={Dataset} user={user}/>
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"
+                                  component={Distribution} user={user}/>
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" component={Dataset}
+                                  user={user}/>
+                    <PrivateRoute path="/dashboard/catalogs" exact component={DashboardTabs} user={user}/>
+                    <PrivateRoute path="/dashboard/catalogs/:catalog" component={Catalog} user={user}/>
 
-                    <ProtectedRoute path="/dashboard/fdp" exact component={DashboardTabs} user={user} />
+                    <ProtectedRoute path="/dashboard/fdp" exact component={DashboardTabs} user={user}/>
 
-                    <PrivateRoute path="/dashboard/data-models" exact component={DashboardTabs} user={user} />
-                    <PrivateRoute path="/dashboard/data-models/add" exact component={AddDataModel} user={user} />
+                    <PrivateRoute path="/dashboard/data-models" exact component={DashboardTabs} user={user}/>
+                    <PrivateRoute path="/dashboard/data-models/add" exact component={AddDataModel} user={user}/>
 
-                    <PrivateRoute path="/dashboard/data-models/:model" component={DataModel} user={user} />
+                    <PrivateRoute path="/dashboard/data-models/:model" component={DataModel} user={user}/>
 
                     <Route component={NotFound}/>
                 </Switch>

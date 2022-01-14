@@ -18,10 +18,10 @@ export default class Study extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoadingStudy:       true,
-            study:                null,
-            datasets:             [],
-            isLoadingDatasets:    true
+            isLoadingStudy: true,
+            study: null,
+            datasets: [],
+            isLoadingDatasets: true
         };
     }
 
@@ -30,7 +30,7 @@ export default class Study extends Component {
     }
 
     getStudy = () => {
-        const { match } = this.props;
+        const {match} = this.props;
 
         axios.get('/api/study/slug/' + match.params.study)
             .then((response) => {
@@ -45,25 +45,23 @@ export default class Study extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the study';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     render() {
-        const { isLoadingStudy, study } = this.state;
-        const { location, user, embedded } = this.props;
+        const {isLoadingStudy, study} = this.state;
+        const {location, user, embedded} = this.props;
 
         const breadcrumbs = getBreadCrumbs(location, {study});
 
         let tags = [];
         let badge = (study && study.metadata.recruitmentStatus ? RecruitmentStatus[study.metadata.recruitmentStatus] : null);
 
-        if(study && study.metadata.condition !== null && study.metadata.condition !== '')
-        {
+        if (study && study.metadata.condition !== null && study.metadata.condition !== '') {
             tags.push(study.metadata.condition);
         }
-        if(study && study.metadata.intervention !== null && study.metadata.intervention !== '')
-        {
+        if (study && study.metadata.intervention !== null && study.metadata.intervention !== '') {
             tags.push(study.metadata.intervention);
         }
 
@@ -75,24 +73,24 @@ export default class Study extends Component {
             isLoading={isLoadingStudy}
             embedded={embedded}
         >
-            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} badge={badge} />
+            <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} badge={badge}/>
 
             <MainBody isLoading={isLoadingStudy}>
                 {study && <>
                     <div className="MainCol">
-                        {study.metadata.contacts.length > 0 && <Contacts contacts={study.metadata.contacts} />}
+                        {study.metadata.contacts.length > 0 && <Contacts contacts={study.metadata.contacts}/>}
 
                         {(study.metadata.briefSummary || tags.length > 0) && <div className="InformationDescription">
                             {study.metadata.briefSummary && <div>{paragraphText(study.metadata.briefSummary)}</div>}
-                            {tags.length > 0 && <div className="StudyTags"><Tags tags={tags} /></div>}
+                            {tags.length > 0 && <div className="StudyTags"><Tags tags={tags}/></div>}
                         </div>}
 
-                        <AssociatedItemsBar items={study.count} current="dataset" />
+                        <AssociatedItemsBar items={study.count} current="dataset"/>
 
-                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
+                        <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null}/>
                     </div>
                     <div className="SideCol">
-                        <MetadataSideBar type="study" metadata={study.metadata} name={title} />
+                        <MetadataSideBar type="study" metadata={study.metadata} name={title}/>
                     </div>
                 </>}
             </MainBody>

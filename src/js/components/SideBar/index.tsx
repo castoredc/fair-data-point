@@ -20,7 +20,7 @@ interface SideBarProps {
 const SideBar: FC<SideBarProps> = ({location, items, back, onVersionChange}) => {
     return <div className="SideBar">
         {back && <div className="Back">
-            <BackButton to={back.to}>{back.title}</BackButton>
+            <BackButton to={back.to} sidebar>{back.title}</BackButton>
         </div>}
         <ScrollShadow className="SideBarScrollShadow">
             <div className="SideBarNav">
@@ -40,8 +40,8 @@ const SideBar: FC<SideBarProps> = ({location, items, back, onVersionChange}) => 
                                         options={item.versions}
                                         menuPlacement="auto"
                                         width="fullWidth"
-                                        getOptionLabel={({label}) => label }
-                                        getOptionValue={({value}) => value }
+                                        getOptionLabel={({label}) => label}
+                                        getOptionValue={({value}) => value}
                                     />
                                 </div>
                             </FormItem>

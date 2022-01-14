@@ -21,7 +21,7 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
         super(props);
         this.state = {
             isLoading: true,
-            fdp:          null,
+            fdp: null,
         };
     }
 
@@ -37,7 +37,7 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
         axios.get('/api/fdp')
             .then((response) => {
                 this.setState({
-                    fdp:          response.data,
+                    fdp: response.data,
                     isLoading: false,
                 });
             })
@@ -49,7 +49,8 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
                 if (error.response && typeof error.response.data.error !== "undefined") {
                     toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading the FAIR Data Point information"/>);
+                    toast.error(<ToastContent type="error"
+                                              message="An error occurred while loading the FAIR Data Point information"/>);
                 }
             });
     };
@@ -60,13 +61,13 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
         const title = fdp ? (fdp.hasMetadata ? localizedText(fdp.metadata.title, 'en') : 'FAIR Data Point') : 'FAIR Data Point';
 
         return <div>
-            <DocumentTitle title="FAIR Data Point" />
+            <DocumentTitle title="FAIR Data Point"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading FAIR Data Point information"/>}
 
             <Heading type="Section">{title}</Heading>
 
-            {fdp && <FAIRDataPointMetadataForm fdp={fdp} onSave={this.getFairDataPoint} />}
+            {fdp && <FAIRDataPointMetadataForm fdp={fdp} onSave={this.getFairDataPoint}/>}
         </div>;
     }
 }

@@ -13,7 +13,7 @@ const FieldErrors: FC<{ field: FieldInputProps<any>, serverErrors?: any }> = ({f
                             <Space bottom="default"/>
                             <ValidationMessage type="error">{message}</ValidationMessage>
                         </>
-                ));
+                    ));
                 } else {
                     return <>
                         <Space bottom="default"/>

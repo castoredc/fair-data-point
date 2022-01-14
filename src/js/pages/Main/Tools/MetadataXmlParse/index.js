@@ -23,7 +23,7 @@ export default class MetadataXmlParse extends Component {
         if (e.target.files.length > 0) {
             const file = e.target.files[0];
 
-            if(file.type !== 'text/xml') {
+            if (file.type !== 'text/xml') {
                 toast.error(<ToastContent type="error"
                                           message="This file is not an XML file."/>);
 

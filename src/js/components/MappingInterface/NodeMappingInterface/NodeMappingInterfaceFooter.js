@@ -30,7 +30,7 @@ const NodeMappingInterfaceFooter = ({
                 </Stack>
             </Stack>
         </div>;
-    } else if(dataTransformation && step === 'syntax') {
+    } else if (dataTransformation && step === 'syntax') {
         return <div className="FormButtons">
             <Stack distribution="equalSpacing">
                 <Button

@@ -5,12 +5,14 @@ import './Input.scss'
 
 export default class RadioGroup extends ValidatorComponent {
     render() {
-        const { value, options, onChange, name, variant, readOnly, serverError } = this.props;
+        const {value, options, onChange, name, variant, readOnly, serverError} = this.props;
 
         return <div className="Input">
             <div
-                className={'RadioGroup'  + (variant === 'horizontal' ? ' Horizontal' : ' Vertical')}
-                ref={(r) => { this.input = r; }}
+                className={'RadioGroup' + (variant === 'horizontal' ? ' Horizontal' : ' Vertical')}
+                ref={(r) => {
+                    this.input = r;
+                }}
             >
                 {options.map((option) => {
                     return <ChoiceOption
@@ -18,7 +20,9 @@ export default class RadioGroup extends ValidatorComponent {
                         labelText={option.label}
                         type="radio"
                         name={name}
-                        onChange={readOnly ? null : () => {onChange({target: { name: name, value: option.value}})}}
+                        onChange={readOnly ? null : () => {
+                            onChange({target: {name: name, value: option.value}})
+                        }}
                         value={option.value}
                         checked={value === option.value}
                         readOnly={readOnly}
@@ -37,7 +41,7 @@ export default class RadioGroup extends ValidatorComponent {
 
 
     errorText() {
-        const { isValid } = this.state;
+        const {isValid} = this.state;
 
         if (isValid) {
             return null;

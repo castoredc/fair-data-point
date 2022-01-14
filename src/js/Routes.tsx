@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {Redirect, Route, RouteComponentProps, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import axios from "axios";

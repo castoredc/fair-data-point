@@ -8,13 +8,13 @@ import Organization from "./Organization";
 
 class Organizations extends Component {
     render() {
-        const { organizations, table } = this.props;
+        const {organizations, table} = this.props;
 
         const label = 'Organization' + (organizations.length > 1 ? 's' : '');
 
         const coordinates = organizations.filter((agent) => {
-            return ! (agent.organization.coordinates === null);
-        }).map((agent)  => {
+            return !(agent.organization.coordinates === null);
+        }).map((agent) => {
             return [agent.organization.coordinates.lat, agent.organization.coordinates.long];
         });
 
@@ -43,10 +43,10 @@ class Organizations extends Component {
                         attribution='&copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>, &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>'
                     />
                     {coordinates.map((coordinate, index) => {
-                        return <Marker key={index} position={coordinate} />
+                        return <Marker key={index} position={coordinate}/>
                     })}
 
-                    <AttributionControl position="bottomright" prefix={false} />
+                    <AttributionControl position="bottomright" prefix={false}/>
                 </Map>
             </div>}
         </MetadataItem>

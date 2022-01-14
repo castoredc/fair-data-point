@@ -52,7 +52,9 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({field, form, languages
                     <div className="LocalizedTextInputText">
                         <TextInput
                             name="text"
-                            onChange={(e) => { handleChange(field, form, index, 'text', e.target.value)}}
+                            onChange={(e) => {
+                                handleChange(field, form, index, 'text', e.target.value)
+                            }}
                             value={localizedTextItem.text}
                             multiline={multiline}
                             // rows={rows}
@@ -62,10 +64,11 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({field, form, languages
                         <Dropdown
                             options={languages}
                             menuPlacement={"auto"}
-                            getOptionLabel={({label}) => label }
-                            getOptionValue={({value}) => value }
+                            getOptionLabel={({label}) => label}
+                            getOptionValue={({value}) => value}
                             onChange={(option: OptionType) => {
-                                handleChange(field, form, index, 'language', option.value)}
+                                handleChange(field, form, index, 'language', option.value)
+                            }
                             }
                             value={languages.find((language) => language.value === localizedTextItem.language)}
                             width="minimum"
@@ -73,7 +76,9 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({field, form, languages
                     </div>
                     <div className="LocalizedTextInputButtons">
                         <div className="LocalizedTextInputButton">
-                            {!first && <Button icon="cross" className="RemoveButton" buttonType="contentOnly" onClick={() => handleRemove(field, form, index)} iconDescription="Remove text" />}
+                            {!first && <Button icon="cross" className="RemoveButton" buttonType="contentOnly"
+                                               onClick={() => handleRemove(field, form, index)}
+                                               iconDescription="Remove text"/>}
                         </div>
                     </div>
                 </div>
@@ -81,7 +86,8 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({field, form, languages
         </div>
 
         <div className="LocalizedTextInputAddButton">
-            <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>Add new</Button>
+            <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>Add
+                new</Button>
         </div>
 
         <FieldErrors field={field} serverErrors={serverErrors}/>
@@ -91,6 +97,6 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({field, form, languages
 export default LocalizedTextInput;
 
 const defaultData = {
-    text:     '',
+    text: '',
     language: null
 };

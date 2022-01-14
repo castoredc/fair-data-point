@@ -21,7 +21,7 @@ class VisNetwork extends Component {
     }
 
     renderNetwork = () => {
-        const { nodes, edges } = this.props;
+        const {nodes, edges} = this.props;
 
         const data = {
             nodes: nodes,
@@ -54,7 +54,7 @@ class VisNetwork extends Component {
     render() {
         const {className} = this.props;
         return (
-            <div className={classNames('Network', className)} ref={this.appRef} />
+            <div className={classNames('Network', className)} ref={this.appRef}/>
         );
     }
 }

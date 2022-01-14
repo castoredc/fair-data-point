@@ -68,12 +68,12 @@ export default class Dataset extends Component {
                     </div>
 
                     <div className="SideCol">
-                        <MetadataSideBar type="dataset" metadata={dataset.metadata} name={title} />
+                        <MetadataSideBar type="dataset" metadata={dataset.metadata} name={title}/>
                     </div>
 
-                    <AssociatedItemsBar items={dataset.count} current="distribution" />
+                    <AssociatedItemsBar items={dataset.count} current="distribution"/>
 
-                    <DistributionList dataset={dataset} embedded={embedded} className="MainCol" />
+                    <DistributionList dataset={dataset} embedded={embedded} className="MainCol"/>
                 </>}
             </MainBody>
         </Layout>;

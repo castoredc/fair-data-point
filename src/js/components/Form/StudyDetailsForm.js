@@ -190,7 +190,7 @@ export default class StudyDetailsForm extends Component {
         const invalid = "This value is invalid";
 
         if (isLoading && !submitDisabled) {
-            return <LoadingOverlay accessibleLabel="Loading study information" />;
+            return <LoadingOverlay accessibleLabel="Loading study information"/>;
         }
 
         return (

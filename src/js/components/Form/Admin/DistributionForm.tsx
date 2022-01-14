@@ -121,14 +121,14 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     };
 
     handleSubmit = (values, {setSubmitting}) => {
-        const { dataset, distribution, mainUrl, history } = this.props;
+        const {dataset, distribution, mainUrl, history} = this.props;
 
         const url = '/api/dataset/' + dataset + '/distribution' + (distribution ? '/' + distribution.slug : '');
 
         axios.post(url, values)
             .then((response) => {
                 this.setState({
-                    distribution:   response.data,
+                    distribution: response.data,
                 });
 
                 if (distribution) {
@@ -291,7 +291,8 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
                                         <p>The API Credentials for this distribution are encrypted.</p>
 
-                                        <Button buttonType="danger" onClick={() => setFieldValue('apiUserEncrypted', false)}>
+                                        <Button buttonType="danger"
+                                                onClick={() => setFieldValue('apiUserEncrypted', false)}>
                                             Change API Credentials</Button>
                                     </div> : <div>
                                         <FormItem label="Email address">

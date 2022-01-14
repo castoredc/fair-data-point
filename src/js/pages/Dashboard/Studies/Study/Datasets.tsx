@@ -59,7 +59,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
     };
 
     handleCreate = () => {
-        const { studyId, history } = this.props;
+        const {studyId, history} = this.props;
 
         this.setState({
             isLoading: true
@@ -79,7 +79,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while creating a new dataset';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
@@ -91,7 +91,8 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
-                <Button icon="add" className="AddButton" disabled={isLoading} onClick={this.handleCreate}>New dataset</Button>
+                <Button icon="add" className="AddButton" disabled={isLoading} onClick={this.handleCreate}>New
+                    dataset</Button>
             </Stack>
 
             <div>
@@ -101,7 +102,8 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     return <ListItem
                         key={dataset.id}
                         selectable={false}
-                        link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`} title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
+                        link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`}
+                        title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
                     />
                 })}
             </div>

@@ -11,7 +11,7 @@ export default class SPARQLDataTable extends Component {
 
         return vars.map((variable) => {
             return {
-                Header:   variable,
+                Header: variable,
                 accessor: variable,
             };
         });
@@ -29,7 +29,8 @@ export default class SPARQLDataTable extends Component {
 
             for (let colId = 0; colId < vars.length; colId++) {
                 const sparqlVar = vars[colId];
-                row[sparqlVar] = (<CellText>{sparqlVar in binding ? this.getCellContent(binding, sparqlVar, prefixes) : ''}</CellText>)
+                row[sparqlVar] = (
+                    <CellText>{sparqlVar in binding ? this.getCellContent(binding, sparqlVar, prefixes) : ''}</CellText>)
             }
 
             rows.push(row);
@@ -61,7 +62,7 @@ export default class SPARQLDataTable extends Component {
         }
 
         return <span>{prefixed ? "" : "<"}<Link className='iri' href={href}
-                                             target="_blank">{visibleString}</Link>{prefixed ? "" : ">"}</span>;
+                                                target="_blank">{visibleString}</Link>{prefixed ? "" : ">"}</span>;
     };
 
     getCellContent = (bindings, sparqlVar) => {

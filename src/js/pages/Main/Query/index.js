@@ -7,8 +7,7 @@ import {classNames, localizedText} from "../../../util";
 import Yasqe from "@triply/yasqe";
 import './Query.scss';
 import SPARQLDataTable from "../../../components/Yasr/SPARQLDataTable";
-import Alert from "../../../components/Alert";
-import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
+import {Banner, Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import Layout from "../../../components/Layout";
 import MainBody from "../../../components/Layout/MainBody";
 import Split from "../../../components/Layout/Split";
@@ -86,7 +85,8 @@ export default class Query extends Component {
                             this.createYasgui()
                         });
                     }).catch((error) => {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading the prefixes from prefix.cc"/>);
+                    toast.error(<ToastContent type="error"
+                                              message="An error occurred while loading the prefixes from prefix.cc"/>);
 
                     this.setState({
                         prefixes: prefixes,
@@ -172,7 +172,20 @@ export default class Query extends Component {
     };
 
     render() {
-        const {hasDistribution, isLoading, distribution, prefixes, columns, rows, queryExecuted, error, message, isExecutingQuery, showEditor, executionTime} = this.state;
+        const {
+            hasDistribution,
+            isLoading,
+            distribution,
+            prefixes,
+            columns,
+            rows,
+            queryExecuted,
+            error,
+            message,
+            isExecutingQuery,
+            showEditor,
+            executionTime
+        } = this.state;
         const {location, user, embedded} = this.props;
 
         let title = (hasDistribution && !isLoading) ? localizedText(distribution.metadata.title, 'en') : 'Query';
@@ -185,7 +198,7 @@ export default class Query extends Component {
             embedded={embedded}
             fullWidth
         >
-            <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true} />
+            <Header user={user} embedded={embedded} title={title} hideTitle={true} forceSmallHeader={true}/>
 
             <MainBody isLoading={isLoading} className="QueryComponent">
                 <Split sizes={[40, 60]}>
@@ -225,10 +238,10 @@ export default class Query extends Component {
                             fullUrl={distribution.fullUrl}
                         />}
 
-                        {error && <Alert variant="error" icon="errorCircled">
-                            <strong>An error occurred, please check your query and try again</strong>
-                            {message}
-                        </Alert>}
+                        {error && <Banner type="error"
+                                          title="An error occurred, please check your query and try again"
+                                          description={message}
+                        />}
                     </div>
                 </Split>
             </MainBody>

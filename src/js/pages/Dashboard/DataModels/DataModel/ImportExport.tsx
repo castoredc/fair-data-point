@@ -54,7 +54,6 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
     parseFile = (value: FileList | null, setFieldValue) => {
         if (value !== null && value.length > 0) {
             const file = value.item(0);
-            console.log(file)
 
             if (file !== null && file.type === 'application/json') {
                 let reader = new FileReader();

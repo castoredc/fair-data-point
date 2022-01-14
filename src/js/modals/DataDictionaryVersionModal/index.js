@@ -18,8 +18,8 @@ export default class DataDictionaryVersionModal extends Component {
     }
 
     handleChange = (event) => {
-        const { data } = this.state;
-        const { latestVersion } = this.props;
+        const {data} = this.state;
+        const {latestVersion} = this.props;
         const versionType = event.target.value;
 
         const parsedVersion = latestVersion.split('.');
@@ -30,11 +30,11 @@ export default class DataDictionaryVersionModal extends Component {
 
         let newVersion = '';
 
-        if(versionType === 'major') {
+        if (versionType === 'major') {
             newVersion = (major + 1) + '.' + 0 + '.' + 0;
-        } else if(versionType === 'minor') {
+        } else if (versionType === 'minor') {
             newVersion = major + '.' + (minor + 1) + '.' + 0;
-        } else if(versionType === 'patch') {
+        } else if (versionType === 'patch') {
             newVersion = major + '.' + minor + '.' + (patch + 1);
         }
 
@@ -56,8 +56,8 @@ export default class DataDictionaryVersionModal extends Component {
     };
 
     render() {
-        const { show, handleClose, onSave, latestVersion } = this.props;
-        const { data, newVersion } = this.state;
+        const {show, handleClose, onSave, latestVersion} = this.props;
+        const {data, newVersion} = this.state;
 
         const required = "This field is required";
 
@@ -102,7 +102,7 @@ export default class DataDictionaryVersionModal extends Component {
 }
 
 const versionTypes = [
-    { value: 'major', label: 'Major changes' },
-    { value: 'minor', label: 'Minor changes' },
-    { value: 'patch', label: 'Patch' },
+    {value: 'major', label: 'Major changes'},
+    {value: 'minor', label: 'Minor changes'},
+    {value: 'patch', label: 'Patch'},
 ];

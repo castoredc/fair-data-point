@@ -23,7 +23,7 @@ export default class Catalog extends Component {
             hasLoadedCatalog: false,
             fdp: null,
             catalog: null,
-            currentItem:     null,
+            currentItem: null,
         };
 
         this.datasetsRef = React.createRef();
@@ -103,10 +103,10 @@ export default class Catalog extends Component {
                         </div>}
                     </div>
                     <div className="SideCol">
-                        <MetadataSideBar type="catalog" metadata={catalog.metadata} name={title} />
+                        <MetadataSideBar type="catalog" metadata={catalog.metadata} name={title}/>
                     </div>
 
-                    <AssociatedItemsBar items={catalog.count} current={currentItem} onClick={this.handleItemChange} />
+                    <AssociatedItemsBar items={catalog.count} current={currentItem} onClick={this.handleItemChange}/>
 
                     <StudyList
                         visible={currentItem === 'study'}

@@ -2,7 +2,7 @@ import ScrollShadow from "../ScrollShadow";
 import {classNames} from "../../util";
 import React from "react";
 
-export const StudyStructureNavigator = ({ contents, selectedStep, handleStepSwitch }) => {
+export const StudyStructureNavigator = ({contents, selectedStep, handleStepSwitch}) => {
     return <div className="StudyStructureNavigator">
         <ScrollShadow>
             <div className="StructureElements">

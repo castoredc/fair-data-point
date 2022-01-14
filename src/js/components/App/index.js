@@ -46,8 +46,7 @@ class App extends Component {
             .then((response) => {
                 let user = null;
 
-                if(Object.keys(response.data).length !== 0)
-                {
+                if (Object.keys(response.data).length !== 0) {
                     user = response.data;
                 }
 
@@ -61,7 +60,7 @@ class App extends Component {
                     isLoading: false,
                 });
 
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastContent type="error" message="An error occurred"/>);
             });
     };
 
@@ -84,7 +83,7 @@ class App extends Component {
                     draggable={false}
                     pauseOnHover
                 />
-                {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> : <Routes user={user} embedded={embedded} />}
+                {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> : <Routes user={user} embedded={embedded}/>}
             </div>
         );
     }

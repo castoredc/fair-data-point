@@ -54,7 +54,8 @@ export default class SideTabs extends Component {
 
                                 {tab.badge && <span className="SideTabsNavItemBadge">{tab.badge}</span>}
                                 {(tab.icons && tab.icons.length > 0) && <span className="SideTabsNavItemIcons">
-                                    {tab.icons.map((icon, key) => <span key={key} className="SideTabsNavItemIcon"><Tooltip
+                                    {tab.icons.map((icon, key) => <span key={key}
+                                                                        className="SideTabsNavItemIcon"><Tooltip
                                         content={icon.title}
                                         hideOnBlur
                                     >

@@ -59,7 +59,7 @@ export default class DistributionContentsRdf extends Component {
     };
 
     onSave = () => {
-        const { selectedMapping } = this.state;
+        const {selectedMapping} = this.state;
 
         this.setState({
             addedMapping: selectedMapping,

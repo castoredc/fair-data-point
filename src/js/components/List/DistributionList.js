@@ -88,7 +88,7 @@ export default class DistributionList extends Component {
         }
 
         if (distributions === null) {
-            return <LoadingOverlay accessibleLabel="Loading distributions" content="" />;
+            return <LoadingOverlay accessibleLabel="Loading distributions" content=""/>;
         }
 
         return <div className={classNames('Distributions', className)}>

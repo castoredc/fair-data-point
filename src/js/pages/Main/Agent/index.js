@@ -15,9 +15,9 @@ export default class Agent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading:       true,
-            agent:           null,
-            currentItem:     null,
+            isLoading: true,
+            agent: null,
+            currentItem: null,
         };
     }
 
@@ -26,12 +26,12 @@ export default class Agent extends Component {
     }
 
     getAgent = () => {
-        const { match } = this.props;
+        const {match} = this.props;
 
         axios.get('/api/agent/details/' + match.params.slug)
             .then((response) => {
                 this.setState({
-                    agent:     response.data,
+                    agent: response.data,
                     currentItem: Object.keys(response.data.count).find(key => response.data.count[key] > 0) ?? null,
                     isLoading: false,
                 });
@@ -42,7 +42,7 @@ export default class Agent extends Component {
                 });
 
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the details';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
@@ -53,8 +53,8 @@ export default class Agent extends Component {
     }
 
     render() {
-        const { isLoading, agent, currentItem } = this.state;
-        const { user, embedded, location } = this.props;
+        const {isLoading, agent, currentItem} = this.state;
+        const {user, embedded, location} = this.props;
 
         const title = agent ? agent.name : null;
 
@@ -66,11 +66,11 @@ export default class Agent extends Component {
             isLoading={isLoading}
             embedded={embedded}
         >
-            <Header user={user} embedded={embedded} title={title} />
+            <Header user={user} embedded={embedded} title={title}/>
 
             <MainBody isLoading={isLoading}>
                 {agent && (<>
-                    <AssociatedItemsBar items={agent.count} current={currentItem} onClick={this.handleItemChange} />
+                    <AssociatedItemsBar items={agent.count} current={currentItem} onClick={this.handleItemChange}/>
 
                     <CatalogList
                         visible={currentItem === 'catalog'}

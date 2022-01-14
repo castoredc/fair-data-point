@@ -20,7 +20,7 @@ export default class Language extends Component {
     }
 
     getLanguage = () => {
-        const { code } = this.props;
+        const {code} = this.props;
 
         axios.get('/api/language/' + code)
             .then((response) => {
@@ -39,9 +39,9 @@ export default class Language extends Component {
     };
 
     render() {
-        const { language, isLoading } = this.state;
+        const {language, isLoading} = this.state;
 
-        if(isLoading || ! language) {
+        if (isLoading || !language) {
             return <div className="Language">&nbsp;</div>;
         }
 

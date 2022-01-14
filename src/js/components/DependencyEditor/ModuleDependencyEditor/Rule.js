@@ -11,17 +11,17 @@ export const Rule = ({
                          schema,
                      }) => {
     const {
-              classNames,
-              controls,
-              fields,
-              getInputType,
-              getLevel,
-              getOperators,
-              getValueEditorType,
-              getValues,
-              onPropChange,
-              onRuleRemove,
-          } = schema;
+        classNames,
+        controls,
+        fields,
+        getInputType,
+        getLevel,
+        getOperators,
+        getValueEditorType,
+        getValues,
+        onPropChange,
+        onRuleRemove,
+    } = schema;
 
     const onElementChanged = (property, value) => {
         onPropChange(property, value, id);

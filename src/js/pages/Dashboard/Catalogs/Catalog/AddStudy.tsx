@@ -34,7 +34,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
         const {showModal} = this.state;
 
         this.setState({
-            showModal:       {
+            showModal: {
                 ...showModal,
                 [type]: true,
             },
@@ -61,14 +61,15 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     };
 
     handleAdd = () => {
-        const { catalog } = this.props;
-        const { selectedStudy } = this.state;
+        const {catalog} = this.props;
+        const {selectedStudy} = this.state;
 
         axios.post('/api/catalog/' + catalog + '/study/add', {
             studyId: selectedStudy.id
         })
             .then((response) => {
-                toast.success(<ToastContent type="success" message="The study was successfully added to the catalog" />, {
+                toast.success(<ToastContent type="success"
+                                            message="The study was successfully added to the catalog"/>, {
                     position: "top-right"
                 });
 
@@ -81,22 +82,24 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
             })
             .catch((error) => {
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while adding the study to the catalog';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     render() {
-        const { catalog } = this.props;
-        const { showModal, selectedStudy, addedStudy } = this.state;
+        const {catalog} = this.props;
+        const {showModal, selectedStudy, addedStudy} = this.state;
 
         return <div className="PageBody">
             <Modal
                 open={showModal.newStudy}
-                onClose={() => {this.closeModal('newStudy')}}
+                onClose={() => {
+                    this.closeModal('newStudy')
+                }}
                 title="Add new study"
                 accessibleName="Add new study"
             >
-                <StudyForm />
+                <StudyForm/>
             </Modal>
 
             {selectedStudy && <ConfirmModal
@@ -104,17 +107,20 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 action="Add study"
                 variant="primary"
                 onConfirm={this.handleAdd}
-                onCancel={() => {this.closeModal('confirm')}}
+                onCancel={() => {
+                    this.closeModal('confirm')
+                }}
                 show={showModal.confirm}
             >
                 Are you sure you want to add <strong>{selectedStudy.name}</strong> to this catalog?
             </ConfirmModal>}
 
 
-
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
-                    <Button icon="add" className="AddButton" onClick={() => {this.openModal('newStudy')}}>Create new study</Button>
+                    <Button icon="add" className="AddButton" onClick={() => {
+                        this.openModal('newStudy')
+                    }}>Create new study</Button>
                 </Stack>
             </div>
 
