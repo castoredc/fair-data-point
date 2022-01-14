@@ -17,6 +17,7 @@ use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
 use App\Command\Data\DataModel\GetDataModelsCommand;
 use App\Command\Data\DataModel\ImportDataModelCommand;
+use App\Command\Data\DataModel\UpdateDataModelCommand;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
@@ -127,6 +128,30 @@ class DataModelApiController extends ApiController
         $this->denyAccessUnlessGranted('view', $dataModel);
 
         return new JsonResponse((new DataModelApiResource($dataModel))->toArray());
+    }
+
+    /**
+     * @Route("/{model}", methods={"POST"}, name="api_model_update")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     */
+    public function updateDataModel(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        try {
+            $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
+            assert($parsed instanceof DataModelApiRequest);
+
+            $bus->dispatch(new UpdateDataModelCommand($dataModel, $parsed->getTitle(), $parsed->getDescription()));
+
+            return new JsonResponse([]);
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+        } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating a data model', ['exception' => $e]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

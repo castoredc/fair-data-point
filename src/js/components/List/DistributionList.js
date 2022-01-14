@@ -4,8 +4,8 @@ import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {LoadingOverlay, Pagination} from "@castoredc/matter";
-import DistributionListItem from "../ListItem/DistributionListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
+import ListItem from "components/ListItem";
 
 export default class DistributionList extends Component {
     constructor(props) {
@@ -104,13 +104,14 @@ export default class DistributionList extends Component {
                     if (distribution.hasMetadata === false) {
                         return null;
                     }
-                    return <DistributionListItem key={distribution.id}
-                                                 newWindow={embedded}
-                                                 state={state}
-                                                 link={distribution.relativeUrl}
-                                                 name={localizedText(distribution.metadata.title, 'en')}
-                                                 description={localizedText(distribution.metadata.description, 'en')}
-                                                 smallIcon={(distribution.accessRights === 2 || distribution.accessRights === 3) && 'lock'}
+                    return <ListItem
+                        key={distribution.id}
+                        title={localizedText(distribution.metadata.title, 'en')}
+                        description={localizedText(distribution.metadata.description, 'en')}
+                        link={distribution.relativeUrl}
+                        state={state}
+                        newWindow={embedded}
+                        smallIcon={(distribution.accessRights === 2 || distribution.accessRights === 3) && 'lock'}
                     />
                 })}
 

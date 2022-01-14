@@ -17,6 +17,8 @@ import {PrivateRoute, ProtectedRoute} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
 import SelectCatalog from "pages/Dashboard/Studies/SelectCatalog";
 import DataModel from "pages/Dashboard/DataModels/DataModel";
+import AddCatalog from "pages/Dashboard/Catalogs/AddCatalog";
+import AddDataModel from "pages/Dashboard/DataModels/AddDataModel";
 
 interface DashboardProps extends RouteComponentProps<any> {
     user: any,
@@ -117,6 +119,7 @@ export default class Dashboard extends Component<DashboardProps> {
                     <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/studies/:study" component={Study} user={user} />
 
+                    <PrivateRoute path="/dashboard/catalogs/add" exact component={AddCatalog} user={user} />
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add" component={Dataset} user={user} />
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution" component={Distribution} user={user} />
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" component={Dataset} user={user} />
@@ -126,6 +129,7 @@ export default class Dashboard extends Component<DashboardProps> {
                     <ProtectedRoute path="/dashboard/fdp" exact component={DashboardTabs} user={user} />
 
                     <PrivateRoute path="/dashboard/data-models" exact component={DashboardTabs} user={user} />
+                    <PrivateRoute path="/dashboard/data-models/add" exact component={AddDataModel} user={user} />
 
                     <PrivateRoute path="/dashboard/data-models/:model" component={DataModel} user={user} />
 

@@ -7,10 +7,10 @@ import './App.scss'
 import {toast, ToastContainer} from "react-toastify";
 import axios from "axios";
 import ToastContent from "../ToastContent";
-import LoadingScreen from "../LoadingScreen";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {classNames} from "../../util";
+import {LoadingOverlay} from "@castoredc/matter";
 
 class App extends Component {
     constructor(props) {
@@ -84,7 +84,7 @@ class App extends Component {
                     draggable={false}
                     pauseOnHover
                 />
-                {isLoading ? <LoadingScreen showLoading={true} /> : <Routes user={user} embedded={embedded} />}
+                {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> : <Routes user={user} embedded={embedded} />}
             </div>
         );
     }

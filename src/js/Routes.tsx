@@ -20,7 +20,7 @@ axios.interceptors.response.use(function (response) {
     }
 });
 
-interface RoutesProps extends RouteComponentProps<any> {
+interface RoutesProps {
     user: any,
     embedded: boolean,
 }

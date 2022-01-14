@@ -15,6 +15,7 @@ import Nodes from "pages/Dashboard/DataModels/DataModel/Nodes";
 import Prefixes from "pages/Dashboard/DataModels/DataModel/Prefixes";
 import Versions from "pages/Dashboard/DataModels/DataModel/Versions";
 import Preview from "pages/Dashboard/DataModels/DataModel/Preview";
+import DataModelForm from "components/Form/Data/DataModelForm";
 
 interface DataModelProps extends RouteComponentProps<any> {
 }
@@ -264,9 +265,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                 <Switch>
                     <Route path="/dashboard/data-models/:model" exact
                            render={(props) => (
-                               <div>
-                                   {dataModel.description && <div>{dataModel.description}</div>}
-                               </div>
+                               <DataModelForm history={history} dataModel={dataModel}/>
                            )}
                     />
                     <Route path="/dashboard/data-models/:model/versions" exact
