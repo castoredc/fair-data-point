@@ -1,16 +1,16 @@
 import {Component} from 'react';
 
 class DocumentTitle extends Component {
-  update = () => {
-    document.title = this.props.title;
-  };
+    update = () => {
+        document.title = this.props.title;
+    };
 
-  componentDidMount = this.update;
-  componentDidUpdate = this.update;
+    componentDidMount = this.update;
+    componentDidUpdate = this.update;
 
-  render() {
-    return null;
-  }
+    render() {
+        return null;
+    }
 }
 
 export default DocumentTitle;

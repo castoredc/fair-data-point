@@ -35,17 +35,17 @@ $filtersPadding: 30px;
   }
 
   &.Overlay {
-    position: fixed!important;
+    position: fixed !important;
     top: 0;
     right: 0;
     z-index: 1002;
     background: $generic-white;
-    padding: 15px!important;
+    padding: 15px !important;
     width: 100%;
     height: 100%;
 
     & > div > div:first-child {
-      display: none!important;
+      display: none !important;
     }
 
     & > div {
@@ -65,7 +65,7 @@ $filtersPadding: 30px;
   }
 
   &::before {
-    display: none!important;
+    display: none !important;
   }
 
   .OverlayHeader {
@@ -83,13 +83,13 @@ $filtersPadding: 30px;
       position: absolute;
       top: 0;
       right: 0;
-      background-color: rgba(0,0,0,0);
+      background-color: rgba(0, 0, 0, 0);
       border: none;
       color: $neutral-800;
 
       &:hover {
-        background-color: $pale-grey!important;
-        color: $azul!important;
+        background-color: $pale-grey !important;
+        color: $azul !important;
       }
     }
   }

@@ -36,19 +36,20 @@ export default class DataModelModulePreview extends Component {
         const {repeated, dependent, dependencies, rdf, visualization} = this.props;
 
         let alerts = <div className="DataModelModuleAlerts">
-            {repeated && <Banner compact customIcon={<CopyIcon />} description="This group is repeated for every instance of a specific survey or report" />}
-            {dependent && <Banner compact customIcon={<DecisionIcon />} description={<>
+            {repeated && <Banner compact customIcon={<CopyIcon/>}
+                                 description="This group is repeated for every instance of a specific survey or report"/>}
+            {dependent && <Banner compact customIcon={<DecisionIcon/>} description={<>
                 This group is dependent and will only be rendered when:
 
                 <div className="DependencyDescription">{this.renderDependencies(dependencies.description)}</div>
-            </>} />}
+            </>}/>}
         </div>;
 
         const nodes = visualization.nodes.map((node) => {
             node.shape = 'box';
             node.margin = 10;
 
-            if(node.type === 'value') {
+            if (node.type === 'value') {
                 node.shape = 'ellipse';
                 node.margin = 20;
 
@@ -58,18 +59,18 @@ export default class DataModelModulePreview extends Component {
                 };
             }
 
-            if(node.type === 'record') {
+            if (node.type === 'record') {
                 node.shape = 'circle';
             }
 
-            if(node.type === 'external') {
+            if (node.type === 'external') {
                 node.color = {
                     border: '#c4474d',
                     background: '#ffcbcb',
                 };
             }
 
-            if(node.type === 'internal') {
+            if (node.type === 'internal') {
                 node.color = {
                     border: '#efcc6f',
                     background: '#ffe5c8',
@@ -106,29 +107,29 @@ export default class DataModelModulePreview extends Component {
 
         return <div className="PageTabs">
             <Tabs
-            onChange={this.changeTab}
-            selected={selectedTab}
-            tabs={{
-                visualization: {
-                    title:   'Visualization',
-                    content: <div className="FullHeightPageTab">
-                        {alerts}
-                        {rdf !== '' ? <VisNetwork className="FullHeightNetwork" nodes={nodes} edges={edges} /> :
-                            <div className="NoResults">There is no preview available.</div>}
-                    </div>,
-                },
-                rdf: {
-                    title:   'RDF',
-                    content: <>
-                        {alerts}
-                        {rdf !== '' ? <ScrollShadow>
-                                <Highlight content={rdf}/>
-                        </ScrollShadow> :
-                            <div className="NoResults">There is no preview available.</div>}
-                    </>,
-                },
-            }}
-        />
+                onChange={this.changeTab}
+                selected={selectedTab}
+                tabs={{
+                    visualization: {
+                        title: 'Visualization',
+                        content: <div className="FullHeightPageTab">
+                            {alerts}
+                            {rdf !== '' ? <VisNetwork className="FullHeightNetwork" nodes={nodes} edges={edges}/> :
+                                <div className="NoResults">There is no preview available.</div>}
+                        </div>,
+                    },
+                    rdf: {
+                        title: 'RDF',
+                        content: <>
+                            {alerts}
+                            {rdf !== '' ? <ScrollShadow>
+                                    <Highlight content={rdf}/>
+                                </ScrollShadow> :
+                                <div className="NoResults">There is no preview available.</div>}
+                        </>,
+                    },
+                }}
+            />
         </div>;
     }
 }

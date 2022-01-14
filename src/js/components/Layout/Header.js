@@ -14,12 +14,12 @@ export default class Header extends Component {
         super(props);
 
         this.state = {
-            mobile:        null,
-            smallHeader:   false,
-            showModal:     false,
+            mobile: null,
+            smallHeader: false,
+            showModal: false,
             loginModalUrl: null,
             loginModalView: null,
-            loginModalServer:        null,
+            loginModalServer: null,
         };
     };
 
@@ -83,7 +83,10 @@ export default class Header extends Component {
     };
 
     closeModal = () => {
-        const {onModalClose = () => {}} = this.props;
+        const {
+            onModalClose = () => {
+            }
+        } = this.props;
         this.setState({
             showModal: false,
         }, () => {
@@ -92,7 +95,18 @@ export default class Header extends Component {
     };
 
     render() {
-        const {embedded, className, title, badge, location, data, breadcrumbs, user, hideTitle = false, forceSmallHeader = false} = this.props;
+        const {
+            embedded,
+            className,
+            title,
+            badge,
+            location,
+            data,
+            breadcrumbs,
+            user,
+            hideTitle = false,
+            forceSmallHeader = false
+        } = this.props;
         const {mobile, smallHeader, showModal, loginModalUrl, loginModalServer, loginModalView} = this.state;
 
         const adminMenuItems = [];
@@ -100,13 +114,13 @@ export default class Header extends Component {
         const defaultMenuItems = [
             {
                 destination: '/dashboard',
-                icon:        'settings',
-                label:       'Dashboard',
+                icon: 'settings',
+                label: 'Dashboard',
             },
             {
                 destination: '/logout',
-                icon:        'logOut',
-                label:       'Log out',
+                icon: 'logOut',
+                label: 'Log out',
             },
         ];
 
@@ -122,8 +136,9 @@ export default class Header extends Component {
             />
             {title && <DocumentTitle title={title}/>}
             {!embedded && <div className="Header">
-                <div className={classNames('Spacing', forceSmallHeader && 'Small')} />
-                {!mobile && <div className={classNames('MainHeader', smallHeader && 'Small', forceSmallHeader && 'Small')}>
+                <div className={classNames('Spacing', forceSmallHeader && 'Small')}/>
+                {!mobile &&
+                <div className={classNames('MainHeader', smallHeader && 'Small', forceSmallHeader && 'Small')}>
                     <div className="container">
                         <Stack distribution="equalSpacing">
                             <div className="HeaderLogoCol">
@@ -156,7 +171,7 @@ export default class Header extends Component {
                             <div className="HeaderBackCol">
                                 {(breadcrumbs && breadcrumbs.previous) && <Link to={{
                                     pathname: breadcrumbs.previous.path,
-                                    state:    breadcrumbs.previous.state,
+                                    state: breadcrumbs.previous.state,
                                 }}><Button
                                     icon="arrowLeft"
                                     iconDescription={`Go back to ${localizedText(breadcrumbs.previous.title, 'en')}`}

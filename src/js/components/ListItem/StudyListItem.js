@@ -5,23 +5,31 @@ import ListItem from "./index";
 
 export default class StudyListItem extends Component {
     render() {
-        const { link, name, state, recruitmentStatus, badge, description, condition, intervention, centers, newWindow = false} = this.props;
+        const {
+            link,
+            name,
+            state,
+            recruitmentStatus,
+            badge,
+            description,
+            condition,
+            intervention,
+            centers,
+            newWindow = false
+        } = this.props;
 
         let badgeText = badge;
 
-        if(recruitmentStatus)
-        {
+        if (recruitmentStatus) {
             badgeText = RecruitmentStatus[recruitmentStatus];
         }
 
         let tags = [];
 
-        if(condition !== null && condition !== '')
-        {
+        if (condition !== null && condition !== '') {
             tags.push(condition);
         }
-        if(intervention !== null && intervention !== '')
-        {
+        if (intervention !== null && intervention !== '') {
             tags.push(intervention);
         }
 

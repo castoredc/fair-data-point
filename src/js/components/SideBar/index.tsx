@@ -40,8 +40,8 @@ const SideBar: FC<SideBarProps> = ({location, items, back, onVersionChange}) => 
                                         options={item.versions}
                                         menuPlacement="auto"
                                         width="fullWidth"
-                                        getOptionLabel={({label}) => label }
-                                        getOptionValue={({value}) => value }
+                                        getOptionLabel={({label}) => label}
+                                        getOptionValue={({value}) => value}
                                     />
                                 </div>
                             </FormItem>

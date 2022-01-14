@@ -6,7 +6,7 @@ import {turtle} from "./turtle";
 
 class Highlight extends Component {
     render() {
-        const { content } = this.props;
+        const {content} = this.props;
 
         let highlighted = Prism.highlight(content, turtle, "turtle");
         highlighted = highlighted.replace(/##record_id##/gm, '<span class="Record"><span>Record ID</span></span>');
@@ -14,7 +14,7 @@ class Highlight extends Component {
         highlighted = highlighted.replace(/##([^#]*)##/gm, '<span class="Variable"><span>$1</span></span>');
 
         return (
-            <div className="Highlight" dangerouslySetInnerHTML={{ __html: highlighted }} />
+            <div className="Highlight" dangerouslySetInnerHTML={{__html: highlighted}}/>
         );
     }
 }

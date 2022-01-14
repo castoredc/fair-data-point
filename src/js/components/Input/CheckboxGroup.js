@@ -13,21 +13,23 @@ export default class CheckboxGroup extends Component {
     }
 
     onCheckboxChange = (e) => {
-        const { onChange, name } = this.props;
-        const { selection } = this.state;
+        const {onChange, name} = this.props;
+        const {selection} = this.state;
 
         let newSelection = selection;
 
-        if(e.target.checked) {
+        if (e.target.checked) {
             newSelection.push(e.target.value);
         } else {
-            newSelection = newSelection.filter(function(option) { return option !== e.target.value });
+            newSelection = newSelection.filter(function (option) {
+                return option !== e.target.value
+            });
         }
 
         this.setState({
             selection: newSelection
         }, () => {
-           onChange({target: { name: name, value: newSelection}});
+            onChange({target: {name: name, value: newSelection}});
         });
     };
 
@@ -35,10 +37,12 @@ export default class CheckboxGroup extends Component {
         const {
             options,
             value
-          } = this.props;
+        } = this.props;
 
         return (
-            <div className="CheckboxFormGroup" ref={(r) => { this.input = r; }}>
+            <div className="CheckboxFormGroup" ref={(r) => {
+                this.input = r;
+            }}>
                 {options.map((option) => {
                     return <ChoiceOption
                         key={option.value}
@@ -46,7 +50,9 @@ export default class CheckboxGroup extends Component {
                         type="checkbox"
                         onChange={this.onCheckboxChange}
                         value={option.value}
-                        checked={value.find((valueOption) => {return valueOption === option.value}) || false}
+                        checked={value.find((valueOption) => {
+                            return valueOption === option.value
+                        }) || false}
                     />
                 })}
             </div>

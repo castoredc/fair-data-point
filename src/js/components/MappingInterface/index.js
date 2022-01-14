@@ -60,10 +60,10 @@ export default class MappingInterface extends Component {
                     versionId={versionId}
                     onSave={onSave}
                 />
-             )}
+            )}
 
             {(structure && mapping && type === 'module') && (
-                 <ModuleMappingInterface
+                <ModuleMappingInterface
                     mapping={mapping}
                     structure={structure}
                     dataset={dataset}

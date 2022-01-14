@@ -11,19 +11,19 @@ export const RuleGroup = ({
                               not,
                           }) => {
     const {
-              combinators,
-              controls,
-              createRule,
-              createRuleGroup,
-              getLevel,
-              isRuleGroup,
-              onGroupAdd,
-              onGroupRemove,
-              onPropChange,
-              onRuleAdd,
-              showCombinatorsBetweenRules,
-              showNotToggle,
-          } = schema;
+        combinators,
+        controls,
+        createRule,
+        createRuleGroup,
+        getLevel,
+        isRuleGroup,
+        onGroupAdd,
+        onGroupRemove,
+        onPropChange,
+        onRuleAdd,
+        showCombinatorsBetweenRules,
+        showNotToggle,
+    } = schema;
 
     const hasParentGroup = () => !!parentId;
 

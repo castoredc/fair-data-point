@@ -15,9 +15,9 @@ export default class ModuleDependencyEditor extends Component {
         this.state = {
             fields: props.valueNodes.map((node) => {
                 return {
-                    name:      node.id,
-                    label:     node.title,
-                    dataType:  node.value.dataType,
+                    name: node.id,
+                    label: node.title,
+                    dataType: node.value.dataType,
                     valueType: node.value.value,
                 }
             }),
@@ -55,16 +55,16 @@ export default class ModuleDependencyEditor extends Component {
                     showCombinatorsBetweenRules={true}
                     onQueryChange={handleChange}
                     controlElements={{
-                        addGroupAction:     (props) => <Button icon="add" buttonType="primary"
-                                                               onClick={props.handleOnClick}>Group</Button>,
-                        removeGroupAction:  (props) => <Button icon="trash" buttonType="danger"
-                                                               onClick={props.handleOnClick}
-                                                               iconDescription="Delete group"/>,
-                        addRuleAction:      (props) => <Button icon="add" buttonType="primary"
-                                                               onClick={props.handleOnClick}>Condition</Button>,
-                        removeRuleAction:   (props) => <Button icon="trash" buttonType="danger"
-                                                               onClick={props.handleOnClick}
-                                                               iconDescription="Delete condition"/>,
+                        addGroupAction: (props) => <Button icon="add" buttonType="primary"
+                                                           onClick={props.handleOnClick}>Group</Button>,
+                        removeGroupAction: (props) => <Button icon="trash" buttonType="danger"
+                                                              onClick={props.handleOnClick}
+                                                              iconDescription="Delete group"/>,
+                        addRuleAction: (props) => <Button icon="add" buttonType="primary"
+                                                          onClick={props.handleOnClick}>Condition</Button>,
+                        removeRuleAction: (props) => <Button icon="trash" buttonType="danger"
+                                                             onClick={props.handleOnClick}
+                                                             iconDescription="Delete condition"/>,
                         combinatorSelector: (props) => <Dropdown value={props.value}
                                                                  onChange={(e) => props.handleOnChange(e.value)}
                                                                  menuPosition="fixed"
@@ -73,24 +73,24 @@ export default class ModuleDependencyEditor extends Component {
                                                                      return {value: option.name, label: option.label};
                                                                  })}
                         />,
-                        fieldSelector:      (props) => <Dropdown value={props.value}
-                                                                 onChange={(e) => props.handleOnChange(e.value)}
-                                                                 menuPosition="fixed"
-                                                                 width="tiny" options={props.options.map((option) => {
+                        fieldSelector: (props) => <Dropdown value={props.value}
+                                                            onChange={(e) => props.handleOnChange(e.value)}
+                                                            menuPosition="fixed"
+                                                            width="tiny" options={props.options.map((option) => {
                             return {value: option.name, label: option.label};
                         })}
                         />,
-                        operatorSelector:   (props) => <Dropdown value={props.value}
-                                                                 onChange={(e) => props.handleOnChange(e.value)}
-                                                                 menuPosition="fixed"
-                                                                 width="minimum"
-                                                                 options={props.options.map((option) => {
-                                                                     return {value: option.name, label: option.label};
-                                                                 })}
+                        operatorSelector: (props) => <Dropdown value={props.value}
+                                                               onChange={(e) => props.handleOnChange(e.value)}
+                                                               menuPosition="fixed"
+                                                               width="minimum"
+                                                               options={props.options.map((option) => {
+                                                                   return {value: option.name, label: option.label};
+                                                               })}
                         />,
-                        ruleGroup:          (props) => <RuleGroup {...props} />,
-                        rule:               (props) => <Rule {...props} />,
-                        valueEditor:        (props) => <ValueEditor prefixes={prefixes} {...props} />,
+                        ruleGroup: (props) => <RuleGroup {...props} />,
+                        rule: (props) => <Rule {...props} />,
+                        valueEditor: (props) => <ValueEditor prefixes={prefixes} {...props} />,
                     }}
                     operators={operators}
                     getOperators={this.getOperators}

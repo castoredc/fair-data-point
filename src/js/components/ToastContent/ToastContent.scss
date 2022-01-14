@@ -10,12 +10,15 @@
 .ToastContent.info .ToastContentIcon svg path {
   fill: #3498db;
 }
+
 .ToastContent.success .ToastContentIcon svg path {
   fill: #07bc0c;
 }
+
 .ToastContent.warning .ToastContentIcon svg path {
   fill: #f1c40f;
 }
+
 .ToastContent.error .ToastContentIcon svg path {
   fill: #e74c3c;
 }

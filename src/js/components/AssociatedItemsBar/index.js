@@ -4,7 +4,7 @@ import {classNames} from "../../util";
 
 class AssociatedItemsBarItem extends Component {
     render() {
-        const { count, onClick, type, current} = this.props;
+        const {count, onClick, type, current} = this.props;
 
         return <button className={classNames('AssociatedItemsBarItem', current === type && 'active')}
                        onClick={() => onClick(type)}
@@ -27,7 +27,7 @@ export default class AssociatedItemsBar extends Component {
         Object.entries(items).forEach(([key, value]) => {
             const object = {type: key, count: value};
 
-            if(value > 0) {
+            if (value > 0) {
                 withContent.push(object);
             } else {
                 withoutContent.push(object);
@@ -38,7 +38,8 @@ export default class AssociatedItemsBar extends Component {
 
         return <div className="AssociatedItemsBar">
             {content.map((item) => {
-                return <AssociatedItemsBarItem key={item.type} count={item.count} type={item.type} current={current} onClick={onClick} />
+                return <AssociatedItemsBarItem key={item.type} count={item.count} type={item.type} current={current}
+                                               onClick={onClick}/>
             })}
         </div>;
     }

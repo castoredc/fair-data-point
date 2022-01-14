@@ -4,7 +4,13 @@ import {Button, Stack} from "@castoredc/matter";
 
 export default class DataModelModule extends Component {
     render() {
-        const {groupedTriples, openModuleModal, openTripleModal, openRemoveTripleModal, openAddModuleModal} = this.props;
+        const {
+            groupedTriples,
+            openModuleModal,
+            openTripleModal,
+            openRemoveTripleModal,
+            openAddModuleModal
+        } = this.props;
 
         return <div className="DataModelModule">
             <div className="ButtonBar">

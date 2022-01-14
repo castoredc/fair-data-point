@@ -13,7 +13,7 @@ class Publishers extends Component {
                 let component = null;
 
                 if (publisher.type === 'person') {
-                    component = <Person person={publisher.person} />;
+                    component = <Person person={publisher.person}/>;
                 } else if (publisher.type === 'organization') {
                     component = <Organization
                         organization={publisher.organization}

@@ -51,7 +51,7 @@ export default class DistributionContentsDependencyEditor extends Component {
     }
 
     getOperators = (field) => {
-        if(typeof field === 'undefined') {
+        if (typeof field === 'undefined') {
             return operators;
         }
 

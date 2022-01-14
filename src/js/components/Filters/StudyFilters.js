@@ -56,11 +56,10 @@ export default class StudyFilters extends Component {
                     isLoadingCountries: false
                 });
 
-                if(error.response && typeof error.response.data.error !== "undefined")
-                {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
                 }
             });
     };
@@ -71,9 +70,9 @@ export default class StudyFilters extends Component {
 
         let url = '/api/study/filters';
 
-        if(catalog) {
+        if (catalog) {
             url = '/api/catalog/' + catalog.slug + '/study/filters';
-        } else if(agent) {
+        } else if (agent) {
             url = '/api/agent/details/' + agent.slug + '/study/filters'
         }
 
@@ -121,8 +120,9 @@ export default class StudyFilters extends Component {
             });
     };
 
-    handleChange = (event, callback = (() => {})) => {
-        const { data } = this.state;
+    handleChange = (event, callback = (() => {
+    })) => {
+        const {data} = this.state;
         const newData = {
             ...data,
             [event.target.name]: event.target.value,
@@ -150,12 +150,11 @@ export default class StudyFilters extends Component {
     };
 
     render() {
-        const { style, className, overlay, sticky, hidden, isLoading } = this.props;
-        const { isLoadingCountries, data, options } = this.state;
+        const {style, className, overlay, sticky, hidden, isLoading} = this.props;
+        const {isLoadingCountries, data, options} = this.state;
 
-        if(isLoadingCountries || isLoading)
-        {
-            return <LoadingOverlay accessibleLabel="Loading filters" content="" />;
+        if (isLoadingCountries || isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading filters" content=""/>;
         }
 
         const showStudyType = options.studyType.length > 0;
@@ -164,14 +163,16 @@ export default class StudyFilters extends Component {
 
         const showFilters = (options.studyType.length + options.methodType.length + options.country.length) > 0;
 
-        if(hidden) {
+        if (hidden) {
             return null;
         }
 
-        return <div className={classNames('FilterForm', overlay && 'Overlay', sticky && 'Sticky', className)} style={style}>
+        return <div className={classNames('FilterForm', overlay && 'Overlay', sticky && 'Sticky', className)}
+                    style={style}>
             <ValidatorForm
                 ref={node => (this.form = node)}
-                onSubmit={() => {}}
+                onSubmit={() => {
+                }}
             >
                 <div className="FilterBlock">
                     <Input
@@ -207,7 +208,9 @@ export default class StudyFilters extends Component {
                             isMulti
                             options={options.country}
                             name="country"
-                            onChange={(e) => {this.handleSelectChange('country', e)}}
+                            onChange={(e) => {
+                                this.handleSelectChange('country', e)
+                            }}
                         />
                     </FormItem>}
                 </div>}

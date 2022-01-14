@@ -30,9 +30,9 @@ export default class StudyStructure extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { types } = this.props;
+        const {types} = this.props;
 
-        if(types.length !== prevProps.types.length) {
+        if (types.length !== prevProps.types.length) {
             const selectableTypes = this.parseTypes();
             const selectedType = selectableTypes[0];
 
@@ -77,7 +77,7 @@ export default class StudyStructure extends Component {
 
         const selection = types || ['study', 'report', 'survey'];
 
-        if(!structure) {
+        if (!structure) {
             return selection;
         }
 
@@ -131,7 +131,15 @@ export default class StudyStructure extends Component {
 
     render() {
         const {selectable, selection, onSelect, dataFormat, dataType, dataTransformation} = this.props;
-        const {structure, isLoadingFields, fields, selectedStep, selectedType, isLoadingStructure, selectableTypes} = this.state;
+        const {
+            structure,
+            isLoadingFields,
+            fields,
+            selectedStep,
+            selectedType,
+            isLoadingStructure,
+            selectableTypes
+        } = this.state;
 
         if (isLoadingStructure) {
             return <LoadingOverlay accessibleLabel="Loading structure"/>;
@@ -180,8 +188,14 @@ export default class StudyStructure extends Component {
                 selected={selectedType}
                 tabs={{
                     study: {title: 'Study', content: selectableTypes.includes('study') ? tabContent : cannotBeSelected},
-                    report: {title: 'Reports', content: selectableTypes.includes('report') ? tabContent : cannotBeSelected},
-                    survey: {title: 'Surveys', content: selectableTypes.includes('survey') ? tabContent : cannotBeSelected},
+                    report: {
+                        title: 'Reports',
+                        content: selectableTypes.includes('report') ? tabContent : cannotBeSelected
+                    },
+                    survey: {
+                        title: 'Surveys',
+                        content: selectableTypes.includes('survey') ? tabContent : cannotBeSelected
+                    },
                 }}
             />
         </div>;

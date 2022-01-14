@@ -6,12 +6,12 @@ import {classNames} from "../../util";
 
 export default class BackButton extends Component {
     render() {
-        const { to, children, sidebar } = this.props;
+        const {to, children, sidebar} = this.props;
         return <div className={classNames('BackButton', sidebar && 'Sidebar')}>
             <LinkContainer to={to}>
                 <button>
                     <span className="circle">
-                        <ArrowLeftIcon height="10px" width="10px" />
+                        <ArrowLeftIcon height="10px" width="10px"/>
                     </span>
 
                     {children}

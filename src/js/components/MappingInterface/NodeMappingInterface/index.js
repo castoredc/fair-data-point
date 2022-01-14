@@ -138,11 +138,11 @@ export default class NodeMappingInterface extends Component {
         const dataType = mapping.node.value.dataType;
 
         const variables = selectedElements.map((element) => {
-            if(element.variableName) {
+            if (element.variableName) {
                 return element.variableName;
             }
 
-            if(element.slug) {
+            if (element.slug) {
                 return element.slug;
             }
 
