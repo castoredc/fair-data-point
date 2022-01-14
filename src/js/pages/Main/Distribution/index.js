@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import axios from "axios";
 import {classNames, localizedText} from "../../../util";
 import ListItem from "../../../components/ListItem";
-import Alert from "../../../components/Alert";
 import Header from "../../../components/Layout/Header";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
@@ -12,7 +11,8 @@ import {getBreadCrumbs} from "../../../utils/BreadcrumbUtils";
 import MetadataSideBar from "../../../components/MetadataSideBar";
 import './Distribution.scss';
 import {isGranted} from "utils/PermissionHelper";
-import {Button, CastorNest} from "@castoredc/matter";
+import {Banner} from "@castoredc/matter";
+import {LockIcon} from "@castoredc/matter-icons";
 
 export default class Distribution extends Component {
     constructor(props) {
@@ -73,7 +73,7 @@ export default class Distribution extends Component {
 
     render() {
         const {distribution, isLoadingDistribution, showLoginModal, loginModalUrl, loginModalView, server} = this.state;
-        const {location, user, embedded} = this.props;
+        const {history, location, user, embedded} = this.props;
 
         const breadcrumbs = getBreadCrumbs(location, {distribution});
 
@@ -98,43 +98,41 @@ export default class Distribution extends Component {
                     </div>
 
                     <div className="SideCol">
-                        <MetadataSideBar type="distribution" metadata={distribution.metadata} name={title} />
+                        <MetadataSideBar type="distribution" metadata={distribution.metadata} name={title}/>
                     </div>
 
-                    <hr className="Separator" />
+                    <hr className="Separator"/>
 
-                    <div className={classNames('MainCol DistributionAccess', !isGranted('access_data', distribution.permissions) && 'Restricted')}>
+                    <div
+                        className={classNames('MainCol DistributionAccess', !isGranted('access_data', distribution.permissions) && 'Restricted')}>
                         {(!user && !isGranted('access_data', distribution.permissions)) && <div className="Overlay">
-                            <Alert
-                                variant="info"
-                                icon="lock">
-                                <strong>The access to the data in this distribution is restricted.</strong>
-                                In order to access the data, please log in with your Castor EDC account.
-
-                                <div className="LoginForm Compact">
-                                    <div className="LoginButton">
-                                        <Button href={'/connect/castor/' + distribution.study.sourceServer + '?target_path=' + distribution.relativeUrl}>
-                                            <CastorNest className="LoginButtonLogo" />
-                                            Log in with Castor
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Alert>
+                            <Banner
+                                type="info"
+                                customIcon={<LockIcon/>}
+                                title="The access to the data in this distribution is restricted"
+                                description="In order to access the data, please log in with your Castor EDC account."
+                                actions={[
+                                    {
+                                        label: 'Log in with Castor',
+                                        onClick: () => history.push('/connect/castor/' + distribution.study.sourceServer + '?target_path=' + distribution.relativeUrl)
+                                    }
+                                ]}
+                            />
                         </div>
                         }
 
                         {user && !isGranted('access_data', distribution.permissions) && <div className="Overlay">
-                            <Alert
-                                variant="error"
-                                icon="lock">
-                                <strong>You do not have access to the data inside this distribution.</strong>
-
-                                The access to the data is restricted and your account has not been granted access.
-                            </Alert>
+                            <Banner
+                                type="error"
+                                customIcon={<LockIcon/>}
+                                title="You do not have access to the data inside this distribution"
+                                description="The access to the data is restricted and your account has not been granted access."
+                            />
                         </div>
                         }
 
-                        {isGranted('access_data', distribution.permissions) && <div className="DistributionAccessButtons">
+                        {isGranted('access_data', distribution.permissions) &&
+                        <div className="DistributionAccessButtons">
                             {distribution.isCached && <ListItem link={distribution.relativeUrl + '/query'}
                                                                 title="Query the data"
                                                                 description="Use SPARQL queries to extract specific information from this distribution."

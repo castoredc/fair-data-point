@@ -8,6 +8,7 @@ import ListItem from "components/ListItem";
 import {localizedText} from "../../../util";
 import {toRem} from "@castoredc/matter-utils";
 import DocumentTitle from "components/DocumentTitle";
+import BackButton from "components/BackButton";
 
 interface AddStudyProps extends RouteComponentProps<any> {
 }
@@ -132,6 +133,8 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
+                    <BackButton to="/dashboard/studies/add">Back to catalogs</BackButton>
+
                     <Heading type="Section">Choose a Study</Heading>
 
                     <p>

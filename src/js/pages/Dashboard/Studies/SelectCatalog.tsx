@@ -9,6 +9,7 @@ import {localizedText} from "../../../util";
 import {toRem} from "@castoredc/matter-utils";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import DocumentTitle from "components/DocumentTitle";
+import BackButton from "components/BackButton";
 
 interface SelectCatalogProps extends RouteComponentProps<any> {
 }
@@ -92,6 +93,8 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
+                    <BackButton to="/dashboard/studies">Back to studies</BackButton>
+
                     <Heading type="Section">Choose a Catalog</Heading>
 
                     <p>

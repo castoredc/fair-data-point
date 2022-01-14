@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Modal from "../Modal";
 import ModuleDependencyEditor from "../../components/DependencyEditor/ModuleDependencyEditor";
 import {formatQuery} from "react-querybuilder";
-import Alert from "../../components/Alert";
+import {Banner} from "@castoredc/matter";
 
 export default class DependencyModal extends Component {
     constructor(props) {
@@ -31,12 +31,11 @@ export default class DependencyModal extends Component {
         const sqlQuery = formatQuery(query, 'sql');
         const replaced = sqlQuery.replace(/\(|\)|and|or| /ig, '');
 
-        if(replaced.length === 0) {
+        if (replaced.length === 0) {
             this.setState({
                 lengthValid: false
             });
-        }
-        else if (valid) {
+        } else if (valid) {
             this.setState({
                 lengthValid: true
             });
@@ -66,10 +65,11 @@ export default class DependencyModal extends Component {
             closeButton
             className="DependencyModal"
         >
-            {!lengthValid && <Alert variant="error" icon="errorCircled">
-                <strong>An error occurred</strong>
-                There were no dependency conditions found, please add one or more conditions
-            </Alert>}
+            {!lengthValid && <Banner
+                type="error"
+                title="An error occurred"
+                description="There were no dependency conditions found, please add one or more conditions"
+            />}
 
             <ModuleDependencyEditor
                 valueNodes={valueNodes}

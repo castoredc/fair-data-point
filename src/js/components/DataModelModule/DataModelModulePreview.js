@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import Highlight from "../Highlight";
-import {Tabs} from "@castoredc/matter";
-import Alert from "../Alert";
+import {Banner, Tabs} from "@castoredc/matter";
 import ScrollShadow from "../ScrollShadow";
 import VisNetwork from "../Visualization/Network";
+import {CopyIcon, DecisionIcon} from "@castoredc/matter-icons";
 
 export default class DataModelModulePreview extends Component {
     constructor(props) {
@@ -35,20 +35,14 @@ export default class DataModelModulePreview extends Component {
         const {selectedTab} = this.state;
         const {repeated, dependent, dependencies, rdf, visualization} = this.props;
 
-        let alerts = <>
-            {repeated && <Alert
-                variant="info"
-                icon="copy">
-                This group is repeated for every instance of a specific survey or report
-            </Alert>}
-            {dependent && <Alert
-                variant="info"
-                icon="decision">
+        let alerts = <div className="DataModelModuleAlerts">
+            {repeated && <Banner compact customIcon={<CopyIcon />} description="This group is repeated for every instance of a specific survey or report" />}
+            {dependent && <Banner compact customIcon={<DecisionIcon />} description={<>
                 This group is dependent and will only be rendered when:
 
                 <div className="DependencyDescription">{this.renderDependencies(dependencies.description)}</div>
-            </Alert>}
-        </>;
+            </>} />}
+        </div>;
 
         const nodes = visualization.nodes.map((node) => {
             node.shape = 'box';

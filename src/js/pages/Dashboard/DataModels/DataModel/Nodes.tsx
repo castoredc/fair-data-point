@@ -34,8 +34,6 @@ export default class Nodes extends Component<NodesProps, NodesState> {
     openModal = (type, data) => {
         const {showModal} = this.state;
 
-        console.log(data);
-
         this.setState({
             showModal: {
                 ...showModal,
