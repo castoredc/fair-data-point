@@ -16,7 +16,7 @@ use function assert;
 class Triple extends ElementGroup
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", inversedBy="subjectTriples", cascade={"persist"})
      * @ORM\JoinColumn(name="subject", referencedColumnName="id", nullable=false)
      */
     private Node $subject;
@@ -28,7 +28,7 @@ class Triple extends ElementGroup
     private Predicate $predicate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\Node", inversedBy="objectTriples", cascade={"persist"})
      * @ORM\JoinColumn(name="object", referencedColumnName="id", nullable=false)
      */
     private Node $object;
