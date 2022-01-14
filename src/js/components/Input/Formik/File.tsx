@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC} from 'react'
+import React, {FC} from 'react'
 
 import {FileSelector} from "@castoredc/matter";
 import {FieldProps} from "formik";

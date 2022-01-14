@@ -155,7 +155,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
         const invalid = "This value is invalid";
 
         if (isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading study information" />;
+            return <LoadingOverlay accessibleLabel="Loading study information"/>;
         }
 
 
@@ -180,10 +180,10 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                             <FormGroup label="Study Identification">
 
                                 <FormItem label="Brief study title">
-                                    <Field component={Input} name="briefName" serverError={validation} />
+                                    <Field component={Input} name="briefName" serverError={validation}/>
                                 </FormItem>
                                 <FormItem label="Official (scientific) study title">
-                                    <Field component={Input} name="scientificName" serverError={validation} />
+                                    <Field component={Input} name="scientificName" serverError={validation}/>
                                 </FormItem>
 
                                 <FormItem label="Study type">
@@ -243,7 +243,8 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
 
                                 <FormItem label="Brief Summary">
                                     <p>
-                                        Please include the objective, design, research question and the population of your
+                                        Please include the objective, design, research question and the population of
+                                        your
                                         study.
                                     </p>
                                     <Field
@@ -307,7 +308,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                     </Form>
                 }}
             </Formik>
-            </>;
+        </>;
     }
 }
 

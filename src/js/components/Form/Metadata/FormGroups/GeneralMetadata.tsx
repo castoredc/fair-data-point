@@ -14,8 +14,7 @@ type GeneralMetadataProps = {
     children: React.ReactNode,
 }
 
-type GeneralMetadataState = {
-}
+type GeneralMetadataState = {}
 
 export default class GeneralMetadata extends Component<GeneralMetadataProps, GeneralMetadataState> {
     render() {
@@ -27,45 +26,45 @@ export default class GeneralMetadata extends Component<GeneralMetadataProps, Gen
         } = this.props;
 
         return <div>
-                <FormItem label="Title">
-                    <Field
-                        component={LocalizedTextInput}
-                        name="title"
-                        languages={languages}
-                        serverError={validation}
-                    />
-                </FormItem>
-                <FormItem label="Description">
-                    <Field
-                        component={LocalizedTextInput}
-                        name="description"
-                        languages={languages}
-                        serverError={validation}
-                        multiline
-                        rows="8"
-                    />
-                </FormItem>
+            <FormItem label="Title">
+                <Field
+                    component={LocalizedTextInput}
+                    name="title"
+                    languages={languages}
+                    serverError={validation}
+                />
+            </FormItem>
+            <FormItem label="Description">
+                <Field
+                    component={LocalizedTextInput}
+                    name="description"
+                    languages={languages}
+                    serverError={validation}
+                    multiline
+                    rows="8"
+                />
+            </FormItem>
 
-                <FormItem label="Language">
-                    <Field
-                        component={Select}
-                        options={languages}
-                        name="language"
-                        menuPosition="fixed"
-                        serverError={validation}
-                    />
-                </FormItem>
+            <FormItem label="Language">
+                <Field
+                    component={Select}
+                    options={languages}
+                    name="language"
+                    menuPosition="fixed"
+                    serverError={validation}
+                />
+            </FormItem>
 
-                <FormItem label="License">
-                    <Field
-                        component={Select}
-                        options={licenses}
-                        name="license"
-                        serverError={validation}
-                    />
-                </FormItem>
+            <FormItem label="License">
+                <Field
+                    component={Select}
+                    options={licenses}
+                    name="license"
+                    serverError={validation}
+                />
+            </FormItem>
 
-                {children}
-            </div>;
+            {children}
+        </div>;
     }
 }

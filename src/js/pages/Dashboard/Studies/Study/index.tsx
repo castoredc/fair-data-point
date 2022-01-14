@@ -159,7 +159,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                            render={(props) => isGranted('edit_source_system', study.permissions) ? <div>
                                <Annotations studyId={study.id}/>
                            </div> : <div>
-                               <Banner type="error" title="You do not have permission to access this study in Castor" />
+                               <Banner type="error" title="You do not have permission to access this study in Castor"/>
                            </div>
                            }/>
                     <Route path="/dashboard/studies/:study/datasets" exact

@@ -21,14 +21,14 @@ export default class StudyForm extends Component {
         data['hasStudyId'] = data.sourceId !== '' ? true : '';
 
         this.state = {
-            data:          data,
-            validation:    {},
-            isSaved:       false,
-            isLoading:     false,
+            data: data,
+            validation: {},
+            isSaved: false,
+            isLoading: false,
             castorServers: [],
-            study:         null,
-            catalog:       props.catalog ? props.catalog : null,
-            update:        !!props.study,
+            study: null,
+            catalog: props.catalog ? props.catalog : null,
+            update: !!props.study,
         };
     }
 
@@ -64,7 +64,7 @@ export default class StudyForm extends Component {
         }
 
         const newState = {
-            data:       newData,
+            data: newData,
             validation: {
                 [event.target.name]: false,
             },
@@ -91,8 +91,8 @@ export default class StudyForm extends Component {
             axios.post('/api/study' + (study ? '/' + study.id : ''), newData)
                 .then((response) => {
                     this.setState({
-                        isSaved:   true,
-                        study:     response.data,
+                        isSaved: true,
+                        study: response.data,
                         isLoading: false,
                     });
 
@@ -251,10 +251,10 @@ export default class StudyForm extends Component {
 }
 
 export const defaultData = {
-    sourceId:     '',
-    name:         '',
-    source:       'castor',
+    sourceId: '',
+    name: '',
+    source: 'castor',
     sourceServer: '',
-    published:    false,
-    slug:         '',
+    published: false,
+    slug: '',
 };

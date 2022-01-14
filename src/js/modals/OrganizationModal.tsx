@@ -13,8 +13,7 @@ type OrganizationModalProps = {
     countries: any
 }
 
-type OrganizationModalState = {
-}
+type OrganizationModalState = {}
 
 
 export default class OrganizationModal extends Component<OrganizationModalProps, OrganizationModalState> {
@@ -22,13 +21,13 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
         super(props);
     }
 
-    handleSubmit = (values, { setSubmitting }) => {
+    handleSubmit = (values, {setSubmitting}) => {
         const {studyId, onClose} = this.props;
 
         window.onbeforeunload = null;
 
         this.setState({
-            isLoading:      true,
+            isLoading: true,
         });
 
         axios.post('/api/study/' + studyId + '/centers/add', {
@@ -43,12 +42,13 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
         })
             .then((response) => {
                 this.setState({
-                    isLoading:      false,
+                    isLoading: false,
                 });
 
                 onClose();
 
-                toast.success(<ToastContent type="success" message={`The ${values.organization.name} center was successfully added.`}/>, {
+                toast.success(<ToastContent type="success"
+                                            message={`The ${values.organization.name} center was successfully added.`}/>, {
                     position: "top-right",
                 });
             })
@@ -63,7 +63,7 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
                     });
                 }
                 this.setState({
-                    isLoading:      false,
+                    isLoading: false,
                 }, () => {
                     setSubmitting(false);
                 });
@@ -73,16 +73,16 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
     render() {
         const {open, id, countries, onClose} = this.props;
 
-        const edit = !! id;
+        const edit = !!id;
         const title = edit ? `Edit center` : 'Add center';
-        
+
         return <Modal
             open={open}
             title={title}
             accessibleName={title}
             onClose={onClose}
         >
-            <OrganizationForm countries={countries} handleSubmit={this.handleSubmit} />
+            <OrganizationForm countries={countries} handleSubmit={this.handleSubmit}/>
         </Modal>
     }
 }

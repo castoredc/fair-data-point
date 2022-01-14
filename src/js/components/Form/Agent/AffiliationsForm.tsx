@@ -60,33 +60,33 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
     handleSubmit = (values) => {
         const {onSaved} = this.props;
 
-            this.setState({
-                isLoading: true,
-            });
+        this.setState({
+            isLoading: true,
+        });
 
-            axios.post('/api/user/affiliations', values.affiliations)
-                .then(() => {
-                    this.setState({
-                        isLoading: false,
-                    }, () => {
-                        onSaved();
-                    });
-                })
-                .catch((error) => {
-                    if (error.response && error.response.status === 400) {
-                        this.setState({
-                            validation: error.response.data.fields,
-                        });
-                    } else {
-                        toast.error(<ToastContent type="error"
-                                                  message="An error occurred while updating your affiliations"/>, {
-                            position: "top-center",
-                        });
-                    }
-                    this.setState({
-                        isLoading: false,
-                    });
+        axios.post('/api/user/affiliations', values.affiliations)
+            .then(() => {
+                this.setState({
+                    isLoading: false,
+                }, () => {
+                    onSaved();
                 });
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 400) {
+                    this.setState({
+                        validation: error.response.data.fields,
+                    });
+                } else {
+                    toast.error(<ToastContent type="error"
+                                              message="An error occurred while updating your affiliations"/>, {
+                        position: "top-center",
+                    });
+                }
+                this.setState({
+                    isLoading: false,
+                });
+            });
     };
 
     render() {
@@ -138,7 +138,8 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                                             ))}
                                         </div>
                                         <Stack distribution="trailing" alignment="end">
-                                            <Button buttonType="secondary" icon="add" onClick={() => arrayHelpers.push(defaultData)}>
+                                            <Button buttonType="secondary" icon="add"
+                                                    onClick={() => arrayHelpers.push(defaultData)}>
                                                 Add another affiliation
                                             </Button>
                                         </Stack>

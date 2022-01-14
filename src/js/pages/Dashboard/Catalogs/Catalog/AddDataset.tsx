@@ -35,7 +35,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
         const {showModal} = this.state;
 
         this.setState({
-            showModal:       {
+            showModal: {
                 ...showModal,
                 [type]: true,
             },
@@ -62,14 +62,15 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
     };
 
     handleAdd = () => {
-        const { catalog } = this.props;
-        const { selectedDataset } = this.state;
+        const {catalog} = this.props;
+        const {selectedDataset} = this.state;
 
         axios.post('/api/catalog/' + catalog + '/dataset/add', {
             datasetId: selectedDataset.id
         })
             .then((response) => {
-                toast.success(<ToastContent type="success" message="The dataset was successfully added to the catalog" />, {
+                toast.success(<ToastContent type="success"
+                                            message="The dataset was successfully added to the catalog"/>, {
                     position: "top-right"
                 });
 
@@ -82,13 +83,13 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
             })
             .catch((error) => {
                 const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while adding the dataset to the catalog';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastContent type="error" message={message}/>);
             });
     };
 
     render() {
-        const { catalog } = this.props;
-        const { showModal, selectedDataset, addedDataset } = this.state;
+        const {catalog} = this.props;
+        const {showModal, selectedDataset, addedDataset} = this.state;
 
         return <div className="PageBody">
             {selectedDataset && <ConfirmModal
@@ -96,10 +97,14 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                 action="Add dataset"
                 variant="primary"
                 onConfirm={this.handleAdd}
-                onCancel={() => {this.closeModal('confirm')}}
+                onCancel={() => {
+                    this.closeModal('confirm')
+                }}
                 show={showModal.confirm}
             >
-                Are you sure you want to add {selectedDataset.hasMetadata ? <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to this catalog?
+                Are you sure you want to add {selectedDataset.hasMetadata ?
+                <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to this
+                catalog?
             </ConfirmModal>}
 
             <DatasetsDataTable

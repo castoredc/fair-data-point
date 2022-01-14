@@ -38,8 +38,8 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
         });
 
         let filters = {
-            page : pagination.currentPage,
-            perPage : pagination.perPage,
+            page: pagination.currentPage,
+            perPage: pagination.perPage,
         };
 
         axios.get('/api/catalog', {params: filters})
@@ -86,13 +86,13 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
         const {isLoading, catalogs, pagination} = this.state;
 
         return <div>
-            <DocumentTitle title="Catalogs" />
+            <DocumentTitle title="Catalogs"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs"/>}
 
-            <Space bottom="comfortable" />
+            <Space bottom="comfortable"/>
 
-           <Header
+            <Header
                 title="My catalogs"
                 type="Section"
             >
@@ -105,7 +105,8 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                 {catalogs.map((catalog) => {
                     return <ListItem
                         selectable={false}
-                        link={`/dashboard/catalogs/${catalog.slug}`} title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
+                        link={`/dashboard/catalogs/${catalog.slug}`}
+                        title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
                     />
                 })}
 

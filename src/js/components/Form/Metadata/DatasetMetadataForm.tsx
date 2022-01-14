@@ -12,7 +12,7 @@ type DatasetMetadataFormProps = {
 
 export default class DatasetMetadataForm extends Component<DatasetMetadataFormProps> {
     render() {
-        const { dataset, onSave } = this.props;
+        const {dataset, onSave} = this.props;
 
         return <MetadataForm type="dataset" object={dataset} onSave={onSave}
                              defaultData={defaultData}

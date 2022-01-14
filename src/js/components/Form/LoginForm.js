@@ -36,7 +36,15 @@ export default class LoginForm extends Component {
     };
 
     render() {
-        const {catalog, path, servers, serverLocked = false, modal = false , brand = 'FAIR Data Point', view} = this.props;
+        const {
+            catalog,
+            path,
+            servers,
+            serverLocked = false,
+            modal = false,
+            brand = 'FAIR Data Point',
+            view
+        } = this.props;
         const {selectedServer} = this.state;
 
         const loginUrl = '/connect/castor/' + selectedServer + (path ? '?target_path=' + path : '');
@@ -49,7 +57,8 @@ export default class LoginForm extends Component {
                     {!modal && <h1>{localizedText(catalog.name, 'en')}</h1>}
 
                     <div className="LoginText">
-                        <p>To enter your study in the {localizedText(catalog.name, 'en')} you must be a registered Castor EDC user.</p>
+                        <p>To enter your study in the {localizedText(catalog.name, 'en')} you must be a registered
+                            Castor EDC user.</p>
                         <p>Please log in with your Castor EDC account and allow the application to access your
                             information.</p>
                         {catalog.accessingData === false && <p>
@@ -61,8 +70,10 @@ export default class LoginForm extends Component {
                     {!modal && <h1>{brand}</h1>}
 
                     <div className="LoginText">
-                        {(!modal) && <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>}
-                        {(modal && view !== 'generic' && view !== null) && <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>}
+                        {(!modal) &&
+                        <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>}
+                        {(modal && view !== 'generic' && view !== null) &&
+                        <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>}
 
                         <p>Please log in with your Castor EDC account and allow the application to access your
                             information.</p>
@@ -93,7 +104,7 @@ export default class LoginForm extends Component {
 
                 <div className="LoginButton">
                     <Button href={loginUrl} disabled={selectedServer === null}>
-                        <CastorNest className="LoginButtonLogo" />
+                        <CastorNest className="LoginButtonLogo"/>
                         Log in with Castor
                     </Button>
                 </div>

@@ -17,20 +17,20 @@ export default class DatasetForm extends Component {
         super(props);
 
         this.state = {
-            data:           props.dataset ? mergeData(defaultData, props.dataset) : defaultData,
-            validation:     {},
-            isSaved:        false,
+            data: props.dataset ? mergeData(defaultData, props.dataset) : defaultData,
+            validation: {},
+            isSaved: false,
             submitDisabled: false,
-            dataset:        props.dataset ? props.dataset : null,
-            update:         !!props.dataset,
-            showApiUser:    props.dataset ? !props.dataset.hasApiUser : true,
+            dataset: props.dataset ? props.dataset : null,
+            update: !!props.dataset,
+            showApiUser: props.dataset ? !props.dataset.hasApiUser : true,
         };
     }
 
     handleChange = (event) => {
         const {data} = this.state;
         const newState = {
-            data:       {
+            data: {
                 ...data,
                 [event.target.name]: event.target.value,
             },
@@ -50,14 +50,14 @@ export default class DatasetForm extends Component {
         if (this.form.isFormValid()) {
             this.setState({
                 submitDisabled: true,
-                isLoading:      true,
+                isLoading: true,
             });
 
             axios.post('/api/dataset/' + dataset.slug, data)
                 .then((response) => {
                     this.setState({
-                        isSaved:        true,
-                        isLoading:      false,
+                        isSaved: true,
+                        isLoading: false,
                         submitDisabled: false,
                     });
 
@@ -77,7 +77,7 @@ export default class DatasetForm extends Component {
                     }
                     this.setState({
                         submitDisabled: false,
-                        isLoading:      false,
+                        isLoading: false,
                     });
                 });
         }
@@ -100,22 +100,23 @@ export default class DatasetForm extends Component {
                 <div className="FormContent">
                     {dataset.study && <FormItem label="Study">
                         <div className="StudyLink">
-                                <div className="StudyIcon">
-                                    <Icon type="study" width="32px" height="32px" />
+                            <div className="StudyIcon">
+                                <Icon type="study" width="32px" height="32px"/>
+                            </div>
+                            <div className="StudyDetails">
+                                <div className="StudyName">
+                                    <dl>
+                                        <dt>Brief name</dt>
+                                        <dd>{dataset.study.hasMetadata ? dataset.study.metadata.briefName :
+                                            <span className="None">None</span>}</dd>
+                                        <dt>Study name</dt>
+                                        <dd>{dataset.study.name}</dd>
+                                    </dl>
                                 </div>
-                                <div className="StudyDetails">
-                                    <div className="StudyName">
-                                        <dl>
-                                            <dt>Brief name</dt>
-                                            <dd>{dataset.study.hasMetadata ? dataset.study.metadata.briefName : <span className="None">None</span>}</dd>
-                                            <dt>Study name</dt>
-                                            <dd>{dataset.study.name}</dd>
-                                        </dl>
-                                    </div>
-                                    <Link to={`/dashboard/studies/${dataset.study.id}`}>
-                                        <Button buttonType="secondary">Open study</Button>
-                                    </Link>
-                                </div>
+                                <Link to={`/dashboard/studies/${dataset.study.id}`}>
+                                    <Button buttonType="secondary">Open study</Button>
+                                </Link>
+                            </div>
                         </div>
                     </FormItem>}
 
@@ -166,6 +167,6 @@ export default class DatasetForm extends Component {
 }
 
 export const defaultData = {
-    slug:      '',
+    slug: '',
     published: false,
 };

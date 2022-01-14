@@ -1,4 +1,4 @@
-import React, {Component, FC, useRef} from 'react'
+import React, {FC, useRef} from 'react'
 import {ActionMenu} from "@castoredc/matter";
 
 interface AnnotationProps {

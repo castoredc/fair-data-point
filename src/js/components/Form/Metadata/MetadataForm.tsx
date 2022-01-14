@@ -177,7 +177,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             showModal,
         } = this.state;
 
-        const { children } = this.props;
+        const {children} = this.props;
 
         return <>
             <Formik
@@ -232,7 +232,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
 
                         <div className="FormButtons">
                             <Stack distribution="trailing">
-                                <Button buttonType="primary" onClick={() => this.showVersionModal(setFieldValue, handleSubmit)} disabled={isSubmitting}>
+                                <Button buttonType="primary"
+                                        onClick={() => this.showVersionModal(setFieldValue, handleSubmit)}
+                                        disabled={isSubmitting}>
                                     Save
                                 </Button>
                             </Stack>

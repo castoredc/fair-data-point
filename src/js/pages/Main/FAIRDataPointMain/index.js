@@ -69,11 +69,11 @@ export default class FAIRDataPointMain extends Component {
                             </div>
                         </div>
                         <div className="SideCol">
-                            <MetadataSideBar type="fdp" metadata={fdp.metadata} name={title} />
+                            <MetadataSideBar type="fdp" metadata={fdp.metadata} name={title}/>
                         </div>
                     </>}
 
-                    <AssociatedItemsBar items={fdp.count} current="catalog" />
+                    <AssociatedItemsBar items={fdp.count} current="catalog"/>
 
                     <CatalogList embedded={embedded} className="MainCol"/>
                 </>}

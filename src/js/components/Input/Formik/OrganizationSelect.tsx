@@ -113,8 +113,8 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
                         isDisabled={disabled}
                         onChange={this.handleOrganizationSelect}
                         components={{DropdownIndicator: AsyncDropdownIndicator}}
-                        getOptionLabel={({label}) => label }
-                        getOptionValue={({value}) => value }
+                        getOptionLabel={({label}) => label}
+                        getOptionValue={({value}) => value}
                         openMenuOnClick={false}
                         value={{
                             source: value.source,
@@ -124,7 +124,8 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
                         }}
                     />
 
-                    <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>
+                    <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual}
+                            disabled={disabled}>
                         I cannot find my organization
                     </Button>
                 </FormItem>}
@@ -162,7 +163,7 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
                 </>}
             </Stack>
 
-            <FieldErrors field={field} />
+            <FieldErrors field={field}/>
         </div>
     }
 }

@@ -1,9 +1,8 @@
 import React, {FC, FormEvent} from 'react'
 
-import {Choice as MatterChoice, ChoiceOption} from "@castoredc/matter";
+import {ChoiceOption} from "@castoredc/matter";
 import {FieldProps} from "formik";
 import FieldErrors from "components/Input/Formik/Errors";
-import {ChoiceOptionProps} from "@castoredc/matter/lib/types/src/ChoiceOption/ChoiceOption";
 
 interface SingleChoiceProps extends FieldProps {
     readOnly?: boolean,
@@ -13,12 +12,12 @@ interface SingleChoiceProps extends FieldProps {
 }
 
 const SingleChoice: FC<SingleChoiceProps> = ({
-                                     field,
-                                     readOnly,
-                                     onChange,
-                                     serverError,
+                                                 field,
+                                                 readOnly,
+                                                 onChange,
+                                                 serverError,
                                                  labelText
-                                 }) => {
+                                             }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
     return <>

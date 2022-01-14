@@ -59,7 +59,7 @@ class Dropdown extends ValidatorComponent {
             const DropdownIndicator = props => {
                 return (
                     <components.DropdownIndicator {...props}>
-                        <Icon type="search" />
+                        <Icon type="search"/>
                     </components.DropdownIndicator>
                 );
             };
@@ -79,7 +79,7 @@ class Dropdown extends ValidatorComponent {
                 }}
                 onChange={onChange}
                 styles={dropdownStyle}
-                components={{ DropdownIndicator }}
+                components={{DropdownIndicator}}
                 placeholder=""
                 isDisabled={isDisabled}
                 value={dropdownValue}
@@ -132,7 +132,7 @@ class Dropdown extends ValidatorComponent {
         } else {
             let dropdownValue = value;
 
-            if (typeof dropdownValue !== 'object' && dropdownValue !== null && ! isGrouped) {
+            if (typeof dropdownValue !== 'object' && dropdownValue !== null && !isGrouped) {
                 dropdownValue = options.find((option) => option.value === dropdownValue);
             }
 

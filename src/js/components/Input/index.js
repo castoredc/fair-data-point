@@ -8,24 +8,37 @@ import {TextInput, TextStyle} from "@castoredc/matter";
 
 class Input extends ValidatorComponent {
     render() {
-        const { errorMessages, serverError, validators, requiredError, validatorListener, mask, className, ...rest } = this.props;
-        const { isValid } = this.state;
+        const {
+            errorMessages,
+            serverError,
+            validators,
+            requiredError,
+            validatorListener,
+            mask,
+            className,
+            ...rest
+        } = this.props;
+        const {isValid} = this.state;
         return (
             <div className={classNames('Input', className)}>
                 {mask ? <MaskedInput
-                        mask={mask}
-                        className="MaskedInput"
-                        {...rest}
-                        ref={(r) => { this.input = r; }}
-                        invalid={!isValid}
-                        render={(ref, props) => (
-                            <TextInput forwardRef={ref} {...props} />
-                        )}
-                    /> : <TextInput
-                        {...rest}
-                        invalid={!isValid}
-                        forwardRef={(r) => { this.input = r; }}
-                    />
+                    mask={mask}
+                    className="MaskedInput"
+                    {...rest}
+                    ref={(r) => {
+                        this.input = r;
+                    }}
+                    invalid={!isValid}
+                    render={(ref, props) => (
+                        <TextInput forwardRef={ref} {...props} />
+                    )}
+                /> : <TextInput
+                    {...rest}
+                    invalid={!isValid}
+                    forwardRef={(r) => {
+                        this.input = r;
+                    }}
+                />
                 }
                 {this.errorText()}
                 {serverError && serverError.map((errorText, index) => (
@@ -38,7 +51,7 @@ class Input extends ValidatorComponent {
     }
 
     errorText() {
-        const { isValid } = this.state;
+        const {isValid} = this.state;
 
         if (isValid) {
             return null;
@@ -46,7 +59,7 @@ class Input extends ValidatorComponent {
 
         return (
             <TextStyle variation="error">
-               {this.getErrorMessage()}
+                {this.getErrorMessage()}
             </TextStyle>
         );
     }

@@ -8,8 +8,8 @@ type FAIRDataPointMetadataFormProps = {
 
 export default class FAIRDataPointMetadataForm extends Component<FAIRDataPointMetadataFormProps> {
     render() {
-        const { fdp, onSave } = this.props;
+        const {fdp, onSave} = this.props;
 
-        return <MetadataForm type="fdp" object={fdp} onSave={onSave} />;
+        return <MetadataForm type="fdp" object={fdp} onSave={onSave}/>;
     }
 }

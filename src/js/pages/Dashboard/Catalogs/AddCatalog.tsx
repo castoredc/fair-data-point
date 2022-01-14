@@ -13,7 +13,7 @@ export default class AddCatalog extends Component<AddCatalogProps> {
     render() {
         const {history} = this.props;
         return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-            <DocumentTitle title="Add a catalog" />
+            <DocumentTitle title="Add a catalog"/>
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
@@ -21,7 +21,7 @@ export default class AddCatalog extends Component<AddCatalogProps> {
 
                     <Heading type="Section">Add a catalog</Heading>
 
-                    <CatalogForm history={history} />
+                    <CatalogForm history={history}/>
                 </StackItem>
             </Stack>
         </div>;

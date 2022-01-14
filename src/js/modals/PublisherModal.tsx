@@ -72,9 +72,9 @@ export default class PublisherModal extends Component<PublisherModalProps, Publi
                 onChange={this.handleTypeChange}
             />
 
-            {type === 'person' && <PersonForm handleSubmit={this.handleSubmit} />}
+            {type === 'person' && <PersonForm handleSubmit={this.handleSubmit}/>}
 
-            {type === 'organization' && <OrganizationForm countries={countries} handleSubmit={this.handleSubmit} />}
+            {type === 'organization' && <OrganizationForm countries={countries} handleSubmit={this.handleSubmit}/>}
         </Modal>
     }
 }

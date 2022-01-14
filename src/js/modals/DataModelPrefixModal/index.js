@@ -22,7 +22,7 @@ export default class DataModelPrefixModal extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { show, data } = this.props;
+        const {show, data} = this.props;
 
         if (show !== prevProps.show || data !== prevProps.data) {
             this.setState({
@@ -33,19 +33,20 @@ export default class DataModelPrefixModal extends Component {
 
     componentDidMount() {
         ValidatorForm.addValidationRule('isUrl', (value) => {
-            var pattern = new RegExp('^((ft|htt)ps?:\\/\\/)?'+ // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name and extension
-                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                '(\\:\\d+)?'+ // port
-                '(\\/[-a-z\\d%@_.~+&:]*)*'+ // path
-                '(\\?[;&a-z\\d%@_.,~+&:=-]*)?'+ // query string
-                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            var pattern = new RegExp('^((ft|htt)ps?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?' + // port
+                '(\\/[-a-z\\d%@_.~+&:]*)*' + // path
+                '(\\?[;&a-z\\d%@_.,~+&:=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
             return pattern.test(value);
         });
     }
 
-    handleChange = (event, callback = (() => {})) => {
-        const { data } = this.state;
+    handleChange = (event, callback = (() => {
+    })) => {
+        const {data} = this.state;
         this.setState({
             data: {
                 ...data,
@@ -58,13 +59,13 @@ export default class DataModelPrefixModal extends Component {
     };
 
     handleSubmit = () => {
-        const { modelId, versionId, onSaved } = this.props;
-        const { data } = this.state;
+        const {modelId, versionId, onSaved} = this.props;
+        const {data} = this.state;
 
         if (this.form.isFormValid()) {
             this.setState({
                 submitDisabled: true,
-                isLoading:      true
+                isLoading: true
             });
 
             axios.post('/api/model/' + modelId + '/v/' + versionId + '/prefix' + (data.id ? '/' + data.id : ''), {
@@ -99,7 +100,7 @@ export default class DataModelPrefixModal extends Component {
     };
 
     render() {
-        const { show, handleClose } = this.props;
+        const {show, handleClose} = this.props;
         const {data, validation, isLoading} = this.state;
 
         const required = "This field is required";

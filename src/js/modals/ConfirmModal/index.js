@@ -13,7 +13,7 @@ export default class ConfirmModal extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { show } = this.props;
+        const {show} = this.props;
 
         if (show !== prevProps.show) {
             this.setState({
@@ -29,7 +29,10 @@ export default class ConfirmModal extends Component {
     };
 
     handleCancel = () => {
-        const { onCancel = () => {} }  = this.props;
+        const {
+            onCancel = () => {
+            }
+        } = this.props;
 
         this.setState({
             showCancelModal: false,
@@ -39,7 +42,7 @@ export default class ConfirmModal extends Component {
     };
 
     handleConfirm = () => {
-        const { onConfirm } = this.props;
+        const {onConfirm} = this.props;
 
         onConfirm(() => {
             this.setState({
@@ -49,8 +52,8 @@ export default class ConfirmModal extends Component {
     };
 
     render() {
-        const { title, children, action, variant, includeButton = false } = this.props;
-        const { showCancelModal } = this.state;
+        const {title, children, action, variant, includeButton = false} = this.props;
+        const {showCancelModal} = this.state;
 
         const modal = <Modal
             show={showCancelModal}
@@ -70,7 +73,7 @@ export default class ConfirmModal extends Component {
             {children}
         </Modal>;
 
-        if(includeButton) {
+        if (includeButton) {
             return <div className="Confirm">
                 <Button buttonType={variant ? variant : 'primary'} onClick={this.handleClick}>
                     {action}

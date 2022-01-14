@@ -18,11 +18,11 @@ export default class DataModelModuleModal extends Component {
         super(props);
 
         this.state = {
-            data:                this.handleNewData(),
-            validation:          {},
-            isSaved:             false,
-            submitDisabled:      false,
-            isLoading:           false,
+            data: this.handleNewData(),
+            validation: {},
+            isSaved: false,
+            submitDisabled: false,
+            isLoading: false,
             showDependencyModal: false,
         };
     }
@@ -54,7 +54,7 @@ export default class DataModelModuleModal extends Component {
     handleChange = (event) => {
         const {data} = this.state;
         this.setState({
-            data:       {
+            data: {
                 ...data,
                 [event.target.name]: event.target.value,
             },
@@ -71,14 +71,14 @@ export default class DataModelModuleModal extends Component {
         if (this.form.isFormValid()) {
             this.setState({
                 submitDisabled: true,
-                isLoading:      true,
+                isLoading: true,
             });
 
             axios.post('/api/model/' + modelId + '/v/' + versionId + '/module' + (data.id ? '/' + data.id : ''), data)
                 .then(() => {
                     this.setState({
-                        isSaved:        true,
-                        isLoading:      false,
+                        isSaved: true,
+                        isLoading: false,
                         submitDisabled: false,
                     });
 
@@ -96,7 +96,7 @@ export default class DataModelModuleModal extends Component {
                     }
                     this.setState({
                         submitDisabled: false,
-                        isLoading:      false,
+                        isLoading: false,
                     });
                 });
         }
@@ -265,7 +265,8 @@ export default class DataModelModuleModal extends Component {
                 </FormItem>
 
                 {data.dependent && <FormItem>
-                    <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">Edit dependencies</Button>
+                    <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">Edit
+                        dependencies</Button>
                 </FormItem>}
             </ValidatorForm>
         </Modal>
@@ -273,10 +274,10 @@ export default class DataModelModuleModal extends Component {
 }
 
 const defaultData = {
-    title:        '',
-    order:        '',
-    repeated:     false,
-    dependent:    false,
+    title: '',
+    order: '',
+    repeated: false,
+    dependent: false,
     dependencies: {
         rules: [],
         combinator: 'and',

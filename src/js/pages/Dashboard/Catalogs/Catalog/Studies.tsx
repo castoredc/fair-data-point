@@ -16,9 +16,9 @@ export default class Studies extends Component<StudiesProps> {
         return <div className="PageBody">
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
-                        <LinkContainer to={'/admin/catalog/' + catalog + '/studies/add'}>
-                            <Button icon="add" className="AddButton">Add study</Button>
-                        </LinkContainer>
+                    <LinkContainer to={'/admin/catalog/' + catalog + '/studies/add'}>
+                        <Button icon="add" className="AddButton">Add study</Button>
+                    </LinkContainer>
                 </Stack>
             </div>
 

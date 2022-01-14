@@ -8,7 +8,7 @@ export default class Modal extends Component {
     handleClick = (event) => {
         const {handleClose} = this.props;
 
-        if(event.target === event.currentTarget) {
+        if (event.target === event.currentTarget) {
             handleClose();
         }
     };
@@ -16,8 +16,7 @@ export default class Modal extends Component {
     render() {
         const {show, title, children, footer, handleClose, className, closeButton, isLoading} = this.props;
 
-        if(! show)
-        {
+        if (!show) {
             return null;
         }
 
@@ -25,7 +24,8 @@ export default class Modal extends Component {
             <div className="FullScreenOverlay" onClick={this.handleClick}>
                 <div className={classNames('Modal', isLoading && 'Loading', className && className)}>
                     {title && <header>{title}</header>}
-                    {closeButton && <Button icon="cross" className="CloseButton" onClick={handleClose} iconDescription="Close" />}
+                    {closeButton &&
+                    <Button icon="cross" className="CloseButton" onClick={handleClose} iconDescription="Close"/>}
                     <main>
                         {isLoading && <LoadingOverlay accessibleLabel="Loading"/>}
                         {children}

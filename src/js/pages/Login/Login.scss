@@ -1,11 +1,11 @@
 @import '../../scss/colors';
 
 .Login {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: inherit;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: inherit;
 
   .LoginContainer {
     max-width: 550px;
@@ -24,6 +24,7 @@
           fill: $azul;
         }
       }
+
       margin-bottom: 64px;
     }
 

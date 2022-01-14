@@ -3,12 +3,14 @@
 .App {
   position: relative;
   min-height: 100vh;
-&.Loading {
-     opacity: 0;
- }
-&.Loaded {
-     opacity: 1;
- }
+
+  &.Loading {
+    opacity: 0;
+  }
+
+  &.Loaded {
+    opacity: 1;
+  }
 }
 
 .UnderDevelopment {

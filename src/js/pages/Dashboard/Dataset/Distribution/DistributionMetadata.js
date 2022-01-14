@@ -3,10 +3,10 @@ import DistributionMetadataForm from "components/Form/Metadata/DistributionMetad
 
 export default class DistributionMetadata extends Component {
     render() {
-        const { distribution, onSave } = this.props;
+        const {distribution, onSave} = this.props;
 
         return <div className="PageBody">
-            <DistributionMetadataForm distribution={distribution} onSave={onSave} />
+            <DistributionMetadataForm distribution={distribution} onSave={onSave}/>
         </div>;
     }
 

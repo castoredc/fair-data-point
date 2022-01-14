@@ -196,7 +196,7 @@ export default class StudyList extends Component {
         }
 
         if (studies === null || map === null) {
-            return <LoadingOverlay accessibleLabel="Loading studies" content="" />;
+            return <LoadingOverlay accessibleLabel="Loading studies" content=""/>;
         }
 
         return <StickyContainer className="StickyContainer">

@@ -39,9 +39,9 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         });
 
         let filters = {
-            page : pagination.currentPage,
-            perPage : pagination.perPage,
-            acceptSubmissions : true,
+            page: pagination.currentPage,
+            perPage: pagination.perPage,
+            acceptSubmissions: true,
         };
 
         axios.get('/api/catalog', {params: filters})
@@ -87,7 +87,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         const {isLoading, catalogs, pagination} = this.state;
 
         return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-            <DocumentTitle title="Add a study" />
+            <DocumentTitle title="Add a study"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs"/>}
 
@@ -101,7 +101,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
                         Please choose a catalog where you would like to add your study to.
                     </p>
 
-                    <Separator />
+                    <Separator/>
 
                     {catalogs.length > 0 ? catalogs.map((catalog) => {
                             return <ListItem key={catalog.id}

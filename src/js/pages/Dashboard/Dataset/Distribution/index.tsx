@@ -73,7 +73,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             .then((response) => {
                 this.setState({
-                    contents:          response.data.elements,
+                    contents: response.data.elements,
                     isLoading: false,
                 });
             })

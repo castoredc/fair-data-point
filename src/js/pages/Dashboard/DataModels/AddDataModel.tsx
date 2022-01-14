@@ -13,7 +13,7 @@ export default class AddDataModel extends Component<AddDataModelProps> {
     render() {
         const {history} = this.props;
         return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-            <DocumentTitle title="Add a data model" />
+            <DocumentTitle title="Add a data model"/>
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
@@ -21,7 +21,7 @@ export default class AddDataModel extends Component<AddDataModelProps> {
 
                     <Heading type="Section">Add a data model</Heading>
 
-                    <DataModelForm history={history} />
+                    <DataModelForm history={history}/>
                 </StackItem>
             </Stack>
         </div>;

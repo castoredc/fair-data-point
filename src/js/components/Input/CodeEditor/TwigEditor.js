@@ -13,7 +13,7 @@ export default class TwigEditor extends Component {
     }
 
     componentDidMount() {
-        const { onChange } = this.props;
+        const {onChange} = this.props;
 
         this.codeMirror = CodeMirror.fromTextArea(
             this.ref.current,
@@ -29,11 +29,11 @@ export default class TwigEditor extends Component {
     }
 
     render() {
-        const { label, value } = this.props;
+        const {label, value} = this.props;
 
         return <div className="TwigEditor">
             {label && <FormLabel>{label}</FormLabel>}
-            <textarea ref={this.ref} autoComplete="off" defaultValue={value} />
+            <textarea ref={this.ref} autoComplete="off" defaultValue={value}/>
         </div>;
     }
 }

@@ -124,12 +124,12 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
 
         const selectedStudy = selectedStudyId ? studies.find((study) => study.sourceId == selectedStudyId) : null;
 
-        if(isLoading) {
+        if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading studies"/>;
         }
 
         return <div style={{marginLeft: 'auto', marginRight: 'auto'}}>
-            <DocumentTitle title="Add a study" />
+            <DocumentTitle title="Add a study"/>
 
             <Stack distribution="center">
                 <StackItem style={{width: toRem(480), marginTop: '3.2rem'}}>
@@ -141,7 +141,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         {`Please choose an item from your list of studies that you’d like to include in the ${localizedText(catalog.metadata.title, 'en')}.`}
                     </p>
 
-                    <Separator />
+                    <Separator/>
 
                     {(studies.length > 0 && selectedStudy) && <div>
                         <ListItem key={selectedStudy.sourceId}
@@ -152,12 +152,13 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         />
 
                         <Stack distribution="trailing" alignment="end">
-                            <Button buttonType="contentOnly" onClick={() => this.handleStudySelect(null)} style={{ padding: 0 }}>
+                            <Button buttonType="contentOnly" onClick={() => this.handleStudySelect(null)}
+                                    style={{padding: 0}}>
                                 Select another study
                             </Button>
                         </Stack>
 
-                        <Space top="condensed" />
+                        <Space top="condensed"/>
 
                         <Stack distribution="center">
                             <Button disabled={submitDisabled} onClick={this.importStudy}>Next</Button>

@@ -60,13 +60,14 @@ export default class Distributions extends Component<DistributionsProps, Distrib
         const {isLoading, distributions} = this.state;
         const {match, history} = this.props;
 
-        const mainUrl = match.params.study ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}` :`/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
+        const mainUrl = match.params.study ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}` : `/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
 
         return <div>
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
-                <Button icon="add" className="AddButton" disabled={isLoading} onClick={() => history.push(`${mainUrl}/distributions/add`)}>New distribution</Button>
+                <Button icon="add" className="AddButton" disabled={isLoading}
+                        onClick={() => history.push(`${mainUrl}/distributions/add`)}>New distribution</Button>
             </Stack>
 
             <div>
@@ -75,7 +76,8 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                 {distributions.map((distribution) => {
                     return <ListItem
                         selectable={false}
-                        link={`${mainUrl}/distributions/${distribution.slug}`} title={distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution'}
+                        link={`${mainUrl}/distributions/${distribution.slug}`}
+                        title={distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution'}
                     />
                 })}
             </div>

@@ -9,11 +9,11 @@ export default class DistributionLog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal:    false,
+            showModal: false,
             isLoadingLog: true,
             hasLoadedLog: false,
-            log:          null,
-            selectedTab:  'records',
+            log: null,
+            selectedTab: 'records',
         };
     }
 
@@ -64,19 +64,19 @@ export default class DistributionLog extends Component {
 
         let tabs = {
             records: {
-                title:   'Record logs',
+                title: 'Record logs',
                 content: <DistributionRecordLogsDataTable
-                             history={history}
-                             dataset={dataset}
-                             distribution={distribution}
-                             log={match.params.log}
-                         />,
+                    history={history}
+                    dataset={dataset}
+                    distribution={distribution}
+                    log={match.params.log}
+                />,
             },
         };
 
-        if(hasErrors) {
+        if (hasErrors) {
             tabs.errors = {
-                title:   'Errors',
+                title: 'Errors',
                 content: <div>{log.errors.map((error) => {
                     return <div className="ErrorLogItem">
                         <Heading type="Panel">{error.exception}</Heading>

@@ -41,10 +41,12 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
             isLoading: true,
         });
 
-        axios.get(viewAll ? '/api/study' : '/api/study/my', {params: {
+        axios.get(viewAll ? '/api/study' : '/api/study/my', {
+            params: {
                 page: pagination.currentPage,
                 perPage: pagination.perPage,
-            }})
+            }
+        })
             .then((response) => {
                 this.setState({
                     studies: response.data.results,
@@ -99,11 +101,11 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
         const {isLoading, studies, pagination, viewAll} = this.state;
 
         return <div className="DashboardTab">
-            <DocumentTitle title="Studies" />
+            <DocumentTitle title="Studies"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
-            <Space bottom="comfortable" />
+            <Space bottom="comfortable"/>
 
             <Header
                 title="My studies"
@@ -120,15 +122,16 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
             </Header>
 
             {/*<div className="DashboardList">*/}
-                <ScrollShadow className="DashboardList">
+            <ScrollShadow className="DashboardList">
                 {studies.map((study) => {
                     return <ListItem
                         key={study.id}
                         selectable={false}
-                        link={`/dashboard/studies/${study.id}`} title={study.hasMetadata ? study.metadata.briefName : study.name}
+                        link={`/dashboard/studies/${study.id}`}
+                        title={study.hasMetadata ? study.metadata.briefName : study.name}
                     />
                 })}
-                </ScrollShadow>
+            </ScrollShadow>
             {/*</div>*/}
 
             <div className="DashboardFooter">

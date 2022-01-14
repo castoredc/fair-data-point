@@ -4,7 +4,7 @@ import {classNames} from "../../util";
 
 class Tags extends Component {
     render() {
-        const { className, tags }  = this.props;
+        const {className, tags} = this.props;
 
         return <span className={classNames(className, 'Tags')}>
             {tags.map((tag, index) => {

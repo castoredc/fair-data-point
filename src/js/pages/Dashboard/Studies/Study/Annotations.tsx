@@ -20,7 +20,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
     constructor(props) {
         super(props);
         this.state = {
-            showModal:    false,
+            showModal: false,
             isLoading: false,
             optionGroups: [],
             selectedOptionGroup: '',
@@ -32,8 +32,8 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
     }
 
     getOptionGroups = () => {
-        const { studyId } = this.props;
-        const { selectedOptionGroup } = this.state;
+        const {studyId} = this.props;
+        const {selectedOptionGroup} = this.state;
         this.setState({
             isLoading: true,
         });
@@ -70,7 +70,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
         const {isLoading, optionGroups, selectedOptionGroup} = this.state;
 
         if (isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading option groups" />;
+            return <LoadingOverlay accessibleLabel="Loading option groups"/>;
         }
 
         const options = optionGroups.map((optionGroup) => {
@@ -81,7 +81,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             return optionGroup.id === selectedOptionGroup;
         });
 
-        if(optionGroups && optionGroups.length === 0) {
+        if (optionGroups && optionGroups.length === 0) {
             return <div className="NoResults">This study does not have option groups.</div>
         }
 
@@ -91,13 +91,13 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
                 options={options}
                 menuPlacement={"auto"}
                 menuPosition="fixed"
-                getOptionLabel={({label}) => label }
-                getOptionValue={({value}) => value }
+                getOptionLabel={({label}) => label}
+                getOptionValue={({value}) => value}
                 onChange={this.updateSelection}
                 value={selectedOptionGroup ? {value: optionGroup.id, label: optionGroup.name} : undefined}
             />
 
-            <Separator spacing="comfortable" />
+            <Separator spacing="comfortable"/>
 
             {optionGroup && <OptionGroup studyId={studyId} onUpdate={this.getOptionGroups} {...optionGroup} />}
         </div>;

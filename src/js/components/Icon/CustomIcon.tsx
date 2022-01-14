@@ -7,33 +7,33 @@ const SIZE = 16;
 
 
 type CustomIconProps = {
-  className?: string;
-  type: string;
-  width?: number;
-  height?: number;
-  onClick?: (e) => void;
-  role?: string;
+    className?: string;
+    type: string;
+    width?: number;
+    height?: number;
+    onClick?: (e) => void;
+    role?: string;
 };
 
 const CustomIcon: FC<CustomIconProps> = ({
-  className,
-  type,
-  width = SIZE,
-  height = SIZE,
-  onClick,
-  role,
-}) => {
-  const CustomIcon = icons[type];
+                                             className,
+                                             type,
+                                             width = SIZE,
+                                             height = SIZE,
+                                             onClick,
+                                             role,
+                                         }) => {
+    const CustomIcon = icons[type];
 
-  return (
-    <CustomIcon
-      className={classNames('Icon', className, type)}
-      width={width}
-      height={height}
-      onClick={onClick}
-      role={role}
-    />
-  );
+    return (
+        <CustomIcon
+            className={classNames('Icon', className, type)}
+            width={width}
+            height={height}
+            onClick={onClick}
+            role={role}
+        />
+    );
 };
 
 export default CustomIcon;

@@ -13,7 +13,7 @@ export default class DatasetList extends Component {
 
         this.state = {
             isLoadingDatasets: true,
-            datasets:          null,
+            datasets: null,
             pagination: DataGridHelper.getDefaultState(props.embedded ? 5 : 10),
         };
     }
@@ -31,17 +31,17 @@ export default class DatasetList extends Component {
         });
 
         let filters = {
-            page:    pagination.currentPage,
+            page: pagination.currentPage,
             perPage: pagination.perPage,
         };
 
         let url = '';
 
-        if(study) {
+        if (study) {
             url = '/api/study/' + study.id + '/dataset'
-        } else if(catalog) {
+        } else if (catalog) {
             url = '/api/catalog/' + catalog.slug + '/dataset'
-        } else if(agent) {
+        } else if (agent) {
             url = '/api/agent/details/' + agent.slug + '/dataset'
         }
 
@@ -52,7 +52,7 @@ export default class DatasetList extends Component {
                 });
 
                 this.setState({
-                    datasets:          datasets,
+                    datasets: datasets,
                     pagination: DataGridHelper.parseResults(response.data),
                     isLoadingDatasets: false,
                 });
@@ -74,7 +74,7 @@ export default class DatasetList extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage + 1,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getDatasets();
@@ -85,12 +85,12 @@ export default class DatasetList extends Component {
         const {embedded, pagination, datasets} = this.state;
         const {visible = true, study, state, className} = this.props;
 
-        if(!visible) {
+        if (!visible) {
             return null;
         }
 
         if (datasets === null) {
-            return <LoadingOverlay accessibleLabel="Loading datasets" content="" />;
+            return <LoadingOverlay accessibleLabel="Loading datasets" content=""/>;
         }
 
         return <div className={classNames('Datasets', className)}>
@@ -121,7 +121,8 @@ export default class DatasetList extends Component {
                     totalItems={pagination.totalResults}
                 />
 
-            </> : <div className="NoResults">This {study ? 'study' : 'catalog'} does not have any associated datasets.</div>}
+            </> : <div className="NoResults">This {study ? 'study' : 'catalog'} does not have any associated
+                datasets.</div>}
         </div>;
     }
 }

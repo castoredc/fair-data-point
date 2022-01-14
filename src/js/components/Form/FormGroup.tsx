@@ -4,7 +4,7 @@ type FormGroupProps = {
     label: string
 }
 
-const FormGroup: FC<FormGroupProps> = ({ label, children }) => {
+const FormGroup: FC<FormGroupProps> = ({label, children}) => {
     return <div className="FormGroup">
         <div className="FormHeading">
             <h2>{label}</h2>

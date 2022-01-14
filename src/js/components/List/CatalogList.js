@@ -13,7 +13,7 @@ export default class CatalogList extends Component {
 
         this.state = {
             isLoadingCatalogs: true,
-            catalogs:          null,
+            catalogs: null,
             pagination: DataGridHelper.getDefaultState(props.embedded ? 5 : 10),
         };
     }
@@ -31,13 +31,13 @@ export default class CatalogList extends Component {
         });
 
         let filters = {
-            page:    pagination.currentPage,
+            page: pagination.currentPage,
             perPage: pagination.perPage,
         };
 
         let url = '/api/catalog';
 
-        if(agent) {
+        if (agent) {
             url = '/api/agent/details/' + agent.slug + '/catalog'
         }
 
@@ -48,7 +48,7 @@ export default class CatalogList extends Component {
                 });
 
                 this.setState({
-                    catalogs:          catalogs,
+                    catalogs: catalogs,
                     pagination: DataGridHelper.parseResults(response.data),
                     isLoadingCatalogs: false,
                 });
@@ -70,7 +70,7 @@ export default class CatalogList extends Component {
             pagination: {
                 ...pagination,
                 currentPage: paginationCount.currentPage + 1,
-                perPage:     paginationCount.pageLimit,
+                perPage: paginationCount.pageLimit,
             },
         }, () => {
             this.getCatalogs();
@@ -81,12 +81,12 @@ export default class CatalogList extends Component {
         const {embedded, pagination, catalogs} = this.state;
         const {visible = true, study, state, className} = this.props;
 
-        if(!visible) {
+        if (!visible) {
             return null;
         }
 
         if (catalogs === null) {
-            return <LoadingOverlay accessibleLabel="Loading catalogs" content="" />;
+            return <LoadingOverlay accessibleLabel="Loading catalogs" content=""/>;
         }
 
         return <div className={classNames('Catalogs', className)}>
@@ -113,7 +113,8 @@ export default class CatalogList extends Component {
                     totalItems={pagination.totalResults}
                 />
 
-            </> : <div className="NoResults">This {study ? 'study' : 'FAIR Data Point'} does not have any associated catalogs.</div>}
+            </> : <div className="NoResults">This {study ? 'study' : 'FAIR Data Point'} does not have any associated
+                catalogs.</div>}
         </div>;
     }
 }

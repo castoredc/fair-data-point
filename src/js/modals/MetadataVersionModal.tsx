@@ -27,7 +27,7 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
     }
 
     handleChange = (event) => {
-        const { currentVersion } = this.props;
+        const {currentVersion} = this.props;
         const versionType = event.target.value;
 
         const parsedVersion = currentVersion.split('.');
@@ -38,11 +38,11 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
 
         let newVersion = '';
 
-        if(versionType === 'major') {
+        if (versionType === 'major') {
             newVersion = (major + 1) + '.' + 0 + '.' + 0;
-        } else if(versionType === 'minor') {
+        } else if (versionType === 'minor') {
             newVersion = major + '.' + (minor + 1) + '.' + 0;
-        } else if(versionType === 'patch') {
+        } else if (versionType === 'patch') {
             newVersion = major + '.' + minor + '.' + (patch + 1);
         }
 
@@ -53,8 +53,8 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
     };
 
     render() {
-        const { open, onClose, handleSave, currentVersion } = this.props;
-        const { versionType, newVersion } = this.state;
+        const {open, onClose, handleSave, currentVersion} = this.props;
+        const {versionType, newVersion} = this.state;
 
         const title = "Save metadata";
 
@@ -66,9 +66,9 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
         >
             <Choice
                 options={[
-                    { value: 'major', labelText: 'Major changes' },
-                    { value: 'minor', labelText: 'Minor changes' },
-                    { value: 'patch', labelText: 'Patch' },
+                    {value: 'major', labelText: 'Major changes'},
+                    {value: 'minor', labelText: 'Minor changes'},
+                    {value: 'patch', labelText: 'Patch'},
                 ]}
                 value={versionType ? versionType : undefined}
                 name="versionType"
@@ -85,7 +85,9 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
             </FormItem>}
 
 
-            <Button type="submit" disabled={versionType === null} onClick={() => {handleSave(versionType ? versionType : '')}}>
+            <Button type="submit" disabled={versionType === null} onClick={() => {
+                handleSave(versionType ? versionType : '')
+            }}>
                 Save metadata
             </Button>
         </Modal>

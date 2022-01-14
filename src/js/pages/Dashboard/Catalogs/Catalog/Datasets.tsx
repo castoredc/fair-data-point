@@ -68,7 +68,8 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
             <Stack distribution="trailing" alignment="end">
                 {/*<Button icon="add" className="AddButton" disabled={isLoading}>New dataset</Button>*/}
 
-                <Button icon="add" buttonType="primary" disabled={isLoading} onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}>
+                <Button icon="add" buttonType="primary" disabled={isLoading}
+                        onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}>
                     Add dataset
                 </Button>
             </Stack>
@@ -80,7 +81,8 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     return <ListItem
                         key={dataset.id}
                         selectable={false}
-                        link={`/dashboard/catalogs/${catalog}/datasets/${dataset.slug}`} title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
+                        link={`/dashboard/catalogs/${catalog}/datasets/${dataset.slug}`}
+                        title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
                     />
                 })}
             </div>
