@@ -169,6 +169,10 @@ export default class TripleModal extends Component {
     getOptions = (type) => {
         const {nodes} = this.props;
 
+        if(nodes.length === 0) {
+            return [];
+        }
+
         return nodes[type].map((node) => {
             return {value: node.id, label: node.title, repeated: node.repeated};
         });

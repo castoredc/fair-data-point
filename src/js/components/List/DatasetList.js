@@ -4,8 +4,8 @@ import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {LoadingOverlay, Pagination} from "@castoredc/matter";
-import DatasetListItem from "../ListItem/DatasetListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
+import ListItem from "components/ListItem";
 
 export default class DatasetList extends Component {
     constructor(props) {
@@ -103,13 +103,14 @@ export default class DatasetList extends Component {
                     if (dataset.hasMetadata === false) {
                         return null;
                     }
-                    return <DatasetListItem key={dataset.id}
-                                            newWindow={embedded}
-                                            state={state}
-                                            link={dataset.relativeUrl}
-                                            name={localizedText(dataset.metadata.title, 'en')}
-                                            description={localizedText(dataset.metadata.description, 'en')}
-                    />
+                    return <ListItem
+                        key={dataset.id}
+                        title={localizedText(dataset.metadata.title, 'en')}
+                        description={localizedText(dataset.metadata.description, 'en')}
+                        link={dataset.relativeUrl}
+                        state={state}
+                        newWindow={embedded}
+                    />;
                 })}
 
                 <Pagination

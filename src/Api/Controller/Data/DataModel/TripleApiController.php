@@ -68,6 +68,10 @@ class TripleApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
+        if ($triple->getDataModelVersion() !== $module->getVersion()) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
+
         try {
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
             assert($parsed instanceof TripleApiRequest);
@@ -94,6 +98,10 @@ class TripleApiController extends ApiController
     public function deleteTriple(DataModelGroup $module, Triple $triple, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+
+        if ($triple->getDataModelVersion() !== $module->getVersion()) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
 
         try {
             $bus->dispatch(new DeleteTripleCommand($triple));

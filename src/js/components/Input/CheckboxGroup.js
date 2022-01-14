@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import './Checkbox.scss';
 import './Input.scss'
 import {ChoiceOption} from "@castoredc/matter";
 

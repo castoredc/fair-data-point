@@ -6,8 +6,7 @@ import queryString from 'query-string';
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../components/ToastContent";
-import LoadingScreen from "../../components/LoadingScreen";
-import {CastorLogo} from "@castoredc/matter";
+import {CastorLogo, LoadingOverlay} from "@castoredc/matter";
 import LoginForm from "../../components/Form/LoginForm";
 
 export default class Login extends Component {
@@ -84,14 +83,14 @@ export default class Login extends Component {
     };
 
     render() {
-        const { serverLocked, view, servers, selectedServer, catalog } = this.state;
+        const { serverLocked, view, servers, selectedServer, catalog, isLoading } = this.state;
 
         const params = queryString.parse(this.props.location.search);
         const path = typeof params.path !== 'undefined' ? params.path : '';
 
-        if(this.state.isLoading)
+        if(isLoading)
         {
-            return <LoadingScreen showLoading={true}/>;
+            return <LoadingOverlay accessibleLabel="Loading"/>;
         }
 
         return (

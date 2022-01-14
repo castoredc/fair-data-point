@@ -4,8 +4,8 @@ import {classNames, localizedText} from "../../util";
 import {toast} from "react-toastify";
 import ToastContent from "../ToastContent";
 import {LoadingOverlay, Pagination} from "@castoredc/matter";
-import CatalogListItem from "../ListItem/CatalogListItem";
 import DataGridHelper from "../DataTable/DataGridHelper";
+import ListItem from "components/ListItem";
 
 export default class CatalogList extends Component {
     constructor(props) {
@@ -95,13 +95,14 @@ export default class CatalogList extends Component {
                     if (catalog.hasMetadata === false) {
                         return null;
                     }
-                    return <CatalogListItem key={catalog.id}
-                                            newWindow={embedded}
-                                            state={state}
-                                            link={catalog.relativeUrl}
-                                            name={localizedText(catalog.metadata.title, 'en')}
-                                            description={localizedText(catalog.metadata.description, 'en')}
-                    />
+                    return <ListItem
+                        key={catalog.id}
+                        title={localizedText(catalog.metadata.title, 'en')}
+                        description={localizedText(catalog.metadata.description, 'en')}
+                        link={catalog.relativeUrl}
+                        state={state}
+                        newWindow={embedded}
+                    />;
                 })}
 
                 <Pagination

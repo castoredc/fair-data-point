@@ -29,8 +29,6 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
         this.state = {
             affiliations: props.user.details.affiliations ?? [],
             countries: null,
-            // metadataSource: null,
-            // visitedFields: {},
             validation: [
                 defaultValidation,
             ],
@@ -60,7 +58,6 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
     }
 
     handleSubmit = (values) => {
-        console.log(values);
         const {onSaved} = this.props;
 
             this.setState({

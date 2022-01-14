@@ -13,6 +13,7 @@ import DatasetMetadataForm from "components/Form/Metadata/DatasetMetadataForm";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";
 import Distributions from "pages/Dashboard/Dataset/Distributions";
+import AddDistribution from "pages/Dashboard/Dataset/AddDistribution";
 
 interface DatasetProps extends RouteComponentProps<any> {
     study?: any,
@@ -153,11 +154,19 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                     />
                     <Route
                         path={[
-                        "/dashboard/studies/:study/datasets/:dataset/distributions",
-                        "/dashboard/catalogs/:catalog/datasets/:dataset/distributions",
+                            "/dashboard/studies/:study/datasets/:dataset/distributions",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions",
                         ]}
                         exact
-                       render={(props) => <Distributions {...props} />}
+                        render={(props) => <Distributions {...props} />}
+                    />
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/add",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add",
+                        ]}
+                        exact
+                        render={(props) => <AddDistribution {...props} />}
                     />
 
                     <Route component={NotFound}/>

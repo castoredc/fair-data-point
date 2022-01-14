@@ -122,7 +122,7 @@ export const replaceAt = (array, index, value) => {
 export const mergeData = (defaultData, newData) => {
     return Object.keys(defaultData).reduce((a, key) => (
         { ...a, [key]: (key in newData ? newData[key] : defaultData[key])}
-        ), {});
+        ), defaultData);
 };
 
 export const ucfirst = (text) => {

@@ -149,7 +149,7 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             <Formik
                 initialValues={{
                     ontology: null,
-                    concept:  null,
+                    concept: null,
                     includeIndividuals: []
                 }}
                 validationSchema={Yup.object().shape({
@@ -170,44 +170,44 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                       handleSubmit,
                       isSubmitting,
                       setValues,
-                    setFieldValue
+                      setFieldValue
                   }) => {
                     return <Form>
-                    <FormItem label="Ontology">
-                        <Field
-                            component={Select}
-                            options={options}
-                            name="ontology"
-                            onChange={() => setFieldValue('concept', null)}
-                            menuPosition="fixed"
-                            serverError={validation}
-                        />
-                    </FormItem>
-                    <FormItem label="Concept">
-                        <Field
-                            component={AsyncSelect}
-                            name="concept"
-                            async
-                            loadOptions={(inputValue, callback) => this.loadConcepts(values.ontology, values.includeIndividuals, inputValue, callback)}
-                            // onChange={this.handleConceptChange}
-                            isDisabled={values.ontology === null}
-                            menuPosition="fixed"
-                            serverError={validation}
-                        />
+                        <FormItem label="Ontology">
+                            <Field
+                                component={Select}
+                                options={options}
+                                name="ontology"
+                                onChange={() => setFieldValue('concept', null)}
+                                menuPosition="fixed"
+                                serverError={validation}
+                            />
+                        </FormItem>
+                        <FormItem label="Concept">
+                            <Field
+                                component={AsyncSelect}
+                                name="concept"
+                                async
+                                loadOptions={(inputValue, callback) => this.loadConcepts(values.ontology, values.includeIndividuals, inputValue, callback)}
+                                // onChange={this.handleConceptChange}
+                                isDisabled={values.ontology === null}
+                                menuPosition="fixed"
+                                serverError={validation}
+                            />
 
-                        <Field
-                            component={Choice}
-                            multiple={true}
-                            options={[{value: '1', labelText: 'Include individuals'}]}
-                            name="includeIndividuals"
-                            serverError={validation}
-                        />
-                    </FormItem>
+                            <Field
+                                component={Choice}
+                                multiple={true}
+                                options={[{value: '1', labelText: 'Include individuals'}]}
+                                name="includeIndividuals"
+                                serverError={validation}
+                            />
+                        </FormItem>
 
-                    <Button type="submit" disabled={values.ontology === null || isSubmitting}>
-                        Add annotation
-                    </Button>
-                </Form>;
+                        <Button type="submit" disabled={values.ontology === null || isSubmitting}>
+                            Add annotation
+                        </Button>
+                    </Form>;
                 }}
             </Formik>
         </Modal>

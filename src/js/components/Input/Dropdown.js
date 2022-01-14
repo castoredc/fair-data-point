@@ -77,8 +77,6 @@ class Dropdown extends ValidatorComponent {
                 ref={(r) => {
                     this.input = r;
                 }}
-                menuPosition="fixed"
-                menuPlacement="auto"
                 onChange={onChange}
                 styles={dropdownStyle}
                 components={{ DropdownIndicator }}

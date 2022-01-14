@@ -1,3 +1,5 @@
+@import '../../scss/colors';
+
 .Dashboard {
   overflow: hidden;
   display: flex;
@@ -42,5 +44,23 @@
     padding-bottom: 3.2rem;
     height: 100%;
     padding-top: 3.2rem;
+  }
+
+  .LargeTable {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    overflow: auto;
+
+    .TableHeader {
+      padding: 10px 0;
+      background-color: $pale-grey;
+      border-bottom: 0.2rem solid $neutral-50 !important;
+    }
+
+    .TableBody {
+      flex: 1;
+      overflow: auto;
+    }
   }
 }

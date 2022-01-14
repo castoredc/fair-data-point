@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import StudiesDataTable from "components/DataTable/StudiesDataTable";
-import {Button, Stack} from "@castoredc/matter";
-import AddStudyModal from "../../../../modals/AddStudyModal";
+import {Button, Modal, Stack} from "@castoredc/matter";
 import ConfirmModal from "../../../../modals/ConfirmModal";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
+import StudyForm from "components/Form/Admin/StudyForm";
 
 interface AddStudyProps {
     catalog: string,
@@ -90,11 +90,14 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
         const { showModal, selectedStudy, addedStudy } = this.state;
 
         return <div className="PageBody">
-            <AddStudyModal
-                show={showModal.newStudy}
-                handleClose={() => {this.closeModal('newStudy')}}
-                catalog={catalog}
-            />
+            <Modal
+                open={showModal.newStudy}
+                onClose={() => {this.closeModal('newStudy')}}
+                title="Add new study"
+                accessibleName="Add new study"
+            >
+                <StudyForm />
+            </Modal>
 
             {selectedStudy && <ConfirmModal
                 title="Add study"

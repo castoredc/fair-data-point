@@ -65,7 +65,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
 
     render() {
         const {catalog, isLoading} = this.state;
-        const {location} = this.props;
+        const {location, history} = this.props;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading catalog"/>;
@@ -121,6 +121,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                            render={(props) => <div>
                                <CatalogForm
                                    catalog={catalog}
+                                   history={history}
                                />
                            </div>}/>
                     <Route path="/dashboard/catalogs/:catalog/metadata" exact

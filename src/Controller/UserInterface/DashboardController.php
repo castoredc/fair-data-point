@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
+use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
@@ -106,9 +108,11 @@ class DashboardController extends AbstractController
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}", name="dashboard_study_dataset")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/metadata", name="dashboard_study_dataset_metadata")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions", name="dashboard_study_dataset_distributions")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/add", name="dashboard_study_dataset_distributions_add")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}", name="dashboard_catalog_dataset")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/metadata", name="dashboard_catalog_dataset_metadata")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions", name="dashboard_catalog_dataset_distributions")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add", name="dashboard_catalog_dataset_distributions_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
@@ -124,16 +128,16 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}", name="dashboard_dataset_distribution")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/metadata", name="admin_study_distribution_metadata")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents", name="admin_study_distribution_content")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log", name="admin_study_distribution_log")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/subset", name="admin_study_distribution_subset")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}", name="dashboard_study_dataset_distribution")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/metadata", name="dashboard_study_distribution_metadata")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents", name="dashboard_study_distribution_content")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log", name="dashboard_study_distribution_log")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/subset", name="dashboard_study_distribution_subset")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}", name="dashboard_dataset_distribution")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/metadata", name="admin_study_distribution_metadata")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents", name="admin_study_distribution_content")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log", name="admin_study_distribution_log")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset", name="admin_study_distribution_subset")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/metadata", name="dashboard_study_distribution_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents", name="dashboard_study_distribution_content")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log", name="dashboard_study_distribution_log")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset", name="dashboard_study_distribution_subset")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
@@ -150,8 +154,8 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="admin_study_distribution_log_records")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="admin_catalog_distribution_log_records")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="dashboard_study_distribution_log_records")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="dashboard_catalog_distribution_log_records")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
@@ -202,21 +206,51 @@ class DashboardController extends AbstractController
         return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }
 
-//    /**
-//     * @Route("/catalog/{catalog}/dataset/{dataset}", name="admin_catalog_dataset")
-//     * @Route("/catalog/{catalog}/dataset/{dataset}/metadata", name="admin_catalog_dataset_metadata")
-//     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions", name="admin_catalog_dataset_distributions")
-//     * @Route("/catalog/{catalog}/dataset/{dataset}/distributions/add", name="admin_catalog_dataset_distribution_add")
-//     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-//     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-//     */
-//    public function dataset(Catalog $catalog, Dataset $dataset): Response
-//    {
-//        $this->denyAccessUnlessGranted('edit', $dataset);
-//
-//        return $this->render(
-//            'react.html.twig',
-//            ['title' => 'FDP Admin']
-//        );
-//    }
+    /**
+     * @Route("/dashboard/data-models/{model}", name="dashboard_model")
+     * @Route("/dashboard/data-models/{model}/versions", name="dashboard_model_versions")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     */
+    public function adminModel(DataModel $dataModel): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => $dataModel->getTitle()]
+        );
+    }
+
+    /**
+     * @Route("/dashboard/data-models/{model}/{version}/modules", name="dashboard_model_modules")
+     * @Route("/dashboard/data-models/{model}/{version}/prefixes", name="dashboard_model_prefixes")
+     * @Route("/dashboard/data-models/{model}/{version}/preview", name="dashboard_model_preview")
+     * @Route("/dashboard/data-models/{model}/{version}/import-export", name="dashboard_model_importexport")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
+     */
+    public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FDP Admin']
+        );
+    }
+
+    /**
+     * @Route("/dashboard/data-models/{model}/{version}/nodes/{nodeType}", name="dashboard_model_nodes")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "dataModel", "version": "version"}})
+     */
+    public function adminModelVersionNodes(DataModel $dataModel, DataModelVersion $dataModelVersion, string $nodeType): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'FDP Admin']
+        );
+    }
 }

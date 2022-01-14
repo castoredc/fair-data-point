@@ -74,8 +74,6 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
     handleOrganizationSelect = (organization) => {
         const {form, field} = this.props;
 
-        console.log('selected', organization);
-
         form.setFieldValue(field.name, {
             source: organization.source,
             id: organization.value,

@@ -10,12 +10,13 @@ import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";
-import DistributionDetails from "pages/Dashboard/Dataset/Distribution/DistributionDetails";
 import DistributionMetadata from "pages/Dashboard/Dataset/Distribution/DistributionMetadata";
-import DistributionContents from "pages/Dashboard/Dataset/Distribution/DistributionContents";
 import DistributionSubset from "pages/Dashboard/Dataset/Distribution/DistributionSubset";
 import DistributionLog from "pages/Dashboard/Dataset/Distribution/DistributionLog";
 import DistributionLogs from "pages/Dashboard/Dataset/Distribution/DistributionLogs";
+import Details from "pages/Dashboard/Dataset/Distribution/Details";
+import DistributionContentsCsv from "pages/Dashboard/Dataset/Distribution/DistributionContentsCsv";
+import DistributionContentsRdf from "pages/Dashboard/Dataset/Distribution/DistributionContentsRdf";
 
 interface DistributionProps extends RouteComponentProps<any> {
     dataset: any,
@@ -23,6 +24,7 @@ interface DistributionProps extends RouteComponentProps<any> {
 
 interface DistributionState {
     distribution: any,
+    contents: any,
     isLoading: boolean,
 }
 
@@ -32,6 +34,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
         this.state = {
             distribution: null,
+            contents: null,
             isLoading: true,
         };
     }
@@ -47,8 +50,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
             .then((response) => {
                 this.setState({
                     distribution: response.data,
-                    isLoading: false,
-                });
+                }, this.getContents);
             })
             .catch((error) => {
                 this.setState({
@@ -64,18 +66,40 @@ export default class Distribution extends Component<DistributionProps, Distribut
             });
     };
 
+    getContents = () => {
+        const {match} = this.props;
+
+        axios.get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution + '/contents')
+
+            .then((response) => {
+                this.setState({
+                    contents:          response.data.elements,
+                    isLoading: false,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
+                toast.error(<ToastContent type="error" message={message}/>);
+            });
+    };
+
     componentDidMount() {
         this.getDistribution();
     }
 
     render() {
         const {history, location, match} = this.props;
-        const {isLoading, distribution} = this.state;
+        const {isLoading, distribution, contents} = this.state;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading distribution"/>;
         }
 
+        const catalog = match.params.catalog;
         const study = match.params.study;
         const dataset = match.params.dataset;
 
@@ -141,7 +165,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             <SideBar
                 back={{
-                    to: match.params.study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${match.params.catalog}/datasets/${dataset}`,
+                    to: study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`,
                     title: 'Back to dataset'
                 }}
                 location={location}
@@ -168,8 +192,10 @@ export default class Distribution extends Component<DistributionProps, Distribut
                         ]}
                         exact
                         render={(props) => (
-                            <DistributionDetails
+                            <Details
                                 {...props}
+                                catalog={catalog}
+                                study={study}
                                 dataset={dataset}
                                 distribution={distribution}
                             />
@@ -197,13 +223,16 @@ export default class Distribution extends Component<DistributionProps, Distribut
                             "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/contents"
                         ]}
                         exact
-                        render={(props) => (
-                            <DistributionContents
-                                {...props}
-                                dataset={dataset}
-                                distribution={distribution}
-                            />
-                        )}
+                        render={(props) => {
+                            if (distribution.type === 'csv') {
+                                return <DistributionContentsCsv contents={contents} catalog={catalog}
+                                                                distribution={distribution} dataset={dataset}/>;
+                            } else if (distribution.type === 'rdf') {
+                                return <DistributionContentsRdf dataset={dataset} distribution={distribution}/>;
+                            }
+
+                            return <div className="NoResults">This distribution does not have contents.</div>;
+                        }}
                     />
 
                     <Route
