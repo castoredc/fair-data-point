@@ -3,7 +3,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
 import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
 import StudyDetailsForm from "components/Form/Study/StudyDetailsForm";
@@ -16,8 +16,9 @@ import {isGranted} from "utils/PermissionHelper";
 import Datasets from "pages/Dashboard/Studies/Study/Datasets";
 import SideBar from "components/SideBar";
 import NotFound from "pages/NotFound";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface StudyProps extends RouteComponentProps<any> {
+interface StudyProps extends AuthorizedRouteComponentProps {
 }
 
 interface StudyState {

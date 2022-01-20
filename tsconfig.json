@@ -16,7 +16,7 @@
       "pages/*": ["./src/js/pages/*"],
 //      "services/*": ["./src/js/services/*"],
 //      "store/*": ["./src/js/store/*"],
-//      "types/*": ["./src/js/types/*"],
+      "types/*": ["./src/js/types/*"],
       "utils/*": ["./src/js/utils/*"]
     },
     "sourceMap": true,

@@ -3,7 +3,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import {Button, LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
 import Header from "components/Layout/Dashboard/Header";
@@ -17,8 +17,9 @@ import DistributionLogs from "pages/Dashboard/Dataset/Distribution/DistributionL
 import Details from "pages/Dashboard/Dataset/Distribution/Details";
 import DistributionContentsCsv from "pages/Dashboard/Dataset/Distribution/DistributionContentsCsv";
 import DistributionContentsRdf from "pages/Dashboard/Dataset/Distribution/DistributionContentsRdf";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface DistributionProps extends RouteComponentProps<any> {
+interface DistributionProps extends AuthorizedRouteComponentProps {
     dataset: any,
 }
 
@@ -92,7 +93,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
     }
 
     render() {
-        const {history, location, match} = this.props;
+        const {history, location, match, user} = this.props;
         const {isLoading, distribution, contents} = this.state;
 
         if (isLoading) {
@@ -194,6 +195,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                         render={(props) => (
                             <Details
                                 {...props}
+                                user={user}
                                 catalog={catalog}
                                 study={study}
                                 dataset={dataset}

@@ -3,15 +3,15 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Heading, LoadingOverlay, Pagination, Separator, Stack, StackItem} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import {localizedText} from "../../../util";
 import {toRem} from "@castoredc/matter-utils";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import DocumentTitle from "components/DocumentTitle";
 import BackButton from "components/BackButton";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface SelectCatalogProps extends RouteComponentProps<any> {
+interface SelectCatalogProps extends AuthorizedRouteComponentProps {
 }
 
 interface SelectCatalogState {

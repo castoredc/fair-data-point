@@ -5,7 +5,7 @@ import FormItem from "../FormItem";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
-import {PersonType} from "../../../types/PersonType";
+import {PersonType} from "types/PersonType";
 import {Field, Form, Formik} from 'formik';
 import Input from "components/Input/Formik/Input";
 import * as Yup from 'yup';

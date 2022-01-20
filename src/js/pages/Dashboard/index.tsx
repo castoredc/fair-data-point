@@ -1,5 +1,5 @@
 import React, {Component, FunctionComponent} from "react";
-import {Redirect, Route, RouteComponentProps, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import NotFound from "../NotFound";
 import {CastorBar, Tabs} from "@castoredc/matter";
 import Studies from "./Studies";
@@ -13,15 +13,14 @@ import Distribution from "pages/Dashboard/Dataset/Distribution";
 import Catalogs from "pages/Dashboard/Catalogs";
 import Catalog from "pages/Dashboard/Catalogs/Catalog";
 import FAIRDataPoint from "pages/Dashboard/FAIRDataPoint";
-import {PrivateRoute, ProtectedRoute} from "components/Route";
+import {AuthorizedRouteComponentProps, PrivateRoute, ProtectedRoute} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
 import SelectCatalog from "pages/Dashboard/Studies/SelectCatalog";
 import DataModel from "pages/Dashboard/DataModels/DataModel";
 import AddCatalog from "pages/Dashboard/Catalogs/AddCatalog";
 import AddDataModel from "pages/Dashboard/DataModels/AddDataModel";
 
-interface DashboardProps extends RouteComponentProps<any> {
-    user: any,
+interface DashboardProps extends AuthorizedRouteComponentProps {
 }
 
 const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, match, user}) => {
@@ -38,16 +37,16 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
             title: 'Studies',
         },
         catalogs: {
-            content: <Catalogs history={history} location={location} match={match}/>,
+            content: <Catalogs history={history} location={location} match={match} user={user}/>,
             title: 'Catalogs',
         },
         dataModels: {
-            content: <DataModels history={history} location={location} match={match}/>,
+            content: <DataModels history={history} location={location} match={match} user={user}/>,
             title: 'Data models',
         },
         ...(isAdmin(user) && {
             fdp: {
-                content: <FAIRDataPoint history={history} location={location} match={match}/>,
+                content: <FAIRDataPoint history={history} location={location} match={match} user={user}/>,
                 title: 'FAIR Data Point',
             }
         })
@@ -123,7 +122,7 @@ export default class Dashboard extends Component<DashboardProps> {
                     <PrivateRoute path="/dashboard/studies/:study/datasets/:dataset" component={Dataset} user={user}/>
                     <PrivateRoute path="/dashboard/studies/:study" component={Study} user={user}/>
 
-                    <PrivateRoute path="/dashboard/catalogs/add" exact component={AddCatalog} user={user}/>
+                    <ProtectedRoute path="/dashboard/catalogs/add" exact component={AddCatalog} user={user}/>
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add"
                                   component={Dataset} user={user}/>
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"

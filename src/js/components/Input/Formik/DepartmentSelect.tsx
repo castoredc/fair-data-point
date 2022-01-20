@@ -7,7 +7,7 @@ import {Button, Dropdown, TextInput} from "@castoredc/matter";
 import {FieldProps} from "formik";
 import {OptionType} from "components/Input/Formik/Select";
 import {ActionMeta} from "react-select/src/types";
-import {OrganizationType} from "../../../types/OrganizationType";
+import {OrganizationType} from "types/OrganizationType";
 import FieldErrors from "components/Input/Formik/Errors";
 
 interface DepartmentSelectProps extends FieldProps {

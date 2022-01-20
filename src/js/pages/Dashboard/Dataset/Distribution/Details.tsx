@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import DistributionForm from "components/Form/Admin/DistributionForm";
-import {RouteComponentProps} from "react-router-dom";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface DetailsProps extends RouteComponentProps<any> {
+interface DetailsProps extends AuthorizedRouteComponentProps {
     distribution: any,
     catalog?: string,
     dataset?: string,

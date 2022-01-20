@@ -3,15 +3,15 @@ import './DataModelModules.scss';
 import axios from "axios";
 import {toast} from "react-toastify";
 import {Button} from "@castoredc/matter";
-import {RouteComponentProps} from "react-router-dom";
 import ToastContent from "components/ToastContent";
 import DataModelModuleModal from "../../../../modals/DataModelModuleModal";
 import TripleModal from "../../../../modals/TripleModal";
 import ConfirmModal from "../../../../modals/ConfirmModal";
 import SideTabs from "components/SideTabs";
 import DataModelModule from "components/DataModelModule/DataModelModule";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface ModulesProps extends RouteComponentProps<any> {
+interface ModulesProps extends AuthorizedRouteComponentProps {
     modules: any,
     nodes: any,
     prefixes: any,

@@ -3,7 +3,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
 import {LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
@@ -16,8 +16,9 @@ import Prefixes from "pages/Dashboard/DataModels/DataModel/Prefixes";
 import Versions from "pages/Dashboard/DataModels/DataModel/Versions";
 import Preview from "pages/Dashboard/DataModels/DataModel/Preview";
 import DataModelForm from "components/Form/Data/DataModelForm";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface DataModelProps extends RouteComponentProps<any> {
+interface DataModelProps extends AuthorizedRouteComponentProps {
 }
 
 interface DataModelState {
@@ -180,7 +181,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     };
 
     render() {
-        const {history, location, match} = this.props;
+        const {history, location, user} = this.props;
         const {isLoading, dataModel, versions, currentVersion, modules, nodes, prefixes} = this.state;
 
         if (isLoading) {
@@ -273,6 +274,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                <Versions
                                    getDataModel={this.getDataModel}
                                    dataModel={dataModel}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -286,6 +288,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    getModules={this.getModules}
                                    dataModel={dataModel}
                                    version={currentVersion.value}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -297,6 +300,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    getNodes={this.getNodes}
                                    dataModel={dataModel}
                                    version={currentVersion}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -308,6 +312,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    getPrefixes={this.getPrefixes}
                                    dataModel={dataModel}
                                    version={currentVersion.value}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -317,6 +322,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                <Preview
                                    dataModel={dataModel}
                                    version={currentVersion.value}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -327,6 +333,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    dataModel={dataModel}
                                    version={currentVersion.value}
                                    getDataModel={this.getDataModel}
+                                   user={user}
                                    {...props}
                                />
                            )}

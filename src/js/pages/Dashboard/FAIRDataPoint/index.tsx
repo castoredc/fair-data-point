@@ -1,14 +1,14 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../util";
-import {RouteComponentProps} from "react-router-dom";
 import {Heading, LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import FAIRDataPointMetadataForm from "components/Form/Metadata/FAIRDataPointMetadataForm";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface FAIRDataPointProps extends RouteComponentProps<any> {
+interface FAIRDataPointProps extends AuthorizedRouteComponentProps {
 }
 
 interface FAIRDataPointState {

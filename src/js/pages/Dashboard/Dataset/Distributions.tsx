@@ -6,9 +6,9 @@ import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
-import {RouteComponentProps} from "react-router-dom";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface DistributionsProps extends RouteComponentProps<any> {
+interface DistributionsProps extends AuthorizedRouteComponentProps {
 }
 
 interface DistributionsState {

@@ -2,10 +2,9 @@ import React, {Component} from "react";
 import Emoji from "components/Emoji";
 import queryString from "query-string";
 import AffiliationsForm from "components/Form/Agent/AffiliationsForm";
-import {RouteComponentProps} from "react-router-dom";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface AffiliationsProps extends RouteComponentProps<any> {
-    user: any,
+interface AffiliationsProps extends AuthorizedRouteComponentProps {
 }
 
 interface AffiliationsState {
@@ -31,6 +30,10 @@ export default class Affiliations extends Component<AffiliationsProps, Affiliati
     render() {
         const {location, user} = this.props;
         const {isSaved} = this.state;
+
+        if (!(user && user.details)) {
+            return null;
+        }
 
         if (isSaved) {
             const params = queryString.parse(location.search);

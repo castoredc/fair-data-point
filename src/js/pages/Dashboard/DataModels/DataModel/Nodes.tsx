@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 import {ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack, Tabs} from "@castoredc/matter";
-import {RouteComponentProps} from "react-router-dom";
 import AddNodeModal from "../../../../modals/AddNodeModal";
 import ConfirmModal from "../../../../modals/ConfirmModal";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface NodesProps extends RouteComponentProps<any> {
+interface NodesProps extends AuthorizedRouteComponentProps {
     nodes: any,
     getNodes: () => void,
     dataModel: any,

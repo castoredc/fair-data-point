@@ -2,13 +2,13 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
-import {RouteComponentProps} from "react-router-dom";
 import ToastContent from "components/ToastContent";
 import DataModelPrefixModal from "../../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../../modals/ConfirmModal";
 import DataGridContainer from "components/DataTable/DataGridContainer";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface PrefixesProps extends RouteComponentProps<any> {
+interface PrefixesProps extends AuthorizedRouteComponentProps {
     prefixes: any,
     getPrefixes: () => void,
     dataModel: any,

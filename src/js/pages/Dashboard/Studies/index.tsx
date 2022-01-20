@@ -3,16 +3,15 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, ChoiceOption, LoadingOverlay, Pagination, Space} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {isAdmin} from "utils/PermissionHelper";
 import Header from "components/Layout/Dashboard/Header";
 import ScrollShadow from "components/ScrollShadow";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface StudiesProps extends RouteComponentProps<any> {
-    user: any,
+interface StudiesProps extends AuthorizedRouteComponentProps {
 }
 
 interface StudiesState {

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../../util";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import {LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import SideBar from "components/SideBar";
@@ -16,8 +16,9 @@ import Datasets from "pages/Dashboard/Catalogs/Catalog/Datasets";
 import AddDataset from "pages/Dashboard/Catalogs/Catalog/AddDataset";
 import Body from "components/Layout/Dashboard/Body";
 import Header from "components/Layout/Dashboard/Header";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface CatalogProps extends RouteComponentProps<any> {
+interface CatalogProps extends AuthorizedRouteComponentProps {
 }
 
 interface CatalogState {

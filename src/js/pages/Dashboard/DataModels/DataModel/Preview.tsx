@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
 import {LoadingOverlay} from "@castoredc/matter";
-import {RouteComponentProps} from "react-router-dom";
 import ToastContent from "components/ToastContent";
 import DataModelModulePreview from "components/DataModelModule/DataModelModulePreview";
 import SideTabs from "components/SideTabs";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface PreviewProps extends RouteComponentProps<any> {
+interface PreviewProps extends AuthorizedRouteComponentProps {
     dataModel: any,
     version: any,
 }

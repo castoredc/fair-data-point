@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {Button, Heading, Stack} from "@castoredc/matter";
 import axios from "axios";
 import {toast} from "react-toastify";
-import {RouteComponentProps} from "react-router-dom";
 import FormItem from "components/Form/FormItem";
 import {Field, Form, Formik} from "formik";
 import Input from "components/Input/Formik/Input";
@@ -10,8 +9,9 @@ import File from "components/Input/Formik/File";
 import ToastContent from "components/ToastContent";
 import {downloadFile, isNumeric} from "../../../../util";
 import * as Yup from "yup";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface ImportExportProps extends RouteComponentProps<any> {
+interface ImportExportProps extends AuthorizedRouteComponentProps {
     dataModel: any,
     version: string,
     getDataModel: (callback) => void,

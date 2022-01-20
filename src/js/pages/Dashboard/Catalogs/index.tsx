@@ -3,14 +3,15 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, LoadingOverlay, Pagination, Space} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
 import Header from "components/Layout/Dashboard/Header";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isAdmin} from "utils/PermissionHelper";
 
-interface CatalogsProps extends RouteComponentProps<any> {
+interface CatalogsProps extends AuthorizedRouteComponentProps {
 }
 
 interface CatalogsState {
@@ -82,7 +83,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
     }
 
     render() {
-        const {history} = this.props;
+        const {history, user} = this.props;
         const {isLoading, catalogs, pagination} = this.state;
 
         return <div>
@@ -96,9 +97,9 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                 title="My catalogs"
                 type="Section"
             >
-                <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
+                {isAdmin(user) && <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
                     Add catalog
-                </Button>
+                </Button>}
             </Header>
 
             <div>

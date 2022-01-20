@@ -3,12 +3,12 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, LoadingOverlay, Space} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface DataModelsProps extends RouteComponentProps<any> {
+interface DataModelsProps extends AuthorizedRouteComponentProps {
 }
 
 interface DataModelsState {

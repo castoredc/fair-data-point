@@ -3,7 +3,7 @@ import React, {FC} from 'react';
 import '../Form.scss'
 import FormItem from "../FormItem";
 import {Button, Stack} from "@castoredc/matter";
-import {AffiliationType} from "../../../types/AffiliationType";
+import {AffiliationType} from "types/AffiliationType";
 import Avatar from "react-avatar";
 import CustomIcon from "components/Icon/CustomIcon";
 import {Field} from "formik";

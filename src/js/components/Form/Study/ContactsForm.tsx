@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
 import axios from "axios";
 import Avatar from 'react-avatar';
-import {PersonType} from "../../../types/PersonType";
+import {PersonType} from "types/PersonType";
 import ContactModal from "../../../modals/ContactModal";
 import ConfirmModal from "../../../modals/ConfirmModal";
 
