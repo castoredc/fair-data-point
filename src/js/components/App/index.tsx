@@ -12,6 +12,7 @@ import queryString from "query-string";
 import {classNames} from "../../util";
 import {LoadingOverlay} from "@castoredc/matter";
 import {UserType} from "../../types/UserType";
+import TagManager from 'react-gtm-module'
 
 interface AppProps extends RouteComponentProps<any> {
 }
@@ -36,17 +37,16 @@ class App extends Component<AppProps, AppState> {
 
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            this.onRouteChanged();
+            this.onRouteChange();
         }
     }
 
-    onRouteChanged = () => {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            event: 'FdpPageView',
-            data: {
+    onRouteChange = () => {
+        TagManager.dataLayer({
+            dataLayer: {
+                event: 'FdpPageView',
                 url: this.props.location.pathname
-            }
+            },
         });
     };
 
