@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataSpecification;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
+use App\Entity\Enum\PermissionType;
 use App\Entity\Version as VersionNumber;
+use App\Security\Permission;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
 use App\Traits\CreatedAndUpdated;
@@ -59,7 +61,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     private bool $isPublic = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="DataSpecificationPermission", mappedBy="dataSpecification")
+     * @ORM\OneToMany(targetEntity="DataSpecificationPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="dataSpecification")
      *
      * @var Collection<DataSpecificationPermission>
      */
@@ -153,6 +155,20 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     public function getPermissions(): Collection
     {
         return $this->permissions;
+    }
+
+    public function addPermissionForUser(User $user, PermissionType $type): Permission
+    {
+        $permission = new DataSpecificationPermission($user, $type, $this);
+        $this->permissions->add($permission);
+
+        return $permission;
+    }
+
+    public function removePermissionForUser(User $user): void
+    {
+        $permission = $this->getPermissionsForUser($user);
+        $this->permissions->removeElement($permission);
     }
 
     public function getPermissionsForUser(User $user): ?DataSpecificationPermission

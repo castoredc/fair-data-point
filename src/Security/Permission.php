@@ -14,6 +14,12 @@ abstract class Permission
     /** @ORM\Column(type="PermissionType") */
     protected PermissionType $type;
 
+    public function __construct(User $user, PermissionType $type)
+    {
+        $this->user = $user;
+        $this->type = $type;
+    }
+
     public function getUser(): User
     {
         return $this->user;

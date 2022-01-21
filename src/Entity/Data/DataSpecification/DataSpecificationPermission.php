@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DataSpecification;
 
+use App\Entity\Enum\PermissionType;
 use App\Security\Permission;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,12 @@ class DataSpecificationPermission extends Permission
      * @ORM\JoinColumn(name="data_specification_id", referencedColumnName="id")
      */
     private DataSpecification $dataSpecification;
+
+    public function __construct(User $user, PermissionType $type, DataSpecification $dataSpecification)
+    {
+        parent::__construct($user, $type);
+        $this->dataSpecification = $dataSpecification;
+    }
 
     public function getEntity(): DataSpecification
     {
