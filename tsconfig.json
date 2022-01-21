@@ -14,6 +14,7 @@
 //      "modules/*": ["./src/js/modules/*"],
 //      "hooks/*": ["./src/js/hooks/*"],
       "pages/*": ["./src/js/pages/*"],
+      "modals/*": ["./src/js/modals/*"],
 //      "services/*": ["./src/js/services/*"],
 //      "store/*": ["./src/js/store/*"],
       "types/*": ["./src/js/types/*"],

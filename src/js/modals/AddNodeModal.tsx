@@ -191,7 +191,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                         </FormItem>}
 
                         <Button buttonType="primary" type="submit" disabled={isSubmitting}>
-                            Add node
+                            {title}
                         </Button>
                     </Form>;
                 }}

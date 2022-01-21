@@ -38,7 +38,7 @@ const Choice: FC<ChoiceProps> = ({
             labelText={field.name}
             name={field.name}
             options={renderedOptions}
-            collapse={collapse}
+            collapse={!!collapse}
             onChange={onChange ? (event) => {
                 onChange(event);
                 field.onChange(event)

@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
-import {LoadingOverlay} from "@castoredc/matter";
+import {Banner, LoadingOverlay} from "@castoredc/matter";
 import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
@@ -17,6 +17,9 @@ import Versions from "pages/Dashboard/DataModels/DataModel/Versions";
 import Preview from "pages/Dashboard/DataModels/DataModel/Preview";
 import DataModelForm from "components/Form/Data/DataModelForm";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import Permissions from "pages/Dashboard/DataModels/DataModel/Permissions";
+import {isGranted} from "utils/PermissionHelper";
+import Annotations from "pages/Dashboard/Studies/Study/Annotations";
 
 interface DataModelProps extends AuthorizedRouteComponentProps {
 }
@@ -212,12 +215,12 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                         title: 'Versions',
                         customIcon: 'versions'
                     },
-                    {
+                    ...isGranted('manage', dataModel.permissions) ? [{
                         to: '/dashboard/data-models/' + dataModel.id + '/permissions',
                         exact: true,
                         title: 'Permissions',
                         icon: 'usersLight'
-                    },
+                    }] : [],
                     {
                         type: 'separator'
                     },
@@ -287,14 +290,16 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                            )}
                     />
                     <Route path="/dashboard/data-models/:model/permissions" exact
-                           render={(props) => (
-                               <Versions
+                           render={(props) => isGranted('manage', dataModel.permissions) ?
+                               <Permissions
                                    getDataModel={this.getDataModel}
                                    dataModel={dataModel}
                                    user={user}
                                    {...props}
-                               />
-                           )}
+                               /> : <div>
+                               <Banner type="error" title="You do not have access to this page"/>
+                           </div>
+                           }
                     />
                     <Route path="/dashboard/data-models/:model/:version/modules" exact
                            render={(props) => (

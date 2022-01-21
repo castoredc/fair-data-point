@@ -120,7 +120,6 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                 </Button>
             </Header>
 
-            {/*<div className="DashboardList">*/}
             <ScrollShadow className="DashboardList">
                 {studies.map((study) => {
                     return <ListItem
@@ -130,8 +129,9 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                         title={study.hasMetadata ? study.metadata.briefName : study.name}
                     />
                 })}
+
+                {studies.length == 0 && <div className="NoResults">No studies found.</div>}
             </ScrollShadow>
-            {/*</div>*/}
 
             <div className="DashboardFooter">
                 {pagination && <Pagination

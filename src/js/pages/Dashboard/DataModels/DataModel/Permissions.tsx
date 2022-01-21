@@ -1,0 +1,249 @@
+import React, {Component} from "react";
+import {ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack} from "@castoredc/matter";
+import axios from "axios";
+import {toast} from "react-toastify";
+import ToastContent from "components/ToastContent";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {PermissionType} from "types/PermissionType";
+import Avatar from "react-avatar";
+import AddUserModal from "modals/AddUserModal";
+import ConfirmModal from "modals/ConfirmModal";
+import {ucfirst} from "../../../../util";
+
+interface PermissionsProps extends AuthorizedRouteComponentProps {
+    getDataModel: () => void,
+    dataModel: any,
+}
+
+interface PermissionsState {
+    showModal: any,
+    isLoading: boolean,
+    permissions: PermissionType[],
+    modalData: any,
+}
+
+export default class Permissions extends Component<PermissionsProps, PermissionsState> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showModal: {
+                add: false,
+                remove: false,
+            },
+            isLoading: true,
+            permissions: [],
+            modalData: null,
+        };
+    }
+
+    openModal = (type, data) => {
+        const {showModal} = this.state;
+
+        this.setState({
+            showModal: {
+                ...showModal,
+                [type]: true,
+            },
+            modalData: data,
+        });
+    };
+
+    closeModal = (type) => {
+        const {showModal} = this.state;
+
+        this.setState({
+            showModal: {
+                ...showModal,
+                [type]: false,
+            },
+            modalData: null,
+        });
+    };
+
+    componentDidMount() {
+        this.getPermissions();
+    }
+
+    getPermissions = () => {
+        const {dataModel} = this.props;
+
+        this.setState({
+            isLoading: true,
+        });
+
+        axios.get('/api/model/' + dataModel.id + '/permissions')
+            .then((response) => {
+                this.setState({
+                    permissions: response.data.results,
+                    isLoading: false,
+                });
+            })
+            .catch((error) => {
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
+                }
+
+                this.setState({
+                    isLoading: false,
+                });
+            });
+    };
+
+    handleSubmit = (values, { setSubmitting}) => {
+        const {dataModel} = this.props;
+        const {modalData} = this.state;
+
+        axios.post('/api/model/' + dataModel.id + '/permissions' + (modalData !== null ? '/' + modalData.user.id : ''), values)
+            .then((response) => {
+                setSubmitting(false);
+
+                toast.success(<ToastContent type="success"
+                                            message={`${response.data.user.name}'s permissions were successfully set`} />, {
+                    position: "top-right",
+                });
+
+                this.closeModal('add');
+                this.getPermissions();
+            })
+            .catch((error) => {
+                setSubmitting(false);
+
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
+                }
+            });
+    }
+
+    handleRevoke = () => {
+        const {dataModel} = this.props;
+        const {modalData} = this.state;
+
+        axios.delete('/api/model/' + dataModel.id + '/permissions/' + modalData.user.id)
+            .then(() => {
+                toast.success(<ToastContent type="success"
+                                            message={`${modalData.user.name}'s permissions were successfully revoked`} />, {
+                    position: "top-right",
+                });
+
+                this.closeModal('remove');
+                this.getPermissions();
+            })
+            .catch((error) => {
+                if (error.response && typeof error.response.data.error !== "undefined") {
+                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred"/>);
+                }
+            });
+    };
+
+    render() {
+        const {showModal, permissions, isLoading, modalData} = this.state;
+
+        if (isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading users"/>;
+        }
+
+        const columns = [
+            {
+                Header: 'Name',
+                accessor: 'name',
+                width: 280,
+            },
+            {
+                Header: 'Permission',
+                accessor: 'type',
+            },
+            {
+                accessor: 'menu',
+                disableGroupBy: true,
+                disableResizing: true,
+                isInteractive: true,
+                isSticky: true,
+                maxWidth: 34,
+                minWidth: 34,
+                width: 34
+            },
+        ];
+
+        const rows = permissions.map((permission) => {
+            return {
+                name: <CellText>
+                    <Stack wrap={false}>
+                        <Avatar name={permission.user.name} size="35px" round/>
+                        <span>
+                            {permission.user.name}
+                        </span>
+                    </Stack>
+                </CellText>,
+                type: <CellText>{ucfirst(permission.type)}</CellText>,
+                menu: <ActionsCell items={[
+                    {
+                        destination: () => {
+                            this.openModal('add', permission)
+                        },
+                        label: 'Edit permissions',
+                    },
+                    {
+                        destination: () => {
+                            this.openModal('remove', permission)
+                        },
+                        label: 'Revoke permissions',
+                    },
+                ]}/>,
+            }
+        });
+
+        return <div className="PageBody">
+            <AddUserModal
+                open={showModal.add}
+                onClose={() => this.closeModal('add')}
+                handleSubmit={this.handleSubmit}
+                data={modalData}
+                permissions={[
+                    {
+                        labelText: "View",
+                        value: 'view',
+                    },
+                    {
+                        labelText: "Edit",
+                        value: 'edit',
+                    },
+                    {
+                        labelText: "Manage",
+                        value: 'manage',
+                    },
+                ]}
+            />
+
+            {modalData && <ConfirmModal
+                title="Revoke permissions"
+                action="Revoke permissions"
+                variant="danger"
+                onConfirm={this.handleRevoke}
+                onCancel={() => this.closeModal('remove')}
+                show={showModal.remove}
+            >
+                Are you sure you want to revoke permissions for <strong>{modalData.user.name}</strong>?
+            </ConfirmModal>}
+
+            <div className="PageButtons">
+                <Stack distribution="trailing" alignment="end">
+                    <Button icon="add" onClick={() => this.openModal('add', null)}>Add user</Button>
+                </Stack>
+            </div>
+
+            <DataGrid
+                accessibleName="Permissions"
+                emptyStateContent="This data model does not have any users added to it"
+                rows={rows}
+                columns={columns}
+                anchorRightColumns={1}
+            />
+        </div>;
+    }
+}
