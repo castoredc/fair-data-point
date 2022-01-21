@@ -137,6 +137,7 @@ export default class Dashboard extends Component<DashboardProps> {
                     <PrivateRoute path="/dashboard/data-models" exact component={DashboardTabs} user={user}/>
                     <PrivateRoute path="/dashboard/data-models/add" exact component={AddDataModel} user={user}/>
 
+                    <PrivateRoute path="/dashboard/data-models/:model/:version" component={DataModel} user={user}/>
                     <PrivateRoute path="/dashboard/data-models/:model" component={DataModel} user={user}/>
 
                     <Route component={NotFound}/>

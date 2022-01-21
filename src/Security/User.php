@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\Data\DataSpecification\DataSpecificationPermission;
 use App\Entity\Enum\Wizard;
 use App\Entity\FAIRData\Agent\Person;
 use App\Security\Providers\Castor\CastorUser;
@@ -10,6 +11,7 @@ use App\Security\Providers\Orcid\OrcidUser;
 use App\Traits\CreatedAt;
 use App\Traits\UpdatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
@@ -49,6 +51,13 @@ class User implements UserInterface
      * @ORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
      */
     private ?OrcidUser $orcid = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataSpecification\DataSpecificationPermission", mappedBy="user", cascade={"persist", "remove"})
+     *
+     * @var Collection<DataSpecificationPermission>
+     */
+    private Collection $dataSpecifications;
 
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
@@ -210,5 +219,13 @@ class User implements UserInterface
     public function setPerson(?Person $person): void
     {
         $this->person = $person;
+    }
+
+    /**
+     * @return Collection<DataSpecificationPermission>
+     */
+    public function getDataSpecifications(): Collection
+    {
+        return $this->dataSpecifications;
     }
 }

@@ -47,11 +47,23 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/dashboard/data-models", name="dashboard_data_models")
-     * @Route("/dashboard/data-models/add", name="dashboard_data_model_add")
      */
     public function dataModels(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Data models']
+        );
+    }
+
+    /**
+     * @Route("/dashboard/data-models/add", name="dashboard_data_model_add")
+     */
+    public function addDataModel(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render(
             'react.html.twig',
@@ -178,9 +190,21 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/dashboard/catalogs", name="dashboard_catalogs")
-     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
      */
     public function catalogs(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Catalogs']
+        );
+    }
+
+    /**
+     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
+     */
+    public function addCatalog(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -209,11 +233,12 @@ class DashboardController extends AbstractController
     /**
      * @Route("/dashboard/data-models/{model}", name="dashboard_model")
      * @Route("/dashboard/data-models/{model}/versions", name="dashboard_model_versions")
+     * @Route("/dashboard/data-models/{model}/permissions", name="dashboard_model_permissions")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function adminModel(DataModel $dataModel): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         return $this->render(
             'react.html.twig',
@@ -231,7 +256,7 @@ class DashboardController extends AbstractController
      */
     public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         return $this->render(
             'react.html.twig',
@@ -246,7 +271,7 @@ class DashboardController extends AbstractController
      */
     public function adminModelVersionNodes(DataModel $dataModel, DataModelVersion $dataModelVersion, string $nodeType): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         return $this->render(
             'react.html.twig',

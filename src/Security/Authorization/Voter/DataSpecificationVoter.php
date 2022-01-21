@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\Data\DataSpecification\DataSpecification;
+use App\Security\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -15,6 +16,7 @@ class DataSpecificationVoter extends Voter
     public const VIEW = 'view';
     public const ADD = 'add';
     public const EDIT = 'edit';
+    public const MANAGE = 'manage';
     private Security $security;
 
     public function __construct(Security $security)
@@ -35,26 +37,34 @@ class DataSpecificationVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
+        $user = $token->getUser();
+        $dataSpecification = $subject;
+        assert($dataSpecification instanceof DataSpecification);
+
+        if ($attribute === self::VIEW && $dataSpecification->isPublic()) {
+            return true;
+        }
+
+        if (! $user instanceof User) {
+            return false;
+        }
+
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        if ($attribute !== self::VIEW) {
-            return false;
+        $permission = $dataSpecification->getPermissionsForUser($user);
+
+        if ($permission->getType()->isView()) {
+            return $attribute === self::VIEW;
         }
 
-        $dataSpecification = $subject;
-        assert($dataSpecification instanceof DataSpecification);
-        $versions = $dataSpecification->getVersions();
+        if ($permission->getType()->isEdit()) {
+            return $attribute === self::VIEW || $attribute === self::EDIT;
+        }
 
-        foreach ($versions as $version) {
-            foreach ($version->getDistributionContents() as $distributionContent) {
-                $distribution = $distributionContent->getDistribution();
-
-                if ($this->security->isGranted('view', $distribution)) {
-                    return true;
-                }
-            }
+        if ($permission->getType()->isManage()) {
+            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::MANAGE;
         }
 
         return false;

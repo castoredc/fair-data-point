@@ -5,6 +5,7 @@ namespace App\Entity\Data\DataSpecification;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\Version as VersionNumber;
+use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -52,6 +53,16 @@ abstract class DataSpecification
      * @var Collection<Version>
      */
     private Collection $versions;
+
+    /** @ORM\Column(type="boolean") */
+    private bool $isPublic = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DataSpecificationPermission", mappedBy="dataSpecification")
+     *
+     * @var Collection<DataSpecificationPermission>
+     */
+    private Collection $permissions;
 
     public function __construct(string $title, ?string $description)
     {
@@ -123,5 +134,34 @@ abstract class DataSpecification
         }
 
         return false;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
+    }
+
+    /**
+     * @return Collection<DataSpecificationPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function getPermissionsForUser(User $user): ?DataSpecificationPermission
+    {
+        foreach ($this->permissions->toArray() as $permission) {
+            if ($permission->getUser() === $user) {
+                return $permission;
+            }
+        }
+
+        return null;
     }
 }

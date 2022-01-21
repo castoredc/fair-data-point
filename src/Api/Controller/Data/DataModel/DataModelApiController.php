@@ -136,7 +136,7 @@ class DataModelApiController extends ApiController
      */
     public function updateDataModel(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         try {
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);

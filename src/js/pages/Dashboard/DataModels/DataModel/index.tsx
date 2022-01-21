@@ -72,7 +72,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     return {value: version.id, label: version.version};
                 });
 
-                const currentVersion = (match.params.version && match.params.version !== 'versions') ? match.params.version : versions.slice(-1)[0].label;
+                const currentVersion = (match.params.version && ! ["versions", "permissions"].includes(match.params.version)) ? match.params.version : versions.slice(-1)[0].label;
 
                 this.setState({
                     dataModel: response.data,
@@ -98,12 +98,13 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
 
     handleVersionChange = (version) => {
         const {currentVersion} = this.state;
-        const newVersion = version.label;
+        const {history} = this.props;
 
+        const newVersion = version.label;
         const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + newVersion + '/');
 
         if (window.location.pathname !== newUrl) {
-            this.props.history.push(newUrl);
+            history.push(newUrl);
         } else {
             this.setState({
                 currentVersion: version
@@ -212,6 +213,12 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                         customIcon: 'versions'
                     },
                     {
+                        to: '/dashboard/data-models/' + dataModel.id + '/permissions',
+                        exact: true,
+                        title: 'Permissions',
+                        icon: 'usersLight'
+                    },
+                    {
                         type: 'separator'
                     },
                     {
@@ -270,6 +277,16 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                            )}
                     />
                     <Route path="/dashboard/data-models/:model/versions" exact
+                           render={(props) => (
+                               <Versions
+                                   getDataModel={this.getDataModel}
+                                   dataModel={dataModel}
+                                   user={user}
+                                   {...props}
+                               />
+                           )}
+                    />
+                    <Route path="/dashboard/data-models/:model/permissions" exact
                            render={(props) => (
                                <Versions
                                    getDataModel={this.getDataModel}
