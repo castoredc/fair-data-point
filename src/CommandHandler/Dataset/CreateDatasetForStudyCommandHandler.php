@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace App\CommandHandler\Dataset;
 
 use App\Command\Dataset\CreateDatasetForStudyCommand;
+use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Permission\DatasetPermission;
 use App\Exception\NoAccessPermissionToStudy;
+use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -27,6 +30,8 @@ class CreateDatasetForStudyCommandHandler implements MessageHandlerInterface
     public function __invoke(CreateDatasetForStudyCommand $command): Dataset
     {
         $study = $command->getStudy();
+        $user = $this->security->getUser();
+        assert($user instanceof User);
 
         if (! $this->security->isGranted('edit', $study)) {
             throw new NoAccessPermissionToStudy();
@@ -37,6 +42,8 @@ class CreateDatasetForStudyCommandHandler implements MessageHandlerInterface
 
         $dataset = new Dataset($slug);
         $dataset->setStudy($study);
+
+        $dataset->addPermissionForUser($user, PermissionType::manage());
 
         $study->addDataset($dataset);
 

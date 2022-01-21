@@ -5,10 +5,12 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\CreateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
+use App\Security\User;
 use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +39,9 @@ abstract class CreateDistributionCommandHandler implements MessageHandlerInterfa
     protected function handleDistributionCreation(CreateDistributionCommand $command): Distribution
     {
         $dataset = $command->getDataset();
+        $user = $this->security->getUser();
         $study = $dataset->getStudy();
+        assert($user instanceof User);
         assert($study instanceof CastorStudy);
 
         if (! $this->security->isGranted('edit', $dataset)) {
@@ -61,6 +65,8 @@ abstract class CreateDistributionCommandHandler implements MessageHandlerInterfa
 
             $distribution->setApiUser($apiUser);
         }
+
+        $distribution->addPermissionForUser($user, PermissionType::manage());
 
         return $distribution;
     }

@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\Enum\PermissionType;
+use App\Entity\FAIRData\Permission\DatasetPermission;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Security\PermissionsEnabledEntity;
+use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +21,7 @@ use function count;
  * @ORM\Table(name="dataset", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Dataset implements AccessibleEntity, MetadataEnrichedEntity
+class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
@@ -64,6 +68,13 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity
 
     /** @ORM\Column(type="boolean") */
     private bool $isPublished = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DatasetPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="dataset")
+     *
+     * @var Collection<DatasetPermission>
+     */
+    private Collection $permissions;
 
     public function __construct(string $slug)
     {
@@ -188,5 +199,30 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity
     public function addMetadata(DatasetMetadata $metadata): void
     {
         $this->metadata->add($metadata);
+    }
+
+    public function addPermissionForUser(User $user, PermissionType $type): DatasetPermission
+    {
+        $permission = new DatasetPermission($user, $type, $this);
+        $this->permissions->add($permission);
+
+        return $permission;
+    }
+
+    public function removePermissionForUser(User $user): void
+    {
+        $permission = $this->getPermissionsForUser($user);
+        $this->permissions->removeElement($permission);
+    }
+
+    public function getPermissionsForUser(User $user): ?DatasetPermission
+    {
+        foreach ($this->permissions->toArray() as $permission) {
+            if ($permission->getUser() === $user) {
+                return $permission;
+            }
+        }
+
+        return null;
     }
 }

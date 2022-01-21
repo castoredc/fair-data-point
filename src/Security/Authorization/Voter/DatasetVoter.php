@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\FAIRData\Dataset;
+use App\Security\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -14,6 +15,8 @@ class DatasetVoter extends Voter
 {
     public const VIEW = 'view';
     public const EDIT = 'edit';
+    public const MANAGE = 'manage';
+
     private Security $security;
 
     public function __construct(Security $security)
@@ -24,7 +27,7 @@ class DatasetVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::EDIT], true)) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT, self::MANAGE], true)) {
             return false;
         }
 
@@ -34,19 +37,34 @@ class DatasetVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
+        $user = $token->getUser();
+        $dataset = $subject;
+        assert($dataset instanceof Dataset);
+
+        if ($attribute === self::VIEW && $dataset->isPublished()) {
+            return true;
+        }
+
+        if (! $user instanceof User) {
+            return false;
+        }
+
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        $dataset = $subject;
-        assert($dataset instanceof Dataset);
+        $permission = $dataset->getPermissionsForUser($user);
 
-        switch ($attribute) {
-            case self::VIEW:
-                return $this->security->isGranted(self::VIEW, $dataset->getStudy());
+        if ($permission->getType()->isView()) {
+            return $attribute === self::VIEW;
+        }
 
-            case self::EDIT:
-                return $this->security->isGranted(self::EDIT, $dataset->getStudy());
+        if ($permission->getType()->isEdit()) {
+            return $attribute === self::VIEW || $attribute === self::EDIT;
+        }
+
+        if ($permission->getType()->isManage()) {
+            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::MANAGE;
         }
 
         return false;
