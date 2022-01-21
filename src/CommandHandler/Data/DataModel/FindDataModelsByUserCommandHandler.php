@@ -39,7 +39,7 @@ class FindDataModelsByUserCommandHandler implements MessageHandlerInterface
         $specifications = [];
 
         foreach ($specificationPermissions as $specificationPermission) {
-            $specifications[] = $specificationPermission->getDataSpecification();
+            $specifications[] = $specificationPermission->getEntity();
         }
 
         return $specifications;

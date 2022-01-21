@@ -5,6 +5,7 @@ namespace App\Entity\Data\DataSpecification;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\Version as VersionNumber;
+use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     "dictionary" = "App\Entity\Data\DataDictionary\DataDictionary",
  * })
  */
-abstract class DataSpecification
+abstract class DataSpecification implements PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
@@ -54,7 +55,7 @@ abstract class DataSpecification
      */
     private Collection $versions;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(type="boolean", options={"default" : 0}) */
     private bool $isPublic = false;
 
     /**
