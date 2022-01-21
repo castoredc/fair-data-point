@@ -7,13 +7,11 @@ use App\Command\Security\AddPermissionToEntityCommand;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserAlreadyExists;
 use App\Exception\UserNotFound;
-use App\Repository\CastorUserRepository;
 use App\Security\Permission;
 use App\Security\Providers\Castor\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class AddPermissionToEntityCommandHandler implements MessageHandlerInterface
 {
@@ -39,7 +37,6 @@ class AddPermissionToEntityCommandHandler implements MessageHandlerInterface
         }
 
         $repository = $this->em->getRepository(CastorUser::class);
-        assert($repository instanceof CastorUserRepository);
         $user = $repository->findUserByEmail($command->getEmail())->getUser();
 
         if ($entity->getPermissionsForUser($user) !== null) {
