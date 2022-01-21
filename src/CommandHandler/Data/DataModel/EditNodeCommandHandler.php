@@ -35,11 +35,12 @@ class EditNodeCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(EditNodeCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $node = $command->getNode();
+        $dataModel = $node->getDataModelVersion()->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $node = $command->getNode();
 
         $node->setTitle($command->getTitle());
         $node->setDescription($command->getDescription());

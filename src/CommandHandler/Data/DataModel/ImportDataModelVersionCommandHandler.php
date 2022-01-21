@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data\DataModel;
 
-use App\Command\Data\DataModel\ImportDataModelCommand;
+use App\Command\Data\DataModel\ImportDataModelVersionCommand;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\NoAccessPermission;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Security;
 use function file_get_contents;
 use function json_decode;
 
-class ImportDataModelCommandHandler implements MessageHandlerInterface
+class ImportDataModelVersionCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
     private Security $security;
@@ -50,13 +50,14 @@ class ImportDataModelCommandHandler implements MessageHandlerInterface
         $this->tripleFactory = $tripleFactory;
     }
 
-    public function __invoke(ImportDataModelCommand $command): DataModelVersion
+    public function __invoke(ImportDataModelVersionCommand $command): DataModelVersion
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $dataModel = $command->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
 
-        $dataModel = $command->getDataModel();
         $version = $command->getVersion();
         $file = $command->getFile();
 

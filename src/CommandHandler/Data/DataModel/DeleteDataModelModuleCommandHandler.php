@@ -23,13 +23,15 @@ class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
 
     public function __invoke(DeleteDataModelModuleCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $module = $command->getModule();
+        $dataModelVersion = $module->getVersion();
+        $dataModel = $dataModelVersion->getDataSpecification();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
 
-        $module = $command->getModule();
-        $dataModel = $module->getVersion();
-        $dataModel->removeGroup($module);
+        $dataModelVersion->removeGroup($module);
 
         foreach ($module->getElementGroups() as $triple) {
             $this->em->remove($triple);

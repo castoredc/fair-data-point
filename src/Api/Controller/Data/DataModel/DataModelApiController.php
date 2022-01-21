@@ -11,15 +11,18 @@ use App\Api\Resource\Data\DataModel\DataModelApiResource;
 use App\Api\Resource\Data\DataModel\DataModelsApiResource;
 use App\Api\Resource\Data\DataModel\DataModelVersionApiResource;
 use App\Api\Resource\Data\DataModel\DataModelVersionExportApiResource;
+use App\Api\Resource\PaginatedApiResource;
+use App\Api\Resource\Security\PermissionApiResource;
 use App\Command\Data\DataModel\CreateDataModelCommand;
 use App\Command\Data\DataModel\CreateDataModelVersionCommand;
 use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
 use App\Command\Data\DataModel\GetDataModelsCommand;
-use App\Command\Data\DataModel\ImportDataModelCommand;
+use App\Command\Data\DataModel\ImportDataModelVersionCommand;
 use App\Command\Data\DataModel\UpdateDataModelCommand;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\SessionTimedOut;
@@ -27,6 +30,7 @@ use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
 use App\Exception\Upload\NoFileSpecified;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -48,21 +52,6 @@ use const JSON_PRETTY_PRINT;
  */
 class DataModelApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_models")
-     */
-    public function dataModels(MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $envelope = $bus->dispatch(new GetDataModelsCommand());
-
-        $handledStamp = $envelope->last(HandledStamp::class);
-        assert($handledStamp instanceof HandledStamp);
-
-        return new JsonResponse((new DataModelsApiResource($handledStamp->getResult()))->toArray());
-    }
-
     /**
      * @Route("", methods={"POST"}, name="api_model_add")
      */
@@ -127,7 +116,33 @@ class DataModelApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
-        return new JsonResponse((new DataModelApiResource($dataModel))->toArray());
+        return $this->getResponse(
+            new DataModelApiResource($dataModel),
+            $dataModel,
+            [DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
+        );
+    }
+
+    /**
+     * @Route("/{model}/permissions", methods={"GET"}, name="api_model_permissions")
+     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
+     */
+    public function permissions(DataModel $dataModel): Response
+    {
+        $this->denyAccessUnlessGranted('manage', $dataModel);
+
+        return new JsonResponse(
+            (new PaginatedApiResource(
+                PermissionApiResource::class,
+                new PaginatedResultCollection(
+                    $dataModel->getPermissions()->toArray(),
+                    1,
+                    $dataModel->getPermissions()->count(),
+                    $dataModel->getPermissions()->count(),
+                ),
+                $this->isGranted('ROLE_ADMIN')
+            ))->toArray()
+        );
     }
 
     /**
@@ -214,7 +229,7 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataModelVersionApiRequest::class, $request);
             assert($parsed instanceof DataModelVersionApiRequest);
 
-            $envelope = $bus->dispatch(new ImportDataModelCommand($dataModel, $file, $parsed->getVersion()));
+            $envelope = $bus->dispatch(new ImportDataModelVersionCommand($dataModel, $file, $parsed->getVersion()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

@@ -13,19 +13,19 @@ class UpdateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupC
 {
     public function __invoke(UpdateDataModelModuleCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $module = $command->getModule();
+        $dataModelVersion = $module->getVersion();
+        $dataModel = $dataModelVersion->getDataSpecification();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $module = $command->getModule();
 
         if ($module->isDependent()) {
             $dependencies = $module->getDependencies();
             $module->setDependencies(null);
             $this->em->remove($dependencies);
         }
-
-        $dataModelVersion = $module->getVersion();
 
         $dataModelVersion->removeGroup($module);
 

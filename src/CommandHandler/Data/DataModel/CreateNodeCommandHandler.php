@@ -35,11 +35,12 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(CreateNodeCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $dataModel = $command->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
 
-        $dataModel = $command->getDataModel();
         $type = $command->getType();
 
         if ($type->isExternalIri()) {

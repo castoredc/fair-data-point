@@ -66,12 +66,12 @@ class NamespacePrefix
         $this->uri = $uri;
     }
 
-    public function getDataModel(): DataModelVersion
+    public function getDataModelVersion(): DataModelVersion
     {
         return $this->dataModel;
     }
 
-    public function setDataModel(DataModelVersion $dataModel): void
+    public function setDataModelVersion(DataModelVersion $dataModel): void
     {
         $this->dataModel = $dataModel;
     }

@@ -27,7 +27,7 @@ class DataSpecificationVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::ADD, self::EDIT], true)) {
+        if (! in_array($attribute, [self::VIEW, self::ADD, self::EDIT, self::MANAGE], true)) {
             return false;
         }
 

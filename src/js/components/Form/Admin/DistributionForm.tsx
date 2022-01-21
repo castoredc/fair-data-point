@@ -102,7 +102,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     };
 
     getDataModels = () => {
-        axios.get('/api/model')
+        axios.get('/api/model/my')
             .then((response) => {
                 this.setState({
                     dataModels: response.data.map((dataModel) => {

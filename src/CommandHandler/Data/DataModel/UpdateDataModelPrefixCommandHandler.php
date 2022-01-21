@@ -24,11 +24,12 @@ class UpdateDataModelPrefixCommandHandler implements MessageHandlerInterface
 
     public function __invoke(UpdateDataModelPrefixCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $prefix = $command->getDataModelPrefix();
+        $dataModel = $prefix->getDataModelVersion()->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $prefix = $command->getDataModelPrefix();
 
         $prefix->setPrefix($command->getPrefix());
         $prefix->setUri(new Iri($command->getUri()));

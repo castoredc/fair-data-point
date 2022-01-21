@@ -7,7 +7,7 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Version;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ImportDataModelCommand
+class ImportDataModelVersionCommand
 {
     private DataModel $dataModel;
     private UploadedFile $file;
