@@ -9,9 +9,12 @@ use App\Api\Request\Metadata\CatalogMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\PaginatedApiResource;
 use App\Command\Catalog\CreateCatalogCommand;
+use App\Command\Catalog\FindCatalogsByUserCommand;
 use App\Command\Catalog\GetPaginatedCatalogsCommand;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +23,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function count;
 
 /**
  * @Route("/api/catalog")
@@ -51,6 +55,45 @@ class CatalogsApiController extends ApiController
             return new JsonResponse((new PaginatedApiResource(CatalogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
+        } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
+
+            return new JsonResponse([], 500);
+        }
+    }
+
+    /**
+     * @Route("/my", methods={"GET"}, name="api_my_catalogs")
+     */
+    public function myCatalogs(Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        assert($user instanceof User);
+
+        try {
+            $envelope = $bus->dispatch(new FindCatalogsByUserCommand(
+                $user
+            ));
+
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            $results = $handledStamp->getResult();
+
+            return new JsonResponse(
+                (new PaginatedApiResource(
+                    CatalogApiResource::class,
+                    new PaginatedResultCollection(
+                        $handledStamp->getResult(),
+                        1,
+                        count($handledStamp->getResult()),
+                        count($handledStamp->getResult())
+                    ),
+                    $this->isGranted('ROLE_ADMIN')
+                ))->toArray()
+            );
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
 

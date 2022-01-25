@@ -1,0 +1,48 @@
+<?php
+declare(strict_types=1);
+
+namespace App\CommandHandler\Catalog;
+
+use App\Command\Catalog\FindCatalogsByUserCommand;
+use App\Entity\FAIRData\Catalog;
+use App\Security\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Security\Core\Security;
+
+class FindCatalogsByUserCommandHandler implements MessageHandlerInterface
+{
+    private EntityManagerInterface $em;
+
+    private Security $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
+    {
+        $this->em = $em;
+        $this->security = $security;
+    }
+
+    /**
+     * @return Catalog[]
+     */
+    public function __invoke(FindCatalogsByUserCommand $command): array
+    {
+        $catalogRepository = $this->em->getRepository(Catalog::class);
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return $catalogRepository->findAll();
+        }
+
+        $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        $permissions = $user->getCatalogs()->toArray();
+        $catalogs = [];
+
+        foreach ($permissions as $permission) {
+            $catalogs[] = $permission->getEntity();
+        }
+
+        return $catalogs;
+    }
+}

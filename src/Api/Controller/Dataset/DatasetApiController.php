@@ -13,6 +13,7 @@ use App\Command\Dataset\UpdateDatasetCommand;
 use App\Command\Distribution\GetPaginatedDistributionsCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DatasetVoter;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,11 @@ class DatasetApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 
-        return new JsonResponse((new DatasetApiResource($dataset))->toArray());
+        return $this->getResponse(
+            new DatasetApiResource($dataset),
+            $dataset,
+            [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
+        );
     }
 
     /**

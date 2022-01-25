@@ -6,6 +6,7 @@ namespace App\CommandHandler\Security;
 use App\Command\Security\EditPermissionToEntityCommand;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotFound;
+use App\Security\Permission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -25,7 +26,7 @@ class EditPermissionToEntityCommandHandler implements MessageHandlerInterface
      * @throws UserNotFound
      * @throws NoAccessPermission
      */
-    public function __invoke(EditPermissionToEntityCommand $command): void
+    public function __invoke(EditPermissionToEntityCommand $command): Permission
     {
         $entity = $command->getEntity();
 
@@ -46,5 +47,7 @@ class EditPermissionToEntityCommandHandler implements MessageHandlerInterface
         $this->em->persist($permission);
         $this->em->persist($entity);
         $this->em->flush();
+
+        return $permission;
     }
 }

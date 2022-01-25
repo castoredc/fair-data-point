@@ -204,9 +204,12 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(EditPermissionApiRequest::class, $request);
             assert($parsed instanceof EditPermissionApiRequest);
 
-            $bus->dispatch(new EditPermissionToEntityCommand($dataModel, $user, $parsed->getType()));
+            $envelope = $bus->dispatch(new EditPermissionToEntityCommand($dataModel, $user, $parsed->getType()));
 
-            return new JsonResponse([]);
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            return new JsonResponse((new PermissionApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

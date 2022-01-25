@@ -16,6 +16,7 @@ use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Command\Study\FilterStudiesCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\CatalogVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ use function assert;
  * @Route("/api/catalog/{catalog}")
  * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
  */
-class CatalogApiController extends ApiController
+class SingleCatalogApiController extends ApiController
 {
     /**
      * @Route("", methods={"GET"}, name="api_catalog")
@@ -39,7 +40,11 @@ class CatalogApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 
-        return new JsonResponse((new CatalogApiResource($catalog))->toArray());
+        return $this->getResponse(
+            new CatalogApiResource($catalog),
+            $catalog,
+            [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
+        );
     }
 
     /**

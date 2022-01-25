@@ -59,7 +59,7 @@ class DistributionApiController extends ApiController
         return $this->getResponse(
             new DistributionApiResource($distribution, $uriHelper),
             $distribution,
-            [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::ACCESS_DATA]
+            [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::MANAGE, DistributionVoter::ACCESS_DATA]
         );
     }
 

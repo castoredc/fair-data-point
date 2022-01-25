@@ -43,7 +43,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
             perPage: pagination.perPage,
         };
 
-        axios.get('/api/catalog', {params: filters})
+        axios.get('/api/catalog/my', {params: filters})
             .then((response) => {
                 this.setState({
                     catalogs: response.data.results,
@@ -110,6 +110,8 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                         title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
                     />
                 })}
+
+                {catalogs.length == 0 && <div className="NoResults">No catalogs found.</div>}
 
                 {pagination && <Pagination
                     accessibleName="Pagination"
