@@ -6,9 +6,9 @@ namespace App\Api\Controller\Dataset;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\MetadataFilterApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +48,11 @@ class DatasetsApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                DatasetApiResource::class,
+                $results,
+                [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

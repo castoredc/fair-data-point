@@ -32,6 +32,11 @@ class GetDatasetsByStudyCommandHandler implements MessageHandlerInterface
             $results[] = $dataset;
         }
 
-        return new PaginatedResultCollection($results, 1, count($results), count($results));
+        return new PaginatedResultCollection(
+            $results,
+            1,
+            count($results),
+            count($results),
+        );
     }
 }

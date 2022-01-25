@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 
 interface PermissionsEnabledEntity
 {
+    public function getId(): string;
+
     public function addPermissionForUser(User $user, PermissionType $type): Permission;
 
     public function removePermissionForUser(User $user): void;

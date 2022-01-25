@@ -6,13 +6,13 @@ namespace App\CommandHandler\Dataset;
 use App\Command\Dataset\CreateDatasetForStudyCommand;
 use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Dataset;
-use App\Entity\FAIRData\Permission\DatasetPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 use function uniqid;
 
 class CreateDatasetForStudyCommandHandler implements MessageHandlerInterface

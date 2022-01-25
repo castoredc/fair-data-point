@@ -9,6 +9,7 @@ use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class FindCatalogsByUserCommandHandler implements MessageHandlerInterface
 {
@@ -30,7 +31,10 @@ class FindCatalogsByUserCommandHandler implements MessageHandlerInterface
         $catalogRepository = $this->em->getRepository(Catalog::class);
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            return $catalogRepository->findAll();
+            /** @var Catalog[] $catalogs */
+            $catalogs = $catalogRepository->findAll();
+
+            return $catalogs;
         }
 
         $user = $this->security->getUser();

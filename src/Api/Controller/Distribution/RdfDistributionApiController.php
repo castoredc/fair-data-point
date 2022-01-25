@@ -6,7 +6,6 @@ namespace App\Api\Controller\Distribution;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Distribution\DataModelMappingApiRequest;
 use App\Api\Resource\Distribution\DataModelMappingApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Command\Distribution\RDF\CreateDataModelModuleMappingCommand;
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
 use App\Command\Distribution\RDF\GetDataModelMappingCommand;
@@ -70,7 +69,7 @@ class RdfDistributionApiController extends ApiController
         $results = $handledStamp->getResult();
         assert($results instanceof PaginatedResultCollection);
 
-        return new JsonResponse((new PaginatedApiResource(DataModelMappingApiResource::class, $results))->toArray());
+        return $this->getPaginatedResponse(DataModelMappingApiResource::class, $results);
     }
 
     /**

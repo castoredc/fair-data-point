@@ -9,7 +9,6 @@ use App\Api\Request\Metadata\MetadataFilterApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesMapApiResource;
 use App\Command\Catalog\UpdateCatalogCommand;
 use App\Command\Dataset\GetPaginatedDatasetsCommand;
@@ -17,6 +16,7 @@ use App\Command\Study\FilterStudiesCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\CatalogVoter;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,7 +102,11 @@ class SingleCatalogApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                DatasetApiResource::class,
+                $results,
+                [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

@@ -52,6 +52,11 @@ class GetPaginatedStudiesCommandHandler implements MessageHandlerInterface
             $isAdmin
         );
 
-        return new PaginatedResultCollection($studies, $command->getPage(), $command->getPerPage(), $count);
+        return new PaginatedResultCollection(
+            $studies,
+            $command->getPage(),
+            $command->getPerPage(),
+            $count
+        );
     }
 }

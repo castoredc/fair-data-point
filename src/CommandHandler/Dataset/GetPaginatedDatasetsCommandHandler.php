@@ -31,6 +31,11 @@ class GetPaginatedDatasetsCommandHandler implements MessageHandlerInterface
         $count = $datasetRepository->countDatasets($command->getCatalog(), $command->getAgent(), $command->getHideCatalogs(), $isAdmin);
         $datasets = $datasetRepository->findDatasets($command->getCatalog(), $command->getAgent(), $command->getHideCatalogs(), $command->getPerPage(), $command->getPage(), $isAdmin);
 
-        return new PaginatedResultCollection($datasets, $command->getPage(), $command->getPerPage(), $count);
+        return new PaginatedResultCollection(
+            $datasets,
+            $command->getPage(),
+            $command->getPerPage(),
+            $count
+        );
     }
 }

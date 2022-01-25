@@ -6,7 +6,6 @@ namespace App\Api\Controller\Security;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Security\EditPermissionApiRequest;
 use App\Api\Request\Security\PermissionApiRequest;
-use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Security\PermissionApiResource;
 use App\Command\Security\AddPermissionToEntityCommand;
 use App\Command\Security\EditPermissionToEntityCommand;
@@ -41,18 +40,12 @@ class PermissionsApiController extends ApiController
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
 
-        return new JsonResponse(
-            (new PaginatedApiResource(
-                PermissionApiResource::class,
-                new PaginatedResultCollection(
-                    $object->getPermissions()->toArray(),
-                    1,
-                    $object->getPermissions()->count(),
-                    $object->getPermissions()->count(),
-                ),
-                $this->isGranted('ROLE_ADMIN')
-            ))->toArray()
-        );
+        return $this->getPaginatedResponse(PermissionApiResource::class, new PaginatedResultCollection(
+            $object->getPermissions()->toArray(),
+            1,
+            $object->getPermissions()->count(),
+            $object->getPermissions()->count(),
+        ));
     }
 
     /**
@@ -88,6 +81,7 @@ class PermissionsApiController extends ApiController
 
             $this->logger->critical('An error occurred while adding permissions for a user', [
                 'exception' => $e,
+                'type' => $type,
                 'dataModel' => $object->getId(),
             ]);
 

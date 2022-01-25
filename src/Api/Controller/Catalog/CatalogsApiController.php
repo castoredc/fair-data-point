@@ -7,13 +7,13 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\CatalogApiRequest;
 use App\Api\Request\Metadata\CatalogMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Command\Catalog\CreateCatalogCommand;
 use App\Command\Catalog\FindCatalogsByUserCommand;
 use App\Command\Catalog\GetPaginatedCatalogsCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +52,11 @@ class CatalogsApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(CatalogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                CatalogApiResource::class,
+                $results,
+                [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -82,17 +86,15 @@ class CatalogsApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse(
-                (new PaginatedApiResource(
-                    CatalogApiResource::class,
-                    new PaginatedResultCollection(
-                        $handledStamp->getResult(),
-                        1,
-                        count($handledStamp->getResult()),
-                        count($handledStamp->getResult())
-                    ),
-                    $this->isGranted('ROLE_ADMIN')
-                ))->toArray()
+            return $this->getPaginatedResponse(
+                CatalogApiResource::class,
+                new PaginatedResultCollection(
+                    $handledStamp->getResult(),
+                    1,
+                    count($handledStamp->getResult()),
+                    count($handledStamp->getResult())
+                ),
+                [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
             );
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);

@@ -36,6 +36,9 @@ class PermissionsEnabledEntityType extends Enum
         self::MODEL => DataModel::class,
     ];
 
+    /**
+     * @return class-string<object>
+     */
     public function getClass(): string
     {
         return self::CLASS_MAPPING[$this->toString()];
