@@ -9,7 +9,7 @@ import {localizedText} from "../../../../util";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import DistributionMetadata from "pages/Dashboard/Dataset/Distribution/DistributionMetadata";
 import DistributionSubset from "pages/Dashboard/Dataset/Distribution/DistributionSubset";
 import DistributionLog from "pages/Dashboard/Dataset/Distribution/DistributionLog";
@@ -20,6 +20,7 @@ import DistributionContentsRdf from "pages/Dashboard/Dataset/Distribution/Distri
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
 interface DistributionProps extends AuthorizedRouteComponentProps {
     dataset: any,
@@ -100,6 +101,10 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading distribution"/>;
+        }
+
+        if(! isGranted('edit', distribution.permissions)) {
+            return <NoPermission text="You do not have permission to edit this distribution"/>;
         }
 
         const catalog = match.params.catalog;
@@ -240,9 +245,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                    object={distribution}
                                    user={user}
                                    {...props}
-                               /> : <div>
-                                   <Banner type="error" title="You do not have access to this page"/>
-                               </div>
+                               /> : <NoPermission text="You do not have access to this page"/>
                            }
                     />
 

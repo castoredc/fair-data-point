@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
-import NotFound from "./pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import Login from "./pages/Login";
 import axios from "axios";
 import {PrivateRoute} from "components/Route";

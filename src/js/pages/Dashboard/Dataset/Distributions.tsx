@@ -7,6 +7,7 @@ import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
 
 interface DistributionsProps extends AuthorizedRouteComponentProps {
 }
@@ -76,6 +77,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                 {distributions.map((distribution) => {
                     return <ListItem
                         selectable={false}
+                        disabled={! isGranted('edit', distribution.permissions)}
                         link={`${mainUrl}/distributions/${distribution.slug}`}
                         title={distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution'}
                     />

@@ -15,8 +15,9 @@ import Annotations from "pages/Dashboard/Studies/Study/Annotations";
 import {isGranted} from "utils/PermissionHelper";
 import Datasets from "pages/Dashboard/Studies/Study/Datasets";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
 interface StudyProps extends AuthorizedRouteComponentProps {
 }
@@ -73,6 +74,10 @@ export default class Study extends Component<StudyProps, StudyState> {
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading study"/>;
+        }
+
+        if(!isGranted('edit', study.permissions)) {
+            return <NoPermission text="You do not have permission to edit this study"/>;
         }
 
         const title = study.hasMetadata ? localizedText(study.metadata.briefName, 'en') : study.name;

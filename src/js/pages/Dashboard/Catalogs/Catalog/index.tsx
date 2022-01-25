@@ -5,7 +5,7 @@ import {Route, Switch} from 'react-router-dom';
 import {Banner, LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import CatalogMetadataForm from "components/Form/Metadata/CatalogMetadataForm";
@@ -19,6 +19,7 @@ import Header from "components/Layout/Dashboard/Header";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
 interface CatalogProps extends AuthorizedRouteComponentProps {
 }
@@ -72,6 +73,10 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading catalog"/>;
+        }
+
+        if(! isGranted('edit', catalog.permissions)) {
+            return <NoPermission text="You do not have permission to edit this catalog"/>;
         }
 
         const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : null;
@@ -147,9 +152,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                                    object={catalog}
                                    user={user}
                                    {...props}
-                               /> : <div>
-                                   <Banner type="error" title="You do not have access to this page"/>
-                               </div>
+                               /> : <NoPermission text="You do not have access to this page"/>
                            }
                     />
                     <Route path="/dashboard/catalogs/:catalog/studies/add" exact

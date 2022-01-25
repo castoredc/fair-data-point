@@ -168,18 +168,6 @@ export default class StudiesDataTable extends Component {
                 accessor: 'method',
             },
             {
-                Header: <Icon description="Publish consent" type="globe"/>,
-                accessor: 'consentPublish',
-                disableResizing: true,
-                width: 32
-            },
-            {
-                Header: <Icon description="Social consent" type="share"/>,
-                accessor: 'consentSocial',
-                disableResizing: true,
-                width: 32
-            },
-            {
                 Header: <Icon description="Published" type="view"/>,
                 accessor: 'published',
                 disableResizing: true,
@@ -192,10 +180,6 @@ export default class StudiesDataTable extends Component {
                 title: <CellText>{item.hasMetadata ? item.metadata.briefName : item.name}</CellText>,
                 type: <CellText>{item.hasMetadata ? StudyType[item.metadata.studyType] : null}</CellText>,
                 method: <CellText>{item.hasMetadata ? MethodType[item.metadata.methodType] : null}</CellText>,
-                consentPublish: item.hasMetadata && item.consent.publish ?
-                    <IconCell icon={{type: 'tickSmall'}}/> : undefined,
-                consentSocial: item.hasMetadata && item.consent.socialMedia ?
-                    <IconCell icon={{type: 'tickSmall'}}/> : undefined,
                 published: item.published ? <IconCell icon={{type: 'view'}}/> : undefined,
             };
         });

@@ -8,7 +8,7 @@ import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import ImportExport from "pages/Dashboard/DataModels/DataModel/ImportExport";
 import Modules from "pages/Dashboard/DataModels/DataModel/Modules";
 import Nodes from "pages/Dashboard/DataModels/DataModel/Nodes";
@@ -19,6 +19,7 @@ import DataModelForm from "components/Form/Data/DataModelForm";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
 interface DataModelProps extends AuthorizedRouteComponentProps {
 }
@@ -191,6 +192,10 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
             return <LoadingOverlay accessibleLabel="Loading data model"/>;
         }
 
+        if(! isGranted('edit', dataModel.permissions)) {
+            return <NoPermission text="You do not have permission to edit this data model"/>;
+        }
+
         return <>
             <DocumentTitle title={dataModel.title}/>
 
@@ -296,9 +301,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    object={dataModel}
                                    user={user}
                                    {...props}
-                               /> : <div>
-                               <Banner type="error" title="You do not have access to this page"/>
-                           </div>
+                               /> : <NoPermission text="You do not have access to this page"/>
                            }
                     />
                     <Route path="/dashboard/data-models/:model/:version/modules" exact

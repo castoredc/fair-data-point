@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 import {Route, Switch} from "react-router-dom";
 import './Wizard.scss';
-import NotFound from "../NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import UserDetails from "./UserDetails";
 import Affiliations from "./Affiliations";
 import {CastorBar} from "@castoredc/matter";

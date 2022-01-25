@@ -1,6 +1,6 @@
 import React, {Component, FunctionComponent} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
-import NotFound from "../NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import {CastorBar, Tabs} from "@castoredc/matter";
 import Studies from "./Studies";
 import './Dashboard.scss';
@@ -19,6 +19,7 @@ import SelectCatalog from "pages/Dashboard/Studies/SelectCatalog";
 import DataModel from "pages/Dashboard/DataModels/DataModel";
 import AddCatalog from "pages/Dashboard/Catalogs/AddCatalog";
 import AddDataModel from "pages/Dashboard/DataModels/AddDataModel";
+import AddDataset from "pages/Dashboard/Catalogs/Catalog/AddDataset";
 
 interface DashboardProps extends AuthorizedRouteComponentProps {
 }
@@ -127,6 +128,7 @@ export default class Dashboard extends Component<DashboardProps> {
                                   component={Dataset} user={user}/>
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"
                                   component={Distribution} user={user}/>
+                    <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/add" exact component={Catalog} user={user}/>
                     <PrivateRoute path="/dashboard/catalogs/:catalog/datasets/:dataset" component={Dataset}
                                   user={user}/>
                     <PrivateRoute path="/dashboard/catalogs" exact component={DashboardTabs} user={user}/>

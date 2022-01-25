@@ -11,12 +11,13 @@ import Body from "components/Layout/Dashboard/Body";
 import DatasetForm from "components/Form/Admin/DatasetForm";
 import DatasetMetadataForm from "components/Form/Metadata/DatasetMetadataForm";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import Distributions from "pages/Dashboard/Dataset/Distributions";
 import AddDistribution from "pages/Dashboard/Dataset/AddDistribution";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any,
@@ -79,6 +80,10 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading dataset"/>;
+        }
+
+        if(! isGranted('edit', dataset.permissions)) {
+            return <NoPermission text="You do not have permission to edit this dataset"/>;
         }
 
         const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
@@ -174,9 +179,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                                 object={dataset}
                                 user={user}
                                 {...props}
-                            /> : <div>
-                                <Banner type="error" title="You do not have access to this page"/>
-                            </div>
+                            /> : <NoPermission text="You do not have access to this page"/>
                         }
                     />
                     <Route
