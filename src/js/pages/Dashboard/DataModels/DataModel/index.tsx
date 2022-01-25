@@ -2,13 +2,13 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
-import {LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Banner, LoadingOverlay} from "@castoredc/matter";
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import ImportExport from "pages/Dashboard/DataModels/DataModel/ImportExport";
 import Modules from "pages/Dashboard/DataModels/DataModel/Modules";
 import Nodes from "pages/Dashboard/DataModels/DataModel/Nodes";
@@ -16,8 +16,12 @@ import Prefixes from "pages/Dashboard/DataModels/DataModel/Prefixes";
 import Versions from "pages/Dashboard/DataModels/DataModel/Versions";
 import Preview from "pages/Dashboard/DataModels/DataModel/Preview";
 import DataModelForm from "components/Form/Data/DataModelForm";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
+import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
-interface DataModelProps extends RouteComponentProps<any> {
+interface DataModelProps extends AuthorizedRouteComponentProps {
 }
 
 interface DataModelState {
@@ -71,7 +75,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     return {value: version.id, label: version.version};
                 });
 
-                const currentVersion = (match.params.version && match.params.version !== 'versions') ? match.params.version : versions.slice(-1)[0].label;
+                const currentVersion = (match.params.version && ! ["versions", "permissions"].includes(match.params.version)) ? match.params.version : versions.slice(-1)[0].label;
 
                 this.setState({
                     dataModel: response.data,
@@ -97,12 +101,13 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
 
     handleVersionChange = (version) => {
         const {currentVersion} = this.state;
-        const newVersion = version.label;
+        const {history} = this.props;
 
+        const newVersion = version.label;
         const newUrl = window.location.pathname.replace('/' + currentVersion.label + '/', '/' + newVersion + '/');
 
         if (window.location.pathname !== newUrl) {
-            this.props.history.push(newUrl);
+            history.push(newUrl);
         } else {
             this.setState({
                 currentVersion: version
@@ -180,11 +185,15 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     };
 
     render() {
-        const {history, location, match} = this.props;
+        const {history, location, user} = this.props;
         const {isLoading, dataModel, versions, currentVersion, modules, nodes, prefixes} = this.state;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading data model"/>;
+        }
+
+        if(! isGranted('edit', dataModel.permissions)) {
+            return <NoPermission text="You do not have permission to edit this data model"/>;
         }
 
         return <>
@@ -210,6 +219,12 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                         title: 'Versions',
                         customIcon: 'versions'
                     },
+                    ...isGranted('manage', dataModel.permissions) ? [{
+                        to: '/dashboard/data-models/' + dataModel.id + '/permissions',
+                        exact: true,
+                        title: 'Permissions',
+                        icon: 'usersLight'
+                    }] : [],
                     {
                         type: 'separator'
                     },
@@ -273,9 +288,21 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                <Versions
                                    getDataModel={this.getDataModel}
                                    dataModel={dataModel}
+                                   user={user}
                                    {...props}
                                />
                            )}
+                    />
+                    <Route path="/dashboard/data-models/:model/permissions" exact
+                           render={(props) => isGranted('manage', dataModel.permissions) ?
+                               <PermissionEditor
+                                   getObject={this.getDataModel}
+                                   type="model"
+                                   object={dataModel}
+                                   user={user}
+                                   {...props}
+                               /> : <NoPermission text="You do not have access to this page"/>
+                           }
                     />
                     <Route path="/dashboard/data-models/:model/:version/modules" exact
                            render={(props) => (
@@ -286,6 +313,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    getModules={this.getModules}
                                    dataModel={dataModel}
                                    version={currentVersion.value}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -297,6 +325,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    getNodes={this.getNodes}
                                    dataModel={dataModel}
                                    version={currentVersion}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -308,6 +337,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    getPrefixes={this.getPrefixes}
                                    dataModel={dataModel}
                                    version={currentVersion.value}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -317,6 +347,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                <Preview
                                    dataModel={dataModel}
                                    version={currentVersion.value}
+                                   user={user}
                                    {...props}
                                />
                            )}
@@ -327,6 +358,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                                    dataModel={dataModel}
                                    version={currentVersion.value}
                                    getDataModel={this.getDataModel}
+                                   user={user}
                                    {...props}
                                />
                            )}

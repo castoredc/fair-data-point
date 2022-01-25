@@ -2,11 +2,11 @@ import React, {Component} from "react";
 import {Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import axios from "axios";
 import {toast} from "react-toastify";
-import {RouteComponentProps} from "react-router-dom";
 import ToastContent from "components/ToastContent";
 import DataModelVersionModal from "../../../../modals/DataModelVersionModal";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface VersionsProps extends RouteComponentProps<any> {
+interface VersionsProps extends AuthorizedRouteComponentProps {
     getDataModel: () => void,
     dataModel: any,
 }

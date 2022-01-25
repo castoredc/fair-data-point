@@ -7,6 +7,7 @@ import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import * as H from "history";
 import {localizedText} from "../../../../util";
+import {isGranted} from "utils/PermissionHelper";
 
 interface DatasetsProps {
     catalog: string,
@@ -66,8 +67,6 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
-                {/*<Button icon="add" className="AddButton" disabled={isLoading}>New dataset</Button>*/}
-
                 <Button icon="add" buttonType="primary" disabled={isLoading}
                         onClick={() => history.push(`/dashboard/catalogs/${catalog}/datasets/add`)}>
                     Add dataset
@@ -81,6 +80,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     return <ListItem
                         key={dataset.id}
                         selectable={false}
+                        disabled={! isGranted('edit', dataset.permissions)}
                         link={`/dashboard/catalogs/${catalog}/datasets/${dataset.slug}`}
                         title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
                     />

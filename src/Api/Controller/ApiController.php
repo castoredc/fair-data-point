@@ -5,10 +5,14 @@ namespace App\Api\Controller;
 
 use App\Api\Request\ApiRequest;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\RoleBasedApiResource;
 use App\Api\Resource\Security\PermissionsApiResource;
+use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Model\Castor\ApiClient;
+use App\Service\UriHelper;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,11 +30,14 @@ abstract class ApiController extends AbstractController
 
     protected LoggerInterface $logger;
 
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger)
+    protected EntityManagerInterface $em;
+
+    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $this->apiClient = $apiClient;
         $this->validator = $validator;
         $this->logger = $logger;
+        $this->em = $em;
     }
 
     /**
@@ -87,6 +94,47 @@ abstract class ApiController extends AbstractController
         }
 
         return new JsonResponse(array_merge($resource->toArray(), $this->getPermissionArray($object, $attributes)));
+    }
+
+    /**
+     * @param string[]|null $attributes
+     */
+    protected function getPaginatedResponse(
+        string $apiResourceType,
+        PaginatedResultCollection $collection,
+        ?array $attributes = null,
+        ?UriHelper $uriHelper = null
+    ): JsonResponse {
+        $results = [];
+
+        foreach ($collection as $object) {
+            if ($uriHelper !== null) {
+                $resource = new $apiResourceType($object, $uriHelper);
+            } else {
+                $resource = new $apiResourceType($object);
+            }
+
+            if ($resource instanceof RoleBasedApiResource) {
+                $resource->setAdmin($this->isGranted('ROLE_ADMIN'));
+            }
+
+            $apiResource = $resource->toArray();
+
+            if ($attributes !== null) {
+                $apiResource = array_merge($apiResource, $this->getPermissionArray($object, $attributes));
+            }
+
+            $results[] = $apiResource;
+        }
+
+        return new JsonResponse([
+            'results' => $results,
+            'currentPage' => $collection->getCurrentPage(),
+            'start' => $collection->getStart(),
+            'perPage' => $collection->getPerPage(),
+            'totalResults' => $collection->getTotalResults(),
+            'totalPages' => $collection->getTotalPages(),
+        ]);
     }
 
     /**

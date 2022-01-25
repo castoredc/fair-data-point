@@ -11,7 +11,6 @@ use App\Api\Resource\Distribution\DistributionApiResource;
 use App\Api\Resource\Distribution\DistributionContentApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationLogApiResource;
 use App\Api\Resource\Distribution\DistributionGenerationRecordLogApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Command\Distribution\CSV\CreateCSVDistributionCommand;
 use App\Command\Distribution\CSV\UpdateCSVDistributionCommand;
 use App\Command\Distribution\GetDistributionGenerationLogsCommand;
@@ -59,7 +58,7 @@ class DistributionApiController extends ApiController
         return $this->getResponse(
             new DistributionApiResource($distribution, $uriHelper),
             $distribution,
-            [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::ACCESS_DATA]
+            [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::MANAGE, DistributionVoter::ACCESS_DATA]
         );
     }
 
@@ -108,7 +107,7 @@ class DistributionApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DistributionGenerationLogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(DistributionGenerationLogApiResource::class, $results);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -170,7 +169,7 @@ class DistributionApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DistributionGenerationRecordLogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(DistributionGenerationRecordLogApiResource::class, $results);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

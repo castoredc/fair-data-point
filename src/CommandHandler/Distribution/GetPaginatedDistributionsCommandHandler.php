@@ -25,6 +25,11 @@ class GetPaginatedDistributionsCommandHandler implements MessageHandlerInterface
         $count = $distributionRepository->countDistributions($command->getCatalog(), $command->getDataset(), $command->getAgent());
         $datasets = $distributionRepository->findDistributions($command->getCatalog(), $command->getDataset(), $command->getAgent(), $command->getPerPage(), $command->getPage());
 
-        return new PaginatedResultCollection($datasets, $command->getPage(), $command->getPerPage(), $count);
+        return new PaginatedResultCollection(
+            $datasets,
+            $command->getPage(),
+            $command->getPerPage(),
+            $count
+        );
     }
 }

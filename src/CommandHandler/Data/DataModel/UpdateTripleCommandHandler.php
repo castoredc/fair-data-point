@@ -28,13 +28,15 @@ class UpdateTripleCommandHandler implements MessageHandlerInterface
 
     public function __invoke(UpdateTripleCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
-            throw new NoAccessPermission();
-        }
-
         $triple = $command->getTriple();
         $dataModelVersion = $triple->getGroup()->getVersion();
         assert($dataModelVersion instanceof DataModelVersion);
+
+        $dataModel = $dataModelVersion->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
+            throw new NoAccessPermission();
+        }
 
         $nodeRepository = $this->em->getRepository(Node::class);
 

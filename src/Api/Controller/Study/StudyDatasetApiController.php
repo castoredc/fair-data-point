@@ -5,10 +5,10 @@ namespace App\Api\Controller\Study;
 
 use App\Api\Controller\ApiController;
 use App\Api\Resource\Dataset\DatasetApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Command\Dataset\CreateDatasetForStudyCommand;
 use App\Command\Dataset\GetDatasetsByStudyCommand;
 use App\Entity\Study;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +38,11 @@ class StudyDatasetApiController extends ApiController
 
         $results = $handledStamp->getResult();
 
-        return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+        return $this->getPaginatedResponse(
+            DatasetApiResource::class,
+            $results,
+            [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
+        );
     }
 
     /**

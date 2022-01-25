@@ -3,14 +3,14 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, Heading, LoadingOverlay, Separator, Space, Stack, StackItem} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import {localizedText} from "../../../util";
 import {toRem} from "@castoredc/matter-utils";
 import DocumentTitle from "components/DocumentTitle";
 import BackButton from "components/BackButton";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface AddStudyProps extends RouteComponentProps<any> {
+interface AddStudyProps extends AuthorizedRouteComponentProps {
 }
 
 interface AddStudyState {

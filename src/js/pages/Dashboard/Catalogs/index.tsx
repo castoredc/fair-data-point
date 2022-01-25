@@ -3,14 +3,15 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, LoadingOverlay, Pagination, Space} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
 import Header from "components/Layout/Dashboard/Header";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isAdmin} from "utils/PermissionHelper";
 
-interface CatalogsProps extends RouteComponentProps<any> {
+interface CatalogsProps extends AuthorizedRouteComponentProps {
 }
 
 interface CatalogsState {
@@ -42,7 +43,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
             perPage: pagination.perPage,
         };
 
-        axios.get('/api/catalog', {params: filters})
+        axios.get('/api/catalog/my', {params: filters})
             .then((response) => {
                 this.setState({
                     catalogs: response.data.results,
@@ -82,7 +83,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
     }
 
     render() {
-        const {history} = this.props;
+        const {history, user} = this.props;
         const {isLoading, catalogs, pagination} = this.state;
 
         return <div>
@@ -96,9 +97,9 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                 title="My catalogs"
                 type="Section"
             >
-                <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
+                {isAdmin(user) && <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
                     Add catalog
-                </Button>
+                </Button>}
             </Header>
 
             <div>
@@ -109,6 +110,8 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                         title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
                     />
                 })}
+
+                {catalogs.length == 0 && <div className="NoResults">No catalogs found.</div>}
 
                 {pagination && <Pagination
                     accessibleName="Pagination"

@@ -23,11 +23,12 @@ class DeleteTripleCommandHandler implements MessageHandlerInterface
 
     public function __invoke(DeleteTripleCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $triple = $command->getTriple();
+        $dataModel = $triple->getDataModelVersion()->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $triple = $command->getTriple();
 
         $this->em->remove($triple);
 

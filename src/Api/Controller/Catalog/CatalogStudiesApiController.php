@@ -6,7 +6,6 @@ namespace App\Api\Controller\Catalog;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\AddStudyToCatalogApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
-use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Castor\ImportStudyCommand;
@@ -18,6 +17,7 @@ use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
+use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +64,11 @@ class CatalogStudiesApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(StudyApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                StudyApiResource::class,
+                $results,
+                [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

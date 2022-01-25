@@ -25,10 +25,10 @@
         "upmatter": "yarn upgrade --latest --pattern matter"
     },
     "dependencies": {
-        "@castoredc/matter": "^18.2.0",
-        "@castoredc/matter-fonts": "^18.2.0",
-        "@castoredc/matter-icons": "^18.2.0",
-        "@castoredc/matter-utils": "^18.2.0",
+        "@castoredc/matter": "^18.9.0",
+        "@castoredc/matter-fonts": "^18.9.0",
+        "@castoredc/matter-icons": "^18.9.0",
+        "@castoredc/matter-utils": "^18.9.0",
         "@triply/yasgui": "^4.0.124",
         "@types/jest": "^26.0.23",
         "@types/react": "^17.0.9",
@@ -52,6 +52,7 @@
         "react-avatar": "^3.10.0",
         "react-dom": "^16.13.1",
         "react-form-validator-core": "^0.6.5",
+        "react-gtm-module": "^2.0.11",
         "react-leaflet": "^2.6.3",
         "react-leaflet-markercluster": "^2.0.0",
         "react-portal": "^4.2.1",

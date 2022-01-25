@@ -28,11 +28,12 @@ class RemoveNodeCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(RemoveNodeCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $node = $command->getNode();
+        $dataModel = $node->getDataModelVersion()->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $node = $command->getNode();
 
         if ($node->hasTriples()) {
             throw new NodeInUseByTriples();

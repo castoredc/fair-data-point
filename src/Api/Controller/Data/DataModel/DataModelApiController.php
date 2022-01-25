@@ -15,8 +15,7 @@ use App\Command\Data\DataModel\CreateDataModelCommand;
 use App\Command\Data\DataModel\CreateDataModelVersionCommand;
 use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
-use App\Command\Data\DataModel\GetDataModelsCommand;
-use App\Command\Data\DataModel\ImportDataModelCommand;
+use App\Command\Data\DataModel\ImportDataModelVersionCommand;
 use App\Command\Data\DataModel\UpdateDataModelCommand;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
@@ -27,6 +26,7 @@ use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
 use App\Exception\Upload\NoFileSpecified;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -48,21 +48,6 @@ use const JSON_PRETTY_PRINT;
  */
 class DataModelApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_models")
-     */
-    public function dataModels(MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $envelope = $bus->dispatch(new GetDataModelsCommand());
-
-        $handledStamp = $envelope->last(HandledStamp::class);
-        assert($handledStamp instanceof HandledStamp);
-
-        return new JsonResponse((new DataModelsApiResource($handledStamp->getResult()))->toArray());
-    }
-
     /**
      * @Route("", methods={"POST"}, name="api_model_add")
      */
@@ -127,7 +112,11 @@ class DataModelApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
-        return new JsonResponse((new DataModelApiResource($dataModel))->toArray());
+        return $this->getResponse(
+            new DataModelApiResource($dataModel),
+            $dataModel,
+            [DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
+        );
     }
 
     /**
@@ -136,7 +125,7 @@ class DataModelApiController extends ApiController
      */
     public function updateDataModel(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         try {
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
@@ -214,7 +203,7 @@ class DataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataModelVersionApiRequest::class, $request);
             assert($parsed instanceof DataModelVersionApiRequest);
 
-            $envelope = $bus->dispatch(new ImportDataModelCommand($dataModel, $file, $parsed->getVersion()));
+            $envelope = $bus->dispatch(new ImportDataModelVersionCommand($dataModel, $file, $parsed->getVersion()));
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

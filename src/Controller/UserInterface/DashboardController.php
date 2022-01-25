@@ -47,11 +47,23 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/dashboard/data-models", name="dashboard_data_models")
-     * @Route("/dashboard/data-models/add", name="dashboard_data_model_add")
      */
     public function dataModels(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Data models']
+        );
+    }
+
+    /**
+     * @Route("/dashboard/data-models/add", name="dashboard_data_model_add")
+     */
+    public function addDataModel(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render(
             'react.html.twig',
@@ -105,12 +117,31 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/catalogs/{catalog}", name="dashboard_catalog")
+     * @Route("/dashboard/catalogs/{catalog}/metadata", name="dashboard_catalog_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/permissions", name="dashboard_catalog_permissions")
+     * @Route("/dashboard/catalogs/{catalog}/datasets", name="dashboard_catalog_datasets")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/add", name="dashboard_catalog_dataset_add")
+     * @Route("/dashboard/catalogs/{catalog}/studies", name="dashboard_catalog_studies")
+     * @Route("/dashboard/catalogs/{catalog}/studies/add", name="dashboard_catalog_study_add")
+     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     */
+    public function catalog(Catalog $catalog): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $catalog);
+
+        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
+    }
+
+    /**
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}", name="dashboard_study_dataset")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/metadata", name="dashboard_study_dataset_metadata")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/permissions", name="dashboard_study_dataset_permissions")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions", name="dashboard_study_dataset_distributions")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/add", name="dashboard_study_dataset_distributions_add")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}", name="dashboard_catalog_dataset")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/metadata", name="dashboard_catalog_dataset_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/permissions", name="dashboard_catalog_dataset_permissions")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions", name="dashboard_catalog_dataset_distributions")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add", name="dashboard_catalog_dataset_distributions_add")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
@@ -130,11 +161,13 @@ class DashboardController extends AbstractController
     /**
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}", name="dashboard_study_dataset_distribution")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/metadata", name="dashboard_study_distribution_metadata")
+     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/permissions", name="dashboard_study_distribution_permissions")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents", name="dashboard_study_distribution_content")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log", name="dashboard_study_distribution_log")
      * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/subset", name="dashboard_study_distribution_subset")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}", name="dashboard_dataset_distribution")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/metadata", name="dashboard_study_distribution_metadata")
+     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/permissions", name="dashboard_study_distribution_permissions")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents", name="dashboard_study_distribution_content")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log", name="dashboard_study_distribution_log")
      * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset", name="dashboard_study_distribution_subset")
@@ -178,7 +211,6 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/dashboard/catalogs", name="dashboard_catalogs")
-     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
      */
     public function catalogs(): Response
     {
@@ -191,29 +223,27 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/catalogs/{catalog}", name="dashboard_catalog")
-     * @Route("/dashboard/catalogs/{catalog}/metadata", name="dashboard_catalog_metadata")
-     * @Route("/dashboard/catalogs/{catalog}/datasets", name="dashboard_catalog_datasets")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/add", name="dashboard_catalog_dataset_add")
-     * @Route("/dashboard/catalogs/{catalog}/studies", name="dashboard_catalog_studies")
-     * @Route("/dashboard/catalogs/{catalog}/studies/add", name="dashboard_catalog_study_add")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
+     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
      */
-    public function catalog(Catalog $catalog): Response
+    public function addCatalog(): Response
     {
-        $this->denyAccessUnlessGranted('edit', $catalog);
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        return $this->render('react.html.twig', ['title' => 'FDP Admin']);
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Catalogs']
+        );
     }
 
     /**
      * @Route("/dashboard/data-models/{model}", name="dashboard_model")
      * @Route("/dashboard/data-models/{model}/versions", name="dashboard_model_versions")
+     * @Route("/dashboard/data-models/{model}/permissions", name="dashboard_model_permissions")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function adminModel(DataModel $dataModel): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         return $this->render(
             'react.html.twig',
@@ -231,7 +261,7 @@ class DashboardController extends AbstractController
      */
     public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         return $this->render(
             'react.html.twig',
@@ -246,7 +276,7 @@ class DashboardController extends AbstractController
      */
     public function adminModelVersionNodes(DataModel $dataModel, DataModelVersion $dataModelVersion, string $nodeType): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('edit', $dataModel);
 
         return $this->render(
             'react.html.twig',

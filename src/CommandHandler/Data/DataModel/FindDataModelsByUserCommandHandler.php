@@ -5,9 +5,11 @@ namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Entity\Data\DataModel\DataModel;
+use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class FindDataModelsByUserCommandHandler implements MessageHandlerInterface
 {
@@ -26,6 +28,20 @@ class FindDataModelsByUserCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(FindDataModelsByUserCommand $command): array
     {
-        return $this->em->getRepository(DataModel::class)->findAll();
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return $this->em->getRepository(DataModel::class)->findAll();
+        }
+
+        $user = $this->security->getUser();
+        assert($user instanceof User);
+
+        $specificationPermissions = $user->getDataSpecifications()->toArray();
+        $specifications = [];
+
+        foreach ($specificationPermissions as $specificationPermission) {
+            $specifications[] = $specificationPermission->getEntity();
+        }
+
+        return $specifications;
     }
 }

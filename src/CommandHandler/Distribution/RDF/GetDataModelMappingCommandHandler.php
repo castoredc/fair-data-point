@@ -61,6 +61,11 @@ class GetDataModelMappingCommandHandler implements MessageHandlerInterface
             }
         }
 
-        return new PaginatedResultCollection($results, 1, count($results), count($results));
+        return new PaginatedResultCollection(
+            $results,
+            1,
+            count($results),
+            count($results)
+        );
     }
 }

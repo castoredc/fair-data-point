@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\Enum\PermissionType;
+use App\Entity\FAIRData\Permission\CatalogPermission;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Security\PermissionsEnabledEntity;
+use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,7 +22,7 @@ use function count;
  * @ORM\Table(name="catalog", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Catalog implements AccessibleEntity, MetadataEnrichedEntity
+class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
@@ -70,12 +74,20 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity
      */
     private Collection $metadata;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\CatalogPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="catalog")
+     *
+     * @var Collection<CatalogPermission>
+     */
+    private Collection $permissions;
+
     public function __construct(string $slug)
     {
         $this->slug = $slug;
         $this->datasets = new ArrayCollection();
         $this->studies = new ArrayCollection();
         $this->metadata = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string
@@ -236,5 +248,43 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity
     public function addMetadata(CatalogMetadata $metadata): void
     {
         $this->metadata->add($metadata);
+    }
+
+    public function isPublic(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return Collection<CatalogPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermissionForUser(User $user, PermissionType $type): CatalogPermission
+    {
+        $permission = new CatalogPermission($user, $type, $this);
+        $this->permissions->add($permission);
+
+        return $permission;
+    }
+
+    public function removePermissionForUser(User $user): void
+    {
+        $permission = $this->getPermissionsForUser($user);
+        $this->permissions->removeElement($permission);
+    }
+
+    public function getPermissionsForUser(User $user): ?CatalogPermission
+    {
+        foreach ($this->permissions->toArray() as $permission) {
+            if ($permission->getUser() === $user) {
+                return $permission;
+            }
+        }
+
+        return null;
     }
 }

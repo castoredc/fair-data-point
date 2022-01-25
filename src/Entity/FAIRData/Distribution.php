@@ -5,11 +5,15 @@ namespace App\Entity\FAIRData;
 
 use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents\DistributionContents;
+use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Agent\Agent;
+use App\Entity\FAIRData\Permission\DistributionPermission;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
 use App\Security\ApiUser;
+use App\Security\PermissionsEnabledEntity;
+use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +25,7 @@ use function count;
  * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
  * @ORM\HasLifecycleCallbacks
  */
-class Distribution implements AccessibleEntity, MetadataEnrichedEntity
+class Distribution implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
@@ -76,12 +80,20 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity
      */
     private Collection $contactPoints;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DistributionPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="distribution")
+     *
+     * @var Collection<DistributionPermission>
+     */
+    private Collection $permissions;
+
     public function __construct(string $slug, Dataset $dataset)
     {
         $this->slug = $slug;
         $this->dataset = $dataset;
         $this->metadata = new ArrayCollection();
         $this->contactPoints = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string
@@ -213,5 +225,43 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity
     public function removeContactPoint(Agent $contactPoint): void
     {
         $this->contactPoints->removeElement($contactPoint);
+    }
+
+    public function isPublished(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return Collection<DistributionPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermissionForUser(User $user, PermissionType $type): DistributionPermission
+    {
+        $permission = new DistributionPermission($user, $type, $this);
+        $this->permissions->add($permission);
+
+        return $permission;
+    }
+
+    public function removePermissionForUser(User $user): void
+    {
+        $permission = $this->getPermissionsForUser($user);
+        $this->permissions->removeElement($permission);
+    }
+
+    public function getPermissionsForUser(User $user): ?DistributionPermission
+    {
+        foreach ($this->permissions->toArray() as $permission) {
+            if ($permission->getUser() === $user) {
+                return $permission;
+            }
+        }
+
+        return null;
     }
 }

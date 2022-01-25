@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import axios from "axios";
 import {localizedText} from "../../../../util";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
-import {LoadingOverlay} from "@castoredc/matter";
+import {Route, Switch} from 'react-router-dom';
+import {Banner, LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import CatalogMetadataForm from "components/Form/Metadata/CatalogMetadataForm";
@@ -16,8 +16,12 @@ import Datasets from "pages/Dashboard/Catalogs/Catalog/Datasets";
 import AddDataset from "pages/Dashboard/Catalogs/Catalog/AddDataset";
 import Body from "components/Layout/Dashboard/Body";
 import Header from "components/Layout/Dashboard/Header";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
+import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
-interface CatalogProps extends RouteComponentProps<any> {
+interface CatalogProps extends AuthorizedRouteComponentProps {
 }
 
 interface CatalogState {
@@ -65,10 +69,14 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
 
     render() {
         const {catalog, isLoading} = this.state;
-        const {location, history} = this.props;
+        const {location, history, user} = this.props;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading catalog"/>;
+        }
+
+        if(! isGranted('edit', catalog.permissions)) {
+            return <NoPermission text="You do not have permission to edit this catalog"/>;
         }
 
         const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : null;
@@ -95,6 +103,12 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                         title: 'Metadata',
                         customIcon: 'metadata'
                     },
+                    ...isGranted('manage', catalog.permissions) ? [{
+                        to: '/dashboard/catalogs/' + catalog.slug + '/permissions',
+                        exact: true,
+                        title: 'Permissions',
+                        icon: 'usersLight'
+                    }] : [],
                     {
                         type: 'separator'
                     },
@@ -123,11 +137,24 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                                    catalog={catalog}
                                    history={history}
                                />
-                           </div>}/>
+                           </div>}
+                    />
                     <Route path="/dashboard/catalogs/:catalog/metadata" exact
                            render={(props) => <div>
                                <CatalogMetadataForm catalog={catalog} onSave={this.getCatalog}/>
-                           </div>}/>
+                           </div>}
+                    />
+                    <Route path="/dashboard/catalogs/:catalog/permissions" exact
+                           render={(props) => isGranted('manage', catalog.permissions) ?
+                               <PermissionEditor
+                                   getObject={this.getCatalog}
+                                   type="catalog"
+                                   object={catalog}
+                                   user={user}
+                                   {...props}
+                               /> : <NoPermission text="You do not have access to this page"/>
+                           }
+                    />
                     <Route path="/dashboard/catalogs/:catalog/studies/add" exact
                            render={(props) => <AddStudy {...props} catalog={catalog.slug}/>}/>
                     <Route path="/dashboard/catalogs/:catalog/studies" exact

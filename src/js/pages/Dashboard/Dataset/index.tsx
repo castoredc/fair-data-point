@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {Button, LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../util";
 import Header from "components/Layout/Dashboard/Header";
@@ -11,11 +11,15 @@ import Body from "components/Layout/Dashboard/Body";
 import DatasetForm from "components/Form/Admin/DatasetForm";
 import DatasetMetadataForm from "components/Form/Metadata/DatasetMetadataForm";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import Distributions from "pages/Dashboard/Dataset/Distributions";
 import AddDistribution from "pages/Dashboard/Dataset/AddDistribution";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
+import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
-interface DatasetProps extends RouteComponentProps<any> {
+interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any,
     catalog?: any
 }
@@ -67,7 +71,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
     }
 
     render() {
-        const {history, location, match} = this.props;
+        const {history, location, match, user} = this.props;
         const {isLoading, dataset} = this.state;
 
         if (!match.params.study && !match.params.catalog) {
@@ -76,6 +80,10 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading dataset"/>;
+        }
+
+        if(! isGranted('edit', dataset.permissions)) {
+            return <NoPermission text="You do not have permission to edit this dataset"/>;
         }
 
         const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
@@ -105,6 +113,12 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                         title: 'Metadata',
                         customIcon: 'metadata'
                     },
+                    ...isGranted('manage', dataset.permissions) ? [{
+                        to: mainUrl + '/datasets/' + dataset.slug + '/permissions',
+                        exact: true,
+                        title: 'Permissions',
+                        icon: 'usersLight'
+                    }] : [],
                     {
                         type: 'separator'
                     },
@@ -154,11 +168,27 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                     />
                     <Route
                         path={[
+                            "/dashboard/studies/:study/datasets/:dataset/permissions",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/permissions",
+                        ]}
+                        exact
+                        render={(props) => isGranted('manage', dataset.permissions) ?
+                            <PermissionEditor
+                                getObject={this.getDataset}
+                                type="dataset"
+                                object={dataset}
+                                user={user}
+                                {...props}
+                            /> : <NoPermission text="You do not have access to this page"/>
+                        }
+                    />
+                    <Route
+                        path={[
                             "/dashboard/studies/:study/datasets/:dataset/distributions",
                             "/dashboard/catalogs/:catalog/datasets/:dataset/distributions",
                         ]}
                         exact
-                        render={(props) => <Distributions {...props} />}
+                        render={(props) => <Distributions {...props} user={user}/>}
                     />
                     <Route
                         path={[
@@ -166,7 +196,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/add",
                         ]}
                         exact
-                        render={(props) => <AddDistribution {...props} />}
+                        render={(props) => <AddDistribution {...props} user={user}/>}
                     />
 
                     <Route component={NotFound}/>

@@ -86,7 +86,7 @@ class DataModelVersion extends Version
 
     public function addPrefix(NamespacePrefix $prefix): void
     {
-        $prefix->setDataModel($this);
+        $prefix->setDataModelVersion($this);
         $this->prefixes->add($prefix);
     }
 

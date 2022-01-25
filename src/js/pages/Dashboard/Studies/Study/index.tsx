@@ -3,7 +3,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../../components/ToastContent";
 import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
 import StudyDetailsForm from "components/Form/Study/StudyDetailsForm";
@@ -15,9 +15,11 @@ import Annotations from "pages/Dashboard/Studies/Study/Annotations";
 import {isGranted} from "utils/PermissionHelper";
 import Datasets from "pages/Dashboard/Studies/Study/Datasets";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
-interface StudyProps extends RouteComponentProps<any> {
+interface StudyProps extends AuthorizedRouteComponentProps {
 }
 
 interface StudyState {
@@ -72,6 +74,10 @@ export default class Study extends Component<StudyProps, StudyState> {
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading study"/>;
+        }
+
+        if(!isGranted('edit', study.permissions)) {
+            return <NoPermission text="You do not have permission to edit this study"/>;
         }
 
         const title = study.hasMetadata ? localizedText(study.metadata.briefName, 'en') : study.name;

@@ -24,6 +24,7 @@ type ListItemProps = {
     onClick?: (e) => void;
     badge?: string;
     tags?: string[];
+    disabled?: boolean
 }
 
 const ListItem: FC<ListItemProps> = ({
@@ -41,7 +42,8 @@ const ListItem: FC<ListItemProps> = ({
                                          className,
                                          onClick,
                                          badge,
-                                         tags = []
+                                         tags = [],
+                                         disabled = false
                                      }) => {
 
     if (selectable && onClick) {
@@ -70,6 +72,10 @@ const ListItem: FC<ListItemProps> = ({
             <span className="ListItemDescription">{description}</span>
         {tags.length > 0 && <Tags tags={tags} className="ListItemTags"/>}
         </span>;
+
+    if (disabled) {
+        return <div className="ListItem Disabled">{children}</div>;
+    }
 
     if (isURL(link) || newWindow) {
         return <a href={link} onClick={onClick} target="_blank" className="ListItem">{children}</a>;

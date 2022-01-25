@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import {RouteComponentProps} from 'react-router-dom';
 import CatalogForm from "components/Form/Admin/CatalogForm";
 import DocumentTitle from "components/DocumentTitle";
 import {toRem} from "@castoredc/matter-utils";
 import {Heading, Stack, StackItem} from "@castoredc/matter";
 import BackButton from "components/BackButton";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface AddCatalogProps extends RouteComponentProps<any> {
+interface AddCatalogProps extends AuthorizedRouteComponentProps {
 }
 
 export default class AddCatalog extends Component<AddCatalogProps> {

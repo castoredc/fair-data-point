@@ -6,7 +6,6 @@ namespace App\Api\Controller\Study;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Request\Study\StudyApiRequest;
-use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Catalog\GetCatalogBySlugCommand;
@@ -22,6 +21,7 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +65,11 @@ class StudiesApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(StudyApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                StudyApiResource::class,
+                $results,
+                [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

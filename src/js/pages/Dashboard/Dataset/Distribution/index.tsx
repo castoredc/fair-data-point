@@ -2,14 +2,14 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {Button, LoadingOverlay} from "@castoredc/matter";
-import {Route, RouteComponentProps, Switch} from 'react-router-dom';
+import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
+import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
-import NotFound from "pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import DistributionMetadata from "pages/Dashboard/Dataset/Distribution/DistributionMetadata";
 import DistributionSubset from "pages/Dashboard/Dataset/Distribution/DistributionSubset";
 import DistributionLog from "pages/Dashboard/Dataset/Distribution/DistributionLog";
@@ -17,8 +17,12 @@ import DistributionLogs from "pages/Dashboard/Dataset/Distribution/DistributionL
 import Details from "pages/Dashboard/Dataset/Distribution/Details";
 import DistributionContentsCsv from "pages/Dashboard/Dataset/Distribution/DistributionContentsCsv";
 import DistributionContentsRdf from "pages/Dashboard/Dataset/Distribution/DistributionContentsRdf";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
+import PermissionEditor from "components/PermissionEditor";
+import NoPermission from "pages/ErrorPages/NoPermission";
 
-interface DistributionProps extends RouteComponentProps<any> {
+interface DistributionProps extends AuthorizedRouteComponentProps {
     dataset: any,
 }
 
@@ -92,11 +96,15 @@ export default class Distribution extends Component<DistributionProps, Distribut
     }
 
     render() {
-        const {history, location, match} = this.props;
+        const {history, location, match, user} = this.props;
         const {isLoading, distribution, contents} = this.state;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading distribution"/>;
+        }
+
+        if(! isGranted('edit', distribution.permissions)) {
+            return <NoPermission text="You do not have permission to edit this distribution"/>;
         }
 
         const catalog = match.params.catalog;
@@ -104,22 +112,30 @@ export default class Distribution extends Component<DistributionProps, Distribut
         const dataset = match.params.dataset;
 
         const title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
+        
+        const mainUrl = match.params.study ? '/dashboard/studies/' + match.params.study + '/datasets/' + dataset : '/dashboard/catalogs/' + match.params.catalog + '/datasets/' + dataset;
 
         let sidebarItems = [
             {
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug,
+                to: mainUrl + '/distributions/' + distribution.slug,
                 exact: true,
                 title: 'Distribution',
                 customIcon: 'distribution'
             },
             {
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/metadata',
+                to: mainUrl + '/distributions/' + distribution.slug + '/metadata',
                 exact: true,
                 title: 'Metadata',
                 customIcon: 'metadata'
             },
+            ...isGranted('manage', distribution.permissions) ? [{
+                to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
+                exact: true,
+                title: 'Permissions',
+                icon: 'usersLight'
+            }] : [],
             {
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/subset',
+                to: mainUrl + '/distributions/' + distribution.slug + '/subset',
                 exact: true,
                 title: 'Subset',
                 icon: 'selectList'
@@ -132,7 +148,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         if (distribution.type === 'rdf') {
             sidebarItems.push(
                 {
-                    to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/contents',
+                    to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Mappings',
                     icon: 'order'
@@ -142,7 +158,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
             if (distribution.isCached) {
                 sidebarItems.push(
                     {
-                        to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/log',
+                        to: mainUrl + '/distributions/' + distribution.slug + '/log',
                         exact: true,
                         title: 'Log',
                         icon: 'summary'
@@ -152,7 +168,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         } else if (distribution.type === 'csv') {
             sidebarItems.push(
                 {
-                    to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/contents',
+                    to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Contents',
                     icon: 'order'
@@ -165,7 +181,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             <SideBar
                 back={{
-                    to: study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`,
+                    to: mainUrl,
                     title: 'Back to dataset'
                 }}
                 location={location}
@@ -194,6 +210,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                         render={(props) => (
                             <Details
                                 {...props}
+                                user={user}
                                 catalog={catalog}
                                 study={study}
                                 dataset={dataset}
@@ -215,6 +232,23 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                 distribution={distribution}
                                 onSave={this.getDistribution}/>
                         )}
+                    />
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/permissions",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/permissions"
+                        ]}
+                        exact
+                           render={(props) => isGranted('manage', distribution.permissions) ?
+                               <PermissionEditor
+                                   getObject={this.getDistribution}
+                                   type="distribution"
+                                   object={distribution}
+                                   user={user}
+                                   {...props}
+                               /> : <NoPermission text="You do not have access to this page"/>
+                           }
                     />
 
                     <Route

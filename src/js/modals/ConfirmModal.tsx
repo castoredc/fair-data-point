@@ -1,9 +1,24 @@
 import React, {Component} from 'react'
-import {Button} from "@castoredc/matter";
-import './ConfirmModal.scss';
-import Modal from "../Modal";
+import {Button, ButtonVariants, Modal} from "@castoredc/matter";
 
-export default class ConfirmModal extends Component {
+type ConfirmModalProps = {
+    show?: boolean,
+    title: string,
+    action: string,
+    variant: ButtonVariants,
+    onCancel?: () => void,
+    onConfirm: (callback ?: () => void) => void,
+}
+
+type ShowProps =
+    | { includeButton: true; show: never}
+    | { includeButton?: false; show: boolean}
+
+type ConfirmModalState = {
+    showCancelModal: boolean,
+}
+
+export default class ConfirmModal extends Component<ConfirmModalProps & ShowProps, ConfirmModalState> {
     constructor(props) {
         super(props);
 
@@ -29,15 +44,14 @@ export default class ConfirmModal extends Component {
     };
 
     handleCancel = () => {
-        const {
-            onCancel = () => {
-            }
-        } = this.props;
+        const {onCancel} = this.props;
 
         this.setState({
             showCancelModal: false,
         }, () => {
-            onCancel();
+            if(onCancel) {
+                onCancel();
+            }
         });
     };
 
@@ -56,19 +70,21 @@ export default class ConfirmModal extends Component {
         const {showCancelModal} = this.state;
 
         const modal = <Modal
-            show={showCancelModal}
-            className="ConfirmModal"
+            open={showCancelModal}
             title={title}
-            footer={(
-                <div>
-                    <Button buttonType={variant ? variant : 'primary'} onClick={this.handleConfirm}>
-                        {action}
-                    </Button>
-                    <Button buttonType="contentOnly" onClick={this.handleCancel}>
-                        Cancel
-                    </Button>
-                </div>
-            )}
+            accessibleName={title}
+            onClose={this.handleCancel}
+            primaryAction={{
+                label: action,
+                onClick: this.handleConfirm
+            }}
+            secondaryActions={[
+                {
+                    label: 'Cancel',
+                    onClick: this.handleCancel,
+                    buttonType: 'contentOnly'
+                }
+            ]}
         >
             {children}
         </Modal>;

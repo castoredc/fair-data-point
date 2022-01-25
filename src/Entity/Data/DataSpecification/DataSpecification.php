@@ -4,7 +4,11 @@ declare(strict_types=1);
 namespace App\Entity\Data\DataSpecification;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
+use App\Entity\Enum\PermissionType;
 use App\Entity\Version as VersionNumber;
+use App\Security\Permission;
+use App\Security\PermissionsEnabledEntity;
+use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     "dictionary" = "App\Entity\Data\DataDictionary\DataDictionary",
  * })
  */
-abstract class DataSpecification
+abstract class DataSpecification implements PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
@@ -53,6 +57,16 @@ abstract class DataSpecification
      */
     private Collection $versions;
 
+    /** @ORM\Column(type="boolean", options={"default" : 0}) */
+    private bool $isPublic = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DataSpecificationPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="dataSpecification")
+     *
+     * @var Collection<DataSpecificationPermission>
+     */
+    private Collection $permissions;
+
     public function __construct(string $title, ?string $description)
     {
         $this->title = $title;
@@ -60,6 +74,7 @@ abstract class DataSpecification
 
         $this->distributionContents = new ArrayCollection();
         $this->versions = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string
@@ -123,5 +138,48 @@ abstract class DataSpecification
         }
 
         return false;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
+    }
+
+    /**
+     * @return Collection<DataSpecificationPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermissionForUser(User $user, PermissionType $type): Permission
+    {
+        $permission = new DataSpecificationPermission($user, $type, $this);
+        $this->permissions->add($permission);
+
+        return $permission;
+    }
+
+    public function removePermissionForUser(User $user): void
+    {
+        $permission = $this->getPermissionsForUser($user);
+        $this->permissions->removeElement($permission);
+    }
+
+    public function getPermissionsForUser(User $user): ?DataSpecificationPermission
+    {
+        foreach ($this->permissions->toArray() as $permission) {
+            if ($permission->getUser() === $user) {
+                return $permission;
+            }
+        }
+
+        return null;
     }
 }

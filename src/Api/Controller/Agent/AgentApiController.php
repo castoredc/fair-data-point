@@ -11,7 +11,6 @@ use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudiesMapApiResource;
 use App\Api\Resource\Study\StudyApiResource;
@@ -26,6 +25,10 @@ use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\CatalogVoter;
+use App\Security\Authorization\Voter\DatasetVoter;
+use App\Security\Authorization\Voter\DistributionVoter;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -106,7 +109,11 @@ class AgentApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(StudyApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                StudyApiResource::class,
+                $results,
+                [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -167,7 +174,11 @@ class AgentApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DatasetApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                DatasetApiResource::class,
+                $results,
+                [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -203,7 +214,11 @@ class AgentApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(CatalogApiResource::class, $results, $this->isGranted('ROLE_ADMIN')))->toArray());
+            return $this->getPaginatedResponse(
+                CatalogApiResource::class,
+                $results,
+                [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
@@ -240,7 +255,12 @@ class AgentApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DistributionApiResource::class, $results, $this->isGranted('ROLE_ADMIN'), $uriHelper))->toArray());
+            return $this->getPaginatedResponse(
+                DistributionApiResource::class,
+                $results,
+                [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::MANAGE, DistributionVoter::ACCESS_DATA],
+                $uriHelper
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

@@ -7,12 +7,22 @@ import './App.scss'
 import {toast, ToastContainer} from "react-toastify";
 import axios from "axios";
 import ToastContent from "../ToastContent";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {classNames} from "../../util";
 import {LoadingOverlay} from "@castoredc/matter";
+import {UserType} from "../../types/UserType";
+import TagManager from 'react-gtm-module'
 
-class App extends Component {
+interface AppProps extends RouteComponentProps<any> {
+}
+
+interface AppState {
+    isLoading: boolean,
+    user: UserType | null,
+}
+
+class App extends Component<AppProps, AppState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,17 +37,16 @@ class App extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
-            this.onRouteChanged();
+            this.onRouteChange();
         }
     }
 
-    onRouteChanged = () => {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            event: 'FdpPageView',
-            data: {
+    onRouteChange = () => {
+        TagManager.dataLayer({
+            dataLayer: {
+                event: 'FdpPageView',
                 url: this.props.location.pathname
-            }
+            },
         });
     };
 
@@ -71,7 +80,7 @@ class App extends Component {
         const embedded = (typeof params.embed !== 'undefined');
 
         return (
-            <div className={classNames('App', isLoading && 'Loading', !isLoading && 'Loaded', embedded && 'Embedded')}>
+            <div className={classNames('App', embedded && 'Embedded')}>
                 <ToastContainer
                     position="top-center"
                     autoClose={5000}
@@ -79,7 +88,6 @@ class App extends Component {
                     newestOnTop={false}
                     closeOnClick
                     rtl={false}
-                    pauseOnVisibilityChange
                     draggable={false}
                     pauseOnHover
                 />

@@ -3,12 +3,13 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "../../../components/ToastContent";
 import {Button, LoadingOverlay, Space} from "@castoredc/matter";
-import {RouteComponentProps} from 'react-router-dom';
 import ListItem from "components/ListItem";
 import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isAdmin} from "utils/PermissionHelper";
 
-interface DataModelsProps extends RouteComponentProps<any> {
+interface DataModelsProps extends AuthorizedRouteComponentProps {
 }
 
 interface DataModelsState {
@@ -57,7 +58,7 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
     }
 
     render() {
-        const {history} = this.props;
+        const {history, user} = this.props;
         const {isLoading, dataModels} = this.state;
 
         return <div>
@@ -71,9 +72,9 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
                 title="My data models"
                 type="Section"
             >
-                <Button buttonType="primary" onClick={() => history.push('/dashboard/data-models/add')}>
+                {isAdmin(user) && <Button buttonType="primary" onClick={() => history.push('/dashboard/data-models/add')}>
                     Add data model
-                </Button>
+                </Button>}
             </Header>
 
             <div>
@@ -83,6 +84,8 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
                         link={`/dashboard/data-models/${model.id}`} title={model.title}
                     />
                 })}
+
+                {dataModels.length == 0 && <div className="NoResults">No data models found.</div>}
             </div>
         </div>;
     }

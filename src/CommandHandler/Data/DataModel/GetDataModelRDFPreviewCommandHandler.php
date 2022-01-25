@@ -39,7 +39,9 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetDataModelRDFPreviewCommand $command): DataModelRDFPreviewApiResource
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $dataModel = $command->getDataModel();
+
+        if (! $this->security->isGranted('view', $dataModel)) {
             throw new NoAccessPermission();
         }
 
@@ -47,7 +49,6 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
 
         $fullGraph = new Graph();
 
-        $dataModel = $command->getDataModel();
         $modules = $dataModel->getGroups();
         $prefixes = $dataModel->getPrefixes();
 

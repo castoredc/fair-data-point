@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import {RouteComponentProps} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {toRem} from "@castoredc/matter-utils";
 import {Heading, Stack, StackItem} from "@castoredc/matter";
 import DataModelForm from "components/Form/Data/DataModelForm";
 import BackButton from "components/BackButton";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface AddDataModelProps extends RouteComponentProps<any> {
+interface AddDataModelProps extends AuthorizedRouteComponentProps {
 }
 
 export default class AddDataModel extends Component<AddDataModelProps> {

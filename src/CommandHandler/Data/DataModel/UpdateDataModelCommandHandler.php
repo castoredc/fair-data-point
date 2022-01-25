@@ -23,11 +23,12 @@ class UpdateDataModelCommandHandler implements MessageHandlerInterface
 
     public function __invoke(UpdateDataModelCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $dataModel = $command->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
 
-        $dataModel = $command->getDataModel();
         $dataModel->setTitle($command->getTitle());
         $dataModel->setDescription($command->getDescription());
 

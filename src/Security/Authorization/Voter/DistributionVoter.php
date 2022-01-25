@@ -17,6 +17,8 @@ class DistributionVoter extends Voter
     public const VIEW = 'view';
     public const EDIT = 'edit';
     public const ACCESS_DATA = 'access_data';
+    public const MANAGE = 'manage';
+
     private Security $security;
 
     public function __construct(Security $security)
@@ -27,7 +29,7 @@ class DistributionVoter extends Voter
     /** @inheritDoc */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA], true)) {
+        if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA, self::MANAGE], true)) {
             return false;
         }
 
@@ -37,24 +39,48 @@ class DistributionVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
+        $user = $token->getUser();
         $distribution = $subject;
         assert($distribution instanceof Distribution);
 
-        switch ($attribute) {
-            case self::VIEW:
-                return $this->security->isGranted(self::VIEW, $distribution->getDataset());
+        if ($attribute === self::VIEW && $distribution->isPublished()) {
+            return true;
+        }
 
-            case self::EDIT:
-                return $this->security->isGranted(self::EDIT, $distribution->getDataset());
+        if (! $user instanceof User) {
+            return false;
+        }
 
-            case self::ACCESS_DATA:
-                return $this->canAccessData($distribution, $token);
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        $permission = $distribution->getPermissionsForUser($user);
+
+        if ($attribute === self::ACCESS_DATA) {
+            return $this->canAccessData($distribution, $user);
+        }
+
+        if ($permission === null) {
+            return false;
+        }
+
+        if ($permission->getType()->isView()) {
+            return $attribute === self::VIEW;
+        }
+
+        if ($permission->getType()->isEdit()) {
+            return $attribute === self::VIEW || $attribute === self::EDIT;
+        }
+
+        if ($permission->getType()->isManage()) {
+            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::MANAGE;
         }
 
         return false;
     }
 
-    private function canAccessData(Distribution $distribution, TokenInterface $token): bool
+    private function canAccessData(Distribution $distribution, User $user): bool
     {
         if ($distribution->getContents() === null) {
             return false;
@@ -62,12 +88,6 @@ class DistributionVoter extends Voter
 
         if ($distribution->getContents()->getAccessRights() === DistributionAccessType::PUBLIC) {
             return true;
-        }
-
-        $user = $token->getUser();
-
-        if (! $user instanceof User) {
-            return false;
         }
 
         if (! $user->hasCastorUser()) {

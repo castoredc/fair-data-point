@@ -7,7 +7,7 @@ import axios from "axios";
 import Avatar from "react-avatar";
 import ConfirmModal from "../../../modals/ConfirmModal";
 import OrganizationModal from "../../../modals/OrganizationModal";
-import {OrganizationType} from "../../../types/OrganizationType";
+import {OrganizationType} from "types/OrganizationType";
 
 type OrganizationsFormProps = {
     studyId: string

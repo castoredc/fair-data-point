@@ -939,37 +939,37 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
-"@castoredc/matter-fonts@^18.2.0":
-  version "18.2.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-fonts/18.2.0/6d2abac53e816b32c2948272495f48435081562da1aaa818b2fa93ee7d0fea2c#a11e05befc4a94d0278c343d1c782d817d6d7c35"
-  integrity sha512-ts0FdznTFDIq0eyYaFcb9C0vWCgmhkf4cnY/2M+ShsynSSqYGkCYmucTMRq75GmOwrqhxJz6COHVWbxkSjo5Vw==
+"@castoredc/matter-fonts@^18.9.0":
+  version "18.9.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-fonts/18.9.0/46eb8ebb877286a1210091e1ac07ea62b339ebd135ac33fcf045add0b8f76c1b#203fe338e24897f1769a4ae43280367651ade395"
+  integrity sha512-Y/lX/0ZVJvy/iG+kqs2Jy4W61YxT/8cDpx3BEfLzUBIYGAERDNu28eysFD6xSZapQw6SyCDOcnoQ590/l7DD1w==
 
-"@castoredc/matter-icons@^18.2.0":
-  version "18.2.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-icons/18.2.0/b65cd06cb204ffb1d287915a78214914ed9bd0f6e3fcf123191c2ef56a85210e#fa44cf0872d0f3635d427059b48625ac7559367a"
-  integrity sha512-HjF/O1zHVLagViXY1QNLlujGPmXh9c42DHvAESKGhdOcT7wui7MaEdKBiWjNE7D24EOlaXHbhNVDQF+xyJFZ8A==
+"@castoredc/matter-icons@^18.9.0":
+  version "18.9.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-icons/18.9.0/81dbdb3d89c23deed34a501b72319df12369818906be509f683378f6b7a225e3#1596f659bc0c5be256b0e6cc3265ae19c1fa1ba1"
+  integrity sha512-c3jpSlmifnFn5Mu1K11UfhLmxlpjjFrgzYUwRCeri6yXfRIx7pSh+a7imBDxvaxdDU03zpsIp3JiyQZjNPwuOA==
   dependencies:
     "@babel/runtime" "^7.16.3"
-    "@castoredc/matter-utils" "^18.2.0"
+    "@castoredc/matter-utils" "^18.9.0"
     tslib "^2.3.1"
 
-"@castoredc/matter-utils@^18.2.0":
-  version "18.2.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-utils/18.2.0/2b985c03e7c6cfbd300da5866869ee4b88e173471f0534bcdf1ecead38815722#e0e3f5200dc076f4465d0b377ed4a41a915c2804"
-  integrity sha512-kzKYPbITAfJ+G+qP4PdUK6mwJDhZchVHWu7mZHaba4999Ryy5k1LSPwCd4gQWxvSKTyPR3ddpWuN+r/hW4KImQ==
+"@castoredc/matter-utils@^18.9.0":
+  version "18.9.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-utils/18.9.0/c95756a9a4e77bd191f1d6171552f954d066f1279f573869f416744092c0500a#27afd3d4eec517b76aee74e68838c580dce47301"
+  integrity sha512-F3wGIZMpVulcRz2YtREZweDgiGXZ2jL9QEhkbQGClP4+5IK7G8aWNQylVnodjVcZ/WgzX4nQ3ixQcanZGYrU0g==
 
-"@castoredc/matter@^18.2.0":
-  version "18.2.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter/18.2.0/29b3258f9afe6f68040da9099ce13f1bf89abd26d3b7535bcb913a031b0072d2#0494d12dc0527e2dd49dd66ca22f068b6bc3394a"
-  integrity sha512-TfLf2swgHX5z0b0YqSudo/qXMWxjlN1hFMMqlZtuKNSY+7BKzX55oh4mNsJeoNoCx3vM9AU2KyC1v3qqv9z/2Q==
+"@castoredc/matter@^18.9.0":
+  version "18.9.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter/18.9.0/1b32b66edd1a50ef2792b012f23759799d6927f65cb25e8abeeea93cf5361c5f#81ab00f2b92ee797d4750807d06f7e9dce8ee157"
+  integrity sha512-lBAFdFniOABa7MMmBc6UvCqy29jlmLsbSNhZAcfulc5eT39VPQ3rheVk0/zIw7fUfrW8gL4FODG0UBIi3S8s0Q==
   dependencies:
     "@babel/runtime" "^7.16.3"
-    "@castoredc/matter-fonts" "^18.2.0"
-    "@castoredc/matter-icons" "^18.2.0"
-    "@castoredc/matter-utils" "^18.2.0"
+    "@castoredc/matter-fonts" "^18.9.0"
+    "@castoredc/matter-icons" "^18.9.0"
+    "@castoredc/matter-utils" "^18.9.0"
     "@types/react-dates" "^21.8.3"
     "@types/react-select" "3.1.2"
-    core-js "^3.19.1"
+    core-js "^3.20.2"
     lodash "^4.17.19"
     moment "^2.29.1"
     react-beautiful-dnd "^13.1.0"
@@ -978,7 +978,7 @@
     react-imask "^6.1.0"
     react-select "^3.2.0"
     react-table "^7.7.0"
-    react-with-direction "^1.3.1"
+    react-with-direction "^1.4.0"
     styled-normalize "^8.0.6"
     webfontloader "^1.6.28"
 
@@ -2408,10 +2408,15 @@ core-js-compat@^3.18.0, core-js-compat@^3.19.1:
     browserslist "^4.19.1"
     semver "7.0.0"
 
-core-js@^3.10.1, core-js@^3.19.1, core-js@^3.6.1:
+core-js@^3.10.1, core-js@^3.6.1:
   version "3.20.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.20.0.tgz#1c5ac07986b8d15473ab192e45a2e115a4a95b79"
   integrity sha512-KjbKU7UEfg4YPpskMtMXPhUKn7m/1OdTHTVjy09ScR2LVaoUXe8Jh0UdvN2EKUR6iKTJph52SJP95mAB0MnVLQ==
+
+core-js@^3.20.2:
+  version "3.20.3"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.20.3.tgz#c710d0a676e684522f3db4ee84e5e18a9d11d69a"
+  integrity sha512-vVl8j8ph6tRS3B8qir40H7yw7voy17xL0piAjlbBUsH7WIfzoedL/ZOr1OV9FyZQLWXsayOJyV4tnRyXR85/ag==
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -5186,6 +5191,11 @@ react-form-validator-core@^0.6.5:
     prop-types "^15.0.0"
     react-lifecycles-compat "^3.0.2"
 
+react-gtm-module@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.11.tgz#14484dac8257acd93614e347c32da9c5ac524206"
+  integrity sha512-8gyj4TTxeP7eEyc2QKawEuQoAZdjKvMY4pgWfycGmqGByhs17fR+zEBs0JUDq4US/l+vbTl+6zvUIx27iDo/Vw==
+
 react-imask@^6.1.0:
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/react-imask/-/react-imask-6.2.2.tgz#1a6574828370158bfa7bf6bdf0db255206ef10c0"
@@ -5390,7 +5400,7 @@ react-transition-group@^4, react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-with-direction@^1.3.1:
+react-with-direction@^1.3.1, react-with-direction@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-with-direction/-/react-with-direction-1.4.0.tgz#ebdf64d685d0650ce966e872e6431ad5a2485444"
   integrity sha512-ybHNPiAmaJpoWwugwqry9Hd1Irl2hnNXlo/2SXQBwbLn/jGMauMS2y9jw+ydyX5V9ICryCqObNSthNt5R94xpg==

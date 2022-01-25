@@ -1,13 +1,13 @@
 import React, {FC} from "react";
-import {Route, RouteComponentProps, Switch} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import './Wizard.scss';
-import NotFound from "../NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import UserDetails from "./UserDetails";
 import Affiliations from "./Affiliations";
 import {CastorBar} from "@castoredc/matter";
+import {AuthorizedRouteComponentProps} from "components/Route";
 
-interface WizardProps extends RouteComponentProps<any> {
-    user: any,
+interface WizardProps extends AuthorizedRouteComponentProps {
 }
 
 const Wizard: FC<WizardProps> = ({user, ...rest}) => {

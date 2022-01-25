@@ -23,11 +23,12 @@ class DeleteDataModelPrefixCommandHandler implements MessageHandlerInterface
 
     public function __invoke(DeleteDataModelPrefixCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $prefix = $command->getDataModelPrefix();
+        $dataModel = $prefix->getDataModelVersion()->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $prefix = $command->getDataModelPrefix();
 
         $this->em->remove($prefix);
 

@@ -3,13 +3,18 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\Data\DataSpecification\DataSpecificationPermission;
 use App\Entity\Enum\Wizard;
 use App\Entity\FAIRData\Agent\Person;
+use App\Entity\FAIRData\Permission\CatalogPermission;
+use App\Entity\FAIRData\Permission\DatasetPermission;
+use App\Entity\FAIRData\Permission\DistributionPermission;
 use App\Security\Providers\Castor\CastorUser;
 use App\Security\Providers\Orcid\OrcidUser;
 use App\Traits\CreatedAt;
 use App\Traits\UpdatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
@@ -49,6 +54,34 @@ class User implements UserInterface
      * @ORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
      */
     private ?OrcidUser $orcid = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataSpecification\DataSpecificationPermission", mappedBy="user", cascade={"persist", "remove"})
+     *
+     * @var Collection<DataSpecificationPermission>
+     */
+    private Collection $dataSpecifications;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\CatalogPermission", mappedBy="user", cascade={"persist", "remove"})
+     *
+     * @var Collection<CatalogPermission>
+     */
+    private Collection $catalogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DatasetPermission", mappedBy="user", cascade={"persist", "remove"})
+     *
+     * @var Collection<DatasetPermission>
+     */
+    private Collection $datasets;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DistributionPermission", mappedBy="user", cascade={"persist", "remove"})
+     *
+     * @var Collection<DistributionPermission>
+     */
+    private Collection $distributions;
 
     public const DOMAINS = [
         'castoredc.com' => ['ROLE_ADMIN'],
@@ -210,5 +243,37 @@ class User implements UserInterface
     public function setPerson(?Person $person): void
     {
         $this->person = $person;
+    }
+
+    /**
+     * @return Collection<DataSpecificationPermission>
+     */
+    public function getDataSpecifications(): Collection
+    {
+        return $this->dataSpecifications;
+    }
+
+    /**
+     * @return Collection<CatalogPermission>
+     */
+    public function getCatalogs(): Collection
+    {
+        return $this->catalogs;
+    }
+
+    /**
+     * @return Collection<DatasetPermission>
+     */
+    public function getDatasets(): Collection
+    {
+        return $this->datasets;
+    }
+
+    /**
+     * @return Collection<DistributionPermission>
+     */
+    public function getDistributions(): Collection
+    {
+        return $this->distributions;
     }
 }

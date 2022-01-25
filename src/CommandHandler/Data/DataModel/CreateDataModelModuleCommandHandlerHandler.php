@@ -14,11 +14,11 @@ class CreateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupC
 {
     public function __invoke(CreateDataModelModuleCommand $command): void
     {
-        if (! $this->security->isGranted('ROLE_ADMIN')) {
+        $dataModel = $command->getDataModel();
+
+        if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
-
-        $dataModel = $command->getDataModel();
 
         $module = new DataModelGroup($command->getTitle(), $command->getOrder(), $command->isRepeated(), $command->isDependent(), $dataModel);
         $dataModel->addGroup($module);

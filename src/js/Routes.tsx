@@ -1,12 +1,13 @@
 import React, {FC} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
-import NotFound from "./pages/NotFound";
+import NotFound from "pages/ErrorPages/NotFound";
 import Login from "./pages/Login";
 import axios from "axios";
 import {PrivateRoute} from "components/Route";
 import Main from "./pages/Main";
 import Wizard from "./pages/Wizard";
 import Dashboard from "pages/Dashboard";
+import {UserType} from "./types/UserType";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -21,7 +22,7 @@ axios.interceptors.response.use(function (response) {
 });
 
 interface RoutesProps {
-    user: any,
+    user: UserType | null,
     embedded: boolean,
 }
 
@@ -37,7 +38,7 @@ const Routes: FC<RoutesProps> = ({user, embedded}) => {
         <Route path="/tools" render={(props) => <Main {...props} user={user}/>}/>
 
         /* Dashboard */
-        <PrivateRoute path="/dashboard" user={user} component={Dashboard}/>
+        <PrivateRoute path="/dashboard" user={user} render={(props) => <Dashboard {...props} user={user} />}/>
 
         <Route path="/wizard" render={(props) => <Wizard {...props} user={user}/>}/>
 

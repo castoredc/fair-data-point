@@ -8,11 +8,12 @@ use App\Api\Request\Dataset\DatasetApiRequest;
 use App\Api\Request\Metadata\MetadataFilterApiRequest;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionApiResource;
-use App\Api\Resource\PaginatedApiResource;
 use App\Command\Dataset\UpdateDatasetCommand;
 use App\Command\Distribution\GetPaginatedDistributionsCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DatasetVoter;
+use App\Security\Authorization\Voter\DistributionVoter;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,11 @@ class DatasetApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 
-        return new JsonResponse((new DatasetApiResource($dataset))->toArray());
+        return $this->getResponse(
+            new DatasetApiResource($dataset),
+            $dataset,
+            [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
+        );
     }
 
     /**
@@ -97,7 +102,12 @@ class DatasetApiController extends ApiController
 
             $results = $handledStamp->getResult();
 
-            return new JsonResponse((new PaginatedApiResource(DistributionApiResource::class, $results, $this->isGranted('ROLE_ADMIN'), $uriHelper))->toArray());
+            return $this->getPaginatedResponse(
+                DistributionApiResource::class,
+                $results,
+                [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::MANAGE, DistributionVoter::ACCESS_DATA],
+                $uriHelper
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {

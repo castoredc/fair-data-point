@@ -6,9 +6,10 @@ import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import ListItem from "components/ListItem";
 import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
-import {RouteComponentProps} from "react-router-dom";
+import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
 
-interface DistributionsProps extends RouteComponentProps<any> {
+interface DistributionsProps extends AuthorizedRouteComponentProps {
 }
 
 interface DistributionsState {
@@ -76,6 +77,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                 {distributions.map((distribution) => {
                     return <ListItem
                         selectable={false}
+                        disabled={! isGranted('edit', distribution.permissions)}
                         link={`${mainUrl}/distributions/${distribution.slug}`}
                         title={distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution'}
                     />

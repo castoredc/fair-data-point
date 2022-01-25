@@ -8,10 +8,11 @@ import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
 import {FieldArray, Form, Formik} from "formik";
 import AffiliationForm from "components/Form/Agent/AffiliationForm";
 import * as Yup from "yup";
+import {UserType} from "types/UserType";
 
 
 interface AffiliationsFormProps {
-    user: any,
+    user: UserType,
     onSaved: () => void,
 }
 
