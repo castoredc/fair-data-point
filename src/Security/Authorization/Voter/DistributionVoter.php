@@ -57,8 +57,12 @@ class DistributionVoter extends Voter
 
         $permission = $distribution->getPermissionsForUser($user);
 
-        if($attribute === self::ACCESS_DATA) {
+        if ($attribute === self::ACCESS_DATA) {
             return $this->canAccessData($distribution, $user);
+        }
+
+        if ($permission === null) {
+            return false;
         }
 
         if ($permission->getType()->isView()) {

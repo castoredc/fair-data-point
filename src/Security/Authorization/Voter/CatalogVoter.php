@@ -57,20 +57,22 @@ class CatalogVoter extends Voter
 
         $permission = $catalog->getPermissionsForUser($user);
 
-        if ($permission->getType()->isView()) {
-            return $attribute === self::VIEW;
-        }
-
         if (! $user->hasCastorUser()) {
             return false;
         }
 
-        if ($permission->getType()->isEdit()) {
-            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::ADD;
-        }
+        if ($permission !== null) {
+            if ($permission->getType()->isView()) {
+                return $attribute === self::VIEW;
+            }
 
-        if ($permission->getType()->isManage()) {
-            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::ADD || $attribute === self::MANAGE;
+            if ($permission->getType()->isEdit()) {
+                return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::ADD;
+            }
+
+            if ($permission->getType()->isManage()) {
+                return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::ADD || $attribute === self::MANAGE;
+            }
         }
 
         if ($catalog->isAcceptingSubmissions()) {

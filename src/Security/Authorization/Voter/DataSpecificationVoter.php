@@ -55,6 +55,10 @@ class DataSpecificationVoter extends Voter
 
         $permission = $dataSpecification->getPermissionsForUser($user);
 
+        if ($permission === null) {
+            return false;
+        }
+
         if ($permission->getType()->isView()) {
             return $attribute === self::VIEW;
         }

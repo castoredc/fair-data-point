@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {Button, LoadingOverlay} from "@castoredc/matter";
+import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
 import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../../util";
@@ -18,6 +18,8 @@ import Details from "pages/Dashboard/Dataset/Distribution/Details";
 import DistributionContentsCsv from "pages/Dashboard/Dataset/Distribution/DistributionContentsCsv";
 import DistributionContentsRdf from "pages/Dashboard/Dataset/Distribution/DistributionContentsRdf";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
+import PermissionEditor from "components/PermissionEditor";
 
 interface DistributionProps extends AuthorizedRouteComponentProps {
     dataset: any,
@@ -119,6 +121,12 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 title: 'Metadata',
                 customIcon: 'metadata'
             },
+            ...isGranted('manage', distribution.permissions) ? [{
+                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/permissions',
+                exact: true,
+                title: 'Permissions',
+                icon: 'usersLight'
+            }] : [],
             {
                 to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/subset',
                 exact: true,
@@ -217,6 +225,25 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                 distribution={distribution}
                                 onSave={this.getDistribution}/>
                         )}
+                    />
+
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/permissions",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/permissions"
+                        ]}
+                        exact
+                           render={(props) => isGranted('manage', distribution.permissions) ?
+                               <PermissionEditor
+                                   getObject={this.getDistribution}
+                                   type="distribution"
+                                   object={distribution}
+                                   user={user}
+                                   {...props}
+                               /> : <div>
+                                   <Banner type="error" title="You do not have access to this page"/>
+                               </div>
+                           }
                     />
 
                     <Route

@@ -7,26 +7,18 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModel\DataModelApiRequest;
 use App\Api\Request\Data\DataModel\DataModelVersionApiRequest;
 use App\Api\Request\Data\DataModel\DataModelVersionTypeApiRequest;
-use App\Api\Request\Security\EditPermissionApiRequest;
-use App\Api\Request\Security\PermissionApiRequest;
 use App\Api\Resource\Data\DataModel\DataModelApiResource;
 use App\Api\Resource\Data\DataModel\DataModelsApiResource;
 use App\Api\Resource\Data\DataModel\DataModelVersionApiResource;
 use App\Api\Resource\Data\DataModel\DataModelVersionExportApiResource;
-use App\Api\Resource\PaginatedApiResource;
-use App\Api\Resource\Security\PermissionApiResource;
 use App\Command\Data\DataModel\CreateDataModelCommand;
 use App\Command\Data\DataModel\CreateDataModelVersionCommand;
 use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Command\Data\DataModel\GetDataModelRDFPreviewCommand;
 use App\Command\Data\DataModel\ImportDataModelVersionCommand;
 use App\Command\Data\DataModel\UpdateDataModelCommand;
-use App\Command\Security\AddPermissionToEntityCommand;
-use App\Command\Security\EditPermissionToEntityCommand;
-use App\Command\Security\RemovePermissionToEntityCommand;
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\SessionTimedOut;
@@ -34,8 +26,6 @@ use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
 use App\Exception\Upload\NoFileSpecified;
-use App\Exception\UserAlreadyExists;
-use App\Exception\UserNotFound;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
@@ -127,130 +117,6 @@ class DataModelApiController extends ApiController
             $dataModel,
             [DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
         );
-    }
-
-    /**
-     * @Route("/{model}/permissions", methods={"GET"}, name="api_model_permissions")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     */
-    public function permissions(DataModel $dataModel): Response
-    {
-        $this->denyAccessUnlessGranted('manage', $dataModel);
-
-        return new JsonResponse(
-            (new PaginatedApiResource(
-                PermissionApiResource::class,
-                new PaginatedResultCollection(
-                    $dataModel->getPermissions()->toArray(),
-                    1,
-                    $dataModel->getPermissions()->count(),
-                    $dataModel->getPermissions()->count(),
-                ),
-                $this->isGranted('ROLE_ADMIN')
-            ))->toArray()
-        );
-    }
-
-    /**
-     * @Route("/{model}/permissions", methods={"POST"}, name="api_model_permissions_add")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     */
-    public function addPermissions(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('manage', $dataModel);
-
-        try {
-            $parsed = $this->parseRequest(PermissionApiRequest::class, $request);
-            assert($parsed instanceof PermissionApiRequest);
-
-            $envelope = $bus->dispatch(new AddPermissionToEntityCommand($dataModel, $parsed->getEmail(), $parsed->getType()));
-
-            $handledStamp = $envelope->last(HandledStamp::class);
-            assert($handledStamp instanceof HandledStamp);
-
-            return new JsonResponse((new PermissionApiResource($handledStamp->getResult()))->toArray());
-        } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            if ($e instanceof UserAlreadyExists) {
-                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
-            }
-
-            if ($e instanceof UserNotFound) {
-                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
-            }
-
-            $this->logger->critical('An error occurred while adding permissions for a user', [
-                'exception' => $e,
-                'dataModel' => $dataModel->getId(),
-            ]);
-
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * @Route("/{model}/permissions/{user}", methods={"POST"}, name="api_model_permissions_edit")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     * @ParamConverter("user", options={"mapping": {"user": "id"}})
-     */
-    public function editPermissions(DataModel $dataModel, User $user, Request $request, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('manage', $dataModel);
-
-        try {
-            $parsed = $this->parseRequest(EditPermissionApiRequest::class, $request);
-            assert($parsed instanceof EditPermissionApiRequest);
-
-            $envelope = $bus->dispatch(new EditPermissionToEntityCommand($dataModel, $user, $parsed->getType()));
-
-            $handledStamp = $envelope->last(HandledStamp::class);
-            assert($handledStamp instanceof HandledStamp);
-
-            return new JsonResponse((new PermissionApiResource($handledStamp->getResult()))->toArray());
-        } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            if ($e instanceof UserNotFound) {
-                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
-            }
-
-            $this->logger->critical('An error occurred while changing permissions for a user', [
-                'exception' => $e,
-                'dataModel' => $dataModel->getId(),
-            ]);
-
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * @Route("/{model}/permissions/{user}", methods={"DELETE"}, name="api_model_permissions_remove")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     * @ParamConverter("user", options={"mapping": {"user": "id"}})
-     */
-    public function removePermissions(DataModel $dataModel, User $user, MessageBusInterface $bus): Response
-    {
-        $this->denyAccessUnlessGranted('manage', $dataModel);
-
-        try {
-            $bus->dispatch(new RemovePermissionToEntityCommand($dataModel, $user));
-
-            return new JsonResponse([]);
-        } catch (HandlerFailedException $e) {
-            $e = $e->getPrevious();
-
-            $this->logger->critical('An error occurred while removing permissions for a user', [
-                'exception' => $e,
-                'dataModel' => $dataModel->getId(),
-            ]);
-
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**

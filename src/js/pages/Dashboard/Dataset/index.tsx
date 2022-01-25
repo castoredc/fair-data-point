@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {Button, LoadingOverlay} from "@castoredc/matter";
+import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
 import {Route, Switch} from 'react-router-dom';
 import DocumentTitle from "components/DocumentTitle";
 import {localizedText} from "../../../util";
@@ -15,6 +15,8 @@ import NotFound from "pages/NotFound";
 import Distributions from "pages/Dashboard/Dataset/Distributions";
 import AddDistribution from "pages/Dashboard/Dataset/AddDistribution";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import {isGranted} from "utils/PermissionHelper";
+import PermissionEditor from "components/PermissionEditor";
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any,
@@ -106,6 +108,12 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                         title: 'Metadata',
                         customIcon: 'metadata'
                     },
+                    ...isGranted('manage', dataset.permissions) ? [{
+                        to: mainUrl + '/datasets/' + dataset.slug + '/permissions',
+                        exact: true,
+                        title: 'Permissions',
+                        icon: 'usersLight'
+                    }] : [],
                     {
                         type: 'separator'
                     },
@@ -152,6 +160,24 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                         render={(props) => <div>
                             <DatasetMetadataForm dataset={dataset} onSave={this.getDataset}/>
                         </div>}
+                    />
+                    <Route
+                        path={[
+                            "/dashboard/studies/:study/datasets/:dataset/permissions",
+                            "/dashboard/catalogs/:catalog/datasets/:dataset/permissions",
+                        ]}
+                        exact
+                        render={(props) => isGranted('manage', dataset.permissions) ?
+                            <PermissionEditor
+                                getObject={this.getDataset}
+                                type="dataset"
+                                object={dataset}
+                                user={user}
+                                {...props}
+                            /> : <div>
+                                <Banner type="error" title="You do not have access to this page"/>
+                            </div>
+                        }
                     />
                     <Route
                         path={[

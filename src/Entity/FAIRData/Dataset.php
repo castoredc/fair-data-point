@@ -201,6 +201,14 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         $this->metadata->add($metadata);
     }
 
+    /**
+     * @return Collection<DatasetPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
     public function addPermissionForUser(User $user, PermissionType $type): DatasetPermission
     {
         $permission = new DatasetPermission($user, $type, $this);

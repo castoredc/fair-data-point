@@ -9,6 +9,7 @@ use App\Api\Resource\Security\PermissionsApiResource;
 use App\Exception\ApiRequestParseError;
 use App\Exception\GroupedApiRequestParseError;
 use App\Model\Castor\ApiClient;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,11 +27,14 @@ abstract class ApiController extends AbstractController
 
     protected LoggerInterface $logger;
 
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger)
+    protected EntityManagerInterface $em;
+
+    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em)
     {
         $this->apiClient = $apiClient;
         $this->validator = $validator;
         $this->logger = $logger;
+        $this->em = $em;
     }
 
     /**

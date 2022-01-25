@@ -3,26 +3,28 @@ import {ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack} from "@c
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {AuthorizedRouteComponentProps} from "components/Route";
 import {PermissionType} from "types/PermissionType";
 import Avatar from "react-avatar";
 import AddUserModal from "modals/AddUserModal";
 import ConfirmModal from "modals/ConfirmModal";
-import {ucfirst} from "../../../../util";
+import {ucfirst} from "../../util";
+import {UserType} from "types/UserType";
 
-interface PermissionsProps extends AuthorizedRouteComponentProps {
-    getDataModel: () => void,
-    dataModel: any,
+interface PermissionEditorProps {
+    user: UserType | null;
+    getObject: () => void,
+    object: any,
+    type: string,
 }
 
-interface PermissionsState {
+interface PermissionEditorState {
     showModal: any,
     isLoading: boolean,
     permissions: PermissionType[],
     modalData: any,
 }
 
-export default class Permissions extends Component<PermissionsProps, PermissionsState> {
+export default class PermissionEditor extends Component<PermissionEditorProps, PermissionEditorState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -65,13 +67,13 @@ export default class Permissions extends Component<PermissionsProps, Permissions
     }
 
     getPermissions = () => {
-        const {dataModel} = this.props;
+        const {object, type} = this.props;
 
         this.setState({
             isLoading: true,
         });
 
-        axios.get('/api/model/' + dataModel.id + '/permissions')
+        axios.get('/api/permissions/' + type + '/' + object.id)
             .then((response) => {
                 this.setState({
                     permissions: response.data.results,
@@ -92,10 +94,11 @@ export default class Permissions extends Component<PermissionsProps, Permissions
     };
 
     handleSubmit = (values, { setSubmitting}) => {
-        const {dataModel} = this.props;
+        const {object, type} = this.props;
         const {modalData} = this.state;
 
-        axios.post('/api/model/' + dataModel.id + '/permissions' + (modalData !== null ? '/' + modalData.user.id : ''), values)
+        //axios.post('/api/model/' + dataModel.id + '/permissions' + (modalData !== null ? '/' + modalData.user.id : ''), values)
+        axios.post('/api/permissions/' + type + '/' + object.id + (modalData !== null ? '/' + modalData.user.id : ''), values)
             .then((response) => {
                 setSubmitting(false);
 
@@ -119,10 +122,11 @@ export default class Permissions extends Component<PermissionsProps, Permissions
     }
 
     handleRevoke = () => {
-        const {dataModel} = this.props;
+        const {object, type} = this.props;
         const {modalData} = this.state;
 
-        axios.delete('/api/model/' + dataModel.id + '/permissions/' + modalData.user.id)
+        // axios.delete('/api/model/' + dataModel.id + '/permissions/' + modalData.user.id)
+        axios.delete('/api/permissions/' + type + '/' + object.id + '/' + modalData.user.id)
             .then(() => {
                 toast.success(<ToastContent type="success"
                                             message={`${modalData.user.name}'s permissions were successfully revoked`} />, {
@@ -143,6 +147,7 @@ export default class Permissions extends Component<PermissionsProps, Permissions
 
     render() {
         const {showModal, permissions, isLoading, modalData} = this.state;
+        const {type} = this.props;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading users"/>;
@@ -239,7 +244,7 @@ export default class Permissions extends Component<PermissionsProps, Permissions
 
             <DataGrid
                 accessibleName="Permissions"
-                emptyStateContent="This data model does not have any users added to it"
+                emptyStateContent={`This ${type} does not have any users added to it`}
                 rows={rows}
                 columns={columns}
                 anchorRightColumns={1}

@@ -231,6 +231,14 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
         return true;
     }
 
+    /**
+     * @return Collection<DistributionPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
     public function addPermissionForUser(User $user, PermissionType $type): DistributionPermission
     {
         $permission = new DistributionPermission($user, $type, $this);

@@ -17,9 +17,8 @@ import Versions from "pages/Dashboard/DataModels/DataModel/Versions";
 import Preview from "pages/Dashboard/DataModels/DataModel/Preview";
 import DataModelForm from "components/Form/Data/DataModelForm";
 import {AuthorizedRouteComponentProps} from "components/Route";
-import Permissions from "pages/Dashboard/DataModels/DataModel/Permissions";
 import {isGranted} from "utils/PermissionHelper";
-import Annotations from "pages/Dashboard/Studies/Study/Annotations";
+import PermissionEditor from "components/PermissionEditor";
 
 interface DataModelProps extends AuthorizedRouteComponentProps {
 }
@@ -291,9 +290,10 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     />
                     <Route path="/dashboard/data-models/:model/permissions" exact
                            render={(props) => isGranted('manage', dataModel.permissions) ?
-                               <Permissions
-                                   getDataModel={this.getDataModel}
-                                   dataModel={dataModel}
+                               <PermissionEditor
+                                   getObject={this.getDataModel}
+                                   type="model"
+                                   object={dataModel}
                                    user={user}
                                    {...props}
                                /> : <div>

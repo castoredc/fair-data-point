@@ -254,6 +254,14 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         return true;
     }
 
+    /**
+     * @return Collection<CatalogPermission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
     public function addPermissionForUser(User $user, PermissionType $type): CatalogPermission
     {
         $permission = new CatalogPermission($user, $type, $this);
