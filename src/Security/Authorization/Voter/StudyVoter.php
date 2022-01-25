@@ -91,7 +91,7 @@ class StudyVoter extends Voter
         }
 
         if ($study->getSource()->isCastor()) {
-            return $user->getCastorUser()->hasAccessToStudy($study->getSourceId());
+            return $study->getSourceId() !== null ? $user->getCastorUser()->hasAccessToStudy($study->getSourceId()) : false;
         }
 
         return false;
