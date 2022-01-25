@@ -82,6 +82,7 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         $this->catalogs = new ArrayCollection();
         $this->metadata = new ArrayCollection();
         $this->distributions = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string

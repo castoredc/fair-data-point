@@ -178,7 +178,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                                 ]}
                                 serverError={validation.value}
                                 name="value"
-                                variant="horizontal"
+                                collapse
                             />
                         </FormItem>}
                         {showRepeated && <FormItem>

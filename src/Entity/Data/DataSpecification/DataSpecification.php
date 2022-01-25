@@ -74,6 +74,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
 
         $this->distributionContents = new ArrayCollection();
         $this->versions = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string

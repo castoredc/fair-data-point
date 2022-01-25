@@ -87,6 +87,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         $this->datasets = new ArrayCollection();
         $this->studies = new ArrayCollection();
         $this->metadata = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string

@@ -112,28 +112,30 @@ export default class Distribution extends Component<DistributionProps, Distribut
         const dataset = match.params.dataset;
 
         const title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
+        
+        const mainUrl = match.params.study ? '/dashboard/studies/' + match.params.study + '/datasets/' + dataset : '/dashboard/catalogs/' + match.params.catalog + '/datasets/' + dataset;
 
         let sidebarItems = [
             {
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug,
+                to: mainUrl + '/distributions/' + distribution.slug,
                 exact: true,
                 title: 'Distribution',
                 customIcon: 'distribution'
             },
             {
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/metadata',
+                to: mainUrl + '/distributions/' + distribution.slug + '/metadata',
                 exact: true,
                 title: 'Metadata',
                 customIcon: 'metadata'
             },
             ...isGranted('manage', distribution.permissions) ? [{
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/permissions',
+                to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
                 exact: true,
                 title: 'Permissions',
                 icon: 'usersLight'
             }] : [],
             {
-                to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/subset',
+                to: mainUrl + '/distributions/' + distribution.slug + '/subset',
                 exact: true,
                 title: 'Subset',
                 icon: 'selectList'
@@ -146,7 +148,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         if (distribution.type === 'rdf') {
             sidebarItems.push(
                 {
-                    to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/contents',
+                    to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Mappings',
                     icon: 'order'
@@ -156,7 +158,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
             if (distribution.isCached) {
                 sidebarItems.push(
                     {
-                        to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/log',
+                        to: mainUrl + '/distributions/' + distribution.slug + '/log',
                         exact: true,
                         title: 'Log',
                         icon: 'summary'
@@ -166,7 +168,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         } else if (distribution.type === 'csv') {
             sidebarItems.push(
                 {
-                    to: '/dashboard/studies/' + study + '/datasets/' + dataset + '/distributions/' + distribution.slug + '/contents',
+                    to: mainUrl + '/distributions/' + distribution.slug + '/contents',
                     exact: true,
                     title: 'Contents',
                     icon: 'order'
@@ -179,7 +181,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             <SideBar
                 back={{
-                    to: study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`,
+                    to: mainUrl,
                     title: 'Back to dataset'
                 }}
                 location={location}

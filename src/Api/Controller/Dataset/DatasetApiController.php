@@ -105,7 +105,8 @@ class DatasetApiController extends ApiController
             return $this->getPaginatedResponse(
                 DistributionApiResource::class,
                 $results,
-                [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::MANAGE, DistributionVoter::ACCESS_DATA]
+                [DistributionVoter::VIEW, DistributionVoter::EDIT, DistributionVoter::MANAGE, DistributionVoter::ACCESS_DATA],
+                $uriHelper
             );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);

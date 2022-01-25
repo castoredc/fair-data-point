@@ -93,6 +93,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
         $this->dataset = $dataset;
         $this->metadata = new ArrayCollection();
         $this->contactPoints = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string

@@ -196,7 +196,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                 <Field
                                     component={Choice}
                                     options={distributionTypes}
-                                    variant="horizontal"
+                                    collapse
                                     name="type"
                                 />
                             </FormItem>
@@ -205,7 +205,6 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                 <Field
                                     component={SingleChoice}
                                     labelText="Include all data"
-                                    variant="horizontal"
                                     name="includeAllData"
                                 />
                             </FormItem>}
@@ -253,7 +252,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                         component={Choice}
                                         options={accessTypes}
                                         name="accessRights"
-                                        variant="horizontal"
+                                        collapse
                                     />
                                 </FormItem>
 
@@ -270,7 +269,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                                 value: false,
                                             },
                                         ]}
-                                        variant="horizontal"
+                                        collapse
                                         name="published"
                                     />
                                 </FormItem>}
@@ -281,7 +280,6 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                     <Field
                                         component={SingleChoice}
                                         labelText="Use API User"
-                                        variant="horizontal"
                                         name="useApiUser"
                                     />
                                 </FormItem>
