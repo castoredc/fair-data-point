@@ -94,6 +94,10 @@ class DistributionVoter extends Voter
             return false;
         }
 
+        if ($distribution->getDataset()->getStudy()->getSourceId() === null) {
+            return false;
+        }
+
         return $user->getCastorUser()->hasAccessToStudy($distribution->getDataset()->getStudy()->getSourceId());
     }
 }
