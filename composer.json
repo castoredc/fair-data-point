@@ -18,7 +18,7 @@
         "fresh/doctrine-enum-bundle": "^7.1",
         "guzzlehttp/guzzle": "~6.5",
         "knpuniversity/oauth2-client-bundle": "^2.5",
-        "league/oauth2-client": "^2.5",
+        "league/oauth2-client": "^2.6",
         "ml/json-ld": "^1.2",
         "semsol/arc2": "^2.5.5",
         "sensio/framework-extra-bundle": "^6.2",
