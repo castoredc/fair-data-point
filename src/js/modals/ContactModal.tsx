@@ -14,7 +14,6 @@ type ContactModalProps = {
 
 type ContactModalState = {}
 
-
 export default class ContactModal extends Component<ContactModalProps, ContactModalState> {
     constructor(props) {
         super(props);

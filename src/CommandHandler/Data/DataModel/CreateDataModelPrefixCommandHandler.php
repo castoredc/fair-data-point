@@ -25,17 +25,18 @@ class CreateDataModelPrefixCommandHandler implements MessageHandlerInterface
 
     public function __invoke(CreateDataModelPrefixCommand $command): void
     {
-        $dataModel = $command->getDataModel();
+        $dataModelVersion = $command->getDataModelVersion();
+        $dataModel = $dataModelVersion->getDataModel();
 
         if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
 
         $prefix = new NamespacePrefix($command->getPrefix(), new Iri($command->getUri()));
-        $dataModel->addPrefix($prefix);
+        $dataModelVersion->addPrefix($prefix);
 
         $this->em->persist($prefix);
-        $this->em->persist($dataModel);
+        $this->em->persist($dataModelVersion);
 
         $this->em->flush();
     }

@@ -92,7 +92,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
                 handleClose={() => {
                     this.closeModal()
                 }}
-                onSave={this.createNewVersion}
+                handleSave={this.createNewVersion}
             />
 
             <div className="PageButtons">

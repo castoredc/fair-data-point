@@ -35,7 +35,8 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(CreateNodeCommand $command): void
     {
-        $dataModel = $command->getDataModel();
+        $dataModelVersion = $command->getDataModelVersion();
+        $dataModel = $dataModelVersion->getDataModel();
 
         if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
@@ -44,18 +45,18 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
         $type = $command->getType();
 
         if ($type->isExternalIri()) {
-            $node = new ExternalIriNode($dataModel, $command->getTitle(), $command->getDescription());
+            $node = new ExternalIriNode($dataModelVersion, $command->getTitle(), $command->getDescription());
             $node->setIri(new Iri($command->getValue()));
         } elseif ($type->isInternalIri()) {
-            $node = new InternalIriNode($dataModel, $command->getTitle(), $command->getDescription());
+            $node = new InternalIriNode($dataModelVersion, $command->getTitle(), $command->getDescription());
             $node->setSlug($command->getValue());
             $node->setIsRepeated($command->isRepeated());
         } elseif ($type->isLiteral()) {
-            $node = new LiteralNode($dataModel, $command->getTitle(), $command->getDescription());
+            $node = new LiteralNode($dataModelVersion, $command->getTitle(), $command->getDescription());
             $node->setValue($command->getValue());
             $node->setDataType($command->getDataType());
         } elseif ($type->isValue()) {
-            $node = new ValueNode($dataModel, $command->getTitle(), $command->getDescription());
+            $node = new ValueNode($dataModelVersion, $command->getTitle(), $command->getDescription());
             $node->setIsRepeated($command->isRepeated());
 
             if ($command->getValue() === 'annotated') {
@@ -70,10 +71,10 @@ class CreateNodeCommandHandler implements MessageHandlerInterface
             throw new InvalidNodeType();
         }
 
-        $dataModel->addElement($node);
+        $dataModelVersion->addElement($node);
 
         $this->em->persist($node);
-        $this->em->persist($dataModel);
+        $this->em->persist($dataModelVersion);
 
         $this->em->flush();
     }

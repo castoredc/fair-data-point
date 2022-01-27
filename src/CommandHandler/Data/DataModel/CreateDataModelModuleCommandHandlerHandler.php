@@ -14,14 +14,15 @@ class CreateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupC
 {
     public function __invoke(CreateDataModelModuleCommand $command): void
     {
-        $dataModel = $command->getDataModel();
+        $dataModelVersion = $command->getDataModelVersion();
+        $dataModel = $dataModelVersion->getDataModel();
 
         if (! $this->security->isGranted('edit', $dataModel)) {
             throw new NoAccessPermission();
         }
 
-        $module = new DataModelGroup($command->getTitle(), $command->getOrder(), $command->isRepeated(), $command->isDependent(), $dataModel);
-        $dataModel->addGroup($module);
+        $module = new DataModelGroup($command->getTitle(), $command->getOrder(), $command->isRepeated(), $command->isDependent(), $dataModelVersion);
+        $dataModelVersion->addGroup($module);
 
         if ($command->isDependent()) {
             $dependencies = $command->getDependencies();
@@ -32,7 +33,7 @@ class CreateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupC
         }
 
         $this->em->persist($module);
-        $this->em->persist($dataModel);
+        $this->em->persist($dataModelVersion);
 
         $this->em->flush();
     }

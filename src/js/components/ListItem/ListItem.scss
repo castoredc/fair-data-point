@@ -93,6 +93,12 @@
   font-weight: normal;
   padding: 16px;
   border-radius: 3px;
+  cursor: pointer;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
 
   .ListItemTitle {
     font-size: 14px;

@@ -24,11 +24,7 @@ type StudyDetailsFormState = {
     data: any,
     isLoading: boolean,
     languages: any,
-    validation: any
-    // contacts: any,
-    // isLoading: boolean,
-    // openModal: boolean,
-    // openRemoveModal: boolean,
+    validation: any,
 }
 
 export default class StudyDetailsForm extends Component<StudyDetailsFormProps, StudyDetailsFormState> {
@@ -37,8 +33,6 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
 
         this.state = {
             data: defaultData,
-            // isSaved: false,
-            // submitDisabled: false,
             isLoading: false,
             validation: {},
             languages: []

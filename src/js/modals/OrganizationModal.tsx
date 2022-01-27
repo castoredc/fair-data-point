@@ -15,7 +15,6 @@ type OrganizationModalProps = {
 
 type OrganizationModalState = {}
 
-
 export default class OrganizationModal extends Component<OrganizationModalProps, OrganizationModalState> {
     constructor(props) {
         super(props);

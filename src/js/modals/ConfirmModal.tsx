@@ -11,8 +11,8 @@ type ConfirmModalProps = {
 }
 
 type ShowProps =
-    | { includeButton: true; show: never}
-    | { includeButton?: false; show: boolean}
+    | { includeButton: true }
+    | { includeButton?: false; show: boolean }
 
 type ConfirmModalState = {
     showCancelModal: boolean,
@@ -32,7 +32,7 @@ export default class ConfirmModal extends Component<ConfirmModalProps & ShowProp
 
         if (show !== prevProps.show) {
             this.setState({
-                showCancelModal: show
+                showCancelModal: show ?? false,
             });
         }
     }
@@ -49,7 +49,7 @@ export default class ConfirmModal extends Component<ConfirmModalProps & ShowProp
         this.setState({
             showCancelModal: false,
         }, () => {
-            if(onCancel) {
+            if (onCancel) {
                 onCancel();
             }
         });

@@ -8,7 +8,7 @@ use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
 
 class CreateDataModelModuleCommand
 {
-    private DataModelVersion $dataModel;
+    private DataModelVersion $dataModelVersion;
 
     private string $title;
 
@@ -20,9 +20,9 @@ class CreateDataModelModuleCommand
 
     private ?DependencyGroup $dependencies = null;
 
-    public function __construct(DataModelVersion $dataModel, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
+    public function __construct(DataModelVersion $dataModelVersion, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
     {
-        $this->dataModel = $dataModel;
+        $this->dataModelVersion = $dataModelVersion;
         $this->title = $title;
         $this->order = $order;
         $this->isRepeated = $isRepeated;
@@ -30,9 +30,9 @@ class CreateDataModelModuleCommand
         $this->dependencies = $dependencies;
     }
 
-    public function getDataModel(): DataModelVersion
+    public function getDataModelVersion(): DataModelVersion
     {
-        return $this->dataModel;
+        return $this->dataModelVersion;
     }
 
     public function getTitle(): string

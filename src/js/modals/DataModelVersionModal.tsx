@@ -1,20 +1,20 @@
 import React, {Component} from 'react'
-import {Button, Choice, Modal} from "@castoredc/matter";
 import FormItem from "components/Form/FormItem";
+import {Button, Choice, Modal} from "@castoredc/matter";
 
-type MetadataVersionModalProps = {
-    currentVersion: string,
-    open: boolean,
-    onClose: () => void,
+type DataModelVersionModalProps = {
+    latestVersion: string,
+    show: boolean,
+    handleClose: () => void,
     handleSave: (versionType: string) => void,
-}
+};
 
-type MetadataVersionModalState = {
+type DataModelVersionModalState = {
     versionType: string | null,
     newVersion: string | null,
 }
 
-export default class MetadataVersionModal extends Component<MetadataVersionModalProps, MetadataVersionModalState> {
+export default class DataModelVersionModal extends Component<DataModelVersionModalProps, DataModelVersionModalState> {
     constructor(props) {
         super(props);
 
@@ -25,10 +25,10 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
     }
 
     handleChange = (event) => {
-        const {currentVersion} = this.props;
+        const {latestVersion} = this.props;
         const versionType = event.target.value;
 
-        const parsedVersion = currentVersion.split('.');
+        const parsedVersion = latestVersion.split('.');
 
         const major = parseInt(parsedVersion[0]);
         const minor = parseInt(parsedVersion[1]);
@@ -51,16 +51,14 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
     };
 
     render() {
-        const {open, onClose, handleSave, currentVersion} = this.props;
+        const {show, handleClose, handleSave, latestVersion} = this.props;
         const {versionType, newVersion} = this.state;
 
-        const title = "Save metadata";
-
         return <Modal
-            open={open}
-            title={title}
-            accessibleName={title}
-            onClose={onClose}
+            open={show}
+            onClose={handleClose}
+            title="Create version"
+            accessibleName="Create version"
         >
             <Choice
                 options={[
@@ -71,17 +69,16 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                 value={versionType ? versionType : undefined}
                 name="versionType"
                 onChange={this.handleChange}
-                labelText="Please indicate to what extent you made changes in the metadata"
+                labelText="Please indicate to what extent you are making changes in the data model"
             />
 
-            {currentVersion && <FormItem label="Current version">
-                {currentVersion}
-            </FormItem>}
+            <FormItem label="Latest version">
+                {latestVersion}
+            </FormItem>
 
             {newVersion && <FormItem label="New version">
                 {newVersion}
             </FormItem>}
-
 
             <Button type="submit" disabled={versionType === null} onClick={() => {
                 handleSave(versionType ? versionType : '')

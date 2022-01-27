@@ -7,22 +7,22 @@ use App\Entity\Data\DataModel\DataModelVersion;
 
 class CreateDataModelPrefixCommand
 {
-    private DataModelVersion $dataModel;
+    private DataModelVersion $dataModelVersion;
 
     private string $prefix;
 
     private string $uri;
 
-    public function __construct(DataModelVersion $dataModel, string $prefix, string $uri)
+    public function __construct(DataModelVersion $dataModelVersion, string $prefix, string $uri)
     {
-        $this->dataModel = $dataModel;
+        $this->dataModelVersion = $dataModelVersion;
         $this->prefix = $prefix;
         $this->uri = $uri;
     }
 
-    public function getDataModel(): DataModelVersion
+    public function getDataModelVersion(): DataModelVersion
     {
-        return $this->dataModel;
+        return $this->dataModelVersion;
     }
 
     public function getPrefix(): string
