@@ -151,7 +151,7 @@ class StudyRepository extends EntityRepository
         }
 
         if ($agent !== null || $country !== null) {
-            $qb->innerJoin('metadata.centers', 'agent')
+            $qb->innerJoin('metadata.participatingCenters', 'agent')
                 ->leftJoin(Department::class, 'department', Join::WITH, 'agent.id = department.id')
                 ->leftJoin(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id');
 
