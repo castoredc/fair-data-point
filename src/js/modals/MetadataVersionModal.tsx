@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Button, Choice, Modal} from "@castoredc/matter";
 import FormItem from "components/Form/FormItem";
 
-
 type MetadataVersionModalProps = {
     currentVersion: string,
     open: boolean,
@@ -14,7 +13,6 @@ type MetadataVersionModalState = {
     versionType: string | null,
     newVersion: string | null,
 }
-
 
 export default class MetadataVersionModal extends Component<MetadataVersionModalProps, MetadataVersionModalState> {
     constructor(props) {

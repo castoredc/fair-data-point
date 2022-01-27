@@ -53,7 +53,7 @@ export default class DataModelVersionModal extends Component<DataModelVersionMod
     render() {
         const {show, handleClose, handleSave, latestVersion} = this.props;
         const {versionType, newVersion} = this.state;
-        
+
         return <Modal
             open={show}
             onClose={handleClose}

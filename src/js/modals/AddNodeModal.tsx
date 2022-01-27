@@ -13,7 +13,6 @@ import SingleChoice from "components/Input/Formik/SingleChoice";
 import Select from "components/Input/Formik/Select";
 import {mergeData} from "../util";
 
-
 type AddNodeModalProps = {
     open: boolean,
     onClose: () => void,

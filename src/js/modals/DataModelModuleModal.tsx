@@ -143,17 +143,17 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                       handleSubmit,
                       isSubmitting,
                       setValues,
-                    setFieldValue
+                      setFieldValue
                   }) => {
                     return <Form>
                         <DependencyModal
                             show={showDependencyModal}
                             handleClose={this.closeDependencyModal}
                             save={(dependencies) => {
-                                    setFieldValue('dependencies', dependencies);
-                                    this.setState({
-                                        showDependencyModal: false,
-                                    });
+                                setFieldValue('dependencies', dependencies);
+                                this.setState({
+                                    showDependencyModal: false,
+                                });
                             }}
                             valueNodes={valueNodes}
                             prefixes={prefixes}

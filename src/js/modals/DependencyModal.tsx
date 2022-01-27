@@ -48,7 +48,7 @@ export default class DependencyModal extends Component<DependencyModalProps, Dep
         const {query} = this.state;
         const {save} = this.props;
 
-        if(query === null) {
+        if (query === null) {
             return;
         }
 
