@@ -1,21 +1,41 @@
 import React, {Component} from 'react'
-import Modal from "../Modal";
-import ModuleDependencyEditor from "../../components/DependencyEditor/ModuleDependencyEditor";
+import ModuleDependencyEditor from "components/DependencyEditor/ModuleDependencyEditor";
 import {formatQuery} from "react-querybuilder";
-import {Banner} from "@castoredc/matter";
+import {Banner, Modal} from "@castoredc/matter";
+import {PrefixType} from "types/PrefixType";
+import {NodeType} from "types/NodeType";
+import {DependenciesType} from "types/ModuleType";
+import {RuleGroupType} from "react-querybuilder/types/types";
 
-export default class DependencyModal extends Component {
+type DependencyModalProps = {
+    show: boolean,
+    save: (query) => void,
+    handleClose: () => void,
+    valueNodes: NodeType[],
+    prefixes: PrefixType[],
+    dependencies: DependenciesType[] | null,
+};
+
+type DependencyModalState = {
+    query: RuleGroupType | null,
+    lengthValid: boolean;
+};
+
+export default class DependencyModal extends Component<DependencyModalProps, DependencyModalState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            query: '',
+            query: null,
             lengthValid: true
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return (this.props.show !== nextProps.show || this.state.lengthValid !== nextState.lengthValid);
+        const {show} = this.props;
+        const {lengthValid} = this.state;
+
+        return (show !== nextProps.show || lengthValid !== nextState.lengthValid);
     }
 
     handleChange = (query) => {
@@ -28,7 +48,11 @@ export default class DependencyModal extends Component {
         const {query} = this.state;
         const {save} = this.props;
 
-        const sqlQuery = formatQuery(query, 'sql');
+        if(query === null) {
+            return;
+        }
+
+        const sqlQuery = formatQuery(query, 'sql') as string;
         const replaced = sqlQuery.replace(/\(|\)|and|or| /ig, '');
 
         if (replaced.length === 0) {
@@ -55,15 +79,14 @@ export default class DependencyModal extends Component {
     };
 
     render() {
-        const {show, handleClose, valueNodes, prefixes, dependencies} = this.props;
+        const {show, valueNodes, prefixes, dependencies} = this.props;
         const {lengthValid} = this.state;
 
         return <Modal
-            show={show}
-            handleClose={this.handleClose}
+            open={show}
+            onClose={this.handleClose}
             title="Edit dependencies"
-            closeButton
-            className="DependencyModal"
+            accessibleName="Edit dependencies"
         >
             {!lengthValid && <Banner
                 type="error"
