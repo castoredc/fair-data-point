@@ -39,7 +39,8 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
      */
     public function __invoke(GetDataModelRDFPreviewCommand $command): DataModelRDFPreviewApiResource
     {
-        $dataModel = $command->getDataModel();
+        $dataModelVersion = $command->getDataModelVersion();
+        $dataModel = $dataModelVersion->getDataModel();
 
         if (! $this->security->isGranted('view', $dataModel)) {
             throw new NoAccessPermission();
@@ -49,10 +50,10 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
 
         $fullGraph = new Graph();
 
-        $modules = $dataModel->getGroups();
-        $prefixes = $dataModel->getPrefixes();
+        $modules = $dataModelVersion->getGroups();
+        $prefixes = $dataModelVersion->getPrefixes();
 
-        $dataModelTriples = [];
+        $dataModelVersionTriples = [];
 
         foreach ($prefixes as $prefix) {
             RdfNamespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
@@ -87,13 +88,13 @@ class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
                     $moduleGraph->add($subjectInModuleGraph, $predicateUri, $moduleGraph->resource($this->getValue($object)));
                 }
 
-                $dataModelTriples[] = $triple;
+                $dataModelVersionTriples[] = $triple;
             }
 
             $modulePreviews[] = new DataModelModuleRDFPreviewApiResource($module, $moduleGraph->serialise('turtle'));
         }
 
-        return new DataModelRDFPreviewApiResource($dataModelTriples, $modulePreviews, $fullGraph->serialise('turtle'));
+        return new DataModelRDFPreviewApiResource($dataModelVersionTriples, $modulePreviews, $fullGraph->serialise('turtle'));
     }
 
     private function getValue(Node $node): string

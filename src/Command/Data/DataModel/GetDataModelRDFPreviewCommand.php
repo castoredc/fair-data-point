@@ -7,15 +7,15 @@ use App\Entity\Data\DataModel\DataModelVersion;
 
 class GetDataModelRDFPreviewCommand
 {
-    private DataModelVersion $dataModel;
+    private DataModelVersion $dataModelVersion;
 
-    public function __construct(DataModelVersion $dataModel)
+    public function __construct(DataModelVersion $dataModelVersion)
     {
-        $this->dataModel = $dataModel;
+        $this->dataModelVersion = $dataModelVersion;
     }
 
-    public function getDataModel(): DataModelVersion
+    public function getDataModelVersion(): DataModelVersion
     {
-        return $this->dataModel;
+        return $this->dataModelVersion;
     }
 }
