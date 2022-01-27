@@ -1,12 +1,25 @@
 import React, {Component} from 'react'
 import axios from "axios";
 import {toast} from "react-toastify";
-import ToastContent from "../../components/ToastContent";
-import Modal from "../Modal";
-import LoginForm from "../../components/Form/LoginForm";
-import {LoadingOverlay} from "@castoredc/matter";
+import ToastContent from "components/ToastContent";
+import LoginForm from "components/Form/LoginForm";
+import {Modal} from "@castoredc/matter";
+import {ServerType} from "types/ServerType";
 
-export default class LoginModal extends Component {
+type LoginModalProps = {
+    show: boolean,
+    handleClose: () => void,
+    path: string,
+    server?: string,
+    view?: string,
+}
+
+type LoginModalState = {
+    servers: ServerType[],
+    isLoading: boolean,
+}
+
+export default class LoginModal extends Component<LoginModalProps, LoginModalState> {
     constructor(props) {
         super(props);
 
@@ -21,8 +34,6 @@ export default class LoginModal extends Component {
     }
 
     getServers = () => {
-        const {server} = this.props;
-
         axios.get('/api/castor/servers')
             .then((response) => {
                 this.setState({
@@ -43,15 +54,21 @@ export default class LoginModal extends Component {
         const {servers, isLoading} = this.state;
 
         return <Modal
-            show={show}
-            handleClose={handleClose}
-            className="LoginModal"
+            open={show}
+            onClose={handleClose}
             title="Log in"
-            closeButton
+            accessibleName="Log in"
+            customWidth="50rem"
+            isLoading={isLoading}
         >
-            {isLoading ? <LoadingOverlay accessibleLabel="Loading"/> :
-                <LoginForm path={path} modal={true} server={server} serverLocked={!!server} servers={servers}
-                           view={view}/>}
+            <LoginForm
+                path={path}
+                modal={true}
+                selectedServerId={server}
+                serverLocked={!!server}
+                servers={servers}
+                view={view}
+            />
         </Modal>
     }
 }
