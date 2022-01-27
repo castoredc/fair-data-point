@@ -92,7 +92,7 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                                 <Field
                                     component={Input}
                                     name="slug"
-                                    serverError={validation.slug}
+                                    serverError={validation}
                                 />
                             </FormItem>
 

@@ -127,14 +127,14 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                             <Field
                                 component={Input}
                                 name="title"
-                                serverError={validation.title}
+                                serverError={validation}
                             />
                         </FormItem>
                         <FormItem label="Description">
                             <Field
                                 component={Input}
                                 name="description"
-                                serverError={validation.description}
+                                serverError={validation}
                                 multiline={true}
                             />
                         </FormItem>
@@ -142,14 +142,14 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                             <Field
                                 component={Input}
                                 name="value"
-                                serverError={validation.value}
+                                serverError={validation}
                             />
                         </FormItem>}
                         {values.type === 'internal' && <FormItem label="Slug">
                             <Field
                                 component={Input}
                                 name="value"
-                                serverError={validation.value}
+                                serverError={validation}
                             />
                         </FormItem>}
 
@@ -157,7 +157,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                             <Field
                                 component={Select}
                                 options={dataTypes}
-                                serverError={validation.dataType}
+                                serverError={validation}
                                 name="dataType"
                             />
                         </FormItem>}
@@ -166,7 +166,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                             <Field
                                 component={Input}
                                 name="value"
-                                serverError={validation.value}
+                                serverError={validation}
                             />
                         </FormItem>}
                         {values.type === 'value' && <FormItem label="Value">
@@ -176,7 +176,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                                     {value: 'plain', labelText: 'Plain value'},
                                     {value: 'annotated', labelText: 'Annotated value'},
                                 ]}
-                                serverError={validation.value}
+                                serverError={validation}
                                 name="value"
                                 collapse
                             />
@@ -185,7 +185,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                             <Field
                                 component={SingleChoice}
                                 labelText="Repeated"
-                                serverError={validation.repeated}
+                                serverError={validation}
                                 name="repeated"
                             />
                         </FormItem>}
