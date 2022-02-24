@@ -58,11 +58,11 @@ class CatalogsApiController extends ApiController
                 [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -99,7 +99,7 @@ class CatalogsApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -124,13 +124,13 @@ class CatalogsApiController extends ApiController
             $catalog = $handledStamp->getResult();
             assert($catalog instanceof Catalog);
 
-            return new JsonResponse((new CatalogApiResource($catalog))->toArray(), 200);
+            return new JsonResponse((new CatalogApiResource($catalog))->toArray());
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while creating a catalog', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

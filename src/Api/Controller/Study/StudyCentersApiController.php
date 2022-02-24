@@ -40,7 +40,13 @@ class StudyCentersApiController extends ApiController
 
             return new JsonResponse((new ParticipatingCentersApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
+            $this->logger->critical('An error occurred while getting the centers for a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -74,11 +80,17 @@ class StudyCentersApiController extends ApiController
                 );
             }
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
+            $this->logger->critical('An error occurred while adding a center to a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -101,11 +113,17 @@ class StudyCentersApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
+            $this->logger->critical('An error occurred while removing a center from a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

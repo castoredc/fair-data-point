@@ -34,7 +34,7 @@ class DataModelPrefixApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray(), 200);
+        return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray());
     }
 
     /**
@@ -50,13 +50,13 @@ class DataModelPrefixApiController extends ApiController
 
             $bus->dispatch(new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while adding a data model prefix', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,16 +78,16 @@ class DataModelPrefixApiController extends ApiController
 
             $bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while updating a data model prefix', [
                 'exception' => $e,
                 'PrefixID' => $prefix->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,14 +106,14 @@ class DataModelPrefixApiController extends ApiController
         try {
             $bus->dispatch(new DeleteDataModelPrefixCommand($prefix));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while deleting a data model prefix', [
                 'exception' => $e,
                 'PrefixID' => $prefix->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

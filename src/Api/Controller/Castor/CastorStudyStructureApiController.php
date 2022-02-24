@@ -51,19 +51,19 @@ class CastorStudyStructureApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof ErrorFetchingCastorData) {
-                return new JsonResponse($e->toArray(), 500);
+                return new JsonResponse($e->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             $this->logger->critical(
@@ -76,7 +76,7 @@ class CastorStudyStructureApiController extends ApiController
             );
         }
 
-        return new JsonResponse([], 500);
+        return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -97,19 +97,19 @@ class CastorStudyStructureApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof ErrorFetchingCastorData) {
-                return new JsonResponse($e->toArray(), 500);
+                return new JsonResponse($e->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             $this->logger->critical(
@@ -123,7 +123,7 @@ class CastorStudyStructureApiController extends ApiController
             );
         }
 
-        return new JsonResponse([], 500);
+        return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -147,19 +147,19 @@ class CastorStudyStructureApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof ErrorFetchingCastorData) {
-                return new JsonResponse($e->toArray(), 500);
+                return new JsonResponse($e->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             $this->logger->critical(
@@ -172,7 +172,7 @@ class CastorStudyStructureApiController extends ApiController
             );
         }
 
-        return new JsonResponse([], 500);
+        return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -196,19 +196,19 @@ class CastorStudyStructureApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof ErrorFetchingCastorData) {
-                return new JsonResponse($e->toArray(), 500);
+                return new JsonResponse($e->toArray(), Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             $this->logger->critical(
@@ -221,6 +221,6 @@ class CastorStudyStructureApiController extends ApiController
             );
         }
 
-        return new JsonResponse([], 500);
+        return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

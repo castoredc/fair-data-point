@@ -120,30 +120,30 @@ class RdfDistributionApiController extends ApiController
             $result = $handledStamp->getResult();
             assert($result instanceof Mapping);
 
-            return new JsonResponse((new DataModelMappingApiResource($result))->toArray(), 200);
+            return new JsonResponse((new DataModelMappingApiResource($result))->toArray());
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof MappingAlreadyExists) {
-                return new JsonResponse($e->toArray(), 409);
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof InvalidSyntax) {
-                return new JsonResponse($e->toArray(), 400);
+                return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
             if ($e instanceof VariableNotSelected) {
-                return new JsonResponse($e->toArray(), 400);
+                return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
             $this->logger->critical('An error occurred while adding a mapping to an RDF distribution', [
@@ -152,7 +152,7 @@ class RdfDistributionApiController extends ApiController
                 'DistributionID' => $distribution->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

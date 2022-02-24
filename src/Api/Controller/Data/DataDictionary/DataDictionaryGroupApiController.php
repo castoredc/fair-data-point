@@ -34,7 +34,7 @@ class DataDictionaryGroupApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataDictionaryVersion->getDataDictionary());
 
-        return new JsonResponse((new DataDictionaryGroupsApiResource($dataDictionaryVersion))->toArray(), 200);
+        return new JsonResponse((new DataDictionaryGroupsApiResource($dataDictionaryVersion))->toArray());
     }
 
     /**
@@ -50,13 +50,13 @@ class DataDictionaryGroupApiController extends ApiController
 
             $bus->dispatch(new CreateDataDictionaryGroupCommand($dataDictionaryVersion, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while creating a data dictionary group', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,16 +78,16 @@ class DataDictionaryGroupApiController extends ApiController
 
             $bus->dispatch(new UpdateDataDictionaryGroupCommand($group, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while updating a data dictionary group', [
                 'exception' => $e,
                 'GroupID' => $group->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,14 +106,14 @@ class DataDictionaryGroupApiController extends ApiController
         try {
             $bus->dispatch(new DeleteDataDictionaryGroupCommand($group));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while deleting a data dictionary group', [
                 'exception' => $e,
                 'GroupID' => $group->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

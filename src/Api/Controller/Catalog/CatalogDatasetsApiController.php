@@ -52,18 +52,18 @@ class CatalogDatasetsApiController extends ApiController
 
             $bus->dispatch(new AddDatasetToCatalogCommand($dataset, $catalog));
 
-            return new JsonResponse((new DatasetApiResource($dataset))->toArray(), 200);
+            return new JsonResponse((new DatasetApiResource($dataset))->toArray());
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
             if ($e instanceof StudyNotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             $this->logger->critical('An error occurred while adding a dataset to a catalog', [
@@ -72,7 +72,7 @@ class CatalogDatasetsApiController extends ApiController
                 'CatalogID' => $catalog->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

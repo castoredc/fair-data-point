@@ -68,19 +68,26 @@ class StudyMetadataApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
+            $this->logger->critical('An error occurred while adding metadata to a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * @Route("/api/study/{studyId}/metadata/{metadataId}", methods={"POST"}, name="api_update_metadata")
      * @ParamConverter("studyMetadata", options={"mapping": {"metadataId": "id", "studyId": "study"}})
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function updateMetadata(StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response
+    public function updateMetadata(Study $study, StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $studyMetadata->getStudy());
 
@@ -107,11 +114,18 @@ class StudyMetadataApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
+            $this->logger->critical('An error occurred while updating metadata from a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+                'StudyMetadata' => $studyMetadata->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

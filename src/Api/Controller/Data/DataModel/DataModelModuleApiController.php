@@ -34,7 +34,7 @@ class DataModelModuleApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray(), 200);
+        return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray());
     }
 
     /**
@@ -50,13 +50,13 @@ class DataModelModuleApiController extends ApiController
 
             $bus->dispatch(new CreateDataModelModuleCommand($dataModelVersion, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while creating a data model module', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,16 +78,16 @@ class DataModelModuleApiController extends ApiController
 
             $bus->dispatch(new UpdateDataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while updating a data model module', [
                 'exception' => $e,
                 'ModuleID' => $module->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,14 +106,14 @@ class DataModelModuleApiController extends ApiController
         try {
             $bus->dispatch(new DeleteDataModelModuleCommand($module));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while deleting a data model module', [
                 'exception' => $e,
                 'ModuleID' => $module->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

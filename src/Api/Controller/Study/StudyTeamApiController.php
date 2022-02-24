@@ -39,7 +39,13 @@ class StudyTeamApiController extends ApiController
 
             return new JsonResponse((new PersonsApiResource($handledStamp->getResult()))->toArray());
         } catch (HandlerFailedException $e) {
-            return new JsonResponse([], 500);
+            $this->logger->critical('An error occurred while getting the study team for a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,9 +73,15 @@ class StudyTeamApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            $this->logger->critical('An error occurred while adding a study team member to a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -92,9 +104,15 @@ class StudyTeamApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            $this->logger->critical('An error occurred while removing a study team member from a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         }
     }
 }

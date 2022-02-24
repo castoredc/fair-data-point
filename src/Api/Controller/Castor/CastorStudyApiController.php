@@ -41,16 +41,16 @@ class CastorStudyApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             $this->logger->critical('An error occurred while loading the studies from Castor', ['exception' => $e]);
         }
 
-        return new JsonResponse([], 500);
+        return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

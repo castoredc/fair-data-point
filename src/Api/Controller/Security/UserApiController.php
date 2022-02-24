@@ -63,13 +63,13 @@ class UserApiController extends ApiController
                 new UpdateUserCommand($parsed->getFirstName(), $parsed->getMiddleName(), $parsed->getLastName(), $parsed->getEmail())
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while updating the user\'s information', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

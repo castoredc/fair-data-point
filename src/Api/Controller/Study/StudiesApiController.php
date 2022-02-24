@@ -71,11 +71,11 @@ class StudiesApiController extends ApiController
                 [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the studies', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -92,7 +92,7 @@ class StudiesApiController extends ApiController
 
             return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
         } catch (UserNotACastorUser $e) {
-            return new JsonResponse($e->toArray(), 403);
+            return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -135,31 +135,31 @@ class StudiesApiController extends ApiController
                 $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
             }
 
-            return new JsonResponse((new StudyApiResource($study))->toArray(), 200);
+            return new JsonResponse((new StudyApiResource($study))->toArray());
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
             if ($e instanceof CatalogNotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof StudyAlreadyExists) {
-                return new JsonResponse($e->toArray(), 409);
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
             $this->logger->critical('An error occurred while adding a study', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
