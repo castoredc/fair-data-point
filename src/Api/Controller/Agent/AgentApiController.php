@@ -115,7 +115,7 @@ class AgentApiController extends ApiController
                 [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the studies for an agent', [
                 'exception' => $e,
@@ -180,7 +180,7 @@ class AgentApiController extends ApiController
                 [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the datasets for an agent', [
                 'exception' => $e,
@@ -220,7 +220,7 @@ class AgentApiController extends ApiController
                 [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs for an agent', [
                 'exception' => $e,
@@ -262,7 +262,7 @@ class AgentApiController extends ApiController
                 $uriHelper
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the distributions for an agent', [
                 'exception' => $e,
@@ -290,7 +290,7 @@ class AgentApiController extends ApiController
 
             return new JsonResponse((new StudiesMapApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the map information for an agent', [
                 'exception' => $e,

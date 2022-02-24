@@ -54,7 +54,7 @@ class DatasetsApiController extends ApiController
                 [DatasetVoter::VIEW, DatasetVoter::EDIT, DatasetVoter::MANAGE]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the datasets', ['exception' => $e]);
 

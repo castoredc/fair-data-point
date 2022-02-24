@@ -81,7 +81,7 @@ class StudyTeamApiController extends ApiController
                 'StudyID' => $study->getId(),
             ]);
 
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -112,7 +112,7 @@ class StudyTeamApiController extends ApiController
                 'StudyID' => $study->getId(),
             ]);
 
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         }
     }
 }

@@ -109,7 +109,7 @@ class DistributionApiController extends ApiController
 
             return $this->getPaginatedResponse(DistributionGenerationLogApiResource::class, $results);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -171,7 +171,7 @@ class DistributionApiController extends ApiController
 
             return $this->getPaginatedResponse(DistributionGenerationRecordLogApiResource::class, $results);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -236,7 +236,7 @@ class DistributionApiController extends ApiController
 
             return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -299,7 +299,7 @@ class DistributionApiController extends ApiController
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -337,7 +337,7 @@ class DistributionApiController extends ApiController
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 

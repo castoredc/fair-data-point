@@ -122,7 +122,7 @@ class RdfDistributionApiController extends ApiController
 
             return new JsonResponse((new DataModelMappingApiResource($result))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -139,11 +139,11 @@ class RdfDistributionApiController extends ApiController
             }
 
             if ($e instanceof InvalidSyntax) {
-                return new JsonResponse($e->toArray(), 400);
+                return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
             if ($e instanceof VariableNotSelected) {
-                return new JsonResponse($e->toArray(), 400);
+                return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
             $this->logger->critical('An error occurred while adding a mapping to an RDF distribution', [

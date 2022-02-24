@@ -45,7 +45,7 @@ class OrganizationApiController extends ApiController
 
             return new JsonResponse((new OrganizationSearchApiResource($handledStamp->getResult()))->toArray());
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 

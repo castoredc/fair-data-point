@@ -70,7 +70,7 @@ class CatalogStudiesApiController extends ApiController
                 [StudyVoter::VIEW, StudyVoter::EDIT, StudyVoter::EDIT_SOURCE_SYSTEM]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the studies for a catalog', [
                 'exception' => $e,
@@ -118,7 +118,7 @@ class CatalogStudiesApiController extends ApiController
 
             return new JsonResponse((new StudyApiResource($study))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -165,7 +165,7 @@ class CatalogStudiesApiController extends ApiController
 
             return new JsonResponse((new StudyApiResource($study))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 

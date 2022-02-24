@@ -51,7 +51,7 @@ class CatalogMetadataController extends ApiController
 
             return new JsonResponse([], 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while adding metadata for a catalog', [
                 'exception' => $e,

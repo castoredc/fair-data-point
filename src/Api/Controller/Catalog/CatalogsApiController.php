@@ -58,7 +58,7 @@ class CatalogsApiController extends ApiController
                 [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
             );
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
 
@@ -126,7 +126,7 @@ class CatalogsApiController extends ApiController
 
             return new JsonResponse((new CatalogApiResource($catalog))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while creating a catalog', ['exception' => $e]);
 

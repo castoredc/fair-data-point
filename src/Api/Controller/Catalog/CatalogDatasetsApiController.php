@@ -54,7 +54,7 @@ class CatalogDatasetsApiController extends ApiController
 
             return new JsonResponse((new DatasetApiResource($dataset))->toArray(), 200);
         } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), 400);
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
