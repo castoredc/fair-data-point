@@ -123,7 +123,7 @@ class CatalogStudiesApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof StudyNotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
@@ -170,7 +170,7 @@ class CatalogStudiesApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof StudyNotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {

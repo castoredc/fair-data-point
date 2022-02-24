@@ -59,7 +59,7 @@ class CastorStudyStructureApiController extends ApiController
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
@@ -105,7 +105,7 @@ class CastorStudyStructureApiController extends ApiController
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
@@ -155,7 +155,7 @@ class CastorStudyStructureApiController extends ApiController
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {
@@ -204,7 +204,7 @@ class CastorStudyStructureApiController extends ApiController
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), 404);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             if ($e instanceof SessionTimedOut) {

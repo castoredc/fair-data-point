@@ -64,7 +64,7 @@ class AgentApiController extends ApiController
             } elseif ($agent instanceof Person) {
                 $resource = new PersonApiResource($agent);
             } else {
-                return new JsonResponse([], 404);
+                return new JsonResponse([], Response::HTTP_NOT_FOUND);
             }
 
             $resource->setMetadataCount($results);
