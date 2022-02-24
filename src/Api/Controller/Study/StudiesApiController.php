@@ -154,7 +154,7 @@ class StudiesApiController extends ApiController
             }
 
             if ($e instanceof StudyAlreadyExists) {
-                return new JsonResponse($e->toArray(), 409);
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
             $this->logger->critical('An error occurred while adding a study', ['exception' => $e]);

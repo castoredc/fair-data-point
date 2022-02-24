@@ -131,7 +131,7 @@ class RdfDistributionApiController extends ApiController
             }
 
             if ($e instanceof MappingAlreadyExists) {
-                return new JsonResponse($e->toArray(), 409);
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
             if ($e instanceof NotFound) {

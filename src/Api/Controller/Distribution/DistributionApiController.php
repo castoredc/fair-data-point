@@ -241,7 +241,7 @@ class DistributionApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof LanguageNotFound) {
-                return new JsonResponse($e->toArray(), 409);
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
             $this->logger->critical('An error occurred while adding a distribution', [
@@ -304,7 +304,7 @@ class DistributionApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof LanguageNotFound) {
-                return new JsonResponse($e->toArray(), 409);
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
             $this->logger->critical('An error occurred while updating a distribution', [
