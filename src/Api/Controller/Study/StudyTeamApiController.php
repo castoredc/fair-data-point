@@ -73,7 +73,7 @@ class StudyTeamApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             $this->logger->critical('An error occurred while adding a study team member to a study', [
                 'exception' => $e,
@@ -104,7 +104,7 @@ class StudyTeamApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             $this->logger->critical('An error occurred while removing a study team member from a study', [
                 'exception' => $e,

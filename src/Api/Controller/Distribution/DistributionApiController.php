@@ -234,7 +234,7 @@ class DistributionApiController extends ApiController
 
             $distribution = $handledStamp->getResult();
 
-            return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray(), 200);
+            return new JsonResponse((new DistributionApiResource($distribution, $uriHelper))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
@@ -297,7 +297,7 @@ class DistributionApiController extends ApiController
                 return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
@@ -335,7 +335,7 @@ class DistributionApiController extends ApiController
                 )
             );
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

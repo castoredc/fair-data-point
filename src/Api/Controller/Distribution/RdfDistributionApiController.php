@@ -120,7 +120,7 @@ class RdfDistributionApiController extends ApiController
             $result = $handledStamp->getResult();
             assert($result instanceof Mapping);
 
-            return new JsonResponse((new DataModelMappingApiResource($result))->toArray(), 200);
+            return new JsonResponse((new DataModelMappingApiResource($result))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

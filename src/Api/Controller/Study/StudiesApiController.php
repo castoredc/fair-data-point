@@ -135,7 +135,7 @@ class StudiesApiController extends ApiController
                 $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
             }
 
-            return new JsonResponse((new StudyApiResource($study))->toArray(), 200);
+            return new JsonResponse((new StudyApiResource($study))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

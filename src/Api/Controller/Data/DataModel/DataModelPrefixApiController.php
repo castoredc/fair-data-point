@@ -34,7 +34,7 @@ class DataModelPrefixApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
-        return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray(), 200);
+        return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray());
     }
 
     /**
@@ -50,7 +50,7 @@ class DataModelPrefixApiController extends ApiController
 
             $bus->dispatch(new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
@@ -78,7 +78,7 @@ class DataModelPrefixApiController extends ApiController
 
             $bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
@@ -106,7 +106,7 @@ class DataModelPrefixApiController extends ApiController
         try {
             $bus->dispatch(new DeleteDataModelPrefixCommand($prefix));
 
-            return new JsonResponse([], 200);
+            return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while deleting a data model prefix', [
                 'exception' => $e,

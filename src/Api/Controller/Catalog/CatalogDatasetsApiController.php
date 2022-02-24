@@ -52,7 +52,7 @@ class CatalogDatasetsApiController extends ApiController
 
             $bus->dispatch(new AddDatasetToCatalogCommand($dataset, $catalog));
 
-            return new JsonResponse((new DatasetApiResource($dataset))->toArray(), 200);
+            return new JsonResponse((new DatasetApiResource($dataset))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

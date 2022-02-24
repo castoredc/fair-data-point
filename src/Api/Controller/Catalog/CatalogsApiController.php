@@ -124,7 +124,7 @@ class CatalogsApiController extends ApiController
             $catalog = $handledStamp->getResult();
             assert($catalog instanceof Catalog);
 
-            return new JsonResponse((new CatalogApiResource($catalog))->toArray(), 200);
+            return new JsonResponse((new CatalogApiResource($catalog))->toArray());
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

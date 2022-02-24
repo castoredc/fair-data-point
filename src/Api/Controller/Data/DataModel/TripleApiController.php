@@ -34,7 +34,7 @@ class TripleApiController extends ApiController
     {
         $this->denyAccessUnlessGranted('view', $module->getVersion()->getDataSpecification());
 
-        return new JsonResponse((new TriplesApiResource($module))->toArray(), 200);
+        return new JsonResponse((new TriplesApiResource($module))->toArray());
     }
 
     /**
