@@ -41,7 +41,7 @@ class CastorStudyApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {

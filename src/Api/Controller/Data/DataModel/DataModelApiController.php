@@ -95,7 +95,7 @@ class DataModelApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             $this->logger->critical('An error occurred while loading the data models', ['exception' => $e]);
