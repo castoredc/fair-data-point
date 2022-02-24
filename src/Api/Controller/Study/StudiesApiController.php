@@ -92,7 +92,7 @@ class StudiesApiController extends ApiController
 
             return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
         } catch (UserNotACastorUser $e) {
-            return new JsonResponse($e->toArray(), 403);
+            return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -146,11 +146,11 @@ class StudiesApiController extends ApiController
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof StudyAlreadyExists) {

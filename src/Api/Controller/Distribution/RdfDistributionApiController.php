@@ -127,7 +127,7 @@ class RdfDistributionApiController extends ApiController
             $e = $e->getPrevious();
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof MappingAlreadyExists) {

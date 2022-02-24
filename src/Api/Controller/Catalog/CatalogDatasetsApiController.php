@@ -63,7 +63,7 @@ class CatalogDatasetsApiController extends ApiController
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             $this->logger->critical('An error occurred while adding a dataset to a catalog', [

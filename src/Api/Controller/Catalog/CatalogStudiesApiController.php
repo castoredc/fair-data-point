@@ -127,7 +127,7 @@ class CatalogStudiesApiController extends ApiController
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             $this->logger->critical('An error occurred while adding a study to a catalog', [
@@ -174,7 +174,7 @@ class CatalogStudiesApiController extends ApiController
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             $this->logger->critical('An error occurred while importing a study to a catalog', [
