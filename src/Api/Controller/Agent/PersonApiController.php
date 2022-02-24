@@ -48,6 +48,8 @@ class PersonApiController extends ApiController
                 return new JsonResponse([], Response::HTTP_NOT_FOUND);
             }
 
+            $this->logger->critical('An error occurred while searching for a person', ['exception' => $e]);
+
             return new JsonResponse([], 500);
         }
     }

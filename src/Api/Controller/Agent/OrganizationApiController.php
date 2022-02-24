@@ -53,6 +53,8 @@ class OrganizationApiController extends ApiController
                 return new JsonResponse([], Response::HTTP_NOT_FOUND);
             }
 
+            $this->logger->critical('An error occurred while searching for an organization', ['exception' => $e]);
+
             return new JsonResponse([], 500);
         }
     }

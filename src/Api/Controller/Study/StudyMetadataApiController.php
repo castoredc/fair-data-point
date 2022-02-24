@@ -72,6 +72,12 @@ class StudyMetadataApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while adding metadata to a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
@@ -79,8 +85,9 @@ class StudyMetadataApiController extends ApiController
     /**
      * @Route("/api/study/{studyId}/metadata/{metadataId}", methods={"POST"}, name="api_update_metadata")
      * @ParamConverter("studyMetadata", options={"mapping": {"metadataId": "id", "studyId": "study"}})
+     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function updateMetadata(StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response
+    public function updateMetadata(Study $study, StudyMetadata $studyMetadata, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $studyMetadata->getStudy());
 
@@ -111,6 +118,13 @@ class StudyMetadataApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), 400);
         } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating metadata from a study', [
+                'exception' => $e,
+                'Study' => $study->getSlug(),
+                'StudyID' => $study->getId(),
+                'StudyMetadata' => $studyMetadata->getId(),
+            ]);
+
             return new JsonResponse([], 500);
         }
     }
