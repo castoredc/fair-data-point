@@ -76,7 +76,7 @@ class CSVDistributionController extends FAIRDataController
                 return new JsonResponse($e->toArray(), 403);
             }
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

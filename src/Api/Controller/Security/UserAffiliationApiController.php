@@ -63,7 +63,7 @@ class UserAffiliationApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while updating the user\'s affiliations', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

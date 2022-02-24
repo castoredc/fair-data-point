@@ -56,7 +56,7 @@ class TerminologyApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting concept suggestions', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

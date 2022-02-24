@@ -45,7 +45,7 @@ class StudyTeamApiController extends ApiController
                 'StudyID' => $study->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -60,6 +60,6 @@ class MyStudiesApiController extends ApiController
             $this->logger->critical('An error occurred while loading the studies', ['exception' => $e]);
         }
 
-        return new JsonResponse([], 500);
+        return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

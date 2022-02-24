@@ -119,7 +119,7 @@ class DistributionApiController extends ApiController
                 'DistributionID' => $distribution->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -182,7 +182,7 @@ class DistributionApiController extends ApiController
                 'LogID' => $log->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -226,7 +226,7 @@ class DistributionApiController extends ApiController
                     )
                 );
             } else {
-                return new JsonResponse([], 500);
+                return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             $handledStamp = $envelope->last(HandledStamp::class);
@@ -249,7 +249,7 @@ class DistributionApiController extends ApiController
                 'details' => $e->getMessage(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -294,7 +294,7 @@ class DistributionApiController extends ApiController
                     $parsed->getDataModelVersion()
                 );
             } else {
-                return new JsonResponse([], 500);
+                return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             return new JsonResponse([], 200);
@@ -313,7 +313,7 @@ class DistributionApiController extends ApiController
                 'DistributionID' => $distribution->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -347,7 +347,7 @@ class DistributionApiController extends ApiController
                 'DistributionID' => $distribution->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

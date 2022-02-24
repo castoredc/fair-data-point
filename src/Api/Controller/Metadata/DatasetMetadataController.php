@@ -58,7 +58,7 @@ class DatasetMetadataController extends ApiController
                 'DatasetID' => $dataset->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

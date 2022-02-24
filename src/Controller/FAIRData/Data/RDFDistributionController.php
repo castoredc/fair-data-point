@@ -104,7 +104,7 @@ class RDFDistributionController extends FAIRDataController
                 'DistributionID' => $distribution->getId(),
             ]);
 
-            return new JsonResponse(['error' => 'An error occurred while loading the RDF for a distribution.'], 500);
+            return new JsonResponse(['error' => 'An error occurred while loading the RDF for a distribution.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $this->getTurtleResponse($distribution, $turtle, $request->query->getBoolean('download'));

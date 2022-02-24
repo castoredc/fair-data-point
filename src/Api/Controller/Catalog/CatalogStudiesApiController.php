@@ -78,7 +78,7 @@ class CatalogStudiesApiController extends ApiController
                 'CatalogID' => $catalog->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -136,7 +136,7 @@ class CatalogStudiesApiController extends ApiController
                 'CatalogID' => $catalog->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -183,7 +183,7 @@ class CatalogStudiesApiController extends ApiController
                 'CatalogID' => $catalog->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

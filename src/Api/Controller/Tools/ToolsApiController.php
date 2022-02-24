@@ -62,7 +62,7 @@ class ToolsApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

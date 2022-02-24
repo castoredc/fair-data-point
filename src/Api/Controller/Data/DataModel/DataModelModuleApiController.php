@@ -56,7 +56,7 @@ class DataModelModuleApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while creating a data model module', ['exception' => $e]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -87,7 +87,7 @@ class DataModelModuleApiController extends ApiController
                 'ModuleID' => $module->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -113,7 +113,7 @@ class DataModelModuleApiController extends ApiController
                 'ModuleID' => $module->getId(),
             ]);
 
-            return new JsonResponse([], 500);
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
