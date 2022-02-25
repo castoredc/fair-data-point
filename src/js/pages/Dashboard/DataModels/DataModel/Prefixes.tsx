@@ -172,7 +172,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
 
             <DataGridContainer
                 fullHeight
-                ref={this.tableRef}
+                forwardRef={this.tableRef}
             >
                 <DataGrid
                     accessibleName="Prefixes"

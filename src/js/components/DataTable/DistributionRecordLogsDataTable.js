@@ -132,7 +132,7 @@ export default class DistributionRecordLogsDataTable extends Component {
                 handlePageChange={this.handlePagination}
                 fullHeight
                 isLoading={isLoadingLogs}
-                ref={this.tableRef}
+                forwardRef={this.tableRef}
                 inFlexContainer
             >
                 <DataGrid
