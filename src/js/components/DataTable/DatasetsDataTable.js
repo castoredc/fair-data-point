@@ -163,7 +163,7 @@ export default class DatasetsDataTable extends Component {
             handlePageChange={this.handlePagination}
             fullHeight
             isLoading={isLoadingDatasets}
-            ref={this.tableRef}
+            forwardRef={this.tableRef}
         >
             <DataGrid
                 accessibleName="Datasets"

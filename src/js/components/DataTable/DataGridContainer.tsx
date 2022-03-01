@@ -9,7 +9,7 @@ interface DataGridContainerProps {
     pagination?: any,
     children: React.ReactNode,
     handlePageChange?: (value: PaginationState) => void,
-    ref: any,
+    forwardRef?: any,
 }
 
 const DataGridContainer: FC<DataGridContainerProps> = (({
@@ -18,7 +18,8 @@ const DataGridContainer: FC<DataGridContainerProps> = (({
                                                             inFlexContainer = false,
                                                             children,
                                                             pagination,
-                                                            handlePageChange, ref
+                                                            handlePageChange,
+                                                            forwardRef
                                                         }) => {
     const grid = <div style={{
         flex: 1,
@@ -35,7 +36,7 @@ const DataGridContainer: FC<DataGridContainerProps> = (({
             height: '100%',
             position: 'relative',
             ...(inFlexContainer && {flex: 1})
-        }} ref={ref}>
+        }} ref={forwardRef}>
             {isLoading && <LoadingOverlay accessibleLabel="Loading"/>}
 
             {grid}

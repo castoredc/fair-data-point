@@ -132,7 +132,7 @@ export default class DataModelMappingsDataTable extends Component {
             handlePageChange={this.handlePagination}
             fullHeight
             isLoading={isLoadingMappings}
-            ref={this.tableRef}
+            forwardRef={this.tableRef}
         >
             <DataGrid
                 accessibleName="Mappings"
