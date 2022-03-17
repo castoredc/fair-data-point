@@ -1,0 +1,13 @@
+/.git
+/.circleci
+/ansible
+/build
+/vendor
+/.gitignore
+/ansible.cfg
+/*.md
+/LICENSE.txt
+/.dockerignore
+/.idea
+/Jenkinsfile
+/.phpstorm*.php
