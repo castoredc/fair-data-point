@@ -17,9 +17,7 @@ class CreateDataModelNodeMappingCommand extends CreateDataModelMappingCommand
 
     private ?string $transformSyntax;
 
-    /**
-     * @param string[] $elements
-     */
+    /** @param string[] $elements */
     public function __construct(
         RDFDistribution $distribution,
         string $node,
@@ -41,9 +39,7 @@ class CreateDataModelNodeMappingCommand extends CreateDataModelMappingCommand
         return $this->node;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getElements(): array
     {
         return $this->elements;

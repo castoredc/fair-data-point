@@ -7,9 +7,7 @@ use Exception;
 
 class UserAlreadyExists extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'This user is already added.'];

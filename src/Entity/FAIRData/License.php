@@ -6,9 +6,7 @@ namespace App\Entity\FAIRData;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class License
 {
     /**
@@ -60,9 +58,7 @@ class License
         $this->name = $name;
     }
 
-    /**
-     * @return array<string>
-     */
+    /** @return array<string> */
     public function toArray(): array
     {
         return [

@@ -11,17 +11,13 @@ class DataModelsApiResource implements ApiResource
     /** @var DataModel[] */
     private array $dataModels;
 
-    /**
-     * @param DataModel[] $dataModels
-     */
+    /** @param DataModel[] $dataModels */
     public function __construct(array $dataModels)
     {
         $this->dataModels = $dataModels;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

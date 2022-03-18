@@ -120,9 +120,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         $this->fairDataPoint = $fairDataPoint;
     }
 
-    /**
-     * @return Dataset[]
-     */
+    /** @return Dataset[] */
     public function getDatasets(bool $includeUnpublishedDatasets): array
     {
         $datasets = $this->datasets->toArray();
@@ -255,9 +253,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         return true;
     }
 
-    /**
-     * @return Collection<CatalogPermission>
-     */
+    /** @return Collection<CatalogPermission> */
     public function getPermissions(): Collection
     {
         return $this->permissions;

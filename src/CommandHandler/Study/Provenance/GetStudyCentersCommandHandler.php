@@ -9,9 +9,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class GetStudyCentersCommandHandler implements MessageHandlerInterface
 {
-    /**
-     * @return ParticipatingCenter[]
-     */
+    /** @return ParticipatingCenter[] */
     public function __invoke(GetStudyCentersCommand $command): array
     {
         $metadata = $command->getStudy()->getLatestMetadata();

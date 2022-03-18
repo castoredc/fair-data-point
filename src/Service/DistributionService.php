@@ -58,9 +58,7 @@ class DistributionService
         return $options;
     }
 
-    /**
-     * @throws CouldNotConnectToMySqlServer
-     */
+    /** @throws CouldNotConnectToMySqlServer */
     public function createCreatorConnection(): Connection
     {
         $config = new DBALConfiguration();
@@ -82,9 +80,7 @@ class DistributionService
         }
     }
 
-    /**
-     * @throws DBALException
-     */
+    /** @throws DBALException */
     public function createDistributionConnection(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): Connection
     {
         $config = new DBALConfiguration();
@@ -102,9 +98,7 @@ class DistributionService
         return DriverManager::getConnection($params, $config);
     }
 
-    /**
-     * @throws DBALException
-     */
+    /** @throws DBALException */
     public function getArc2Store(string $store, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService, bool $setupStore = true): ARC2_Store
     {
         $params = [
@@ -125,9 +119,7 @@ class DistributionService
         return $store;
     }
 
-    /**
-     * @throws DBALException
-     */
+    /** @throws DBALException */
     public function getArc2Endpoint(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): ARC2_StoreEndpoint
     {
         $params = [
@@ -149,9 +141,7 @@ class DistributionService
         return $endpoint;
     }
 
-    /**
-     * @throws CouldNotConnectToMySqlServer
-     */
+    /** @throws CouldNotConnectToMySqlServer */
     public function createDatabase(DistributionDatabaseInformation $databaseInformation): void
     {
         $manager = new MySqlSchemaManager($this->createCreatorConnection());

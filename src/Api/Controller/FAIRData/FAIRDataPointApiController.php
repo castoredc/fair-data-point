@@ -15,9 +15,7 @@ use function assert;
 
 class FAIRDataPointApiController extends ApiController
 {
-    /**
-     * @Route("/api/fdp", name="api_fdp")
-     */
+    /** @Route("/api/fdp", name="api_fdp") */
     public function fdp(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetFAIRDataPointCommand());

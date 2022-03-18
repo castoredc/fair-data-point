@@ -58,9 +58,7 @@ abstract class CreateMetadataCommand
         return $this->versionUpdate;
     }
 
-    /**
-     * @return Agent[]
-     */
+    /** @return Agent[] */
     public function getPublishers(): array
     {
         return $this->publishers;

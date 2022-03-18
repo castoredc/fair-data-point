@@ -79,9 +79,7 @@ class DistributionDatabaseInformation
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->password));
     }
 
-    /**
-     * @throws CouldNotTransformEncryptedStringToJson
-     */
+    /** @throws CouldNotTransformEncryptedStringToJson */
     public function setUsername(EncryptionService $encryptionService, string $username): void
     {
         $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($username)));
@@ -93,9 +91,7 @@ class DistributionDatabaseInformation
         $this->username = $encoded;
     }
 
-    /**
-     * @throws CouldNotTransformEncryptedStringToJson
-     */
+    /** @throws CouldNotTransformEncryptedStringToJson */
     public function setPassword(EncryptionService $encryptionService, string $password): void
     {
         $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($password)));

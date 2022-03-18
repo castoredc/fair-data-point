@@ -16,9 +16,7 @@ class OptionGroupApiResource implements ApiResource
         $this->optionGroup = $optionGroup;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $options = [];

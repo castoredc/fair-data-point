@@ -17,9 +17,7 @@ trait UpdatedAt
         return $this->updatedAt;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    /** @ORM\PreUpdate */
     public function onUpdate(LifecycleEventArgs $e): void
     {
         $this->updatedAt = new DateTime();

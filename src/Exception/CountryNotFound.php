@@ -7,9 +7,7 @@ use Exception;
 
 class CountryNotFound extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Country not found.'];

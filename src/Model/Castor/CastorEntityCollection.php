@@ -22,9 +22,7 @@ class CastorEntityCollection implements Countable, IteratorAggregate
      */
     private array $entities;
 
-    /**
-     * @param CastorEntity[]|null $entities
-     */
+    /** @param CastorEntity[]|null $entities */
     public function __construct(?array $entities = null)
     {
         $this->entities = $entities !== null ? $this->parseEntities($entities) : [];

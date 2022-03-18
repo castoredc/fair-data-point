@@ -5,8 +5,6 @@ namespace App\Api\Resource;
 
 interface ApiResource
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array;
 }

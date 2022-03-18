@@ -131,33 +131,25 @@ abstract class Metadata
         $this->license = $license;
     }
 
-    /**
-     * @return Collection<Agent>
-     */
+    /** @return Collection<Agent> */
     public function getPublishers(): Collection
     {
         return $this->publishers;
     }
 
-    /**
-     * @param Collection<Agent> $publishers
-     */
+    /** @param Collection<Agent> $publishers */
     public function setPublishers(Collection $publishers): void
     {
         $this->publishers = $publishers;
     }
 
-    /**
-     * @return Collection<Agent>
-     */
+    /** @return Collection<Agent> */
     public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    /**
-     * @param Collection<Agent> $contacts
-     */
+    /** @param Collection<Agent> $contacts */
     public function setContacts(Collection $contacts): void
     {
         $this->contacts = $contacts;

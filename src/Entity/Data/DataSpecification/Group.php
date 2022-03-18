@@ -141,17 +141,13 @@ abstract class Group
         $this->version = $version;
     }
 
-    /**
-     * @return Collection<Element>
-     */
+    /** @return Collection<Element> */
     public function getElements(): Collection
     {
         return $this->elements;
     }
 
-    /**
-     * @param Collection<Element> $elements
-     */
+    /** @param Collection<Element> $elements */
     public function setElements(Collection $elements): void
     {
         $this->elements = $elements;
@@ -168,17 +164,13 @@ abstract class Group
         $this->elements->removeElement($element);
     }
 
-    /**
-     * @return Collection<string, ElementGroup>
-     */
+    /** @return Collection<string, ElementGroup> */
     public function getElementGroups(): Collection
     {
         return $this->elementGroups;
     }
 
-    /**
-     * @param Collection<string, ElementGroup> $elementGroups
-     */
+    /** @param Collection<string, ElementGroup> $elementGroups */
     public function setElementGroups(Collection $elementGroups): void
     {
         $this->elementGroups = $elementGroups;

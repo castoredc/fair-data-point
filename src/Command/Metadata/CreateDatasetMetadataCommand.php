@@ -45,9 +45,7 @@ class CreateDatasetMetadataCommand extends CreateMetadataCommand
         return $this->dataset;
     }
 
-    /**
-     * @return OntologyConcept[]
-     */
+    /** @return OntologyConcept[] */
     public function getTheme(): array
     {
         return $this->theme;

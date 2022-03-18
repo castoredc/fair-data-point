@@ -17,9 +17,7 @@ class AffiliationApiResource implements ApiResource
         $this->affiliation = $affiliation;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

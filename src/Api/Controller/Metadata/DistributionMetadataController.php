@@ -23,9 +23,7 @@ use function assert;
  */
 class DistributionMetadataController extends ApiController
 {
-    /**
-     * @Route("", methods={"POST"}, name="api_metadata_distribution_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_metadata_distribution_add") */
     public function addDistributionMetadata(Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);

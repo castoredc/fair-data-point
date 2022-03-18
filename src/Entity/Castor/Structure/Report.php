@@ -7,9 +7,7 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class Report extends StructureElement
 {
     private ?string $description = null;
@@ -44,9 +42,7 @@ class Report extends StructureElement
         $this->type = $type;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): Report
     {
         return new Report(

@@ -23,9 +23,7 @@ use function assert;
  */
 class DatasetMetadataController extends ApiController
 {
-    /**
-     * @Route("", methods={"POST"}, name="api_metadata_dataset_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_metadata_dataset_add") */
     public function addDatasetMetadata(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);

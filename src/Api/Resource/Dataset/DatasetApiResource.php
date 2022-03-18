@@ -19,9 +19,7 @@ class DatasetApiResource implements ApiResource
         $this->dataset = $dataset;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $dataset = [

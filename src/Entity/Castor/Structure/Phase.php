@@ -53,9 +53,7 @@ class Phase extends StructureElement
         });
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): Phase
     {
         return new Phase(

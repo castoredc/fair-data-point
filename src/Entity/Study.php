@@ -125,9 +125,7 @@ abstract class Study implements AccessibleEntity
         $this->slug = $slug;
     }
 
-    /**
-     * @return StudyMetadata[]|ArrayCollection
-     */
+    /** @return StudyMetadata[]|ArrayCollection */
     public function getMetadata()
     {
         return $this->metadata;
@@ -194,9 +192,7 @@ abstract class Study implements AccessibleEntity
         $this->isPublished = $isPublished;
     }
 
-    /**
-     * @return Collection<Catalog>
-     */
+    /** @return Collection<Catalog> */
     public function getCatalogs(): Collection
     {
         return $this->catalogs;
@@ -222,17 +218,13 @@ abstract class Study implements AccessibleEntity
         return '/study/' . $this->slug;
     }
 
-    /**
-     * @return Collection<Mapping>
-     */
+    /** @return Collection<Mapping> */
     public function getMappings(): Collection
     {
         return $this->mappings;
     }
 
-    /**
-     * @return Collection<ElementMapping>
-     */
+    /** @return Collection<ElementMapping> */
     public function getNodeMappings(): Collection
     {
         $return = new ArrayCollection();
@@ -248,9 +240,7 @@ abstract class Study implements AccessibleEntity
         return $return;
     }
 
-    /**
-     * @return Collection<GroupMapping>
-     */
+    /** @return Collection<GroupMapping> */
     public function getModuleMappings(): Collection
     {
         $return = new ArrayCollection();

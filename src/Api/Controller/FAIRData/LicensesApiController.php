@@ -17,9 +17,7 @@ use function assert;
 
 class LicensesApiController extends ApiController
 {
-    /**
-     * @Route("/api/licenses", name="api_licenses")
-     */
+    /** @Route("/api/licenses", name="api_licenses") */
     public function countries(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetLicensesCommand());

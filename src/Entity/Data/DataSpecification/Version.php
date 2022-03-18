@@ -86,17 +86,13 @@ abstract class Version
         $this->version = $version;
     }
 
-    /**
-     * @return Collection<Group>
-     */
+    /** @return Collection<Group> */
     public function getGroups(): Collection
     {
         return $this->groups;
     }
 
-    /**
-     * @return Collection<Group>
-     */
+    /** @return Collection<Group> */
     public function getRepeatedGroups(): Collection
     {
         $return = new ArrayCollection();
@@ -112,9 +108,7 @@ abstract class Version
         return $return;
     }
 
-    /**
-     * @param Collection<Group> $groups
-     */
+    /** @param Collection<Group> $groups */
     public function setGroups(Collection $groups): void
     {
         $this->groups = $groups;
@@ -162,9 +156,7 @@ abstract class Version
         $this->reorderGroups();
     }
 
-    /**
-     * @return Collection<DistributionContents>
-     */
+    /** @return Collection<DistributionContents> */
     public function getDistributionContents(): Collection
     {
         return $this->distributionContents;
@@ -180,9 +172,7 @@ abstract class Version
         $this->dataSpecification = $dataSpecification;
     }
 
-    /**
-     * @return Collection<Element>
-     */
+    /** @return Collection<Element> */
     public function getElements(): Collection
     {
         return $this->elements;

@@ -112,9 +112,7 @@ class AgentArrayValidator extends ConstraintValidator
         }
     }
 
-    /**
-     * @param mixed[] $agent
-     */
+    /** @param mixed[] $agent */
     private function mergeViolations(int $index, array $agent, Assert\Collection $collection, AgentArray $constraint): void
     {
         $violations = $this->context->getValidator()->validate($agent, $collection);

@@ -12,17 +12,13 @@ class DatasetsFilterApiResource implements ApiResource
     /** @var Dataset[] */
     private array $datasets;
 
-    /**
-     * @param Dataset[] $datasets
-     */
+    /** @param Dataset[] $datasets */
     public function __construct(array $datasets)
     {
         $this->datasets = $datasets;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $metadata = [];

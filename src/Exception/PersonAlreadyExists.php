@@ -7,9 +7,7 @@ use Exception;
 
 class PersonAlreadyExists extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'A person with the same email address already exists.'];

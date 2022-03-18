@@ -12,17 +12,13 @@ class StudiesFilterApiResource implements ApiResource
     /** @var Study[] */
     private array $studies;
 
-    /**
-     * @param Study[] $studies
-     */
+    /** @param Study[] $studies */
     public function __construct(array $studies)
     {
         $this->studies = $studies;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $metadata = [];

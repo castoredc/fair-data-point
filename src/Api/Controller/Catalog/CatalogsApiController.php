@@ -25,14 +25,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 use function count;
 
-/**
- * @Route("/api/catalog")
- */
+/** @Route("/api/catalog") */
 class CatalogsApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_catalogs")
-     */
+    /** @Route("", methods={"GET"}, name="api_catalogs") */
     public function catalogs(Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -66,9 +62,7 @@ class CatalogsApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/my", methods={"GET"}, name="api_my_catalogs")
-     */
+    /** @Route("/my", methods={"GET"}, name="api_my_catalogs") */
     public function myCatalogs(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -103,9 +97,7 @@ class CatalogsApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_catalog_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_catalog_add") */
     public function addCatalog(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

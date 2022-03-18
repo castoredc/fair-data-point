@@ -34,9 +34,7 @@ use function assert;
  */
 class CatalogStudiesApiController extends ApiController
 {
-    /**
-     * @Route("", name="api_catalog_studies")
-     */
+    /** @Route("", name="api_catalog_studies") */
     public function studies(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
@@ -82,9 +80,7 @@ class CatalogStudiesApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/filters", name="api_catalog_studies_filters")
-     */
+    /** @Route("/filters", name="api_catalog_studies_filters") */
     public function studyFilters(Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
@@ -93,9 +89,7 @@ class CatalogStudiesApiController extends ApiController
         return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
     }
 
-    /**
-     * @Route("/add", methods={"POST"}, name="api_add_study_to_catalog")
-     */
+    /** @Route("/add", methods={"POST"}, name="api_add_study_to_catalog") */
     public function addStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('add', $catalog);
@@ -140,9 +134,7 @@ class CatalogStudiesApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/import", methods={"POST"}, name="api_import_study_to_catalog")
-     */
+    /** @Route("/import", methods={"POST"}, name="api_import_study_to_catalog") */
     public function importStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('add', $catalog);

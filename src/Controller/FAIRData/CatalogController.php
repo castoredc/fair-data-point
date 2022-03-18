@@ -12,9 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CatalogController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/{catalog}", name="redirect_old_catalog")
-     */
+    /** @Route("/fdp/{catalog}", name="redirect_old_catalog") */
     public function catalogRedirect(string $catalog, Request $request): Response
     {
         return $this->redirectToRoute('catalog', [

@@ -7,9 +7,7 @@ use Exception;
 
 class AnnotationAlreadyExists extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'The ontology concept is already attached to this entity.'];

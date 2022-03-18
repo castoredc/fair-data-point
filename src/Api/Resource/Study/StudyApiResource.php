@@ -20,9 +20,7 @@ class StudyApiResource extends RoleBasedApiResource
         parent::setAdmin($isAdmin);
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $firstMetadata = $this->study->getFirstMetadata();

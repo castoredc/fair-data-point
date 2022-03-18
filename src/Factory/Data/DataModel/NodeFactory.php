@@ -17,9 +17,7 @@ use App\Exception\InvalidNodeType;
 
 class NodeFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromJson(DataModelVersion $version, array $data): Node
     {
         $type = NodeType::fromString($data['type']);

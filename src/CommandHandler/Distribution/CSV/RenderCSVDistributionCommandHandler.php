@@ -31,9 +31,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $this->encryptionService = $encryptionService;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function __invoke(RenderCSVDistributionCommand $command): string
     {
         $contents = $command->getDistribution();

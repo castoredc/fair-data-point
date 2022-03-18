@@ -30,9 +30,7 @@ class DatasetMetadataApiRequest extends MetadataApiRequest
         $this->keyword = $this->getFromData('keyword');
     }
 
-    /**
-     * @return OntologyConcept[]
-     */
+    /** @return OntologyConcept[] */
     public function getTheme(): array
     {
         $data = [];

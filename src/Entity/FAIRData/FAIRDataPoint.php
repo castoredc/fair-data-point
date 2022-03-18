@@ -79,17 +79,13 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
         return '/fdp';
     }
 
-    /**
-     * @return Collection<string, Catalog>
-     */
+    /** @return Collection<string, Catalog> */
     public function getCatalogs(): Collection
     {
         return $this->catalogs;
     }
 
-    /**
-     * @param Collection<string, Catalog> $catalogs
-     */
+    /** @param Collection<string, Catalog> $catalogs */
     public function setCatalogs(Collection $catalogs): void
     {
         $this->catalogs = $catalogs;

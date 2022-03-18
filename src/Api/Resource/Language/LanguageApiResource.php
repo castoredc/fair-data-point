@@ -15,9 +15,7 @@ class LanguageApiResource implements ApiResource
         $this->language = $language;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

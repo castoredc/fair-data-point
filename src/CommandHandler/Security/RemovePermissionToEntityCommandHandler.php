@@ -21,9 +21,7 @@ class RemovePermissionToEntityCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @throws NoAccessPermission
-     */
+    /** @throws NoAccessPermission */
     public function __invoke(RemovePermissionToEntityCommand $command): void
     {
         $entity = $command->getEntity();

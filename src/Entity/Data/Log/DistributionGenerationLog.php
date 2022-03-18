@@ -66,9 +66,7 @@ class DistributionGenerationLog
         return $this->distribution;
     }
 
-    /**
-     * @return Collection<DistributionGenerationRecordLog>
-     */
+    /** @return Collection<DistributionGenerationRecordLog> */
     public function getRecords(): Collection
     {
         return $this->records;
@@ -114,9 +112,7 @@ class DistributionGenerationLog
         return $this->status;
     }
 
-    /**
-     * @return mixed[]|null
-     */
+    /** @return mixed[]|null */
     public function getErrors(): ?array
     {
         return $this->errors;
@@ -133,9 +129,7 @@ class DistributionGenerationLog
         $this->records->add($record);
     }
 
-    /**
-     * @param mixed[] $error
-     */
+    /** @param mixed[] $error */
     public function addError(array $error): void
     {
         $this->errors[] = $error;

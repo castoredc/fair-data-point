@@ -31,9 +31,7 @@ use function assert;
  */
 class DatasetApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_dataset")
-     */
+    /** @Route("", methods={"GET"}, name="api_dataset") */
     public function dataset(Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
@@ -45,9 +43,7 @@ class DatasetApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_dataset_update")
-     */
+    /** @Route("", methods={"POST"}, name="api_dataset_update") */
     public function updateDataset(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);
@@ -77,9 +73,7 @@ class DatasetApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/distribution", methods={"GET"}, name="api_dataset_distributions")
-     */
+    /** @Route("/distribution", methods={"GET"}, name="api_dataset_distributions") */
     public function distributions(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);

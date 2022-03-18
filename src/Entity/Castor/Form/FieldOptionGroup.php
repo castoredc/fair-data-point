@@ -8,9 +8,7 @@ use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class FieldOptionGroup extends CastorEntity
 {
     private ?string $name = null;
@@ -22,9 +20,7 @@ class FieldOptionGroup extends CastorEntity
     /** @var FieldOption[]|null */
     private ?array $options = null;
 
-    /**
-     * @param FieldOption[]|null $options
-     */
+    /** @param FieldOption[]|null $options */
     public function __construct(string $id, CastorStudy $study, string $name, ?string $description, bool $layout, ?array $options)
     {
         parent::__construct($id, $name, $study, null);
@@ -65,9 +61,7 @@ class FieldOptionGroup extends CastorEntity
         $this->layout = $layout;
     }
 
-    /**
-     * @return FieldOption[]|null
-     */
+    /** @return FieldOption[]|null */
     public function getOptions(): ?array
     {
         return $this->options;
@@ -119,9 +113,7 @@ class FieldOptionGroup extends CastorEntity
         return $this->getOptionById($id);
     }
 
-    /**
-     * @param FieldOption[]|null $options
-     */
+    /** @param FieldOption[]|null $options */
     public function setOptions(?array $options): void
     {
         $this->options = $options;
@@ -139,9 +131,7 @@ class FieldOptionGroup extends CastorEntity
         }
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): FieldOptionGroup
     {
         $options = [];

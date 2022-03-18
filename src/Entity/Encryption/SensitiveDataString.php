@@ -17,17 +17,13 @@ class SensitiveDataString
         return $this->value;
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function __debugInfo(): array
     {
         return ['value' => 'hidden sensitive data'];
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function __sleep(): array
     {
         return [];

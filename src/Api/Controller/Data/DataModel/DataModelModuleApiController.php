@@ -27,9 +27,7 @@ use function assert;
  */
 class DataModelModuleApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_model_modules")
-     */
+    /** @Route("", methods={"GET"}, name="api_model_modules") */
     public function getModules(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -37,9 +35,7 @@ class DataModelModuleApiController extends ApiController
         return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray());
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_model_module_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_model_module_add") */
     public function addModule(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());

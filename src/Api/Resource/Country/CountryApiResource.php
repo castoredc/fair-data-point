@@ -15,9 +15,7 @@ class CountryApiResource implements ApiResource
         $this->country = $country;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

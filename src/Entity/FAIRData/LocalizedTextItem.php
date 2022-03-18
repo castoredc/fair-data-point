@@ -90,9 +90,7 @@ class LocalizedTextItem
         $this->languageCode = $languageCode;
     }
 
-    /**
-     * @return array<string>
-     */
+    /** @return array<string> */
     public function toArray(): array
     {
         return [

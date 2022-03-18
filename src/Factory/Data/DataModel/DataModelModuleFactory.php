@@ -17,9 +17,7 @@ class DataModelModuleFactory
         $this->dependencyGroupFactory = $dependencyGroupFactory;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromJson(DataModelVersion $version, ArrayCollection $nodes, array $data): DataModelGroup
     {
         $newModule = new DataModelGroup(

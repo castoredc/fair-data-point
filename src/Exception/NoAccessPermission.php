@@ -7,9 +7,7 @@ use Exception;
 
 class NoAccessPermission extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'You do not have permission to access this data.'];

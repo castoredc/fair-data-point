@@ -27,9 +27,7 @@ class StudyStep extends Step
         $this->parentId = $parentId;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): StudyStep
     {
         return new StudyStep(

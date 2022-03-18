@@ -33,9 +33,7 @@ use function assert;
  */
 class AnnotationApiController extends ApiController
 {
-    /**
-     * @Route("/add", name="api_study_annotations_add")
-     */
+    /** @Route("/add", name="api_study_annotations_add") */
     public function addAnnotation(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);

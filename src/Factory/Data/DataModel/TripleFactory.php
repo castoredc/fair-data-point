@@ -9,9 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class TripleFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromJson(DataModelGroup $module, ArrayCollection $nodes, ArrayCollection $predicates, array $data): Triple
     {
         return new Triple(

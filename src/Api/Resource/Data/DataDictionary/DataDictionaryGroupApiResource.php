@@ -16,9 +16,7 @@ class DataDictionaryGroupApiResource implements ApiResource
         $this->group = $group;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         // TODO: Add variables

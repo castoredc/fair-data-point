@@ -19,9 +19,7 @@ class IriApiResource implements ApiResource
         $this->iri = $iri;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $prefixes = $this->dataModel->getPrefixes();

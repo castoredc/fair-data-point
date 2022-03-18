@@ -16,9 +16,7 @@ class DataDictionaryVersionApiResource implements ApiResource
         $this->dataDictionaryVersion = $dataDictionaryVersion;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

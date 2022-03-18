@@ -22,9 +22,7 @@ class ApiClient
         $this->webhookUrl = $webhookUrl;
     }
 
-    /**
-     * @param array<mixed> $message
-     */
+    /** @param array<mixed> $message */
     public function postMessage(array $message): void
     {
         try {

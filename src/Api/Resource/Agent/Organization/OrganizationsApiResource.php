@@ -11,17 +11,13 @@ class OrganizationsApiResource implements ApiResource
     /** @var Organization[] */
     private array $organizations;
 
-    /**
-     * @param Organization[] $organizations
-     */
+    /** @param Organization[] $organizations */
     public function __construct(array $organizations)
     {
         $this->organizations = $organizations;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

@@ -26,9 +26,7 @@ class DistributionApiResource implements ApiResource
         $this->uriHelper = $uriHelper;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $distribution = [

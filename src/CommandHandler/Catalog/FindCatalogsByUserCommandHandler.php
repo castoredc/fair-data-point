@@ -23,9 +23,7 @@ class FindCatalogsByUserCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @return Catalog[]
-     */
+    /** @return Catalog[] */
     public function __invoke(FindCatalogsByUserCommand $command): array
     {
         $catalogRepository = $this->em->getRepository(Catalog::class);

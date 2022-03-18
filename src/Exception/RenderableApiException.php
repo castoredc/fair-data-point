@@ -7,9 +7,7 @@ use Exception;
 
 abstract class RenderableApiException extends Exception implements ApiException
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

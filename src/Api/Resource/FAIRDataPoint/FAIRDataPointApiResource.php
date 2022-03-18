@@ -17,9 +17,7 @@ class FAIRDataPointApiResource implements ApiResource
         $this->fairDataPoint = $fairDataPoint;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $fdp = [

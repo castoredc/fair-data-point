@@ -87,9 +87,7 @@ class OntologyConcept
         $this->displayName = $displayName;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         return new OntologyConcept(

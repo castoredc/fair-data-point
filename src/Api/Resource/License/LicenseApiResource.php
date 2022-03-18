@@ -15,9 +15,7 @@ class LicenseApiResource implements ApiResource
         $this->license = $license;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

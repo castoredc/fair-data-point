@@ -11,17 +11,13 @@ class StepsApiResource implements ApiResource
     /** @var Step[] */
     private array $steps;
 
-    /**
-     * @param Step[] $steps
-     */
+    /** @param Step[] $steps */
     public function __construct(array $steps)
     {
         $this->steps = $steps;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

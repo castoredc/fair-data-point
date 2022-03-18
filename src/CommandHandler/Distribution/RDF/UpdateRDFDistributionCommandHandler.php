@@ -14,9 +14,7 @@ use function assert;
 
 class UpdateRDFDistributionCommandHandler extends UpdateDistributionCommandHandler
 {
-    /**
-     * @throws LanguageNotFound
-     */
+    /** @throws LanguageNotFound */
     public function __invoke(UpdateRDFDistributionCommand $command): void
     {
         $distribution = $this->handleDistributionUpdate($command);

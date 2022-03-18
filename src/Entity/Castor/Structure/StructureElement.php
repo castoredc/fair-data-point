@@ -9,9 +9,7 @@ use App\Entity\Castor\Structure\Step\Step;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 abstract class StructureElement extends CastorEntity
 {
     protected ?string $name = null;
@@ -42,17 +40,13 @@ abstract class StructureElement extends CastorEntity
         $this->name = $name;
     }
 
-    /**
-     * @return Step[]
-     */
+    /** @return Step[] */
     public function getSteps(): array
     {
         return $this->steps;
     }
 
-    /**
-     * @param Step[] $steps
-     */
+    /** @param Step[] $steps */
     public function setSteps(array $steps): void
     {
         $this->steps = $steps;

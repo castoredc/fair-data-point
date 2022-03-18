@@ -40,9 +40,7 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @param string[]|null $hideCatalogs
-     */
+    /** @param string[]|null $hideCatalogs */
     public function countDatasets(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, bool $admin): int
     {
         $qb = $this->createQueryBuilder('dataset')
@@ -59,9 +57,7 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
         }
     }
 
-    /**
-     * @param string[]|null $hideCatalogs
-     */
+    /** @param string[]|null $hideCatalogs */
     private function getDatasetQuery(QueryBuilder $qb, ?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, bool $admin): QueryBuilder
     {
         $qb = $this->getQuery($qb);

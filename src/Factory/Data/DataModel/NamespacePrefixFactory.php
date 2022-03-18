@@ -8,9 +8,7 @@ use App\Entity\Iri;
 
 class NamespacePrefixFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromJson(array $data): NamespacePrefix
     {
         return new NamespacePrefix(

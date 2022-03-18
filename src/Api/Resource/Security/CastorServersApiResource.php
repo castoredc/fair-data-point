@@ -11,17 +11,13 @@ class CastorServersApiResource implements ApiResource
     /** @var CastorServer[] */
     private array $servers;
 
-    /**
-     * @param CastorServer[] $servers
-     */
+    /** @param CastorServer[] $servers */
     public function __construct(array $servers)
     {
         $this->servers = $servers;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

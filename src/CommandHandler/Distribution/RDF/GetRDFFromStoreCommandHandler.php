@@ -36,9 +36,7 @@ class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function __invoke(GetRDFFromStoreCommand $command): string
     {
         $distribution = $command->getDistribution()->getDistribution();

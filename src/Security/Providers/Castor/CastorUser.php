@@ -119,17 +119,13 @@ class CastorUser implements ProviderUser
         return $this->emailAddress;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getStudies(): array
     {
         return $this->studies;
     }
 
-    /**
-     * @param string[] $studies
-     */
+    /** @param string[] $studies */
     public function setStudies(array $studies): void
     {
         $this->studies = $studies;

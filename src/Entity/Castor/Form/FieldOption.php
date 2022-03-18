@@ -7,9 +7,7 @@ use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class FieldOption extends CastorEntity
 {
     private ?string $name = null;
@@ -70,9 +68,7 @@ class FieldOption extends CastorEntity
         $this->optionGroup = $optionGroup;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): FieldOption
     {
         return new FieldOption(

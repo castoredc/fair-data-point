@@ -1,7 +1,5 @@
 <?php
-/**
- * @phpcs:disable SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedConstant
- */
+/** @phpcs:disable SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedConstant */
 declare(strict_types=1);
 
 namespace App\Entity\Enum;
@@ -36,9 +34,7 @@ class PermissionsEnabledEntityType extends Enum
         self::MODEL => DataModel::class,
     ];
 
-    /**
-     * @return class-string<object>
-     */
+    /** @return class-string<object> */
     public function getClass(): string
     {
         return self::CLASS_MAPPING[$this->toString()];

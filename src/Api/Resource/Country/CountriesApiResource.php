@@ -11,17 +11,13 @@ class CountriesApiResource implements ApiResource
     /** @var Country[] */
     private array $countries;
 
-    /**
-     * @param Country[] $countries
-     */
+    /** @param Country[] $countries */
     public function __construct(array $countries)
     {
         $this->countries = $countries;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

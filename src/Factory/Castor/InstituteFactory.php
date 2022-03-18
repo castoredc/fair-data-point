@@ -8,9 +8,7 @@ use App\Entity\Castor\Institute;
 
 class InstituteFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromCastorApiData(CastorStudy $study, array $data): Institute
     {
         return new Institute(

@@ -18,9 +18,7 @@ class OrganizationSearchApiResource implements ApiResource
         $this->organizations = $organizations;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

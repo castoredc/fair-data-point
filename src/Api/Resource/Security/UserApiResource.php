@@ -19,9 +19,7 @@ class UserApiResource implements ApiResource
         $this->helper = new UserDetailsHelper($user);
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [

@@ -15,9 +15,7 @@ use function assert;
 
 class CastorServersApiController extends ApiController
 {
-    /**
-     * @Route("/api/castor/servers", name="api_servers")
-     */
+    /** @Route("/api/castor/servers", name="api_servers") */
     public function catalogs(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetCastorServersCommand());
