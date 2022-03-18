@@ -9,10 +9,11 @@ interface InputProps extends FieldProps {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void,
     autoFocus?: boolean,
     serverError?: any,
-    multiline?: boolean
+    multiline?: boolean,
+    inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' | undefined;
 }
 
-const Input: FC<InputProps> = ({field, form, meta, readOnly, onChange, autoFocus, serverError, multiline}) => {
+const Input: FC<InputProps> = ({field, form, meta, readOnly, onChange, autoFocus, serverError, multiline, inputMode}) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
     const serverErrors = serverError ? serverError[field.name] : undefined;
@@ -30,6 +31,7 @@ const Input: FC<InputProps> = ({field, form, meta, readOnly, onChange, autoFocus
             readOnly={readOnly}
             autoFocus={autoFocus}
             multiline={multiline}
+            inputMode={inputMode}
         />
 
         <FieldErrors field={field} serverErrors={serverErrors}/>

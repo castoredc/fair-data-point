@@ -28,3 +28,5 @@ yarn-error.log
 bfg.jar
 .DS_Store
 public/.DS_Store
+
+auth.json

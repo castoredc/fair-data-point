@@ -138,7 +138,7 @@ export default class DistributionsDataTable extends Component {
             handlePageChange={this.handlePagination}
             fullHeight
             isLoading={isLoadingDistributions}
-            ref={this.tableRef}
+            forwardRef={this.tableRef}
         >
             <DataGrid
                 accessibleName="Distributions"

@@ -191,7 +191,7 @@ export default class StudiesDataTable extends Component {
                     handlePageChange={this.handlePagination}
                     fullHeight
                     isLoading={isLoadingStudies}
-                    ref={this.tableRef}
+                    forwardRef={this.tableRef}
                 >
                     <DataGrid
                         accessibleName="Studies"

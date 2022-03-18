@@ -94,7 +94,7 @@ class DashboardController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText() . ' | Add study']
+            ['title' => 'Add study']
         );
     }
 
