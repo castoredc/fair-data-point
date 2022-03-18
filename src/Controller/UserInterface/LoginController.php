@@ -43,7 +43,7 @@ class LoginController extends AbstractController
 
         return $this->render(
             'react.html.twig',
-            ['title' => $catalog->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText() . ' | Log in']
+            ['title' => 'Log in']
         );
     }
 
