@@ -99,7 +99,7 @@ const defaultData = {
 const OrganizationSchema = Yup.object().shape({
     country: Yup.string().required("Please select a country"),
     organization: Yup.object().shape({
-        source: Yup.string().required(),
+        source: Yup.string().required('Please select an organization'),
         name: Yup.string().when('source', {
             is: 'manual',
             then: Yup.string().required('Please enter a name'),
