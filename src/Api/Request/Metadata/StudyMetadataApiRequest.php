@@ -42,7 +42,7 @@ class StudyMetadataApiRequest extends SingleApiRequest
     private ?string $intervention = null;
 
     /** @Assert\Type("integer") */
-    private ?string $estimatedEnrollment;
+    private ?int $estimatedEnrollment;
 
     /** @Assert\Date() */
     private ?string $estimatedStudyStartDate = null;
@@ -79,7 +79,7 @@ class StudyMetadataApiRequest extends SingleApiRequest
         $this->type = $this->getFromData('type');
         $this->condition = $this->getFromData('condition');
         $this->intervention = $this->getFromData('intervention');
-        $this->estimatedEnrollment = $this->getFromData('estimatedEnrollment');
+        $this->estimatedEnrollment = (int) $this->getFromData('estimatedEnrollment');
         $this->estimatedStudyStartDate = $this->getFromData('estimatedStudyStartDate');
         $this->estimatedStudyCompletionDate = $this->getFromData('estimatedStudyCompletionDate');
         $this->summary = $this->getFromData('summary');
