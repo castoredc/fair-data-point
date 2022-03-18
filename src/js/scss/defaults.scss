@@ -109,3 +109,35 @@ div[type="error"] {
   width: 100%;
   max-width: 40rem;
 }
+
+.PageBody {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  margin-bottom: 1.6rem;
+  overflow: auto;
+}
+
+.PageTabs {
+  height: 100%;
+  flex: 1;
+  overflow: auto;
+
+  .FullHeightPageTab {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & > div {
+    /* Matter Tabs */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    & > div[role=tabpanel] {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}

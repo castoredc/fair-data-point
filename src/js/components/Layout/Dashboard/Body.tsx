@@ -3,7 +3,9 @@ import './Dashboard.scss';
 import {Stack, StackItem} from "@castoredc/matter";
 import {toRem} from "@castoredc/matter-utils";
 
-type BodyProps = {}
+type BodyProps = {
+    children: React.ReactNode,
+}
 
 const Body: FC<BodyProps> = ({children}) => {
     return <div className="DashboardBody">
@@ -14,7 +16,9 @@ const Body: FC<BodyProps> = ({children}) => {
                 // marginTop: '3.2rem',
                 overflow: 'hidden',
                 height: '100%',
-                padding: '0 3.2rem'
+                padding: '0 3.2rem',
+                display: 'flex',
+                flexDirection: 'column',
             }}>
                 {children}
             </StackItem>
