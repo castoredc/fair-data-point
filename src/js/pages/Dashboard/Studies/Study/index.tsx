@@ -133,14 +133,14 @@ export default class Study extends Component<StudyProps, StudyState> {
 
             <Body>
                 <Header title={title}>
-                    <Button
+                    {study.hasMetadata && <Button
                         buttonType="contentOnly"
                         icon="openNewWindow"
                         href={`/study/${study.slug}`}
                         target="_blank"
                     >
                         View
-                    </Button>
+                    </Button>}
                 </Header>
 
                 <Switch>
