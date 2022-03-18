@@ -57,6 +57,11 @@ class LocalizedText
         return $this->texts;
     }
 
+    public function hasTexts(): bool
+    {
+        return ! $this->texts->isEmpty();
+    }
+
     /**
      * @param Collection<LocalizedTextItem> $texts
      */

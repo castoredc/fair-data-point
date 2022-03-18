@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\Agent\Agent;
+use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Service\UriHelper;
 use EasyRdf\RdfNamespace;
@@ -68,8 +69,8 @@ abstract class FAIRDataController extends AbstractController
         }
 
         return [
-            'title' => $entity->getLatestMetadata()->getTitle()->getTextByLanguageString('en')->getText(),
-            'description' => $entity->getLatestMetadata()->getDescription()->getTextByLanguageString('en')->getText(),
+            'title' => $this->getLanguageText($entity->getLatestMetadata()->getTitle(), 'en'),
+            'description' => $this->getLanguageText($entity->getLatestMetadata()->getDescription(), 'en'),
         ];
     }
 
@@ -79,5 +80,16 @@ abstract class FAIRDataController extends AbstractController
         return [
             'title' => $agent->getName(),
         ];
+    }
+
+    private function getLanguageText(LocalizedText $localizedText, string $language): string
+    {
+        if (! $localizedText->hasTexts()) {
+            return '';
+        }
+
+        $item = $localizedText->getTextByLanguageString($language) ?? $localizedText->getTexts()->first();
+
+        return $item->getText();
     }
 }
