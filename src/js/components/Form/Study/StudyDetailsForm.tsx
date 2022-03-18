@@ -14,6 +14,7 @@ import OntologyConceptFormBlock from "components/Input/Formik/OntologyConceptFor
 import LocalizedTextInput from "components/Input/Formik/LocalizedTextInput";
 import ToastContent from "components/ToastContent";
 import Choice from "components/Input/Formik/Choice";
+import * as Yup from "yup";
 
 
 type StudyDetailsFormProps = {
@@ -106,8 +107,8 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
             conditions: values.conditions,
             intervention: values.intervention,
             estimatedEnrollment: values.estimatedEnrollment,
-            estimatedStudyStartDate: values.estimatedStudyStartDate ? format(values.estimatedStudyStartDate, 'dd-MM-yyyy') : null,
-            estimatedStudyCompletionDate: values.estimatedStudyCompletionDate ? format(values.estimatedStudyCompletionDate, 'dd-MM-yyyy') : null,
+            estimatedStudyStartDate: values.estimatedStudyStartDate ? format(values.estimatedStudyStartDate, 'yyyy-MM-dd') : null,
+            estimatedStudyCompletionDate: values.estimatedStudyCompletionDate ? format(values.estimatedStudyCompletionDate, 'yyyy-MM-dd') : null,
             summary: values.summary,
             recruitmentStatus: values.recruitmentStatus,
             methodType: values.methodType,
@@ -145,18 +146,16 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
 
     render() {
         const {isLoading, data, languages, validation} = this.state;
-        const required = "This field is required";
-        const invalid = "This value is invalid";
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading study information"/>;
         }
 
-
         return <>
             <Formik
                 initialValues={data}
                 onSubmit={this.handleSubmit}
+                validationSchema={StudyDetailsSchema}
             >
                 {({
                       values,
@@ -185,6 +184,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                                         component={Choice}
                                         options={studyTypes}
                                         name="studyType"
+                                        collapse
                                         serverError={validation}
                                     />
                                 </FormItem>
@@ -194,6 +194,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                                         component={Choice}
                                         options={methodTypes}
                                         name="methodType"
+                                        collapse
                                         serverError={validation}
                                     />
                                 </FormItem>
@@ -265,13 +266,6 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                                         serverError={validation}
                                     />
                                 </FormItem>
-                                {/*<FormItem*/}
-                                {/*    label="Primary Disease or Condition Being Studied in the Trial, or the Focus of the Study">*/}
-                                {/*    <Field*/}
-                                {/*        name="condition"*/}
-                                {/*    />*/}
-                                {/*</FormItem>*/}
-                                {/*Keywords*/}
                                 <FormItem label="Intervention">
                                     <Field
                                         component={Input}
@@ -286,6 +280,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                                     <Field
                                         component={Input}
                                         name="estimatedEnrollment"
+                                        inputMode="numeric"
                                         serverError={validation}
                                     />
                                 </FormItem>
@@ -349,3 +344,30 @@ const defaultData = {
         language: null
     }],
 };
+
+const StudyDetailsSchema = Yup.object().shape({
+    briefName: Yup.string().required('Please enter a brief study title'),
+    scientificName: Yup.string().nullable(),
+    studyType: Yup.string().required('Please select the study type'),
+    method: Yup.string().nullable(),
+    status: Yup.string().nullable(),
+    estimatedStudyStartDate: Yup.string().nullable(),
+    estimatedStudyCompletionDate: Yup.string().nullable(),
+    briefSummary: Yup.string().required('Please enter a brief summary'),
+    conditions: Yup.array().of(
+        Yup.object().shape({
+            code: Yup.string().required('This concept cannot be added'),
+            url: Yup.string().required('This concept cannot be added'),
+            displayName: Yup.string().required('This concept cannot be added'),
+            ontology: Yup.string().required('Please select an ontology'),
+        }),
+    ).nullable(),
+    keywords: Yup.array().of(
+        Yup.object().shape({
+            language: Yup.string().required('Please select a language'),
+            text: Yup.string().required('Please enter a keyword'),
+        }),
+    ).nullable(),
+    intervention: Yup.string().nullable(),
+    estimatedEnrollment: Yup.number().typeError('Please enter a valid number').nullable(),
+});
