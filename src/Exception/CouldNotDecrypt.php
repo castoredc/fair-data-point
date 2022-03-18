@@ -7,9 +7,7 @@ use Exception;
 
 class CouldNotDecrypt extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Failed to decrypt given ciphertext.'];

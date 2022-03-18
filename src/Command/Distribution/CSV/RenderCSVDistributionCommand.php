@@ -16,9 +16,7 @@ class RenderCSVDistributionCommand
 
     private Catalog $catalog;
 
-    /**
-     * @param Record[] $records
-     */
+    /** @param Record[] $records */
     public function __construct(array $records, CSVDistribution $distribution, Catalog $catalog)
     {
         $this->records = $records;
@@ -26,9 +24,7 @@ class RenderCSVDistributionCommand
         $this->catalog = $catalog;
     }
 
-    /**
-     * @return Record[]
-     */
+    /** @return Record[] */
     public function getRecords(): array
     {
         return $this->records;

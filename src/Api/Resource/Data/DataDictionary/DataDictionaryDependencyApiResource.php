@@ -18,9 +18,7 @@ class DataDictionaryDependencyApiResource implements ApiResource
         $this->dependency = $dependency;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $description = [];

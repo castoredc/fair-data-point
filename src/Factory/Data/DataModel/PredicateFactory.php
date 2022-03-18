@@ -9,9 +9,7 @@ use App\Entity\Iri;
 
 class PredicateFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromJson(DataModelVersion $version, array $data): Predicate
     {
         return new Predicate($version, new Iri($data['value']['value']));

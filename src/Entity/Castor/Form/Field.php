@@ -13,9 +13,7 @@ use RecursiveIteratorIterator;
 use function boolval;
 use function in_array;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class Field extends CastorEntity
 {
     public const EXPORTABLE = [
@@ -241,17 +239,13 @@ class Field extends CastorEntity
         $this->parentId = $parentId;
     }
 
-    /**
-     * @return MetadataPoint[]
-     */
+    /** @return MetadataPoint[] */
     public function getMetadata(): array
     {
         return $this->metadata;
     }
 
-    /**
-     * @param MetadataPoint[] $metadata
-     */
+    /** @param MetadataPoint[] $metadata */
     public function setMetadata(array $metadata): void
     {
         $this->metadata = $metadata;
@@ -304,9 +298,7 @@ class Field extends CastorEntity
         return $types;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): Field
     {
         return new Field(

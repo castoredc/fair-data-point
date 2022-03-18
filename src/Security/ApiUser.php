@@ -64,9 +64,7 @@ class ApiUser
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientId));
     }
 
-    /**
-     * @throws CouldNotTransformEncryptedStringToJson
-     */
+    /** @throws CouldNotTransformEncryptedStringToJson */
     public function setDecryptedClientId(EncryptionService $encryptionService, string $clientId): void
     {
         $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($clientId)));
@@ -88,9 +86,7 @@ class ApiUser
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientSecret));
     }
 
-    /**
-     * @throws CouldNotTransformEncryptedStringToJson
-     */
+    /** @throws CouldNotTransformEncryptedStringToJson */
     public function setDecryptedClientSecret(EncryptionService $encryptionService, string $clientSecret): void
     {
         $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($clientSecret)));

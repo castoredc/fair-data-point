@@ -10,17 +10,13 @@ class PermissionsApiResource implements ApiResource
     /** @var string[] */
     protected array $permissions;
 
-    /**
-     * @param string[] $permissions
-     */
+    /** @param string[] $permissions */
     public function __construct(array $permissions)
     {
         $this->permissions = $permissions;
     }
 
-    /**
-     * @return array<string, string[]>
-     */
+    /** @return array<string, string[]> */
     public function toArray(): array
     {
         return [

@@ -103,9 +103,7 @@ class User implements UserInterface
         return $this->id === $user->getId() && $this->updatedAt === $user->getUpdatedAt();
     }
 
-    /**
-     * @return array<string> The user roles
-     */
+    /** @return array<string> The user roles */
     public function getRoles(): array
     {
         $roles = ['ROLE_USER'];
@@ -245,33 +243,25 @@ class User implements UserInterface
         $this->person = $person;
     }
 
-    /**
-     * @return Collection<DataSpecificationPermission>
-     */
+    /** @return Collection<DataSpecificationPermission> */
     public function getDataSpecifications(): Collection
     {
         return $this->dataSpecifications;
     }
 
-    /**
-     * @return Collection<CatalogPermission>
-     */
+    /** @return Collection<CatalogPermission> */
     public function getCatalogs(): Collection
     {
         return $this->catalogs;
     }
 
-    /**
-     * @return Collection<DatasetPermission>
-     */
+    /** @return Collection<DatasetPermission> */
     public function getDatasets(): Collection
     {
         return $this->datasets;
     }
 
-    /**
-     * @return Collection<DistributionPermission>
-     */
+    /** @return Collection<DistributionPermission> */
     public function getDistributions(): Collection
     {
         return $this->distributions;

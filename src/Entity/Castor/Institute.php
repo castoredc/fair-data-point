@@ -105,9 +105,7 @@ class Institute
         return $this->country;
     }
 
-    /**
-     * @return Collection<Record>
-     */
+    /** @return Collection<Record> */
     public function getRecords(): Collection
     {
         return $this->records;
@@ -128,9 +126,7 @@ class Institute
         $this->country = $country;
     }
 
-    /**
-     * @param Collection<Record> $records
-     */
+    /** @param Collection<Record> $records */
     public function setRecords(Collection $records): void
     {
         $this->records = $records;

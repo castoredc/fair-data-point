@@ -21,9 +21,7 @@ class NodesApiResource implements ApiResource
         $this->type = $type;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [

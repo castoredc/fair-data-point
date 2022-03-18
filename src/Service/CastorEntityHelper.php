@@ -25,9 +25,7 @@ class CastorEntityHelper
     private ApiClient $apiClient;
     private EncryptionService $encryptionService;
 
-    /**
-     * @throws UserNotACastorUser
-     */
+    /** @throws UserNotACastorUser */
     public function __construct(EntityManagerInterface $em, ApiClient $apiClient, EncryptionService $encryptionService)
     {
         $this->em = $em;
@@ -66,9 +64,7 @@ class CastorEntityHelper
         return new CastorEntityCollection($repository->findByStudyAndParent($study, $parent));
     }
 
-    /**
-     * @throws InvalidEntityType
-     */
+    /** @throws InvalidEntityType */
     public function getEntityFromCastorByTypeAndId(CastorStudy $study, CastorEntityType $type, string $id, ?string $parentId = null): CastorEntity
     {
         if ($type->isFieldOption()) {
@@ -89,9 +85,7 @@ class CastorEntityHelper
         return $entity;
     }
 
-    /**
-     * @throws InvalidEntityType
-     */
+    /** @throws InvalidEntityType */
     public function getEntityByTypeAndId(CastorStudy $study, CastorEntityType $type, string $id, ?string $parentId = null): CastorEntity
     {
         $entity = null;

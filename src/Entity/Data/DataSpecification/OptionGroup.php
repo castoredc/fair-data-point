@@ -78,17 +78,13 @@ class OptionGroup
         $this->description = $description;
     }
 
-    /**
-     * @return Collection<OptionGroupOption>
-     */
+    /** @return Collection<OptionGroupOption> */
     public function getOptions(): Collection
     {
         return $this->options;
     }
 
-    /**
-     * @param Collection<OptionGroupOption> $options
-     */
+    /** @param Collection<OptionGroupOption> $options */
     public function setOptions(Collection $options): void
     {
         $this->options = $options;
@@ -105,9 +101,7 @@ class OptionGroup
         $this->options->removeElement($option);
     }
 
-    /**
-     * @return Collection<Element>
-     */
+    /** @return Collection<Element> */
     public function getElements(): Collection
     {
         return $this->elements;

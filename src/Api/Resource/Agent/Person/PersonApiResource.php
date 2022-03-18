@@ -15,9 +15,7 @@ class PersonApiResource extends AgentApiResource
         $this->agent = $person;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $agent = $this->agent;

@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
 {
-    /**
-     * @Route("/login", name="login")
-     */
+    /** @Route("/login", name="login") */
     public function react(): Response
     {
         return $this->render(
@@ -24,9 +22,7 @@ class LoginController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/logout", name="logout")
-     */
+    /** @Route("/logout", name="logout") */
     public function logout(): void
     {
     }
@@ -47,9 +43,7 @@ class LoginController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/redirect-login", name="redirect_login")
-     */
+    /** @Route("/redirect-login", name="redirect_login") */
     public function loginRedirect(Request $request): Response
     {
         return $this->redirectToRoute('fdp');

@@ -12,9 +12,7 @@ class GroupedApiRequestParseError extends Exception
     /** @var ConstraintViolationListInterface[] */
     private array $violations = [];
 
-    /**
-     * @param array<ConstraintViolationListInterface> $violations
-     */
+    /** @param array<ConstraintViolationListInterface> $violations */
     public function __construct(array $violations)
     {
         parent::__construct();
@@ -22,9 +20,7 @@ class GroupedApiRequestParseError extends Exception
         $this->violations = $violations ?? [];
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $fields = [];

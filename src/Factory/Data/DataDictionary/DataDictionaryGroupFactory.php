@@ -17,9 +17,7 @@ class DataDictionaryGroupFactory
         $this->dependencyGroupFactory = $dependencyGroupFactory;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromJson(DataDictionaryVersion $version, ArrayCollection $nodes, array $data): DataDictionaryGroup
     {
         $newGroup = new DataDictionaryGroup(

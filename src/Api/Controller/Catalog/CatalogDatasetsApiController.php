@@ -29,9 +29,7 @@ use function assert;
  */
 class CatalogDatasetsApiController extends ApiController
 {
-    /**
-     * @Route("/add", methods={"POST"}, name="api_add_dataset_to_catalog")
-     */
+    /** @Route("/add", methods={"POST"}, name="api_add_dataset_to_catalog") */
     public function addDatasetToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('add', $catalog);

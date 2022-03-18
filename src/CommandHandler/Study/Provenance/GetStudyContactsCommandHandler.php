@@ -9,9 +9,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class GetStudyContactsCommandHandler implements MessageHandlerInterface
 {
-    /**
-     * @return Person[]
-     */
+    /** @return Person[] */
     public function __invoke(GetStudyContactsCommand $command): array
     {
         $metadata = $command->getStudy()->getLatestMetadata();

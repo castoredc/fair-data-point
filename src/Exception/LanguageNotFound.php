@@ -7,9 +7,7 @@ use Exception;
 
 class LanguageNotFound extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Language not found.'];

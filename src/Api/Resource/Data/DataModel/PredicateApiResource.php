@@ -15,9 +15,7 @@ class PredicateApiResource implements ApiResource
         $this->predicate = $predicate;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

@@ -17,9 +17,7 @@ class DataDictionaryGroupsApiResource implements ApiResource
         $this->dataDictionary = $dataDictionary;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

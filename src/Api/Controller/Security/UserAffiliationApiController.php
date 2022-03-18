@@ -17,14 +17,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/user")
- */
+/** @Route("/api/user") */
 class UserAffiliationApiController extends ApiController
 {
-    /**
-     * @Route("/affiliations", methods={"POST"}, name="api_user_affiliations_update")
-     */
+    /** @Route("/affiliations", methods={"POST"}, name="api_user_affiliations_update") */
     public function updateAffiliations(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

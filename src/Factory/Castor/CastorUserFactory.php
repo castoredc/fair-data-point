@@ -7,9 +7,7 @@ use App\Security\Providers\Castor\CastorUser;
 
 class CastorUserFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromCastorApiData(array $data): CastorUser
     {
         return new CastorUser(

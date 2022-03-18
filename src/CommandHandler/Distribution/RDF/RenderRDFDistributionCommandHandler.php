@@ -56,9 +56,7 @@ class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
         $this->dataTransformationService = $dataTransformationService;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function __invoke(RenderRDFDistributionCommand $command): Graph
     {
         $contents = $command->getDistribution();

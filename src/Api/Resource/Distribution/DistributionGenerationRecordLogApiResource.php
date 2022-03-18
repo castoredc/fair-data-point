@@ -16,9 +16,7 @@ class DistributionGenerationRecordLogApiResource implements ApiResource
         $this->recordLog = $recordLog;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

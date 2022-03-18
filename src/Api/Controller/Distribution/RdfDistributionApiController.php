@@ -42,9 +42,7 @@ use function assert;
  */
 class RdfDistributionApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_distribution_contents_rdf")
-     */
+    /** @Route("", methods={"GET"}, name="api_distribution_contents_rdf") */
     public function distributionRdfContents(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);
@@ -72,9 +70,7 @@ class RdfDistributionApiController extends ApiController
         return $this->getPaginatedResponse(DataModelMappingApiResource::class, $results);
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add") */
     public function addMapping(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $distribution);

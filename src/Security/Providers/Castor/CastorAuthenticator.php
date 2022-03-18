@@ -23,26 +23,20 @@ use function strtr;
 
 class CastorAuthenticator extends Authenticator
 {
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function supports(Request $request)
     {
         // continue ONLY if the current ROUTE matches the check ROUTE
         return $request->attributes->get('_route') === 'connect_castor_check';
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getCredentials(Request $request)
     {
         return $this->fetchAccessToken($this->getCastorClient());
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $castorUser = $this->getCastorClient()->fetchUserFromToken($credentials);
@@ -114,9 +108,7 @@ class CastorAuthenticator extends Authenticator
         return new RedirectResponse($url);
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $message = strtr($exception->getMessageKey(), $exception->getMessageData());
@@ -124,9 +116,7 @@ class CastorAuthenticator extends Authenticator
         return new Response($message, Response::HTTP_FORBIDDEN);
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function start(Request $request, ?AuthenticationException $authException = null)
     {
         $url = '/login';

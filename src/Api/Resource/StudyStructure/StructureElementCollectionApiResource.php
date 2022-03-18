@@ -15,9 +15,7 @@ class StructureElementCollectionApiResource implements ApiResource
         $this->collection = $collection;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         if ($this->collection->getElements() === null) {

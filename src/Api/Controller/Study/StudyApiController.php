@@ -19,9 +19,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/study")
- */
+/** @Route("/api/study") */
 class StudyApiController extends ApiController
 {
     /**

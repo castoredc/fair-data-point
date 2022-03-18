@@ -59,9 +59,7 @@ class CreateCatalogMetadataCommand extends CreateMetadataCommand
         return $this->logo;
     }
 
-    /**
-     * @return OntologyConcept[]
-     */
+    /** @return OntologyConcept[] */
     public function getThemeTaxonomy(): array
     {
         return $this->themeTaxonomy;

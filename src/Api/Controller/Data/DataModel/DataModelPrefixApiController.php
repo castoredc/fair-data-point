@@ -27,9 +27,7 @@ use function assert;
  */
 class DataModelPrefixApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_model_prefixes")
-     */
+    /** @Route("", methods={"GET"}, name="api_model_prefixes") */
     public function getPrefixes(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -37,9 +35,7 @@ class DataModelPrefixApiController extends ApiController
         return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray());
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_model_prefix_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_model_prefix_add") */
     public function addPrefix(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());

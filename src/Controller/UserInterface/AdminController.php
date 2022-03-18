@@ -9,14 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin")
- */
+/** @Route("/admin") */
 class AdminController extends AbstractController
 {
-    /**
-     * @Route("", name="admin")
-     */
+    /** @Route("", name="admin") */
     public function admin(): Response
     {
         return $this->redirectToRoute('admin_catalogs');

@@ -27,9 +27,7 @@ use function assert;
  */
 class TripleApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_model_module")
-     */
+    /** @Route("", methods={"GET"}, name="api_model_module") */
     public function getTriples(DataModelGroup $module): Response
     {
         $this->denyAccessUnlessGranted('view', $module->getVersion()->getDataSpecification());
@@ -37,9 +35,7 @@ class TripleApiController extends ApiController
         return new JsonResponse((new TriplesApiResource($module))->toArray());
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_triple_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_triple_add") */
     public function addTriple(DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());

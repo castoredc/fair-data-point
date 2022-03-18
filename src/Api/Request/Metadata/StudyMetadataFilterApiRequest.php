@@ -90,9 +90,7 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
         return $this->page !== 0 ? $this->page : 1;
     }
 
-    /**
-     * @return string[]|null
-     */
+    /** @return string[]|null */
     public function getHideCatalogs(): ?array
     {
         return $this->hideCatalogs;

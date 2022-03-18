@@ -54,9 +54,7 @@ abstract class CreateMetadataCommandHandler implements MessageHandlerInterface
         return $localizedText;
     }
 
-    /**
-     * @param Agent[] $publishers
-     */
+    /** @param Agent[] $publishers */
     protected function parsePublishers(array $publishers): ArrayCollection
     {
         $return = new ArrayCollection();

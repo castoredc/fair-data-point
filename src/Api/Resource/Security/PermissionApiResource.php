@@ -15,9 +15,7 @@ class PermissionApiResource implements ApiResource
         $this->permission = $permission;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

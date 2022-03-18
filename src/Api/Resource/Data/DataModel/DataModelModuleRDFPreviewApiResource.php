@@ -23,9 +23,7 @@ class DataModelModuleRDFPreviewApiResource implements ApiResource
         $this->rdfPreview = $rdfPreview;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $visualizationEdges = [];

@@ -11,17 +11,13 @@ class ParticipatingCentersApiResource implements ApiResource
     /** @var ParticipatingCenter[] */
     private array $participatingCenters;
 
-    /**
-     * @param ParticipatingCenter[] $participatingCenters
-     */
+    /** @param ParticipatingCenter[] $participatingCenters */
     public function __construct(array $participatingCenters)
     {
         $this->participatingCenters = $participatingCenters;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

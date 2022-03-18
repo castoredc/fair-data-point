@@ -13,9 +13,7 @@ class SurveyStep extends Step
         parent::__construct($id, $study, StructureType::survey(), $description, $name, $position);
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): SurveyStep
     {
         return new SurveyStep(

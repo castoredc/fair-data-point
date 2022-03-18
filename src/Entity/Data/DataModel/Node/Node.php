@@ -54,9 +54,7 @@ abstract class Node extends Element
         return $version;
     }
 
-    /**
-     * @return Triple[]
-     */
+    /** @return Triple[] */
     public function getTriples(): array
     {
         return array_unique(array_merge($this->subjectTriples->toArray(), $this->objectTriples->toArray()), SORT_REGULAR);

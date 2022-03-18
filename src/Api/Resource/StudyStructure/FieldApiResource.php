@@ -15,9 +15,7 @@ class FieldApiResource implements ApiResource
         $this->field = $field;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

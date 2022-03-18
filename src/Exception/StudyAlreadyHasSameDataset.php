@@ -7,9 +7,7 @@ use Exception;
 
 class StudyAlreadyHasSameDataset extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'This study already has this dataset assigned.'];

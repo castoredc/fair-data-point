@@ -7,9 +7,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use function uniqid;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class Department extends Agent
 {
     /**
@@ -55,9 +53,7 @@ class Department extends Agent
         $this->additionalInformation = $additionalInformation;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, Organization $organization): self
     {
         $department = new self(

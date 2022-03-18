@@ -1,7 +1,5 @@
 <?php
-/**
- * @phpcs:disable SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedConstant
- */
+/** @phpcs:disable SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedConstant */
 declare(strict_types=1);
 
 namespace App\Entity\Enum;

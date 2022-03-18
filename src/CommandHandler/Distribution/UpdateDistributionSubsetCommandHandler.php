@@ -23,9 +23,7 @@ class UpdateDistributionSubsetCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @throws NoAccessPermission
-     */
+    /** @throws NoAccessPermission */
     public function __invoke(UpdateDistributionSubsetCommand $command): void
     {
         $distribution = $command->getDistribution();

@@ -16,8 +16,6 @@ interface PermissionsEnabledEntity
 
     public function getPermissionsForUser(User $user): ?Permission;
 
-    /**
-     * @return Collection<Permission>
-     */
+    /** @return Collection<Permission> */
     public function getPermissions(): Collection;
 }

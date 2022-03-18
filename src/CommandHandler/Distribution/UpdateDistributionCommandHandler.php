@@ -31,9 +31,7 @@ abstract class UpdateDistributionCommandHandler implements MessageHandlerInterfa
         $this->encryptionService = $encryptionService;
     }
 
-    /**
-     * @throws LanguageNotFound
-     */
+    /** @throws LanguageNotFound */
     protected function handleDistributionUpdate(UpdateDistributionCommand $command): Distribution
     {
         $distribution = $command->getDistribution();

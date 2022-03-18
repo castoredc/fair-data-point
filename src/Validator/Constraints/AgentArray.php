@@ -5,9 +5,7 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+/** @Annotation */
 class AgentArray extends Constraint
 {
     public string $message = 'This list does not contain valid agents.';

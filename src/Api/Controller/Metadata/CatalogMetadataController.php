@@ -23,9 +23,7 @@ use function assert;
  */
 class CatalogMetadataController extends ApiController
 {
-    /**
-     * @Route("", methods={"POST"}, name="api_metadata_catalog_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_metadata_catalog_add") */
     public function addCatalogMetadata(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $catalog);

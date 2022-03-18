@@ -15,9 +15,7 @@ class GridInstituteApiResource implements ApiResource
         $this->institute = $institute;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $coordinates = null;

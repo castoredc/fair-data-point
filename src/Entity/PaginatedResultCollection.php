@@ -20,9 +20,7 @@ class PaginatedResultCollection implements Countable, IteratorAggregate
 
     private int $totalResults;
 
-    /**
-     * @param mixed[] $results
-     */
+    /** @param mixed[] $results */
     public function __construct(array $results, int $currentPage, int $perPage, int $totalResults)
     {
         $this->results = $results;
@@ -31,9 +29,7 @@ class PaginatedResultCollection implements Countable, IteratorAggregate
         $this->totalResults = $totalResults;
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function getResults(): array
     {
         return $this->results;

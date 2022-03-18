@@ -22,17 +22,13 @@ abstract class StructureElementCollection
         return $this->elements[$id];
     }
 
-    /**
-     * @return StructureElement[]|null
-     */
+    /** @return StructureElement[]|null */
     public function getElements(): ?array
     {
         return $this->elements;
     }
 
-    /**
-     * @return Field[]
-     */
+    /** @return Field[] */
     public function getFields(): array
     {
         $fields = [];

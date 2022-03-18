@@ -1,7 +1,5 @@
 <?php
-/**
- * @phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
- */
+/** @phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps */
 declare(strict_types=1);
 
 namespace App\CommandHandler\Tools;

@@ -16,9 +16,7 @@ class DataModelVersionApiResource implements ApiResource
         $this->dataModelVersion = $dataModelVersion;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

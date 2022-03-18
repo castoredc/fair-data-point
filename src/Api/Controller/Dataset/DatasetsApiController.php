@@ -18,14 +18,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dataset")
- */
+/** @Route("/api/dataset") */
 class DatasetsApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_datasets")
-     */
+    /** @Route("", methods={"GET"}, name="api_datasets") */
     public function datasets(Request $request, MessageBusInterface $bus): Response
     {
         try {

@@ -42,9 +42,7 @@ class DependencyGroup extends Dependency
         $this->combinator = $combinator;
     }
 
-    /**
-     * @return Collection<Dependency>
-     */
+    /** @return Collection<Dependency> */
     public function getRules(): Collection
     {
         return $this->rules;
@@ -55,9 +53,7 @@ class DependencyGroup extends Dependency
         $this->rules->add($rule);
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         $group = new self(DependencyCombinatorType::fromString($data['combinator']));

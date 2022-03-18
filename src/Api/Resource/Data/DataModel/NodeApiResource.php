@@ -19,9 +19,7 @@ class NodeApiResource implements ApiResource
         $this->node = $node;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $value = $this->node->getValue() ?? null;

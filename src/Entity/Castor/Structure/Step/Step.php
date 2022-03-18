@@ -10,9 +10,7 @@ use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 use function ksort;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 abstract class Step extends CastorEntity
 {
     /**
@@ -72,9 +70,7 @@ abstract class Step extends CastorEntity
         $this->position = $position;
     }
 
-    /**
-     * @return Field[]
-     */
+    /** @return Field[] */
     public function getFields(): array
     {
         $return = [];
@@ -88,9 +84,7 @@ abstract class Step extends CastorEntity
         return $return;
     }
 
-    /**
-     * @param Field[] $fields
-     */
+    /** @param Field[] $fields */
     public function setFields(array $fields): void
     {
         $this->fields = $fields;

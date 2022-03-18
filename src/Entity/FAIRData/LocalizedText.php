@@ -26,9 +26,7 @@ class LocalizedText
      */
     private Collection $texts;
 
-    /**
-     * @param Collection<mixed, LocalizedTextItem> $texts
-     */
+    /** @param Collection<mixed, LocalizedTextItem> $texts */
     public function __construct(Collection $texts)
     {
         $this->texts = $texts;
@@ -49,9 +47,7 @@ class LocalizedText
         $this->id = $id;
     }
 
-    /**
-     * @return Collection<LocalizedTextItem>
-     */
+    /** @return Collection<LocalizedTextItem> */
     public function getTexts(): Collection
     {
         return $this->texts;
@@ -62,17 +58,13 @@ class LocalizedText
         return ! $this->texts->isEmpty();
     }
 
-    /**
-     * @param Collection<LocalizedTextItem> $texts
-     */
+    /** @param Collection<LocalizedTextItem> $texts */
     public function setTexts(Collection $texts): void
     {
         $this->texts = $texts;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $array = [];

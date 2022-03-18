@@ -29,9 +29,7 @@ class EncryptedString implements JsonSerializable
         return $this->nonce;
     }
 
-    /**
-     * @return mixed[]
-     */
+    /** @return mixed[] */
     public function jsonSerialize(): array
     {
         return [

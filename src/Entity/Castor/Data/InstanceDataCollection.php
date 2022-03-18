@@ -49,9 +49,7 @@ abstract class InstanceDataCollection extends RecordData
         return $this->data->get($mostRecentInstance->getId())->getFieldResultByVariableName($variableName);
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study, Record $record, ArrayCollection $instances): ?InstanceDataCollection
     {
         return null;

@@ -54,17 +54,13 @@ class ElementMapping extends Mapping
         $this->element = $element;
     }
 
-    /**
-     * @return Collection<CastorEntity>
-     */
+    /** @return Collection<CastorEntity> */
     public function getEntities(): Collection
     {
         return $this->entities;
     }
 
-    /**
-     * @param Collection<CastorEntity> $elements
-     */
+    /** @param Collection<CastorEntity> $elements */
     public function setEntities(Collection $elements): void
     {
         $this->entities = $elements;

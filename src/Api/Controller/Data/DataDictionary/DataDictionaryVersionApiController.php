@@ -31,9 +31,7 @@ use const JSON_PRETTY_PRINT;
  */
 class DataDictionaryVersionApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_dictionary_version")
-     */
+    /** @Route("", methods={"GET"}, name="api_dictionary_version") */
     public function dataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataDictionaryVersion->getDataDictionary());
@@ -41,9 +39,7 @@ class DataDictionaryVersionApiController extends ApiController
         return new JsonResponse((new DataDictionaryVersionApiResource($dataDictionaryVersion))->toArray());
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_dictionary_version_create")
-     */
+    /** @Route("", methods={"POST"}, name="api_dictionary_version_create") */
     public function createDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataDictionary);
@@ -70,9 +66,7 @@ class DataDictionaryVersionApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/export", methods={"GET"}, name="api_dictionary_version_export")
-     */
+    /** @Route("/export", methods={"GET"}, name="api_dictionary_version_export") */
     public function exportDataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataDictionaryVersion->getDataDictionary());

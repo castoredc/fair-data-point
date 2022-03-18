@@ -40,9 +40,7 @@ abstract class ApiController extends AbstractController
         $this->em = $em;
     }
 
-    /**
-     * @throws ApiRequestParseError
-     */
+    /** @throws ApiRequestParseError */
     protected function parseRequest(string $requestObject, Request $request): ApiRequest
     {
         $request = new $requestObject($request);
@@ -84,9 +82,7 @@ abstract class ApiController extends AbstractController
         return $return;
     }
 
-    /**
-     * @param string[]|null $attributes
-     */
+    /** @param string[]|null $attributes */
     protected function getResponse(ApiResource $resource, ?object $object, ?array $attributes): JsonResponse
     {
         if ($object === null || $attributes === null) {
@@ -96,9 +92,7 @@ abstract class ApiController extends AbstractController
         return new JsonResponse(array_merge($resource->toArray(), $this->getPermissionArray($object, $attributes)));
     }
 
-    /**
-     * @param string[]|null $attributes
-     */
+    /** @param string[]|null $attributes */
     protected function getPaginatedResponse(
         string $apiResourceType,
         PaginatedResultCollection $collection,

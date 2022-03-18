@@ -61,9 +61,7 @@ class FieldDependency
         $this->description = $description;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): FieldDependency
     {
         return new FieldDependency(

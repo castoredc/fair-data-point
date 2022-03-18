@@ -23,9 +23,7 @@ class SurveyData extends InstanceDataCollection
         $this->surveyInstances = new ArrayCollection();
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function addSurveyPackageData(array $data, CastorStudy $study, SurveyPackageInstance $surveyPackageInstance): void
     {
         foreach ($data as $rawInstanceResults) {
@@ -39,9 +37,7 @@ class SurveyData extends InstanceDataCollection
         }
     }
 
-    /**
-     * @param array<mixed> $rawInstanceResults
-     */
+    /** @param array<mixed> $rawInstanceResults */
     private function getSurveyInstance(array $rawInstanceResults, SurveyPackageInstance $surveyPackageInstance): SurveyInstance
     {
         if ($this->surveyInstances->contains($rawInstanceResults['survey_instance_id'])) {

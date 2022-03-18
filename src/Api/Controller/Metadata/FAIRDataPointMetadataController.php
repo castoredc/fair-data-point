@@ -15,14 +15,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/fdp")
- */
+/** @Route("/api/metadata/fdp") */
 class FAIRDataPointMetadataController extends ApiController
 {
-    /**
-     * @Route("", methods={"POST"}, name="api_metadata_fdp_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_metadata_fdp_add") */
     public function addCatalogMetadata(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

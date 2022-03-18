@@ -13,25 +13,19 @@ class StudyMetadataFilterApiResource implements ApiResource
     /** @var StudyMetadata[] */
     private array $metadata;
 
-    /**
-     * @param StudyMetadata[] $metadata
-     */
+    /** @param StudyMetadata[] $metadata */
     public function __construct(array $metadata)
     {
         $this->metadata = $metadata;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return $this->generateFilters();
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     private function generateFilters(): array
     {
         $filters = [

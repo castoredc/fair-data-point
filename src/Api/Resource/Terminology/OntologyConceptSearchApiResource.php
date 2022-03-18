@@ -18,9 +18,7 @@ class OntologyConceptSearchApiResource implements ApiResource
         $this->concepts = $concepts;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

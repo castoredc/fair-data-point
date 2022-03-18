@@ -7,9 +7,7 @@ use Exception;
 
 class NodeInUseByTriples extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'This node is still in use by triples.'];

@@ -40,9 +40,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return '/oauth/authorize';
     }
 
-    /**
-     * @param array<mixed> $options
-     */
+    /** @param array<mixed> $options */
     public function getAuthorizationUrl(array $options = []): string
     {
         if (! isset($options['server'])) {
@@ -71,9 +69,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return parent::getAccessToken($grant, $options);
     }
 
-    /**
-     * @param array<mixed> $params
-     */
+    /** @param array<mixed> $params */
     public function getBaseAccessTokenUrl(array $params): string
     {
         return $this->server . '/oauth/token';
@@ -84,17 +80,13 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return $this->server . '/api/user';
     }
 
-    /**
-     * @return array<string>
-     */
+    /** @return array<string> */
     protected function getDefaultScopes(): array
     {
         return [];
     }
 
-    /**
-     * @param array<mixed>|string $data
-     */
+    /** @param array<mixed>|string $data */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.

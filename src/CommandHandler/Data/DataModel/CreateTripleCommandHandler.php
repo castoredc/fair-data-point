@@ -29,9 +29,7 @@ class CreateTripleCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @throws InvalidNodeType
-     */
+    /** @throws InvalidNodeType */
     public function __invoke(CreateTripleCommand $command): void
     {
         $module = $command->getModule();

@@ -10,9 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class RecordFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromCastorApiData(CastorStudy $study, ArrayCollection $institutes, array $data): Record
     {
         return new Record(

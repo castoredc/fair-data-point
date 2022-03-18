@@ -46,9 +46,7 @@ use function assert;
  */
 class AgentApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_agent_details")
-     */
+    /** @Route("", methods={"GET"}, name="api_agent_details") */
     public function agentDetails(Agent $agent, MessageBusInterface $bus): Response
     {
         try {
@@ -81,9 +79,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/study", methods={"GET"}, name="api_agent_studies")
-     */
+    /** @Route("/study", methods={"GET"}, name="api_agent_studies") */
     public function agentStudies(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -127,9 +123,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/study/filters", methods={"GET"}, name="api_agent_study_filters")
-     */
+    /** @Route("/study/filters", methods={"GET"}, name="api_agent_study_filters") */
     public function agentStudiesFilters(Agent $agent, MessageBusInterface $bus): Response
     {
         try {
@@ -151,9 +145,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/dataset", methods={"GET"}, name="api_agent_datasets")
-     */
+    /** @Route("/dataset", methods={"GET"}, name="api_agent_datasets") */
     public function agentDatasets(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -192,9 +184,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/catalog", methods={"GET"}, name="api_agent_catalogs")
-     */
+    /** @Route("/catalog", methods={"GET"}, name="api_agent_catalogs") */
     public function agentCatalogs(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -232,9 +222,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/distribution", methods={"GET"}, name="api_agent_distribution")
-     */
+    /** @Route("/distribution", methods={"GET"}, name="api_agent_distribution") */
     public function agentDistributions(Agent $agent, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         try {
@@ -274,9 +262,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/map", methods={"GET"}, name="api_agent_map")
-     */
+    /** @Route("/map", methods={"GET"}, name="api_agent_map") */
     public function agentMap(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {

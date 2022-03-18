@@ -78,9 +78,7 @@ abstract class GraphResource
         return $graph;
     }
 
-    /**
-     * @param Agent[] $agents
-     */
+    /** @param Agent[] $agents */
     protected function addAgentsToGraph(string $predicate, array $agents, Graph $graph): Graph
     {
         foreach ($agents as $agent) {

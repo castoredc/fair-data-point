@@ -11,17 +11,13 @@ class CastorEntitiesApiResource implements ApiResource
     /** @var CastorEntity[] */
     private array $entities;
 
-    /**
-     * @param CastorEntity[] $entities
-     */
+    /** @param CastorEntity[] $entities */
     public function __construct(array $entities)
     {
         $this->entities = $entities;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

@@ -33,9 +33,7 @@ use function assert;
  */
 class CastorStudyStructureApiController extends ApiController
 {
-    /**
-     * @Route("/structure", name="api_study_structure")
-     */
+    /** @Route("/structure", name="api_study_structure") */
     public function studyStructure(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
@@ -79,9 +77,7 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @Route("/structure/step/{step}/fields", name="api_study_structure_step")
-     */
+    /** @Route("/structure/step/{step}/fields", name="api_study_structure_step") */
     public function studyStructureStep(CastorStudy $study, string $step, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
@@ -126,9 +122,7 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @Route("/optiongroups", name="api_study_optiongroups")
-     */
+    /** @Route("/optiongroups", name="api_study_optiongroups") */
     public function optionGroups(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
@@ -175,9 +169,7 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @Route("/institutes", name="api_study_institutes")
-     */
+    /** @Route("/institutes", name="api_study_institutes") */
     public function institutes(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);

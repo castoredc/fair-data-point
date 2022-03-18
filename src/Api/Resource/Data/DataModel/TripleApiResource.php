@@ -15,9 +15,7 @@ class TripleApiResource implements ApiResource
         $this->triple = $triple;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

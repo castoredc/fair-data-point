@@ -14,9 +14,7 @@ use function assert;
 
 class UpdateCSVDistributionCommandHandler extends UpdateDistributionCommandHandler
 {
-    /**
-     * @throws LanguageNotFound
-     */
+    /** @throws LanguageNotFound */
     public function __invoke(UpdateCSVDistributionCommand $command): void
     {
         $distribution = $this->handleDistributionUpdate($command);

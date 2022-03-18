@@ -12,9 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class DistributionGenerationRecordLogRepository extends EntityRepository
 {
-    /**
-     * @return mixed
-     */
+    /** @return mixed */
     public function findLogs(
         DistributionGenerationLog $log,
         ?int $perPage,

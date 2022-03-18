@@ -15,9 +15,7 @@ class AnnotationApiResource implements ApiResource
         $this->annotation = $annotation;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

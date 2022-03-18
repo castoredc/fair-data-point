@@ -7,9 +7,7 @@ use Exception;
 
 class OntologyConceptNotFound extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Ontology concept not found.'];

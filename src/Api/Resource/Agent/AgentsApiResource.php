@@ -18,17 +18,13 @@ class AgentsApiResource implements ApiResource
     /** @var Agent[] */
     private array $agents;
 
-    /**
-     * @param Agent[] $agents
-     */
+    /** @param Agent[] $agents */
     public function __construct(array $agents)
     {
         $this->agents = $agents;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $organizations = [];

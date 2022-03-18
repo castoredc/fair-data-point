@@ -201,17 +201,13 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
         $this->apiUser = $apiUser;
     }
 
-    /**
-     * @return Collection<Agent>
-     */
+    /** @return Collection<Agent> */
     public function getContactPoints(): Collection
     {
         return $this->contactPoints;
     }
 
-    /**
-     * @param Collection<Agent> $contactPoints
-     */
+    /** @param Collection<Agent> $contactPoints */
     public function setContactPoints(Collection $contactPoints): void
     {
         $this->contactPoints = $contactPoints;
@@ -232,9 +228,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
         return true;
     }
 
-    /**
-     * @return Collection<DistributionPermission>
-     */
+    /** @return Collection<DistributionPermission> */
     public function getPermissions(): Collection
     {
         return $this->permissions;
