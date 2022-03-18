@@ -76,7 +76,7 @@ export default class Study extends Component<StudyProps, StudyState> {
             return <LoadingOverlay accessibleLabel="Loading study"/>;
         }
 
-        if(!isGranted('edit', study.permissions)) {
+        if (!isGranted('edit', study.permissions)) {
             return <NoPermission text="You do not have permission to edit this study"/>;
         }
 
@@ -102,13 +102,15 @@ export default class Study extends Component<StudyProps, StudyState> {
                         to: '/dashboard/studies/' + study.id + '/team',
                         exact: true,
                         title: 'Study team',
-                        customIcon: 'contacts'
+                        customIcon: 'contacts',
+                        disabled: ! study.hasMetadata
                     },
                     {
                         to: '/dashboard/studies/' + study.id + '/centers',
                         exact: true,
                         title: 'Participating centers',
-                        customIcon: 'center'
+                        customIcon: 'center',
+                        disabled: ! study.hasMetadata
                     },
                     {
                         type: 'separator'
@@ -150,29 +152,36 @@ export default class Study extends Component<StudyProps, StudyState> {
                                    studyId={study.id}
                                />
                            </div>
-                           }/>
-                    <Route path="/dashboard/studies/:study/team" exact
-                           render={(props) => <div>
-                               <ContactsForm studyId={study.id}/>
-                           </div>
-                           }/>
-                    <Route path="/dashboard/studies/:study/centers" exact
-                           render={(props) => <div>
-                               <OrganizationsForm studyId={study.id}/>
-                           </div>
-                           }/>
+                           }
+                    />
+                    {study.hasMetadata && <>
+                        <Route path="/dashboard/studies/:study/team" exact
+                               render={(props) => <div>
+                                   <ContactsForm studyId={study.id}/>
+                               </div>
+                               }
+                        />
+                        <Route path="/dashboard/studies/:study/centers" exact
+                               render={(props) => <div>
+                                   <OrganizationsForm studyId={study.id}/>
+                               </div>
+                               }
+                        />
+                    </>}
                     <Route path="/dashboard/studies/:study/annotations" exact
                            render={(props) => isGranted('edit_source_system', study.permissions) ? <div>
                                <Annotations studyId={study.id}/>
                            </div> : <div>
                                <Banner type="error" title="You do not have permission to access this study in Castor"/>
                            </div>
-                           }/>
+                           }
+                    />
                     <Route path="/dashboard/studies/:study/datasets" exact
                            render={(props) => <div>
                                <Datasets studyId={study.id} history={history}/>
                            </div>
-                           }/>
+                           }
+                    />
                     <Route component={NotFound}/>
                 </Switch>
             </Body>
