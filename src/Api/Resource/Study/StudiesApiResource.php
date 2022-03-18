@@ -13,18 +13,14 @@ class StudiesApiResource implements ApiResource
 
     private bool $isAdmin;
 
-    /**
-     * @param Study[] $studies
-     */
+    /** @param Study[] $studies */
     public function __construct(array $studies, bool $isAdmin)
     {
         $this->studies = $studies;
         $this->isAdmin = $isAdmin;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

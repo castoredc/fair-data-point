@@ -19,9 +19,7 @@ class StudyMapApiResource implements ApiResource
         $this->organization = $organization;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $metadata = $this->study->getLatestMetadata();

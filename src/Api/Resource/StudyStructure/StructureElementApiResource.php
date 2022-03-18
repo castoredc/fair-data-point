@@ -15,9 +15,7 @@ class StructureElementApiResource implements ApiResource
         $this->element = $element;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

@@ -11,17 +11,13 @@ class OntologiesApiResource implements ApiResource
     /** @var Ontology[] */
     private array $ontologies;
 
-    /**
-     * @param Ontology[] $ontologies
-     */
+    /** @param Ontology[] $ontologies */
     public function __construct(array $ontologies)
     {
         $this->ontologies = $ontologies;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

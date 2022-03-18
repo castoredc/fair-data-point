@@ -7,9 +7,7 @@ use Exception;
 
 class CouldNotCreateDatabase extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Could not create database.'];

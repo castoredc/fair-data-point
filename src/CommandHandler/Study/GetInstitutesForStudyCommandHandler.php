@@ -24,9 +24,7 @@ class GetInstitutesForStudyCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @throws UserNotACastorUser
-     */
+    /** @throws UserNotACastorUser */
     public function __invoke(GetInstitutesForStudyCommand $command): ArrayCollection
     {
         $user = $this->security->getUser();

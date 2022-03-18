@@ -47,9 +47,7 @@ class MetadataFilterApiRequest extends SingleApiRequest
         return $this->page !== 0 ? $this->page : 1;
     }
 
-    /**
-     * @return string[]|null
-     */
+    /** @return string[]|null */
     public function getHideParents(): ?array
     {
         return $this->hideParents;

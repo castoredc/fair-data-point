@@ -15,9 +15,7 @@ class StepApiResource implements ApiResource
         $this->step = $step;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

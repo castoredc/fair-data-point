@@ -10,9 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function boolval;
 
-/**
- * @Assert\GroupSequenceProvider()
- */
+/** @Assert\GroupSequenceProvider() */
 class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**
@@ -108,9 +106,7 @@ class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequen
         return $this->element;
     }
 
-    /**
-     * @return string[]|null
-     */
+    /** @return string[]|null */
     public function getElements(): ?array
     {
         return $this->elements;

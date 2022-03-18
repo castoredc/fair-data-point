@@ -33,9 +33,7 @@ use function assert;
  */
 class SingleCatalogApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_catalog")
-     */
+    /** @Route("", methods={"GET"}, name="api_catalog") */
     public function catalog(Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
@@ -47,9 +45,7 @@ class SingleCatalogApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_catalog_update")
-     */
+    /** @Route("", methods={"POST"}, name="api_catalog_update") */
     public function updateCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $catalog);

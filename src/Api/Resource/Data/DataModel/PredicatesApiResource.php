@@ -15,9 +15,7 @@ class PredicatesApiResource implements ApiResource
         $this->dataModel = $dataModel;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

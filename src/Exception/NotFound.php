@@ -7,9 +7,7 @@ use Exception;
 
 class NotFound extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'The data you are trying to access cannot be found.'];

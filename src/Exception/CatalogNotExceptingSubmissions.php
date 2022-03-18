@@ -7,9 +7,7 @@ use Exception;
 
 class CatalogNotExceptingSubmissions extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'This catalog is not accepting submissions.'];

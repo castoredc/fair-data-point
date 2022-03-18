@@ -7,9 +7,7 @@ use Exception;
 
 class InvalidNodeType extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'This type of node is not supported.'];

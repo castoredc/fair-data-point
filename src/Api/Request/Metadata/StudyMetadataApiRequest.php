@@ -159,9 +159,7 @@ class StudyMetadataApiRequest extends SingleApiRequest
         return $this->methodType !== null ? MethodType::fromString($this->methodType) : null;
     }
 
-    /**
-     * @return OntologyConcept[]
-     */
+    /** @return OntologyConcept[] */
     public function getConditions(): array
     {
         $data = [];

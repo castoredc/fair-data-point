@@ -107,17 +107,13 @@ abstract class CastorEntity
         $this->label = $label;
     }
 
-    /**
-     * @return Collection<string, Annotation>
-     */
+    /** @return Collection<string, Annotation> */
     public function getAnnotations(): Collection
     {
         return $this->annotations;
     }
 
-    /**
-     * @return Annotation[]
-     */
+    /** @return Annotation[] */
     public function getAnnotationsByOntology(Ontology $ontology): array
     {
         $return = [];
@@ -144,9 +140,7 @@ abstract class CastorEntity
         return false;
     }
 
-    /**
-     * @param Collection<string, Annotation> $annotations
-     */
+    /** @param Collection<string, Annotation> $annotations */
     public function setAnnotations(Collection $annotations): void
     {
         $this->annotations = $annotations;

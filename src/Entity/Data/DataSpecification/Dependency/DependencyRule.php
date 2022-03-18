@@ -74,9 +74,7 @@ class DependencyRule extends Dependency
         $this->value = $value;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         $rule = new self(

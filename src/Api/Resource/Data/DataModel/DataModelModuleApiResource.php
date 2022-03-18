@@ -19,9 +19,7 @@ class DataModelModuleApiResource implements ApiResource
         $this->groupTriples = $groupTriples;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $return = [

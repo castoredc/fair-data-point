@@ -186,9 +186,7 @@ class DistributionApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_distribution_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_distribution_add") */
     public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataset);

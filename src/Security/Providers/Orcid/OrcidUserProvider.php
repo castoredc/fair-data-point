@@ -34,9 +34,7 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         return '/oauth/authorize';
     }
 
-    /**
-     * @param array<mixed> $options
-     */
+    /** @param array<mixed> $options */
     public function getAuthorizationUrl(array $options = []): string
     {
         $base = self::BASE_URL . $this->getBaseAuthorizationUrl();
@@ -46,9 +44,7 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         return $this->appendQuery($base, $query);
     }
 
-    /**
-     * @param array<mixed> $params
-     */
+    /** @param array<mixed> $params */
     public function getBaseAccessTokenUrl(array $params): string
     {
         return self::BASE_URL . '/oauth/token';
@@ -59,17 +55,13 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         return '';
     }
 
-    /**
-     * @return array<string>
-     */
+    /** @return array<string> */
     protected function getDefaultScopes(): array
     {
         return ['/authenticate'];
     }
 
-    /**
-     * @param array<mixed>|string $data
-     */
+    /** @param array<mixed>|string $data */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.

@@ -53,9 +53,7 @@ abstract class Authenticator extends SocialAuthenticator
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function start(Request $request, ?AuthenticationException $authException = null)
     {
         $url = '/login';

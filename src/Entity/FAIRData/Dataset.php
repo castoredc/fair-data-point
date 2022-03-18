@@ -105,33 +105,25 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         $this->slug = $slug;
     }
 
-     /**
-      * @return Collection<string, Catalog>
-      */
+     /** @return Collection<string, Catalog> */
     public function getCatalogs(): Collection
     {
         return $this->catalogs;
     }
 
-    /**
-     * @param Collection<string, Catalog> $catalogs
-     */
+    /** @param Collection<string, Catalog> $catalogs */
     public function setCatalogs(Collection $catalogs): void
     {
         $this->catalogs = $catalogs;
     }
 
-    /**
-     * @return Collection<string, Distribution>
-     */
+    /** @return Collection<string, Distribution> */
     public function getDistributions(): Collection
     {
         return $this->distributions;
     }
 
-    /**
-     * @param Collection<string, Distribution> $distributions
-     */
+    /** @param Collection<string, Distribution> $distributions */
     public function setDistributions(Collection $distributions): void
     {
         $this->distributions = $distributions;
@@ -202,9 +194,7 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
         $this->metadata->add($metadata);
     }
 
-    /**
-     * @return Collection<DatasetPermission>
-     */
+    /** @return Collection<DatasetPermission> */
     public function getPermissions(): Collection
     {
         return $this->permissions;

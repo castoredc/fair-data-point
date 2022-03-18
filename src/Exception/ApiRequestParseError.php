@@ -18,9 +18,7 @@ class ApiRequestParseError extends Exception
         $this->violations = $violations;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $fields = [];

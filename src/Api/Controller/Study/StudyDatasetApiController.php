@@ -24,9 +24,7 @@ use function assert;
  */
 class StudyDatasetApiController extends ApiController
 {
-    /**
-     * @Route("/dataset", methods={"GET"}, name="api_study_datasets")
-     */
+    /** @Route("/dataset", methods={"GET"}, name="api_study_datasets") */
     public function datasets(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
@@ -45,9 +43,7 @@ class StudyDatasetApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/dataset", methods={"POST"}, name="api_study_create_dataset")
-     */
+    /** @Route("/dataset", methods={"POST"}, name="api_study_create_dataset") */
     public function createDataset(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);

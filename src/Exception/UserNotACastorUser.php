@@ -7,9 +7,7 @@ use Exception;
 
 class UserNotACastorUser extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'The current user is not a Castor User.'];

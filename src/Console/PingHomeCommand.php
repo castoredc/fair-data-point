@@ -1,7 +1,5 @@
 <?php
-/**
- * @phpcs:disable SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
- */
+/** @phpcs:disable SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
 declare(strict_types=1);
 
 namespace App\Console;

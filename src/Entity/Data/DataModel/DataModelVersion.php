@@ -42,9 +42,7 @@ class DataModelVersion extends Version
         $this->predicates = new ArrayCollection();
     }
 
-    /**
-     * @return Node[]
-     */
+    /** @return Node[] */
     public function getNodesByType(NodeType $nodeType): array
     {
         $return = [];
@@ -62,9 +60,7 @@ class DataModelVersion extends Version
         return $return;
     }
 
-    /**
-     * @return Collection<Predicate>
-     */
+    /** @return Collection<Predicate> */
     public function getPredicates(): Collection
     {
         return $this->predicates;
@@ -76,9 +72,7 @@ class DataModelVersion extends Version
         $this->predicates->add($predicate);
     }
 
-    /**
-     * @return Collection<NamespacePrefix>
-     */
+    /** @return Collection<NamespacePrefix> */
     public function getPrefixes(): Collection
     {
         return $this->prefixes;

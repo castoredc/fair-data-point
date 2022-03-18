@@ -13,18 +13,14 @@ class RenderRDFDistributionCommand
 
     private RDFDistribution $distribution;
 
-    /**
-     * @param Record[] $records
-     */
+    /** @param Record[] $records */
     public function __construct(array $records, RDFDistribution $distribution)
     {
         $this->records = $records;
         $this->distribution = $distribution;
     }
 
-    /**
-     * @return Record[]
-     */
+    /** @return Record[] */
     public function getRecords(): array
     {
         return $this->records;

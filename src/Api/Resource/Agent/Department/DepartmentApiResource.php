@@ -19,9 +19,7 @@ class DepartmentApiResource extends AgentApiResource
         $this->includeOrganization = $includeOrganization;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $agent = $this->agent;

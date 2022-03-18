@@ -20,9 +20,7 @@ class DataModelGroup extends Group
         $this->addElementGroup($triple);
     }
 
-    /**
-     * @return Collection<string, ElementGroup>
-     */
+    /** @return Collection<string, ElementGroup> */
     public function getTriples(): Collection
     {
         return $this->getElementGroups();

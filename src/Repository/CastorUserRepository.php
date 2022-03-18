@@ -10,9 +10,7 @@ use function assert;
 
 class CastorUserRepository extends EntityRepository
 {
-    /**
-     * @throws UserNotFound
-     */
+    /** @throws UserNotFound */
     public function findUserByEmail(string $email): CastorUser
     {
         $user = $this->findOneBy(['emailAddress' => $email]);

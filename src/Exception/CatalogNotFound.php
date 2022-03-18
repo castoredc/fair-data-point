@@ -7,9 +7,7 @@ use Exception;
 
 class CatalogNotFound extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Catalog not found.'];

@@ -15,9 +15,7 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
     protected const METADATA_CLASS = CatalogMetadata::class;
     protected const TYPE = 'catalog';
 
-    /**
-     * @return Catalog[]
-     */
+    /** @return Catalog[] */
     public function findCatalogs(?Agent $agent, ?bool $acceptSubmissions, ?int $perPage, ?int $page): array
     {
         $qb = $this->createQueryBuilder('catalog')

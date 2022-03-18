@@ -77,17 +77,13 @@ class CatalogMetadata extends Metadata
         return count($this->themeTaxonomies) > 0;
     }
 
-    /**
-     * @return Collection<OntologyConcept>
-     */
+    /** @return Collection<OntologyConcept> */
     public function getThemeTaxonomies(): Collection
     {
         return $this->themeTaxonomies;
     }
 
-    /**
-     * @param Collection<OntologyConcept> $themeTaxonomies
-     */
+    /** @param Collection<OntologyConcept> $themeTaxonomies */
     public function setThemeTaxonomies(Collection $themeTaxonomies): void
     {
         $this->themeTaxonomies = $themeTaxonomies;

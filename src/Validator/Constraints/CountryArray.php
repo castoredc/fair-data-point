@@ -5,9 +5,7 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+/** @Annotation */
 class CountryArray extends Constraint
 {
     public string $message = 'This list does not contain valid countries.';

@@ -19,9 +19,7 @@ class DistributionContentApiResource implements ApiResource
         $this->distribution = $distribution;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         if ($this->distribution->getContents() === null) {

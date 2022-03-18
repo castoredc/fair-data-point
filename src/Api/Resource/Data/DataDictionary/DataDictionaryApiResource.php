@@ -20,9 +20,7 @@ class DataDictionaryApiResource implements ApiResource
         $this->includeVersions = $includeVersions;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $array = [

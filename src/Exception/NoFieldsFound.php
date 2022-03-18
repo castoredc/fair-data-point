@@ -7,9 +7,7 @@ use Exception;
 
 class NoFieldsFound extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'The structure does not contain fields.'];

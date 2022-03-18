@@ -11,17 +11,13 @@ class LicensesApiResource implements ApiResource
     /** @var License[] */
     private array $licenses;
 
-    /**
-     * @param License[] $licenses
-     */
+    /** @param License[] $licenses */
     public function __construct(array $licenses)
     {
         $this->licenses = $licenses;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

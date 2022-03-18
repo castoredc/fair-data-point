@@ -7,9 +7,7 @@ use Exception;
 
 class UserNotAnOrcidUser extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'The current user is not an ORCID User.'];

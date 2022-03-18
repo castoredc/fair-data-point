@@ -102,17 +102,13 @@ abstract class DataSpecification implements PermissionsEnabledEntity
         $this->description = $description;
     }
 
-    /**
-     * @return Collection<DistributionContents>
-     */
+    /** @return Collection<DistributionContents> */
     public function getDistributionContents(): Collection
     {
         return $this->distributionContents;
     }
 
-    /**
-     * @return Collection<Version>
-     */
+    /** @return Collection<Version> */
     public function getVersions(): Collection
     {
         return $this->versions;
@@ -150,9 +146,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
         $this->isPublic = $isPublic;
     }
 
-    /**
-     * @return Collection<DataSpecificationPermission>
-     */
+    /** @return Collection<DataSpecificationPermission> */
     public function getPermissions(): Collection
     {
         return $this->permissions;

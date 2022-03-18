@@ -27,9 +27,7 @@ class GetRDFEndpointCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function __invoke(GetRDFEndpointCommand $command): ARC2_StoreEndpoint
     {
         $distribution = $command->getDistribution()->getDistribution();

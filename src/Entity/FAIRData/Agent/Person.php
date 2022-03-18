@@ -14,9 +14,7 @@ use function array_filter;
 use function implode;
 use function strtolower;
 
-/**
- * @ORM\Entity
- */
+/** @ORM\Entity */
 class Person extends Agent
 {
     public const TYPE = 'person';
@@ -177,9 +175,7 @@ class Person extends Agent
         $this->affiliations->removeElement($affiliation);
     }
 
-    /**
-     * @return Collection<Affiliation>
-     */
+    /** @return Collection<Affiliation> */
     public function getAffiliations(): Collection
     {
         return $this->affiliations;
@@ -195,9 +191,7 @@ class Person extends Agent
         $this->affiliations->clear();
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         $person = new Person(

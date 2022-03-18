@@ -11,17 +11,13 @@ class OntologyConceptsApiResource implements ApiResource
     /** @var OntologyConcept[] */
     private array $concepts;
 
-    /**
-     * @param OntologyConcept[] $concepts
-     */
+    /** @param OntologyConcept[] $concepts */
     public function __construct(array $concepts)
     {
         $this->concepts = $concepts;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

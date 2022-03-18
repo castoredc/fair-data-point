@@ -15,9 +15,7 @@ class OrganizationApiResource extends AgentApiResource
         $this->agent = $organization;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $agent = $this->agent;

@@ -46,17 +46,13 @@ class CodedText
         $this->text = $text;
     }
 
-    /**
-     * @return OntologyConcept[]|ArrayCollection
-     */
+    /** @return OntologyConcept[]|ArrayCollection */
     public function getConcepts()
     {
         return $this->concepts;
     }
 
-    /**
-     * @return array<string>
-     */
+    /** @return array<string> */
     public function toArray(): array
     {
         return [

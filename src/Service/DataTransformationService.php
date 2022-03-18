@@ -52,9 +52,7 @@ class DataTransformationService
         $this->twig->addExtension($sandbox);
     }
 
-    /**
-     * @return false|string[]
-     */
+    /** @return false|string[] */
     public function parseSyntax(string $syntax)
     {
         try {
@@ -72,9 +70,7 @@ class DataTransformationService
         }
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     private function getTwigVariableNames(Node $moduleNode): array
     {
         $variables = [];

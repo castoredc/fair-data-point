@@ -16,9 +16,7 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
     protected const METADATA_CLASS = DistributionMetadata::class;
     protected const TYPE = 'distribution';
 
-    /**
-     * @return Dataset[]
-     */
+    /** @return Dataset[] */
     public function findDistributions(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?int $perPage, ?int $page): array
     {
         $qb = $this->createQueryBuilder('distribution')

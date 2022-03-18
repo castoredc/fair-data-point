@@ -24,9 +24,7 @@ abstract class DataSpecificationVersionCommandHandler
         $this->versionNumberHelper = $versionNumberHelper;
     }
 
-    /**
-     * @throws InvalidEntityType
-     */
+    /** @throws InvalidEntityType */
     protected function duplicateDependencies(DependencyGroup $group, ArrayCollection $elements): DependencyGroup
     {
         $newGroup = new DependencyGroup($group->getCombinator());

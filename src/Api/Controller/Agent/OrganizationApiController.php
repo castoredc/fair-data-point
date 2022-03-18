@@ -22,14 +22,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/agent/organization")
- */
+/** @Route("/api/agent/organization") */
 class OrganizationApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_agent_find_organization")
-     */
+    /** @Route("", methods={"GET"}, name="api_agent_find_organization") */
     public function findOrganization(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

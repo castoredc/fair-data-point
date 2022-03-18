@@ -11,17 +11,13 @@ class DataDictionariesApiResource implements ApiResource
     /** @var DataDictionary[] */
     private array $dataDictionaries;
 
-    /**
-     * @param DataDictionary[] $dataDictionaries
-     */
+    /** @param DataDictionary[] $dataDictionaries */
     public function __construct(array $dataDictionaries)
     {
         $this->dataDictionaries = $dataDictionaries;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

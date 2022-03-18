@@ -69,9 +69,7 @@ class ParticipatingCenter
         return $this->organization;
     }
 
-    /**
-     * @return Collection<Department>
-     */
+    /** @return Collection<Department> */
     public function getDepartments(): Collection
     {
         return $this->departments;

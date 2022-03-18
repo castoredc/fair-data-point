@@ -70,9 +70,7 @@ class OrcidUser implements ProviderUser
         $this->token = $token;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

@@ -66,25 +66,19 @@ class GetPaginatedStudiesCommand
         return $this->search;
     }
 
-    /**
-     * @return StudyType[]|null
-     */
+    /** @return StudyType[]|null */
     public function getStudyType(): ?array
     {
         return $this->studyType;
     }
 
-    /**
-     * @return MethodType[]|null
-     */
+    /** @return MethodType[]|null */
     public function getMethodType(): ?array
     {
         return $this->methodType;
     }
 
-    /**
-     * @return string[]|null
-     */
+    /** @return string[]|null */
     public function getCountry(): ?array
     {
         return $this->country;
@@ -100,9 +94,7 @@ class GetPaginatedStudiesCommand
         return $this->page;
     }
 
-    /**
-     * @return string[]|null
-     */
+    /** @return string[]|null */
     public function getHideCatalogs(): ?array
     {
         return $this->hideCatalogs;

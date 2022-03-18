@@ -7,9 +7,7 @@ use App\Entity\Grid\Address;
 
 class AddressFactory
 {
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromGridApiData(array $data): Address
     {
         return new Address(

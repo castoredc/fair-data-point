@@ -10,9 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function boolval;
 
-/**
- * @Assert\GroupSequenceProvider()
- */
+/** @Assert\GroupSequenceProvider() */
 class DistributionApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
     /**

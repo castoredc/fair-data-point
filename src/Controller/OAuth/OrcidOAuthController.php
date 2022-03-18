@@ -25,9 +25,7 @@ class OrcidOAuthController extends AbstractController
             ->redirect([], []);
     }
 
-    /**
-     * @Route("/oauth/check/orcid", name="oauth_orcid_check")
-     */
+    /** @Route("/oauth/check/orcid", name="oauth_orcid_check") */
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry): void
     {
     }

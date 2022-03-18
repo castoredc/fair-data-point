@@ -21,9 +21,7 @@ class GetPaginatedDatasetsCommand
     /** @var string[]|null */
     private ?array $hideCatalogs = null;
 
-    /**
-     * @param string[]|null $hideCatalogs
-     */
+    /** @param string[]|null $hideCatalogs */
     public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $hideCatalogs, int $perPage, int $page)
     {
         $this->catalog = $catalog;
@@ -59,9 +57,7 @@ class GetPaginatedDatasetsCommand
         return $this->page;
     }
 
-    /**
-     * @return string[]|null
-     */
+    /** @return string[]|null */
     public function getHideCatalogs(): ?array
     {
         return $this->hideCatalogs;

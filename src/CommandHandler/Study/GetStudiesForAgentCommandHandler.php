@@ -17,9 +17,7 @@ class GetStudiesForAgentCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    /**
-     * @return Study[]
-     */
+    /** @return Study[] */
     public function __invoke(GetStudiesForAgentCommand $command): array
     {
         $studyRepository = $this->em->getRepository(Study::class);

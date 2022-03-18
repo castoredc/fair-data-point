@@ -75,9 +75,7 @@ class ApiClient
         $this->server = $server;
     }
 
-    /**
-     * @param mixed $token
-     */
+    /** @param mixed $token */
     public function setToken($token): void
     {
         $this->token = $token;
@@ -98,9 +96,7 @@ class ApiClient
         );
     }
 
-    /**
-     * @throws ErrorFetchingCastorData
-     */
+    /** @throws ErrorFetchingCastorData */
     public function auth(SensitiveDataString $clientId, SensitiveDataString $secret): void
     {
         try {
@@ -331,9 +327,7 @@ class ApiClient
         return $phases;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getPhases(CastorStudy $study): PhaseCollection
     {
         $pages = 1;

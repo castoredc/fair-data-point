@@ -27,9 +27,7 @@ use function assert;
  */
 class DataDictionaryGroupApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_dictionary_groups")
-     */
+    /** @Route("", methods={"GET"}, name="api_dictionary_groups") */
     public function getGroups(DataDictionaryVersion $dataDictionaryVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataDictionaryVersion->getDataDictionary());
@@ -37,9 +35,7 @@ class DataDictionaryGroupApiController extends ApiController
         return new JsonResponse((new DataDictionaryGroupsApiResource($dataDictionaryVersion))->toArray());
     }
 
-    /**
-     * @Route("", methods={"POST"}, name="api_dictionary_group_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_dictionary_group_add") */
     public function addGroup(DataDictionaryVersion $dataDictionaryVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataDictionaryVersion->getDataDictionary());

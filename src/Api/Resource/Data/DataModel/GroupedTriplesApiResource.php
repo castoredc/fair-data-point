@@ -19,9 +19,7 @@ class GroupedTriplesApiResource implements ApiResource
         $this->module = $module;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

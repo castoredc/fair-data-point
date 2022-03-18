@@ -25,9 +25,7 @@ class CastorStudy extends Study
      */
     private ?CastorServer $server = null;
 
-    /**
-     * @return ArrayCollection<string, Field>|null
-     */
+    /** @return ArrayCollection<string, Field>|null */
     public function getFields(): ?ArrayCollection
     {
         return $this->fields;
@@ -38,9 +36,7 @@ class CastorStudy extends Study
         parent::__construct(StudySource::castor(), $sourceId, $name, $slug);
     }
 
-    /**
-     * @param ArrayCollection<string, Field>|null $fields
-     */
+    /** @param ArrayCollection<string, Field>|null $fields */
     public function setFields(?ArrayCollection $fields): void
     {
         $this->fields = $fields;
@@ -56,9 +52,7 @@ class CastorStudy extends Study
         $this->server = $server;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         return new self(

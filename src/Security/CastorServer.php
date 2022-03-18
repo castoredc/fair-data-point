@@ -6,9 +6,7 @@ namespace App\Security;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CastorServerRepository")
- */
+/** @ORM\Entity(repositoryClass="App\Repository\CastorServerRepository") */
 class CastorServer
 {
     /**

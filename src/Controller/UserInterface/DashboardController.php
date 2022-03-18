@@ -45,9 +45,7 @@ class DashboardController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/data-models", name="dashboard_data_models")
-     */
+    /** @Route("/dashboard/data-models", name="dashboard_data_models") */
     public function dataModels(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -58,9 +56,7 @@ class DashboardController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/data-models/add", name="dashboard_data_model_add")
-     */
+    /** @Route("/dashboard/data-models/add", name="dashboard_data_model_add") */
     public function addDataModel(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -71,9 +67,7 @@ class DashboardController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/fdp", name="dashboard_fdp")
-     */
+    /** @Route("/dashboard/fdp", name="dashboard_fdp") */
     public function fdp(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -209,9 +203,7 @@ class DashboardController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/catalogs", name="dashboard_catalogs")
-     */
+    /** @Route("/dashboard/catalogs", name="dashboard_catalogs") */
     public function catalogs(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -222,9 +214,7 @@ class DashboardController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
-     */
+    /** @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add") */
     public function addCatalog(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

@@ -7,9 +7,7 @@ use Exception;
 
 class InvalidDataDictionaryVersion extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Invalid data model version.'];

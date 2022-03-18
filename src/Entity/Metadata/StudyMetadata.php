@@ -278,17 +278,13 @@ class StudyMetadata
         $this->studyCompletionDate = $studyCompletionDate;
     }
 
-    /**
-     * @return Collection<StudyTeamMember>
-     */
+    /** @return Collection<StudyTeamMember> */
     public function getStudyTeam(): Collection
     {
         return $this->studyTeamMembers;
     }
 
-    /**
-     * @return Person[]
-     */
+    /** @return Person[] */
     public function getContacts(): array
     {
         $contacts = [];
@@ -304,9 +300,7 @@ class StudyMetadata
         return $contacts;
     }
 
-    /**
-     * @param Collection<StudyTeamMember> $studyTeamMembers
-     */
+    /** @param Collection<StudyTeamMember> $studyTeamMembers */
     public function setStudyTeam(Collection $studyTeamMembers): void
     {
         $this->studyTeamMembers = $studyTeamMembers;
@@ -322,17 +316,13 @@ class StudyMetadata
         $this->studyTeamMembers->removeElement($studyTeamMember);
     }
 
-    /**
-     * @return Collection<ParticipatingCenter>
-     */
+    /** @return Collection<ParticipatingCenter> */
     public function getCenters(): Collection
     {
         return $this->participatingCenters;
     }
 
-    /**
-     * @return Department[]
-     */
+    /** @return Department[] */
     public function getDepartments(): array
     {
         $departments = [];
@@ -344,9 +334,7 @@ class StudyMetadata
         return $departments;
     }
 
-    /**
-     * @return Organization[]
-     */
+    /** @return Organization[] */
     public function getOrganizations(): array
     {
         $organizations = [];
@@ -358,9 +346,7 @@ class StudyMetadata
         return $organizations;
     }
 
-    /**
-     * @param ArrayCollection<ParticipatingCenter> $centers
-     */
+    /** @param ArrayCollection<ParticipatingCenter> $centers */
     public function setCenters(Collection $centers): void
     {
         $this->participatingCenters = $centers;
@@ -433,17 +419,13 @@ class StudyMetadata
         $this->methodType = $methodType;
     }
 
-    /**
-     * @return Collection<OntologyConcept>
-     */
+    /** @return Collection<OntologyConcept> */
     public function getConditions(): Collection
     {
         return $this->conditions;
     }
 
-    /**
-     * @param Collection<OntologyConcept> $conditions
-     */
+    /** @param Collection<OntologyConcept> $conditions */
     public function setConditions(Collection $conditions): void
     {
         $this->conditions = $conditions;

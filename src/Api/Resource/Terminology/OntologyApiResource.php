@@ -15,9 +15,7 @@ class OntologyApiResource implements ApiResource
         $this->ontology = $ontology;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

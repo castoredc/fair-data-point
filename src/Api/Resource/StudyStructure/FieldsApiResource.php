@@ -11,17 +11,13 @@ class FieldsApiResource implements ApiResource
     /** @var Field[] */
     private array $fields;
 
-    /**
-     * @param Field[] $fields
-     */
+    /** @param Field[] $fields */
     public function __construct(array $fields)
     {
         $this->fields = $fields;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

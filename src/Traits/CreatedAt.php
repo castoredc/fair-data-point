@@ -17,9 +17,7 @@ trait CreatedAt
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    /** @ORM\PrePersist */
     public function onCreate(LifecycleEventArgs $e): void
     {
         $this->createdAt = new DateTimeImmutable();

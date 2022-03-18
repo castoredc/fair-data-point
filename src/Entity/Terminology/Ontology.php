@@ -74,9 +74,7 @@ class Ontology
         $this->id = $id;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         $ontology = new Ontology($data['name'], new Iri($data['url']));

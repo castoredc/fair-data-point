@@ -11,17 +11,13 @@ class LanguagesApiResource implements ApiResource
     /** @var Language[] */
     private array $languages;
 
-    /**
-     * @param Language[] $languages
-     */
+    /** @param Language[] $languages */
     public function __construct(array $languages)
     {
         $this->languages = $languages;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

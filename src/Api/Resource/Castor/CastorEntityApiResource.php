@@ -15,9 +15,7 @@ class CastorEntityApiResource implements ApiResource
         $this->entity = $entity;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

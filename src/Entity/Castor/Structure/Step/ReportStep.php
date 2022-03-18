@@ -13,9 +13,7 @@ class ReportStep extends Step
         parent::__construct($id, $study, StructureType::report(), $description, $name, $position);
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data, CastorStudy $study): ReportStep
     {
         return new ReportStep(

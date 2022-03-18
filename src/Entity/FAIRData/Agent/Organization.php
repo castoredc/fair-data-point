@@ -100,9 +100,7 @@ class Organization extends Agent
         $this->countryCode = $countryCode;
     }
 
-    /**
-     * @return Department[]|ArrayCollection
-     */
+    /** @return Department[]|ArrayCollection */
     public function getDepartments()
     {
         return $this->departments;
@@ -133,9 +131,7 @@ class Organization extends Agent
         $this->city = $city;
     }
 
-    /**
-     * @param Department[]|ArrayCollection $departments
-     */
+    /** @param Department[]|ArrayCollection $departments */
     public function setDepartments($departments): void
     {
         $this->departments = $departments;
@@ -161,9 +157,7 @@ class Organization extends Agent
         $this->gridId = $gridId;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
         $organization = new Organization(

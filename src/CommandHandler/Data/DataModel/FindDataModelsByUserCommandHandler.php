@@ -23,9 +23,7 @@ class FindDataModelsByUserCommandHandler implements MessageHandlerInterface
         $this->security = $security;
     }
 
-    /**
-     * @return DataModel[]
-     */
+    /** @return DataModel[] */
     public function __invoke(FindDataModelsByUserCommand $command): array
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {

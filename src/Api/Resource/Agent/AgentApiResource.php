@@ -13,17 +13,13 @@ abstract class AgentApiResource implements ApiResource
     /** @var array<string, int>|null */
     protected ?array $metadataCount = null;
 
-    /**
-     * @param array<string, int> $metadataCount
-     */
+    /** @param array<string, int> $metadataCount */
     public function setMetadataCount(array $metadataCount): void
     {
         $this->metadataCount = $metadataCount;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [

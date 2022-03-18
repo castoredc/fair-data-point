@@ -132,9 +132,7 @@ abstract class DistributionContents
         $this->isPublished = $isPublished;
     }
 
-    /**
-     * @return Collection<DistributionGenerationLog>
-     */
+    /** @return Collection<DistributionGenerationLog> */
     public function getLogs(): Collection
     {
         return $this->logs;

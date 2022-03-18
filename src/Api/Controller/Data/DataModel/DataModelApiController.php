@@ -43,14 +43,10 @@ use function assert;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/**
- * @Route("/api/model")
- */
+/** @Route("/api/model") */
 class DataModelApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"POST"}, name="api_model_add")
-     */
+    /** @Route("", methods={"POST"}, name="api_model_add") */
     public function addDataModel(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -74,9 +70,7 @@ class DataModelApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/my", methods={"GET"}, name="api_my_data_models")
-     */
+    /** @Route("/my", methods={"GET"}, name="api_my_data_models") */
     public function myDataModels(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

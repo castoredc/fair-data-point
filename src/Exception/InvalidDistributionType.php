@@ -7,9 +7,7 @@ use Exception;
 
 class InvalidDistributionType extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'Invalid distribution type.'];

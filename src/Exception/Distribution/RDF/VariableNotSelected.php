@@ -16,9 +16,7 @@ class VariableNotSelected extends Exception
         $this->variableName = $variableName;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => sprintf('The variable %s that is present in the syntax is not selected for transformation', $this->variableName)];

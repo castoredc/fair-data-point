@@ -39,9 +39,7 @@ class CatalogMetadataApiRequest extends MetadataApiRequest
         return $this->logo;
     }
 
-    /**
-     * @return OntologyConcept[]
-     */
+    /** @return OntologyConcept[] */
     public function getThemeTaxonomy(): array
     {
         $data = [];

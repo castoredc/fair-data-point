@@ -16,25 +16,19 @@ use function assert;
 
 class OrcidAuthenticator extends Authenticator
 {
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function supports(Request $request)
     {
         return $request->attributes->get('_route') === 'oauth_orcid_check';
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getCredentials(Request $request)
     {
         return $this->fetchAccessToken($this->getOrcidClient());
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $orcidUser = $this->getOrcidClient()->fetchUserFromToken($credentials);
@@ -86,9 +80,7 @@ class OrcidAuthenticator extends Authenticator
         return new RedirectResponse($url);
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         return new Response($exception->getMessage(), Response::HTTP_FORBIDDEN);

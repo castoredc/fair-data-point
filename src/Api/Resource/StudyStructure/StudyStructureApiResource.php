@@ -15,9 +15,7 @@ class StudyStructureApiResource implements ApiResource
         $this->structure = $structure;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

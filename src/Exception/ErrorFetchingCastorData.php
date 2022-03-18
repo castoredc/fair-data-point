@@ -7,9 +7,7 @@ use Exception;
 
 class ErrorFetchingCastorData extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

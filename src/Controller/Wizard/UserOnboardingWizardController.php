@@ -14,9 +14,7 @@ use function urlencode;
 
 class UserOnboardingWizardController extends AbstractController
 {
-    /**
-     * @Route("/wizard/user/details", name="wizard_user_details")
-     */
+    /** @Route("/wizard/user/details", name="wizard_user_details") */
     public function details(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -24,9 +22,7 @@ class UserOnboardingWizardController extends AbstractController
         return $this->getResponse($request);
     }
 
-    /**
-     * @Route("/wizard/user/affiliations", name="wizard_user_affiliations")
-     */
+    /** @Route("/wizard/user/affiliations", name="wizard_user_affiliations") */
     public function affiliations(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

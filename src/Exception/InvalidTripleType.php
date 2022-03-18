@@ -7,9 +7,7 @@ use Exception;
 
 class InvalidTripleType extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'The triple is of an invalid type.'];

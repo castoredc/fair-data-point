@@ -42,9 +42,7 @@ class UpdateStudyMetadataCommand
 
     private ?LocalizedText $keywords = null;
 
-    /**
-     * @param OntologyConcept[] $conditions
-     */
+    /** @param OntologyConcept[] $conditions */
     public function __construct(
         StudyMetadata $metadata,
         string $briefName,
@@ -107,9 +105,7 @@ class UpdateStudyMetadataCommand
         return $this->type;
     }
 
-    /**
-     * @return OntologyConcept[]
-     */
+    /** @return OntologyConcept[] */
     public function getConditions(): array
     {
         return $this->conditions;

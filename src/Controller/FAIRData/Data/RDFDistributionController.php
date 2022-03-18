@@ -110,9 +110,7 @@ class RDFDistributionController extends FAIRDataController
         return $this->getTurtleResponse($distribution, $turtle, $request->query->getBoolean('download'));
     }
 
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}/{element}", name="distribution_rdf_record_element")
-     */
+    /** @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}/{element}", name="distribution_rdf_record_element") */
     public function rdfDistributionElement(string $dataset, string $distribution, string $record, string $element): Response
     {
         return $this->redirectToRoute('distribution_rdf_record', [

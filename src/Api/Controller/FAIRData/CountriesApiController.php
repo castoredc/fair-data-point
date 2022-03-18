@@ -14,9 +14,7 @@ use function assert;
 
 class CountriesApiController extends ApiController
 {
-    /**
-     * @Route("/api/countries", name="api_countries")
-     */
+    /** @Route("/api/countries", name="api_countries") */
     public function countries(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetCountriesCommand());

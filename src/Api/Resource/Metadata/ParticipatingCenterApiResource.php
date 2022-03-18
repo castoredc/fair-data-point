@@ -17,9 +17,7 @@ class ParticipatingCenterApiResource implements ApiResource
         $this->participatingCenter = $participatingCenter;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = (new OrganizationApiResource($this->participatingCenter->getOrganization()))->toArray();

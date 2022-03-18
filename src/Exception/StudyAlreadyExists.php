@@ -7,9 +7,7 @@ use Exception;
 
 class StudyAlreadyExists extends Exception
 {
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return ['error' => 'This study is already imported.'];

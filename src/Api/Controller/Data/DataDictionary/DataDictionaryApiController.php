@@ -32,9 +32,7 @@ use function assert;
  */
 class DataDictionaryApiController extends ApiController
 {
-    /**
-     * @Route("", methods={"GET"}, name="api_dictionary")
-     */
+    /** @Route("", methods={"GET"}, name="api_dictionary") */
     public function dataDictionary(DataDictionary $dataDictionary): Response
     {
         $this->denyAccessUnlessGranted('view', $dataDictionary);
@@ -42,9 +40,7 @@ class DataDictionaryApiController extends ApiController
         return new JsonResponse((new DataDictionaryApiResource($dataDictionary))->toArray());
     }
 
-    /**
-     * @Route("/import", methods={"POST"}, name="api_dictionary_import")
-     */
+    /** @Route("/import", methods={"POST"}, name="api_dictionary_import") */
     public function importDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataDictionary);

@@ -57,17 +57,13 @@ class DatasetMetadata extends Metadata
         return count($this->themes) > 0;
     }
 
-    /**
-     * @return Collection<OntologyConcept>
-     */
+    /** @return Collection<OntologyConcept> */
     public function getThemes(): Collection
     {
         return $this->themes;
     }
 
-    /**
-     * @param Collection<OntologyConcept> $themes
-     */
+    /** @param Collection<OntologyConcept> $themes */
     public function setThemes(Collection $themes): void
     {
         $this->themes = $themes;

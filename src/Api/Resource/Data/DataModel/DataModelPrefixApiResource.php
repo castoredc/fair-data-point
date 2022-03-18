@@ -15,9 +15,7 @@ class DataModelPrefixApiResource implements ApiResource
         $this->prefix = $prefix;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return [

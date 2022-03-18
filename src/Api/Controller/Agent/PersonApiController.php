@@ -18,14 +18,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/agent/person")
- */
+/** @Route("/api/agent/person") */
 class PersonApiController extends ApiController
 {
-    /**
-     * @Route("/email", methods={"GET"}, name="api_agent_person")
-     */
+    /** @Route("/email", methods={"GET"}, name="api_agent_person") */
     public function getPersonByEmail(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

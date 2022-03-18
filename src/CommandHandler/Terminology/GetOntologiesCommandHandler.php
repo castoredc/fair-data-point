@@ -17,9 +17,7 @@ class GetOntologiesCommandHandler implements MessageHandlerInterface
         $this->em = $em;
     }
 
-    /**
-     * @return Ontology[]
-     */
+    /** @return Ontology[] */
     public function __invoke(GetOntologiesCommand $command): array
     {
         return $this->em->getRepository(Ontology::class)->findAll();

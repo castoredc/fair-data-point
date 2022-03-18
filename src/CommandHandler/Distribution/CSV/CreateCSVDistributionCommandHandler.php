@@ -11,9 +11,7 @@ use App\Exception\LanguageNotFound;
 
 class CreateCSVDistributionCommandHandler extends CreateDistributionCommandHandler
 {
-    /**
-     * @throws LanguageNotFound
-     */
+    /** @throws LanguageNotFound */
     public function __invoke(CreateCSVDistributionCommand $command): Distribution
     {
         $distribution = $this->handleDistributionCreation($command);

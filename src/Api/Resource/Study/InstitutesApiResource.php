@@ -17,9 +17,7 @@ class InstitutesApiResource implements ApiResource
         $this->institutes = $institutes;
     }
 
-    /**
-     * @return array<mixed>
-     */
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $data = [];

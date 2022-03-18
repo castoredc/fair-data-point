@@ -15,9 +15,7 @@ class InstituteFactory
         $this->addressFactory = $addressFactory;
     }
 
-    /**
-     * @param array<mixed> $data
-     */
+    /** @param array<mixed> $data */
     public function createFromGridApiData(array $data): Institute
     {
         $institute = new Institute(
