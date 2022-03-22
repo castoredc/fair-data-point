@@ -56,9 +56,9 @@ abstract class FAIRDataController extends AbstractController
     {
         RdfNamespace::set('r3d', 'http://www.re3data.org/schema/3-0#');
         RdfNamespace::set('fdp', 'http://rdf.biosemantics.org/ontologies/fdp-o#');
-        RdfNamespace::set('ldp', 'http://www.w3.org/ns/ldp');
+        RdfNamespace::set('ldp', 'http://www.w3.org/ns/ldp#');
         RdfNamespace::set('datacite', 'http://purl.org/spar/datacite/');
-        RdfNamespace::set('ejprd', 'http://purl.org/ejp-rd/vocabulary');
+        RdfNamespace::set('ejprd', 'http://purl.org/ejp-rd/vocabulary/');
     }
 
     /** @return mixed[] */
