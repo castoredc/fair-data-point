@@ -35,17 +35,26 @@ class VisNetwork extends Component {
             layout: {
                 randomSeed: 1,
                 improvedLayout: true,
+                hierarchical: {
+                    levelSeparation: 150,
+                    treeSpacing: 200,
+                    blockShifting: true,
+                    edgeMinimization: true,
+                    parentCentralization: true,
+                    direction: 'UD',
+                    nodeSpacing: 300,
+                    sortMethod: "directed"
+                }
             },
             interaction: {
                 dragNodes: false,
                 hover: true,
             },
             physics: {
-                enabled: true,
-                barnesHut: {
-                    avoidOverlap: .5
+                hierarchicalRepulsion: {
+                    nodeDistance: 180,
                 },
-            }
+            },
         };
 
         this.network = new Network(this.appRef.current, data, options);
