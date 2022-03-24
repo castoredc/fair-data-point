@@ -293,6 +293,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                         render={(props) => (
                             <DistributionLogs
                                 {...props}
+                                catalog={catalog}
+                                study={study}
                                 dataset={dataset}
                                 distribution={distribution}
                             />
