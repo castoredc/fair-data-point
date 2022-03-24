@@ -18,7 +18,8 @@ import * as Yup from "yup";
 
 
 type StudyDetailsFormProps = {
-    studyId: string
+    studyId: string,
+    onSaved: () => void,
 }
 
 type StudyDetailsFormState = {
@@ -96,7 +97,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
     };
 
     handleSubmit = (values, {setSubmitting}) => {
-        const {studyId} = this.props;
+        const {studyId, onSaved} = this.props;
         const {data} = this.state;
 
         axios.post('/api/study/' + studyId + '/metadata' + (data.id ? '/' + data.id : ''), {
@@ -125,6 +126,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                 });
 
                 setSubmitting(false);
+                onSaved();
             })
             .catch((error) => {
                 if (error.response && error.response.status === 400) {
@@ -349,7 +351,7 @@ const StudyDetailsSchema = Yup.object().shape({
     briefName: Yup.string().required('Please enter a brief study title'),
     scientificName: Yup.string().nullable(),
     studyType: Yup.string().required('Please select the study type'),
-    method: Yup.string().nullable(),
+    method: Yup.string().required('Please select the method'),
     status: Yup.string().nullable(),
     estimatedStudyStartDate: Yup.string().nullable(),
     estimatedStudyCompletionDate: Yup.string().nullable(),

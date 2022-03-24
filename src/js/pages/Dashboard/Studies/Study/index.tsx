@@ -104,14 +104,14 @@ export default class Study extends Component<StudyProps, StudyState> {
                         exact: true,
                         title: 'Study team',
                         customIcon: 'contacts',
-                        disabled: ! study.hasMetadata
+                        disabled: !study.hasMetadata
                     },
                     {
                         to: '/dashboard/studies/' + study.id + '/centers',
                         exact: true,
                         title: 'Participating centers',
                         customIcon: 'center',
-                        disabled: ! study.hasMetadata
+                        disabled: !study.hasMetadata
                     },
                     {
                         type: 'separator'
@@ -151,24 +151,24 @@ export default class Study extends Component<StudyProps, StudyState> {
                            render={(props) => <PageBody>
                                <StudyDetailsForm
                                    studyId={study.id}
+                                   onSaved={this.getStudy}
                                />
                            </PageBody>
                            }
                     />
-                    {study.hasMetadata && <>
-                        <Route path="/dashboard/studies/:study/team" exact
-                               render={(props) => <PageBody>
-                                   <ContactsForm studyId={study.id}/>
-                               </PageBody>
-                               }
-                        />
-                        <Route path="/dashboard/studies/:study/centers" exact
-                               render={(props) => <PageBody>
-                                   <OrganizationsForm studyId={study.id}/>
-                               </PageBody>
-                               }
-                        />
-                    </>}
+                    {study.hasMetadata && <Route path="/dashboard/studies/:study/team" exact
+                                                 render={(props) => <PageBody>
+                                                     <ContactsForm studyId={study.id}/>
+                                                 </PageBody>
+                                                 }
+                    />
+                    }
+                    {study.hasMetadata && <Route path="/dashboard/studies/:study/centers" exact
+                                                 render={(props) => <PageBody>
+                                                     <OrganizationsForm studyId={study.id}/>
+                                                 </PageBody>
+                                                 }
+                    />}
                     <Route path="/dashboard/studies/:study/annotations" exact
                            render={(props) => isGranted('edit_source_system', study.permissions) ? <PageBody>
                                <Annotations studyId={study.id}/>
