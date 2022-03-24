@@ -274,7 +274,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     }
                 ]}
             />
-            <Body>
+            <Body fullWidth={true}>
                 <Header title={dataModel.title}/>
 
                 <Switch>

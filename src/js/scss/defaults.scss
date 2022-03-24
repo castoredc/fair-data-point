@@ -123,6 +123,26 @@ div[type="error"] {
   flex: 1;
   overflow: auto;
 
+  & > form {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    overflow: auto;
+
+    & > div:first-child {
+      /* Matter Tabs */
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+
+      & > div[role=tabpanel] {
+        flex: 1;
+        overflow: auto;
+      }
+    }
+  }
+
   .FullHeightPageTab {
     height: 100%;
     display: flex;

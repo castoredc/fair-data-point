@@ -3,6 +3,7 @@ import {LinkContainer} from "react-router-bootstrap";
 import StudiesDataTable from "components/DataTable/StudiesDataTable";
 import {Button, Stack} from "@castoredc/matter";
 import * as H from "history";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface StudiesProps {
     catalog: string,
@@ -13,7 +14,7 @@ export default class Studies extends Component<StudiesProps> {
     render() {
         const {catalog, history} = this.props;
 
-        return <div className="PageBody">
+        return <PageBody>
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
                     <LinkContainer to={'/dashboard/catalogs/' + catalog + '/studies/add'}>
@@ -26,6 +27,6 @@ export default class Studies extends Component<StudiesProps> {
                 history={history}
                 catalog={catalog}
             />
-        </div>;
+        </PageBody>;
     }
 }

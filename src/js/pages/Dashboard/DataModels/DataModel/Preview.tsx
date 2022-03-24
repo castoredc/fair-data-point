@@ -6,6 +6,7 @@ import ToastContent from "components/ToastContent";
 import DataModelModulePreview from "components/DataModelModule/DataModelModulePreview";
 import SideTabs from "components/SideTabs";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface PreviewProps extends AuthorizedRouteComponentProps {
     dataModel: any,
@@ -95,7 +96,7 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
             }
         });
 
-        return <div className="PageBody">
+        return <PageBody>
             <SideTabs
                 hasTabs
                 title="Groups"
@@ -110,6 +111,6 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
                     ...tabs
                 ]}
             />
-        </div>;
+        </PageBody>;
     }
 }

@@ -10,6 +10,7 @@ import ConfirmModal from "../../../../modals/ConfirmModal";
 import SideTabs from "components/SideTabs";
 import DataModelModule from "components/DataModelModule/DataModelModule";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface ModulesProps extends AuthorizedRouteComponentProps {
     modules: any,
@@ -154,7 +155,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
 
         const orderOptions = this.getOrderOptions();
 
-        return <div className="PageBody">
+        return <PageBody>
             <DataModelModuleModal
                 orderOptions={orderOptions}
                 show={showModal.module}
@@ -251,6 +252,6 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                 })}
             />
             }
-        </div>;
+        </PageBody>;
     }
 }

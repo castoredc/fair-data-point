@@ -7,6 +7,7 @@ import DataModelPrefixModal from "../../../../modals/DataModelPrefixModal";
 import ConfirmModal from "../../../../modals/ConfirmModal";
 import DataGridContainer from "components/DataTable/DataGridContainer";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface PrefixesProps extends AuthorizedRouteComponentProps {
     prefixes: any,
@@ -135,7 +136,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
             }
         });
 
-        return <div className="PageBody">
+        return <PageBody>
             <DataModelPrefixModal
                 show={showModal.add}
                 handleClose={() => {
@@ -182,6 +183,6 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                     columns={columns}
                 />
             </DataGridContainer>
-        </div>;
+        </PageBody>;
     }
 }

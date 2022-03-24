@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import DistributionForm from "components/Form/Admin/DistributionForm";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface DetailsProps extends AuthorizedRouteComponentProps {
     distribution: any,
@@ -15,13 +16,13 @@ export default class Details extends Component<DetailsProps> {
 
         const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
 
-        return <div className="PageBody">
+        return <PageBody>
             <DistributionForm
                 history={history}
                 mainUrl={mainUrl}
                 dataset={dataset}
                 distribution={distribution}
             />
-        </div>;
+        </PageBody>;
     }
 }

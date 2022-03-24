@@ -4,6 +4,7 @@ import {Heading, LoadingOverlay, Tabs} from "@castoredc/matter";
 import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 export default class DistributionLog extends Component {
     constructor(props) {
@@ -88,7 +89,7 @@ export default class DistributionLog extends Component {
             }
         }
 
-        return <div className="PageBody">
+        return <PageBody>
             <div className="PageTabs">
                 <Tabs
                     onChange={this.changeTab}
@@ -98,6 +99,6 @@ export default class DistributionLog extends Component {
             </div>
 
 
-        </div>;
+        </PageBody>;
     }
 }

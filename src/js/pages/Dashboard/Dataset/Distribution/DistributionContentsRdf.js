@@ -7,6 +7,7 @@ import {Dropdown as CastorDropdown, LoadingOverlay, Stack, Tabs} from "@castored
 import FormItem from "components/Form/FormItem";
 import MappingInterface from "components/MappingInterface";
 import Split from "components/Layout/Split";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 export default class DistributionContentsRdf extends Component {
     constructor(props) {
@@ -100,7 +101,7 @@ export default class DistributionContentsRdf extends Component {
             return {value: version.id, label: label};
         });
 
-        return <div className="PageBody">
+        return <PageBody>
             <div className="PageButtons">
                 <Stack distribution="trailing" alignment="end">
                     <FormItem label="Data model version" inline align="right">
@@ -164,6 +165,6 @@ export default class DistributionContentsRdf extends Component {
                     />
                 </Split>
             </div>
-        </div>;
+        </PageBody>;
     }
 }

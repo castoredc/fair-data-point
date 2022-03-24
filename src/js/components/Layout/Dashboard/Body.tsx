@@ -5,13 +5,14 @@ import {toRem} from "@castoredc/matter-utils";
 
 type BodyProps = {
     children: React.ReactNode,
+    fullWidth?: boolean,
 }
 
-const Body: FC<BodyProps> = ({children}) => {
+const Body: FC<BodyProps> = ({children, fullWidth}) => {
     return <div className="DashboardBody">
         <Stack distribution="center">
             <StackItem style={{
-                width: toRem(960),
+                width: !!fullWidth ? '100%' : toRem(960),
                 maxWidth: '100%',
                 // marginTop: '3.2rem',
                 overflow: 'hidden',

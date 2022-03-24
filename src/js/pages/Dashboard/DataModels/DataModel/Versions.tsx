@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import DataModelVersionModal from "../../../../modals/DataModelVersionModal";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface VersionsProps extends AuthorizedRouteComponentProps {
     getDataModel: () => void,
@@ -85,7 +86,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
             }
         });
 
-        return <div className="PageBody">
+        return <PageBody>
             <DataModelVersionModal
                 show={showModal}
                 latestVersion={latestVersion}
@@ -107,7 +108,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
                 rows={rows}
                 columns={columns}
             />
-        </div>;
+        </PageBody>;
     }
 
 }

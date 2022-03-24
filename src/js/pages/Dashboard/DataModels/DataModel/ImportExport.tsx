@@ -10,6 +10,7 @@ import ToastContent from "components/ToastContent";
 import {downloadFile, isNumeric} from "../../../../util";
 import * as Yup from "yup";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface ImportExportProps extends AuthorizedRouteComponentProps {
     dataModel: any,
@@ -138,7 +139,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
             })
         });
 
-        return <div className="PageBody">
+        return <PageBody>
             <Stack>
                 <div>
                     <Formik
@@ -191,6 +192,6 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                     <Button onClick={this.export} icon="download" disabled={isExporting}>Export model</Button>
                 </div>
             </Stack>
-        </div>;
+        </PageBody>;
     }
 }

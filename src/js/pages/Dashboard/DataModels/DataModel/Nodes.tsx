@@ -6,6 +6,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface NodesProps extends AuthorizedRouteComponentProps {
     nodes: any,
@@ -187,7 +188,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
 
         const selectedType = match.params.nodeType;
 
-        return <div className="PageBody">
+        return <PageBody>
             <AddNodeModal
                 open={showModal.add}
                 onClose={() => this.closeModal('add')}
@@ -370,6 +371,6 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     }}
                 />
             </div>
-        </div>;
+        </PageBody>;
     }
 }

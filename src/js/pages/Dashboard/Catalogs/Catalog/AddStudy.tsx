@@ -6,6 +6,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import StudyForm from "components/Form/Admin/StudyForm";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface AddStudyProps {
     catalog: string,
@@ -90,7 +91,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
         const {catalog} = this.props;
         const {showModal, selectedStudy, addedStudy} = this.state;
 
-        return <div className="PageBody">
+        return <PageBody>
             <Modal
                 open={showModal.newStudy}
                 onClose={() => {
@@ -129,6 +130,6 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 hideCatalog={catalog}
                 lastHandledStudy={addedStudy}
             />
-        </div>;
+        </PageBody>;
     }
 }

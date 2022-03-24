@@ -8,6 +8,7 @@ import DataGridHelper from "components/DataTable/DataGridHelper";
 import * as H from "history";
 import {localizedText} from "../../../../util";
 import {isGranted} from "utils/PermissionHelper";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface DatasetsProps {
     catalog: string,
@@ -63,7 +64,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
         const {isLoading, datasets} = this.state;
         const {catalog, history} = this.props;
 
-        return <div>
+        return <PageBody>
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
@@ -86,6 +87,6 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     />
                 })}
             </div>
-        </div>;
+        </PageBody>;
     }
 }
