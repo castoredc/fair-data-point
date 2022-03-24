@@ -188,8 +188,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 items={sidebarItems}
             />
 
-            <Body>
-                <Header title={title}>
+            <Body fullWidth={true}>
+                <Header title={title} fullWidth={true}>
                     <Button
                         buttonType="contentOnly"
                         icon="openNewWindow"
@@ -293,6 +293,8 @@ export default class Distribution extends Component<DistributionProps, Distribut
                         render={(props) => (
                             <DistributionLogs
                                 {...props}
+                                catalog={catalog}
+                                study={study}
                                 dataset={dataset}
                                 distribution={distribution}
                             />

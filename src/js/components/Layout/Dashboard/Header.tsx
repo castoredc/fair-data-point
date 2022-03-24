@@ -7,12 +7,13 @@ import {HeadingType} from "@castoredc/matter/lib/types/types/heading";
 type HeaderProps = {
     title: string,
     badge?: ReactElement,
-    type?: HeadingType
+    type?: HeadingType,
+    fullWidth?: boolean,
 }
 
-const Header: FC<HeaderProps> = ({title, badge, children, type}) => {
+const Header: FC<HeaderProps> = ({title, badge, children, type, fullWidth}) => {
     return <div className="DashboardHeader" style={{
-        width: toRem(960),
+        width: !!fullWidth ? '100%' : toRem(960),
         maxWidth: '100%',
     }}>
         <Stack distribution="equalSpacing">
