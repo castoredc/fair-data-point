@@ -102,7 +102,7 @@ export default class DistributionContentsRdf extends Component {
         });
 
         return <PageBody>
-            <div className="PageButtons">
+            <div className="PageButtons" style={{flex: '0 0 60px'}}>
                 <Stack distribution="trailing" alignment="end">
                     <FormItem label="Data model version" inline align="right">
                         <div className="Select">
@@ -121,7 +121,10 @@ export default class DistributionContentsRdf extends Component {
                 </Stack>
             </div>
 
-            <div className="Mappings">
+            <div className="Mappings" style={{
+                flex: 1,
+                overflow: 'auto'
+            }}>
                 <Split sizes={[50, 50]}>
                     <div className="PageTabs">
                         <Tabs
