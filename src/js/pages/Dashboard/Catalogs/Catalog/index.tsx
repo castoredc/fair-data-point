@@ -20,6 +20,7 @@ import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
 import NoPermission from "pages/ErrorPages/NoPermission";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface CatalogProps extends AuthorizedRouteComponentProps {
 }
@@ -79,7 +80,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
             return <NoPermission text="You do not have permission to edit this catalog"/>;
         }
 
-        const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : null;
+        const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : 'Untitled catalog';
 
         return <>
             <DocumentTitle title={title}/>
@@ -132,17 +133,17 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
 
                 <Switch>
                     <Route path="/dashboard/catalogs/:catalog" exact
-                           render={(props) => <div>
+                           render={(props) => <PageBody>
                                <CatalogForm
                                    catalog={catalog}
                                    history={history}
                                />
-                           </div>}
+                           </PageBody>}
                     />
                     <Route path="/dashboard/catalogs/:catalog/metadata" exact
-                           render={(props) => <div>
+                           render={(props) => <PageBody>
                                <CatalogMetadataForm catalog={catalog} onSave={this.getCatalog}/>
-                           </div>}
+                           </PageBody>}
                     />
                     <Route path="/dashboard/catalogs/:catalog/permissions" exact
                            render={(props) => isGranted('manage', catalog.permissions) ?

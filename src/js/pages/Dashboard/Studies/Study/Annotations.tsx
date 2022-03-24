@@ -4,6 +4,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import OptionGroup from "components/StudyStructure/OptionGroup";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface AnnotationsProps {
     studyId: string,
@@ -85,7 +86,7 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             return <div className="NoResults">This study does not have option groups.</div>
         }
 
-        return <div className="PageBody">
+        return <PageBody>
             <FormLabel>Option group</FormLabel>
             <Dropdown
                 options={options}
@@ -100,6 +101,6 @@ export default class Annotations extends Component<AnnotationsProps, Annotations
             <Separator spacing="comfortable"/>
 
             {optionGroup && <OptionGroup studyId={studyId} onUpdate={this.getOptionGroups} {...optionGroup} />}
-        </div>;
+        </PageBody>;
     }
 }

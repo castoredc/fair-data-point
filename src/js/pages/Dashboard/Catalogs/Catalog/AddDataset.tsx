@@ -6,6 +6,7 @@ import ToastContent from "components/ToastContent";
 import DatasetsDataTable from "components/DataTable/DatasetsDataTable";
 import {localizedText} from "../../../../util";
 import * as H from "history";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface AddDatasetProps {
     catalog: string,
@@ -91,7 +92,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
         const {catalog} = this.props;
         const {showModal, selectedDataset, addedDataset} = this.state;
 
-        return <div className="PageBody">
+        return <PageBody>
             {selectedDataset && <ConfirmModal
                 title="Add dataset"
                 action="Add dataset"
@@ -112,6 +113,6 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                 hideCatalog={catalog}
                 lastHandledDataset={addedDataset}
             />
-        </div>;
+        </PageBody>;
     }
 }

@@ -10,6 +10,7 @@ import {localizedText} from "../../../util";
 import Header from "components/Layout/Dashboard/Header";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface CatalogsProps extends AuthorizedRouteComponentProps {
 }
@@ -86,7 +87,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
         const {history, user} = this.props;
         const {isLoading, catalogs, pagination} = this.state;
 
-        return <div>
+        return <PageBody>
             <DocumentTitle title="Catalogs"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs"/>}
@@ -122,6 +123,6 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                     totalItems={pagination.totalResults}
                 />}
             </div>
-        </div>;
+        </PageBody>;
     }
 }

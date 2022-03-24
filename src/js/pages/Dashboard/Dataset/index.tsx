@@ -18,6 +18,7 @@ import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
 import NoPermission from "pages/ErrorPages/NoPermission";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any,
@@ -150,11 +151,11 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             "/dashboard/catalogs/:catalog/datasets/:dataset",
                         ]}
                         exact
-                        render={(props) => <div>
+                        render={(props) => <PageBody>
                             <DatasetForm
                                 dataset={dataset}
                             />
-                        </div>}
+                        </PageBody>}
                     />
                     <Route
                         path={[
@@ -162,9 +163,9 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             "/dashboard/catalogs/:catalog/datasets/:dataset/metadata",
                         ]}
                         exact
-                        render={(props) => <div>
+                        render={(props) => <PageBody>
                             <DatasetMetadataForm dataset={dataset} onSave={this.getDataset}/>
-                        </div>}
+                        </PageBody>}
                     />
                     <Route
                         path={[

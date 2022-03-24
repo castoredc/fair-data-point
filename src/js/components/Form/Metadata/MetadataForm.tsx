@@ -195,51 +195,53 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                       setValues,
                       setFieldValue
                   }) => {
-                    return <Form>
+                    return <div className="PageTabs">
+                        <Form>
                         <MetadataVersionModal
                             open={showModal}
                             currentVersion={currentVersion}
                             onClose={this.closeModal}
                             handleSave={(versionType) => this.handleVersionUpdate(versionType, setFieldValue, handleSubmit)}
                         />
-                        <div className="PageTabs">
                             <Tabs
                                 tabs={{
                                     metadata: {
                                         title: 'Metadata',
-                                        content: <>
+                                        content: <div className="FullHeightPageTab">
                                             <GeneralMetadata values={values}
                                                              languages={languages} licenses={licenses}
                                                              countries={countries} validation={validation}>
                                                 {children && children(validation, languages)}
                                             </GeneralMetadata>
-                                        </>,
+                                        </div>,
                                     },
                                     publishers: {
                                         title: 'Publishers',
-                                        content: <PublishersMetadata
-                                            publishers={values.publishers}
-                                            setValue={setFieldValue}
-                                            languages={languages}
-                                            licenses={licenses}
-                                            countries={countries}
-                                            validation={validation}
-                                        />,
+                                        content: <div className="FullHeightPageTab">
+                                            <PublishersMetadata
+                                                publishers={values.publishers}
+                                                setValue={setFieldValue}
+                                                languages={languages}
+                                                licenses={licenses}
+                                                countries={countries}
+                                                validation={validation}
+                                            />
+                                        </div>,
                                     },
                                 }}
                             />
-                        </div>
 
-                        <div className="FormButtons">
-                            <Stack distribution="trailing">
-                                <Button buttonType="primary"
-                                        onClick={() => this.showVersionModal(setFieldValue, handleSubmit)}
-                                        disabled={isSubmitting}>
-                                    Save
-                                </Button>
-                            </Stack>
-                        </div>
+                            <div className="FormButtons">
+                                <Stack distribution="trailing">
+                                    <Button buttonType="primary"
+                                            onClick={() => this.showVersionModal(setFieldValue, handleSubmit)}
+                                            disabled={isSubmitting}>
+                                        Save
+                                    </Button>
+                                </Stack>
+                            </div>
                     </Form>
+                        </div>
                 }}
             </Formik>
         </>;

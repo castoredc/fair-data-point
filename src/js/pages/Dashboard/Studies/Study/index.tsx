@@ -18,6 +18,7 @@ import SideBar from "components/SideBar";
 import NotFound from "pages/ErrorPages/NotFound";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import NoPermission from "pages/ErrorPages/NoPermission";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface StudyProps extends AuthorizedRouteComponentProps {
 }
@@ -147,39 +148,39 @@ export default class Study extends Component<StudyProps, StudyState> {
 
                 <Switch>
                     <Route path="/dashboard/studies/:study" exact
-                           render={(props) => <div>
+                           render={(props) => <PageBody>
                                <StudyDetailsForm
                                    studyId={study.id}
                                />
-                           </div>
+                           </PageBody>
                            }
                     />
                     {study.hasMetadata && <>
                         <Route path="/dashboard/studies/:study/team" exact
-                               render={(props) => <div>
+                               render={(props) => <PageBody>
                                    <ContactsForm studyId={study.id}/>
-                               </div>
+                               </PageBody>
                                }
                         />
                         <Route path="/dashboard/studies/:study/centers" exact
-                               render={(props) => <div>
+                               render={(props) => <PageBody>
                                    <OrganizationsForm studyId={study.id}/>
-                               </div>
+                               </PageBody>
                                }
                         />
                     </>}
                     <Route path="/dashboard/studies/:study/annotations" exact
-                           render={(props) => isGranted('edit_source_system', study.permissions) ? <div>
+                           render={(props) => isGranted('edit_source_system', study.permissions) ? <PageBody>
                                <Annotations studyId={study.id}/>
-                           </div> : <div>
+                           </PageBody> : <PageBody>
                                <Banner type="error" title="You do not have permission to access this study in Castor"/>
-                           </div>
+                           </PageBody>
                            }
                     />
                     <Route path="/dashboard/studies/:study/datasets" exact
-                           render={(props) => <div>
+                           render={(props) => <PageBody>
                                <Datasets studyId={study.id} history={history}/>
-                           </div>
+                           </PageBody>
                            }
                     />
                     <Route component={NotFound}/>

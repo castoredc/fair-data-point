@@ -7,6 +7,7 @@ import FAIRDataPointMetadataForm from "components/Form/Metadata/FAIRDataPointMet
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 import {AuthorizedRouteComponentProps} from "components/Route";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface FAIRDataPointProps extends AuthorizedRouteComponentProps {
 }
@@ -60,7 +61,7 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
 
         const title = fdp ? (fdp.hasMetadata ? localizedText(fdp.metadata.title, 'en') : 'FAIR Data Point') : 'FAIR Data Point';
 
-        return <div>
+        return <PageBody>
             <DocumentTitle title="FAIR Data Point"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading FAIR Data Point information"/>}
@@ -68,6 +69,6 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
             <Heading type="Section">{title}</Heading>
 
             {fdp && <FAIRDataPointMetadataForm fdp={fdp} onSave={this.getFairDataPoint}/>}
-        </div>;
+        </PageBody>;
     }
 }

@@ -8,6 +8,7 @@ import DocumentTitle from "components/DocumentTitle";
 import Header from "components/Layout/Dashboard/Header";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface DataModelsProps extends AuthorizedRouteComponentProps {
 }
@@ -61,7 +62,7 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
         const {history, user} = this.props;
         const {isLoading, dataModels} = this.state;
 
-        return <div>
+        return <PageBody>
             <DocumentTitle title="Data models"/>
 
             {isLoading && <LoadingOverlay accessibleLabel="Loading data models"/>}
@@ -87,6 +88,6 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
 
                 {dataModels.length == 0 && <div className="NoResults">No data models found.</div>}
             </div>
-        </div>;
+        </PageBody>;
     }
 }

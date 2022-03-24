@@ -8,6 +8,7 @@ import DataGridHelper from "components/DataTable/DataGridHelper";
 import {localizedText} from "../../../util";
 import {AuthorizedRouteComponentProps} from "components/Route";
 import {isGranted} from "utils/PermissionHelper";
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface DistributionsProps extends AuthorizedRouteComponentProps {
 }
@@ -63,7 +64,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
 
         const mainUrl = match.params.study ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}` : `/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
 
-        return <div>
+        return <PageBody>
             {isLoading && <LoadingOverlay accessibleLabel="Loading studies"/>}
 
             <Stack distribution="trailing" alignment="end">
@@ -83,6 +84,6 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                     />
                 })}
             </div>
-        </div>;
+        </PageBody>;
     }
 }
