@@ -87,12 +87,12 @@ export default class DistributionLogsDataTable extends Component {
         const {logs} = this.state;
         const {dataset, distribution, history, study, catalog} = this.props;
 
-        const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}` + '/distribution/' + distribution.slug;
+        const mainUrl = study ? `/dashboard/studies/${study}/datasets/${dataset}` : `/dashboard/catalogs/${catalog}/datasets/${dataset}`;
 
         const log = logs[rowId];
 
         history.push({
-            pathname: mainUrl + '/log/' + log.id,
+            pathname: mainUrl + '/distributions/' + distribution.slug + '/log/' + log.id,
         });
     };
 

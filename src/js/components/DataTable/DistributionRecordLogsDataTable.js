@@ -8,6 +8,7 @@ import DistributionGenerationStatus from "../Status/DistributionGenerationStatus
 import FormItem from "../Form/FormItem";
 import DataGridHelper from "./DataGridHelper";
 import DataGridContainer from "./DataGridContainer";
+import Split from "components/Layout/Split";
 
 export default class DistributionRecordLogsDataTable extends Component {
     constructor(props) {
@@ -127,51 +128,53 @@ export default class DistributionRecordLogsDataTable extends Component {
         });
 
         return <div className="RecordLogs">
-            <DataGridContainer
-                pagination={pagination}
-                handlePageChange={this.handlePagination}
-                fullHeight
-                isLoading={isLoadingLogs}
-                forwardRef={this.tableRef}
-                inFlexContainer
-            >
-                <DataGrid
-                    accessibleName="Log items"
-                    emptyStateContent="No logs found"
-                    onClick={this.handleClick}
-                    rows={rows}
-                    columns={columns}
-                />
-            </DataGridContainer>
+            <Split sizes={[70, 30]}>
+                <DataGridContainer
+                    pagination={pagination}
+                    handlePageChange={this.handlePagination}
+                    fullHeight
+                    isLoading={isLoadingLogs}
+                    forwardRef={this.tableRef}
+                    inFlexContainer
+                >
+                    <DataGrid
+                        accessibleName="Log items"
+                        emptyStateContent="No logs found"
+                        onClick={this.handleClick}
+                        rows={rows}
+                        columns={columns}
+                    />
+                </DataGridContainer>
 
-            <div className="RecordLogsDetails">
-                {selectedLogItem !== null ? <div>
-                    <Heading type="Subsection">Record details</Heading>
-                    <FormItem label="Record ID">
-                        {selectedLogItem.record.id}
-                    </FormItem>
+                <div className="RecordLogsDetails">
+                    {selectedLogItem !== null ? <div>
+                        <Heading type="Subsection">Record details</Heading>
+                        <FormItem label="Record ID">
+                            {selectedLogItem.record.id}
+                        </FormItem>
 
-                    <FormItem label="Status">
-                        <DistributionGenerationStatus status={selectedLogItem.status}/>
-                    </FormItem>
+                        <FormItem label="Status">
+                            <DistributionGenerationStatus status={selectedLogItem.status}/>
+                        </FormItem>
 
-                    <FormItem label="Date and time">
-                        {moment(selectedLogItem.createdAt).format('DD-MM-YYYY HH:mm:ss')}
-                    </FormItem>
+                        <FormItem label="Date and time">
+                            {moment(selectedLogItem.createdAt).format('DD-MM-YYYY HH:mm:ss')}
+                        </FormItem>
 
-                    <FormItem label="Errors" className="ErrorLog">
-                        {selectedLogItemHasErrors ? selectedLogItem.errors.map((error) => {
-                            return <div className="ErrorLogItem">
-                                <strong>{error.exception}</strong><br/>
-                                <div>
-                                    {error.message}
+                        <FormItem label="Errors" className="ErrorLog">
+                            {selectedLogItemHasErrors ? selectedLogItem.errors.map((error) => {
+                                return <div className="ErrorLogItem">
+                                    <strong>{error.exception}</strong><br/>
+                                    <div>
+                                        {error.message}
+                                    </div>
                                 </div>
-                            </div>
-                        }) : <div className="NoResults">No errors occurred while generating this record</div>}
-                    </FormItem>
-                </div> : <div className="NoResults">Select a log entry</div>}
+                            }) : <div className="NoResults">No errors occurred while generating this record</div>}
+                        </FormItem>
+                    </div> : <div className="NoResults">Select a log entry</div>}
 
-            </div>
+                </div>
+            </Split>
         </div>;
     }
 }
