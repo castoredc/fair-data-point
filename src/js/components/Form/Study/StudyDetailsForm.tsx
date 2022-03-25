@@ -351,7 +351,7 @@ const StudyDetailsSchema = Yup.object().shape({
     briefName: Yup.string().required('Please enter a brief study title'),
     scientificName: Yup.string().nullable(),
     studyType: Yup.string().required('Please select the study type'),
-    method: Yup.string().required('Please select the method'),
+    methodType: Yup.string().required('Please select the method'),
     status: Yup.string().nullable(),
     estimatedStudyStartDate: Yup.string().nullable(),
     estimatedStudyCompletionDate: Yup.string().nullable(),
