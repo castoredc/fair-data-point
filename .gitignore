@@ -24,7 +24,6 @@ yarn-error.log
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-.npmrc
 bfg.jar
 .DS_Store
 public/.DS_Store
