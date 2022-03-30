@@ -30,3 +30,7 @@ bfg.jar
 public/.DS_Store
 
 auth.json
+
+.env
+
+composor.phar
