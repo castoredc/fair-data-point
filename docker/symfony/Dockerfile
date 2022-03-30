@@ -19,6 +19,5 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
-
 # Install composer
 RUN composer install -v
