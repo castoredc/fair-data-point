@@ -19,7 +19,7 @@ To be able to run the FAIR Data Point application locally you need to have the f
 ### Before booting the application
 
 - Copy the `.env.dist` file into the same folder with the new name `.env.local`. 
-- Paste the secrets (marked with `[Paste from OneLogin]`) from the `ENG - FDP Limited Access` OneLogin note in the `.env.local` file.
+- Paste the secrets (marked with `[Paste from 1Password]`) from the `ENG - FDP Limited Access` 1Password note in the `.env.local` file.
 
 
 - Add the following entry to `/etc/hosts`:
