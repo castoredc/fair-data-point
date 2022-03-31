@@ -19,9 +19,5 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
-# To run some additional command during build time (db migrations, loading fixtures, etc)
-COPY ./docker/symfony/prepare.sh .
-RUN chmod a+x ./prepare.sh
-
 # Install composer
 RUN composer install -v

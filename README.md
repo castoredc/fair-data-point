@@ -26,13 +26,19 @@ To be able to run the FAIR Data Point application locally you need to have the f
     ```
     127.0.0.1       fdp.castoredc.local
     ```
+- Create a .npmrc file at the root of the project directory and paste the below code in it.
+  Also replace the GITHUB_TOKEN with your actual github token.
 
+    ```
+    @castoredc:registry=https://npm.pkg.github.com/
+    //npm.pkg.github.com/:_authToken=GITHUB_TOKEN
+    ```
 
 ### Managing the local environment
 To boot the application locally run:
 
 ```bash
-docker-compose up --build -d
+yarn build-docker
 ```
 
 You can now access the FAIR Data Point via <https://fdp.castoredc.local>.
@@ -40,13 +46,13 @@ You can now access the FAIR Data Point via <https://fdp.castoredc.local>.
 To stop the environment run:
 
 ```bash
-docker-compose stop
+yarn stop-docker
 ```
 
 To destroy all the containers:
 
 ```bash
-docker-compose down
+yarn destroy-docker
 ```
 
 
@@ -66,4 +72,18 @@ yarn build
 To upgrade Matter (Castor's Design System), run:
 ```bash
 yarn upmatter
+```
+
+### Common errors
+
+In case you see errors related to composer on m1 macbooks
+
+1. Install composer on your local machine from here
+```
+    https://getcomposer.org/download/
+```
+
+2. Then run the below comand in root directory of your project
+```
+    php composer.phar install
 ```
