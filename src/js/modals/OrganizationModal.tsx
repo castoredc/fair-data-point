@@ -1,87 +1,104 @@
-import React, {Component} from 'react'
-import {Modal} from "@castoredc/matter";
+import React, { Component } from "react";
+import { Modal } from "@castoredc/matter";
 import OrganizationForm from "components/Form/Agent/OrganizationForm";
-import axios from "axios";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
+import { apiClient } from "../network";
 
 type OrganizationModalProps = {
-    id?: string,
-    open: boolean,
-    onClose: () => void,
-    studyId: string,
-    countries: any
-}
+  id?: string;
+  open: boolean;
+  onClose: () => void;
+  studyId: string;
+  countries: any;
+};
 
-type OrganizationModalState = {}
+type OrganizationModalState = {};
 
-export default class OrganizationModal extends Component<OrganizationModalProps, OrganizationModalState> {
-    constructor(props) {
-        super(props);
-    }
+export default class OrganizationModal extends Component<
+  OrganizationModalProps,
+  OrganizationModalState
+> {
+  constructor(props) {
+    super(props);
+  }
 
-    handleSubmit = (values, {setSubmitting}) => {
-        const {studyId, onClose} = this.props;
+  handleSubmit = (values, { setSubmitting }) => {
+    const { studyId, onClose } = this.props;
 
-        window.onbeforeunload = null;
+    window.onbeforeunload = null;
 
+    this.setState({
+      isLoading: true,
+    });
+
+    apiClient
+      .post("/api/study/" + studyId + "/centers/add", {
+        source: values.organization.source,
+        country: values.country,
+        ...(values.organization.source !== "database"
+          ? {
+              name: values.organization.name,
+              city: values.organization.city,
+            }
+          : {
+              id: values.organization.id,
+            }),
+      })
+      .then((response) => {
         this.setState({
-            isLoading: true,
+          isLoading: false,
         });
 
-        axios.post('/api/study/' + studyId + '/centers/add', {
-            source: values.organization.source,
-            country: values.country,
-            ...values.organization.source !== 'database' ? {
-                name: values.organization.name,
-                city: values.organization.city,
-            } : {
-                id: values.organization.id,
+        onClose();
+
+        toast.success(
+          <ToastContent
+            type="success"
+            message={`The ${values.organization.name} center was successfully added.`}
+          />,
+          {
+            position: "top-right",
+          }
+        );
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          this.setState({
+            validation: error.response.data.fields,
+          });
+        } else {
+          toast.error(
+            <ToastContent type="error" message="An error occurred" />,
+            {
+              position: "top-center",
             }
-        })
-            .then((response) => {
-                this.setState({
-                    isLoading: false,
-                });
+          );
+        }
+        this.setState(
+          {
+            isLoading: false,
+          },
+          () => {
+            setSubmitting(false);
+          }
+        );
+      });
+  };
 
-                onClose();
+  render() {
+    const { open, id, countries, onClose } = this.props;
 
-                toast.success(<ToastContent type="success"
-                                            message={`The ${values.organization.name} center was successfully added.`}/>, {
-                    position: "top-right",
-                });
-            })
-            .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    this.setState({
-                        validation: error.response.data.fields,
-                    });
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred"/>, {
-                        position: "top-center",
-                    });
-                }
-                this.setState({
-                    isLoading: false,
-                }, () => {
-                    setSubmitting(false);
-                });
-            });
-    }
+    const edit = !!id;
+    const title = edit ? `Edit center` : "Add center";
 
-    render() {
-        const {open, id, countries, onClose} = this.props;
-
-        const edit = !!id;
-        const title = edit ? `Edit center` : 'Add center';
-
-        return <Modal
-            open={open}
-            title={title}
-            accessibleName={title}
-            onClose={onClose}
-        >
-            <OrganizationForm countries={countries} handleSubmit={this.handleSubmit}/>
-        </Modal>
-    }
+    return (
+      <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
+        <OrganizationForm
+          countries={countries}
+          handleSubmit={this.handleSubmit}
+        />
+      </Modal>
+    );
+  }
 }

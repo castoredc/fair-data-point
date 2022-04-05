@@ -1,228 +1,258 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
-import '../Form.scss'
-import axios from "axios";
-import {toast} from "react-toastify";
+import "../Form.scss";
+import { toast } from "react-toastify";
 import ToastContent from "../../ToastContent";
-import {Button, LoadingOverlay, Stack} from "@castoredc/matter";
-import {FieldArray, Form, Formik} from "formik";
+import { Button, LoadingOverlay, Stack } from "@castoredc/matter";
+import { FieldArray, Form, Formik } from "formik";
 import AffiliationForm from "components/Form/Agent/AffiliationForm";
 import * as Yup from "yup";
-import {UserType} from "types/UserType";
-
+import { UserType } from "types/UserType";
+import { apiClient } from "src/js/network";
 
 interface AffiliationsFormProps {
-    user: UserType,
-    onSaved: () => void,
+  user: UserType;
+  onSaved: () => void;
 }
 
 interface AffiliationsFormState {
-    isLoading: boolean,
-    countries: any,
-    validation: any,
-    affiliations: any,
+  isLoading: boolean;
+  countries: any;
+  validation: any;
+  affiliations: any;
 }
 
-export default class AffiliationsForm extends Component<AffiliationsFormProps, AffiliationsFormState> {
-    constructor(props) {
-        super(props);
+export default class AffiliationsForm extends Component<
+  AffiliationsFormProps,
+  AffiliationsFormState
+> {
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            affiliations: props.user.details.affiliations ?? [],
-            countries: null,
-            validation: [
-                defaultValidation,
-            ],
-            isLoading: true,
-        };
-    }
-
-    getCountries = () => {
-        axios.get('/api/countries')
-            .then((response) => {
-                this.setState({
-                    countries: response.data,
-                    isLoading: false
-                });
-            })
-            .catch((error) => {
-                if (error.response && typeof error.response.data.error !== "undefined") {
-                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred"/>);
-                }
-            });
+    this.state = {
+      affiliations: props.user.details.affiliations ?? [],
+      countries: null,
+      validation: [defaultValidation],
+      isLoading: true,
     };
+  }
 
-    componentDidMount() {
-        this.getCountries();
-    }
-
-    handleSubmit = (values) => {
-        const {onSaved} = this.props;
-
+  getCountries = () => {
+    apiClient
+      .get("/api/countries")
+      .then((response) => {
         this.setState({
-            isLoading: true,
+          countries: response.data,
+          isLoading: false,
         });
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          typeof error.response.data.error !== "undefined"
+        ) {
+          toast.error(
+            <ToastContent type="error" message={error.response.data.error} />
+          );
+        } else {
+          toast.error(
+            <ToastContent type="error" message="An error occurred" />
+          );
+        }
+      });
+  };
 
-        axios.post('/api/user/affiliations', values.affiliations)
-            .then(() => {
-                this.setState({
-                    isLoading: false,
-                }, () => {
-                    onSaved();
-                });
-            })
-            .catch((error) => {
-                if (error.response && error.response.status === 400) {
-                    this.setState({
-                        validation: error.response.data.fields,
-                    });
-                } else {
-                    toast.error(<ToastContent type="error"
-                                              message="An error occurred while updating your affiliations"/>, {
-                        position: "top-center",
-                    });
-                }
-                this.setState({
-                    isLoading: false,
-                });
-            });
+  componentDidMount() {
+    this.getCountries();
+  }
+
+  handleSubmit = (values) => {
+    const { onSaved } = this.props;
+
+    this.setState({
+      isLoading: true,
+    });
+
+    apiClient
+      .post("/api/user/affiliations", values.affiliations)
+      .then(() => {
+        this.setState(
+          {
+            isLoading: false,
+          },
+          () => {
+            onSaved();
+          }
+        );
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          this.setState({
+            validation: error.response.data.fields,
+          });
+        } else {
+          toast.error(
+            <ToastContent
+              type="error"
+              message="An error occurred while updating your affiliations"
+            />,
+            {
+              position: "top-center",
+            }
+          );
+        }
+        this.setState({
+          isLoading: false,
+        });
+      });
+  };
+
+  render() {
+    const { affiliations, validation, countries, isLoading } = this.state;
+
+    if (isLoading && countries == null) {
+      return <LoadingOverlay accessibleLabel="Loading" />;
+    }
+
+    const initialValues = {
+      affiliations: [defaultData],
     };
 
-    render() {
-        const {affiliations, validation, countries, isLoading} = this.state;
-
-        if (isLoading && countries == null) {
-            return <LoadingOverlay accessibleLabel="Loading"/>;
-        }
-
-        const initialValues = {
-            affiliations: [defaultData]
-        };
-
-        return <>
-            <Formik
-                initialValues={initialValues}
-                onSubmit={this.handleSubmit}
-                validationSchema={AffiliationSchema}
-            >
-                {({
-                      values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting,
-                      setValues,
-                      setFieldValue
-                  }) => {
-                    return <Form>
-                        {isLoading && <LoadingOverlay accessibleLabel="Submitting affiliations"/>}
-                        <div className="FormContent">
-                            <FieldArray
-                                name="affiliations"
-                                render={arrayHelpers => (<>
-                                        <div className="Affiliations">
-                                            {values.affiliations.map((affiliation, index) => (
-                                                <AffiliationForm
-                                                    values={affiliation}
-                                                    index={index}
-                                                    key={index}
-                                                    validation={validation[index]}
-                                                    countries={countries}
-                                                    name="affiliations"
-                                                    handleRemove={() => arrayHelpers.remove(index)}
-                                                    setFieldValue={setFieldValue}
-                                                />
-                                            ))}
-                                        </div>
-                                        <Stack distribution="trailing" alignment="end">
-                                            <Button buttonType="secondary" icon="add"
-                                                    onClick={() => arrayHelpers.push(defaultData)}>
-                                                Add another affiliation
-                                            </Button>
-                                        </Stack>
-                                    </>
-                                )}
+    return (
+      <>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={this.handleSubmit}
+          validationSchema={AffiliationSchema}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            setValues,
+            setFieldValue,
+          }) => {
+            return (
+              <Form>
+                {isLoading && (
+                  <LoadingOverlay accessibleLabel="Submitting affiliations" />
+                )}
+                <div className="FormContent">
+                  <FieldArray
+                    name="affiliations"
+                    render={(arrayHelpers) => (
+                      <>
+                        <div className="Affiliations">
+                          {values.affiliations.map((affiliation, index) => (
+                            <AffiliationForm
+                              values={affiliation}
+                              index={index}
+                              key={index}
+                              validation={validation[index]}
+                              countries={countries}
+                              name="affiliations"
+                              handleRemove={() => arrayHelpers.remove(index)}
+                              setFieldValue={setFieldValue}
                             />
+                          ))}
                         </div>
+                        <Stack distribution="trailing" alignment="end">
+                          <Button
+                            buttonType="secondary"
+                            icon="add"
+                            onClick={() => arrayHelpers.push(defaultData)}
+                          >
+                            Add another affiliation
+                          </Button>
+                        </Stack>
+                      </>
+                    )}
+                  />
+                </div>
 
-                        <div className="FormButtons">
-                            <Stack distribution="trailing">
-                                <Button type="submit" disabled={isLoading}>
-                                    Save details
-                                </Button>
-                            </Stack>
-                        </div>
-                    </Form>;
-                }}
-            </Formik>
-        </>
-            ;
-    }
+                <div className="FormButtons">
+                  <Stack distribution="trailing">
+                    <Button type="submit" disabled={isLoading}>
+                      Save details
+                    </Button>
+                  </Stack>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
+      </>
+    );
+  }
 }
 
 const defaultData = {
-    country: '',
-    organization: {
-        id: null,
-        name: '',
-        source: '',
-        country: null,
-        city: '',
-    },
-    department: {
-        id: null,
-        name: '',
-        source: '',
-    },
-    position: ''
+  country: "",
+  organization: {
+    id: null,
+    name: "",
+    source: "",
+    country: null,
+    city: "",
+  },
+  department: {
+    id: null,
+    name: "",
+    source: "",
+  },
+  position: "",
 };
 
 const defaultValidation = {
-    name: null,
-    country: null,
-    city: null,
-    department: null,
-    additionalInformation: null
+  name: null,
+  country: null,
+  city: null,
+  department: null,
+  additionalInformation: null,
 };
 
 const AffiliationSchema = Yup.object().shape({
-    affiliations: Yup.array()
-        .of(
-            Yup.object().shape({
-                country: Yup.string().required("Please select a country"),
-                organization: Yup.object().shape({
-                    source: Yup.string().required('Please select an organization'),
-                    name: Yup.string().when('source', {
-                        is: 'manual',
-                        then: Yup.string().required('Please enter a name'),
-                    }),
-                    city: Yup.string().when('source', {
-                        is: 'manual',
-                        then: Yup.string().required('Please enter a city'),
-                    }),
-                    id: Yup.string().nullable().when('source', {
-                        is: !'manual',
-                        then: Yup.string().required('Please select an organization'),
-                    }),
-                }),
-                department: Yup.object().shape({
-                    source: Yup.string().required('Please select a department'),
-                    name: Yup.string().when('source', {
-                        is: 'manual',
-                        then: Yup.string().required('Please enter a name'),
-                    }),
-                    id: Yup.string().nullable().when('source', {
-                        is: !'manual',
-                        then: Yup.string().required('Please select a department'),
-                    }),
-                }),
-                position: Yup.string().required("Please enter your position")
-            })
-        )
-        .required('Please add an affiliation') // these constraints are shown if and only if inner constraints are satisfied
-        .min(1, 'Please add an affiliation'),
+  affiliations: Yup.array()
+    .of(
+      Yup.object().shape({
+        country: Yup.string().required("Please select a country"),
+        organization: Yup.object().shape({
+          source: Yup.string().required("Please select an organization"),
+          name: Yup.string().when("source", {
+            is: "manual",
+            then: Yup.string().required("Please enter a name"),
+          }),
+          city: Yup.string().when("source", {
+            is: "manual",
+            then: Yup.string().required("Please enter a city"),
+          }),
+          id: Yup.string()
+            .nullable()
+            .when("source", {
+              is: !"manual",
+              then: Yup.string().required("Please select an organization"),
+            }),
+        }),
+        department: Yup.object().shape({
+          source: Yup.string().required("Please select a department"),
+          name: Yup.string().when("source", {
+            is: "manual",
+            then: Yup.string().required("Please enter a name"),
+          }),
+          id: Yup.string()
+            .nullable()
+            .when("source", {
+              is: !"manual",
+              then: Yup.string().required("Please select a department"),
+            }),
+        }),
+        position: Yup.string().required("Please enter your position"),
+      })
+    )
+    .required("Please add an affiliation") // these constraints are shown if and only if inner constraints are satisfied
+    .min(1, "Please add an affiliation"),
 });

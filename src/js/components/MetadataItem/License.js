@@ -1,52 +1,56 @@
-import React, {Component} from 'react'
+import React, { Component } from "react";
 
-import './MetadataItem.scss'
-import axios from "axios";
-import {toast} from "react-toastify";
+import "./MetadataItem.scss";
+import { toast } from "react-toastify";
 import ToastContent from "../ToastContent";
+import { apiClient } from "src/js/network";
 
 export default class License extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            license: null,
-            isLoading: true,
-        };
-    }
-
-    componentDidMount() {
-        this.getLicense();
-    }
-
-    getLicense = () => {
-        const {slug} = this.props;
-
-        axios.get('/api/license/' + slug)
-            .then((response) => {
-                this.setState({
-                    license: response.data,
-                    isLoading: false,
-                });
-            })
-            .catch(() => {
-                this.setState({
-                    isLoading: false,
-                });
-
-                toast.error(<ToastContent type="error" message="Could not load license information."/>);
-            });
+    this.state = {
+      license: null,
+      isLoading: true,
     };
+  }
 
-    render() {
-        const {license, isLoading} = this.state;
+  componentDidMount() {
+    this.getLicense();
+  }
 
-        if (isLoading || !license) {
-            return <div className="License">&nbsp;</div>;
-        }
+  getLicense = () => {
+    const { slug } = this.props;
 
-        return <div className="License">
-            {license.label}
-        </div>;
+    apiClient
+      .get("/api/license/" + slug)
+      .then((response) => {
+        this.setState({
+          license: response.data,
+          isLoading: false,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          isLoading: false,
+        });
+
+        toast.error(
+          <ToastContent
+            type="error"
+            message="Could not load license information."
+          />
+        );
+      });
+  };
+
+  render() {
+    const { license, isLoading } = this.state;
+
+    if (isLoading || !license) {
+      return <div className="License">&nbsp;</div>;
     }
+
+    return <div className="License">{license.label}</div>;
+  }
 }

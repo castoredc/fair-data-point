@@ -1,106 +1,141 @@
-import React, {Component} from "react";
-import {Dropdown, FormLabel, LoadingOverlay, Separator} from "@castoredc/matter";
-import axios from "axios";
-import {toast} from "react-toastify";
+import React, { Component } from "react";
+import {
+  Dropdown,
+  FormLabel,
+  LoadingOverlay,
+  Separator,
+} from "@castoredc/matter";
+import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
 import OptionGroup from "components/StudyStructure/OptionGroup";
 import PageBody from "components/Layout/Dashboard/PageBody";
+import { apiClient } from "src/js/network";
 
 interface AnnotationsProps {
-    studyId: string,
+  studyId: string;
 }
 
 interface AnnotationsState {
-    isLoading: boolean,
-    showModal: boolean,
-    optionGroups: any,
-    selectedOptionGroup: string,
+  isLoading: boolean;
+  showModal: boolean;
+  optionGroups: any;
+  selectedOptionGroup: string;
 }
 
-export default class Annotations extends Component<AnnotationsProps, AnnotationsState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showModal: false,
-            isLoading: false,
-            optionGroups: [],
-            selectedOptionGroup: '',
-        };
-    }
-
-    componentDidMount() {
-        this.getOptionGroups();
-    }
-
-    getOptionGroups = () => {
-        const {studyId} = this.props;
-        const {selectedOptionGroup} = this.state;
-        this.setState({
-            isLoading: true,
-        });
-
-        axios.get('/api/castor/study/' + studyId + '/optiongroups')
-            .then((response) => {
-                this.setState({
-                    optionGroups: response.data,
-                    selectedOptionGroup: selectedOptionGroup !== '' ? selectedOptionGroup : (response.data.length > 0 ? response.data[0].id : ''),
-                    isLoading: false,
-                });
-            })
-            .catch((error) => {
-                if (error.response && typeof error.response.data.error !== "undefined") {
-                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
-                } else {
-                    toast.error(<ToastContent type="error" message="An error occurred"/>);
-                }
-
-                this.setState({
-                    isLoading: false,
-                });
-            });
+export default class Annotations extends Component<
+  AnnotationsProps,
+  AnnotationsState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false,
+      isLoading: false,
+      optionGroups: [],
+      selectedOptionGroup: "",
     };
+  }
 
-    updateSelection = (option) => {
+  componentDidMount() {
+    this.getOptionGroups();
+  }
+
+  getOptionGroups = () => {
+    const { studyId } = this.props;
+    const { selectedOptionGroup } = this.state;
+    this.setState({
+      isLoading: true,
+    });
+
+    apiClient
+      .get("/api/castor/study/" + studyId + "/optiongroups")
+      .then((response) => {
         this.setState({
-            selectedOptionGroup: option.value,
+          optionGroups: response.data,
+          selectedOptionGroup:
+            selectedOptionGroup !== ""
+              ? selectedOptionGroup
+              : response.data.length > 0
+              ? response.data[0].id
+              : "",
+          isLoading: false,
         });
-    }
-
-    render() {
-        const {studyId} = this.props;
-        const {isLoading, optionGroups, selectedOptionGroup} = this.state;
-
-        if (isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading option groups"/>;
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          typeof error.response.data.error !== "undefined"
+        ) {
+          toast.error(
+            <ToastContent type="error" message={error.response.data.error} />
+          );
+        } else {
+          toast.error(
+            <ToastContent type="error" message="An error occurred" />
+          );
         }
 
-        const options = optionGroups.map((optionGroup) => {
-            return {value: optionGroup.id, label: optionGroup.name};
+        this.setState({
+          isLoading: false,
         });
+      });
+  };
 
-        const optionGroup = optionGroups.find((optionGroup) => {
-            return optionGroup.id === selectedOptionGroup;
-        });
+  updateSelection = (option) => {
+    this.setState({
+      selectedOptionGroup: option.value,
+    });
+  };
 
-        if (optionGroups && optionGroups.length === 0) {
-            return <div className="NoResults">This study does not have option groups.</div>
-        }
+  render() {
+    const { studyId } = this.props;
+    const { isLoading, optionGroups, selectedOptionGroup } = this.state;
 
-        return <PageBody>
-            <FormLabel>Option group</FormLabel>
-            <Dropdown
-                options={options}
-                menuPlacement={"auto"}
-                menuPosition="fixed"
-                getOptionLabel={({label}) => label}
-                getOptionValue={({value}) => value}
-                onChange={this.updateSelection}
-                value={selectedOptionGroup ? {value: optionGroup.id, label: optionGroup.name} : undefined}
-            />
-
-            <Separator spacing="comfortable"/>
-
-            {optionGroup && <OptionGroup studyId={studyId} onUpdate={this.getOptionGroups} {...optionGroup} />}
-        </PageBody>;
+    if (isLoading) {
+      return <LoadingOverlay accessibleLabel="Loading option groups" />;
     }
+
+    const options = optionGroups.map((optionGroup) => {
+      return { value: optionGroup.id, label: optionGroup.name };
+    });
+
+    const optionGroup = optionGroups.find((optionGroup) => {
+      return optionGroup.id === selectedOptionGroup;
+    });
+
+    if (optionGroups && optionGroups.length === 0) {
+      return (
+        <div className="NoResults">This study does not have option groups.</div>
+      );
+    }
+
+    return (
+      <PageBody>
+        <FormLabel>Option group</FormLabel>
+        <Dropdown
+          options={options}
+          menuPlacement={"auto"}
+          menuPosition="fixed"
+          getOptionLabel={({ label }) => label}
+          getOptionValue={({ value }) => value}
+          onChange={this.updateSelection}
+          value={
+            selectedOptionGroup
+              ? { value: optionGroup.id, label: optionGroup.name }
+              : undefined
+          }
+        />
+
+        <Separator spacing="comfortable" />
+
+        {optionGroup && (
+          <OptionGroup
+            studyId={studyId}
+            onUpdate={this.getOptionGroups}
+            {...optionGroup}
+          />
+        )}
+      </PageBody>
+    );
+  }
 }
