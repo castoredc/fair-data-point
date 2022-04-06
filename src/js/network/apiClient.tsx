@@ -1,4 +1,13 @@
+import React from "react";
 import axios, { AxiosError } from "axios";
+import ToastContent from "components/ToastContent";
+import { toast } from "react-toastify";
+
+/**
+ * TODO:
+ * - This file should be a .ts file and not a .tsx file.
+ * - Change it back to .ts file when we create a function level API for toasts
+ */
 
 const isLocalEnv = process.env.NODE_ENV === "development";
 
@@ -25,6 +34,12 @@ apiClient.interceptors.response.use(
 
       // Redirect the user to login page if the authorization fails
       if (error.response.status === 401) {
+        toast.error(
+          <ToastContent
+            type="error"
+            message="Session timed out. Please login again to continue."
+          />
+        );
         window.location.href =
           "/login?path=" + encodeURIComponent(window.location.pathname);
       }
