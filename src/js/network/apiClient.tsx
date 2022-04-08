@@ -18,10 +18,6 @@ const apiClient = axios.create();
 
 apiClient.interceptors.response.use(
   (response) => {
-    // Only logs the response when user is accessing console in development mode
-    if (isLocalEnv) {
-      console.log(response);
-    }
     return response;
   },
   (error: AxiosError) => {
