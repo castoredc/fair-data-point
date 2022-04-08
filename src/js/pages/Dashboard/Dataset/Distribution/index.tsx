@@ -1,11 +1,10 @@
-import React, {Component} from "react";
-import axios from "axios";
-import {toast} from "react-toastify";
+import React, { Component } from "react";
+import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
-import {Banner, Button, LoadingOverlay} from "@castoredc/matter";
-import {Route, Switch} from 'react-router-dom';
+import { Button, LoadingOverlay } from "@castoredc/matter";
+import { Route, Switch } from "react-router-dom";
 import DocumentTitle from "components/DocumentTitle";
-import {localizedText} from "../../../../util";
+import { localizedText } from "../../../../util";
 import Header from "components/Layout/Dashboard/Header";
 import Body from "components/Layout/Dashboard/Body";
 import SideBar from "components/SideBar";
@@ -17,308 +16,370 @@ import DistributionLogs from "pages/Dashboard/Dataset/Distribution/DistributionL
 import Details from "pages/Dashboard/Dataset/Distribution/Details";
 import DistributionContentsCsv from "pages/Dashboard/Dataset/Distribution/DistributionContentsCsv";
 import DistributionContentsRdf from "pages/Dashboard/Dataset/Distribution/DistributionContentsRdf";
-import {AuthorizedRouteComponentProps} from "components/Route";
-import {isGranted} from "utils/PermissionHelper";
+import { AuthorizedRouteComponentProps } from "components/Route";
+import { isGranted } from "utils/PermissionHelper";
 import PermissionEditor from "components/PermissionEditor";
 import NoPermission from "pages/ErrorPages/NoPermission";
+import { apiClient } from "src/js/network";
 
 interface DistributionProps extends AuthorizedRouteComponentProps {
-    dataset: any,
+  dataset: any;
 }
 
 interface DistributionState {
-    distribution: any,
-    contents: any,
-    isLoading: boolean,
+  distribution: any;
+  contents: any;
+  isLoading: boolean;
 }
 
-export default class Distribution extends Component<DistributionProps, DistributionState> {
-    constructor(props) {
-        super(props);
+export default class Distribution extends Component<
+  DistributionProps,
+  DistributionState
+> {
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            distribution: null,
-            contents: null,
-            isLoading: true,
-        };
-    }
+    this.state = {
+      distribution: null,
+      contents: null,
+      isLoading: true,
+    };
+  }
 
-    getDistribution = () => {
+  getDistribution = () => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const { match } = this.props;
+
+    apiClient
+      .get(
+        "/api/dataset/" +
+          match.params.dataset +
+          "/distribution/" +
+          match.params.distribution
+      )
+      .then((response) => {
+        this.setState(
+          {
+            distribution: response.data,
+          },
+          this.getContents
+        );
+      })
+      .catch((error) => {
         this.setState({
-            isLoading: true,
+          isLoading: false,
         });
 
-        const {match} = this.props;
+        if (
+          error.response &&
+          typeof error.response.data.error !== "undefined"
+        ) {
+          toast.error(
+            <ToastContent type="error" message={error.response.data.error} />
+          );
+        } else {
+          toast.error(
+            <ToastContent
+              type="error"
+              message="An error occurred while loading your distribution"
+            />
+          );
+        }
+      });
+  };
 
-        axios.get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution)
-            .then((response) => {
-                this.setState({
-                    distribution: response.data,
-                }, this.getContents);
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                });
+  getContents = () => {
+    const { match } = this.props;
 
-                if (error.response && typeof error.response.data.error !== "undefined") {
-                    toast.error(<ToastContent type="error" message={error.response.data.error}/>);
-                } else {
-                    toast.error(<ToastContent type="error"
-                                              message="An error occurred while loading your distribution"/>);
-                }
-            });
-    };
+    apiClient
+      .get(
+        "/api/dataset/" +
+          match.params.dataset +
+          "/distribution/" +
+          match.params.distribution +
+          "/contents"
+      )
 
-    getContents = () => {
-        const {match} = this.props;
+      .then((response) => {
+        this.setState({
+          contents: response.data.elements,
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          isLoading: false,
+        });
 
-        axios.get('/api/dataset/' + match.params.dataset + '/distribution/' + match.params.distribution + '/contents')
+        const message =
+          error.response && typeof error.response.data.error !== "undefined"
+            ? error.response.data.error
+            : "An error occurred while loading the distribution";
+        toast.error(<ToastContent type="error" message={message} />);
+      });
+  };
 
-            .then((response) => {
-                this.setState({
-                    contents: response.data.elements,
-                    isLoading: false,
-                });
-            })
-            .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                });
+  componentDidMount() {
+    this.getDistribution();
+  }
 
-                const message = (error.response && typeof error.response.data.error !== "undefined") ? error.response.data.error : 'An error occurred while loading the distribution';
-                toast.error(<ToastContent type="error" message={message}/>);
-            });
-    };
+  render() {
+    const { history, location, match, user } = this.props;
+    const { isLoading, distribution, contents } = this.state;
 
-    componentDidMount() {
-        this.getDistribution();
+    if (isLoading) {
+      return <LoadingOverlay accessibleLabel="Loading distribution" />;
     }
 
-    render() {
-        const {history, location, match, user} = this.props;
-        const {isLoading, distribution, contents} = this.state;
+    if (!isGranted("edit", distribution.permissions)) {
+      return (
+        <NoPermission text="You do not have permission to edit this distribution" />
+      );
+    }
 
-        if (isLoading) {
-            return <LoadingOverlay accessibleLabel="Loading distribution"/>;
-        }
+    const catalog = match.params.catalog;
+    const study = match.params.study;
+    const dataset = match.params.dataset;
 
-        if(! isGranted('edit', distribution.permissions)) {
-            return <NoPermission text="You do not have permission to edit this distribution"/>;
-        }
+    const title = distribution.hasMetadata
+      ? localizedText(distribution.metadata.title, "en")
+      : "Untitled distribution";
 
-        const catalog = match.params.catalog;
-        const study = match.params.study;
-        const dataset = match.params.dataset;
+    const mainUrl = match.params.study
+      ? "/dashboard/studies/" + match.params.study + "/datasets/" + dataset
+      : "/dashboard/catalogs/" + match.params.catalog + "/datasets/" + dataset;
 
-        const title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
-        
-        const mainUrl = match.params.study ? '/dashboard/studies/' + match.params.study + '/datasets/' + dataset : '/dashboard/catalogs/' + match.params.catalog + '/datasets/' + dataset;
-
-        let sidebarItems = [
+    let sidebarItems = [
+      {
+        to: mainUrl + "/distributions/" + distribution.slug,
+        exact: true,
+        title: "Distribution",
+        customIcon: "distribution",
+      },
+      {
+        to: mainUrl + "/distributions/" + distribution.slug + "/metadata",
+        exact: true,
+        title: "Metadata",
+        customIcon: "metadata",
+      },
+      ...(isGranted("manage", distribution.permissions)
+        ? [
             {
-                to: mainUrl + '/distributions/' + distribution.slug,
-                exact: true,
-                title: 'Distribution',
-                customIcon: 'distribution'
+              to:
+                mainUrl +
+                "/distributions/" +
+                distribution.slug +
+                "/permissions",
+              exact: true,
+              title: "Permissions",
+              icon: "usersLight",
             },
-            {
-                to: mainUrl + '/distributions/' + distribution.slug + '/metadata',
-                exact: true,
-                title: 'Metadata',
-                customIcon: 'metadata'
-            },
-            ...isGranted('manage', distribution.permissions) ? [{
-                to: mainUrl + '/distributions/' + distribution.slug + '/permissions',
-                exact: true,
-                title: 'Permissions',
-                icon: 'usersLight'
-            }] : [],
-            {
-                to: mainUrl + '/distributions/' + distribution.slug + '/subset',
-                exact: true,
-                title: 'Subset',
-                icon: 'selectList'
-            },
-            {
-                type: 'separator'
-            }
-        ];
+          ]
+        : []),
+      {
+        to: mainUrl + "/distributions/" + distribution.slug + "/subset",
+        exact: true,
+        title: "Subset",
+        icon: "selectList",
+      },
+      {
+        type: "separator",
+      },
+    ];
 
-        if (distribution.type === 'rdf') {
-            sidebarItems.push(
-                {
-                    to: mainUrl + '/distributions/' + distribution.slug + '/contents',
-                    exact: true,
-                    title: 'Mappings',
-                    icon: 'order'
-                }
-            );
+    if (distribution.type === "rdf") {
+      sidebarItems.push({
+        to: mainUrl + "/distributions/" + distribution.slug + "/contents",
+        exact: true,
+        title: "Mappings",
+        icon: "order",
+      });
 
-            if (distribution.isCached) {
-                sidebarItems.push(
-                    {
-                        to: mainUrl + '/distributions/' + distribution.slug + '/log',
-                        exact: true,
-                        title: 'Log',
-                        icon: 'summary'
-                    }
-                );
-            }
-        } else if (distribution.type === 'csv') {
-            sidebarItems.push(
-                {
-                    to: mainUrl + '/distributions/' + distribution.slug + '/contents',
-                    exact: true,
-                    title: 'Contents',
-                    icon: 'order'
-                }
-            )
-        }
+      if (distribution.isCached) {
+        sidebarItems.push({
+          to: mainUrl + "/distributions/" + distribution.slug + "/log",
+          exact: true,
+          title: "Log",
+          icon: "summary",
+        });
+      }
+    } else if (distribution.type === "csv") {
+      sidebarItems.push({
+        to: mainUrl + "/distributions/" + distribution.slug + "/contents",
+        exact: true,
+        title: "Contents",
+        icon: "order",
+      });
+    }
 
-        return <>
-            <DocumentTitle title={title}/>
+    return (
+      <>
+        <DocumentTitle title={title} />
 
-            <SideBar
-                back={{
-                    to: mainUrl,
-                    title: 'Back to dataset'
-                }}
-                location={location}
-                items={sidebarItems}
+        <SideBar
+          back={{
+            to: mainUrl,
+            title: "Back to dataset",
+          }}
+          location={location}
+          items={sidebarItems}
+        />
+
+        <Body fullWidth={true}>
+          <Header title={title} fullWidth={true}>
+            <Button
+              buttonType="contentOnly"
+              icon="openNewWindow"
+              href={`/fdp/dataset/${dataset}/distribution/${distribution.slug}`}
+              target="_blank"
+            >
+              View
+            </Button>
+          </Header>
+
+          <Switch>
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution",
+              ]}
+              exact
+              render={(props) => (
+                <Details
+                  {...props}
+                  user={user}
+                  catalog={catalog}
+                  study={study}
+                  dataset={dataset}
+                  distribution={distribution}
+                />
+              )}
             />
 
-            <Body fullWidth={true}>
-                <Header title={title} fullWidth={true}>
-                    <Button
-                        buttonType="contentOnly"
-                        icon="openNewWindow"
-                        href={`/fdp/dataset/${dataset}/distribution/${distribution.slug}`}
-                        target="_blank"
-                    >
-                        View
-                    </Button>
-                </Header>
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/metadata",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/metadata",
+              ]}
+              exact
+              render={(props) => (
+                <DistributionMetadata
+                  {...props}
+                  dataset={dataset}
+                  distribution={distribution}
+                  onSave={this.getDistribution}
+                />
+              )}
+            />
 
-                <Switch>
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution"
-                        ]}
-                        exact
-                        render={(props) => (
-                            <Details
-                                {...props}
-                                user={user}
-                                catalog={catalog}
-                                study={study}
-                                dataset={dataset}
-                                distribution={distribution}
-                            />
-                        )}
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/permissions",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/permissions",
+              ]}
+              exact
+              render={(props) =>
+                isGranted("manage", distribution.permissions) ? (
+                  <PermissionEditor
+                    getObject={this.getDistribution}
+                    type="distribution"
+                    object={distribution}
+                    user={user}
+                    {...props}
+                  />
+                ) : (
+                  <NoPermission text="You do not have access to this page" />
+                )
+              }
+            />
+
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/contents",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/contents",
+              ]}
+              exact
+              render={(props) => {
+                if (distribution.type === "csv") {
+                  return (
+                    <DistributionContentsCsv
+                      contents={contents}
+                      catalog={catalog}
+                      distribution={distribution}
+                      dataset={dataset}
                     />
-
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/metadata",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/metadata"
-                        ]}
-                        exact
-                        render={(props) => (
-                            <DistributionMetadata
-                                {...props}
-                                dataset={dataset}
-                                distribution={distribution}
-                                onSave={this.getDistribution}/>
-                        )}
+                  );
+                } else if (distribution.type === "rdf") {
+                  return (
+                    <DistributionContentsRdf
+                      dataset={dataset}
+                      distribution={distribution}
                     />
+                  );
+                }
 
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/permissions",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/permissions"
-                        ]}
-                        exact
-                           render={(props) => isGranted('manage', distribution.permissions) ?
-                               <PermissionEditor
-                                   getObject={this.getDistribution}
-                                   type="distribution"
-                                   object={distribution}
-                                   user={user}
-                                   {...props}
-                               /> : <NoPermission text="You do not have access to this page"/>
-                           }
-                    />
+                return (
+                  <div className="NoResults">
+                    This distribution does not have contents.
+                  </div>
+                );
+              }}
+            />
 
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/contents",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/contents"
-                        ]}
-                        exact
-                        render={(props) => {
-                            if (distribution.type === 'csv') {
-                                return <DistributionContentsCsv contents={contents} catalog={catalog}
-                                                                distribution={distribution} dataset={dataset}/>;
-                            } else if (distribution.type === 'rdf') {
-                                return <DistributionContentsRdf dataset={dataset} distribution={distribution}/>;
-                            }
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log/:log",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log/:log",
+              ]}
+              exact
+              render={(props) => (
+                <DistributionLog
+                  {...props}
+                  dataset={dataset}
+                  distribution={distribution}
+                />
+              )}
+            />
 
-                            return <div className="NoResults">This distribution does not have contents.</div>;
-                        }}
-                    />
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log",
+              ]}
+              exact
+              render={(props) => (
+                <DistributionLogs
+                  {...props}
+                  catalog={catalog}
+                  study={study}
+                  dataset={dataset}
+                  distribution={distribution}
+                />
+              )}
+            />
 
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log/:log",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log/:log"
-                        ]}
-                        exact
-                        render={(props) => (
-                            <DistributionLog
-                                {...props}
-                                dataset={dataset}
-                                distribution={distribution}
-                            />
-                        )}
-                    />
+            <Route
+              path={[
+                "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/subset",
+                "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/subset",
+              ]}
+              exact
+              render={(props) => (
+                <DistributionSubset
+                  {...props}
+                  dataset={dataset}
+                  distribution={distribution}
+                />
+              )}
+            />
 
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/log",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/log"
-                        ]}
-                        exact
-                        render={(props) => (
-                            <DistributionLogs
-                                {...props}
-                                catalog={catalog}
-                                study={study}
-                                dataset={dataset}
-                                distribution={distribution}
-                            />
-                        )}
-                    />
-
-                    <Route
-                        path={[
-                            "/dashboard/studies/:study/datasets/:dataset/distributions/:distribution/subset",
-                            "/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/subset"
-                        ]}
-                        exact
-                        render={(props) => (
-                            <DistributionSubset
-                                {...props}
-                                dataset={dataset}
-                                distribution={distribution}
-                            />
-                        )}
-                    />
-
-                    <Route component={NotFound}/>
-                </Switch>
-            </Body>
-        </>;
-    }
+            <Route component={NotFound} />
+          </Switch>
+        </Body>
+      </>
+    );
+  }
 }

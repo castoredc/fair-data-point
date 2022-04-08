@@ -1,176 +1,189 @@
-import React, {Component} from 'react'
-import axios, {CancelTokenSource} from "axios";
-import {toast} from "react-toastify";
+import React, { Component } from "react";
+import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
 import FormItem from "components/Form/FormItem";
-import {Button, Dropdown, Stack, TextInput} from "@castoredc/matter";
-import {FieldProps} from "formik";
-import {AsyncDropdownIndicator, OptionType} from "components/Input/Formik/Select";
-import {debounce} from 'lodash';
-import {OptionsType} from "react-select/src/types";
+import { Button, Dropdown, Stack, TextInput } from "@castoredc/matter";
+import { FieldProps } from "formik";
+import {
+  AsyncDropdownIndicator,
+  OptionType,
+} from "components/Input/Formik/Select";
+import debounce from "lodash/debounce";
+import { OptionsType } from "react-select/src/types";
 import FieldErrors from "components/Input/Formik/Errors";
+import { apiClient } from "src/js/network";
 
 interface OrganizationSelectProps extends FieldProps {
-    country: string,
+  country: string;
 }
 
 type OrganizationSelectState = {
-    axiosCancel: CancelTokenSource | null,
-    cachedOptions: OptionsType<OptionType>,
-}
+  cachedOptions: OptionsType<OptionType>;
+};
 
-export default class OrganizationSelect extends Component<OrganizationSelectProps, OrganizationSelectState> {
-    constructor(props) {
-        super(props);
+export default class OrganizationSelect extends Component<
+  OrganizationSelectProps,
+  OrganizationSelectState
+> {
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            axiosCancel: null,
-            cachedOptions: [],
-        };
+    this.state = {
+      cachedOptions: [],
+    };
+  }
 
-        this.loadOrganizations = debounce(this.loadOrganizations, 1000)
-    }
+  loadOrganizations = debounce((input: string, callback: (options) => void) => {
+    const { country } = this.props;
 
-    loadOrganizations = (input: string, callback: (options) => void) => {
-        const {axiosCancel} = this.state;
-        const {country} = this.props;
-
-        if (axiosCancel !== null) {
-            axiosCancel.cancel();
+    apiClient
+      .get("/api/agent/organization", {
+        params: {
+          country: country,
+          search: input,
+        },
+      })
+      .then((response) => {
+        this.setState(
+          {
+            cachedOptions: response.data,
+          },
+          () => {
+            callback(response.data);
+          }
+        );
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          typeof error.response.data.error !== "undefined"
+        ) {
+          toast.error(
+            <ToastContent type="error" message={error.response.data.error} />
+          );
+        } else {
+          toast.error(
+            <ToastContent type="error" message="An error occurred" />
+          );
         }
 
-        const CancelToken = axios.CancelToken;
-        const source = CancelToken.source();
+        callback(null);
+      });
+  }, 300);
 
-        this.setState({
-            axiosCancel: source,
-        });
+  handleOrganizationSelect = (organization) => {
+    const { form, field } = this.props;
 
-        axios.get('/api/agent/organization', {
-            cancelToken: source.token,
-            params: {
-                country: country,
-                search: input,
-            },
-        }).then((response) => {
-            this.setState({
-                cachedOptions: response.data
-            }, () => {
-                callback(response.data);
-            });
-        })
-            .catch((error) => {
-                if (!axios.isCancel(error)) {
-                    if (error.response && typeof error.response.data.error !== "undefined") {
-                        toast.error(<ToastContent type="error" message={error.response.data.error}/>);
-                    } else {
-                        toast.error(<ToastContent type="error" message="An error occurred"/>);
-                    }
-                }
-                callback(null);
-            });
-    };
+    form.setFieldValue(field.name, {
+      source: organization.source,
+      id: organization.value,
+      name: organization.label,
+      city: organization.data.city,
+    });
+  };
 
-    handleOrganizationSelect = (organization) => {
-        const {form, field} = this.props;
+  toggleManual = () => {
+    const { form, field } = this.props;
+    const value = field.value ? field.value : [defaultData];
 
-        form.setFieldValue(field.name, {
-            source: organization.source,
-            id: organization.value,
-            name: organization.label,
-            city: organization.data.city,
-        });
-    };
+    form.setFieldValue(field.name, {
+      ...defaultData,
+      source: value.source === "manual" ? "" : "manual",
+      id: null,
+    });
+  };
 
-    toggleManual = () => {
-        const {form, field} = this.props;
-        const value = field.value ? field.value : [defaultData];
+  render() {
+    const { country, field, form } = this.props;
+    const { cachedOptions } = this.state;
 
-        form.setFieldValue(field.name, {
-            ...defaultData,
-            source: value.source === 'manual' ? '' : 'manual',
-            id: null,
-        });
-    };
+    const value = field.value ? field.value : [defaultData];
+    const disabled = country === "" || country === null;
 
-    render() {
-        const {country, field, form} = this.props;
-        const {cachedOptions} = this.state;
+    const manual = value.source === "manual";
 
-        const value = field.value ? field.value : [defaultData];
-        const disabled = country === '' || country === null;
+    return (
+      <div>
+        <Stack>
+          {!manual && (
+            <FormItem label="Organization / Institution">
+              <Dropdown
+                name="organization"
+                loadOptions={this.loadOrganizations}
+                options={cachedOptions}
+                menuPosition="fixed"
+                isDisabled={disabled}
+                onChange={this.handleOrganizationSelect}
+                components={{ DropdownIndicator: AsyncDropdownIndicator }}
+                getOptionLabel={({ label }) => label}
+                getOptionValue={({ value }) => value}
+                openMenuOnClick={false}
+                value={{
+                  source: value.source,
+                  value: value.id,
+                  label: value.name,
+                  city: value.city,
+                }}
+              />
 
-        const manual = value.source === 'manual';
+              <Button
+                buttonType="contentOnly"
+                className="CannotFind"
+                onClick={this.toggleManual}
+                disabled={disabled}
+              >
+                I cannot find my organization
+              </Button>
+            </FormItem>
+          )}
 
-        return <div>
-            <Stack>
-                {!manual && <FormItem label="Organization / Institution">
-                    <Dropdown
-                        name="organization"
-                        loadOptions={(value, callback) => this.loadOrganizations(value, callback)}
-                        options={cachedOptions}
-                        menuPosition="fixed"
-                        isDisabled={disabled}
-                        onChange={this.handleOrganizationSelect}
-                        components={{DropdownIndicator: AsyncDropdownIndicator}}
-                        getOptionLabel={({label}) => label}
-                        getOptionValue={({value}) => value}
-                        openMenuOnClick={false}
-                        value={{
-                            source: value.source,
-                            value: value.id,
-                            label: value.name,
-                            city: value.city,
-                        }}
-                    />
+          {manual && (
+            <>
+              <FormItem label="Organization / Institution Name">
+                <TextInput
+                  value={value.name}
+                  onChange={(event) => {
+                    form.setFieldValue(field.name, {
+                      ...value,
+                      name: event.target.value,
+                    });
+                  }}
+                  autoFocus
+                />
 
-                    <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual}
-                            disabled={disabled}>
-                        I cannot find my organization
-                    </Button>
-                </FormItem>}
+                <Button
+                  buttonType="contentOnly"
+                  className="CannotFind"
+                  onClick={this.toggleManual}
+                  disabled={disabled}
+                >
+                  Search for an organization
+                </Button>
+              </FormItem>
+              <FormItem label="City">
+                <TextInput
+                  value={value.city}
+                  onChange={(event) => {
+                    form.setFieldValue(field.name, {
+                      ...value,
+                      city: event.target.value,
+                    });
+                  }}
+                />
+              </FormItem>
+            </>
+          )}
+        </Stack>
 
-                {manual && <>
-                    <FormItem label="Organization / Institution Name">
-                        <TextInput
-                            value={value.name}
-                            onChange={(event) => {
-                                form.setFieldValue(field.name, {
-                                    ...value,
-                                    name: event.target.value
-                                });
-                            }}
-                            autoFocus
-                        />
-
-                        <Button buttonType="contentOnly" className="CannotFind"
-                                onClick={this.toggleManual}
-                                disabled={disabled}>
-                            Search for an organization
-                        </Button>
-                    </FormItem>
-                    <FormItem label="City">
-                        <TextInput
-                            value={value.city}
-                            onChange={(event) => {
-                                form.setFieldValue(field.name, {
-                                    ...value,
-                                    city: event.target.value
-                                });
-                            }}
-                        />
-                    </FormItem>
-                </>}
-            </Stack>
-
-            <FieldErrors field={field}/>
-        </div>
-    }
+        <FieldErrors field={field} />
+      </div>
+    );
+  }
 }
 
 const defaultData = {
-    id: null,
-    name: '',
-    source: '',
-    city: '',
+  id: null,
+  name: "",
+  source: "",
+  city: "",
 };
