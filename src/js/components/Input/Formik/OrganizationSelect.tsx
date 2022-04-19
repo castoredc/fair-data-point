@@ -15,6 +15,7 @@ import { apiClient } from "src/js/network";
 
 interface OrganizationSelectProps extends FieldProps {
   country: string;
+  departmentField: string;
 }
 
 type OrganizationSelectState = {
@@ -83,13 +84,19 @@ export default class OrganizationSelect extends Component<
   };
 
   toggleManual = () => {
-    const { form, field } = this.props;
+    const { form, field, departmentField } = this.props;
     const value = field.value ? field.value : [defaultData];
 
     form.setFieldValue(field.name, {
       ...defaultData,
       source: value.source === "manual" ? "" : "manual",
       id: null,
+    });
+
+    form.setFieldValue(departmentField, {
+      id: null,
+      name: "",
+      source: value.source === "manual" ? "" : "manual",
     });
   };
 

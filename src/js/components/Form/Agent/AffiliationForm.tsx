@@ -67,6 +67,7 @@ const AffiliationForm: FC<AffiliationFormProps> = ({
                             component={OrganizationSelect}
                             label="Organization"
                             name={`${prefix}.organization`}
+                            departmentField={`${prefix}.department`}
                             country={values.country}
                         />
                     </Stack>
