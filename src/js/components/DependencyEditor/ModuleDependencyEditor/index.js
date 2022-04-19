@@ -1,12 +1,10 @@
 import React, {Component} from "react";
-import Dropdown from "../../Input/Dropdown";
-import {Button} from "@castoredc/matter";
+import {Button, Dropdown} from "@castoredc/matter";
 import '../DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
 import {RuleGroup} from "./RuleGroup";
 import {Rule} from "./Rule";
 import {ValueEditor} from "./ValueEditor";
-import {ValidatorForm} from "react-form-validator-core";
 
 export default class ModuleDependencyEditor extends Component {
     constructor(props) {
@@ -31,23 +29,11 @@ export default class ModuleDependencyEditor extends Component {
         return operators.filter((operator) => operator.types.includes(fieldObject.valueType));
     };
 
-    handleSubmit = () => {
-        const {save} = this.props;
-
-        if (this.form.isFormValid()) {
-            save(true);
-        }
-    };
-
     render() {
-        const {prefixes, handleChange, value} = this.props;
+        const {prefixes, handleChange, value, save} = this.props;
         const {fields} = this.state;
 
-        return <ValidatorForm
-            ref={node => (this.form = node)}
-            onSubmit={this.handleSubmit}
-            method="post"
-        >
+        return <>
             <div className="DependencyEditor">
                 <QueryBuilder
                     query={value}
@@ -65,7 +51,7 @@ export default class ModuleDependencyEditor extends Component {
                         removeRuleAction: (props) => <Button icon="trash" buttonType="danger"
                                                              onClick={props.handleOnClick}
                                                              iconDescription="Delete condition"/>,
-                        combinatorSelector: (props) => <Dropdown value={props.value}
+                        combinatorSelector: (props) => <Dropdown value={props.options.find((option) => option.name === props.value)}
                                                                  onChange={(e) => props.handleOnChange(e.value)}
                                                                  menuPosition="fixed"
                                                                  width="minimum"
@@ -73,14 +59,14 @@ export default class ModuleDependencyEditor extends Component {
                                                                      return {value: option.name, label: option.label};
                                                                  })}
                         />,
-                        fieldSelector: (props) => <Dropdown value={props.value}
+                        fieldSelector: (props) => <Dropdown value={props.options.find((option) => option.name === props.value)}
                                                             onChange={(e) => props.handleOnChange(e.value)}
                                                             menuPosition="fixed"
                                                             width="tiny" options={props.options.map((option) => {
                             return {value: option.name, label: option.label};
                         })}
                         />,
-                        operatorSelector: (props) => <Dropdown value={props.value}
+                        operatorSelector: (props) => <Dropdown value={props.options.find((option) => option.name === props.value)}
                                                                onChange={(e) => props.handleOnChange(e.value)}
                                                                menuPosition="fixed"
                                                                width="minimum"
@@ -98,12 +84,11 @@ export default class ModuleDependencyEditor extends Component {
             </div>
 
             <footer>
-                <Button type="submit">
+                <Button onClick={() => save(true)}>
                     Edit dependencies
                 </Button>
             </footer>
-
-        </ValidatorForm>;
+        </>;
     }
 }
 

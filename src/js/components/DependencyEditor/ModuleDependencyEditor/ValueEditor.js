@@ -1,5 +1,6 @@
 import React from "react";
-import Input from "../../Input";
+import {TextInput} from "@castoredc/matter";
+import MaskedInput from "react-text-mask";
 
 export const ValueEditor = ({
                                 field,
@@ -10,9 +11,6 @@ export const ValueEditor = ({
                                 values,
                                 prefixes,
                             }) => {
-
-    const required = "This field is required";
-    const validUrl = "Please enter a valid URI";
 
     const handleUrlChange = (value, prefixes) => {
         let newValue = value;
@@ -38,11 +36,9 @@ export const ValueEditor = ({
     }
 
     if (fieldData.valueType === 'annotated') {
-        return <Input className="ValueEditor" value={value}
-                      validators={['required', 'isUrl']}
-                      errorMessages={[required, validUrl]}
-                      onChange={(e) => handleUrlChange(e.target.value, prefixes)}
-                      width="20rem"
+        return <TextInput className="ValueEditor" value={value}
+                          onChange={(e) => handleUrlChange(e.target.value, prefixes)}
+                          inputSize="20rem"
         />;
     }
 
@@ -61,21 +57,22 @@ export const ValueEditor = ({
             placeholder = 'hh:mm';
         }
 
-        return <Input className="ValueEditor"
-                      value={value}
-                      validators={['required']}
-                      errorMessages={[required]}
-                      onChange={(e) => handleOnChange(e.target.value)}
-                      mask={mask}
-                      placeholder={placeholder}
-                      width="20rem"
-        />;
+        return <MaskedInput
+            mask={mask}
+            className="ValueEditor"
+            ref={(r) => {
+                this.input = r;
+            }}
+            value={value}
+            onChange={(e) => handleOnChange(e.target.value)}
+            render={(ref, props) => (
+                <TextInput forwardRef={ref} {...props} inputSize="20rem" placeholder={placeholder} />
+            )}
+        />
     }
 
-    return <Input className="ValueEditor" value={value}
-                  validators={['required']}
-                  errorMessages={[required]}
+    return <TextInput className="ValueEditor" value={value}
                   onChange={(e) => handleOnChange(e.target.value)}
-                  width="20rem"
+                  inputSize="20rem"
     />;
 };
