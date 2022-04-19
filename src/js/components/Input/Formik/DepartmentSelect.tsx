@@ -181,14 +181,14 @@ export default class DepartmentSelect extends Component<
                 autoFocus={value.source === "manual"}
               />
 
-              <Button
+              {organization.source !== "manual" && <Button
                 buttonType="contentOnly"
                 className="CannotFind"
                 onClick={this.toggleManual}
                 disabled={disabled}
               >
                 Search for a department
-              </Button>
+              </Button>}
             </FormItem>
           </>
         )}
