@@ -48,7 +48,7 @@ class MetadataParseCommandHandler implements MessageHandlerInterface
 
                 foreach ($field->metadata->children() as $metadata) {
                     $type = (string) $metadata->metadata_type;
-                    $typeName = $types[$type];
+                    $typeName = $types[$type] ?? $type;
                     $id = (string) $metadata->metadata_id;
                     $description = (string) $metadata->metadata_description;
                     $value = (string) $metadata->metadata_value;
