@@ -11,7 +11,7 @@
         "ciwit/bioportal-browser": "^1.1.1",
         "cocur/slugify": "^4.0",
         "composer/package-versions-deprecated": "1.11.99.5",
-        "doctrine/doctrine-bundle": "^2.5",
+        "doctrine/doctrine-bundle": "^2.6",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.10",
         "easyrdf/easyrdf": "^1.0.0",
