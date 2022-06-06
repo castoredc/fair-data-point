@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc27ced171babe27760dec35c69c214e",
+    "content-hash": "f2f251676a3d75b59f983a6020477eff",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -4658,16 +4658,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.18.5",
+            "version": "v1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "10e438f53a972439675dc720706f0cd5c0ed94f1"
+                "reference": "c36d11d1bca0a85dde6ca4d52bd4aceeb54dbd8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/10e438f53a972439675dc720706f0cd5c0ed94f1",
-                "reference": "10e438f53a972439675dc720706f0cd5c0ed94f1",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/c36d11d1bca0a85dde6ca4d52bd4aceeb54dbd8f",
+                "reference": "c36d11d1bca0a85dde6ca4d52bd4aceeb54dbd8f",
                 "shasum": ""
             },
             "require": {
@@ -4703,7 +4703,7 @@
             "description": "Composer plugin for Symfony",
             "support": {
                 "issues": "https://github.com/symfony/flex/issues",
-                "source": "https://github.com/symfony/flex/tree/v1.18.5"
+                "source": "https://github.com/symfony/flex/tree/v1.19.0"
             },
             "funding": [
                 {
@@ -4719,7 +4719,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-16T17:26:46+00:00"
+            "time": "2022-06-03T07:58:31+00:00"
         },
         {
             "name": "symfony/framework-bundle",
@@ -11276,5 +11276,5 @@
         "ext-sodium": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
