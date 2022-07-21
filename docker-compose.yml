@@ -26,6 +26,8 @@ services:
     environment:
       COMPOSER_HOME: /opt/composer
       APP_ENV: dev
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       - mysql
     links:
