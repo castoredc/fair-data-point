@@ -78,6 +78,17 @@ class DashboardController extends AbstractController
         );
     }
 
+    /** @Route("/dashboard/edc-servers", name="dashboard_edcservers") */
+    public function edcServers(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'EDC Servers']
+        );
+    }
+
     /**
      * @Route("/dashboard/studies/add/{catalog}", name="dashboard_study_add_catalog")
      * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
