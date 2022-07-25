@@ -27,6 +27,24 @@ class CastorServer
     /** @ORM\Column(type="boolean") */
     private bool $default;
 
+    private function __construct(Iri $uri, string $name, string $flag, bool $default = false)
+    {
+        $this->url = $uri;
+        $this->name = $name;
+        $this->flag = $flag;
+        $this->default = $default;
+    }
+
+    public static function nonDefaultServer(string $uri, string $name, string $flag): CastorServer
+    {
+        return new self(new Iri($uri), $name, $flag);
+    }
+
+    public static function defaultServer(string $uri, string $name, string $flag): CastorServer
+    {
+        return new self(new Iri($uri), $name, $flag, true);
+    }
+
     public function getId(): int
     {
         return $this->id;
