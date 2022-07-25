@@ -5,6 +5,9 @@ namespace App\Security;
 
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
+use function filter_var;
+use const FILTER_VALIDATE_URL;
 
 /** @ORM\Entity(repositoryClass="App\Repository\CastorServerRepository") */
 class CastorServer
@@ -27,19 +30,26 @@ class CastorServer
     /** @ORM\Column(type="boolean") */
     private bool $default;
 
+    /** @throws InvalidArgumentException */
     private function __construct(Iri $uri, string $name, string $flag, bool $default = false)
     {
+        if (filter_var($uri->getValue(), FILTER_VALIDATE_URL) === false) {
+            throw new InvalidArgumentException('Invalid Castor EDC server URI provided.');
+        }
+
         $this->url = $uri;
         $this->name = $name;
         $this->flag = $flag;
         $this->default = $default;
     }
 
+    /** @throws InvalidArgumentException */
     public static function nonDefaultServer(string $uri, string $name, string $flag): CastorServer
     {
         return new self(new Iri($uri), $name, $flag);
     }
 
+    /** @throws InvalidArgumentException */
     public static function defaultServer(string $uri, string $name, string $flag): CastorServer
     {
         return new self(new Iri($uri), $name, $flag, true);
