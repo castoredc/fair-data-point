@@ -28,9 +28,9 @@ COPY docker/symfony/php-xdebug /usr/local/bin/php-xdebug
 # Override php.ini settings
 #COPY ./docker/symfony/app_custom.ini /usr/local/etc/php/conf.d/app_custom.ini
 
-WORKDIR /var/www/html
+WORKDIR /home/castor/fdp
 
-COPY . /var/www/html
+COPY . /home/castor/fdp
 
 # Install composer
 RUN composer install -v

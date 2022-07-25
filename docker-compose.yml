@@ -20,7 +20,6 @@ services:
       dockerfile: ./docker/symfony/Dockerfile
     command: php-fpm
     volumes:
-      - ./var:/var/www/html/var
       - ~/.composer:/opt/composer
       - .:/home/castor/fdp:delegated
     environment:

@@ -30,9 +30,12 @@ class CastorOAuthController extends AbstractController
     }
 
     /**
-     * After going to Facebook, you're redirected back here
+     * After going to Castor's login page, you're redirected back here
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml
+     *
+     * From https://github.com/knpuniversity/oauth2-client-bundle#step-3-use-the-client-service:
+     * If you want to *authenticate* the user, then leave this method blank and create a Guard authenticator
      *
      * @Route("/login/check-castor", name="connect_castor_check")
      */
