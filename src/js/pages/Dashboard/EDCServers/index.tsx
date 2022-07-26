@@ -6,11 +6,13 @@ import ToastContent from "components/ToastContent";
 import { AuthorizedRouteComponentProps } from "components/Route";
 import PageBody from "components/Layout/Dashboard/PageBody";
 import { apiClient } from "src/js/network";
+import EDCServersGrid from "components/DataTable/EDCServersGrid";
+import {ServerType} from "types/ServerType";
 
 interface EDCServersProps extends AuthorizedRouteComponentProps {}
 
 interface EDCServersState {
-    edcServers: any;
+    edcServers: ServerType[];
     isLoading: boolean;
 }
 
@@ -22,7 +24,7 @@ export default class EDCServers extends Component<
         super(props);
         this.state = {
             isLoading: true,
-            edcServers: null,
+            edcServers: [],
         };
     }
 
@@ -35,45 +37,39 @@ export default class EDCServers extends Component<
             isLoading: true,
         });
 
-        // @TODO Create backend endpoint and load the data here.
-        // apiClient
-        //     .get("/api/edc-servers")
-        //     .then((response) => {
-        //         this.setState({
-        //             edcServers: response.data,
-        //             isLoading: false,
-        //         });
-        //     })
-        //     .catch((error) => {
-        //         this.setState({
-        //             isLoading: false,
-        //         });
-        //
-        //         if (
-        //             error.response &&
-        //             typeof error.response.data.error !== "undefined"
-        //         ) {
-        //             toast.error(
-        //                 <ToastContent type="error" message={error.response.data.error} />
-        //             );
-        //         } else {
-        //             toast.error(
-        //                 <ToastContent
-        //                     type="error"
-        //                     message="An error occurred while loading the EDC Servers information"
-        //                 />
-        //             );
-        //         }
-        //     });
+        apiClient
+            .get("/api/castor/servers")
+            .then((response) => {
+                this.setState({
+                    edcServers: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    isLoading: false,
+                });
 
-        this.setState({
-            isLoading: false,
-        });
-
+                if (
+                    error.response &&
+                    typeof error.response.data.error !== "undefined"
+                ) {
+                    toast.error(
+                        <ToastContent type="error" message={error.response.data.error} />
+                    );
+                } else {
+                    toast.error(
+                        <ToastContent
+                            type="error"
+                            message="An error occurred while loading the EDC Servers information"
+                        />
+                    );
+                }
+            });
     };
 
     render() {
-        const { /*edcServers, */isLoading } = this.state;
+        const { edcServers, isLoading } = this.state;
 
         const title = "EDC Servers overview"
 
@@ -87,9 +83,9 @@ export default class EDCServers extends Component<
 
                 <Heading type="Section">{title}</Heading>
 
-                {/*{fdp && (*/}
-                {/*    <FAIRDataPointMetadataForm fdp={fdp} onSave={this.getFairDataPoint} />*/}
-                {/*)}*/}
+                {edcServers.length && (
+                    <EDCServersGrid edcServers={edcServers} /*onSave={this.getEDCServers}*/ />
+                )}
             </PageBody>
         );
     }
