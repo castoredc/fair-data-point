@@ -23,6 +23,8 @@ class CastorServersApiController extends ApiController
         $handledStamp = $envelope->last(HandledStamp::class);
         assert($handledStamp instanceof HandledStamp);
 
-        return new JsonResponse((new CastorServersApiResource($handledStamp->getResult()))->toArray());
+        return new JsonResponse(
+            (new CastorServersApiResource($handledStamp->getResult()))->toArray()
+        );
     }
 }

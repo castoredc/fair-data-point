@@ -15,7 +15,7 @@ class CastorServerApiResource implements ApiResource
         $this->server = $server;
     }
 
-    /** @return array<mixed> */
+    /** @return array{id: int, url: string, name: string, flag: string, default: bool} */
     public function toArray(): array
     {
         return [
