@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\Encryption\EncryptedString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Iri;
+use App\Exception\CouldNotDecrypt;
+use App\Exception\CouldNotTransformEncryptedStringToJson;
+use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use function filter_var;
@@ -30,6 +35,12 @@ class CastorServer
     /** @ORM\Column(type="boolean") */
     private bool $default;
 
+    /** @ORM\Column(type="string", length=255, nullable=true) */
+    private string $clientId;
+
+    /** @ORM\Column(type="string", length=255, nullable=true) */
+    private string $clientSecret;
+
     /** @throws InvalidArgumentException */
     private function __construct(Iri $uri, string $name, string $flag, bool $default = false)
     {
@@ -55,6 +66,31 @@ class CastorServer
         return new self(new Iri($uri), $name, $flag, true);
     }
 
+    /** @throws CouldNotTransformEncryptedStringToJson */
+    public static function withClientCredentials(
+        CastorServer $castorServer,
+        EncryptionService $encryptionService,
+        string $clientId,
+        string $clientSecret
+    ): CastorServer {
+        $encryptedClientId = json_encode($encryptionService->encrypt(new SensitiveDataString($clientId)));
+
+        if ($encryptedClientId === false) {
+            throw new CouldNotTransformEncryptedStringToJson();
+        }
+
+        $encryptedClientSecret = json_encode($encryptionService->encrypt(new SensitiveDataString($clientSecret)));
+
+        if ($encryptedClientSecret === false) {
+            throw new CouldNotTransformEncryptedStringToJson();
+        }
+
+        $castorServer->clientId = $encryptedClientId;
+        $castorServer->clientSecret = $encryptedClientSecret;
+
+        return $castorServer;
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -78,5 +114,27 @@ class CastorServer
     public function isDefault(): bool
     {
         return $this->default;
+    }
+
+    /** @throws CouldNotDecrypt */
+    public function getDecryptedClientId(EncryptionService $encryptionService): SensitiveDataString
+    {
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientId));
+    }
+
+    /** @throws CouldNotDecrypt */
+    public function getDecryptedClientSecret(EncryptionService $encryptionService): SensitiveDataString
+    {
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientSecret));
+    }
+
+    public function getClientIdCiphertext(): string
+    {
+        return $this->clientId;
+    }
+
+    public function getClientSecretCiphertext(): string
+    {
+        return $this->clientSecret;
     }
 }

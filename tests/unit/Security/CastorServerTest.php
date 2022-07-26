@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\Security;
 
+use App\Entity\Encryption\EncryptedString;
+use App\Entity\Encryption\SensitiveDataString;
 use App\Security\CastorServer;
+use App\Service\EncryptionService;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +20,7 @@ final class CastorServerTest extends TestCase
 
         $newServer = CastorServer::nonDefaultServer($uri, $name, $flag);
 
-        self::assertSame($uri, (string) $newServer->getUrl());
+        self::assertSame($uri, (string)$newServer->getUrl());
         self::assertSame($name, $newServer->getName());
         self::assertSame($flag, $newServer->getFlag());
         self::assertFalse($newServer->isDefault());
@@ -31,7 +34,7 @@ final class CastorServerTest extends TestCase
 
         $newServer = CastorServer::defaultServer($uri, $name, $flag);
 
-        self::assertSame($uri, (string) $newServer->getUrl());
+        self::assertSame($uri, (string)$newServer->getUrl());
         self::assertSame($name, $newServer->getName());
         self::assertSame($flag, $newServer->getFlag());
         self::assertTrue($newServer->isDefault());
@@ -46,7 +49,7 @@ final class CastorServerTest extends TestCase
 
         $newServer = CastorServer::defaultServer($uri, $name, $flag);
 
-        self::assertSame($uri, (string) $newServer->getUrl());
+        self::assertSame($uri, (string)$newServer->getUrl());
         self::assertSame($name, $newServer->getName());
         self::assertSame($flag, $newServer->getFlag());
         self::assertTrue($newServer->isDefault());
@@ -61,5 +64,30 @@ final class CastorServerTest extends TestCase
             ['null'],
             [''],
         ];
+    }
+
+    public function testCanAddClientCredentialsToExistingDatabaseServer(): void
+    {
+        $uri = 'https://td1.castoredc.org';
+        $name = 'My next server';
+        $flag = 'nl';
+
+        $server = CastorServer::defaultServer($uri, $name, $flag);
+        $clientId = 'E47AFBFF-A602-43EF-8F7C-F14616BCFE3F';
+        $clientSecret = '555d8f0fbb944546e626869a92cdfcdf';
+
+        $encryption = $this->createMock(EncryptionService::class);
+        $encryption->expects(self::exactly(2))
+            ->method('encrypt')
+            ->willReturnOnConsecutiveCalls(new EncryptedString('encryptedClientId', 'nonce1'), new EncryptedString('encryptedClientSecret', 'nonce2'));
+
+        $serverWithCredentials = CastorServer::withClientCredentials($server, $encryption, $clientId, $clientSecret);
+
+        self::assertNotSame('', $server->getClientIdCiphertext());
+        self::assertNotSame('', $server->getClientSecretCiphertext());
+        self::assertStringContainsString('encryptedClientId', $server->getClientIdCiphertext());
+        self::assertStringContainsString('nonce1', $server->getClientIdCiphertext());
+        self::assertStringContainsString('encryptedClientSecret', $server->getClientSecretCiphertext());
+        self::assertStringContainsString('nonce2', $server->getClientSecretCiphertext());
     }
 }
