@@ -12,6 +12,7 @@ use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use function filter_var;
+use function json_encode;
 use const FILTER_VALIDATE_URL;
 
 /** @ORM\Entity(repositoryClass="App\Repository\CastorServerRepository") */
@@ -36,10 +37,10 @@ class CastorServer
     private bool $default;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
-    private string $clientId;
+    private ?string $clientId;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
-    private string $clientSecret;
+    private ?string $clientSecret;
 
     /** @throws InvalidArgumentException */
     private function __construct(Iri $uri, string $name, string $flag, bool $default = false)
@@ -91,9 +92,10 @@ class CastorServer
         return $castorServer;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
-        return $this->id;
+        // This isn't pretty, but the only way to work with a non-persisted/new entity in unit tests.
+        return $this->id ?? null;
     }
 
     public function getUrl(): Iri
@@ -119,21 +121,29 @@ class CastorServer
     /** @throws CouldNotDecrypt */
     public function getDecryptedClientId(EncryptionService $encryptionService): SensitiveDataString
     {
+        if ($this->clientId === null) {
+            return new SensitiveDataString('');
+        }
+
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientId));
     }
 
     /** @throws CouldNotDecrypt */
     public function getDecryptedClientSecret(EncryptionService $encryptionService): SensitiveDataString
     {
+        if ($this->clientSecret === null) {
+            return new SensitiveDataString('');
+        }
+
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->clientSecret));
     }
 
-    public function getClientIdCiphertext(): string
+    public function getClientIdCiphertext(): ?string
     {
         return $this->clientId;
     }
 
-    public function getClientSecretCiphertext(): string
+    public function getClientSecretCiphertext(): ?string
     {
         return $this->clientSecret;
     }
