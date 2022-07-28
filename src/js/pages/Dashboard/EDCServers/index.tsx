@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Heading, LoadingOverlay } from "@castoredc/matter";
+import {Button, Heading, LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
 import { AuthorizedRouteComponentProps } from "components/Route";
 import PageBody from "components/Layout/Dashboard/PageBody";
 import { apiClient } from "src/js/network";
-import EDCServersGrid from "components/DataTable/EDCServersGrid";
+import EDCServersGrid from "./EDCServersGrid";
 import {ServerType} from "types/ServerType";
 
 interface EDCServersProps extends AuthorizedRouteComponentProps {}

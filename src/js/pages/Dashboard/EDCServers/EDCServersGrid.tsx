@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
+import EDCServerModal from "modals/EDCServerModal";
 
 type EDCServersGridProps = {
     edcServers: ServerType[],
@@ -39,7 +40,7 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
         });
     };
 
-    // handleUpdate = (newPublisher) => {
+    handleUpdate = (newServer) => {
     //     const {publishers, setValue} = this.props;
     //
     //     const exists = newPublisher.id !== '' ? !!publishers.find((publisher) => {
@@ -59,8 +60,8 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
     //                                   message="The publisher was already associated with this metadata and was, therefore, not added again."/>);
     //     }
     //
-    //     this.closeModal();
-    // };
+        this.closeModal();
+    };
 
     handleDeleteConfirm = (edcServer) => {
         this.setState({
@@ -90,7 +91,7 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
     };
 
     render() {
-        const { edcServers, selectedServer, showRemoveModal } = this.state;
+        const { edcServers, selectedServer, showModal, showRemoveModal } = this.state;
 
         const serverRows = edcServers.map((edcServer, index) => {
             return {
@@ -104,12 +105,11 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
         });
 
         return <div>
-            {/*<PublisherModal*/}
-            {/*    open={showModal}*/}
-            {/*    onClose={this.closeModal}*/}
-            {/*    handleSave={this.handleUpdate}*/}
-            {/*    countries={countries}*/}
-            {/*/>*/}
+            <EDCServerModal
+                open={showModal}
+                onClose={this.closeModal}
+                handleSave={this.handleUpdate}
+            />
 
             <ConfirmModal
                 title="Remove server"
