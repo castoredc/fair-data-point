@@ -75,6 +75,21 @@ function runDockerCommand(string $localCommand, ?string $service = 'symfony'): i
     return $returnCode;
 }
 
+function runDockerCommandWithExec(string $localCommand, ?string $service = 'symfony'): int
+{
+    $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+    $command = asCurrentUser(
+        'docker-compose ' . $previousExtraConfiguration
+        . ' exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" ' . $service . ' ' . $localCommand
+    );
+    if (DEBUG) {
+        echo PHP_EOL, PHP_EOL, 'Running command: ', PHP_EOL, $command, PHP_EOL, PHP_EOL;
+    }
+    passthru($command, $returnCode);
+
+    return $returnCode;
+}
+
 function asCurrentUser(string $command): string
 {
     return 'userid=' . getmyuid() . ' groupid=' . getmygid() . ' ' . $command;
@@ -116,37 +131,6 @@ function rmdirr($dir): bool {
     }
     return rmdir($dir);
 }
-//
-//function createGitHooks(): void
-//{
-//    $hooksDir = PROJECT_ROOT . '/.git/hooks';
-//
-//    if (file_exists($hooksDir) && is_link($hooksDir)) {
-//        return;
-//    }
-//    echo 'Initializing git hooks' . PHP_EOL;
-//
-//    $result = rmdirr($hooksDir);
-//    if ($result === false) {
-//        echo PHP_EOL,
-//        'Deleting default git directory with hooks failed. Please remove it yourself. From the project root this would be:',
-//        PHP_EOL, PHP_EOL,
-//        ' rm -R ./.git/hooks';
-//        exit(1);
-//    }
-//
-//    $result = symlink(
-//        PROJECT_ROOT . '/bin/git/hooks',
-//        PROJECT_ROOT . '/.git/hooks'
-//    );
-//    if ($result === false) {
-//        echo PHP_EOL,
-//        'Creating symlink failed. Please link it yourself. From the project root this would be:',
-//        PHP_EOL, PHP_EOL,
-//        ' ln -s ../bin/git/hooks ./.git/hooks';
-//        exit(1);
-//    }
-//}
 
 function initializeEnvironmentFile(): void
 {
@@ -300,47 +284,6 @@ $commands = [
             return runDockerCommand('vendor/bin/paratest --runner=WrapperRunner -p' . $supportedThreads . ' ' . escapeShellArguments($_));
         },
     ],
-    'infect' => [
-        'description' => 'Run infection in the responsible container for the complete unit testsuite',
-        'command' => static function ($_): int {
-            // Note - currently uses pcov coverage driver, which is always enabled. To explicitly enable, run with
-            // php -d pcov.enable=1 (paratest command) --passthru-php="'-d' 'pcov.enable=1'"
-            // Also see https://github.com/paratestphp/paratest/issues/558
-            $returnCode = runDockerCommand('vendor/bin/paratest --coverage-xml=build/unit-tests/coverage-xml --log-junit=build/unit-tests/junit.xml --stop-on-failure --configuration=config/infection/phpunit.xml.dist --runner=WrapperRunner ' . escapeShellArguments($_));
-
-            if ($returnCode === 0) {
-                return runDockerCommand('vendor/bin/infection --skip-initial-tests --coverage=build/unit-tests --no-progress --only-covering-test-cases -j' . getSupportedThreads() . escapeShellArguments($_));
-            }
-
-            echo 'Phpunit returned a non-zero code, aborting mutation tests' . PHP_EOL;
-
-            return 0;
-        },
-    ],
-    'infect-coverage' => [
-            'description' => 'Run phpunit with coverage enabled to generate coverage for use from infection',
-            'command' => static function ($_): int {
-                return runDockerCommand('vendor/bin/paratest --coverage-xml=build/unit-tests/coverage-xml --log-junit=build/unit-tests/junit.xml --stop-on-failure --configuration=config/infection/phpunit.xml.dist  --runner=WrapperRunner ' . escapeShellArguments($_));
-            },
-    ],
-    'infect-changes' => [
-        'description' => 'Run infection in the responsible container only for added/changed files covered by tests',
-        'command' => static function ($_): int {
-            return runDockerCommand('./vendor/bin/infection --show-mutations --git-diff-lines --ignore-msi-with-no-mutations --only-covering-test-cases -j' . getSupportedThreads() . ' ' . escapeShellArguments($_));
-        },
-    ],
-    'infect-changes-skip-coverage' => [
-        'description' => 'Run infection in the responsible container only for added/changed files covered by tests. Rely on existing coverage to skip initial test run.',
-        'command' => static function ($_): int {
-            return runDockerCommand('./vendor/bin/infection --show-mutations --git-diff-lines --ignore-msi-with-no-mutations --only-covering-test-cases --skip-initial-tests --coverage=build/unit-tests -j' . getSupportedThreads() . ' ' . escapeShellArguments($_));
-        },
-    ],
-    'behat' => [
-        'description' => 'Run behat in the responsible container',
-        'command' => static function ($_): int {
-            return runDockerCommand('./vendor/bin/behat' . escapeShellArguments($_));
-        },
-    ],
     'composer' => [
         'description' => 'Run composer inside the responsible container',
         'command' => static function ($_): int {
@@ -387,16 +330,10 @@ $commands = [
             return disablePHPModule('xdebug');
         },
     ],
-    'test-data' => [
-        'description' => 'Run when first creating your new container to populate a new user and study',
-        'command' => static function ($_): int {
-            return runDockerCommand('./bin/console study:create-with-test-data' . escapeShellArguments($_));
-        },
-    ],
     'phpstan' => [
         'description' => 'Run phpstan. Optionally override paths with `bin/fdp phpstan path/to/file.php`',
         'command' => static function ($_): int {
-            return runDockerCommand('vendor/bin/phpstan analyze --memory-limit=-1' . escapeShellArguments($_));
+            return runDockerCommandWithExec('vendor/bin/phpstan analyze --memory-limit=-1' . escapeShellArguments($_));
         },
     ],
     'phpcs' => [
@@ -436,26 +373,6 @@ $commands = [
         'command' => static function ($_): int {
             return runDockerCommand('vendor/bin/rector process ' . escapeShellArguments($_));
         },
-    ],
-    'docs-lint' => [
-        'description' => 'Lint project documentation',
-        'command' => static function (): int {
-            $command = asCurrentUser('docker run --pull always --rm -it -v "$PWD:/project:ro"  quay.io/castor/docs-linters:remark /project');
-
-            passthru(CD_INTO_PROJECT_ROOT . ' && ' . $command, $buildExitCode);
-
-            return $buildExitCode;
-        }
-    ],
-    'docs-build' => [
-        'description' => 'Build project documentation. Will be generated in build/docs folder',
-        'command' => static function (): int {
-            $command = asCurrentUser('docker run --pull always --rm -it -v "$PWD:/project:ro" -v "$PWD/build/docs:/tmp/site"  quay.io/castor/docs-builder:latest build');
-
-            passthru(CD_INTO_PROJECT_ROOT . ' && ' . $command, $buildExitCode);
-
-            return $buildExitCode;
-        }
     ],
     'help' => ['description' => 'Prints this help'],
 ];
