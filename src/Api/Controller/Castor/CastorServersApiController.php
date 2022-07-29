@@ -7,8 +7,10 @@ use App\Api\Controller\ApiController;
 use App\Api\Request\Security\CastorServerApiRequest;
 use App\Api\Resource\Security\CastorServerApiResource;
 use App\Api\Resource\Security\CastorServersApiResource;
+use App\Command\Castor\DeleteCastorServerCommand;
 use App\Command\Security\GetCastorServersCommand;
 use App\Exception\ApiRequestParseError;
+use App\Exception\Castor\CastorServerNotFound;
 use App\Model\Castor\ApiClient;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -75,6 +77,30 @@ class CastorServersApiController extends ApiController
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while updating a CastorServer', ['exception' => $e]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /** @Route("/api/castor/servers/{id}", methods={"DELETE"}, name="delete_add_server") */
+    public function deleteServer(int $id, Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        try {
+            $bus->dispatch(new DeleteCastorServerCommand($id));
+
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        } catch (CastorServerNotFound $e) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        } catch (HandlerFailedException $e) {
+            if ($e->getPrevious() instanceof CastorServerNotFound) {
+                $this->logger->warning('The CastorServer with id ' . $id . ' could not be found.', ['exception' => $e->getPrevious()]);
+
+                return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            }
+
+            $this->logger->critical('An error occurred while deleting a CastorServer', ['exception' => $e]);
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

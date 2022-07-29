@@ -4,6 +4,9 @@ import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
 import UpdateEDCServerModal from "modals/UpdateEDCServerModal";
 import AddEDCServerModal from "modals/AddEDCServerModal";
+import {apiClient} from "../../../network";
+import {toast} from "react-toastify";
+import ToastContent from "components/ToastContent";
 
 type EDCServersGridProps = {
     edcServers: ServerType[],
@@ -96,16 +99,40 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
             return;
         }
 
-        const index = edcServers.indexOf(selectedServer);
 
-        if (index > -1) {
-            let newServers = edcServers;
-            newServers.splice(index, 1);
+        apiClient
+            .delete("/api/castor/servers/" + selectedServer.id)
+            .then((response) => {
+                const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`
+                toast.success(
+                    <ToastContent
+                        type="success"
+                        message={message}
+                    />,
+                    {
+                        position: "top-right",
+                    }
+                );
 
-            this.setState({
-                edcServers: newServers,
+                const index = edcServers.indexOf(selectedServer);
+                if (index > -1) {
+                    let newServers = edcServers;
+                    newServers.splice(index, 1);
+
+                    this.setState({
+                        edcServers: newServers,
+                    })
+                }
+
             })
-        }
+            .catch((error) => {
+                toast.error(
+                    <ToastContent type="error" message="An error occurred"/>,
+                    {
+                        position: "top-center",
+                    }
+                );
+            });
 
         this.closeAllModals();
     };
