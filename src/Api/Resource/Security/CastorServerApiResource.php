@@ -31,8 +31,8 @@ class CastorServerApiResource extends RoleBasedApiResource
         ];
 
         if ($this->isAdmin) {
-            $serverSerialized['client_id'] = $this->server->getDecryptedClientId($this->encryptionService)->exposeAsString();
-            $serverSerialized['client_secret'] = $this->server->getDecryptedClientSecret($this->encryptionService)->exposeAsString();
+            $serverSerialized['clientId'] = $this->server->getDecryptedClientId($this->encryptionService)->exposeAsString();
+            $serverSerialized['clientSecret'] = $this->server->getDecryptedClientSecret($this->encryptionService)->exposeAsString();
         }
 
         return $serverSerialized;
