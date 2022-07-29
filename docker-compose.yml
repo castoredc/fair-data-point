@@ -20,12 +20,13 @@ services:
       dockerfile: ./docker/symfony/Dockerfile
     command: php-fpm
     volumes:
-      - ./var:/var/www/html/var
       - ~/.composer:/opt/composer
       - .:/home/castor/fdp:delegated
     environment:
       COMPOSER_HOME: /opt/composer
       APP_ENV: dev
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       - mysql
     links:

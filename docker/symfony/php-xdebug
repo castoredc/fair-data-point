@@ -1,0 +1,3 @@
+#!/bin/bash
+
+XDEBUG_CONFIG="idekey=PHPSTORM" PHP_IDE_CONFIG="serverName=fdp.castoredc.local" php -d xdebug.client_host=`/sbin/ip route|awk '/default/ { print $3 }'` "$@"
