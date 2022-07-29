@@ -11,7 +11,7 @@ class CreateStudyCommand
 
     private ?string $sourceId = null;
 
-    private ?string $sourceServer = null;
+    private ?int $sourceServer = null;
 
     private ?string $name = null;
 
@@ -20,7 +20,7 @@ class CreateStudyCommand
     public function __construct(
         StudySource $source,
         ?string $sourceId,
-        ?string $sourceServer,
+        ?int $sourceServer,
         ?string $name,
         bool $manuallyEntered
     ) {
@@ -41,7 +41,7 @@ class CreateStudyCommand
         return $this->sourceId;
     }
 
-    public function getSourceServer(): ?string
+    public function getSourceServer(): ?int
     {
         return $this->sourceServer;
     }

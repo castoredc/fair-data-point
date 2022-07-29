@@ -89,7 +89,7 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
      * @throws SessionTimedOut
      * @throws UserNotACastorUser
      */
-    private function createCastorStudy(bool $manuallyEntered, ?string $sourceId, ?string $name, ?string $sourceServer, string $slug): CastorStudy
+    private function createCastorStudy(bool $manuallyEntered, ?string $sourceId, ?string $name, ?int $sourceServer, string $slug): CastorStudy
     {
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 
@@ -108,7 +108,7 @@ class CreateStudyCommandHandler implements MessageHandlerInterface
             $study = new CastorStudy($sourceId, $name, $slug);
             $study->setEnteredManually(true);
 
-            $server = $serverRepository->find($sourceServer);
+            $server = $serverRepository->find((int) $sourceServer);
         } else {
             if (! in_array($sourceId, $castorUser->getStudies(), true)) {
                 throw new NoAccessPermissionToStudy();

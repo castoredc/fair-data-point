@@ -11,7 +11,7 @@ class UpdateStudyCommand
 
     private ?string $sourceId = null;
 
-    private ?string $sourceServer = null;
+    private ?int $sourceServer = null;
 
     private ?string $name = null;
 
@@ -22,7 +22,7 @@ class UpdateStudyCommand
     public function __construct(
         Study $study,
         ?string $sourceId,
-        ?string $sourceServer,
+        ?int $sourceServer,
         ?string $name,
         string $slug,
         bool $published
@@ -45,7 +45,7 @@ class UpdateStudyCommand
         return $this->sourceId;
     }
 
-    public function getSourceServer(): ?string
+    public function getSourceServer(): ?int
     {
         return $this->sourceServer;
     }

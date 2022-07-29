@@ -7,6 +7,7 @@ use App\Security\CastorServer;
 use Doctrine\ORM\EntityRepository;
 
 /**
+ * @method CastorServer|null find(int $id)
  * @method CastorServer|null findOneByName(string $name)
  * @method CastorServer|null findOneById(int $id)
  * @method CastorServer[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
