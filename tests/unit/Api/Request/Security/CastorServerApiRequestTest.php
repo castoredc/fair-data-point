@@ -35,6 +35,7 @@ final class CastorServerApiRequestTest extends TestCase
         self::assertSame('lkjhfdaqweuioafpiubdfjnjw', $apiRequest->getClientSecret());
     }
 
+    /** @param array<mixed> $data */
     private function getRequestWithData(array $data): Request
     {
         return Request::create(

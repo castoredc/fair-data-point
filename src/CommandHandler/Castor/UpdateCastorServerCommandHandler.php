@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Castor;
 
 use App\Command\Castor\UpdateCastorServerCommand;
+use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Security\CastorServer;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +21,7 @@ class UpdateCastorServerCommandHandler implements MessageHandlerInterface
         $this->encryptionService = $encryptionService;
     }
 
-    /* @throws \App\Exception\CouldNotTransformEncryptedStringToJson */
+    /** @throws CouldNotTransformEncryptedStringToJson */
     public function __invoke(UpdateCastorServerCommand $command): CastorServer
     {
         $castorServerRepository = $this->em->getRepository(CastorServer::class);
