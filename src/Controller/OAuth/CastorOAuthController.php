@@ -23,10 +23,17 @@ class CastorOAuthController extends AbstractController
     {
         $request->getSession()->set('previous', $request->get('target_path'));
         $request->getSession()->set('castor.server', $server->getUrl()->getValue());
+        $request->getSession()->set('castor.server_id', $server->getId());
 
         return $clientRegistry
             ->getClient('castor')
-            ->redirect([], ['server' => $server->getUrl()->getValue()]);
+            ->redirect(
+                [],
+                [
+                    'server' => $server->getUrl()->getValue(),
+                    'server_id' => $server->getId(),
+                ]
+            );
     }
 
     /**

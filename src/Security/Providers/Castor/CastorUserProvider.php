@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace App\Security\Providers\Castor;
 
+use App\Exception\CouldNotDecrypt;
 use App\Model\Castor\ApiClient;
+use App\Security\CastorServer;
 use App\Security\Providers\UserProvider;
+use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -14,6 +17,7 @@ use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use function assert;
 
 class CastorUserProvider extends UserProvider implements UserProviderInterface
 {
@@ -22,17 +26,24 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     protected string $server;
 
     private ?ApiClient $apiClient = null;
+    private EncryptionService $encryptionService;
 
     /**
      * @param array<mixed> $options
      * @param array<mixed> $collaborators
      */
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, array $options = [], array $collaborators = [])
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        ApiClient $apiClient,
+        EncryptionService $encryptionService,
+        array $options = [],
+        array $collaborators = []
+    ) {
         parent::__construct($em, $options, $collaborators);
 
         $this->em = $em;
         $this->apiClient = $apiClient;
+        $this->encryptionService = $encryptionService;
     }
 
     public function getBaseAuthorizationUrl(): string
@@ -40,12 +51,18 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return '/oauth/authorize';
     }
 
-    /** @param array<mixed> $options */
+    /**
+     * @param array<mixed> $options
+     *
+     * @throws CouldNotDecrypt
+     */
     public function getAuthorizationUrl(array $options = []): string
     {
-        if (! isset($options['server'])) {
+        if (! isset($options['server']) || ! isset($options['server_id'])) {
             return '';
         }
+
+        $this->overrideClientCredentialsFromDatabase($options['server_id']);
 
         $base = $options['server'] . $this->getBaseAuthorizationUrl();
         $params = $this->getAuthorizationParameters($options);
@@ -57,14 +74,21 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     /**
      * Requests an access token using a specified grant and option set.
      *
-     * @param  mixed        $grant
-     * @param  array<mixed> $options
+     * @param mixed        $grant
+     * @param array<mixed> $options
      *
      * @throws IdentityProviderException
+     * @throws CouldNotDecrypt
      */
-    public function getAccessTokenWithServer(string $server, $grant, array $options = []): AccessTokenInterface
-    {
+    public function getAccessTokenWithServer(
+        string $server,
+        int $serverId,
+        $grant,
+        array $options = []
+    ): AccessTokenInterface {
         $this->server = $server;
+
+        $this->overrideClientCredentialsFromDatabase($serverId);
 
         return parent::getAccessToken($grant, $options);
     }
@@ -107,5 +131,26 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         $user->setServer($this->server);
 
         return $user;
+    }
+
+    private function overrideClientCredentialsFromDatabase(int $serverId): void
+    {
+        $castorServer = $this->em->getRepository(CastorServer::class)->find($serverId);
+        assert($castorServer instanceof CastorServer);
+
+        try {
+            $clientId = $castorServer->getDecryptedClientId($this->encryptionService)->exposeAsString();
+            $clientSecret = $castorServer->getDecryptedClientSecret($this->encryptionService)->exposeAsString();
+        } catch (CouldNotDecrypt $e) {
+            // Don't do anything, fallback to the default credentials supplied in the env file.
+            return;
+        }
+
+        if ($clientId === '' || $clientSecret === '') {
+            return;
+        }
+
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
     }
 }

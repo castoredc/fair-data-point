@@ -20,6 +20,7 @@ class CastorClient extends OAuth2Client
 {
     public const OAUTH2_SESSION_STATE_KEY = 'knpu.oauth2_client_state';
     public const SESSION_SERVER_KEY = 'castor.server';
+    public const SESSION_SERVER_ID_KEY = 'castor.server_id';
 
     private CastorUserProvider $provider;
 
@@ -61,6 +62,7 @@ class CastorClient extends OAuth2Client
     {
         $expectedState = $this->getSession()->get(self::OAUTH2_SESSION_STATE_KEY);
         $server = $this->getSession()->get(self::SESSION_SERVER_KEY);
+        $serverId = (int) $this->getSession()->get(self::SESSION_SERVER_ID_KEY);
         $actualState = $this->getCurrentRequest()->query->get('state');
         if ($actualState === null || ($actualState !== $expectedState)) {
             throw new InvalidStateException('Invalid state');
@@ -72,7 +74,7 @@ class CastorClient extends OAuth2Client
             throw new MissingAuthorizationCodeException('No "code" parameter was found (usually this is a query parameter)!');
         }
 
-        return $this->provider->getAccessTokenWithServer($server, 'authorization_code', ['code' => $code]);
+        return $this->provider->getAccessTokenWithServer($server, $serverId, 'authorization_code', ['code' => $code]);
     }
 
     /**

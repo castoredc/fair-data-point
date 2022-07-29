@@ -6,6 +6,7 @@ namespace App\Factory\Security;
 use App\Model\Castor\ApiClient;
 use App\Security\Providers\Castor\CastorUserProvider;
 use App\Security\Providers\Orcid\OrcidUserProvider;
+use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,12 +19,18 @@ class ProviderFactory
     private EntityManagerInterface $em;
 
     private ApiClient $apiClient;
+    private EncryptionService $encryptionService;
 
-    public function __construct(UrlGeneratorInterface $generator, EntityManagerInterface $em, ApiClient $apiClient)
-    {
+    public function __construct(
+        UrlGeneratorInterface $generator,
+        EntityManagerInterface $em,
+        ApiClient $apiClient,
+        EncryptionService $encryptionService
+    ) {
         $this->generator = $generator;
         $this->em = $em;
         $this->apiClient = $apiClient;
+        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -31,12 +38,27 @@ class ProviderFactory
      * @param mixed[] $redirectParams
      * @param mixed[] $collaborators
      */
-    public function createProvider(string $class, array $options, string $redirectUri, array $redirectParams = [], array $collaborators = []): UserProviderInterface
-    {
-        $options['redirectUri'] = $this->generator->generate($redirectUri, $redirectParams, UrlGeneratorInterface::ABSOLUTE_URL);
+    public function createProvider(
+        string $class,
+        array $options,
+        string $redirectUri,
+        array $redirectParams = [],
+        array $collaborators = []
+    ): UserProviderInterface {
+        $options['redirectUri'] = $this->generator->generate(
+            $redirectUri,
+            $redirectParams,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         if ($class === CastorUserProvider::class) {
-            return new CastorUserProvider($this->em, $this->apiClient, $options, $collaborators);
+            return new CastorUserProvider(
+                $this->em,
+                $this->apiClient,
+                $this->encryptionService,
+                $options,
+                $collaborators
+            );
         }
 
         if ($class === OrcidUserProvider::class) {
