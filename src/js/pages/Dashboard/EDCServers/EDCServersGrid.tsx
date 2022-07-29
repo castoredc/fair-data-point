@@ -2,14 +2,16 @@ import React, {Component} from 'react';
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
-import EDCServerModal from "modals/EDCServerModal";
+import UpdateEDCServerModal from "modals/UpdateEDCServerModal";
+import AddEDCServerModal from "modals/AddEDCServerModal";
 
 type EDCServersGridProps = {
     edcServers: ServerType[],
 }
 
 type EDCServersGridState = {
-    showModal: boolean,
+    showAddModal: boolean,
+    showUpdateModal: boolean,
     showRemoveModal: boolean,
     edcServers: ServerType[],
     selectedServer: ServerType | null;
@@ -20,47 +22,65 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
         super(props);
 
         this.state = {
-            showModal: false,
+            showAddModal: false,
+            showUpdateModal: false,
             showRemoveModal: false,
             edcServers: props.edcServers,
             selectedServer: null,
         };
     }
 
-    openModal = (id) => {
+    openAddModal = () => {
         this.setState({
-            showModal: true,
+            showAddModal: true,
         });
     };
 
-    closeModal = () => {
+    closeAddModal = () => {
         this.setState({
-            showModal: false,
+            showAddModal: false,
+        });
+    };
+
+    openUpdateModal = (id) => {
+        this.setState({
+            showUpdateModal: true,
+        });
+    };
+
+    closeAllModals = () => {
+        this.setState({
+            showAddModal: false,
+            showUpdateModal: false,
             showRemoveModal: false,
         });
     };
 
+    handleNewServer = (newServer) => {
+        const {edcServers} = this.state;
+
+        edcServers.push(newServer);
+
+        this.setState({
+            edcServers: edcServers,
+        });
+
+        this.closeAddModal();
+    }
+
     handleUpdate = (newServer) => {
-    //     const {publishers, setValue} = this.props;
-    //
-    //     const exists = newPublisher.id !== '' ? !!publishers.find((publisher) => {
-    //         if (publisher.type !== newPublisher.type) {
-    //             return false;
-    //         }
-    //
-    //         return publisher[publisher.type].id === newPublisher[newPublisher.type].id
-    //     }) : false;
-    //     if (!exists) {
-    //         let newPublishers = publishers;
-    //         newPublishers.push(newPublisher);
-    //
-    //         setValue('publishers', newPublishers);
-    //     } else {
-    //         toast.error(<ToastContent type="error"
-    //                                   message="The publisher was already associated with this metadata and was, therefore, not added again."/>);
-    //     }
-    //
-        this.closeModal();
+        const {edcServers} = this.props;
+
+        const exists = newServer.id !== '';
+
+        if (! exists) {
+            let newServers = edcServers;
+            edcServers.push(newServer);
+        } else {
+            // TODO submit new server
+        }
+
+        this.closeAllModals();
     };
 
     handleDeleteConfirm = (edcServer) => {
@@ -87,28 +107,38 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
             })
         }
 
-        this.closeModal();
+        this.closeAllModals();
     };
 
     render() {
-        const { edcServers, selectedServer, showModal, showRemoveModal } = this.state;
+        const { edcServers, selectedServer, showAddModal, showUpdateModal, showRemoveModal } = this.state;
 
         const serverRows = edcServers.map((edcServer, index) => {
             return {
+                id: <CellText>{edcServer.id}</CellText>,
                 name: <CellText>{edcServer.name}</CellText>,
                 url: <CellText>{(edcServer.url)}</CellText>,
                 flag: <CellText>{edcServer.flag}</CellText>,
                 defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
                 menu: <ActionsCell
-                    items={[{destination: () => this.handleDeleteConfirm(edcServer), label: 'Remove server'}]}/>,
+                    items={[
+                        {destination: () => this.handleUpdate(edcServer), label: 'Edit server'},
+                        {destination: () => this.handleDeleteConfirm(edcServer), label: 'Remove server'}
+                    ]}/>,
             }
         });
 
         return <div>
-            <EDCServerModal
-                open={showModal}
-                onClose={this.closeModal}
+            <AddEDCServerModal
+                open={showAddModal}
+                onClose={this.closeAllModals}
+                handleSave={this.handleNewServer}
+            />
+            <UpdateEDCServerModal
+                open={showUpdateModal}
+                onClose={this.closeAllModals}
                 handleSave={this.handleUpdate}
+                data={selectedServer}
             />
 
             <ConfirmModal
@@ -116,7 +146,7 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                 action="Remove server"
                 variant="primary"
                 onConfirm={this.handleDelete}
-                onCancel={this.closeModal}
+                onCancel={this.closeAllModals}
                 show={showRemoveModal}
             >
                 Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server list?
@@ -124,9 +154,9 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
 
             <Stack distribution="trailing">
                 <Button icon="add" onClick={() => {
-                    this.openModal(null)
+                    this.openAddModal()
                 }}>
-                    Add server
+                    Add new server
                 </Button>
             </Stack>
 
@@ -136,6 +166,12 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                 rows={serverRows}
                 anchorRightColumns={1}
                 columns={[
+                    {
+                        Header: 'ID',
+                        accessor: 'id',
+                        width: 40,
+                        maxWidth: 40,
+                    },
                     {
                         Header: 'Name',
                         accessor: 'name',

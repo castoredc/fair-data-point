@@ -4,4 +4,6 @@ export type ServerType = {
     name: string,
     flag: string,
     default: boolean,
+    clientId?: string,
+    clientSecret?: string,
 };

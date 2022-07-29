@@ -1,22 +1,22 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 import "../Form.scss";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import ToastContent from "../../ToastContent";
 import FormItem from "./../FormItem";
-import { mergeData } from "../../../util";
-import { Button, Stack } from "@castoredc/matter";
-import { Field, Form, Formik } from "formik";
+import {mergeData} from "../../../util";
+import {Button, Stack} from "@castoredc/matter";
+import {Field, Form, Formik} from "formik";
 import Input from "components/Input/Formik/Input";
 import SingleChoice from "components/Input/Formik/SingleChoice";
 import * as Yup from "yup";
-import { apiClient } from "src/js/network";
+import {apiClient} from "src/js/network";
 import {ServerType} from "types/ServerType";
 import {FormikHelpers} from "formik/dist/types";
 
 interface EDCServerFormProps {
     edcServer?: ServerType;
-    handleSubmit: (values: any, formikHelpers: FormikHelpers<any>) => void,
+    handleSubmit: (values: ServerType) => void,
 }
 
 interface EDCServerFormState {
@@ -25,10 +25,7 @@ interface EDCServerFormState {
     validation?: any;
 }
 
-export default class EDCServerForm extends Component<
-    EDCServerFormProps,
-    EDCServerFormState
-    > {
+export default class EDCServerForm extends Component<EDCServerFormProps, EDCServerFormState> {
     constructor(props) {
         super(props);
 
@@ -41,29 +38,31 @@ export default class EDCServerForm extends Component<
         };
     }
 
-    handleSubmit = (values, { setSubmitting }) => {
-        const { edcServer } = this.props;
+    handleSubmit = (values, {setSubmitting}) => {
+        const {edcServer, handleSubmit} = this.props;
+        setSubmitting(true);
 
         apiClient
-            .post("/api/castor/edc-server" + (edcServer ? "/" + edcServer.id : ""), values)
+            .post("/api/castor/servers" + (edcServer ? "/" + edcServer.id : ""), values)
             .then((response) => {
                 setSubmitting(false);
 
-                if (edcServer) {
+                // New server:
+                if (!edcServer && response.data.id) {
+                    const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`
                     toast.success(
                         <ToastContent
                             type="success"
-                            message="The EDC Server is saved successfully"
+                            message={message}
                         />,
                         {
                             position: "top-right",
                         }
                     );
-                } else {
-                    // No history available here, what to do on failure?
-                    // history.push(
-                    //     "/dashboard/edc-server/" + response.data.id
-                    // );
+
+                    handleSubmit(response.data);
+
+                    return;
                 }
             })
             .catch((error) => {
@@ -75,7 +74,7 @@ export default class EDCServerForm extends Component<
                     });
                 } else {
                     toast.error(
-                        <ToastContent type="error" message="An error occurred" />,
+                        <ToastContent type="error" message="An error occurred"/>,
                         {
                             position: "top-center",
                         }
@@ -85,8 +84,8 @@ export default class EDCServerForm extends Component<
     };
 
     render() {
-        const { initialValues, validation } = this.state;
-        const { edcServer } = this.props;
+        const {initialValues, validation} = this.state;
+        const {edcServer} = this.props;
 
         return (
             <Formik
@@ -133,14 +132,14 @@ export default class EDCServerForm extends Component<
                                 <FormItem label="Client ID">
                                     <Field
                                         component={Input}
-                                        name="client_id"
+                                        name="clientId"
                                         serverError={validation}
                                     />
                                 </FormItem>
                                 <FormItem label="Client secret">
                                     <Field
                                         component={Input}
-                                        name="client_secret"
+                                        name="clientSecret"
                                         serverError={validation}
                                     />
                                 </FormItem>
@@ -174,8 +173,8 @@ export const defaultData = {
     url: "https://",
     flag: "nl",
     default: false,
-    client_id: "",
-    client_secret: "",
+    clientId: "",
+    clientSecret: "",
 };
 
 const EDCServerSchema = Yup.object().shape({
@@ -185,6 +184,6 @@ const EDCServerSchema = Yup.object().shape({
     default: Yup.boolean().required(
         "Please enter if this is the new default Server"
     ),
-    client_id: Yup.string().required("Please enter the client ID"),
-    client_secret: Yup.string().required("Please enter the client secret"),
+    clientId: Yup.string().required("Please enter the client ID"),
+    clientSecret: Yup.string().required("Please enter the client secret"),
 });
