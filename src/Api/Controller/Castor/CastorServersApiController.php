@@ -57,7 +57,7 @@ class CastorServersApiController extends ApiController
         );
     }
 
-    /** @Route("/api/castor/servers", methods={"POST"}, name="api_add_server") */
+    /** @Route("/api/castor/servers", methods={"POST", "PUT"}, name="api_add_server") */
     public function addServer(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

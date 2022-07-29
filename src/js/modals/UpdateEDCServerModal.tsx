@@ -6,7 +6,7 @@ import {ServerType} from "types/ServerType";
 type EDCServerModalProps = {
     open: boolean,
     onClose: () => void,
-    data: ServerType|null,
+    data: ServerType | null,
     handleSave: (edcServer) => void,
 }
 
@@ -19,21 +19,20 @@ export default class UpdateEDCServerModal extends Component<EDCServerModalProps,
         super(props);
 
         this.state = {
-            initialValues: props.data ?? null,
+            initialValues: props.data,
         };
     }
 
-    handleSubmit = (newServer) => {
+    handleSubmit = (updatedServer) => {
         const {handleSave} = this.props;
 
-        handleSave(newServer);
+        handleSave(updatedServer);
     }
 
     render() {
-        const {open, onClose} = this.props;
-        const {initialValues} = this.state;
+        const {open, onClose, data} = this.props;
 
-        const title = initialValues && initialValues.length ? 'Update EDC server' : 'Add new EDC server';
+        const title = 'Update EDC server';
 
         return <Modal
             open={open}
@@ -41,7 +40,7 @@ export default class UpdateEDCServerModal extends Component<EDCServerModalProps,
             accessibleName={title}
             onClose={onClose}
         >
-            <EDCServerForm handleSubmit={this.handleSubmit} />
+            <EDCServerForm handleSubmit={this.handleSubmit} edcServer={data}/>
         </Modal>
     }
 }

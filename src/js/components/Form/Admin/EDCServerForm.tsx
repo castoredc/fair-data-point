@@ -15,7 +15,7 @@ import {ServerType} from "types/ServerType";
 import {FormikHelpers} from "formik/dist/types";
 
 interface EDCServerFormProps {
-    edcServer?: ServerType;
+    edcServer?: ServerType | null;
     handleSubmit: (values: ServerType) => void,
 }
 
@@ -43,13 +43,31 @@ export default class EDCServerForm extends Component<EDCServerFormProps, EDCServ
         setSubmitting(true);
 
         apiClient
-            .post("/api/castor/servers" + (edcServer ? "/" + edcServer.id : ""), values)
+            .put("/api/castor/servers", values)
             .then((response) => {
                 setSubmitting(false);
 
                 // New server:
                 if (!edcServer && response.data.id) {
                     const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`
+                    toast.success(
+                        <ToastContent
+                            type="success"
+                            message={message}
+                        />,
+                        {
+                            position: "top-right",
+                        }
+                    );
+
+                    handleSubmit(response.data);
+
+                    return;
+                }
+
+                // Existing server:
+                if (edcServer && edcServer.id) {
+                    const message = `The EDC Server ${response.data.name} was updated successfully`
                     toast.success(
                         <ToastContent
                             type="success"
@@ -121,6 +139,13 @@ export default class EDCServerForm extends Component<EDCServerFormProps, EDCServ
                                         serverError={validation}
                                     />
                                 </FormItem>
+                                <FormItem label="Flag">
+                                    <Field
+                                        component={Input}
+                                        name="flag"
+                                        serverError={validation}
+                                    />
+                                </FormItem>
 
                                 <FormItem>
                                     <Field
@@ -169,6 +194,7 @@ export default class EDCServerForm extends Component<EDCServerFormProps, EDCServ
 }
 
 export const defaultData = {
+    id: null,
     name: "",
     url: "https://",
     flag: "nl",

@@ -71,16 +71,30 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
         this.closeAddModal();
     }
 
-    handleUpdate = (newServer) => {
+    showUpdateModal = (existingServer) => {
         const {edcServers} = this.props;
+        this.setState({
+            showUpdateModal: true,
+            selectedServer: existingServer
+        });
+    };
 
-        const exists = newServer.id !== '';
+    handleUpdate = (updatedServer) => {
+        const {edcServers, selectedServer} = this.state;
 
-        if (! exists) {
+        if (! selectedServer) {
+            return;
+        }
+
+        const index = edcServers.indexOf(selectedServer);
+        if (index > -1) {
             let newServers = edcServers;
-            edcServers.push(newServer);
-        } else {
-            // TODO submit new server
+
+            newServers[index] = updatedServer;
+
+            this.setState({
+                edcServers: newServers,
+            })
         }
 
         this.closeAllModals();
@@ -98,7 +112,6 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
         if (! selectedServer) {
             return;
         }
-
 
         apiClient
             .delete("/api/castor/servers/" + selectedServer.id)
@@ -149,7 +162,7 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                 defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
                 menu: <ActionsCell
                     items={[
-                        {destination: () => this.handleUpdate(edcServer), label: 'Edit server'},
+                        {destination: () => this.showUpdateModal(edcServer), label: 'Edit server'},
                         {destination: () => this.handleDeleteConfirm(edcServer), label: 'Remove server'}
                     ]}/>,
             }

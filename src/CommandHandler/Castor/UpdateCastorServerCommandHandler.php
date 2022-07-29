@@ -24,7 +24,11 @@ class UpdateCastorServerCommandHandler implements MessageHandlerInterface
     public function __invoke(UpdateCastorServerCommand $command): CastorServer
     {
         $castorServerRepository = $this->em->getRepository(CastorServer::class);
-        $castorServer = $castorServerRepository->findOneBy(['id' => $command->getId()]);
+
+        $castorServer = null;
+        if ($command->getId() !== null) {
+            $castorServer = $castorServerRepository->find($command->getId());
+        }
 
         if ($castorServer !== null) {
             $castorServer->updatePropertiesFromCommand($command, $this->encryptionService);
