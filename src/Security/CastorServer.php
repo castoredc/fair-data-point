@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Command\Castor\UpdateCastorServerCommand;
 use App\Entity\Encryption\EncryptedString;
 use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Iri;
@@ -19,8 +20,10 @@ use const FILTER_VALIDATE_URL;
 class CastorServer
 {
     /**
-     * @ORM\Id
+    /**
      * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private int $id;
 
@@ -33,7 +36,7 @@ class CastorServer
     /** @ORM\Column(type="string", length=255) */
     private string $flag;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(name="`default`", type="boolean") */
     private bool $default;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
@@ -68,12 +71,11 @@ class CastorServer
     }
 
     /** @throws CouldNotTransformEncryptedStringToJson */
-    public static function withClientCredentials(
-        CastorServer $castorServer,
+    public function updateClientCredentials(
         EncryptionService $encryptionService,
         string $clientId,
         string $clientSecret
-    ): CastorServer {
+    ): void {
         $encryptedClientId = json_encode($encryptionService->encrypt(new SensitiveDataString($clientId)));
 
         if ($encryptedClientId === false) {
@@ -86,10 +88,8 @@ class CastorServer
             throw new CouldNotTransformEncryptedStringToJson();
         }
 
-        $castorServer->clientId = $encryptedClientId;
-        $castorServer->clientSecret = $encryptedClientSecret;
-
-        return $castorServer;
+        $this->clientId = $encryptedClientId;
+        $this->clientSecret = $encryptedClientSecret;
     }
 
     public function getId(): ?int
@@ -146,5 +146,21 @@ class CastorServer
     public function getClientSecretCiphertext(): ?string
     {
         return $this->clientSecret;
+    }
+
+    public function makeNonDefault(): void
+    {
+        $this->default = false;
+    }
+
+    /** @throws CouldNotTransformEncryptedStringToJson */
+    public function updatePropertiesFromCommand(
+        UpdateCastorServerCommand $command,
+        EncryptionService $encryptionService
+    ): void {
+        $this->name = $command->getName();
+        $this->flag = $command->getFlag();
+        $this->url = new Iri($command->getUrl());
+        $this->updateClientCredentials($encryptionService, $command->getClientId(), $command->getClientSecret());
     }
 }

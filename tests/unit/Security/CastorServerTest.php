@@ -83,9 +83,9 @@ final class CastorServerTest extends TestCase
                 new EncryptedString('encryptedClientSecret', 'nonce2')
             );
 
-        $serverWithCredentials = CastorServer::withClientCredentials($server, $encryption, $clientId, $clientSecret);
+        $server->updateClientCredentials($encryption, $clientId, $clientSecret);
 
-        self::assertSame('{"cipherText":"encryptedClientId","nonce":"nonce1"}', $serverWithCredentials->getClientIdCiphertext());
-        self::assertSame('{"cipherText":"encryptedClientSecret","nonce":"nonce2"}', $serverWithCredentials->getClientSecretCiphertext());
+        self::assertSame('{"cipherText":"encryptedClientId","nonce":"nonce1"}', $server->getClientIdCiphertext());
+        self::assertSame('{"cipherText":"encryptedClientSecret","nonce":"nonce2"}', $server->getClientSecretCiphertext());
     }
 }
