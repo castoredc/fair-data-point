@@ -36,7 +36,7 @@ class CastorServerApiResourceTest extends TestCase
         $clientSecret = '555d8f0fbb944546e626869a92cdfcdf';
 
         $encryption = new EncryptionService('3264363739616265383861636561373735336333623437373464623233666365');
-        $serverWithCredentials = CastorServer::withClientCredentials($server, $encryption, $clientId, $clientSecret);
+        $server->updateClientCredentials($encryption, $clientId, $clientSecret);
 
         $expected = [
             'id' => null,
@@ -48,7 +48,7 @@ class CastorServerApiResourceTest extends TestCase
             'client_secret' => '555d8f0fbb944546e626869a92cdfcdf',
         ];
 
-        $resource = new CastorServerApiResource($serverWithCredentials, true, $encryption);
+        $resource = new CastorServerApiResource($server, true, $encryption);
         self::assertSame($expected, $resource->toArray());
     }
 }

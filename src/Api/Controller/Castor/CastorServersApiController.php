@@ -4,14 +4,19 @@ declare(strict_types=1);
 namespace App\Api\Controller\Castor;
 
 use App\Api\Controller\ApiController;
+use App\Api\Request\Security\CastorServerApiRequest;
+use App\Api\Resource\Security\CastorServerApiResource;
 use App\Api\Resource\Security\CastorServersApiResource;
 use App\Command\Security\GetCastorServersCommand;
+use App\Exception\ApiRequestParseError;
 use App\Model\Castor\ApiClient;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,8 +38,8 @@ class CastorServersApiController extends ApiController
         $this->encryptionService = $encryptionService;
     }
 
-    /** @Route("/api/castor/servers", name="api_servers") */
-    public function catalogs(MessageBusInterface $bus): Response
+    /** @Route("/api/castor/servers", methods={"GET"}, name="api_servers") */
+    public function servers(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetCastorServersCommand());
 
@@ -48,5 +53,30 @@ class CastorServersApiController extends ApiController
                 $this->encryptionService
             ))->toArray()
         );
+    }
+
+    /** @Route("/api/castor/servers", methods={"POST"}, name="api_add_server") */
+    public function addServer(Request $request, MessageBusInterface $bus): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        try {
+            $parsed = $this->parseRequest(CastorServerApiRequest::class, $request);
+            assert($parsed instanceof CastorServerApiRequest);
+
+            $envelope = $bus->dispatch($parsed->toCommand());
+            $handledStamp = $envelope->last(HandledStamp::class);
+            assert($handledStamp instanceof HandledStamp);
+
+            return new JsonResponse(
+                (new CastorServerApiResource($handledStamp->getResult(), true, $this->encryptionService))->toArray()
+            );
+        } catch (ApiRequestParseError $e) {
+            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+        } catch (HandlerFailedException $e) {
+            $this->logger->critical('An error occurred while updating a CastorServer', ['exception' => $e]);
+
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

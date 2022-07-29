@@ -21,6 +21,7 @@ class CastorServer
 {
     /**
     /**
+     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")

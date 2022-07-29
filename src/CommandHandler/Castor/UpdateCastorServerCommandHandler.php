@@ -1,0 +1,65 @@
+<?php
+declare(strict_types=1);
+
+namespace App\CommandHandler\Castor;
+
+use App\Command\Castor\UpdateCastorServerCommand;
+use App\Security\CastorServer;
+use App\Service\EncryptionService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+
+class UpdateCastorServerCommandHandler implements MessageHandlerInterface
+{
+    private EntityManagerInterface $em;
+    private EncryptionService $encryptionService;
+
+    public function __construct(EntityManagerInterface $em, EncryptionService $encryptionService)
+    {
+        $this->em = $em;
+        $this->encryptionService = $encryptionService;
+    }
+
+    /* @throws \App\Exception\CouldNotTransformEncryptedStringToJson */
+    public function __invoke(UpdateCastorServerCommand $command): CastorServer
+    {
+        $castorServerRepository = $this->em->getRepository(CastorServer::class);
+        $castorServer = $castorServerRepository->findOneBy(['id' => $command->getId()]);
+
+        if ($castorServer !== null) {
+            $castorServer->updatePropertiesFromCommand($command, $this->encryptionService);
+        } else {
+            if ($command->isDefault()) {
+                $castorServer = CastorServer::defaultServer(
+                    $command->getUrl(),
+                    $command->getName(),
+                    $command->getFlag()
+                );
+
+                // There can be only one default server, so ensure all other servers are non-default.
+                $allServers = $castorServerRepository->findAll();
+                foreach ($allServers as $server) {
+                    $server->makeNonDefault();
+                }
+            } else {
+                $castorServer = CastorServer::nonDefaultServer(
+                    $command->getUrl(),
+                    $command->getName(),
+                    $command->getFlag()
+                );
+            }
+
+            $castorServer->updateClientCredentials(
+                $this->encryptionService,
+                $command->getClientId(),
+                $command->getClientSecret()
+            );
+
+            $this->em->persist($castorServer);
+        }
+
+        $this->em->flush();
+
+        return $castorServer;
+    }
+}
