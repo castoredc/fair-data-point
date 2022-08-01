@@ -5,7 +5,7 @@ namespace App\Command\Study;
 
 use App\Entity\Study;
 
-class UpdateStudyCommand
+final class UpdateStudyCommand
 {
     private Study $study;
 

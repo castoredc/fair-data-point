@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Castor;
 
-class DeleteCastorServerCommand
+final class DeleteCastorServerCommand
 {
     private int $id;
 

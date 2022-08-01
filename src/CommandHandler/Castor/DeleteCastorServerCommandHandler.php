@@ -9,7 +9,7 @@ use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class DeleteCastorServerCommandHandler implements MessageHandlerInterface
+final class DeleteCastorServerCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
 

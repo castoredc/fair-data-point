@@ -5,6 +5,6 @@ namespace App\Exception\Castor;
 
 use RuntimeException;
 
-class CastorServerNotFound extends RuntimeException
+final class CastorServerNotFound extends RuntimeException
 {
 }

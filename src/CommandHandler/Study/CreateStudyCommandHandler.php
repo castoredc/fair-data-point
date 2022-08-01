@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Security;
 use function assert;
 use function in_array;
 
-class CreateStudyCommandHandler implements MessageHandlerInterface
+final class CreateStudyCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
     private Security $security;

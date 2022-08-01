@@ -7,7 +7,7 @@ use App\Api\Resource\RoleBasedApiResource;
 use App\Security\CastorServer;
 use App\Service\EncryptionService;
 
-class CastorServersApiResource extends RoleBasedApiResource
+final class CastorServersApiResource extends RoleBasedApiResource
 {
     /** @var CastorServer[] */
     private array $servers;

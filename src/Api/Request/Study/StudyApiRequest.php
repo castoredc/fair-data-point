@@ -7,7 +7,7 @@ use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\StudySource;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class StudyApiRequest extends SingleApiRequest
+final class StudyApiRequest extends SingleApiRequest
 {
     /**
      * @Assert\NotBlank()

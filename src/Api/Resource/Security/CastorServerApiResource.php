@@ -7,7 +7,7 @@ use App\Api\Resource\RoleBasedApiResource;
 use App\Security\CastorServer;
 use App\Service\EncryptionService;
 
-class CastorServerApiResource extends RoleBasedApiResource
+final class CastorServerApiResource extends RoleBasedApiResource
 {
     private CastorServer $server;
     private EncryptionService $encryptionService;

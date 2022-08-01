@@ -8,7 +8,7 @@ use App\Security\CastorServer;
 use App\Service\EncryptionService;
 use PHPUnit\Framework\TestCase;
 
-class CastorServerApiResourceTest extends TestCase
+final class CastorServerApiResourceTest extends TestCase
 {
     public function testCanSerializeCastorServerToArray(): void
     {

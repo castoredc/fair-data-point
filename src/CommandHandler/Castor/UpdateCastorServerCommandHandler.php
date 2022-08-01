@@ -10,7 +10,7 @@ use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class UpdateCastorServerCommandHandler implements MessageHandlerInterface
+final class UpdateCastorServerCommandHandler implements MessageHandlerInterface
 {
     private EntityManagerInterface $em;
     private EncryptionService $encryptionService;

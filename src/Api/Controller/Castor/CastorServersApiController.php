@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function assert;
 
-class CastorServersApiController extends ApiController
+final class CastorServersApiController extends ApiController
 {
     private EncryptionService $encryptionService;
 
