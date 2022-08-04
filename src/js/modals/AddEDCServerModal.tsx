@@ -1,41 +1,23 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Modal} from "@castoredc/matter";
 import EDCServerForm from "components/Form/Admin/EDCServerForm";
-import {ServerType} from "types/ServerType";
 
-type AddEDCServerModalProps = {
-    open: boolean,
-    onClose: () => void,
-    handleSave: (edcServer: ServerType) => void,
-}
-
-type AddEDCServerModalState = {}
-
-export default class AddEDCServerModal extends Component<AddEDCServerModalProps, AddEDCServerModalState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {};
-    }
-
-    handleSubmit = (newServer) => {
-        const {handleSave} = this.props;
-
+const AddEDCServerModal = ({open, onClose, handleSave}) => {
+    const handleSubmit = (newServer) => {
         handleSave(newServer);
     }
+    const title = 'Add a new EDC server';
 
-    render() {
-        const {open, onClose} = this.props;
-
-        const title = 'Add a new EDC server';
-
-        return <Modal
+    return (
+        <Modal
             open={open}
             title={title}
             accessibleName={title}
             onClose={onClose}
         >
-            <EDCServerForm handleSubmit={this.handleSubmit} />
+            <EDCServerForm handleSubmit={handleSubmit}/>
         </Modal>
-    }
+    )
 }
+
+export {AddEDCServerModal};
