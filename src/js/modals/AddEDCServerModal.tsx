@@ -3,9 +3,6 @@ import {Modal} from "@castoredc/matter";
 import EDCServerForm from "components/Form/Admin/EDCServerForm";
 
 const AddEDCServerModal = ({open, onClose, handleSave}) => {
-    const handleSubmit = (newServer) => {
-        handleSave(newServer);
-    }
     const title = 'Add a new EDC server';
 
     return (
@@ -15,9 +12,9 @@ const AddEDCServerModal = ({open, onClose, handleSave}) => {
             accessibleName={title}
             onClose={onClose}
         >
-            <EDCServerForm handleSubmit={handleSubmit}/>
+            <EDCServerForm handleSubmit={handleSave}/>
         </Modal>
     )
 }
 
-export {AddEDCServerModal};
+export { AddEDCServerModal };

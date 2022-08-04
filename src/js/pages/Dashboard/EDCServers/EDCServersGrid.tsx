@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
-import UpdateEDCServerModal from "modals/UpdateEDCServerModal";
+import { UpdateEDCServerModal } from "modals/UpdateEDCServerModal";
 import { AddEDCServerModal } from "modals/AddEDCServerModal";
 import {apiClient} from "../../../network";
 import {toast} from "react-toastify";
