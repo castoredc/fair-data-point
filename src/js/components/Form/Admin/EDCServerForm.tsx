@@ -12,9 +12,8 @@ import SingleChoice from "components/Input/Formik/SingleChoice";
 import * as Yup from "yup";
 import {apiClient} from "src/js/network";
 import {ServerType} from "types/ServerType";
-import {FormikHelpers} from "formik/dist/types";
 
-interface EDCServerFormProps {
+type EDCServerFormProps = {
     edcServer?: ServerType | null;
     handleSubmit: (values: ServerType) => void,
 }
