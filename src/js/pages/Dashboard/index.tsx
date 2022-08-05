@@ -13,7 +13,7 @@ import Distribution from "pages/Dashboard/Dataset/Distribution";
 import Catalogs from "pages/Dashboard/Catalogs";
 import Catalog from "pages/Dashboard/Catalogs/Catalog";
 import FAIRDataPoint from "pages/Dashboard/FAIRDataPoint";
-import EDCServers from "pages/Dashboard/EDCServers";
+import {EDCServers} from "pages/Dashboard/EDCServers";
 import {AuthorizedRouteComponentProps, PrivateRoute, ProtectedRoute} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
 import SelectCatalog from "pages/Dashboard/Studies/SelectCatalog";

@@ -1,61 +1,34 @@
-import React, { Component } from "react";
-import {Button, Heading, LoadingOverlay} from "@castoredc/matter";
+import React, {useEffect, useState} from "react";
+import {Heading, LoadingOverlay} from "@castoredc/matter";
 import DocumentTitle from "components/DocumentTitle";
 import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
-import { AuthorizedRouteComponentProps } from "components/Route";
 import PageBody from "components/Layout/Dashboard/PageBody";
 import { apiClient } from "src/js/network";
 import EDCServersGrid from "./EDCServersGrid";
 import {ServerType} from "types/ServerType";
 
-interface EDCServersProps extends AuthorizedRouteComponentProps {}
+const EDCServers = ({history, location, match, user}) => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [edcServers, setEdcServers] = useState<ServerType[]>([]);
 
-interface EDCServersState {
-    edcServers: ServerType[];
-    isLoading: boolean;
-}
-
-export default class EDCServers extends Component<
-    EDCServersProps,
-    EDCServersState
-    > {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: true,
-            edcServers: [],
-        };
-    }
-
-    componentDidMount() {
-        this.getEDCServers();
-    }
-
-    getEDCServers = () => {
-        this.setState({
-            isLoading: true,
-        });
+    const getEDCServers = () => {
+        setIsLoading(true);
 
         apiClient
             .get("/api/castor/servers")
             .then((response) => {
-                this.setState({
-                    edcServers: response.data,
-                    isLoading: false,
-                });
+                setIsLoading(false);
+                setEdcServers(response.data);
             })
             .catch((error) => {
-                this.setState({
-                    isLoading: false,
-                });
-
+                setIsLoading(false);
                 if (
                     error.response &&
                     typeof error.response.data.error !== "undefined"
                 ) {
                     toast.error(
-                        <ToastContent type="error" message={error.response.data.error} />
+                        <ToastContent type="error" message={error.response.data.error}/>
                     );
                 } else {
                     toast.error(
@@ -67,26 +40,26 @@ export default class EDCServers extends Component<
                 }
             });
     };
+    useEffect( () => {
+        getEDCServers();
+    }, []);
+    const title = "EDC Servers overview"
 
-    render() {
-        const { edcServers, isLoading } = this.state;
+    return (
+        <PageBody>
+            <DocumentTitle title="EDC Servers" />
 
-        const title = "EDC Servers overview"
+            {isLoading && (
+                <LoadingOverlay accessibleLabel="Loading EDC servers information" />
+            )}
 
-        return (
-            <PageBody>
-                <DocumentTitle title="EDC Servers" />
+            <Heading type="Section">{title}</Heading>
 
-                {isLoading && (
-                    <LoadingOverlay accessibleLabel="Loading EDC servers information" />
-                )}
-
-                <Heading type="Section">{title}</Heading>
-
-                {edcServers.length && (
-                    <EDCServersGrid edcServers={edcServers} /*onSave={this.getEDCServers}*/ />
-                )}
-            </PageBody>
-        );
-    }
+            {edcServers.length && (
+                <EDCServersGrid edcServers={edcServers} />
+            )}
+        </PageBody>
+    );
 }
+
+export {EDCServers};
