@@ -1,6 +1,6 @@
 import React from 'react'
 import {Modal} from "@castoredc/matter";
-import EDCServerForm from "components/Form/Admin/EDCServerForm";
+import {EDCServerForm} from "components/Form/Admin/EDCServerForm";
 
 const AddEDCServerModal = ({open, onClose, handleSave}) => {
     const title = 'Add a new EDC server';
