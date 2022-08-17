@@ -1,17 +1,8 @@
-import React from "react";
-import {TextInput} from "@castoredc/matter";
-import MaskedInput from "react-text-mask";
+import React from 'react';
+import { TextInput } from '@castoredc/matter';
+import MaskedInput from 'react-text-mask';
 
-export const ValueEditor = ({
-                                field,
-                                fieldData,
-                                operator,
-                                handleOnChange,
-                                value,
-                                values,
-                                prefixes,
-                            }) => {
-
+export const ValueEditor = ({ field, fieldData, operator, handleOnChange, value, values, prefixes }) => {
     const handleUrlChange = (value, prefixes) => {
         let newValue = value;
         const regex = /^([^:]*):(.*)/;
@@ -19,8 +10,8 @@ export const ValueEditor = ({
 
         if (matches !== null) {
             const matchedPrefix = matches[1];
-            const foundPrefix = prefixes.find((prefix) => {
-                return prefix.prefix === matchedPrefix
+            const foundPrefix = prefixes.find(prefix => {
+                return prefix.prefix === matchedPrefix;
             });
 
             if (typeof foundPrefix !== 'undefined') {
@@ -36,10 +27,7 @@ export const ValueEditor = ({
     }
 
     if (fieldData.valueType === 'annotated') {
-        return <TextInput className="ValueEditor" value={value}
-                          onChange={(e) => handleUrlChange(e.target.value, prefixes)}
-                          inputSize="20rem"
-        />;
+        return <TextInput className="ValueEditor" value={value} onChange={e => handleUrlChange(e.target.value, prefixes)} inputSize="20rem" />;
     }
 
     if (fieldData.dataType === 'date' || fieldData.dataType === 'dateTime' || fieldData.dataType === 'time') {
@@ -57,22 +45,19 @@ export const ValueEditor = ({
             placeholder = 'hh:mm';
         }
 
-        return <MaskedInput
-            mask={mask}
-            className="ValueEditor"
-            ref={(r) => {
-                this.input = r;
-            }}
-            value={value}
-            onChange={(e) => handleOnChange(e.target.value)}
-            render={(ref, props) => (
-                <TextInput forwardRef={ref} {...props} inputSize="20rem" placeholder={placeholder} />
-            )}
-        />
+        return (
+            <MaskedInput
+                mask={mask}
+                className="ValueEditor"
+                ref={r => {
+                    this.input = r;
+                }}
+                value={value}
+                onChange={e => handleOnChange(e.target.value)}
+                render={(ref, props) => <TextInput forwardRef={ref} {...props} inputSize="20rem" placeholder={placeholder} />}
+            />
+        );
     }
 
-    return <TextInput className="ValueEditor" value={value}
-                  onChange={(e) => handleOnChange(e.target.value)}
-                  inputSize="20rem"
-    />;
+    return <TextInput className="ValueEditor" value={value} onChange={e => handleOnChange(e.target.value)} inputSize="20rem" />;
 };

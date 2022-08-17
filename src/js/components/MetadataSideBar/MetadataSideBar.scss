@@ -1,52 +1,53 @@
 @import '../../scss/colors';
 
-.MetadataSideBar, .MetadataModal {
-  .Publishers {
-    .Publisher {
-      margin-bottom: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid $neutral-30;
+.MetadataSideBar,
+.MetadataModal {
+    .Publishers {
+        .Publisher {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid $neutral-30;
 
-      &:last-child {
-        border-bottom: none;
-      }
+            &:last-child {
+                border-bottom: none;
+            }
 
-      a {
-        color: $neutral-700;
-        text-decoration: none;
-      }
-    }
-  }
-
-  .Organization {
-    margin-bottom: 10px;
-
-    &:last-child {
-      margin-bottom: 0;
+            a {
+                color: $neutral-700;
+                text-decoration: none;
+            }
+        }
     }
 
-    .Department {
-      color: $neutral-90;
-    }
+    .Organization {
+        margin-bottom: 10px;
 
-    .Location {
-      font-size: 12px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .Department {
+            color: $neutral-90;
+        }
+
+        .Location {
+            font-size: 12px;
+        }
     }
-  }
 }
 
 .MetadataSideBar {
-  button {
-    padding-left: 0;
-    padding-right: 0;
-  }
+    button {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 .MetadataModal {
-  hr {
-    border-color: $neutral-40;
-    border-style: solid;
-    border-top: 0;
-    margin: 20px 0;
-  }
+    hr {
+        border-color: $neutral-40;
+        border-style: solid;
+        border-top: 0;
+        margin: 20px 0;
+    }
 }

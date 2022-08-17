@@ -1,112 +1,117 @@
 @import '../../../../scss/colors';
 
 .DataModelTableHeader {
-  font-weight: bold;
-  display: flex;
+    font-weight: bold;
+    display: flex;
 
-  & > div {
-    width: 33%;
-    flex: 0 0 33%;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+    & > div {
+        width: 33%;
+        flex: 0 0 33%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }
 
 .DataModelTableBody {
-  .DataModelTriple {
-    display: flex;
-    border-bottom: solid 1px $neutral-40;
-
-    &:hover {
-      background: $neutral-20;
-    }
-
-    .DataModelSubject, .DataModelPredicate, .DataModelObject {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    .DataModelSubject {
-      width: 33%;
-      flex: 0 0 33%;
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-
-    .DataModelPredicateObjects {
-      width: 66%;
-      flex: 0 0 66%;
-
-      .TriplePredicateObject {
+    .DataModelTriple {
         display: flex;
-        padding: 10px 0;
         border-bottom: solid 1px $neutral-40;
 
-        &:last-child {
-          border-bottom: 0;
+        &:hover {
+            background: $neutral-20;
         }
 
-        .DataModelPredicate, .DataModelObjects {
-          width: 50%;
-          flex: 0 50%;
-        }
-
+        .DataModelSubject,
+        .DataModelPredicate,
         .DataModelObject {
-          border-bottom: solid 1px $neutral-40;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 10px;
-          padding-bottom: 10px;
-
-          &:last-child {
-            border-bottom: 0;
-            padding-bottom: 0;
-          }
-
-          &:first-child {
-            padding-top: 0;
-          }
+            padding-left: 10px;
+            padding-right: 10px;
         }
-      }
+
+        .DataModelSubject {
+            width: 33%;
+            flex: 0 0 33%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .DataModelPredicateObjects {
+            width: 66%;
+            flex: 0 0 66%;
+
+            .TriplePredicateObject {
+                display: flex;
+                padding: 10px 0;
+                border-bottom: solid 1px $neutral-40;
+
+                &:last-child {
+                    border-bottom: 0;
+                }
+
+                .DataModelPredicate,
+                .DataModelObjects {
+                    width: 50%;
+                    flex: 0 50%;
+                }
+
+                .DataModelObject {
+                    border-bottom: solid 1px $neutral-40;
+                    display: flex;
+                    justify-content: space-between;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+
+                    &:last-child {
+                        border-bottom: 0;
+                        padding-bottom: 0;
+                    }
+
+                    &:first-child {
+                        padding-top: 0;
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
-.DataModelTriple, .DataModelTableHeader, .TriplePredicate {
-  color: $neutral-800;
+.DataModelTriple,
+.DataModelTableHeader,
+.TriplePredicate {
+    color: $neutral-800;
 }
 
 .NodeInfo {
-  font-size: 10px;
+    font-size: 10px;
 
-  &.Slug span {
-    color: $azul;
-  }
+    &.Slug span {
+        color: $azul;
+    }
 
-  &.PrefixedUri span {
-    color: $neutral-100;
-  }
+    &.PrefixedUri span {
+        color: $neutral-100;
+    }
 
-  &.Value span {
-    color: $slug;
-  }
+    &.Value span {
+        color: $slug;
+    }
 }
 
 .DependencyDescription {
-  .DependencyGroup {
-    padding: 1px 5px;
-    border-radius: 3px;
-    border: solid 1px $neutral-70;
-    margin: 4px;
-    display: inline-block;
-  }
+    .DependencyGroup {
+        padding: 1px 5px;
+        border-radius: 3px;
+        border: solid 1px $neutral-70;
+        margin: 4px;
+        display: inline-block;
+    }
 
-  .DependencyCombinator {
-    margin: 0 5px;
-    font-weight: 700;
-  }
+    .DependencyCombinator {
+        margin: 0 5px;
+        font-weight: 700;
+    }
 }
 
 .DataModelModuleAlerts > div {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }

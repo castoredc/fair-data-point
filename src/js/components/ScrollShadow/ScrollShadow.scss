@@ -1,35 +1,35 @@
 .ScrollShadow {
-  display: flex;
-  overflow: hidden;
-  position: relative;
-  height: 100%;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
 
-  &:before,
-  &:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    transition: box-shadow 0.3s ease;
-  }
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        transition: box-shadow 0.3s ease;
+    }
 
-  &:before {
-    top: 0;
-    z-index: 1;
-  }
+    &:before {
+        top: 0;
+        z-index: 1;
+    }
 
-  &:after {
-    bottom: 0;
-  }
+    &:after {
+        bottom: 0;
+    }
 
-  &.topShadow:before,
-  &.bottomShadow:after {
-    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.6);
-  }
+    &.topShadow:before,
+    &.bottomShadow:after {
+        box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.6);
+    }
 
-  .scrollable {
-    width: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+    .scrollable {
+        width: 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }

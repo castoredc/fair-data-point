@@ -1,25 +1,25 @@
 @import '../../../../scss/colors';
 
 .MetadataXmlParse {
-  height: 100vh;
+    height: 100vh;
 
-  .DataTable {
-    width: 100%;
-    flex: 1;
-    overflow: auto;
-  }
+    .DataTable {
+        width: 100%;
+        flex: 1;
+        overflow: auto;
+    }
 
-  .container {
-    display: flex;
-    height: 100%;
-    overflow: auto;
-    flex-flow: column;
-  }
+    .container {
+        display: flex;
+        height: 100%;
+        overflow: auto;
+        flex-flow: column;
+    }
 
-  .Top {
-    width: 100%;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: solid 1px $neutral-40;
-  }
+    .Top {
+        width: 100%;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: solid 1px $neutral-40;
+    }
 }

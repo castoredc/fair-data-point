@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import './ToastContent.scss'
-import {classNames} from "../../util";
-import {Icon} from "@castoredc/matter";
+import React, { Component } from 'react';
+import './ToastContent.scss';
+import { classNames } from '../../util';
+import { Icon } from '@castoredc/matter';
 
 class ToastContent extends Component {
     render() {
-        const {type, icon, message} = this.props;
+        const { type, icon, message } = this.props;
 
         let displayIcon = 'info';
 
@@ -20,11 +20,9 @@ class ToastContent extends Component {
         return (
             <div className={classNames('ToastContent', type)}>
                 <div className="ToastContentIcon">
-                    <Icon type={displayIcon}/>
+                    <Icon type={displayIcon} />
                 </div>
-                <div className="ToastContentMessage">
-                    {message}
-                </div>
+                <div className="ToastContentMessage">{message}</div>
             </div>
         );
     }

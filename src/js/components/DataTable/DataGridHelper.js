@@ -17,7 +17,7 @@ const DataGridHelper = {
             totalResults: data.totalResults,
             totalPages: data.totalPages,
         };
-    }
-}
+    },
+};
 
 export default DataGridHelper;

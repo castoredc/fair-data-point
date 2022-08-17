@@ -1,12 +1,12 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack} from "@castoredc/matter";
-import {ServerType} from "types/ServerType";
-import ConfirmModal from "modals/ConfirmModal";
-import {UpdateEDCServerModal} from "modals/UpdateEDCServerModal";
-import {AddEDCServerModal} from "modals/AddEDCServerModal";
-import {apiClient} from "../../../network";
-import {toast} from "react-toastify";
-import ToastContent from "components/ToastContent";
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '@castoredc/matter';
+import { ServerType } from 'types/ServerType';
+import ConfirmModal from 'modals/ConfirmModal';
+import { UpdateEDCServerModal } from 'modals/UpdateEDCServerModal';
+import { AddEDCServerModal } from 'modals/AddEDCServerModal';
+import { apiClient } from '../../../network';
+import { toast } from 'react-toastify';
+import ToastContent from 'components/ToastContent';
 
 const EDCServersGrid = () => {
     const [showAddModal, setShowAddModal] = useState(false);
@@ -20,32 +20,22 @@ const EDCServersGrid = () => {
         setIsLoading(true);
 
         apiClient
-            .get("/api/castor/servers")
-            .then((response) => {
+            .get('/api/castor/servers')
+            .then(response => {
                 setIsLoading(false);
                 setEdcServersState(response.data);
             })
-            .catch((error) => {
+            .catch(error => {
                 setIsLoading(false);
-                if (
-                    error.response &&
-                    typeof error.response.data.error !== "undefined"
-                ) {
-                    toast.error(
-                        <ToastContent type="error" message={error.response.data.error}/>
-                    );
+                if (error.response && typeof error.response.data.error !== 'undefined') {
+                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
                 } else {
-                    toast.error(
-                        <ToastContent
-                            type="error"
-                            message="An error occurred while loading the EDC Servers information"
-                        />
-                    );
+                    toast.error(<ToastContent type="error" message="An error occurred while loading the EDC Servers information" />);
                 }
             });
     };
 
-    useEffect( () => {
+    useEffect(() => {
         getEDCServers();
     }, []);
 
@@ -63,18 +53,18 @@ const EDCServersGrid = () => {
         setShowRemoveModal(false);
     };
 
-    const openUpdateModal = (existingServer) => {
+    const openUpdateModal = existingServer => {
         setShowUpdateModal(true);
         setSelectedServer(existingServer);
     };
 
-    const handleNewServer = (newServer) => {
+    const handleNewServer = newServer => {
         setEdcServersState([...edcServersState, newServer]);
 
         closeAddModal();
     };
 
-    const handleUpdate = (updatedServer) => {
+    const handleUpdate = updatedServer => {
         if (!selectedServer) {
             return;
         }
@@ -92,7 +82,7 @@ const EDCServersGrid = () => {
         closeAllModals();
     };
 
-    const handleDeleteConfirm = (edcServer) => {
+    const handleDeleteConfirm = edcServer => {
         setShowRemoveModal(true);
         setSelectedServer(edcServer);
     };
@@ -103,18 +93,12 @@ const EDCServersGrid = () => {
         }
 
         apiClient
-            .delete("/api/castor/servers/" + selectedServer.id)
-            .then((response) => {
-                const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`
-                toast.success(
-                    <ToastContent
-                        type="success"
-                        message={message}
-                    />,
-                    {
-                        position: "top-right",
-                    }
-                );
+            .delete('/api/castor/servers/' + selectedServer.id)
+            .then(response => {
+                const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`;
+                toast.success(<ToastContent type="success" message={message} />, {
+                    position: 'top-right',
+                });
 
                 const index = edcServersState.indexOf(selectedServer);
                 if (index > -1) {
@@ -122,15 +106,11 @@ const EDCServersGrid = () => {
                     newServers.splice(index, 1);
                     setEdcServersState(newServers);
                 }
-
             })
-            .catch((error) => {
-                toast.error(
-                    <ToastContent type="error" message="An error occurred"/>,
-                    {
-                        position: "top-center",
-                    }
-                );
+            .catch(error => {
+                toast.error(<ToastContent type="error" message="An error occurred" />, {
+                    position: 'top-center',
+                });
             });
 
         closeAllModals();
@@ -141,36 +121,27 @@ const EDCServersGrid = () => {
             edcServersState.map((edcServer, index) => ({
                 id: <CellText>{edcServer.id}</CellText>,
                 name: <CellText>{edcServer.name}</CellText>,
-                url: <CellText>{(edcServer.url)}</CellText>,
+                url: <CellText>{edcServer.url}</CellText>,
                 flag: <CellText>{edcServer.flag}</CellText>,
                 defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
-                menu: <ActionsCell
-                    items={[
-                        {destination: () => openUpdateModal(edcServer), label: 'Edit server'},
-                        {destination: () => handleDeleteConfirm(edcServer), label: 'Remove server'}
-                    ]}/>,
-
-        })) || [],
+                menu: (
+                    <ActionsCell
+                        items={[
+                            { destination: () => openUpdateModal(edcServer), label: 'Edit server' },
+                            { destination: () => handleDeleteConfirm(edcServer), label: 'Remove server' },
+                        ]}
+                    />
+                ),
+            })) || [],
         [edcServersState]
     );
 
     return (
-    <div>
-        {isLoading && (
-            <LoadingOverlay accessibleLabel="Loading EDC servers information" />
-        )}
+        <div>
+            {isLoading && <LoadingOverlay accessibleLabel="Loading EDC servers information" />}
 
-        <AddEDCServerModal
-                open={showAddModal}
-                onClose={closeAllModals}
-                handleSave={handleNewServer}
-            />
-            <UpdateEDCServerModal
-                open={showUpdateModal}
-                onClose={closeAllModals}
-                handleSave={handleUpdate}
-                data={selectedServer}
-            />
+            <AddEDCServerModal open={showAddModal} onClose={closeAllModals} handleSave={handleNewServer} />
+            <UpdateEDCServerModal open={showUpdateModal} onClose={closeAllModals} handleSave={handleUpdate} data={selectedServer} />
 
             <ConfirmModal
                 title="Remove server"
@@ -180,14 +151,16 @@ const EDCServersGrid = () => {
                 onCancel={closeAllModals}
                 show={showRemoveModal}
             >
-                Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server
-                list?
+                Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server list?
             </ConfirmModal>
 
             <Stack distribution="trailing">
-                <Button icon="add" onClick={() => {
-                    openAddModal()
-                }}>
+                <Button
+                    icon="add"
+                    onClick={() => {
+                        openAddModal();
+                    }}
+                >
                     Add new server
                 </Button>
             </Stack>
@@ -232,12 +205,12 @@ const EDCServersGrid = () => {
                         isSticky: true,
                         maxWidth: 34,
                         minWidth: 34,
-                        width: 34
-                    }
+                        width: 34,
+                    },
                 ]}
             />
         </div>
     );
-}
+};
 
-export {EDCServersGrid};
+export { EDCServersGrid };

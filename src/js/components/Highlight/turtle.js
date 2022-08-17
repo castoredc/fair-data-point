@@ -1,53 +1,50 @@
 export const turtle = {
-    'comment': {
+    comment: {
         pattern: /#.*/,
-        greedy: true
+        greedy: true,
     },
     'multiline-string': {
         pattern: /"""(?:(?:""?)?(?:[^"\\]|\\.))*"""|'''(?:(?:''?)?(?:[^'\\]|\\.))*'''/,
         greedy: true,
         alias: 'string',
         inside: {
-            'comment': /#.*/
-        }
+            comment: /#.*/,
+        },
     },
-    'string': {
+    string: {
         pattern: /"(?:[^\\"\r\n]|\\.)*"|'(?:[^\\'\r\n]|\\.)*'/,
-        greedy: true
+        greedy: true,
     },
-    'url': {
+    url: {
         pattern: /<(?:[^\x00-\x20<>"{}|^`\\]|\\(?:u[\da-f]{4}|U[\da-f]{8}))*>/i,
         greedy: true,
         inside: {
-            'punctuation': /[<>]/
-        }
+            punctuation: /[<>]/,
+        },
     },
-    'function': {
+    function: {
         pattern: /(?:(?![-.\d\xB7])[-.\w\xB7\xC0-\uFFFD]+)?:(?:(?![-.])(?:[-.:\w\xC0-\uFFFD]|%[\da-f]{2}|\\.)+)?/i,
         inside: {
             'local-name': {
                 pattern: /([^:]*:)[\s\S]+/,
-                lookbehind: true
+                lookbehind: true,
             },
-            'prefix': {
+            prefix: {
                 pattern: /[\s\S]+/,
                 inside: {
-                    'punctuation': /:/
-                }
-            }
-        }
+                    punctuation: /:/,
+                },
+            },
+        },
     },
-    'number': /[+-]?\b\d+\.?\d*(?:e[+-]?\d+)?/i,
-    'punctuation': /[{}.,;()[\]]|\^\^/,
-    'boolean': /\b(?:true|false)\b/,
-    'keyword': [
-        /(?:\ba|@prefix|@base)\b|=/,
-        /\b(?:graph|base|prefix)\b/i
-    ],
-    'tag': {
+    number: /[+-]?\b\d+\.?\d*(?:e[+-]?\d+)?/i,
+    punctuation: /[{}.,;()[\]]|\^\^/,
+    boolean: /\b(?:true|false)\b/,
+    keyword: [/(?:\ba|@prefix|@base)\b|=/, /\b(?:graph|base|prefix)\b/i],
+    tag: {
         pattern: /@[a-z]+(?:-[a-z\d]+)*/i,
         inside: {
-            'punctuation': /@/
-        }
-    }
+            punctuation: /@/,
+        },
+    },
 };
