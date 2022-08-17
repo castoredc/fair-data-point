@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
@@ -100,20 +100,23 @@ const EDCServersGrid = ({edcServers}) => {
         closeAllModals();
     };
 
-    const serverRows = edcServersState.map((edcServer, index) => {
-        return {
-            id: <CellText>{edcServer.id}</CellText>,
-            name: <CellText>{edcServer.name}</CellText>,
-            url: <CellText>{(edcServer.url)}</CellText>,
-            flag: <CellText>{edcServer.flag}</CellText>,
-            defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
-            menu: <ActionsCell
-                items={[
-                    {destination: () => openUpdateModal(edcServer), label: 'Edit server'},
-                    {destination: () => handleDeleteConfirm(edcServer), label: 'Remove server'}
-                ]}/>,
-        }
-    });
+    const serverRows = useMemo(
+        () => edcServersState.map((edcServer, index) => {
+            return {
+                id: <CellText>{edcServer.id}</CellText>,
+                name: <CellText>{edcServer.name}</CellText>,
+                url: <CellText>{(edcServer.url)}</CellText>,
+                flag: <CellText>{edcServer.flag}</CellText>,
+                defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
+                menu: <ActionsCell
+                    items={[
+                        {destination: () => openUpdateModal(edcServer), label: 'Edit server'},
+                        {destination: () => handleDeleteConfirm(edcServer), label: 'Remove server'}
+                    ]}/>,
+            }
+        }) || [],
+        edcServersState
+    );
 
     return (
         <div>
