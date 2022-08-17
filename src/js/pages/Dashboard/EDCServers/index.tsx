@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import ToastContent from "components/ToastContent";
 import PageBody from "components/Layout/Dashboard/PageBody";
 import { apiClient } from "src/js/network";
-import EDCServersGrid from "./EDCServersGrid";
+import { EDCServersGrid } from "./EDCServersGrid";
 import {ServerType} from "types/ServerType";
 
 const EDCServers = ({history, location, match, user}) => {

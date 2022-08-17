@@ -1,115 +1,68 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
 import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
-import { UpdateEDCServerModal } from "modals/UpdateEDCServerModal";
-import { AddEDCServerModal } from "modals/AddEDCServerModal";
+import {UpdateEDCServerModal} from "modals/UpdateEDCServerModal";
+import {AddEDCServerModal} from "modals/AddEDCServerModal";
 import {apiClient} from "../../../network";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 
-type EDCServersGridProps = {
-    edcServers: ServerType[],
-}
+const EDCServersGrid = ({edcServers}) => {
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [showRemoveModal, setShowRemoveModal] = useState(false);
+    const [edcServersState, setEdcServersState] = useState<ServerType[]>(edcServers);
+    const [selectedServer, setSelectedServer] = useState<ServerType>();
 
-type EDCServersGridState = {
-    showAddModal: boolean,
-    showUpdateModal: boolean,
-    showRemoveModal: boolean,
-    edcServers: ServerType[],
-    selectedServer: ServerType | null;
-}
-
-export default class EDCServersGrid extends Component<EDCServersGridProps, EDCServersGridState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            showAddModal: false,
-            showUpdateModal: false,
-            showRemoveModal: false,
-            edcServers: props.edcServers,
-            selectedServer: null,
-        };
-    }
-
-    openAddModal = () => {
-        this.setState({
-            showAddModal: true,
-        });
+    const openAddModal = () => {
+        setShowAddModal(true);
     };
 
-    closeAddModal = () => {
-        this.setState({
-            showAddModal: false,
-        });
+    const closeAddModal = () => {
+        setShowAddModal(false);
     };
 
-    openUpdateModal = (id) => {
-        this.setState({
-            showUpdateModal: true,
-        });
+    const closeAllModals = () => {
+        setShowAddModal(false);
+        setShowUpdateModal(false);
+        setShowRemoveModal(false);
     };
 
-    closeAllModals = () => {
-        this.setState({
-            showAddModal: false,
-            showUpdateModal: false,
-            showRemoveModal: false,
-        });
+    const openUpdateModal = (existingServer) => {
+        setShowUpdateModal(true);
+        setSelectedServer(existingServer);
     };
 
-    handleNewServer = (newServer) => {
-        const {edcServers} = this.state;
-
-        edcServers.push(newServer);
-
-        this.setState({
-            edcServers: edcServers,
-        });
-
-        this.closeAddModal();
-    }
-
-    showUpdateModal = (existingServer) => {
-        const {edcServers} = this.props;
-        this.setState({
-            showUpdateModal: true,
-            selectedServer: existingServer
-        });
+    const handleNewServer = (newServer) => {
+        edcServersState.push(newServer);
+        setEdcServersState(edcServersState);
+        closeAddModal();
     };
 
-    handleUpdate = (updatedServer) => {
-        const {edcServers, selectedServer} = this.state;
-
-        if (! selectedServer) {
+    const handleUpdate = (updatedServer) => {
+        if (!selectedServer) {
             return;
         }
 
-        const index = edcServers.indexOf(selectedServer);
+        const index = edcServersState.indexOf(selectedServer);
         if (index > -1) {
-            let newServers = edcServers;
+            let newServers = edcServersState;
 
             newServers[index] = updatedServer;
-
-            this.setState({
-                edcServers: newServers,
-            })
+            setEdcServersState(newServers);
         }
 
-        this.closeAllModals();
+        closeAllModals();
     };
 
-    handleDeleteConfirm = (edcServer) => {
-        this.setState({
-            showRemoveModal: true,
-            selectedServer: edcServer
-        });
-    }
+    const handleDeleteConfirm = (edcServer) => {
+        setShowRemoveModal(true);
+        setSelectedServer(edcServer);
+    };
 
-    handleDelete = () => {
-        const {edcServers, selectedServer} = this.state;
-        if (! selectedServer) {
+    const handleDelete = () => {
+        if (!selectedServer) {
             return;
         }
 
@@ -127,14 +80,11 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                     }
                 );
 
-                const index = edcServers.indexOf(selectedServer);
+                const index = edcServersState.indexOf(selectedServer);
                 if (index > -1) {
-                    let newServers = edcServers;
+                    let newServers = edcServersState;
                     newServers.splice(index, 1);
-
-                    this.setState({
-                        edcServers: newServers,
-                    })
+                    setEdcServersState(newServers);
                 }
 
             })
@@ -147,37 +97,35 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                 );
             });
 
-        this.closeAllModals();
+        closeAllModals();
     };
 
-    render() {
-        const { edcServers, selectedServer, showAddModal, showUpdateModal, showRemoveModal } = this.state;
+    const serverRows = edcServersState.map((edcServer, index) => {
+        return {
+            id: <CellText>{edcServer.id}</CellText>,
+            name: <CellText>{edcServer.name}</CellText>,
+            url: <CellText>{(edcServer.url)}</CellText>,
+            flag: <CellText>{edcServer.flag}</CellText>,
+            defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
+            menu: <ActionsCell
+                items={[
+                    {destination: () => openUpdateModal(edcServer), label: 'Edit server'},
+                    {destination: () => handleDeleteConfirm(edcServer), label: 'Remove server'}
+                ]}/>,
+        }
+    });
 
-        const serverRows = edcServers.map((edcServer, index) => {
-            return {
-                id: <CellText>{edcServer.id}</CellText>,
-                name: <CellText>{edcServer.name}</CellText>,
-                url: <CellText>{(edcServer.url)}</CellText>,
-                flag: <CellText>{edcServer.flag}</CellText>,
-                defaultServer: <CellText>{edcServer.default ? 'Yes' : 'No'}</CellText>,
-                menu: <ActionsCell
-                    items={[
-                        {destination: () => this.showUpdateModal(edcServer), label: 'Edit server'},
-                        {destination: () => this.handleDeleteConfirm(edcServer), label: 'Remove server'}
-                    ]}/>,
-            }
-        });
-
-        return <div>
+    return (
+        <div>
             <AddEDCServerModal
                 open={showAddModal}
-                onClose={this.closeAllModals}
-                handleSave={this.handleNewServer}
+                onClose={closeAllModals}
+                handleSave={handleNewServer}
             />
             <UpdateEDCServerModal
                 open={showUpdateModal}
-                onClose={this.closeAllModals}
-                handleSave={this.handleUpdate}
+                onClose={closeAllModals}
+                handleSave={handleUpdate}
                 data={selectedServer}
             />
 
@@ -185,16 +133,17 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                 title="Remove server"
                 action="Remove server"
                 variant="primary"
-                onConfirm={this.handleDelete}
-                onCancel={this.closeAllModals}
+                onConfirm={handleDelete}
+                onCancel={closeAllModals}
                 show={showRemoveModal}
             >
-                Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server list?
+                Are you sure you want remove <strong>{selectedServer && selectedServer.name}</strong> from the server
+                list?
             </ConfirmModal>
 
             <Stack distribution="trailing">
                 <Button icon="add" onClick={() => {
-                    this.openAddModal()
+                    openAddModal()
                 }}>
                     Add new server
                 </Button>
@@ -244,6 +193,8 @@ export default class EDCServersGrid extends Component<EDCServersGridProps, EDCSe
                     }
                 ]}
             />
-        </div>;
-    }
+        </div>
+    );
 }
+
+export {EDCServersGrid};
