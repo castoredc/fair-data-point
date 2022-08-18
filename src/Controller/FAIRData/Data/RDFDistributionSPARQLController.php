@@ -9,6 +9,7 @@ use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Event\SparqlQueryExecuted;
+use App\Event\SparqlQueryFailed;
 use App\Service\UriHelper;
 use ARC2_StoreEndpoint;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -87,6 +88,15 @@ class RDFDistributionSPARQLController extends FAIRDataController
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),
             ]);
+
+            $this->eventDispatcher->dispatch(
+                new SparqlQueryFailed(
+                    $distribution->getId(),
+                    $this->getUser(),
+                    $request->get('query'),
+                    $t->getMessage()
+                )
+            );
 
             return new Response('An error occurred while executing your query.', 400);
         }
