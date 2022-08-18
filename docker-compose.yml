@@ -7,6 +7,8 @@ services:
     restart: always
     ports:
       - "3306:3306"
+    networks:
+      - fair-data-point
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: '%'
@@ -25,6 +27,8 @@ services:
     environment:
       COMPOSER_HOME: /opt/composer
       APP_ENV: dev
+    networks:
+      - fair-data-point
     extra_hosts:
       - host.docker.internal:host-gateway
     depends_on:
@@ -42,7 +46,16 @@ services:
       - "127.0.0.1:80:80"
     volumes:
       - .:/home/castor/fdp:delegated
+    networks:
+      - fair-data-point
     depends_on:
       - symfony
     links:
       - mysql
+
+networks:
+  fair-data-point:
+    driver: bridge
+    driver_opts:
+      # This MTU setting is necessary to allow within-container connectivity when connected to the Castor VPN.
+      com.docker.network.driver.mtu: 1445
