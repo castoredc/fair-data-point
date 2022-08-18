@@ -22,7 +22,6 @@ class SparqlQueryExecuted extends Event
         $this->resultCount = $resultCount;
     }
 
-
     public function getDistributionId(): string
     {
         return $this->distributionId;
@@ -37,6 +36,7 @@ class SparqlQueryExecuted extends Event
     {
         return $this->query;
     }
+
     public function getResultCount(): int
     {
         return $this->resultCount;

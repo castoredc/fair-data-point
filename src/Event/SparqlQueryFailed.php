@@ -23,7 +23,6 @@ class SparqlQueryFailed extends Event
         $this->error = $error;
     }
 
-
     public function getDistributionId(): string
     {
         return $this->distributionId;

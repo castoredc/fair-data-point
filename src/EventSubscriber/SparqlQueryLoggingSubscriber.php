@@ -20,6 +20,7 @@ final class SparqlQueryLoggingSubscriber implements EventSubscriberInterface
         $this->entityManager = $entityManager;
     }
 
+    /** @return array<class-string, string> */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -60,6 +61,5 @@ final class SparqlQueryLoggingSubscriber implements EventSubscriberInterface
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
-
     }
 }

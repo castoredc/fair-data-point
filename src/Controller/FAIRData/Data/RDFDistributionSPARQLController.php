@@ -22,6 +22,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use Throwable;
 use function assert;
+use function count;
 use function json_decode;
 use const JSON_THROW_ON_ERROR;
 
@@ -34,7 +35,7 @@ class RDFDistributionSPARQLController extends FAIRDataController
         parent::__construct($uriHelper, $logger);
         $this->eventDispatcher = $eventDispatcher;
     }
-    
+
     /**
      * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/sparql", name="distribution_sparql")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
@@ -77,7 +78,7 @@ class RDFDistributionSPARQLController extends FAIRDataController
                     count($parsedResults['results']['bindings']) ?? 0
                 )
             );
-            
+
             echo $rawResults;
 
             exit;
