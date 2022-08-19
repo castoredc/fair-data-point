@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\unit\EventSubscriber;
 
+use App\Event\SparqlQueryExecuted;
 use App\Event\SparqlQueryFailed;
 use App\EventSubscriber\SparqlQueryLoggingSubscriber;
 use App\Security\Providers\Castor\CastorUser;
@@ -27,6 +28,11 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT * WHERE {
   syntax error
 } LIMIT 100';
+    private const SUCCESS_QUERY = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT * WHERE {
+  ?sub ?pred ?obj .
+} LIMIT 10';
 
     private EventDispatcher $dispatcher;
 
@@ -53,6 +59,27 @@ SELECT * WHERE {
 
         $this->dispatcher->dispatch(
             new SparqlQueryFailed(self::DISTRIBUTION_ID, $user, self::FAULTY_QUERY, 'Syntax error')
+        );
+    }
+
+    public function testShouldAddSuccessLogOnSuccessfulQuery(): void
+    {
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects(self::once())
+            ->method('persist');
+        $entityManager->expects(self::once())
+            ->method('flush');
+
+        $subscriber = new SparqlQueryLoggingSubscriber($entityManager);
+        $this->dispatcher->addSubscriber($subscriber);
+        $user = (new User(null));
+        $user->setCastorUser(
+            new CastorUser(self::USER_ID, self::FIRST_NAME, self::MIDDLE_NAME, self::LAST_NAME, self::EMAILADDRESS)
+        );
+        $this->setEntityId($user, self::USER_ID);
+
+        $this->dispatcher->dispatch(
+            new SparqlQueryExecuted(self::DISTRIBUTION_ID, $user, self::SUCCESS_QUERY, 15)
         );
     }
 }
