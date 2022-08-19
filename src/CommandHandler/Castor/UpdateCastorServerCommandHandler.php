@@ -33,6 +33,19 @@ final class UpdateCastorServerCommandHandler implements MessageHandlerInterface
 
         if ($castorServer !== null) {
             $castorServer->updatePropertiesFromCommand($command, $this->encryptionService);
+
+            if ($command->isDefault()) {
+                // There can be only one default server, so ensure all other servers are non-default.
+                $allServers = $castorServerRepository->findAll();
+                foreach ($allServers as $server) {
+                    // Don't update the CastorServer that we just set to default.
+                    if ($server->getId() === $command->getId()) {
+                        continue;
+                    }
+
+                    $server->makeNonDefault();
+                }
+            }
         } else {
             if ($command->isDefault()) {
                 $castorServer = CastorServer::defaultServer(

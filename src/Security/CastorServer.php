@@ -162,6 +162,8 @@ class CastorServer
         $this->name = $command->getName();
         $this->flag = $command->getFlag();
         $this->url = new Iri($command->getUrl());
+        $this->default = $command->isDefault();
+
         $this->updateClientCredentials($encryptionService, $command->getClientId(), $command->getClientSecret());
     }
 }

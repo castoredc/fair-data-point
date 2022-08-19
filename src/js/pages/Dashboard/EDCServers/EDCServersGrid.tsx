@@ -1,5 +1,5 @@
-import React, {useMemo, useState} from 'react';
-import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
+import React, {useEffect, useMemo, useState} from 'react';
+import {ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack} from "@castoredc/matter";
 import {ServerType} from "types/ServerType";
 import ConfirmModal from "modals/ConfirmModal";
 import {UpdateEDCServerModal} from "modals/UpdateEDCServerModal";
@@ -8,12 +8,46 @@ import {apiClient} from "../../../network";
 import {toast} from "react-toastify";
 import ToastContent from "components/ToastContent";
 
-const EDCServersGrid = ({edcServers}) => {
+const EDCServersGrid = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
-    const [edcServersState, setEdcServersState] = useState<ServerType[]>(edcServers);
+    const [edcServersState, setEdcServersState] = useState<ServerType[]>([]);
     const [selectedServer, setSelectedServer] = useState<ServerType>();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getEDCServers = () => {
+        setIsLoading(true);
+
+        apiClient
+            .get("/api/castor/servers")
+            .then((response) => {
+                setIsLoading(false);
+                setEdcServersState(response.data);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                if (
+                    error.response &&
+                    typeof error.response.data.error !== "undefined"
+                ) {
+                    toast.error(
+                        <ToastContent type="error" message={error.response.data.error}/>
+                    );
+                } else {
+                    toast.error(
+                        <ToastContent
+                            type="error"
+                            message="An error occurred while loading the EDC Servers information"
+                        />
+                    );
+                }
+            });
+    };
+
+    useEffect( () => {
+        getEDCServers();
+    }, []);
 
     const openAddModal = () => {
         setShowAddModal(true);
@@ -45,13 +79,15 @@ const EDCServersGrid = ({edcServers}) => {
             return;
         }
 
-        const index = edcServersState.indexOf(selectedServer);
-        if (index > -1) {
-            let newServers = edcServersState;
+        // const index = edcServersState.indexOf(selectedServer);
+        // if (index > -1) {
+        //     let newServers = edcServersState;
+        //
+        //     newServers[index] = updatedServer;
+        //     setEdcServersState(newServers);
+        // }
 
-            newServers[index] = updatedServer;
-            setEdcServersState(newServers);
-        }
+        getEDCServers();
 
         closeAllModals();
     };
@@ -119,8 +155,12 @@ const EDCServersGrid = ({edcServers}) => {
     );
 
     return (
-        <div>
-            <AddEDCServerModal
+    <div>
+        {isLoading && (
+            <LoadingOverlay accessibleLabel="Loading EDC servers information" />
+        )}
+
+        <AddEDCServerModal
                 open={showAddModal}
                 onClose={closeAllModals}
                 handleSave={handleNewServer}
