@@ -1,11 +1,11 @@
 import React from 'react';
-import {ValidatorComponent} from 'react-form-validator-core';
+import { ValidatorComponent } from 'react-form-validator-core';
 import AsyncSelect from 'react-select/async';
-import {ChoiceOption, Dropdown as CastorDropdown, dropdownStyle, Icon, TextStyle} from '@castoredc/matter';
+import { ChoiceOption, Dropdown as CastorDropdown, dropdownStyle, Icon, TextStyle } from '@castoredc/matter';
 
-import {components} from 'react-select';
+import { components } from 'react-select';
 
-import './Input.scss'
+import './Input.scss';
 
 class Dropdown extends ValidatorComponent {
     constructor(props) {
@@ -13,22 +13,22 @@ class Dropdown extends ValidatorComponent {
 
         this.state = {
             ...this.state,
-            cachedOptions: []
+            cachedOptions: [],
         };
     }
 
     loadOptions = (inputValue, callback) => {
-        const {loadOptions} = this.props;
+        const { loadOptions } = this.props;
 
         if (this.timeout) {
             clearTimeout(this.timeout);
-            this.timeout = null
+            this.timeout = null;
         }
 
         this.timeout = setTimeout(() => {
-            loadOptions(inputValue, (options) => {
+            loadOptions(inputValue, options => {
                 this.setState({
-                    cachedOptions: options
+                    cachedOptions: options,
                 });
 
                 callback(options);
@@ -49,9 +49,9 @@ class Dropdown extends ValidatorComponent {
             isMulti = false,
             isGrouped = false,
             menuPosition,
-            defaultOptions
+            defaultOptions,
         } = this.props;
-        const {cachedOptions, isValid} = this.state;
+        const { cachedOptions, isValid } = this.state;
 
         let SelectComponent = null;
 
@@ -59,7 +59,7 @@ class Dropdown extends ValidatorComponent {
             const DropdownIndicator = props => {
                 return (
                     <components.DropdownIndicator {...props}>
-                        <Icon type="search"/>
+                        <Icon type="search" />
                     </components.DropdownIndicator>
                 );
             };
@@ -67,36 +67,34 @@ class Dropdown extends ValidatorComponent {
             let dropdownValue = value;
 
             if (defaultOptions !== undefined && typeof dropdownValue !== 'object' && dropdownValue !== null) {
-                dropdownValue = defaultOptions.find((option) => option.value === dropdownValue);
+                dropdownValue = defaultOptions.find(option => option.value === dropdownValue);
             }
 
-            SelectComponent = <AsyncSelect
-                loadOptions={this.loadOptions}
-                options={cachedOptions}
-                openMenuOnClick={false}
-                ref={(r) => {
-                    this.input = r;
-                }}
-                onChange={onChange}
-                styles={dropdownStyle}
-                components={{DropdownIndicator}}
-                placeholder=""
-                isDisabled={isDisabled}
-                value={dropdownValue}
-                defaultOptions={defaultOptions}
-            />
+            SelectComponent = (
+                <AsyncSelect
+                    loadOptions={this.loadOptions}
+                    options={cachedOptions}
+                    openMenuOnClick={false}
+                    ref={r => {
+                        this.input = r;
+                    }}
+                    onChange={onChange}
+                    styles={dropdownStyle}
+                    components={{ DropdownIndicator }}
+                    placeholder=""
+                    isDisabled={isDisabled}
+                    value={dropdownValue}
+                    defaultOptions={defaultOptions}
+                />
+            );
         } else if (isMulti) {
             const CustomOption = props => (
                 <components.Option className="DropdownMultiOption" {...props}>
-                    <ChoiceOption
-                        labelText={props.data.label}
-                        checked={props.isSelected}
-                        onChange={() => undefined}
-                    />
+                    <ChoiceOption labelText={props.data.label} checked={props.isSelected} onChange={() => undefined} />
                 </components.Option>
             );
 
-            const MultiValue = ({children, ...props}) => {
+            const MultiValue = ({ children, ...props }) => {
                 const value = props.getValue();
 
                 if (value.length === 1) {
@@ -110,73 +108,77 @@ class Dropdown extends ValidatorComponent {
                 return props.Header === 0 ? <div>{value.length} selected</div> : null;
             };
 
-            SelectComponent = <CastorDropdown
-                invalid={!isValid}
-                onChange={onChange}
-                value={value}
-                options={options}
-                placeholder={placeholder}
-                isDisabled={isDisabled}
-                width={width}
-                isMulti={true}
-                closeMenuOnSelect={false}
-                hideSelectedOptions={false}
-                isClearable={false}
-                menuPosition={menuPosition}
-                menuPlacement="auto"
-                components={{
-                    Option: CustomOption,
-                    MultiValue,
-                }}
-            />;
+            SelectComponent = (
+                <CastorDropdown
+                    invalid={!isValid}
+                    onChange={onChange}
+                    value={value}
+                    options={options}
+                    placeholder={placeholder}
+                    isDisabled={isDisabled}
+                    width={width}
+                    isMulti={true}
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    isClearable={false}
+                    menuPosition={menuPosition}
+                    menuPlacement="auto"
+                    components={{
+                        Option: CustomOption,
+                        MultiValue,
+                    }}
+                />
+            );
         } else {
             let dropdownValue = value;
 
             if (typeof dropdownValue !== 'object' && dropdownValue !== null && !isGrouped) {
-                dropdownValue = options.find((option) => option.value === dropdownValue);
+                dropdownValue = options.find(option => option.value === dropdownValue);
             }
 
-            SelectComponent = <CastorDropdown
-                invalid={!isValid}
-                onChange={onChange}
-                value={dropdownValue}
-                options={options}
-                placeholder={placeholder}
-                isDisabled={isDisabled}
-                width={width}
-                menuPosition={menuPosition}
-                menuPlacement="auto"
-            />;
+            SelectComponent = (
+                <CastorDropdown
+                    invalid={!isValid}
+                    onChange={onChange}
+                    value={dropdownValue}
+                    options={options}
+                    placeholder={placeholder}
+                    isDisabled={isDisabled}
+                    width={width}
+                    menuPosition={menuPosition}
+                    menuPlacement="auto"
+                />
+            );
         }
 
         return (
-            <div className="Select" onClick={this.props.onClick}
-                 ref={(r) => {
-                     this.input = r;
-                 }}>
+            <div
+                className="Select"
+                onClick={this.props.onClick}
+                ref={r => {
+                    this.input = r;
+                }}
+            >
                 {SelectComponent}
                 {this.errorText()}
-                {serverError && serverError.map((errorText, index) => (
-                    <TextStyle key={index} variation="error">
-                        {errorText}
-                    </TextStyle>
-                ))}
+                {serverError &&
+                    serverError.map((errorText, index) => (
+                        <TextStyle key={index} variation="error">
+                            {errorText}
+                        </TextStyle>
+                    ))}
             </div>
         );
     }
 
     errorText() {
-        const {isValid} = this.state;
+        const { isValid } = this.state;
 
         if (isValid) {
             return null;
         }
 
-        return (
-            <TextStyle variation="error">
-                {this.getErrorMessage()}
-            </TextStyle>
-        );
+        return <TextStyle variation="error">{this.getErrorMessage()}</TextStyle>;
     }
 }
 

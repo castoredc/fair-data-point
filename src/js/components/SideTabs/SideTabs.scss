@@ -1,123 +1,123 @@
 @import '../../scss/colors';
 
 .SideTabs {
-  display: flex;
-  height: 100%;
-  overflow: auto;
-
-  &.HasButtons {
-    .SideTabsNav {
-      margin-top: 50px;
-    }
-  }
-
-  &.HasTabs {
-    .SideTabsNav {
-      margin-top: 4.8rem;
-    }
-  }
-
-  &.HasTitle {
-    .SideTabsNav {
-      margin-top: 0 !important;
-    }
-  }
-
-  .SideTabsHeader {
-    height: 44px;
-    padding: 6px;
-    margin-bottom: 6px;
-    border-bottom: 1px solid $neutral-40;
-
-    .SideTabsHeaderTitle {
-      color: $neutral-800;
-      font-weight: bold;
-      line-height: 32px;
-    }
-  }
-
-  .SideTabsNav {
-    width: 240px;
-    overflow: auto;
-    flex: 0 0 240px;
-    margin-right: 30px;
     display: flex;
-    flex-direction: column;
-
-    .SideTabsNavItem {
-      display: flex;
-      padding: 1rem;
-      color: $neutral-500;
-      border-radius: 3px;
-      margin-bottom: 4px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      width: 100%;
-      text-align: left;
-      background: none;
-      font-weight: 700;
-
-      &.Active {
-        color: $azul;
-        border-color: $azul;
-
-        .SideTabsNavItemNumber {
-          background: $azul;
-        }
-      }
-
-      &:hover {
-        background: $neutral-30;
-        color: $azul;
-
-        .SideTabsNavItemNumber {
-          background: $azul;
-        }
-      }
-
-      .SideTabsNavItemNumber {
-        margin-right: 12px;
-        font-size: 11px;
-        padding: 3px 5px;
-        border-radius: 2px;
-        background: $neutral-70;
-        color: $generic-white;
-        width: 25px;
-        text-align: center;
-      }
-
-      .SideTabsNavItemTitle {
-        flex: 1;
-      }
-
-      .SideTabsNavItemBadge {
-        margin-left: 10px;
-        font-size: 11px;
-        padding: 3px 5px;
-        border-radius: 2px;
-        border: 1px solid currentColor;
-      }
-
-      .SideTabsNavItemIcons {
-        margin-left: auto;
-        padding-left: 10px;
-
-        .SideTabsNavItemIcon {
-          margin-left: 5px;
-        }
-      }
-    }
-
-    hr {
-      margin: 10px 0 14px 0;
-      border-color: $neutral-40;
-      border-style: solid;
-      border-top: 0;
-    }
-  }
-
-  .SideTabsContent {
-    flex: 1;
+    height: 100%;
     overflow: auto;
-  }
+
+    &.HasButtons {
+        .SideTabsNav {
+            margin-top: 50px;
+        }
+    }
+
+    &.HasTabs {
+        .SideTabsNav {
+            margin-top: 4.8rem;
+        }
+    }
+
+    &.HasTitle {
+        .SideTabsNav {
+            margin-top: 0 !important;
+        }
+    }
+
+    .SideTabsHeader {
+        height: 44px;
+        padding: 6px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid $neutral-40;
+
+        .SideTabsHeaderTitle {
+            color: $neutral-800;
+            font-weight: bold;
+            line-height: 32px;
+        }
+    }
+
+    .SideTabsNav {
+        width: 240px;
+        overflow: auto;
+        flex: 0 0 240px;
+        margin-right: 30px;
+        display: flex;
+        flex-direction: column;
+
+        .SideTabsNavItem {
+            display: flex;
+            padding: 1rem;
+            color: $neutral-500;
+            border-radius: 3px;
+            margin-bottom: 4px;
+            text-decoration: none;
+            border: 1px solid transparent;
+            width: 100%;
+            text-align: left;
+            background: none;
+            font-weight: 700;
+
+            &.Active {
+                color: $azul;
+                border-color: $azul;
+
+                .SideTabsNavItemNumber {
+                    background: $azul;
+                }
+            }
+
+            &:hover {
+                background: $neutral-30;
+                color: $azul;
+
+                .SideTabsNavItemNumber {
+                    background: $azul;
+                }
+            }
+
+            .SideTabsNavItemNumber {
+                margin-right: 12px;
+                font-size: 11px;
+                padding: 3px 5px;
+                border-radius: 2px;
+                background: $neutral-70;
+                color: $generic-white;
+                width: 25px;
+                text-align: center;
+            }
+
+            .SideTabsNavItemTitle {
+                flex: 1;
+            }
+
+            .SideTabsNavItemBadge {
+                margin-left: 10px;
+                font-size: 11px;
+                padding: 3px 5px;
+                border-radius: 2px;
+                border: 1px solid currentColor;
+            }
+
+            .SideTabsNavItemIcons {
+                margin-left: auto;
+                padding-left: 10px;
+
+                .SideTabsNavItemIcon {
+                    margin-left: 5px;
+                }
+            }
+        }
+
+        hr {
+            margin: 10px 0 14px 0;
+            border-color: $neutral-40;
+            border-style: solid;
+            border-top: 0;
+        }
+    }
+
+    .SideTabsContent {
+        flex: 1;
+        overflow: auto;
+    }
 }

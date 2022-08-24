@@ -1,8 +1,8 @@
-import React from "react";
-import SplitWrapper from 'react-split'
-import './Split.scss'
+import React from 'react';
+import SplitWrapper from 'react-split';
+import './Split.scss';
 
-const Split = ({sizes, children}) => {
+const Split = ({ sizes, children }) => {
     return (
         <SplitWrapper
             className="Split"
@@ -10,14 +10,14 @@ const Split = ({sizes, children}) => {
             cursor="col-resize"
             gutterSize={40}
             gutter={(index, direction) => {
-                const gutter = document.createElement('div')
+                const gutter = document.createElement('div');
                 const chip = document.createElement('div');
 
-                gutter.className = `gutter gutter-${direction}`
-                chip.className = `chip`
+                gutter.className = `gutter gutter-${direction}`;
+                chip.className = `chip`;
 
                 gutter.appendChild(chip);
-                return gutter
+                return gutter;
             }}
         >
             {children}

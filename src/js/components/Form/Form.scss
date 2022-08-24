@@ -2,233 +2,237 @@
 @import '../../scss/colors';
 
 .FullHeightForm {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
 }
 
-.NotLoaded, .WaitingOnInput {
-  opacity: 0.5;
+.NotLoaded,
+.WaitingOnInput {
+    opacity: 0.5;
 }
 
 .CannotFind {
-  float: right;
-  padding: 0 !important;
+    float: right;
+    padding: 0 !important;
 }
 
 .StudyLink {
-  border: 1px solid $neutral-50;
-  border-radius: 4px;
-  padding: 16px;
-  max-width: 40rem;
-  display: flex;
+    border: 1px solid $neutral-50;
+    border-radius: 4px;
+    padding: 16px;
+    max-width: 40rem;
+    display: flex;
 
-  .StudyIcon {
-    margin-right: 16px;
-    margin-top: 5px;
+    .StudyIcon {
+        margin-right: 16px;
+        margin-top: 5px;
 
-    svg path {
-      fill: $neutral-300;
+        svg path {
+            fill: $neutral-300;
+        }
     }
-  }
 
-  .StudyDetails {
-    flex: 1;
-  }
-
-  .StudyName {
-    margin-bottom: 10px;
-
-    dl {
-      margin: 0;
-
-      dt {
-        float: left;
-        width: 100px;
-        font-weight: 600;
-        margin: 0;
-        padding: 0 16px 0 0;
-      }
-
-      dd {
-        margin: 0 0 0 100px;
-        padding: 0 0 8px;
-      }
+    .StudyDetails {
+        flex: 1;
     }
-  }
+
+    .StudyName {
+        margin-bottom: 10px;
+
+        dl {
+            margin: 0;
+
+            dt {
+                float: left;
+                width: 100px;
+                font-weight: 600;
+                margin: 0;
+                padding: 0 16px 0 0;
+            }
+
+            dd {
+                margin: 0 0 0 100px;
+                padding: 0 0 8px;
+            }
+        }
+    }
 }
 
 .FormButtons {
-  padding-top: 25px;
-  margin-top: 25px;
-  border-top: 1px solid $neutral-30;
-  height: 60px;
-  flex: 0 1 70px;
+    padding-top: 25px;
+    margin-top: 25px;
+    border-top: 1px solid $neutral-30;
+    height: 60px;
+    flex: 0 1 70px;
 
-  & > div:nth-child(2) {
-    text-align: right;
-  }
+    & > div:nth-child(2) {
+        text-align: right;
+    }
 }
 
 .FormContent {
-  height: 100%;
-  flex: 1;
-  overflow: auto;
+    height: 100%;
+    flex: 1;
+    overflow: auto;
 }
 
 .FormLoader {
-  margin: auto;
+    margin: auto;
 }
 
 .FormItem {
-  margin: 20px 0;
+    margin: 20px 0;
 
-  &.Hidden, .Hidden {
-    display: none;
-  }
-
-  &.Inline {
-    .FormItemLabel {
-      margin-right: 10px;
+    &.Hidden,
+    .Hidden {
+        display: none;
     }
 
-    label {
-      margin-bottom: 0;
+    &.Inline {
+        .FormItemLabel {
+            margin-right: 10px;
+        }
+
+        label {
+            margin-bottom: 0;
+        }
+
+        &.AlignLeft,
+        &.AlignCenter,
+        &.AlignRight {
+            display: flex;
+            align-items: center;
+        }
+
+        &.AlignLeft {
+            justify-content: flex-start;
+        }
+
+        &.AlignCenter {
+            justify-content: center;
+        }
+
+        &.AlignRight {
+            justify-content: flex-end;
+        }
+
+        .FormItemContent {
+            overflow: auto;
+        }
     }
 
-    &.AlignLeft, &.AlignCenter, &.AlignRight {
-      display: flex;
-      align-items: center;
+    .Select {
+        width: 100%;
+        z-index: 101;
+
+        & > div,
+        & > div > div {
+            max-width: 100%;
+
+            *::after {
+                box-sizing: initial;
+            }
+        }
     }
 
-    &.AlignLeft {
-      justify-content: flex-start;
+    &:first-child {
+        margin-top: 0;
     }
-
-    &.AlignCenter {
-      justify-content: center;
-    }
-
-    &.AlignRight {
-      justify-content: flex-end;
-    }
-
-    .FormItemContent {
-      overflow: auto;
-    }
-  }
-
-  .Select {
-    width: 100%;
-    z-index: 101;
-
-    & > div, & > div > div {
-      max-width: 100%;
-
-      *::after {
-        box-sizing: initial;
-      }
-    }
-  }
-
-  &:first-child {
-    margin-top: 0;
-  }
 }
 
 .FormHeading {
-  h2 {
-    font-size: 16px;
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.5;
-    letter-spacing: normal;
-    color: $neutral-800;
-  }
+    h2 {
+        font-size: 16px;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: $neutral-800;
+    }
 }
 
 .FormGroup {
-  padding: 20px 0;
+    padding: 20px 0;
 
-  .FormHeading {
-    border-bottom: 1px solid $neutral-40;
-    margin-bottom: 10px;
+    .FormHeading {
+        border-bottom: 1px solid $neutral-40;
+        margin-bottom: 10px;
 
-    h2 {
-      margin-bottom: 10px;
+        h2 {
+            margin-bottom: 10px;
+        }
     }
-  }
 }
 
-
 .OntologyConceptFormBlock {
-  border: 1px solid $neutral-50;
-  border-radius: 3px;
-  width: 610px;
-  padding: 5px 15px;
-  position: relative;
+    border: 1px solid $neutral-50;
+    border-radius: 3px;
+    width: 610px;
+    padding: 5px 15px;
+    position: relative;
 
-  .Header {
-    color: $neutral-600;
-    font-weight: 700;
-  }
-
-  .AddNew {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-bottom: none !important;
-  }
-
-  .Row {
-    display: flex;
-    padding: 10px 0;
-    border-bottom: 1px solid $neutral-50;
-
-    .Ontology {
-      width: 160px;
-      margin-right: 16px;
+    .Header {
+        color: $neutral-600;
+        font-weight: 700;
     }
 
-    .Concept {
-      flex: 1;
+    .AddNew {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-bottom: none !important;
     }
 
-    .ConceptCode {
-      width: 80px;
-      margin-right: 10px;
-    }
+    .Row {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid $neutral-50;
 
-    .RemoveButton svg {
-      width: 12px;
-      height: 12px;
-      margin: 0;
+        .Ontology {
+            width: 160px;
+            margin-right: 16px;
+        }
+
+        .Concept {
+            flex: 1;
+        }
+
+        .ConceptCode {
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .RemoveButton svg {
+            width: 12px;
+            height: 12px;
+            margin: 0;
+        }
     }
-  }
 }
 
 .Affiliations {
-  .AffiliationForm {
-    margin-bottom: 15px;
-    border: 1px solid $neutral-50;
-    border-radius: 3px;
-    padding: 15px;
+    .AffiliationForm {
+        margin-bottom: 15px;
+        border: 1px solid $neutral-50;
+        border-radius: 3px;
+        padding: 15px;
 
-    .AffiliationAvatar {
-      width: 48px;
-      margin-right: 10px;
+        .AffiliationAvatar {
+            width: 48px;
+            margin-right: 10px;
+        }
     }
-  }
 
-  .BlankAvatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 100%;
-    background-color: $blue-50;
-    padding: 10px;
+    .BlankAvatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 100%;
+        background-color: $blue-50;
+        padding: 10px;
 
-    .Icon path {
-      fill: $blue-700;
+        .Icon path {
+            fill: $blue-700;
+        }
     }
-  }
 }

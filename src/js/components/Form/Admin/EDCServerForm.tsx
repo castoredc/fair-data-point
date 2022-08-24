@@ -1,17 +1,17 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 
-import "../Form.scss";
-import {toast} from "react-toastify";
-import ToastContent from "../../ToastContent";
-import FormItem from "./../FormItem";
-import {mergeData} from "../../../util";
-import {Button, Stack} from "@castoredc/matter";
-import {Field, Form, Formik, FormikProvider, useFormik} from "formik";
-import Input from "components/Input/Formik/Input";
-import SingleChoice from "components/Input/Formik/SingleChoice";
-import {apiClient} from "src/js/network";
-import {ServerType} from "types/ServerType";
-import {EDCServerDefaultData, EDCServerSchema} from "components/Form/Admin/form";
+import '../Form.scss';
+import { toast } from 'react-toastify';
+import ToastContent from '../../ToastContent';
+import FormItem from './../FormItem';
+import { mergeData } from '../../../util';
+import { Button, Stack } from '@castoredc/matter';
+import { Field, Form, Formik, FormikProvider, useFormik } from 'formik';
+import Input from 'components/Input/Formik/Input';
+import SingleChoice from 'components/Input/Formik/SingleChoice';
+import { apiClient } from 'src/js/network';
+import { ServerType } from 'types/ServerType';
+import { EDCServerDefaultData, EDCServerSchema } from 'components/Form/Admin/form';
 
 interface EDCServerFormProps {
     edcServer?: ServerType;
@@ -23,29 +23,23 @@ const EDCServerForm = (props: EDCServerFormProps) => {
     const [validation, setValidation] = useState();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleFormSubmit = (values, {setSubmitting}) => {
+    const handleFormSubmit = (values, { setSubmitting }) => {
         // setIsSubmitting updates our internal EDCServerForm state, setSubmitting is Formik's.
         setIsSubmitting(true);
         setSubmitting(true);
 
         apiClient
-            .put("/api/castor/servers", values)
-            .then((response) => {
+            .put('/api/castor/servers', values)
+            .then(response => {
                 setSubmitting(false);
                 setIsSubmitting(false);
 
                 // New server:
                 if (!props.edcServer && response.data.id) {
-                    const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`
-                    toast.success(
-                        <ToastContent
-                            type="success"
-                            message={message}
-                        />,
-                        {
-                            position: "top-right",
-                        }
-                    );
+                    const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`;
+                    toast.success(<ToastContent type="success" message={message} />, {
+                        position: 'top-right',
+                    });
 
                     props.handleSubmit(response.data);
 
@@ -54,35 +48,26 @@ const EDCServerForm = (props: EDCServerFormProps) => {
 
                 // Existing server:
                 if (props.edcServer && props.edcServer.id) {
-                    const message = `The EDC Server ${response.data.name} was updated successfully`
-                    toast.success(
-                        <ToastContent
-                            type="success"
-                            message={message}
-                        />,
-                        {
-                            position: "top-right",
-                        }
-                    );
+                    const message = `The EDC Server ${response.data.name} was updated successfully`;
+                    toast.success(<ToastContent type="success" message={message} />, {
+                        position: 'top-right',
+                    });
 
                     props.handleSubmit(response.data);
 
                     return;
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 setSubmitting(false);
                 setIsSubmitting(false);
 
                 if (error.response && error.response.status === 400) {
                     setValidation(error.response.data.fields);
                 } else {
-                    toast.error(
-                        <ToastContent type="error" message="An error occurred"/>,
-                        {
-                            position: "top-center",
-                        }
-                    );
+                    toast.error(<ToastContent type="error" message="An error occurred" />, {
+                        position: 'top-center',
+                    });
                 }
             });
     };
@@ -100,47 +85,23 @@ const EDCServerForm = (props: EDCServerFormProps) => {
             <Form>
                 <div className="FormContent">
                     <FormItem label="Name">
-                        <Field
-                            component={Input}
-                            name="name"
-                            serverError={validation}
-                        />
+                        <Field component={Input} name="name" serverError={validation} />
                     </FormItem>
                     <FormItem label="URL">
-                        <Field
-                            component={Input}
-                            name="url"
-                            serverError={validation}
-                        />
+                        <Field component={Input} name="url" serverError={validation} />
                     </FormItem>
                     <FormItem label="Flag">
-                        <Field
-                            component={Input}
-                            name="flag"
-                            serverError={validation}
-                        />
+                        <Field component={Input} name="flag" serverError={validation} />
                     </FormItem>
 
                     <FormItem>
-                        <Field
-                            component={SingleChoice}
-                            labelText="Default server?"
-                            name="default"
-                        />
+                        <Field component={SingleChoice} labelText="Default server?" name="default" />
                     </FormItem>
                     <FormItem label="Client ID">
-                        <Field
-                            component={Input}
-                            name="clientId"
-                            serverError={validation}
-                        />
+                        <Field component={Input} name="clientId" serverError={validation} />
                     </FormItem>
                     <FormItem label="Client secret">
-                        <Field
-                            component={Input}
-                            name="clientSecret"
-                            serverError={validation}
-                        />
+                        <Field component={Input} name="clientSecret" serverError={validation} />
                     </FormItem>
                 </div>
 
@@ -163,7 +124,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
         </FormikProvider>
     );
 
-    return ( form );
-}
+    return form;
+};
 
-export {EDCServerForm};
+export { EDCServerForm };

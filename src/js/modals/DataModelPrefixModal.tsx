@@ -1,160 +1,116 @@
-import React, { Component } from "react";
-import FormItem from "components/Form/FormItem";
-import { toast } from "react-toastify";
-import ToastContent from "components/ToastContent";
-import { Button, Modal } from "@castoredc/matter";
-import * as Yup from "yup";
-import { Field, Form, Formik } from "formik";
-import Input from "components/Input/Formik/Input";
-import { apiClient } from "../network";
+import React, { Component } from 'react';
+import FormItem from 'components/Form/FormItem';
+import { toast } from 'react-toastify';
+import ToastContent from 'components/ToastContent';
+import { Button, Modal } from '@castoredc/matter';
+import * as Yup from 'yup';
+import { Field, Form, Formik } from 'formik';
+import Input from 'components/Input/Formik/Input';
+import { apiClient } from '../network';
 
 type DataModelPrefixModalProps = {
-  show: boolean;
-  handleClose: () => void;
-  data: any;
-  onSaved: () => void;
-  modelId: string;
-  versionId: string;
+    show: boolean;
+    handleClose: () => void;
+    data: any;
+    onSaved: () => void;
+    modelId: string;
+    versionId: string;
 };
 
 type DataModelPrefixModalState = {
-  validation: any;
-  initialValues: any;
+    validation: any;
+    initialValues: any;
 };
 
-export default class DataModelPrefixModal extends Component<
-  DataModelPrefixModalProps,
-  DataModelPrefixModalState
-> {
-  constructor(props) {
-    super(props);
+export default class DataModelPrefixModal extends Component<DataModelPrefixModalProps, DataModelPrefixModalState> {
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      initialValues: props.data ? props.data : defaultData,
-      validation: {},
-    };
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { show, data } = this.props;
-
-    if (show !== prevProps.show || data !== prevProps.data) {
-      this.setState({
-        initialValues: data ? data : defaultData,
-      });
+        this.state = {
+            initialValues: props.data ? props.data : defaultData,
+            validation: {},
+        };
     }
-  }
 
-  handleSubmit = (values, { setSubmitting }) => {
-    const { modelId, versionId, onSaved } = this.props;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { show, data } = this.props;
 
-    apiClient
-      .post(
-        "/api/model/" +
-          modelId +
-          "/v/" +
-          versionId +
-          "/prefix" +
-          (values.id ? "/" + values.id : ""),
-        {
-          prefix: values.prefix,
-          uri: values.uri,
+        if (show !== prevProps.show || data !== prevProps.data) {
+            this.setState({
+                initialValues: data ? data : defaultData,
+            });
         }
-      )
-      .then(() => {
-        setSubmitting(false);
+    }
 
-        onSaved();
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 400) {
-          this.setState({
-            validation: error.response.data.fields,
-          });
-        } else {
-          toast.error(
-            <ToastContent type="error" message="An error occurred" />,
-            {
-              position: "top-center",
-            }
-          );
-        }
+    handleSubmit = (values, { setSubmitting }) => {
+        const { modelId, versionId, onSaved } = this.props;
 
-        setSubmitting(false);
-      });
-  };
+        apiClient
+            .post('/api/model/' + modelId + '/v/' + versionId + '/prefix' + (values.id ? '/' + values.id : ''), {
+                prefix: values.prefix,
+                uri: values.uri,
+            })
+            .then(() => {
+                setSubmitting(false);
 
-  render() {
-    const { show, handleClose } = this.props;
-    const { initialValues, validation } = this.state;
+                onSaved();
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 400) {
+                    this.setState({
+                        validation: error.response.data.fields,
+                    });
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred" />, {
+                        position: 'top-center',
+                    });
+                }
 
-    const required = "This field is required";
-    const validUrl = "Please enter a valid URI";
+                setSubmitting(false);
+            });
+    };
 
-    const title = initialValues.id ? "Edit prefix" : "Add prefix";
+    render() {
+        const { show, handleClose } = this.props;
+        const { initialValues, validation } = this.state;
 
-    return (
-      <Modal
-        open={show}
-        onClose={handleClose}
-        title={title}
-        accessibleName={title}
-      >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={PrefixSchema}
-          onSubmit={this.handleSubmit}
-          enableReinitialize
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            setValues,
-            setFieldValue,
-          }) => {
-            return (
-              <Form>
-                <FormItem label="Prefix">
-                  <Field
-                    component={Input}
-                    name="prefix"
-                    serverError={validation}
-                  />
-                </FormItem>
+        const required = 'This field is required';
+        const validUrl = 'Please enter a valid URI';
 
-                <FormItem label="URI">
-                  <Field
-                    component={Input}
-                    name="uri"
-                    serverError={validation}
-                  />
-                </FormItem>
+        const title = initialValues.id ? 'Edit prefix' : 'Add prefix';
 
-                <Button type="submit" disabled={isSubmitting}>
-                  {values.id ? "Edit prefix" : "Add prefix"}
-                </Button>
-              </Form>
-            );
-          }}
-        </Formik>
-      </Modal>
-    );
-  }
+        return (
+            <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
+                <Formik initialValues={initialValues} validationSchema={PrefixSchema} onSubmit={this.handleSubmit} enableReinitialize>
+                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                        return (
+                            <Form>
+                                <FormItem label="Prefix">
+                                    <Field component={Input} name="prefix" serverError={validation} />
+                                </FormItem>
+
+                                <FormItem label="URI">
+                                    <Field component={Input} name="uri" serverError={validation} />
+                                </FormItem>
+
+                                <Button type="submit" disabled={isSubmitting}>
+                                    {values.id ? 'Edit prefix' : 'Add prefix'}
+                                </Button>
+                            </Form>
+                        );
+                    }}
+                </Formik>
+            </Modal>
+        );
+    }
 }
 
 const defaultData = {
-  prefix: "",
-  uri: "",
+    prefix: '',
+    uri: '',
 };
 
 const PrefixSchema = Yup.object().shape({
-  prefix: Yup.string().required("Please enter a prefix"),
-  uri: Yup.string()
-    .url("Please enter a valid URI")
-    .required("Please enter a valid URI"),
+    prefix: Yup.string().required('Please enter a prefix'),
+    uri: Yup.string().url('Please enter a valid URI').required('Please enter a valid URI'),
 });

@@ -1,6 +1,6 @@
-import React, {Component, createRef} from "react";
-import {Network} from "vis-network";
-import {classNames} from "../../util";
+import React, { Component, createRef } from 'react';
+import { Network } from 'vis-network';
+import { classNames } from '../../util';
 import './Network.scss';
 
 class VisNetwork extends Component {
@@ -21,11 +21,11 @@ class VisNetwork extends Component {
     }
 
     renderNetwork = () => {
-        const {nodes, edges} = this.props;
+        const { nodes, edges } = this.props;
 
         const data = {
             nodes: nodes,
-            edges: edges
+            edges: edges,
         };
 
         const options = {
@@ -43,8 +43,8 @@ class VisNetwork extends Component {
                     parentCentralization: true,
                     direction: 'UD',
                     nodeSpacing: 300,
-                    sortMethod: "directed"
-                }
+                    sortMethod: 'directed',
+                },
             },
             interaction: {
                 dragNodes: false,
@@ -61,10 +61,8 @@ class VisNetwork extends Component {
     };
 
     render() {
-        const {className} = this.props;
-        return (
-            <div className={classNames('Network', className)} ref={this.appRef}/>
-        );
+        const { className } = this.props;
+        return <div className={classNames('Network', className)} ref={this.appRef} />;
     }
 }
 

@@ -1,9 +1,9 @@
 export type PermissionType = {
-    user: PermissionUserType,
-    type: string,
+    user: PermissionUserType;
+    type: string;
 };
 
 type PermissionUserType = {
-    id: string,
-    name: string,
-}
+    id: string;
+    name: string;
+};

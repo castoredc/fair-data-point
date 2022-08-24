@@ -1,18 +1,18 @@
-import React, {Component} from 'react'
-import {Button, Choice, Modal} from "@castoredc/matter";
-import FormItem from "components/Form/FormItem";
+import React, { Component } from 'react';
+import { Button, Choice, Modal } from '@castoredc/matter';
+import FormItem from 'components/Form/FormItem';
 
 type MetadataVersionModalProps = {
-    currentVersion: string,
-    open: boolean,
-    onClose: () => void,
-    handleSave: (versionType: string) => void,
-}
+    currentVersion: string;
+    open: boolean;
+    onClose: () => void;
+    handleSave: (versionType: string) => void;
+};
 
 type MetadataVersionModalState = {
-    versionType: string | null,
-    newVersion: string | null,
-}
+    versionType: string | null;
+    newVersion: string | null;
+};
 
 export default class MetadataVersionModal extends Component<MetadataVersionModalProps, MetadataVersionModalState> {
     constructor(props) {
@@ -20,12 +20,12 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
 
         this.state = {
             versionType: null,
-            newVersion: null
+            newVersion: null,
         };
     }
 
-    handleChange = (event) => {
-        const {currentVersion} = this.props;
+    handleChange = event => {
+        const { currentVersion } = this.props;
         const versionType = event.target.value;
 
         const parsedVersion = currentVersion.split('.');
@@ -37,7 +37,7 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
         let newVersion = '';
 
         if (versionType === 'major') {
-            newVersion = (major + 1) + '.' + 0 + '.' + 0;
+            newVersion = major + 1 + '.' + 0 + '.' + 0;
         } else if (versionType === 'minor') {
             newVersion = major + '.' + (minor + 1) + '.' + 0;
         } else if (versionType === 'patch') {
@@ -46,48 +46,44 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
 
         this.setState({
             versionType: versionType,
-            newVersion: newVersion
+            newVersion: newVersion,
         });
     };
 
     render() {
-        const {open, onClose, handleSave, currentVersion} = this.props;
-        const {versionType, newVersion} = this.state;
+        const { open, onClose, handleSave, currentVersion } = this.props;
+        const { versionType, newVersion } = this.state;
 
-        const title = "Save metadata";
+        const title = 'Save metadata';
 
-        return <Modal
-            open={open}
-            title={title}
-            accessibleName={title}
-            onClose={onClose}
-        >
-            <Choice
-                options={[
-                    {value: 'major', labelText: 'Major changes'},
-                    {value: 'minor', labelText: 'Minor changes'},
-                    {value: 'patch', labelText: 'Patch'},
-                ]}
-                value={versionType ? versionType : undefined}
-                name="versionType"
-                onChange={this.handleChange}
-                labelText="Please indicate to what extent you made changes in the metadata"
-            />
+        return (
+            <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
+                <Choice
+                    options={[
+                        { value: 'major', labelText: 'Major changes' },
+                        { value: 'minor', labelText: 'Minor changes' },
+                        { value: 'patch', labelText: 'Patch' },
+                    ]}
+                    value={versionType ? versionType : undefined}
+                    name="versionType"
+                    onChange={this.handleChange}
+                    labelText="Please indicate to what extent you made changes in the metadata"
+                />
 
-            {currentVersion && <FormItem label="Current version">
-                {currentVersion}
-            </FormItem>}
+                {currentVersion && <FormItem label="Current version">{currentVersion}</FormItem>}
 
-            {newVersion && <FormItem label="New version">
-                {newVersion}
-            </FormItem>}
+                {newVersion && <FormItem label="New version">{newVersion}</FormItem>}
 
-
-            <Button type="submit" disabled={versionType === null} onClick={() => {
-                handleSave(versionType ? versionType : '')
-            }}>
-                Save metadata
-            </Button>
-        </Modal>
+                <Button
+                    type="submit"
+                    disabled={versionType === null}
+                    onClick={() => {
+                        handleSave(versionType ? versionType : '');
+                    }}
+                >
+                    Save metadata
+                </Button>
+            </Modal>
+        );
     }
 }

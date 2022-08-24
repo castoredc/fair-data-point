@@ -1,14 +1,12 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import './Dashboard.scss';
 
 type PageBodyProps = {
-    children: React.ReactNode,
-}
+    children: React.ReactNode;
+};
 
-const PageBody: FC<PageBodyProps> = ({children}) => {
-    return <div className="PageBody">
-        {children}
-    </div>;
-}
+const PageBody: FC<PageBodyProps> = ({ children }) => {
+    return <div className="PageBody">{children}</div>;
+};
 
 export default PageBody;

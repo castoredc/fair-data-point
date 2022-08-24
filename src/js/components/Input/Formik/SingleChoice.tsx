@@ -1,40 +1,40 @@
-import React, {FC, FormEvent} from 'react'
+import React, { FC, FormEvent } from 'react';
 
-import {ChoiceOption} from "@castoredc/matter";
-import {FieldProps} from "formik";
-import FieldErrors from "components/Input/Formik/Errors";
+import { ChoiceOption } from '@castoredc/matter';
+import { FieldProps } from 'formik';
+import FieldErrors from 'components/Input/Formik/Errors';
 
 interface SingleChoiceProps extends FieldProps {
-    readOnly?: boolean,
-    onChange?: (event: FormEvent<HTMLInputElement>) => void,
-    serverError?: any,
-    labelText: string,
+    readOnly?: boolean;
+    onChange?: (event: FormEvent<HTMLInputElement>) => void;
+    serverError?: any;
+    labelText: string;
 }
 
-const SingleChoice: FC<SingleChoiceProps> = ({
-                                                 field,
-                                                 readOnly,
-                                                 onChange,
-                                                 serverError,
-                                                 labelText
-                                             }) => {
+const SingleChoice: FC<SingleChoiceProps> = ({ field, readOnly, onChange, serverError, labelText }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
-    return <>
-        <ChoiceOption
-            checked={field.value}
-            labelText={labelText}
-            name={field.name}
-            type="checkbox"
-            onChange={onChange ? (event) => {
-                onChange(event);
-                field.onChange(event)
-            } : field.onChange}
-            disabled={readOnly}
-        />
+    return (
+        <>
+            <ChoiceOption
+                checked={field.value}
+                labelText={labelText}
+                name={field.name}
+                type="checkbox"
+                onChange={
+                    onChange
+                        ? event => {
+                              onChange(event);
+                              field.onChange(event);
+                          }
+                        : field.onChange
+                }
+                disabled={readOnly}
+            />
 
-        <FieldErrors field={field} serverErrors={serverErrors}/>
-    </>;
-}
+            <FieldErrors field={field} serverErrors={serverErrors} />
+        </>
+    );
+};
 
 export default SingleChoice;

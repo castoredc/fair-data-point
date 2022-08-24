@@ -1,139 +1,133 @@
-import React, { Component } from "react";
-import { classNames, localizedText } from "../../util";
-import { toast } from "react-toastify";
-import ToastContent from "../ToastContent";
-import { LoadingOverlay, Pagination } from "@castoredc/matter";
-import DataGridHelper from "../DataTable/DataGridHelper";
-import ListItem from "components/ListItem";
-import { apiClient } from "src/js/network";
+import React, { Component } from 'react';
+import { classNames, localizedText } from '../../util';
+import { toast } from 'react-toastify';
+import ToastContent from '../ToastContent';
+import { LoadingOverlay, Pagination } from '@castoredc/matter';
+import DataGridHelper from '../DataTable/DataGridHelper';
+import ListItem from 'components/ListItem';
+import { apiClient } from 'src/js/network';
 
 export default class CatalogList extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      isLoadingCatalogs: true,
-      catalogs: null,
-      pagination: DataGridHelper.getDefaultState(props.embedded ? 5 : 10),
-    };
-  }
-
-  componentDidMount() {
-    this.getCatalogs();
-  }
-
-  getCatalogs = () => {
-    const { pagination } = this.state;
-    const { catalog, study, agent } = this.props;
-
-    this.setState({
-      isLoadingCatalogs: true,
-    });
-
-    let filters = {
-      page: pagination.currentPage,
-      perPage: pagination.perPage,
-    };
-
-    let url = "/api/catalog";
-
-    if (agent) {
-      url = "/api/agent/details/" + agent.slug + "/catalog";
+        this.state = {
+            isLoadingCatalogs: true,
+            catalogs: null,
+            pagination: DataGridHelper.getDefaultState(props.embedded ? 5 : 10),
+        };
     }
 
-    apiClient
-      .get(url, { params: filters })
-      .then((response) => {
-        const catalogs = response.data.results.filter((catalog) => {
-          return catalog.hasMetadata;
-        });
-
-        this.setState({
-          catalogs: catalogs,
-          pagination: DataGridHelper.parseResults(response.data),
-          isLoadingCatalogs: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          isLoadingCatalogs: false,
-        });
-
-        const message =
-          error.response && typeof error.response.data.error !== "undefined"
-            ? error.response.data.error
-            : "An error occurred while loading the catalogs";
-        toast.error(<ToastContent type="error" message={message} />);
-      });
-  };
-
-  handlePagination = (paginationCount) => {
-    const { pagination } = this.state;
-
-    this.setState(
-      {
-        pagination: {
-          ...pagination,
-          currentPage: paginationCount.currentPage + 1,
-          perPage: paginationCount.pageLimit,
-        },
-      },
-      () => {
+    componentDidMount() {
         this.getCatalogs();
-      }
-    );
-  };
-
-  render() {
-    const { embedded, pagination, catalogs } = this.state;
-    const { visible = true, study, state, className } = this.props;
-
-    if (!visible) {
-      return null;
     }
 
-    if (catalogs === null) {
-      return <LoadingOverlay accessibleLabel="Loading catalogs" content="" />;
+    getCatalogs = () => {
+        const { pagination } = this.state;
+        const { catalog, study, agent } = this.props;
+
+        this.setState({
+            isLoadingCatalogs: true,
+        });
+
+        let filters = {
+            page: pagination.currentPage,
+            perPage: pagination.perPage,
+        };
+
+        let url = '/api/catalog';
+
+        if (agent) {
+            url = '/api/agent/details/' + agent.slug + '/catalog';
+        }
+
+        apiClient
+            .get(url, { params: filters })
+            .then(response => {
+                const catalogs = response.data.results.filter(catalog => {
+                    return catalog.hasMetadata;
+                });
+
+                this.setState({
+                    catalogs: catalogs,
+                    pagination: DataGridHelper.parseResults(response.data),
+                    isLoadingCatalogs: false,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    isLoadingCatalogs: false,
+                });
+
+                const message =
+                    error.response && typeof error.response.data.error !== 'undefined'
+                        ? error.response.data.error
+                        : 'An error occurred while loading the catalogs';
+                toast.error(<ToastContent type="error" message={message} />);
+            });
+    };
+
+    handlePagination = paginationCount => {
+        const { pagination } = this.state;
+
+        this.setState(
+            {
+                pagination: {
+                    ...pagination,
+                    currentPage: paginationCount.currentPage + 1,
+                    perPage: paginationCount.pageLimit,
+                },
+            },
+            () => {
+                this.getCatalogs();
+            }
+        );
+    };
+
+    render() {
+        const { embedded, pagination, catalogs } = this.state;
+        const { visible = true, study, state, className } = this.props;
+
+        if (!visible) {
+            return null;
+        }
+
+        if (catalogs === null) {
+            return <LoadingOverlay accessibleLabel="Loading catalogs" content="" />;
+        }
+
+        return (
+            <div className={classNames('Catalogs', className)}>
+                {catalogs.length > 0 ? (
+                    <>
+                        {catalogs.map(catalog => {
+                            if (catalog.hasMetadata === false) {
+                                return null;
+                            }
+                            return (
+                                <ListItem
+                                    key={catalog.id}
+                                    title={localizedText(catalog.metadata.title, 'en')}
+                                    description={localizedText(catalog.metadata.description, 'en')}
+                                    link={catalog.relativeUrl}
+                                    state={state}
+                                    newWindow={embedded}
+                                />
+                            );
+                        })}
+
+                        <Pagination
+                            accessibleName="Pagination"
+                            onChange={this.handlePagination}
+                            pageSize={pagination.perPage}
+                            currentPage={pagination.currentPage - 1}
+                            totalItems={pagination.totalResults}
+                        />
+                    </>
+                ) : (
+                    <div className="NoResults">This {study ? 'study' : 'FAIR Data Point'} does not have any associated catalogs.</div>
+                )}
+            </div>
+        );
     }
-
-    return (
-      <div className={classNames("Catalogs", className)}>
-        {catalogs.length > 0 ? (
-          <>
-            {catalogs.map((catalog) => {
-              if (catalog.hasMetadata === false) {
-                return null;
-              }
-              return (
-                <ListItem
-                  key={catalog.id}
-                  title={localizedText(catalog.metadata.title, "en")}
-                  description={localizedText(
-                    catalog.metadata.description,
-                    "en"
-                  )}
-                  link={catalog.relativeUrl}
-                  state={state}
-                  newWindow={embedded}
-                />
-              );
-            })}
-
-            <Pagination
-              accessibleName="Pagination"
-              onChange={this.handlePagination}
-              pageSize={pagination.perPage}
-              currentPage={pagination.currentPage - 1}
-              totalItems={pagination.totalResults}
-            />
-          </>
-        ) : (
-          <div className="NoResults">
-            This {study ? "study" : "FAIR Data Point"} does not have any
-            associated catalogs.
-          </div>
-        )}
-      </div>
-    );
-  }
 }

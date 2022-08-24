@@ -2,152 +2,154 @@
 @import '../../scss/colors';
 
 header {
-  &.Desktop {
-    .Spacing {
-      height: $desktopHeaderHeight;
-      background: $primary-main;
+    &.Desktop {
+        .Spacing {
+            height: $desktopHeaderHeight;
+            background: $primary-main;
 
-      &.Small {
-        height: $desktopHeaderHeightSmall;
-      }
-    }
-
-    &.Embedded {
-      .Spacing {
-        height: 0;
-      }
-    }
-  }
-
-  &.Mobile {
-    .Spacing {
-      height: $mobileHeaderHeight;
-      background: $primary-main;
-    }
-
-    &.Embedded {
-      .Spacing {
-        height: 0;
-      }
-    }
-  }
-
-  .InformationHeader {
-    overflow: auto;
-    margin: 40px 0 18px 0;
-
-    h1 {
-      color: $neutral-800;
-      font-size: 2.1rem;
-      line-height: 1.33;
-      font-family: 'Rubik', sans-serif;
-      font-weight: 500;
-      margin: 0;
-      max-width: 64rem;
-    }
-
-    .Title {
-      font-size: 24px;
-      font-weight: 600;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.33;
-      letter-spacing: normal;
-      color: $neutral-800;
-      margin: 0;
-    }
-
-    .InformationBadge {
-      border-radius: 5px;
-      background-color: $blue-50;
-      padding: 4px 9px;
-      font-family: 'Rubik', sans-serif;
-      font-size: 14px;
-      color: $cobalt;
-      margin-bottom: 10px;
-      display: inline-block;
-      font-weight: normal;
-    }
-  }
-
-  &.Embedded {
-    .InformationHeader {
-      margin-top: 0;
-    }
-  }
-
-  .Header {
-    .HeaderUserCol {
-      text-align: right;
-
-      .DropdownButtonMenuWrapper {
-        margin-top: 5px;
-        right: 0;
-      }
-    }
-
-    .MainHeader {
-      padding-top: $desktopHeaderPadding;
-      padding-bottom: $desktopHeaderPadding;
-      background: $primary-main;
-      position: fixed;
-      width: 100%;
-      z-index: 1001;
-      height: $desktopHeaderHeight;
-      top: 0;
-      transition: all 0.3s ease;
-
-      .HeaderUserCol {
-        & > a, button {
-          margin-top: -3px;
-          background: none;
-          border-color: transparent;
-          transition: all 0.3s ease;
-
-          &:hover, &.Open {
-            background: $cobalt;
-            border-color: $cobalt;
-          }
+            &.Small {
+                height: $desktopHeaderHeightSmall;
+            }
         }
-      }
 
-      &.Small {
-        padding-top: $desktopHeaderPaddingSmall;
-        padding-bottom: $desktopHeaderPaddingSmall;
-        height: $desktopHeaderHeightSmall;
-      }
+        &.Embedded {
+            .Spacing {
+                height: 0;
+            }
+        }
     }
 
-    .MobileHeader {
-      background: $primary-main;
-      height: $mobileHeaderHeight;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1001;
-      padding-top: $mobileHeaderPadding;
-      padding-bottom: $mobileHeaderPadding;
+    &.Mobile {
+        .Spacing {
+            height: $mobileHeaderHeight;
+            background: $primary-main;
+        }
 
-      .HeaderBackCol {
-        width: 34px;
-      }
-
-      .HeaderLogoCol {
-        text-align: center;
-      }
-
-      .Logo {
-        margin: 4px 0;
-      }
+        &.Embedded {
+            .Spacing {
+                height: 0;
+            }
+        }
     }
 
-    .Logo {
-      width: $logoWidth;
-      height: $logoHeight;
+    .InformationHeader {
+        overflow: auto;
+        margin: 40px 0 18px 0;
 
-      path {
-        fill: $generic-white;
-      }
+        h1 {
+            color: $neutral-800;
+            font-size: 2.1rem;
+            line-height: 1.33;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 500;
+            margin: 0;
+            max-width: 64rem;
+        }
+
+        .Title {
+            font-size: 24px;
+            font-weight: 600;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.33;
+            letter-spacing: normal;
+            color: $neutral-800;
+            margin: 0;
+        }
+
+        .InformationBadge {
+            border-radius: 5px;
+            background-color: $blue-50;
+            padding: 4px 9px;
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            color: $cobalt;
+            margin-bottom: 10px;
+            display: inline-block;
+            font-weight: normal;
+        }
     }
-  }
+
+    &.Embedded {
+        .InformationHeader {
+            margin-top: 0;
+        }
+    }
+
+    .Header {
+        .HeaderUserCol {
+            text-align: right;
+
+            .DropdownButtonMenuWrapper {
+                margin-top: 5px;
+                right: 0;
+            }
+        }
+
+        .MainHeader {
+            padding-top: $desktopHeaderPadding;
+            padding-bottom: $desktopHeaderPadding;
+            background: $primary-main;
+            position: fixed;
+            width: 100%;
+            z-index: 1001;
+            height: $desktopHeaderHeight;
+            top: 0;
+            transition: all 0.3s ease;
+
+            .HeaderUserCol {
+                & > a,
+                button {
+                    margin-top: -3px;
+                    background: none;
+                    border-color: transparent;
+                    transition: all 0.3s ease;
+
+                    &:hover,
+                    &.Open {
+                        background: $cobalt;
+                        border-color: $cobalt;
+                    }
+                }
+            }
+
+            &.Small {
+                padding-top: $desktopHeaderPaddingSmall;
+                padding-bottom: $desktopHeaderPaddingSmall;
+                height: $desktopHeaderHeightSmall;
+            }
+        }
+
+        .MobileHeader {
+            background: $primary-main;
+            height: $mobileHeaderHeight;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1001;
+            padding-top: $mobileHeaderPadding;
+            padding-bottom: $mobileHeaderPadding;
+
+            .HeaderBackCol {
+                width: 34px;
+            }
+
+            .HeaderLogoCol {
+                text-align: center;
+            }
+
+            .Logo {
+                margin: 4px 0;
+            }
+        }
+
+        .Logo {
+            width: $logoWidth;
+            height: $logoHeight;
+
+            path {
+                fill: $generic-white;
+            }
+        }
+    }
 }

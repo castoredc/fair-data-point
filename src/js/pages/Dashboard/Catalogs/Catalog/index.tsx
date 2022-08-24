@@ -1,220 +1,187 @@
-import React, { Component } from "react";
-import { localizedText } from "../../../../util";
-import { Route, Switch } from "react-router-dom";
-import { LoadingOverlay } from "@castoredc/matter";
-import DocumentTitle from "components/DocumentTitle";
-import SideBar from "components/SideBar";
-import NotFound from "pages/ErrorPages/NotFound";
-import { toast } from "react-toastify";
-import ToastContent from "components/ToastContent";
-import CatalogMetadataForm from "components/Form/Metadata/CatalogMetadataForm";
-import CatalogForm from "components/Form/Admin/CatalogForm";
-import AddStudy from "pages/Dashboard/Catalogs/Catalog/AddStudy";
-import Studies from "pages/Dashboard/Catalogs/Catalog/Studies";
-import Datasets from "pages/Dashboard/Catalogs/Catalog/Datasets";
-import AddDataset from "pages/Dashboard/Catalogs/Catalog/AddDataset";
-import Body from "components/Layout/Dashboard/Body";
-import Header from "components/Layout/Dashboard/Header";
-import { AuthorizedRouteComponentProps } from "components/Route";
-import { isGranted } from "utils/PermissionHelper";
-import PermissionEditor from "components/PermissionEditor";
-import NoPermission from "pages/ErrorPages/NoPermission";
-import PageBody from "components/Layout/Dashboard/PageBody";
-import { apiClient } from "src/js/network";
+import React, { Component } from 'react';
+import { localizedText } from '../../../../util';
+import { Route, Switch } from 'react-router-dom';
+import { LoadingOverlay } from '@castoredc/matter';
+import DocumentTitle from 'components/DocumentTitle';
+import SideBar from 'components/SideBar';
+import NotFound from 'pages/ErrorPages/NotFound';
+import { toast } from 'react-toastify';
+import ToastContent from 'components/ToastContent';
+import CatalogMetadataForm from 'components/Form/Metadata/CatalogMetadataForm';
+import CatalogForm from 'components/Form/Admin/CatalogForm';
+import AddStudy from 'pages/Dashboard/Catalogs/Catalog/AddStudy';
+import Studies from 'pages/Dashboard/Catalogs/Catalog/Studies';
+import Datasets from 'pages/Dashboard/Catalogs/Catalog/Datasets';
+import AddDataset from 'pages/Dashboard/Catalogs/Catalog/AddDataset';
+import Body from 'components/Layout/Dashboard/Body';
+import Header from 'components/Layout/Dashboard/Header';
+import { AuthorizedRouteComponentProps } from 'components/Route';
+import { isGranted } from 'utils/PermissionHelper';
+import PermissionEditor from 'components/PermissionEditor';
+import NoPermission from 'pages/ErrorPages/NoPermission';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import { apiClient } from 'src/js/network';
 
 interface CatalogProps extends AuthorizedRouteComponentProps {}
 
 interface CatalogState {
-  catalog: any;
-  isLoading: boolean;
+    catalog: any;
+    isLoading: boolean;
 }
 
 export default class Catalog extends Component<CatalogProps, CatalogState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      catalog: null,
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true,
+            catalog: null,
+        };
+    }
+
+    componentDidMount() {
+        this.getCatalog();
+    }
+
+    getCatalog = () => {
+        this.setState({
+            isLoading: true,
+        });
+
+        apiClient
+            .get('/api/catalog/' + this.props.match.params.catalog)
+            .then(response => {
+                this.setState({
+                    catalog: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                if (error.response && typeof error.response.data.error !== 'undefined') {
+                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred while loading the catalog" />);
+                }
+            });
     };
-  }
 
-  componentDidMount() {
-    this.getCatalog();
-  }
+    render() {
+        const { catalog, isLoading } = this.state;
+        const { location, history, user } = this.props;
 
-  getCatalog = () => {
-    this.setState({
-      isLoading: true,
-    });
-
-    apiClient
-      .get("/api/catalog/" + this.props.match.params.catalog)
-      .then((response) => {
-        this.setState({
-          catalog: response.data,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          isLoading: false,
-        });
-
-        if (
-          error.response &&
-          typeof error.response.data.error !== "undefined"
-        ) {
-          toast.error(
-            <ToastContent type="error" message={error.response.data.error} />
-          );
-        } else {
-          toast.error(
-            <ToastContent
-              type="error"
-              message="An error occurred while loading the catalog"
-            />
-          );
+        if (isLoading) {
+            return <LoadingOverlay accessibleLabel="Loading catalog" />;
         }
-      });
-  };
 
-  render() {
-    const { catalog, isLoading } = this.state;
-    const { location, history, user } = this.props;
+        if (!isGranted('edit', catalog.permissions)) {
+            return <NoPermission text="You do not have permission to edit this catalog" />;
+        }
 
-    if (isLoading) {
-      return <LoadingOverlay accessibleLabel="Loading catalog" />;
+        const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : 'Untitled catalog';
+
+        return (
+            <>
+                <DocumentTitle title={title} />
+
+                <SideBar
+                    back={{
+                        to: '/dashboard/catalogs',
+                        title: 'Back to catalog list',
+                    }}
+                    location={location}
+                    items={[
+                        {
+                            to: '/dashboard/catalogs/' + catalog.slug,
+                            exact: true,
+                            title: 'Catalog',
+                            customIcon: 'catalog',
+                        },
+                        {
+                            to: '/dashboard/catalogs/' + catalog.slug + '/metadata',
+                            exact: true,
+                            title: 'Metadata',
+                            customIcon: 'metadata',
+                        },
+                        ...(isGranted('manage', catalog.permissions)
+                            ? [
+                                  {
+                                      to: '/dashboard/catalogs/' + catalog.slug + '/permissions',
+                                      exact: true,
+                                      title: 'Permissions',
+                                      icon: 'usersLight',
+                                  },
+                              ]
+                            : []),
+                        {
+                            type: 'separator',
+                        },
+                        {
+                            to: '/dashboard/catalogs/' + catalog.slug + '/datasets',
+                            exact: true,
+                            title: 'Datasets',
+                            customIcon: 'dataset',
+                        },
+                        {
+                            to: '/dashboard/catalogs/' + catalog.slug + '/studies',
+                            exact: true,
+                            title: 'Studies',
+                            icon: 'study',
+                        },
+                    ]}
+                />
+
+                <Body>
+                    <Header title={title} />
+
+                    <Switch>
+                        <Route
+                            path="/dashboard/catalogs/:catalog"
+                            exact
+                            render={props => (
+                                <PageBody>
+                                    <CatalogForm catalog={catalog} history={history} />
+                                </PageBody>
+                            )}
+                        />
+                        <Route
+                            path="/dashboard/catalogs/:catalog/metadata"
+                            exact
+                            render={props => (
+                                <PageBody>
+                                    <CatalogMetadataForm catalog={catalog} onSave={this.getCatalog} />
+                                </PageBody>
+                            )}
+                        />
+                        <Route
+                            path="/dashboard/catalogs/:catalog/permissions"
+                            exact
+                            render={props =>
+                                isGranted('manage', catalog.permissions) ? (
+                                    <PermissionEditor getObject={this.getCatalog} type="catalog" object={catalog} user={user} {...props} />
+                                ) : (
+                                    <NoPermission text="You do not have access to this page" />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/dashboard/catalogs/:catalog/studies/add"
+                            exact
+                            render={props => <AddStudy {...props} catalog={catalog.slug} />}
+                        />
+                        <Route path="/dashboard/catalogs/:catalog/studies" exact render={props => <Studies {...props} catalog={catalog.slug} />} />
+                        <Route path="/dashboard/catalogs/:catalog/datasets" exact render={props => <Datasets {...props} catalog={catalog.slug} />} />
+                        <Route
+                            path="/dashboard/catalogs/:catalog/datasets/add"
+                            exact
+                            render={props => <AddDataset {...props} catalog={catalog.slug} />}
+                        />
+                        <Route component={NotFound} />
+                    </Switch>
+                </Body>
+            </>
+        );
     }
-
-    if (!isGranted("edit", catalog.permissions)) {
-      return (
-        <NoPermission text="You do not have permission to edit this catalog" />
-      );
-    }
-
-    const title = catalog.hasMetadata
-      ? localizedText(catalog.metadata.title, "en")
-      : "Untitled catalog";
-
-    return (
-      <>
-        <DocumentTitle title={title} />
-
-        <SideBar
-          back={{
-            to: "/dashboard/catalogs",
-            title: "Back to catalog list",
-          }}
-          location={location}
-          items={[
-            {
-              to: "/dashboard/catalogs/" + catalog.slug,
-              exact: true,
-              title: "Catalog",
-              customIcon: "catalog",
-            },
-            {
-              to: "/dashboard/catalogs/" + catalog.slug + "/metadata",
-              exact: true,
-              title: "Metadata",
-              customIcon: "metadata",
-            },
-            ...(isGranted("manage", catalog.permissions)
-              ? [
-                  {
-                    to: "/dashboard/catalogs/" + catalog.slug + "/permissions",
-                    exact: true,
-                    title: "Permissions",
-                    icon: "usersLight",
-                  },
-                ]
-              : []),
-            {
-              type: "separator",
-            },
-            {
-              to: "/dashboard/catalogs/" + catalog.slug + "/datasets",
-              exact: true,
-              title: "Datasets",
-              customIcon: "dataset",
-            },
-            {
-              to: "/dashboard/catalogs/" + catalog.slug + "/studies",
-              exact: true,
-              title: "Studies",
-              icon: "study",
-            },
-          ]}
-        />
-
-        <Body>
-          <Header title={title} />
-
-          <Switch>
-            <Route
-              path="/dashboard/catalogs/:catalog"
-              exact
-              render={(props) => (
-                <PageBody>
-                  <CatalogForm catalog={catalog} history={history} />
-                </PageBody>
-              )}
-            />
-            <Route
-              path="/dashboard/catalogs/:catalog/metadata"
-              exact
-              render={(props) => (
-                <PageBody>
-                  <CatalogMetadataForm
-                    catalog={catalog}
-                    onSave={this.getCatalog}
-                  />
-                </PageBody>
-              )}
-            />
-            <Route
-              path="/dashboard/catalogs/:catalog/permissions"
-              exact
-              render={(props) =>
-                isGranted("manage", catalog.permissions) ? (
-                  <PermissionEditor
-                    getObject={this.getCatalog}
-                    type="catalog"
-                    object={catalog}
-                    user={user}
-                    {...props}
-                  />
-                ) : (
-                  <NoPermission text="You do not have access to this page" />
-                )
-              }
-            />
-            <Route
-              path="/dashboard/catalogs/:catalog/studies/add"
-              exact
-              render={(props) => <AddStudy {...props} catalog={catalog.slug} />}
-            />
-            <Route
-              path="/dashboard/catalogs/:catalog/studies"
-              exact
-              render={(props) => <Studies {...props} catalog={catalog.slug} />}
-            />
-            <Route
-              path="/dashboard/catalogs/:catalog/datasets"
-              exact
-              render={(props) => <Datasets {...props} catalog={catalog.slug} />}
-            />
-            <Route
-              path="/dashboard/catalogs/:catalog/datasets/add"
-              exact
-              render={(props) => (
-                <AddDataset {...props} catalog={catalog.slug} />
-              )}
-            />
-            <Route component={NotFound} />
-          </Switch>
-        </Body>
-      </>
-    );
-  }
 }

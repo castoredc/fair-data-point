@@ -1,9 +1,7 @@
-import React from "react";
+import React from 'react';
 
-const MetadataItemGroup = ({children}) => {
-    return <div className="MetadataItemGroup">
-        {children}
-    </div>;
+const MetadataItemGroup = ({ children }) => {
+    return <div className="MetadataItemGroup">{children}</div>;
 };
 
 export default MetadataItemGroup;

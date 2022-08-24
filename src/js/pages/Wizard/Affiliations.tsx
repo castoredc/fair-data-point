@@ -1,16 +1,14 @@
-import React, {Component} from "react";
-import Emoji from "components/Emoji";
-import queryString from "query-string";
-import AffiliationsForm from "components/Form/Agent/AffiliationsForm";
-import {AuthorizedRouteComponentProps} from "components/Route";
+import React, { Component } from 'react';
+import Emoji from 'components/Emoji';
+import queryString from 'query-string';
+import AffiliationsForm from 'components/Form/Agent/AffiliationsForm';
+import { AuthorizedRouteComponentProps } from 'components/Route';
 
-interface AffiliationsProps extends AuthorizedRouteComponentProps {
-}
+interface AffiliationsProps extends AuthorizedRouteComponentProps {}
 
 interface AffiliationsState {
-    isSaved: boolean,
+    isSaved: boolean;
 }
-
 
 export default class Affiliations extends Component<AffiliationsProps, AffiliationsState> {
     constructor(props) {
@@ -23,13 +21,13 @@ export default class Affiliations extends Component<AffiliationsProps, Affiliati
 
     handleSave = () => {
         this.setState({
-            isSaved: true
+            isSaved: true,
         });
     };
 
     render() {
-        const {location, user} = this.props;
-        const {isSaved} = this.state;
+        const { location, user } = this.props;
+        const { isSaved } = this.state;
 
         if (!(user && user.details)) {
             return null;
@@ -37,24 +35,21 @@ export default class Affiliations extends Component<AffiliationsProps, Affiliati
 
         if (isSaved) {
             const params = queryString.parse(location.search);
-            window.location.href = (typeof params.origin !== 'undefined') ? String(params.origin) : '/';
+            window.location.href = typeof params.origin !== 'undefined' ? String(params.origin) : '/';
         }
 
-        return <>
-            <header>
-                <h1>
-                    <Emoji symbol="🏥"/>&nbsp;
-                    Where do you work, {user.details.firstName}?
-                </h1>
-                <div className="Description">
-                    Please add your affiliation(s) below.
-                </div>
-            </header>
+        return (
+            <>
+                <header>
+                    <h1>
+                        <Emoji symbol="🏥" />
+                        &nbsp; Where do you work, {user.details.firstName}?
+                    </h1>
+                    <div className="Description">Please add your affiliation(s) below.</div>
+                </header>
 
-            <AffiliationsForm
-                user={user}
-                onSaved={this.handleSave}
-            />
-        </>;
+                <AffiliationsForm user={user} onSaved={this.handleSave} />
+            </>
+        );
     }
 }
