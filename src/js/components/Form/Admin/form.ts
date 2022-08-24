@@ -12,12 +12,12 @@ export const EDCServerDefaultData = {
 };
 
 export const EDCServerSchema = Yup.object().shape({
-    name: Yup.string().required("Please enter a name"),
-    url: Yup.string().required("Please enter the server URL"),
-    flag: Yup.string().required("Please enter the two-letter flag identifier"),
+    name: Yup.string().trim().required("Please enter a name"),
+    url: Yup.string().trim().required("Please enter the server URL"),
+    flag: Yup.string().trim().required("Please enter the two-letter flag identifier"),
     default: Yup.boolean().required(
         "Please enter if this is the new default Server"
     ),
-    clientId: Yup.string().required("Please enter the client ID"),
-    clientSecret: Yup.string().required("Please enter the client secret"),
+    clientId: Yup.string().trim().required("Please enter the client ID"),
+    clientSecret: Yup.string().trim().required("Please enter the client secret"),
 });
