@@ -13,6 +13,7 @@ import Distribution from "pages/Dashboard/Dataset/Distribution";
 import Catalogs from "pages/Dashboard/Catalogs";
 import Catalog from "pages/Dashboard/Catalogs/Catalog";
 import FAIRDataPoint from "pages/Dashboard/FAIRDataPoint";
+import {EDCServers} from "pages/Dashboard/EDCServers";
 import {AuthorizedRouteComponentProps, PrivateRoute, ProtectedRoute} from "components/Route";
 import {isAdmin} from "utils/PermissionHelper";
 import SelectCatalog from "pages/Dashboard/Studies/SelectCatalog";
@@ -30,6 +31,7 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
         '/dashboard/catalogs': 'catalogs',
         '/dashboard/data-models': 'dataModels',
         '/dashboard/fdp': 'fdp',
+        '/dashboard/edc-servers': 'edcServers'
     };
 
     const tabs = {
@@ -49,8 +51,12 @@ const DashboardTabs: FunctionComponent<DashboardProps> = ({history, location, ma
             fdp: {
                 content: <FAIRDataPoint history={history} location={location} match={match} user={user}/>,
                 title: 'FAIR Data Point',
+            },
+            edcServers: {
+                content: <EDCServers history={history} location={location} match={match} user={user}/>,
+                title: 'EDC Servers',
             }
-        })
+        }),
     };
 
     return <div className="DashboardTabs">
@@ -135,6 +141,7 @@ export default class Dashboard extends Component<DashboardProps> {
                     <PrivateRoute path="/dashboard/catalogs/:catalog" component={Catalog} user={user}/>
 
                     <ProtectedRoute path="/dashboard/fdp" exact component={DashboardTabs} user={user}/>
+                    <ProtectedRoute path="/dashboard/edc-servers" exact component={DashboardTabs} user={user}/>
 
                     <PrivateRoute path="/dashboard/data-models" exact component={DashboardTabs} user={user}/>
                     <PrivateRoute path="/dashboard/data-models/add" exact component={AddDataModel} user={user}/>
