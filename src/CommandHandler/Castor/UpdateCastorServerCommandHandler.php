@@ -5,11 +5,11 @@ namespace App\CommandHandler\Castor;
 
 use App\Command\Castor\UpdateCastorServerCommand;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
-use App\Repository\CastorServerRepository;
 use App\Security\CastorServer;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use function count;
 
 final class UpdateCastorServerCommandHandler implements MessageHandlerInterface
 {
@@ -25,7 +25,6 @@ final class UpdateCastorServerCommandHandler implements MessageHandlerInterface
     /** @throws CouldNotTransformEncryptedStringToJson */
     public function __invoke(UpdateCastorServerCommand $command): CastorServer
     {
-        /** @var CastorServerRepository $castorServerRepository */
         $castorServerRepository = $this->em->getRepository(CastorServer::class);
 
         $castorServer = null;

@@ -141,7 +141,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
 
         try {
             $clientId = trim($castorServer->getDecryptedClientId($this->encryptionService)->exposeAsString());
-            $clientSecret = \trim($castorServer->getDecryptedClientSecret($this->encryptionService)->exposeAsString());
+            $clientSecret = trim($castorServer->getDecryptedClientSecret($this->encryptionService)->exposeAsString());
         } catch (CouldNotDecrypt $e) {
             // Don't do anything, fallback to the default credentials supplied in the env file.
             return;
