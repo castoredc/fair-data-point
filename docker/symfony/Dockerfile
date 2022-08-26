@@ -34,3 +34,6 @@ COPY . /home/castor/fdp
 
 # Install composer
 RUN composer install -v
+
+# Run initial migrations
+RUN bin/console doctrine:migrations:migrate --no-interaction

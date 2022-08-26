@@ -154,6 +154,11 @@ class CastorServer
         $this->default = false;
     }
 
+    public function makeDefault(): void
+    {
+        $this->default = true;
+    }
+
     /** @throws CouldNotTransformEncryptedStringToJson */
     public function updatePropertiesFromCommand(
         UpdateCastorServerCommand $command,
