@@ -18,6 +18,7 @@ use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use function assert;
+use function trim;
 
 class CastorUserProvider extends UserProvider implements UserProviderInterface
 {
@@ -139,8 +140,8 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         assert($castorServer instanceof CastorServer);
 
         try {
-            $clientId = $castorServer->getDecryptedClientId($this->encryptionService)->exposeAsString();
-            $clientSecret = $castorServer->getDecryptedClientSecret($this->encryptionService)->exposeAsString();
+            $clientId = trim($castorServer->getDecryptedClientId($this->encryptionService)->exposeAsString());
+            $clientSecret = \trim($castorServer->getDecryptedClientSecret($this->encryptionService)->exposeAsString());
         } catch (CouldNotDecrypt $e) {
             // Don't do anything, fallback to the default credentials supplied in the env file.
             return;
