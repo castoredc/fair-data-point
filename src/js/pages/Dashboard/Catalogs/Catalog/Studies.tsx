@@ -1,32 +1,33 @@
-import React, {Component} from "react";
-import {LinkContainer} from "react-router-bootstrap";
-import StudiesDataTable from "components/DataTable/StudiesDataTable";
-import {Button, Stack} from "@castoredc/matter";
-import * as H from "history";
-import PageBody from "components/Layout/Dashboard/PageBody";
+import React, { Component } from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
+import StudiesDataTable from 'components/DataTable/StudiesDataTable';
+import { Button, Stack } from '@castoredc/matter';
+import * as H from 'history';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface StudiesProps {
-    catalog: string,
+    catalog: string;
     history: H.History;
 }
 
 export default class Studies extends Component<StudiesProps> {
     render() {
-        const {catalog, history} = this.props;
+        const { catalog, history } = this.props;
 
-        return <PageBody>
-            <div className="PageButtons">
-                <Stack distribution="trailing" alignment="end">
-                    <LinkContainer to={'/dashboard/catalogs/' + catalog + '/studies/add'}>
-                        <Button icon="add" className="AddButton">Add study</Button>
-                    </LinkContainer>
-                </Stack>
-            </div>
+        return (
+            <PageBody>
+                <div className="PageButtons">
+                    <Stack distribution="trailing" alignment="end">
+                        <LinkContainer to={'/dashboard/catalogs/' + catalog + '/studies/add'}>
+                            <Button icon="add" className="AddButton">
+                                Add study
+                            </Button>
+                        </LinkContainer>
+                    </Stack>
+                </div>
 
-            <StudiesDataTable
-                history={history}
-                catalog={catalog}
-            />
-        </PageBody>;
+                <StudiesDataTable history={history} catalog={catalog} />
+            </PageBody>
+        );
     }
 }

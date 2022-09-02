@@ -1,0 +1,408 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+// phpcs:disable PSR1.Files.SideEffects
+
+define('PROJECT_ROOT', dirname(__DIR__) . '/');
+define('CD_INTO_PROJECT_ROOT', 'cd ' . escapeshellarg(PROJECT_ROOT));
+define('LAST_DOCKER_COMPOSE_CONFIG', __DIR__ . '/.fdp-docker-compose.config');
+
+require_once __DIR__ . '/include/basic-cli.php';
+require_once __DIR__ . '/include/check-env.php';
+
+define('DEBUG', strpos(implode(' ', $argv), '--fdp-debug') !== false);
+
+if (! checkDocker()) {
+    echo PHP_EOL;
+    exit(1);
+}
+
+if (! checkDockerCompose()) {
+    echo PHP_EOL;
+    exit(1);
+}
+
+if (! checkAuthJsonFile()) {
+    echo PHP_EOL;
+    exit(1);
+}
+
+/**
+ * @param string[] $arguments
+ */
+function escapeShellArguments(array $arguments): string
+{
+    if (! $arguments) {
+        return '';
+    }
+
+    return ' ' . implode(
+        ' ',
+        array_map(
+            static function (string $argument): string {
+                return escapeshellarg($argument);
+            },
+            $arguments
+        )
+    );
+}
+
+function execCommandOnSymfony(string $localCommand): int
+{
+    $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+    $command = 'docker-compose ' . $previousExtraConfiguration . ' exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" symfony ' . $localCommand;
+    if (DEBUG) {
+        echo PHP_EOL, PHP_EOL, 'Running command: ', PHP_EOL, $command, PHP_EOL, PHP_EOL;
+    }
+    passthru($command, $returnCode);
+
+    return $returnCode;
+}
+
+function runDockerCommand(string $localCommand, ?string $service = 'symfony'): int
+{
+    $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+    $command = asCurrentUser(
+        'docker-compose ' . $previousExtraConfiguration
+        . ' run -e COLUMNS="`tput cols`" -e LINES="`tput lines`" --rm --no-deps ' . $service . ' ' . $localCommand
+    );
+    if (DEBUG) {
+        echo PHP_EOL, PHP_EOL, 'Running command: ', PHP_EOL, $command, PHP_EOL, PHP_EOL;
+    }
+    passthru($command, $returnCode);
+
+    return $returnCode;
+}
+
+function runDockerCommandWithExec(string $localCommand, ?string $service = 'symfony'): int
+{
+    $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+    $command = asCurrentUser(
+        'docker-compose ' . $previousExtraConfiguration
+        . ' exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" ' . $service . ' ' . $localCommand
+    );
+    if (DEBUG) {
+        echo PHP_EOL, PHP_EOL, 'Running command: ', PHP_EOL, $command, PHP_EOL, PHP_EOL;
+    }
+    passthru($command, $returnCode);
+
+    return $returnCode;
+}
+
+function asCurrentUser(string $command): string
+{
+    return 'userid=' . getmyuid() . ' groupid=' . getmygid() . ' ' . $command;
+}
+
+function disablePHPModule(string $moduleName): int
+{
+    $result = execCommandOnSymfony(
+        'sh -c "ls /usr/local/etc/php/conf.d/docker-php-ext-' . $moduleName . '.ini >/dev/null 2>&1  ' .
+        ' && mv /usr/local/etc/php/conf.d/docker-php-ext-' . $moduleName . '.ini' .
+        ' /usr/local/etc/php/conf.d/docker-php-ext-' . $moduleName . '.off && echo Deactivated || echo Already-off"'
+    );
+    restartPhpFpm();
+
+    return $result;
+}
+
+function enablePHPModule(string $moduleName): int
+{
+    $result = execCommandOnSymfony(
+        'sh -c "ls /usr/local/etc/php/conf.d/docker-php-ext-' . $moduleName . '.off >/dev/null 2>&1 ' .
+        ' && cp /usr/local/etc/php/conf.d/docker-php-ext-' . $moduleName . '.off' .
+        ' /usr/local/etc/php/conf.d/docker-php-ext-' . $moduleName . '.ini && echo Activated || echo Error"'
+    );
+    restartPhpFpm();
+
+    return $result;
+}
+
+function restartPhpFpm(): void
+{
+    execCommandOnSymfony('sh -c "kill -s USR2 1"');
+}
+
+function rmdirr($dir): bool {
+    $files = array_diff(scandir($dir), ['.','..']);
+    foreach ($files as $file) {
+        (is_dir("$dir/$file")) ? rmdirr("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+}
+
+function initializeEnvironmentFile(): void
+{
+    $envFileLocation = PROJECT_ROOT . '/.env';
+    $envDistFileLocation = PROJECT_ROOT . '/.env.dist';
+
+    if (! file_exists($envFileLocation)) {
+        echo 'Initializing docker .env', PHP_EOL;
+        copy($envDistFileLocation, $envFileLocation);
+    }
+
+    $content = file_get_contents($envFileLocation);
+
+    if (preg_match('/^GITHUB_TOKEN=\w+$/m', $content) !== 0) {
+        return;
+    }
+
+    echo 'We need a GitHub with at least "read:packages" scope (https://github.com/settings/tokens/new)' , PHP_EOL;
+    echo 'Insert your GitHub token: ';
+    $token = trim(fgets(STDIN));
+
+    if (preg_match('/^GITHUB_TOKEN=$/m', $content) !== 0) {
+        file_put_contents($envFileLocation, str_replace('GITHUB_TOKEN=', 'GITHUB_TOKEN=' . $token, $content));
+
+        return;
+    }
+
+    file_put_contents($envFileLocation, $content . PHP_EOL . 'GITHUB_TOKEN=' . $token . PHP_EOL);
+}
+
+/**
+ * @param string[] $arguments
+ */
+function parseDockerComposeExtraConfiguration(array $arguments): string
+{
+    $baseComposeConfiguration = ' -f docker-compose.yml';
+    if (PHP_OS_FAMILY === 'Darwin') {
+        $baseComposeConfiguration .= ' -f docker-compose.osx.yml';
+
+        if (file_exists('docker-compose.override.yml')) {
+            $baseComposeConfiguration .= ' -f docker-compose.override.yml';
+        }
+    }
+
+    if ($arguments === []) {
+        return PHP_OS_FAMILY === 'Darwin' ? $baseComposeConfiguration : '';
+    }
+
+    if (count($arguments) !== 1) {
+        echo error('Only one extra file can be used at the moment'), PHP_EOL;
+        exit(1);
+    }
+
+    $configFile = 'docker/' . basename($arguments[0]) . '.yml';
+
+    if (! file_exists(PROJECT_ROOT . $configFile)) {
+        echo error(sprintf('The environment extension configuration could not be found at "%s"', PROJECT_ROOT . $configFile)), PHP_EOL;
+        exit(1);
+    }
+
+    return $baseComposeConfiguration . ' -f ' . $configFile;
+}
+
+function readLastDockerComposeExtraConfiguration(): string
+{
+    if (! file_exists(LAST_DOCKER_COMPOSE_CONFIG)) {
+        return '';
+    }
+
+    return rtrim(file_get_contents(LAST_DOCKER_COMPOSE_CONFIG));
+}
+
+function updateLastDockerComposeExtraConfiguration(string $composeExtraConfiguration): void
+{
+    file_put_contents(LAST_DOCKER_COMPOSE_CONFIG, $composeExtraConfiguration, LOCK_EX);
+}
+
+function getSupportedThreads(): int
+{
+    if (PHP_OS_FAMILY === 'Darwin') {
+        return (int) shell_exec('sysctl -n hw.ncpu');
+    }
+
+    if (PHP_OS_FAMILY === 'Linux') {
+        return (int) shell_exec('nproc');
+    }
+
+    return 8;
+}
+
+$commands = [
+    'up' => [
+        'description' => 'Start docker containers and build them if needed',
+        'command' => static function ($_): int {
+            initializeEnvironmentFile();
+
+            $composeExtraConfiguration = parseDockerComposeExtraConfiguration($_);
+            $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+
+            if ($previousExtraConfiguration !== $composeExtraConfiguration) {
+                passthru(
+                    CD_INTO_PROJECT_ROOT
+                        . ' && ' . asCurrentUser('docker-compose' . $previousExtraConfiguration . ' down --remove-orphans')
+                );
+            }
+
+            updateLastDockerComposeExtraConfiguration($composeExtraConfiguration);
+
+            $logAggregationEnabled = strpos($composeExtraConfiguration, 'log-aggregation') !== false;
+            $backgroundRun = $logAggregationEnabled  ? ' -d' : '';
+
+            passthru(
+                CD_INTO_PROJECT_ROOT
+                    . ' && ' . asCurrentUser('docker-compose' . $composeExtraConfiguration . ' pull')
+                    . ' && ' . asCurrentUser('docker-compose' . $composeExtraConfiguration . ' up --build --remove-orphans' . $backgroundRun),
+                $returnCode
+            );
+
+            if ($logAggregationEnabled) {
+                echo PHP_EOL, 'Check http://localhost:3000/explore for logs!', PHP_EOL;
+            }
+
+            return $returnCode;
+        },
+    ],
+    'down' => [
+        'description' => 'Stops and destroys all containers',
+        'command' => static function (): int {
+            $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+
+            echo 'Stopping and destroying docker containers' . PHP_EOL . PHP_EOL;
+            passthru(CD_INTO_PROJECT_ROOT . ' && docker-compose' . $previousExtraConfiguration . ' down', $returnCode);
+
+            return $returnCode;
+        },
+    ],
+    'console' => [
+        'description' => 'Run our console commands in the responsible container',
+        'command' => static function ($_): int {
+            return runDockerCommand('./bin/console' . escapeShellArguments($_), 'symfony');
+        },
+    ],
+    'phpunit' => [
+        'description' => 'Run phpunit in the responsible container',
+        'command' => static function ($_): int {
+            $supportedThreads = getSupportedThreads();
+            if ($supportedThreads > 16) {
+                $supportedThreads = 16;
+            }
+
+            return runDockerCommand('vendor/bin/paratest --runner=WrapperRunner -p' . $supportedThreads . ' ' . escapeShellArguments($_));
+        },
+    ],
+    'composer' => [
+        'description' => 'Run composer inside the responsible container',
+        'command' => static function ($_): int {
+            return runDockerCommand('composer' . escapeShellArguments($_));
+        },
+    ],
+    'stop' => [
+        'description' => 'Stops the containers',
+        'command' => static function (): int {
+            $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+
+            echo 'Stopping docker containers' . PHP_EOL;
+            passthru(CD_INTO_PROJECT_ROOT . ' && docker-compose' . $previousExtraConfiguration . ' stop', $returnCode);
+
+            return $returnCode;
+        },
+    ],
+    'recreate' => [
+        'description' => 'Recreates the docker containers from scratch,' .
+            ' the disk will not be deleted so your MySQL is safe',
+        'command' => static function (): int {
+            $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+            echo PHP_EOL . 'Recreating containers ' . PHP_EOL;
+            passthru(CD_INTO_PROJECT_ROOT . ' && docker-compose ' . $previousExtraConfiguration . ' up --no-start --build --force-recreate', $returnCode);
+
+            return $returnCode;
+        },
+    ],
+    'ssh' => [
+        'description' => 'SSH into the symfony Docker container',
+        'command' => static function (): int {
+            return execCommandOnSymfony('sh');
+        },
+    ],
+    'xdebug-on' => [
+        'description' => 'Turn on Xdebug',
+        'command' => static function (): int {
+            return enablePHPModule('xdebug');
+        },
+    ],
+    'xdebug-off' => [
+        'description' => 'Turn off Xdebug',
+        'command' => static function (): int {
+            return disablePHPModule('xdebug');
+        },
+    ],
+    'phpstan' => [
+        'description' => 'Run phpstan. Optionally override paths with `bin/fdp phpstan path/to/file.php`',
+        'command' => static function ($_): int {
+            return runDockerCommandWithExec('vendor/bin/phpstan analyze --memory-limit=-1' . escapeShellArguments($_));
+        },
+    ],
+    'phpcs' => [
+        'description' => 'Run phpcs in container. Optionally override paths with `bin/fdp phpcs path/to/file.php`',
+        'command' => static function ($_): int {
+            return runDockerCommand('vendor/bin/phpcs ' . escapeShellArguments($_));
+        },
+    ],
+    'phpcbf' => [
+        'description' => 'Run phpcbf in container. Optionally override paths with `bin/fdp phpcbf path/to/file.php`',
+        'command' => static function ($_): int {
+            return runDockerCommand('vendor/bin/phpcbf ' . escapeShellArguments($_));
+        },
+    ],
+    'exec' => [
+        'description' => 'Executes a command using the given docker-compose service',
+        'command' => static function ($_): int {
+            if (count($_) < 2) {
+                echo error('Arguments [service-name] and [command] are mandatory'), PHP_EOL;
+                echo warning('Usage: bin/fdp exec [service-name] [command]'), PHP_EOL;
+                exit(1);
+            }
+
+            $previousExtraConfiguration = readLastDockerComposeExtraConfiguration();
+
+            passthru(
+                CD_INTO_PROJECT_ROOT .
+                ' && docker-compose ' . $previousExtraConfiguration . ' exec ' . escapeShellArguments($_),
+                $buildExitCode
+            );
+
+            return $buildExitCode;
+        },
+    ],
+    'rector' => [
+        'description' => 'Run rector PHP refactoring in container: `bin/fdp rector ./path/to/dir_or_file`',
+        'command' => static function ($_): int {
+            return runDockerCommand('vendor/bin/rector process ' . escapeShellArguments($_));
+        },
+    ],
+    'help' => ['description' => 'Prints this help'],
+];
+
+$commands['help']['command'] = static function () use ($commands): void {
+    echo PHP_EOL, 'Usage: ./bin/fdp command [--command-options]', PHP_EOL, PHP_EOL;
+    echo 'Commands:', PHP_EOL, PHP_EOL;
+
+    $maxLengthOfCommandName = max(array_map('strlen', array_keys($commands))) + 1;
+
+    foreach ($commands as $command => $commandData) {
+        $padding = str_repeat(' ', $maxLengthOfCommandName - strlen($command));
+        echo $command . $padding . $commandData['description'] . PHP_EOL;
+    }
+    echo PHP_EOL;
+};
+
+if ($argc < 2) {
+    $commands['help']['command']();
+    exit(1);
+}
+
+$command = $argv[1];
+
+$userProvidedArguments = array_slice($argv, 2);
+
+if (! isset($commands[$command])) {
+    $commands['help']['command']();
+    exit;
+}
+
+$returnCode = $commands[$command]['command']($userProvidedArguments);
+exit($returnCode ?: 0);

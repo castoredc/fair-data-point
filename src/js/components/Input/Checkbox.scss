@@ -1,21 +1,21 @@
 @import '../../scss/colors';
 
 .CheckboxesGroup {
-  label {
-    margin-bottom: 8px;
-  }
+    label {
+        margin-bottom: 8px;
+    }
 
-  .CheckboxFormGroup.form-group {
-    margin-bottom: 0;
-  }
+    .CheckboxFormGroup.form-group {
+        margin-bottom: 0;
+    }
 }
 
 .CheckboxFormGroup {
-  label span::after {
-    box-sizing: initial !important;
-  }
+    label span::after {
+        box-sizing: initial !important;
+    }
 
-  &.HeadingCheckboxFormGroup {
-    margin: 2.4rem 0 1.6rem;
-  }
+    &.HeadingCheckboxFormGroup {
+        margin: 2.4rem 0 1.6rem;
+    }
 }

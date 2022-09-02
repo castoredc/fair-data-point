@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import './CodeEditor.scss'
+import React, { Component } from 'react';
+import './CodeEditor.scss';
 import CodeMirror from 'codemirror';
-import {FormLabel} from "@castoredc/matter";
+import { FormLabel } from '@castoredc/matter';
 
 require('codemirror/mode/twig/twig');
 require('codemirror/addon/display/autorefresh');
@@ -13,27 +13,26 @@ export default class TwigEditor extends Component {
     }
 
     componentDidMount() {
-        const {onChange} = this.props;
+        const { onChange } = this.props;
 
-        this.codeMirror = CodeMirror.fromTextArea(
-            this.ref.current,
-            {
-                mode: 'twig',
-                autoRefresh: true
-            }
-        );
+        this.codeMirror = CodeMirror.fromTextArea(this.ref.current, {
+            mode: 'twig',
+            autoRefresh: true,
+        });
 
         this.codeMirror.on('change', editor => {
             onChange(editor.getValue());
-        })
+        });
     }
 
     render() {
-        const {label, value} = this.props;
+        const { label, value } = this.props;
 
-        return <div className="TwigEditor">
-            {label && <FormLabel>{label}</FormLabel>}
-            <textarea ref={this.ref} autoComplete="off" defaultValue={value}/>
-        </div>;
+        return (
+            <div className="TwigEditor">
+                {label && <FormLabel>{label}</FormLabel>}
+                <textarea ref={this.ref} autoComplete="off" defaultValue={value} />
+            </div>
+        );
     }
 }

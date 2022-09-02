@@ -1,32 +1,32 @@
 @import '../../scss/colors';
 
 .DependencyModal {
-  max-width: none;
+    max-width: none;
 }
 
 .DependencyEditor {
-  width: 70rem;
+    width: 70rem;
 
-  & > .DependencyGroup:nth-child(2) {
-    margin: 0;
-  }
+    & > .DependencyGroup:nth-child(2) {
+        margin: 0;
+    }
 
-  .RuleGroup {
-    padding: 10px;
-    border: 1px solid $neutral-40;
-    border-radius: 3px;
-    margin: 10px;
-  }
+    .RuleGroup {
+        padding: 10px;
+        border: 1px solid $neutral-40;
+        border-radius: 3px;
+        margin: 10px;
+    }
 
-  .queryBuilder > .RuleGroup:first-child {
-    margin: 0;
-  }
+    .queryBuilder > .RuleGroup:first-child {
+        margin: 0;
+    }
 
-  .ValueEditor {
-    width: 20rem;
-  }
+    .ValueEditor {
+        width: 20rem;
+    }
 
-  .RuleGroupCombinator {
-    margin-bottom: 8px;
-  }
+    .RuleGroupCombinator {
+        margin-bottom: 8px;
+    }
 }

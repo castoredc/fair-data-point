@@ -1,38 +1,42 @@
-import React, {FC} from "react";
-import {ErrorMessage, FieldInputProps} from "formik";
-import {Space, ValidationMessage} from "@castoredc/matter";
-import {isUndefined} from "lodash";
+import React, { FC } from 'react';
+import { ErrorMessage, FieldInputProps } from 'formik';
+import { Space, ValidationMessage } from '@castoredc/matter';
+import { isUndefined } from 'lodash';
 
-const FieldErrors: FC<{ field: FieldInputProps<any>, serverErrors?: any, index?: number }> = ({field, serverErrors, index}) => {
-    return <>
-        <ErrorMessage
-            name={! isUndefined(index) ? `${field.name}[${index}]` : field.name}
-            render={msg => {
-                if (typeof msg === 'object') {
-                    return Object.values(msg).map((message: string) => (
-                        <>
-                            {isUndefined(index) && <Space bottom="default"/>}
-                            <ValidationMessage type="error">{message}</ValidationMessage>
-                            {! isUndefined(index) && <Space bottom="default"/>}
-                        </>
-                    ));
-                } else {
-                    return <>
-                        <Space bottom="default"/>
-                        <ValidationMessage type="error">{msg}</ValidationMessage>
-                    </>;
-                }
-            }}
-        />
+const FieldErrors: FC<{ field: FieldInputProps<any>; serverErrors?: any; index?: number }> = ({ field, serverErrors, index }) => {
+    return (
+        <>
+            <ErrorMessage
+                name={!isUndefined(index) ? `${field.name}[${index}]` : field.name}
+                render={msg => {
+                    if (typeof msg === 'object') {
+                        return Object.values(msg).map((message: string) => (
+                            <>
+                                {isUndefined(index) && <Space bottom="default" />}
+                                <ValidationMessage type="error">{message}</ValidationMessage>
+                                {!isUndefined(index) && <Space bottom="default" />}
+                            </>
+                        ));
+                    } else {
+                        return (
+                            <>
+                                <Space bottom="default" />
+                                <ValidationMessage type="error">{msg}</ValidationMessage>
+                            </>
+                        );
+                    }
+                }}
+            />
 
-        {serverErrors && <ValidationMessage type="error">
-            {serverErrors.map((errorText, index) => (
-                <div key={index}>
-                    {errorText}
-                </div>
-            ))}
-        </ValidationMessage>}
-    </>;
-}
+            {serverErrors && (
+                <ValidationMessage type="error">
+                    {serverErrors.map((errorText, index) => (
+                        <div key={index}>{errorText}</div>
+                    ))}
+                </ValidationMessage>
+            )}
+        </>
+    );
+};
 
 export default FieldErrors;

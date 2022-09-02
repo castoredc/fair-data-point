@@ -5,15 +5,19 @@ namespace App\Repository;
 
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityRepository;
-use function assert;
 
+/**
+ * @method CastorServer|null find(int $id)
+ * @method CastorServer|null findOneByName(string $name)
+ * @method CastorServer|null findOneById(int $id)
+ * @method CastorServer[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CastorServer|null findOneBy(array $criteria, ?array $orderBy = null)
+ * @method CastorServer[] findAll()
+ */
 class CastorServerRepository extends EntityRepository
 {
     public function findServerByUrl(string $url): ?CastorServer
     {
-        $server = $this->findOneBy(['url' => $url]);
-        assert($server instanceof CastorServer || $server === null);
-
-        return $server;
+        return $this->findOneBy(['url' => $url]);
     }
 }

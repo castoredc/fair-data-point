@@ -1,41 +1,47 @@
-import React, {ChangeEvent, FC} from 'react'
+import React, { ChangeEvent, FC } from 'react';
 
-import {TextInput} from "@castoredc/matter";
-import {FieldProps} from "formik";
-import FieldErrors from "components/Input/Formik/Errors";
+import { TextInput } from '@castoredc/matter';
+import { FieldProps } from 'formik';
+import FieldErrors from 'components/Input/Formik/Errors';
 
 interface InputProps extends FieldProps {
-    readOnly?: boolean,
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void,
-    autoFocus?: boolean,
-    serverError?: any,
-    multiline?: boolean,
+    readOnly?: boolean;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    autoFocus?: boolean;
+    serverError?: any;
+    multiline?: boolean;
     inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' | undefined;
 }
 
-const Input: FC<InputProps> = ({field, form, meta, readOnly, onChange, autoFocus, serverError, multiline, inputMode}) => {
+const Input: FC<InputProps> = ({ field, form, meta, readOnly, onChange, autoFocus, serverError, multiline, inputMode }) => {
     const touched = form.touched[field.name];
     const errors = form.errors[field.name];
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
-    return <>
-        <TextInput
-            name={field.name}
-            value={field.value ?? ''}
-            onChange={onChange ? (event) => {
-                onChange(event);
-                field.onChange(event)
-            } : field.onChange}
-            onBlur={field.onBlur}
-            invalid={touched && !!errors}
-            readOnly={readOnly}
-            autoFocus={autoFocus}
-            multiline={multiline}
-            inputMode={inputMode}
-        />
+    return (
+        <>
+            <TextInput
+                name={field.name}
+                value={field.value ?? ''}
+                onChange={
+                    onChange
+                        ? event => {
+                              onChange(event);
+                              field.onChange(event);
+                          }
+                        : field.onChange
+                }
+                onBlur={field.onBlur}
+                invalid={touched && !!errors}
+                readOnly={readOnly}
+                autoFocus={autoFocus}
+                multiline={multiline}
+                inputMode={inputMode}
+            />
 
-        <FieldErrors field={field} serverErrors={serverErrors}/>
-    </>;
-}
+            <FieldErrors field={field} serverErrors={serverErrors} />
+        </>
+    );
+};
 
 export default Input;

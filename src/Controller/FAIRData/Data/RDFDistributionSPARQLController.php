@@ -8,7 +8,12 @@ use App\Controller\FAIRData\FAIRDataController;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Event\SparqlQueryExecuted;
+use App\Event\SparqlQueryFailed;
+use App\Service\UriHelper;
 use ARC2_StoreEndpoint;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +22,20 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use Throwable;
 use function assert;
+use function count;
+use function json_decode;
+use const JSON_THROW_ON_ERROR;
 
 class RDFDistributionSPARQLController extends FAIRDataController
 {
+    private EventDispatcherInterface $eventDispatcher;
+
+    public function __construct(UriHelper $uriHelper, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher)
+    {
+        parent::__construct($uriHelper, $logger);
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/sparql", name="distribution_sparql")
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
@@ -51,7 +67,19 @@ class RDFDistributionSPARQLController extends FAIRDataController
             $endpoint->handleRequest();
             $endpoint->sendHeaders();
 
-            echo $endpoint->getResult();
+            $rawResults = $endpoint->getResult();
+            $parsedResults = json_decode($rawResults, true, 512, JSON_THROW_ON_ERROR);
+
+            $this->eventDispatcher->dispatch(
+                new SparqlQueryExecuted(
+                    $distribution->getId(),
+                    $this->getUser(),
+                    $request->get('query'),
+                    count($parsedResults['results']['bindings']) ?? 0
+                )
+            );
+
+            echo $rawResults;
 
             exit;
         } catch (Throwable $t) {
@@ -61,6 +89,15 @@ class RDFDistributionSPARQLController extends FAIRDataController
                 'Distribution' => $distribution->getSlug(),
                 'DistributionID' => $distribution->getId(),
             ]);
+
+            $this->eventDispatcher->dispatch(
+                new SparqlQueryFailed(
+                    $distribution->getId(),
+                    $this->getUser(),
+                    $request->get('query'),
+                    $t->getMessage()
+                )
+            );
 
             return new Response('An error occurred while executing your query.', 400);
         }

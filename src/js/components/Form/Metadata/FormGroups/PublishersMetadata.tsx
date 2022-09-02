@@ -1,25 +1,25 @@
-import React, {Component} from 'react';
-import {ActionsCell, Button, CellText, DataGrid, Stack} from "@castoredc/matter";
-import {ucfirst} from "../../../../util";
-import PublisherModal from "../../../../modals/PublisherModal";
-import ConfirmModal from "../../../../modals/ConfirmModal";
-import {toast} from "react-toastify";
-import ToastContent from "components/ToastContent";
+import React, { Component } from 'react';
+import { ActionsCell, Button, CellText, DataGrid, Stack } from '@castoredc/matter';
+import { ucfirst } from '../../../../util';
+import PublisherModal from '../../../../modals/PublisherModal';
+import ConfirmModal from '../../../../modals/ConfirmModal';
+import { toast } from 'react-toastify';
+import ToastContent from 'components/ToastContent';
 
 type PublishersMetadataProps = {
-    languages: any,
-    licenses: any,
-    countries: any,
-    validation: any,
-    publishers: any,
+    languages: any;
+    licenses: any;
+    countries: any;
+    validation: any;
+    publishers: any;
     setValue: (field: string, value: any, shouldValidate?: boolean) => void;
-}
+};
 
 type PublishersMetadataState = {
-    showModal: boolean,
-    showRemoveModal: boolean,
+    showModal: boolean;
+    showRemoveModal: boolean;
     selectedPublisher: any | null;
-}
+};
 
 export default class PublishersMetadata extends Component<PublishersMetadataProps, PublishersMetadataState> {
     constructor(props) {
@@ -32,7 +32,7 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
         };
     }
 
-    openModal = (id) => {
+    openModal = id => {
         this.setState({
             showModal: true,
         });
@@ -45,39 +45,43 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
         });
     };
 
-    handleUpdate = (newPublisher) => {
-        const {publishers, setValue} = this.props;
+    handleUpdate = newPublisher => {
+        const { publishers, setValue } = this.props;
 
-        const exists = newPublisher.id !== '' ? !!publishers.find((publisher) => {
-            if (publisher.type !== newPublisher.type) {
-                return false;
-            }
+        const exists =
+            newPublisher.id !== ''
+                ? !!publishers.find(publisher => {
+                      if (publisher.type !== newPublisher.type) {
+                          return false;
+                      }
 
-            return publisher[publisher.type].id === newPublisher[newPublisher.type].id
-        }) : false;
+                      return publisher[publisher.type].id === newPublisher[newPublisher.type].id;
+                  })
+                : false;
         if (!exists) {
             let newPublishers = publishers;
             newPublishers.push(newPublisher);
 
             setValue('publishers', newPublishers);
         } else {
-            toast.error(<ToastContent type="error"
-                                      message="The publisher was already associated with this metadata and was, therefore, not added again."/>);
+            toast.error(
+                <ToastContent type="error" message="The publisher was already associated with this metadata and was, therefore, not added again." />
+            );
         }
 
         this.closeModal();
     };
 
-    handleDeleteConfirm = (publisher) => {
+    handleDeleteConfirm = publisher => {
         this.setState({
             showRemoveModal: true,
-            selectedPublisher: publisher
+            selectedPublisher: publisher,
         });
-    }
+    };
 
     handleDelete = () => {
-        const {publishers, setValue} = this.props;
-        const {selectedPublisher} = this.state;
+        const { publishers, setValue } = this.props;
+        const { selectedPublisher } = this.state;
 
         const index = publishers.indexOf(selectedPublisher);
 
@@ -92,11 +96,8 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
     };
 
     render() {
-        const {
-            countries,
-            publishers
-        } = this.props;
-        const {showModal, showRemoveModal, selectedPublisher} = this.state;
+        const { countries, publishers } = this.props;
+        const { showModal, showRemoveModal, selectedPublisher } = this.state;
 
         const publisherRows = publishers.map((publisher, index) => {
             let name = '';
@@ -114,9 +115,8 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
                 title: <CellText>{name}</CellText>,
                 type: <CellText>{ucfirst(publisher.type)}</CellText>,
                 info: <CellText>{additionalInfo}</CellText>,
-                menu: <ActionsCell
-                    items={[{destination: () => this.handleDeleteConfirm(publisher), label: 'Remove publisher'}]}/>,
-            }
+                menu: <ActionsCell items={[{ destination: () => this.handleDeleteConfirm(publisher), label: 'Remove publisher' }]} />,
+            };
         });
 
         let selectedPublisherName = '';
@@ -124,67 +124,69 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
             if (selectedPublisher.type === 'organization') {
                 selectedPublisherName = selectedPublisher.organization.name;
             } else if (selectedPublisher.type === 'person') {
-                selectedPublisherName = [selectedPublisher.person.firstName, selectedPublisher.person.middleName, selectedPublisher.person.lastName].filter(Boolean).join(' ');
+                selectedPublisherName = [selectedPublisher.person.firstName, selectedPublisher.person.middleName, selectedPublisher.person.lastName]
+                    .filter(Boolean)
+                    .join(' ');
             }
         }
 
-        return <div>
-            <PublisherModal
-                open={showModal}
-                onClose={this.closeModal}
-                handleSave={this.handleUpdate}
-                countries={countries}
-            />
+        return (
+            <div>
+                <PublisherModal open={showModal} onClose={this.closeModal} handleSave={this.handleUpdate} countries={countries} />
 
-            <ConfirmModal
-                title="Remove publisher"
-                action="Remove publisher"
-                variant="primary"
-                onConfirm={this.handleDelete}
-                onCancel={this.closeModal}
-                show={showRemoveModal}
-            >
-                Are you sure you want remove <strong>{selectedPublisher && selectedPublisherName}</strong> as publisher?
-            </ConfirmModal>
+                <ConfirmModal
+                    title="Remove publisher"
+                    action="Remove publisher"
+                    variant="primary"
+                    onConfirm={this.handleDelete}
+                    onCancel={this.closeModal}
+                    show={showRemoveModal}
+                >
+                    Are you sure you want remove <strong>{selectedPublisher && selectedPublisherName}</strong> as publisher?
+                </ConfirmModal>
 
-            <Stack distribution="trailing">
-                <Button icon="add" onClick={() => {
-                    this.openModal(null)
-                }}>
-                    Add publisher
-                </Button>
-            </Stack>
+                <Stack distribution="trailing">
+                    <Button
+                        icon="add"
+                        onClick={() => {
+                            this.openModal(null);
+                        }}
+                    >
+                        Add publisher
+                    </Button>
+                </Stack>
 
-            <DataGrid
-                accessibleName="Publishers"
-                emptyStateContent="No publishers found"
-                rows={publisherRows}
-                anchorRightColumns={1}
-                columns={[
-                    {
-                        Header: 'Name',
-                        accessor: 'title',
-                    },
-                    {
-                        Header: 'Type',
-                        accessor: 'type',
-                    },
-                    {
-                        Header: 'Additional Information',
-                        accessor: 'info',
-                    },
-                    {
-                        accessor: 'menu',
-                        disableGroupBy: true,
-                        disableResizing: true,
-                        isInteractive: true,
-                        isSticky: true,
-                        maxWidth: 34,
-                        minWidth: 34,
-                        width: 34
-                    }
-                ]}
-            />
-        </div>;
+                <DataGrid
+                    accessibleName="Publishers"
+                    emptyStateContent="No publishers found"
+                    rows={publisherRows}
+                    anchorRightColumns={1}
+                    columns={[
+                        {
+                            Header: 'Name',
+                            accessor: 'title',
+                        },
+                        {
+                            Header: 'Type',
+                            accessor: 'type',
+                        },
+                        {
+                            Header: 'Additional Information',
+                            accessor: 'info',
+                        },
+                        {
+                            accessor: 'menu',
+                            disableGroupBy: true,
+                            disableResizing: true,
+                            isInteractive: true,
+                            isSticky: true,
+                            maxWidth: 34,
+                            minWidth: 34,
+                            width: 34,
+                        },
+                    ]}
+                />
+            </div>
+        );
     }
 }

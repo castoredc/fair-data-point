@@ -1,4 +1,4 @@
-import React, {cloneElement} from "react";
+import React, { cloneElement } from 'react';
 
 export const by = key => (object, item) => {
     object[item[key]] = item;
@@ -24,16 +24,15 @@ export const log = (value, prefix = '') => {
     return value;
 };
 
-export const isNumeric = number =>
-    !isNaN(parseFloat(number)) && isFinite(number);
+export const isNumeric = number => !isNaN(parseFloat(number)) && isFinite(number);
 
 export const preventDefault = e => {
     e.preventDefault();
 };
 
-export const paragraphText = (text) => {
+export const paragraphText = text => {
     return text.split('\n').map((item, i) => {
-        return (item.length > 1) ? <p key={i}>{item}</p> : null;
+        return item.length > 1 ? <p key={i}>{item}</p> : null;
     });
 };
 
@@ -61,21 +60,24 @@ export const localizedText = (texts, language = 'en', paragraph = false) => {
     return texts[0].text;
 };
 
-export const isURL = (str) => {
+export const isURL = str => {
     if (typeof str !== 'string') {
         return false;
     }
 
-    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    var pattern = new RegExp(
+        '^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$',
+        'i'
+    ); // fragment locator
     return !!pattern.test(str);
 };
 
-export const getCenterFromDegrees = (data) => {
+export const getCenterFromDegrees = data => {
     if (!(data.length > 0)) {
         return false;
     }
@@ -87,8 +89,8 @@ export const getCenterFromDegrees = (data) => {
     let Z = 0.0;
 
     for (let i = 0; i < data.length; i++) {
-        let lat = data[i][0] * Math.PI / 180;
-        let lon = data[i][1] * Math.PI / 180;
+        let lat = (data[i][0] * Math.PI) / 180;
+        let lon = (data[i][1] * Math.PI) / 180;
 
         let a = Math.cos(lat) * Math.cos(lon);
         let b = Math.cos(lat) * Math.sin(lon);
@@ -107,8 +109,8 @@ export const getCenterFromDegrees = (data) => {
     let centerHyp = Math.sqrt(X * X + Y * Y);
     let centerLat = Math.atan2(Z, centerHyp);
 
-    let newX = (centerLat * 180 / Math.PI);
-    let newY = (centerLon * 180 / Math.PI);
+    let newX = (centerLat * 180) / Math.PI;
+    let newY = (centerLon * 180) / Math.PI;
 
     return [newX, newY];
 };
@@ -120,12 +122,10 @@ export const replaceAt = (array, index, value) => {
 };
 
 export const mergeData = (defaultData, newData) => {
-    return Object.keys(defaultData).reduce((a, key) => (
-        {...a, [key]: (key in newData ? newData[key] : defaultData[key])}
-    ), defaultData);
+    return Object.keys(defaultData).reduce((a, key) => ({ ...a, [key]: key in newData ? newData[key] : defaultData[key] }), defaultData);
 };
 
-export const ucfirst = (text) => {
+export const ucfirst = text => {
     return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
@@ -144,7 +144,5 @@ export const downloadFile = (contents, filename) => {
 };
 
 export const cloneIfComposite = (children, props) => {
-    return children && children.type && typeof children.type !== 'string'
-        ? cloneElement(children, props)
-        : children;
-}
+    return children && children.type && typeof children.type !== 'string' ? cloneElement(children, props) : children;
+};

@@ -1,114 +1,90 @@
-import React, { Component } from "react";
-import { toast } from "react-toastify";
-import ToastContent from "../../../components/ToastContent";
-import { Button, LoadingOverlay, Space } from "@castoredc/matter";
-import ListItem from "components/ListItem";
-import DocumentTitle from "components/DocumentTitle";
-import Header from "components/Layout/Dashboard/Header";
-import { AuthorizedRouteComponentProps } from "components/Route";
-import { isAdmin } from "utils/PermissionHelper";
-import PageBody from "components/Layout/Dashboard/PageBody";
-import { apiClient } from "src/js/network";
+import React, { Component } from 'react';
+import { toast } from 'react-toastify';
+import ToastContent from '../../../components/ToastContent';
+import { Button, LoadingOverlay, Space } from '@castoredc/matter';
+import ListItem from 'components/ListItem';
+import DocumentTitle from 'components/DocumentTitle';
+import Header from 'components/Layout/Dashboard/Header';
+import { AuthorizedRouteComponentProps } from 'components/Route';
+import { isAdmin } from 'utils/PermissionHelper';
+import PageBody from 'components/Layout/Dashboard/PageBody';
+import { apiClient } from 'src/js/network';
 
 interface DataModelsProps extends AuthorizedRouteComponentProps {}
 
 interface DataModelsState {
-  dataModels: any;
-  isLoading: boolean;
+    dataModels: any;
+    isLoading: boolean;
 }
 
-export default class DataModels extends Component<
-  DataModelsProps,
-  DataModelsState
-> {
-  constructor(props) {
-    super(props);
+export default class DataModels extends Component<DataModelsProps, DataModelsState> {
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      dataModels: [],
-      isLoading: false,
+        this.state = {
+            dataModels: [],
+            isLoading: false,
+        };
+    }
+
+    getDataModels = () => {
+        this.setState({
+            isLoading: true,
+        });
+
+        apiClient
+            .get('/api/model/my')
+            .then(response => {
+                this.setState({
+                    dataModels: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                if (error.response && typeof error.response.data.error !== 'undefined') {
+                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                } else {
+                    toast.error(<ToastContent type="error" message="An error occurred while loading your data models" />);
+                }
+            });
     };
-  }
 
-  getDataModels = () => {
-    this.setState({
-      isLoading: true,
-    });
+    componentDidMount() {
+        this.getDataModels();
+    }
 
-    apiClient
-      .get("/api/model/my")
-      .then((response) => {
-        this.setState({
-          dataModels: response.data,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          isLoading: false,
-        });
+    render() {
+        const { history, user } = this.props;
+        const { isLoading, dataModels } = this.state;
 
-        if (
-          error.response &&
-          typeof error.response.data.error !== "undefined"
-        ) {
-          toast.error(
-            <ToastContent type="error" message={error.response.data.error} />
-          );
-        } else {
-          toast.error(
-            <ToastContent
-              type="error"
-              message="An error occurred while loading your data models"
-            />
-          );
-        }
-      });
-  };
+        return (
+            <PageBody>
+                <DocumentTitle title="Data models" />
 
-  componentDidMount() {
-    this.getDataModels();
-  }
+                {isLoading && <LoadingOverlay accessibleLabel="Loading data models" />}
 
-  render() {
-    const { history, user } = this.props;
-    const { isLoading, dataModels } = this.state;
+                <Space bottom="comfortable" />
 
-    return (
-      <PageBody>
-        <DocumentTitle title="Data models" />
+                <Header title="My data models" type="Section">
+                    {isAdmin(user) && (
+                        <Button buttonType="primary" onClick={() => history.push('/dashboard/data-models/add')}>
+                            Add data model
+                        </Button>
+                    )}
+                </Header>
 
-        {isLoading && <LoadingOverlay accessibleLabel="Loading data models" />}
+                <div>
+                    {dataModels.map(model => {
+                        return <ListItem selectable={false} link={`/dashboard/data-models/${model.id}`} title={model.title} />;
+                    })}
 
-        <Space bottom="comfortable" />
-
-        <Header title="My data models" type="Section">
-          {isAdmin(user) && (
-            <Button
-              buttonType="primary"
-              onClick={() => history.push("/dashboard/data-models/add")}
-            >
-              Add data model
-            </Button>
-          )}
-        </Header>
-
-        <div>
-          {dataModels.map((model) => {
-            return (
-              <ListItem
-                selectable={false}
-                link={`/dashboard/data-models/${model.id}`}
-                title={model.title}
-              />
-            );
-          })}
-
-          {dataModels.length == 0 && (
-            <div className="NoResults">No data models found.</div>
-          )}
-        </div>
-      </PageBody>
-    );
-  }
+                    {dataModels.length == 0 && <div className="NoResults">No data models found.</div>}
+                </div>
+            </PageBody>
+        );
+    }
 }

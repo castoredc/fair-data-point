@@ -1,67 +1,56 @@
 import React from 'react';
-import {ValidatorComponent} from 'react-form-validator-core';
-import MaskedInput from 'react-text-mask'
-import {classNames} from '../../util';
+import { ValidatorComponent } from 'react-form-validator-core';
+import MaskedInput from 'react-text-mask';
+import { classNames } from '../../util';
 
-import './Input.scss'
-import {TextInput, TextStyle} from "@castoredc/matter";
+import './Input.scss';
+import { TextInput, TextStyle } from '@castoredc/matter';
 
 class Input extends ValidatorComponent {
     render() {
-        const {
-            errorMessages,
-            serverError,
-            validators,
-            requiredError,
-            validatorListener,
-            mask,
-            className,
-            ...rest
-        } = this.props;
-        const {isValid} = this.state;
+        const { errorMessages, serverError, validators, requiredError, validatorListener, mask, className, ...rest } = this.props;
+        const { isValid } = this.state;
         return (
             <div className={classNames('Input', className)}>
-                {mask ? <MaskedInput
-                    mask={mask}
-                    className="MaskedInput"
-                    {...rest}
-                    ref={(r) => {
-                        this.input = r;
-                    }}
-                    invalid={!isValid}
-                    render={(ref, props) => (
-                        <TextInput forwardRef={ref} {...props} />
-                    )}
-                /> : <TextInput
-                    {...rest}
-                    invalid={!isValid}
-                    forwardRef={(r) => {
-                        this.input = r;
-                    }}
-                />
-                }
+                {mask ? (
+                    <MaskedInput
+                        mask={mask}
+                        className="MaskedInput"
+                        {...rest}
+                        ref={r => {
+                            this.input = r;
+                        }}
+                        invalid={!isValid}
+                        render={(ref, props) => <TextInput forwardRef={ref} {...props} />}
+                    />
+                ) : (
+                    <TextInput
+                        {...rest}
+                        invalid={!isValid}
+                        forwardRef={r => {
+                            this.input = r;
+                        }}
+                    />
+                )}
                 {this.errorText()}
-                {serverError && serverError.map((errorText, index) => (
-                    <TextStyle key={index} variation="error">
-                        {errorText}
-                    </TextStyle>
-                ))}
+                {serverError &&
+                    serverError.map((errorText, index) => (
+                        <TextStyle key={index} variation="error">
+                            {errorText}
+                        </TextStyle>
+                    ))}
             </div>
         );
     }
 
     errorText() {
-        const {isValid} = this.state;
+        const { isValid } = this.state;
 
         if (isValid) {
             return null;
         }
 
-        return (
-            <TextStyle variation="error">
-                {this.getErrorMessage()}
-            </TextStyle>
-        );
+        return <TextStyle variation="error">{this.getErrorMessage()}</TextStyle>;
     }
 }
 

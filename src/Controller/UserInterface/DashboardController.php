@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DashboardController extends AbstractController
+final class DashboardController extends AbstractController
 {
     /**
      * @return RedirectResponse
@@ -75,6 +75,17 @@ class DashboardController extends AbstractController
         return $this->render(
             'react.html.twig',
             ['title' => 'FAIR Data Point']
+        );
+    }
+
+    /** @Route("/dashboard/edc-servers", name="dashboard_edcservers") */
+    public function edcServers(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'EDC Servers']
         );
     }
 

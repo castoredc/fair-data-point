@@ -1,20 +1,20 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import './Input.scss'
-import {ChoiceOption} from "@castoredc/matter";
+import './Input.scss';
+import { ChoiceOption } from '@castoredc/matter';
 
 export default class CheckboxGroup extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selection: []
+            selection: [],
         };
     }
 
-    onCheckboxChange = (e) => {
-        const {onChange, name} = this.props;
-        const {selection} = this.state;
+    onCheckboxChange = e => {
+        const { onChange, name } = this.props;
+        const { selection } = this.state;
 
         let newSelection = selection;
 
@@ -22,38 +22,45 @@ export default class CheckboxGroup extends Component {
             newSelection.push(e.target.value);
         } else {
             newSelection = newSelection.filter(function (option) {
-                return option !== e.target.value
+                return option !== e.target.value;
             });
         }
 
-        this.setState({
-            selection: newSelection
-        }, () => {
-            onChange({target: {name: name, value: newSelection}});
-        });
+        this.setState(
+            {
+                selection: newSelection,
+            },
+            () => {
+                onChange({ target: { name: name, value: newSelection } });
+            }
+        );
     };
 
     render() {
-        const {
-            options,
-            value
-        } = this.props;
+        const { options, value } = this.props;
 
         return (
-            <div className="CheckboxFormGroup" ref={(r) => {
-                this.input = r;
-            }}>
-                {options.map((option) => {
-                    return <ChoiceOption
-                        key={option.value}
-                        labelText={option.label}
-                        type="checkbox"
-                        onChange={this.onCheckboxChange}
-                        value={option.value}
-                        checked={value.find((valueOption) => {
-                            return valueOption === option.value
-                        }) || false}
-                    />
+            <div
+                className="CheckboxFormGroup"
+                ref={r => {
+                    this.input = r;
+                }}
+            >
+                {options.map(option => {
+                    return (
+                        <ChoiceOption
+                            key={option.value}
+                            labelText={option.label}
+                            type="checkbox"
+                            onChange={this.onCheckboxChange}
+                            value={option.value}
+                            checked={
+                                value.find(valueOption => {
+                                    return valueOption === option.value;
+                                }) || false
+                            }
+                        />
+                    );
                 })}
             </div>
         );

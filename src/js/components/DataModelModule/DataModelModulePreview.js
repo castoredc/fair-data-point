@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import Highlight from "../Highlight";
-import {Banner, Tabs} from "@castoredc/matter";
-import ScrollShadow from "../ScrollShadow";
-import VisNetwork from "../Visualization/Network";
-import {CopyIcon, DecisionIcon} from "@castoredc/matter-icons";
+import React, { Component } from 'react';
+import Highlight from '../Highlight';
+import { Banner, Tabs } from '@castoredc/matter';
+import ScrollShadow from '../ScrollShadow';
+import VisNetwork from '../Visualization/Network';
+import { CopyIcon, DecisionIcon } from '@castoredc/matter-icons';
 
 export default class DataModelModulePreview extends Component {
     constructor(props) {
@@ -13,39 +13,65 @@ export default class DataModelModulePreview extends Component {
         };
     }
 
-    changeTab = (tabIndex) => {
+    changeTab = tabIndex => {
         this.setState({
             selectedTab: tabIndex,
         });
     };
 
-    renderDependencies = (dependencies) => {
+    renderDependencies = dependencies => {
         return dependencies.map((dependency, index) => {
             if (dependency.type === 'group') {
-                return <span className="DependencyGroup" key={index}>{this.renderDependencies(dependency.rules)}</span>;
+                return (
+                    <span className="DependencyGroup" key={index}>
+                        {this.renderDependencies(dependency.rules)}
+                    </span>
+                );
             } else if (dependency.type === 'combinator') {
-                return <span className="DependencyCombinator" key={index}>{dependency.text}</span>;
+                return (
+                    <span className="DependencyCombinator" key={index}>
+                        {dependency.text}
+                    </span>
+                );
             } else if (dependency.type === 'rule') {
-                return <span className="DependencyRule" key={index}>{dependency.text}</span>;
+                return (
+                    <span className="DependencyRule" key={index}>
+                        {dependency.text}
+                    </span>
+                );
             }
-        })
+        });
     };
 
     render() {
-        const {selectedTab} = this.state;
-        const {repeated, dependent, dependencies, rdf, visualization} = this.props;
+        const { selectedTab } = this.state;
+        const { repeated, dependent, dependencies, rdf, visualization } = this.props;
 
-        let alerts = <div className="DataModelModuleAlerts">
-            {repeated && <Banner compact customIcon={<CopyIcon/>}
-                                 description="This group is repeated for every instance of a specific survey or report"/>}
-            {dependent && <Banner compact customIcon={<DecisionIcon/>} description={<>
-                This group is dependent and will only be rendered when:
+        let alerts = (
+            <div className="DataModelModuleAlerts">
+                {repeated && (
+                    <Banner
+                        compact
+                        customIcon={<CopyIcon />}
+                        description="This group is repeated for every instance of a specific survey or report"
+                    />
+                )}
+                {dependent && (
+                    <Banner
+                        compact
+                        customIcon={<DecisionIcon />}
+                        description={
+                            <>
+                                This group is dependent and will only be rendered when:
+                                <div className="DependencyDescription">{this.renderDependencies(dependencies.description)}</div>
+                            </>
+                        }
+                    />
+                )}
+            </div>
+        );
 
-                <div className="DependencyDescription">{this.renderDependencies(dependencies.description)}</div>
-            </>}/>}
-        </div>;
-
-        const nodes = visualization.nodes.map((node) => {
+        const nodes = visualization.nodes.map(node => {
             node.shape = 'box';
             node.margin = 10;
 
@@ -81,13 +107,13 @@ export default class DataModelModulePreview extends Component {
                 color: '#1b2c4b',
                 size: 13,
                 face: 'Lato',
-                multi: 'html'
+                multi: 'html',
             };
 
             return node;
         });
 
-        const edges = visualization.edges.map((edge) => {
+        const edges = visualization.edges.map(edge => {
             edge.font = {
                 color: '#1b2c4b',
                 size: 13,
@@ -105,31 +131,43 @@ export default class DataModelModulePreview extends Component {
             return edge;
         });
 
-        return <div className="PageTabs">
-            <Tabs
-                onChange={this.changeTab}
-                selected={selectedTab}
-                tabs={{
-                    visualization: {
-                        title: 'Visualization',
-                        content: <div className="FullHeightPageTab">
-                            {alerts}
-                            {rdf !== '' ? <VisNetwork className="FullHeightNetwork" nodes={nodes} edges={edges}/> :
-                                <div className="NoResults">There is no preview available.</div>}
-                        </div>,
-                    },
-                    rdf: {
-                        title: 'RDF',
-                        content: <>
-                            {alerts}
-                            {rdf !== '' ? <ScrollShadow>
-                                    <Highlight content={rdf}/>
-                                </ScrollShadow> :
-                                <div className="NoResults">There is no preview available.</div>}
-                        </>,
-                    },
-                }}
-            />
-        </div>;
+        return (
+            <div className="PageTabs">
+                <Tabs
+                    onChange={this.changeTab}
+                    selected={selectedTab}
+                    tabs={{
+                        visualization: {
+                            title: 'Visualization',
+                            content: (
+                                <div className="FullHeightPageTab">
+                                    {alerts}
+                                    {rdf !== '' ? (
+                                        <VisNetwork className="FullHeightNetwork" nodes={nodes} edges={edges} />
+                                    ) : (
+                                        <div className="NoResults">There is no preview available.</div>
+                                    )}
+                                </div>
+                            ),
+                        },
+                        rdf: {
+                            title: 'RDF',
+                            content: (
+                                <>
+                                    {alerts}
+                                    {rdf !== '' ? (
+                                        <ScrollShadow>
+                                            <Highlight content={rdf} />
+                                        </ScrollShadow>
+                                    ) : (
+                                        <div className="NoResults">There is no preview available.</div>
+                                    )}
+                                </>
+                            ),
+                        },
+                    }}
+                />
+            </div>
+        );
     }
 }
