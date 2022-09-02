@@ -1,0 +1,1 @@
+FROM docker.io/stardog/stardog:7.9.1-java11-preview

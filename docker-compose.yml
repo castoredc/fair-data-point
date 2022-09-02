@@ -45,3 +45,20 @@ services:
       - symfony
     links:
       - mysql
+
+  stardog-studio:
+    image: stardog/stardog-studio:3.7.2
+    ports:
+      - "8080:8080"
+
+  stardog:
+    build:
+      context: .
+      dockerfile: ./docker/stardog/Dockerfile
+    environment:
+      - STARDOG_SERVER_JAVA_ARGS=-Xms3g -Xmx3g -XX:MaxDirectMemorySize=4g -Dlog4j2.formatMsgNoLookups=true
+    user: "1001:1002"
+    ports:
+      - "8081:5820"
+    volumes:
+      - ./docker/stardog/data:/var/opt/stardog
