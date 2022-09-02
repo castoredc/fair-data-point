@@ -69,14 +69,6 @@ const EDCServersGrid = () => {
             return;
         }
 
-        // const index = edcServersState.indexOf(selectedServer);
-        // if (index > -1) {
-        //     let newServers = edcServersState;
-        //
-        //     newServers[index] = updatedServer;
-        //     setEdcServersState(newServers);
-        // }
-
         getEDCServers();
 
         closeAllModals();
@@ -100,12 +92,7 @@ const EDCServersGrid = () => {
                     position: 'top-right',
                 });
 
-                const index = edcServersState.indexOf(selectedServer);
-                if (index > -1) {
-                    let newServers = edcServersState;
-                    newServers.splice(index, 1);
-                    setEdcServersState(newServers);
-                }
+                getEDCServers();
             })
             .catch(error => {
                 toast.error(<ToastContent type="error" message="An error occurred" />, {
