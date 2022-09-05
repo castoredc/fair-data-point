@@ -1,6 +1,7 @@
 import flagNL from './flag-nl.svg';
 import flagUK from './flag-uk.svg';
 import flagUS from './flag-us.svg';
+import flagAU from './flag-au.svg';
 import annotations from './annotations.svg';
 import catalog from './catalog.svg';
 import center from './center.svg';
@@ -24,6 +25,7 @@ export default {
     flagNL,
     flagUK,
     flagUS,
+    flagAU,
     annotations,
     catalog,
     center,
