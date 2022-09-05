@@ -38,6 +38,28 @@ services:
     links:
       - mysql
 
+  init:
+    container_name: init
+    build:
+      context: .
+      dockerfile: ./docker/symfony/Dockerfile
+    command: /init.sh
+    volumes:
+      - ~/.composer:/opt/composer
+      - .:/home/castor/fdp:delegated
+    environment:
+      COMPOSER_HOME: /opt/composer
+      APP_ENV: dev
+      MYSQL_HOST: mysql
+    networks:
+      - fair-data-point
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
   nginx:
     container_name: nginx
     build:
