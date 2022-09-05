@@ -4,3 +4,5 @@ monolog:
         type:           service
         id:             custom_slack_handler
         level:          critical
+  channels:
+    - deprecation
