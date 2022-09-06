@@ -4,7 +4,7 @@ services:
   mysql:
     container_name: mysql
     image: mysql/mysql-server:8.0
-    restart: always
+    restart: unless-stopped
     ports:
       - "3306:3306"
     networks:
@@ -12,6 +12,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: '%'
+      MYSQL_INITDB_SKIP_TZINFO: 1
     volumes:
       - ./docker/mysql/create-import-default.sql:/docker-entrypoint-initdb.d/1-create-import-default.sql:ro
 
@@ -27,6 +28,29 @@ services:
     environment:
       COMPOSER_HOME: /opt/composer
       APP_ENV: dev
+    networks:
+      - fair-data-point
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  init:
+    container_name: init
+    build:
+      context: .
+      dockerfile: ./docker/symfony/Dockerfile
+    command: /init.sh
+    volumes:
+      - ~/.composer:/opt/composer
+      - .:/home/castor/fdp:delegated
+    environment:
+      COMPOSER_HOME: /opt/composer
+      APP_ENV: dev
+      MYSQL_HOST: mysql
     networks:
       - fair-data-point
     extra_hosts:
@@ -50,6 +74,7 @@ services:
       - fair-data-point
     depends_on:
       - symfony
+    restart: unless-stopped
     links:
       - mysql
 

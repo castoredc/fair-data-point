@@ -5,7 +5,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Install DB driver for PHP => pdo pdo_mysql
 RUN set -xe \
     && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
-    && apk add git \
+    && apk add bash git \
     && pecl install xdebug-3.1.5 \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install pdo pdo_mysql \
@@ -30,10 +30,4 @@ COPY docker/symfony/php-xdebug /usr/local/bin/php-xdebug
 
 WORKDIR /home/castor/fdp
 
-COPY . /home/castor/fdp
-
-# Install composer
-RUN composer install -v
-
-# Run initial migrations
-RUN bin/console doctrine:migrations:migrate --no-interaction
+COPY docker/symfony/init.sh /init.sh
