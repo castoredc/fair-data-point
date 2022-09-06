@@ -22,6 +22,8 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
 {
     private const HEADER_X_AUTH_TOKEN = 'X-AUTH-TOKEN';
     private const HEADER_X_AUTH_SERVER = 'X-AUTH-SERVER';
+    private const CREDENTIALS_API_TOKEN = 'api_token';
+    private const CREDENTIALS_EDC_SERVER = 'edc_server';
 
     protected ApiClient $apiClient;
     private EntityManagerInterface $entityManager;
@@ -60,8 +62,8 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request): array
     {
         return [
-            'api_token' => $request->headers->get(self::HEADER_X_AUTH_TOKEN),
-            'edc_server' => $request->headers->get(self::HEADER_X_AUTH_SERVER),
+            self::CREDENTIALS_API_TOKEN => $request->headers->get(self::HEADER_X_AUTH_TOKEN),
+            self::CREDENTIALS_EDC_SERVER => $request->headers->get(self::HEADER_X_AUTH_SERVER),
         ];
     }
 
@@ -69,13 +71,13 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
     {
         // Validate the supplied edc server
-        $edcServer = $this->entityManager->getRepository(CastorServer::class)->findOneBy(['url' => $credentials['edc_server']]);
+        $edcServer = $this->entityManager->getRepository(CastorServer::class)->findOneBy(['url' => $credentials[self::CREDENTIALS_EDC_SERVER]]);
         if ($edcServer === null) {
             throw new CustomUserMessageAuthenticationException('Invalid X-AUTH-SERVER provided.');
         }
 
-        $this->apiClient->setServer($credentials['edc_server']);
-        $this->apiClient->setToken($credentials['api_token']);
+        $this->apiClient->setServer($credentials[self::CREDENTIALS_EDC_SERVER]);
+        $this->apiClient->setToken($credentials[self::CREDENTIALS_API_TOKEN]);
 
         try {
             $castorUser = $this->apiClient->getUser();
@@ -86,8 +88,8 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
             throw new CustomUserMessageAuthenticationException('Failed to validate access token.');
         }
 
-        $castorUser->setToken($credentials['api_token']);
-        $castorUser->setServer($credentials['edc_server']);
+        $castorUser->setToken($credentials[self::CREDENTIALS_API_TOKEN]);
+        $castorUser->setServer($credentials[self::CREDENTIALS_EDC_SERVER]);
 
         $dbUser = $this->entityManager->getRepository(CastorUser::class)->findOneBy(['id' => $castorUser->getId()]);
         assert($dbUser instanceof CastorUser || $dbUser === null);
