@@ -82,8 +82,6 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
         $this->apiClient->setServer($credentials['edc_server']);
         $this->apiClient->setToken($credentials['api_token']);
 
-        $this->logger->debug('EdcApiToken: going to auth with: ' . var_export($credentials, true));
-
         try {
             $castorUser = $this->apiClient->getUser();
         } catch (\Throwable $t) {
