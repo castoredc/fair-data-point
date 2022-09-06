@@ -276,12 +276,7 @@ $commands = [
     'phpunit' => [
         'description' => 'Run phpunit in the responsible container',
         'command' => static function ($_): int {
-            $supportedThreads = getSupportedThreads();
-            if ($supportedThreads > 16) {
-                $supportedThreads = 16;
-            }
-
-            return runDockerCommand('vendor/bin/paratest --runner=WrapperRunner -p' . $supportedThreads . ' ' . escapeShellArguments($_));
+            return runDockerCommand('vendor/bin/phpunit ' . escapeShellArguments($_));
         },
     ],
     'composer' => [

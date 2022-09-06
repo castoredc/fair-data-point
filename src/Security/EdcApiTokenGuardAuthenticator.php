@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\Enum\NameOrigin;
-use App\Entity\FAIRData\Agent\Person;
 use App\Model\Castor\ApiClient;
 use App\Security\Providers\Castor\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
-use League\OAuth2\Client\Token\AccessToken;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +15,8 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Throwable;
 use function assert;
-use function filter_var;
-use function var_export;
-use const FILTER_FLAG_HOSTNAME;
 
 class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
 {
@@ -58,13 +50,14 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
         return new Response($exception->getMessage(), 401);
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    /** @inheritDoc */
+    public function start(Request $request, ?AuthenticationException $authException = null)
     {
         return new Response('The X-AUTH-TOKEN and X-AUTH-SERVER headers are required.', 401);
     }
 
     /** @return array{api_token: string|null, edc_server: string|null} */
-    public function getCredentials(Request $request)
+    public function getCredentials(Request $request): array
     {
         return [
             'api_token' => $request->headers->get(self::HEADER_X_AUTH_TOKEN),
@@ -72,23 +65,27 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
         ];
     }
 
-    /**
-     * @param array{api_token: string|null, edc_server: string|null} $credentials
-     *
-     * @return UserInterface
-     */
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    /** @inheritDoc */
+    public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
     {
+        // Validate the supplied edc server
+        $edcServer = $this->entityManager->getRepository(CastorServer::class)->findOneBy(['url' => $credentials['edc_server']]);
+        if ($edcServer === null) {
+            throw new CustomUserMessageAuthenticationException('Invalid X-AUTH-SERVER provided.');
+        }
+
         $this->apiClient->setServer($credentials['edc_server']);
         $this->apiClient->setToken($credentials['api_token']);
 
         try {
             $castorUser = $this->apiClient->getUser();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             $this->logger->warning($t->getMessage());
             $this->logger->warning($t->getTraceAsString());
+
             throw new CustomUserMessageAuthenticationException('Failed to validate access token.');
         }
+
         $castorUser->setToken($credentials['api_token']);
         $castorUser->setServer($credentials['edc_server']);
 
@@ -121,27 +118,13 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
         return $user;
     }
 
-    private function createNewUser(CastorUser $castorUser): User
-    {
-        $person = new Person(
-            $castorUser->getNameFirst(),
-            $castorUser->getNameMiddle(),
-            $castorUser->getNameLast(),
-            $castorUser->getEmailAddress(),
-            null,
-            null,
-            NameOrigin::castor()
-        );
-
-        return new User($person);
-    }
-
-    /** @return true */
-    public function checkCredentials($credentials, UserInterface $user)
+    /** @inheritDoc */
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
         return true;
     }
 
+    /** @inheritDoc */
     public function supportsRememberMe()
     {
         return false;
