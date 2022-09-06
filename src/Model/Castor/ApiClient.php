@@ -75,8 +75,7 @@ class ApiClient
         $this->server = $server;
     }
 
-    /** @param mixed $token */
-    public function setToken($token): void
+    public function setToken(string $token): void
     {
         $this->token = $token;
     }
