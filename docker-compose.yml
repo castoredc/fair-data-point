@@ -79,11 +79,15 @@ services:
       - mysql
 
   stardog-studio:
+    container_name: stardog_studio
     image: stardog/stardog-studio:3.7.2
     ports:
       - "8080:8080"
+    networks:
+      - fair-data-point
 
   stardog:
+    container_name: stardog
     build:
       context: .
       dockerfile: ./docker/stardog/Dockerfile
@@ -94,6 +98,8 @@ services:
       - "8081:5820"
     volumes:
       - ./docker/stardog/data:/var/opt/stardog
+    networks:
+      - fair-data-point
 
 networks:
   fair-data-point:
