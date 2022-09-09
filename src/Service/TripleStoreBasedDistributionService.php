@@ -114,4 +114,10 @@ class TripleStoreBasedDistributionService
     {
         return $this->client->getDataFromStore($namedGraphUrl);
     }
+
+    /** @param array<string, string> $namespaces */
+    public function importNamespaces(array $namespaces): void
+    {
+        $this->client->importNamespaces($namespaces);
+    }
 }

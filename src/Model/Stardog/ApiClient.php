@@ -232,6 +232,14 @@ class ApiClient
         );
     }
 
+    /**
+     * @param array<string, string> $namespaces
+     *
+     * @throws ErrorFetchingStardogData
+     * @throws NoAccessPermission
+     * @throws NotFound
+     * @throws SessionTimedOut
+     */
     public function importNamespaces(array $namespaces): void
     {
         $this->graphRequest(

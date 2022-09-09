@@ -209,6 +209,8 @@ class GenerateRDFCommand extends Command
                 RdfNamespace::set($prefix->getPrefix(), $prefix->getUri()->getValue());
             }
 
+            $this->tripleStoreBasedDistributionService->importNamespaces(RdfNamespace::namespaces());
+
             $imported = [];
             $errors = [];
             $skipped = [];
