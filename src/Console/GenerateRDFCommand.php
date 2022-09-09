@@ -14,9 +14,9 @@ use App\Entity\Enum\DistributionGenerationStatus;
 use App\Model\Castor\ApiClient;
 use App\Service\CastorEntityHelper;
 use App\Service\DataTransformationService;
-use App\Service\DistributionService;
 use App\Service\EncryptionService;
 use App\Service\RDFRenderHelper;
+use App\Service\TripleStoreBasedDistributionService;
 use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf\Graph;
@@ -42,7 +42,7 @@ class GenerateRDFCommand extends Command
     private EntityManagerInterface $em;
     private CastorEntityHelper $entityHelper;
     private UriHelper $uriHelper;
-    private DistributionService $distributionService;
+    private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
     private EncryptionService $encryptionService;
     private LoggerInterface $logger;
     private DataTransformationService $dataTransformationService;
@@ -52,7 +52,7 @@ class GenerateRDFCommand extends Command
         EntityManagerInterface $em,
         CastorEntityHelper $entityHelper,
         UriHelper $uriHelper,
-        DistributionService $distributionService,
+        TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
         EncryptionService $encryptionService,
         LoggerInterface $logger,
         DataTransformationService $dataTransformationService
@@ -61,7 +61,7 @@ class GenerateRDFCommand extends Command
         $this->em = $em;
         $this->entityHelper = $entityHelper;
         $this->uriHelper = $uriHelper;
-        $this->distributionService = $distributionService;
+        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
         $this->encryptionService = $encryptionService;
         $this->logger = $logger;
         $this->dataTransformationService = $dataTransformationService;
@@ -184,12 +184,11 @@ class GenerateRDFCommand extends Command
             $distributionUri = $this->uriHelper->getUri($rdfDistributionContent);
             $graphUri = $distributionUri . '/g';
 
-            $store = $this->distributionService->duplicateArc2Store($dbInformation, $this->encryptionService);
+            $this->tripleStoreBasedDistributionService->createDistributionConnection($dbInformation, $this->encryptionService);
 
             $output->writeln(sprintf("Last import: \t %s", $lastImport !== null ? $lastImport->format(DATE_ATOM) : 'Never'));
             $output->writeln(sprintf("URI: \t\t %s", $distributionUri));
             $output->writeln(sprintf("API user: \t <%s>", $apiUser->getEmailAddress()));
-            $output->writeln(sprintf("RDF Store: \t %s", $store->getName()));
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
 
@@ -237,19 +236,16 @@ class GenerateRDFCommand extends Command
                 }
 
                 if ($import) {
-                    $store->delete(false, $recordGraphUri);
-
                     try {
                         $graph = new Graph();
 
                         $output->writeln('    - Rendering record ' . $record->getId());
 
                         $graph = $helper->renderRecord($record, $graph);
-                        $turtle = $graph->serialise('turtle');
 
                         $output->writeln(sprintf('    - Saving record to <%s>', $recordGraphUri));
 
-                        $store->insert($turtle, $recordGraphUri);
+                        $this->tripleStoreBasedDistributionService->addDataToStore($graph, $recordGraphUri);
 
                         $imported[] = $record;
                         $recordLog->setStatus(DistributionGenerationStatus::success());
@@ -306,36 +302,6 @@ class GenerateRDFCommand extends Command
                 $log->setStatus(DistributionGenerationStatus::success());
             } else {
                 $log->setStatus(DistributionGenerationStatus::notUpdated());
-            }
-
-            if (count($imported) > 0) {
-                try {
-                    $store->optimizeTables();
-                } catch (Throwable $t) {
-                    $output->writeln('    - An error occurred while optimizing the triple store:');
-                    $output->writeln('      ' . get_class($t));
-
-                    if ($t->getMessage() !== '') {
-                        $output->writeln('      ' . $t->getMessage());
-                    }
-
-                    $this->logger->critical(
-                        'An error occurred while optimizing the triple store',
-                        [
-                            'exception' => $t,
-                            'Message' => $t->getMessage(),
-                            'Distribution' => $distribution->getSlug(),
-                            'DistributionID' => $distribution->getId(),
-                        ]
-                    );
-
-                    $log->addError(
-                        [
-                            'exception' => get_class($t),
-                            'message' => $t->getMessage(),
-                        ]
-                    );
-                }
             }
 
             $this->em->persist($log);
