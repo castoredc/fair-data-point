@@ -21,6 +21,9 @@ class DistributionDatabaseInformation
     public const DBNAME_PREPEND = 'fdp_dist_';
     public const DBNAME_PREPEND_ESCAPE = 'fdp\_dist\_';
     public const USERNAME_PREPEND = 'fdp_u_';
+    public const READ_ONLY_USERNAME_PREPEND = 'fdp_u-ro_';
+    public const ROLE_PREPEND = 'fdp_r_';
+    public const READ_ONLY_ROLE_PREPEND = 'fdp_r-ro_';
 
     /**
      * @ORM\Id
@@ -38,6 +41,12 @@ class DistributionDatabaseInformation
     /** @ORM\Column(type="string", name="password", type="text", length=65535, nullable=false) */
     private string $password;
 
+    /** @ORM\Column(type="string", name="readonly_user", type="text", length=65535, nullable=false) */
+    private string $readOnlyUsername;
+
+    /** @ORM\Column(type="string", name="readonly_password", type="text", length=65535, nullable=false) */
+    private string $readOnlyPassword;
+
     public function __construct(Distribution $distribution)
     {
         $this->distribution = $distribution;
@@ -52,6 +61,16 @@ class DistributionDatabaseInformation
     public function getDatabase(): string
     {
         return $this->database;
+    }
+
+    public function getRole(): string
+    {
+        return str_replace(self::DBNAME_PREPEND, self::ROLE_PREPEND, $this->database);
+    }
+
+    public function getReadOnlyRole(): string
+    {
+        return str_replace(self::DBNAME_PREPEND, self::READ_ONLY_ROLE_PREPEND, $this->database);
     }
 
     public function getEscapedDatabase(): string
@@ -69,6 +88,16 @@ class DistributionDatabaseInformation
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->username));
     }
 
+    public function getReadOnlyUsername(): string
+    {
+        return $this->readOnlyUsername;
+    }
+
+    public function getDecryptedReadOnlyUsername(EncryptionService $encryptionService): SensitiveDataString
+    {
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->readOnlyUsername));
+    }
+
     public function getPassword(): string
     {
         return $this->password;
@@ -77,6 +106,16 @@ class DistributionDatabaseInformation
     public function getDecryptedPassword(EncryptionService $encryptionService): SensitiveDataString
     {
         return $encryptionService->decrypt(EncryptedString::fromJsonString($this->password));
+    }
+
+    public function getReadOnlyPassword(): string
+    {
+        return $this->readOnlyPassword;
+    }
+
+    public function getDecryptedReadOnlyPassword(EncryptionService $encryptionService): SensitiveDataString
+    {
+        return $encryptionService->decrypt(EncryptedString::fromJsonString($this->readOnlyPassword));
     }
 
     /** @throws CouldNotTransformEncryptedStringToJson */
@@ -101,5 +140,29 @@ class DistributionDatabaseInformation
         }
 
         $this->password = $encoded;
+    }
+
+    /** @throws CouldNotTransformEncryptedStringToJson */
+    public function setReadOnlyUsername(EncryptionService $encryptionService, string $readOnlyUsername): void
+    {
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($readOnlyUsername)));
+
+        if ($encoded === false) {
+            throw new CouldNotTransformEncryptedStringToJson();
+        }
+
+        $this->readOnlyUsername = $encoded;
+    }
+
+    /** @throws CouldNotTransformEncryptedStringToJson */
+    public function setReadOnlyPassword(EncryptionService $encryptionService, string $readOnlyPassword): void
+    {
+        $encoded = json_encode($encryptionService->encrypt(new SensitiveDataString($readOnlyPassword)));
+
+        if ($encoded === false) {
+            throw new CouldNotTransformEncryptedStringToJson();
+        }
+
+        $this->readOnlyPassword = $encoded;
     }
 }
