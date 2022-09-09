@@ -167,13 +167,6 @@ function initializeEnvironmentFile(): void
 function parseDockerComposeExtraConfiguration(array $arguments): string
 {
     $baseComposeConfiguration = ' -f docker-compose.yml';
-    if (PHP_OS_FAMILY === 'Darwin') {
-        $baseComposeConfiguration .= ' -f docker-compose.osx.yml';
-
-        if (file_exists('docker-compose.override.yml')) {
-            $baseComposeConfiguration .= ' -f docker-compose.override.yml';
-        }
-    }
 
     if ($arguments === []) {
         return PHP_OS_FAMILY === 'Darwin' ? $baseComposeConfiguration : '';

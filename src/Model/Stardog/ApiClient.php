@@ -13,8 +13,10 @@ use GuzzleHttp\Exception\RequestException;
 use Throwable;
 use function array_keys;
 use function array_map;
+use function implode;
 use function json_decode;
 use function json_encode;
+use function sprintf;
 use function str_split;
 use function urlencode;
 
@@ -63,13 +65,13 @@ class ApiClient
      */
     private function jsonRequest(string $uri, string $method, array $data, bool $multipart = false)
     {
-        return $this->handleRequest($method, $uri, [
+        return json_decode((string) $this->handleRequest($method, $uri, [
             'auth' => [
                 $this->user,
                 $this->pass,
             ],
             'json' => $data,
-        ]);
+        ]), true);
     }
 
     /**
@@ -84,7 +86,7 @@ class ApiClient
      */
     private function multipartRequest(string $uri, string $method, array $data)
     {
-        return $this->handleRequest($method, $uri, [
+        return json_decode((string) $this->handleRequest($method, $uri, [
             'auth' => [
                 $this->user,
                 $this->pass,
@@ -95,7 +97,7 @@ class ApiClient
                     'contents' => $value,
                 ];
             }, array_keys($data), $data),
-        ]);
+        ]), true);
     }
 
     /**
@@ -108,7 +110,7 @@ class ApiClient
      */
     private function graphRequest(string $uri, string $method, ?string $data)
     {
-        return $this->handleRequest($method, $uri, [
+        return (string) $this->handleRequest($method, $uri, [
             'auth' => [
                 $this->user,
                 $this->pass,
@@ -200,7 +202,7 @@ class ApiClient
                 $options,
             );
 
-            $body = json_decode((string) $response->getBody(), true);
+            return $response->getBody();
         } catch (RequestException $e) {
             switch ($e->getCode()) {
                 case 401:
@@ -218,8 +220,6 @@ class ApiClient
         } catch (Throwable $e) {
             throw new ErrorFetchingStardogData($e->getMessage());
         }
-
-        return $body;
     }
 
     /** @return mixed */
@@ -229,6 +229,17 @@ class ApiClient
             '/' . $this->database . ($namedGraphUrl !== null ? '/?graph=' . urlencode($namedGraphUrl) : '/?graph=stardog:context:all'),
             self::METHOD_GET,
             null
+        );
+    }
+
+    public function importNamespaces(array $namespaces): void
+    {
+        $this->graphRequest(
+            '/' . $this->database . '/namespaces',
+            self::METHOD_POST,
+            implode("\n", array_map(static function (string $prefix, string $uri): string {
+                return sprintf('@prefix %s: <%s> . ', $prefix, $uri);
+            }, array_keys($namespaces), $namespaces))
         );
     }
 }
