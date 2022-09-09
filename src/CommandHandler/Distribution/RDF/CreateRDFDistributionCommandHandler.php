@@ -74,12 +74,12 @@ class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandl
     {
         $databaseInformation = new DistributionDatabaseInformation($distribution);
 
-        $user_bytes = bin2hex(random_bytes(10));
+        $userBytes = bin2hex(random_bytes(10));
 
-        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . $user_bytes);
+        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . $userBytes);
         $databaseInformation->setPassword($this->encryptionService, bin2hex(random_bytes(32)));
 
-        $databaseInformation->setReadOnlyUsername($this->encryptionService, $databaseInformation::READ_ONLY_USERNAME_PREPEND . $user_bytes);
+        $databaseInformation->setReadOnlyUsername($this->encryptionService, $databaseInformation::READ_ONLY_USERNAME_PREPEND . $userBytes);
         $databaseInformation->setReadOnlyPassword($this->encryptionService, bin2hex(random_bytes(32)));
 
         $distribution->setDatabaseInformation($databaseInformation);
