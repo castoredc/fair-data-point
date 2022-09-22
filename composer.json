@@ -20,7 +20,6 @@
         "knpuniversity/oauth2-client-bundle": "^2.5",
         "league/oauth2-client": "^2.5",
         "ml/json-ld": "^1.2",
-        "semsol/arc2": "^2.5.5",
         "sensio/framework-extra-bundle": "^6.2",
         "stof/doctrine-extensions-bundle": "^1.4",
         "symfony/console": "^5.4",
@@ -104,10 +103,6 @@
         {
             "type": "composer",
             "url": "https://satis.castoredc.net/"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:castoredc/arc2.git"
         }
     ]
 }
