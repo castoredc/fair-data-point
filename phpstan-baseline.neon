@@ -9,3 +9,13 @@ parameters:
 			message: "#^Only booleans are allowed in a negated boolean, string\\|null given\\.$#"
 			count: 2
 			path: bin/include/check-env.php
+
+		-
+			message:
+				"""
+					#^Class App\\\\Security\\\\EdcApiTokenGuardAuthenticator extends deprecated class Symfony\\\\Component\\\\Security\\\\Guard\\\\AbstractGuardAuthenticator\\:
+					since Symfony 5\\.3, use the new authenticator system instead$#
+				"""
+			count: 1
+			path: src/Security/EdcApiTokenGuardAuthenticator.php
+

@@ -42,7 +42,7 @@ class CastorUser implements ProviderUser
     private ?string $token = null;
     private ?string $server = null;
     /** @var string[] */
-    private array $studies;
+    private array $studies = [];
 
     public function __construct(string $id, string $nameFirst, ?string $nameMiddle, string $nameLast, string $emailAddress)
     {
@@ -51,7 +51,6 @@ class CastorUser implements ProviderUser
         $this->nameMiddle = $nameMiddle;
         $this->nameLast = $nameLast;
         $this->emailAddress = strtolower($emailAddress);
-        $this->studies = [];
     }
 
     public function getId(): ?string
