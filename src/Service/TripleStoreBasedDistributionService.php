@@ -6,6 +6,8 @@ namespace App\Service;
 use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
+use App\Graph\SparqlClient;
+use App\Graph\SparqlResponse;
 use App\Model\Stardog\ApiClient;
 use EasyRdf\Graph;
 use Throwable;
@@ -36,7 +38,7 @@ class TripleStoreBasedDistributionService
     public function createCreatorClient(): ApiClient
     {
         return new ApiClient(
-            $this->protocol . '://' . $this->host,
+            $this->getUrl(),
             $this->user,
             $this->pass,
             $this->port
@@ -119,5 +121,21 @@ class TripleStoreBasedDistributionService
     public function importNamespaces(array $namespaces): void
     {
         $this->client->importNamespaces($namespaces);
+    }
+
+    private function getUrl(): string
+    {
+        return $this->protocol . '://' . $this->host;
+    }
+
+    public function runQuery(string $query, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): SparqlResponse
+    {
+        $sparqlClient = new SparqlClient(
+            $this->getUrl() . '/' . $databaseInformation->getDatabase(),
+            $databaseInformation->getDecryptedReadOnlyUsername($encryptionService),
+            $databaseInformation->getDecryptedReadOnlyPassword($encryptionService),
+        );
+
+        return $sparqlClient->query($query);
     }
 }
