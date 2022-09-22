@@ -131,7 +131,7 @@ class TripleStoreBasedDistributionService
     public function runQuery(string $query, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): SparqlResponse
     {
         $sparqlClient = new SparqlClient(
-            $this->getUrl() . '/' . $databaseInformation->getDatabase(),
+            $this->getUrl() . ':' . $this->port . '/' . $databaseInformation->getDatabase() . '/query?graph-uri=tag:stardog:api:context:all',
             $databaseInformation->getDecryptedReadOnlyUsername($encryptionService),
             $databaseInformation->getDecryptedReadOnlyPassword($encryptionService),
         );

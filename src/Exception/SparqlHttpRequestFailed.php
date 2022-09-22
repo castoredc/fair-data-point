@@ -7,9 +7,9 @@ use Exception;
 
 class SparqlHttpRequestFailed extends Exception
 {
-    private string $response;
+    private ?string $response = null;
 
-    public function __construct(string $response)
+    public function __construct(?string $response)
     {
         parent::__construct();
         $this->response = $response;

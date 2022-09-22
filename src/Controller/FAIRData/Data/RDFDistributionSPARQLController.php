@@ -75,7 +75,9 @@ class RDFDistributionSPARQLController extends ApiController
                 )
             );
 
-            return new Response($results->getResponse());
+            return new Response($results->getResponse(), 200, [
+                'Content-Type' => $results->getContentType(),
+            ]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {

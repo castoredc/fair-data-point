@@ -19,7 +19,6 @@ use function mb_eregi;
 use function sprintf;
 use function strpos;
 use function strtoupper;
-use function urlencode;
 
 /**
  * Class for making SPARQL queries, based on EasyRdf's Client
@@ -28,10 +27,7 @@ use function urlencode;
 class SparqlClient
 {
     private const REGEX = '(?:(?:\s*BASE\s*<.*?>\s*)|(?:\s*PREFIX\s+.+:\s*<.*?>\s*))*(CONSTRUCT|SELECT|ASK|DESCRIBE)[\W]';
-    private const RESULT_TYPES = [
-        'application/sparql-results+json' => 1.0,
-        'application/sparql-results+xml' => 0.8,
-    ];
+    private const RESULT_TYPES = ['application/sparql-results+json' => 1.0];
 
     private GuzzleHttpClient $client;
     private string $queryUri;
@@ -94,18 +90,21 @@ class SparqlClient
         }
 
         try {
-            $options = ['headers' => $accept];
+            $options = [
+                'headers' => ['Accept' => $accept],
+                'form_params' => ['query' => $processedQuery],
+            ];
 
             if ($this->hasUsernameAndPassword()) {
                 $options['auth'] = [
-                    $this->user,
-                    $this->pass,
+                    $this->user->exposeAsString(),
+                    $this->pass->exposeAsString(),
                 ];
             }
 
             $response = $this->client->request(
                 'POST',
-                '?query=' . urlencode($processedQuery),
+                $this->queryUri,
                 $options
             );
 
@@ -138,15 +137,17 @@ class SparqlClient
     {
         [$contentType] = Utils::parseMimeType($response->getHeaderLine('Content-Type'));
 
+        $contents = $response->getBody()->getContents();
+
         $parsed = new SparqlResponse(
-            $response->getBody()->getContents(),
+            $contents,
             $contentType
         );
 
         if (strpos($contentType, 'application/sparql-results') === 0) {
-            $parsed->setResult(new Result($response->getBody()->getContents(), $contentType));
+            $parsed->setResult(new Result($contents, $contentType));
         } else {
-            $parsed->setGraph(new Graph($this->queryUri, $response->getBody()->getContents(), $contentType));
+            $parsed->setGraph(new Graph($this->queryUri, $contents, $contentType));
         }
 
         return $parsed;
