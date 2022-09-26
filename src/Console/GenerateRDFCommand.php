@@ -184,7 +184,7 @@ class GenerateRDFCommand extends Command
             $distributionUri = $this->uriHelper->getUri($rdfDistributionContent);
             $graphUri = $distributionUri . '/g';
 
-            $this->tripleStoreBasedDistributionService->createDistributionConnection($dbInformation, $this->encryptionService);
+            $this->tripleStoreBasedDistributionService->createDatabaseApiClient($dbInformation, $this->encryptionService);
 
             $output->writeln(sprintf("Last import: \t %s", $lastImport !== null ? $lastImport->format(DATE_ATOM) : 'Never'));
             $output->writeln(sprintf("URI: \t\t %s", $distributionUri));

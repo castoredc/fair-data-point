@@ -8,7 +8,8 @@ use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
 use App\Graph\SparqlClient;
 use App\Graph\SparqlResponse;
-use App\Model\Stardog\ApiClient;
+use App\Model\Stardog\AdminApiClient;
+use App\Model\Stardog\DatabaseApiClient;
 use EasyRdf\Graph;
 use Throwable;
 
@@ -24,7 +25,7 @@ class TripleStoreBasedDistributionService
 
     private int $port;
 
-    private ApiClient $client;
+    private DatabaseApiClient $client;
 
     public function __construct(string $host = '', string $protocol = '', string $user = '', string $pass = '', int $port = 8081)
     {
@@ -35,9 +36,9 @@ class TripleStoreBasedDistributionService
         $this->port = $port;
     }
 
-    public function createCreatorClient(): ApiClient
+    private function createCreatorClient(): AdminApiClient
     {
-        return new ApiClient(
+        return new AdminApiClient(
             $this->getUrl(),
             $this->user,
             $this->pass,
@@ -45,16 +46,26 @@ class TripleStoreBasedDistributionService
         );
     }
 
-    public function createDistributionConnection(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): void
+    public function createDatabaseApiClient(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): void
     {
-        $this->client = new ApiClient(
+        $this->client = new DatabaseApiClient(
+            $databaseInformation->getDatabase(),
             $this->host,
             $databaseInformation->getDecryptedUsername($encryptionService)->exposeAsString(),
             $databaseInformation->getDecryptedPassword($encryptionService)->exposeAsString(),
             $this->port
         );
+    }
 
-        $this->client->setDatabase($databaseInformation->getDatabase());
+    public function createReadOnlyDatabaseApiClient(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): void
+    {
+        $this->client = new DatabaseApiClient(
+            $databaseInformation->getDatabase(),
+            $this->host,
+            $databaseInformation->getDecryptedReadOnlyUsername($encryptionService)->exposeAsString(),
+            $databaseInformation->getDecryptedReadOnlyPassword($encryptionService)->exposeAsString(),
+            $this->port
+        );
     }
 
     public function addDataToStore(Graph $graph, string $graphUrl): void

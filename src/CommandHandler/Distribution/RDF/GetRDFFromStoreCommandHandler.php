@@ -39,7 +39,7 @@ class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        $this->tripleStoreBasedDistributionService->createDistributionConnection($distribution->getDatabaseInformation(), $this->encryptionService);
+        $this->tripleStoreBasedDistributionService->createReadOnlyDatabaseApiClient($distribution->getDatabaseInformation(), $this->encryptionService);
 
         if ($command->getRecord() !== null) {
             return $this->tripleStoreBasedDistributionService->getDataFromStore($this->uriHelper->getUri($command->getDistribution()) . '/g/' . $command->getRecord());
