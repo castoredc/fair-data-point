@@ -20,7 +20,8 @@ parameters:
 		console_application_loader: tests/console-application.php
 	doctrine:
 		objectManagerLoader: tests/object-manager.php
-	excludes_analyse:
-		- %currentWorkingDirectory%/src/Migrations/*
+	excludePaths:
+	  analyseAndScan:
+	    - %currentWorkingDirectory%/src/Migrations/*
 	checkGenericClassInNonGenericObjectType: false
 	checkMissingIterableValueType: false
