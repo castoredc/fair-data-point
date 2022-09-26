@@ -123,23 +123,30 @@ div[type='error'] {
     height: 100%;
     flex: 1;
     overflow: auto;
+    display: flex;
 
     & > form {
         height: 100%;
+        flex: 1;
         display: flex;
         flex-flow: column;
         overflow: auto;
 
         & > div:first-child {
-            /* Matter Tabs */
+            // TabsWrapper
             flex: 1;
-            overflow: auto;
             display: flex;
             flex-direction: column;
+            overflow: auto;
 
-            & > div[role='tabpanel'] {
-                flex: 1;
-                overflow: auto;
+            & > div:first-child {
+                // ScrollableContainer
+                height: auto;
+            }
+
+            & div > div:first-child {
+                // Matter Tabs
+                height: auto;
             }
         }
     }

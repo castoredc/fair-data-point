@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 
-import { Button, Dropdown, TextInput } from '@castoredc/matter';
+import { Button, Dropdown, TextInput, DefaultOptionType } from '@castoredc/matter';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { replaceAt } from '../../../util';
 import { FormikProps } from 'formik/dist/types';
-import { OptionType } from 'components/Input/Formik/Select';
 
 interface LocalizedTextInputProps extends FieldProps {
     languages: any;
@@ -69,7 +68,7 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                                         menuPlacement={'auto'}
                                         getOptionLabel={({ label }) => label}
                                         getOptionValue={({ value }) => value}
-                                        onChange={(option: OptionType) => {
+                                        onChange={(option: DefaultOptionType) => {
                                             handleChange(field, form, index, 'language', option.value);
                                         }}
                                         value={languages.find(language => language.value === localizedTextItem.language)}

@@ -27,7 +27,7 @@ class Contacts extends Component {
                 })}
 
                 {emails.length > 0 && (
-                    <Button buttonType="contentOnly" icon="email" href={`mailto:${emails[0]}`}>
+                    <Button buttonType="bare" icon="email" href={`mailto:${emails[0]}`}>
                         Get in touch
                     </Button>
                 )}
