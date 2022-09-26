@@ -3,24 +3,24 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Distribution\RDF;
 
-use App\Command\Distribution\RDF\GetRDFStoreCommand;
+use App\Command\Distribution\RDF\RunQueryAgainstDistributionSparqlEndpointCommand;
 use App\Exception\NoAccessPermission;
-use App\Service\DistributionService;
+use App\Graph\SparqlResponse;
 use App\Service\EncryptionService;
-use ARC2_Store;
+use App\Service\TripleStoreBasedDistributionService;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class GetRDFStoreCommandHandler implements MessageHandlerInterface
+class RunQueryAgainstDistributionSparqlEndpointCommandHandler implements MessageHandlerInterface
 {
-    private DistributionService $distributionService;
+    private TripleStoreBasedDistributionService $distributionService;
 
     private EncryptionService $encryptionService;
 
     private Security $security;
 
-    public function __construct(DistributionService $distributionService, EncryptionService $encryptionService, Security $security)
+    public function __construct(TripleStoreBasedDistributionService $distributionService, EncryptionService $encryptionService, Security $security)
     {
         $this->distributionService = $distributionService;
         $this->encryptionService = $encryptionService;
@@ -28,7 +28,7 @@ class GetRDFStoreCommandHandler implements MessageHandlerInterface
     }
 
     /** @throws Exception */
-    public function __invoke(GetRDFStoreCommand $command): ARC2_Store
+    public function __invoke(RunQueryAgainstDistributionSparqlEndpointCommand $command): SparqlResponse
     {
         $distribution = $command->getDistribution()->getDistribution();
 
@@ -36,6 +36,10 @@ class GetRDFStoreCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        return $this->distributionService->getArc2Store(DistributionService::CURRENT_STORE, $distribution->getDatabaseInformation(), $this->encryptionService);
+        return $this->distributionService->runQuery(
+            $command->getQuery(),
+            $distribution->getDatabaseInformation(),
+            $this->encryptionService
+        );
     }
 }

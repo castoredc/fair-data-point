@@ -43,6 +43,10 @@ yarn build-docker
 
 You can now access the FAIR Data Point via <https://fdp.castoredc.local>.
 
+**Stardog** (triple store) is running at <http://fdp.castoredc.local:8080>.\
+The **Stardog Studio** interface (used to manage the database server and databases) can be accessed 
+via <http://fdp.castoredc.local:8081>.
+
 To stop the environment run:
 
 ```bash

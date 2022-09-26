@@ -10,7 +10,6 @@ use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;
-use App\Exception\CouldNotConnectToMySqlServer;
 use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
@@ -66,7 +65,6 @@ class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandl
     }
 
     /**
-     * @throws CouldNotConnectToMySqlServer
      * @throws CouldNotCreateDatabase
      * @throws CouldNotCreateDatabaseUser
      * @throws CouldNotTransformEncryptedStringToJson
@@ -76,13 +74,18 @@ class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandl
     {
         $databaseInformation = new DistributionDatabaseInformation($distribution);
 
-        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . bin2hex(random_bytes(10)));
+        $userBytes = bin2hex(random_bytes(10));
+
+        $databaseInformation->setUsername($this->encryptionService, $databaseInformation::USERNAME_PREPEND . $userBytes);
         $databaseInformation->setPassword($this->encryptionService, bin2hex(random_bytes(32)));
+
+        $databaseInformation->setReadOnlyUsername($this->encryptionService, $databaseInformation::READ_ONLY_USERNAME_PREPEND . $userBytes);
+        $databaseInformation->setReadOnlyPassword($this->encryptionService, bin2hex(random_bytes(32)));
 
         $distribution->setDatabaseInformation($databaseInformation);
 
-        $this->distributionService->createDatabase($databaseInformation);
-        $this->distributionService->createMysqlUser($databaseInformation, $this->encryptionService);
+        $this->tripleStoreBasedDistributionService->createDatabase($databaseInformation);
+        $this->tripleStoreBasedDistributionService->createUsers($databaseInformation, $this->encryptionService);
 
         $this->em->persist($distribution);
         $this->em->persist($databaseInformation);
