@@ -5,6 +5,7 @@ namespace App\CommandHandler\Security;
 
 use App\Command\Security\AddPermissionToEntityCommand;
 use App\Exception\NoAccessPermission;
+use App\Exception\PermissionTypeNotSupported;
 use App\Exception\UserAlreadyExists;
 use App\Exception\UserNotFound;
 use App\Security\Permission;
@@ -27,6 +28,8 @@ class AddPermissionToEntityCommandHandler implements MessageHandlerInterface
     /**
      * @throws UserNotFound
      * @throws NoAccessPermission
+     * @throws PermissionTypeNotSupported
+     * @throws UserAlreadyExists
      */
     public function __invoke(AddPermissionToEntityCommand $command): Permission
     {
@@ -34,6 +37,10 @@ class AddPermissionToEntityCommandHandler implements MessageHandlerInterface
 
         if (! $this->security->isGranted('manage', $entity)) {
             throw new NoAccessPermission();
+        }
+
+        if (! Permission::entitySupportsPermission($entity, $command->getType())) {
+            throw new PermissionTypeNotSupported();
         }
 
         $repository = $this->em->getRepository(CastorUser::class);

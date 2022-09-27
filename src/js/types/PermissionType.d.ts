@@ -7,3 +7,8 @@ type PermissionUserType = {
     id: string;
     name: string;
 };
+
+type PermissionOptionType = {
+    labelText: string,
+    value: string,
+}

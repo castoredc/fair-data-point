@@ -18,4 +18,7 @@ interface PermissionsEnabledEntity
 
     /** @return Collection<Permission> */
     public function getPermissions(): Collection;
+
+    /** @return PermissionType[] */
+    public function supportsPermissions(): array;
 }

@@ -224,4 +224,14 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
 
         return null;
     }
+
+    /** @return PermissionType[] */
+    public function supportsPermissions(): array
+    {
+        return [
+            PermissionType::view(),
+            PermissionType::edit(),
+            PermissionType::manage(),
+        ];
+    }
 }
