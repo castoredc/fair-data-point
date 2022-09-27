@@ -3,6 +3,12 @@
 .DropdownButtonContainer {
     position: relative;
     display: inline-block;
+
+    span svg {
+        margin-left: -0.4rem;
+        margin-bottom: 0;
+        margin-right: 0.8rem;
+    }
 }
 
 .DropdownButtonMenuWrapper {

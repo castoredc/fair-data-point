@@ -25,10 +25,7 @@ const DatePicker: FC<DatePickerProps> = ({ field, form, meta, readOnly, onChange
                 name={field.name}
                 selected={value}
                 dateFormat="DD-MM-YYYY"
-                onChange={date => {
-                    if (onChange) {
-                        onChange(date);
-                    }
+                onChange={(date, event) => {
                     field.onChange({ target: { name: field.name, value: date } });
                 }}
                 onBlur={field.onBlur}

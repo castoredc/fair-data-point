@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastContent from 'components/ToastContent';
 import FormItem from 'components/Form/FormItem';
-import { Button, Dropdown, Stack, TextInput } from '@castoredc/matter';
+import { Button, Dropdown, Stack, TextInput, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
-import { AsyncDropdownIndicator, OptionType } from 'components/Input/Formik/Select';
+import { AsyncDropdownIndicator } from 'components/Input/Formik/Select';
 import debounce from 'lodash/debounce';
 import { OptionsType } from 'react-select/src/types';
 import FieldErrors from 'components/Input/Formik/Errors';
@@ -16,7 +16,7 @@ interface OrganizationSelectProps extends FieldProps {
 }
 
 type OrganizationSelectState = {
-    cachedOptions: OptionsType<OptionType>;
+    cachedOptions: OptionsType<DefaultOptionType>;
 };
 
 export default class OrganizationSelect extends Component<OrganizationSelectProps, OrganizationSelectState> {

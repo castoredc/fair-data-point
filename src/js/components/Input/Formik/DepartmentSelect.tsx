@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastContent from 'components/ToastContent';
 import FormItem from 'components/Form/FormItem';
-import { Button, Dropdown, TextInput } from '@castoredc/matter';
+import { Button, Dropdown, TextInput, ReactSelectTypes, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
-import { OptionType } from 'components/Input/Formik/Select';
-import { ActionMeta } from 'react-select/src/types';
 import { OrganizationType } from 'types/OrganizationType';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { apiClient } from 'src/js/network';
@@ -127,8 +125,8 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
                             options={options}
                             menuPosition="fixed"
                             isDisabled={disabled}
-                            onChange={(value: OptionType, action: ActionMeta<OptionType>) => {
-                                const department = options.find((option: OptionType) => value.value === option.value);
+                            onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, false>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
+                                const department = value && options.find((option: DefaultOptionType) => value.value === option.value);
                                 form.setFieldValue(field.name, {
                                     ...department.data,
                                     source: 'database',
@@ -136,7 +134,7 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
                             }}
                             getOptionLabel={({ label }) => label}
                             getOptionValue={({ value }) => value}
-                            value={value.id && options.find((option: OptionType) => value.id === option.value)}
+                            value={value.id && options.find((option: DefaultOptionType) => value.id === option.value)}
                         />
 
                         <Button buttonType="contentOnly" className="CannotFind" onClick={this.toggleManual} disabled={disabled}>

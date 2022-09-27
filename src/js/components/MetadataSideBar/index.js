@@ -43,7 +43,7 @@ const MetadataSideBar = ({ name, type, metadata }) => {
                 </MetadataItem>
             )}
 
-            <Button icon="openNewWindow" buttonType="contentOnly" onClick={() => setOpen(true)}>
+            <Button icon="openNewWindow" buttonType="bare" onClick={() => setOpen(true)}>
                 View metadata
             </Button>
 

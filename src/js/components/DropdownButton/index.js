@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 
-import { Button, Menu } from '@castoredc/matter';
+import { Button, Menu, Icon } from '@castoredc/matter';
 import './DropdownButton.scss';
 import { classNames } from '../../util';
 import EventListener from '../EventListener';
@@ -50,7 +50,6 @@ class DropdownButton extends Component {
             <div className={classNames('DropdownButtonContainer', className)}>
                 <Button
                     className={classNames('DropdownButton', isOpen && 'Open')}
-                    icon={icon}
                     iconDescription={iconDescription}
                     onClick={() => this.setMenuStatus(!isOpen)}
                     aria-expanded={hideDropdown ? undefined : isOpen}
@@ -58,6 +57,8 @@ class DropdownButton extends Component {
                     isDropdown={!hideDropdown}
                     isOpen={hideDropdown ? undefined : isOpen}
                 >
+                    {icon && <Icon type={icon} />}
+
                     {text}
                 </Button>
 

@@ -3,18 +3,12 @@ import { toast } from 'react-toastify';
 import debounce from 'lodash/debounce';
 import ToastContent from 'components/ToastContent';
 import FormItem from 'components/Form/FormItem';
-import { Button, Choice, Dropdown } from '@castoredc/matter';
+import { Button, Choice, Dropdown, ReactSelectTypes, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
-import { ActionMeta, ValueType } from 'react-select/src/types';
-import { isMultipleOption, OptionType } from 'components/Input/Formik/Select';
 import { apiClient } from 'src/js/network';
+import {isMultipleOption} from "components/Input/Formik/Select";
 
 interface OntologyConceptFormBlockProps extends FieldProps {
-    // open: boolean,
-    // onClose: () => void,
-    // entity: any,
-    // onSaved: () => void,
-    // studyId: string,
     label: string;
 }
 
@@ -23,7 +17,7 @@ type IsMulti = boolean;
 type OntologyConceptFormBlockState = {
     ontologies: any;
     includeIndividuals: boolean;
-    selectedOntology: OptionType | null;
+    selectedOntology: DefaultOptionType | null;
 };
 
 export default class OntologyConceptFormBlock extends Component<OntologyConceptFormBlockProps, OntologyConceptFormBlockState> {
@@ -167,15 +161,13 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                             <Dropdown
                                 options={options}
                                 value={selectedOntology}
-                                onChange={(value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => {
+                                onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
                                     const returnValue = value && (isMultipleOption(value) ? value[0] : value);
                                     this.handleOntologyChange(returnValue);
                                 }}
                                 width="tiny"
                                 menuPlacement={'auto'}
                                 menuPosition="fixed"
-                                getOptionLabel={({ label }) => label}
-                                getOptionValue={({ value }) => value}
                             />
                         </div>
                         <div className="Concept">
@@ -184,14 +176,12 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                                 value={null}
                                 loadOptions={this.loadConcepts}
                                 options={[]}
-                                onChange={(value: ValueType<OptionType, IsMulti>, action: ActionMeta<OptionType>) => {
+                                onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
                                     const returnValue = value && (isMultipleOption(value) ? value[0] : value);
                                     this.addConcept(field, form, returnValue);
                                 }}
                                 isDisabled={selectedOntology === null}
                                 menuPosition="fixed"
-                                getOptionLabel={({ label }) => label}
-                                getOptionValue={({ value }) => value}
                             />
 
                             <Choice
