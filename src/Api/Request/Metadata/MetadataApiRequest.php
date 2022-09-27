@@ -124,6 +124,9 @@ abstract class MetadataApiRequest extends SingleApiRequest
 
             if ($item['type'] === Organization::TYPE) {
                 $organization = Organization::fromData($item['organization']);
+                $agent = $organization;
+            } elseif ($item['type'] === Department::TYPE) {
+                $organization = Organization::fromData($item['organization']);
                 $department = Department::fromData($item['department'], $organization);
                 $agent = $department;
             } elseif ($item['type'] === Person::TYPE) {

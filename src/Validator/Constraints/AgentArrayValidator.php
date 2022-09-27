@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Validator\Constraints;
 
+use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
 use Symfony\Component\Validator\Constraint;
@@ -36,7 +37,7 @@ class AgentArrayValidator extends ConstraintValidator
             if (! isset($agent['type'])) {
                 $this->context->buildViolation($constraint->noTypeMessage)->addViolation();
             } else {
-                if ($agent['type'] === Organization::TYPE) {
+                if ($agent['type'] === Department::TYPE) {
                     $collection = new Assert\Collection([
                         'allowExtraFields' => true,
                         'fields' => [
@@ -51,6 +52,31 @@ class AgentArrayValidator extends ConstraintValidator
                                     ],
                                 ],
                             ]),
+                            'organization' => new Assert\Collection([
+                                'allowExtraFields' => true,
+                                'fields' => [
+                                    'name' => [
+                                        new Assert\NotBlank(),
+                                        new Assert\Type(['type' => 'string']),
+                                    ],
+                                    'country' => [
+                                        new Assert\NotBlank(),
+                                        new Assert\Country(),
+                                    ],
+                                    'city' => [
+                                        new Assert\NotBlank(),
+                                        new Assert\Type(['type' => 'string']),
+                                    ],
+                                ],
+                            ]),
+                        ],
+                    ]);
+
+                    $this->mergeViolations($index, $agent, $collection, $constraint);
+                } elseif ($agent['type'] === Organization::TYPE) {
+                    $collection = new Assert\Collection([
+                        'allowExtraFields' => true,
+                        'fields' => [
                             'organization' => new Assert\Collection([
                                 'allowExtraFields' => true,
                                 'fields' => [
