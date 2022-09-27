@@ -11,8 +11,12 @@ use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
 use App\Entity\Data\DataSpecification\Version;
 use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
 use App\Entity\Data\Log\DistributionGenerationLog;
+use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\Permission\DistributionContentsPermission;
 use App\Entity\Study;
+use App\Security\PermissionsEnabledEntity;
+use App\Security\User;
 use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,7 +36,7 @@ use function assert;
  *     "rdf" = "RDFDistribution",
  * })
  */
-abstract class DistributionContents
+abstract class DistributionContents implements PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
@@ -88,6 +92,13 @@ abstract class DistributionContents
      * @ORM\JoinColumn(name="data_specification_version", referencedColumnName="id", nullable=false)
      */
     protected Version $currentDataSpecificationVersion;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DistributionContentsPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="distributionContents")
+     *
+     * @var Collection<DistributionContentsPermission>
+     */
+    private Collection $permissions;
 
     public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
     {
@@ -202,5 +213,42 @@ abstract class DistributionContents
     public function getMappingByElementForCurrentVersion(Element $element): ?ElementMapping
     {
         return $this->getStudy()->getMappingByNodeAndVersion($element, $this->currentDataSpecificationVersion);
+    }
+
+    /** @return Collection<DistributionContentsPermission> */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermissionForUser(User $user, PermissionType $type): DistributionContentsPermission
+    {
+        $permission = new DistributionContentsPermission($user, $type, $this);
+        $this->permissions->add($permission);
+
+        return $permission;
+    }
+
+    public function removePermissionForUser(User $user): void
+    {
+        $permission = $this->getPermissionsForUser($user);
+        $this->permissions->removeElement($permission);
+    }
+
+    public function getPermissionsForUser(User $user): ?DistributionContentsPermission
+    {
+        foreach ($this->permissions->toArray() as $permission) {
+            if ($permission->getUser() === $user) {
+                return $permission;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return PermissionType[] */
+    public function supportsPermissions(): array
+    {
+        return [PermissionType::accessData()];
     }
 }

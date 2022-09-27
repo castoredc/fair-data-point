@@ -18,7 +18,7 @@ import DistributionContentsCsv from 'pages/Dashboard/Dataset/Distribution/Distri
 import DistributionContentsRdf from 'pages/Dashboard/Dataset/Distribution/DistributionContentsRdf';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
-import PermissionEditor from 'components/PermissionEditor';
+import Permissions from 'pages/Dashboard/Dataset/Distribution/Permissions';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import { apiClient } from 'src/js/network';
 
@@ -81,7 +81,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
 
             .then(response => {
                 this.setState({
-                    contents: response.data.elements,
+                    contents: response.data,
                     isLoading: false,
                 });
             })
@@ -237,19 +237,14 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                 '/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/permissions',
                             ]}
                             exact
-                            render={props =>
-                                isGranted('manage', distribution.permissions) ? (
-                                    <PermissionEditor
-                                        getObject={this.getDistribution}
-                                        type="distribution"
-                                        object={distribution}
-                                        user={user}
-                                        {...props}
-                                    />
-                                ) : (
-                                    <NoPermission text="You do not have access to this page" />
-                                )
-                            }
+                            render={() => (
+                                <Permissions
+                                    contents={contents}
+                                    distribution={distribution}
+                                    getDistribution={this.getDistribution}
+                                    user={user}
+                                />
+                            )}
                         />
 
                         <Route
@@ -258,7 +253,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                                 '/dashboard/catalogs/:catalog/datasets/:dataset/distributions/:distribution/contents',
                             ]}
                             exact
-                            render={props => {
+                            render={() => {
                                 if (distribution.type === 'csv') {
                                     return (
                                         <DistributionContentsCsv

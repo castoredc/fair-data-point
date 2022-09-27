@@ -19,6 +19,7 @@ import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import {Edit, Manage, View} from "components/PermissionEditor/Permissions";
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any;
@@ -171,7 +172,14 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props =>
                                 isGranted('manage', dataset.permissions) ? (
-                                    <PermissionEditor getObject={this.getDataset} type="dataset" object={dataset} user={user} {...props} />
+                                    <PermissionEditor
+                                        getObject={this.getDataset}
+                                        type="dataset"
+                                        object={dataset}
+                                        user={user}
+                                        permissions={[View, Edit, Manage]}
+                                        {...props}
+                                    />
                                 ) : (
                                     <NoPermission text="You do not have access to this page" />
                                 )

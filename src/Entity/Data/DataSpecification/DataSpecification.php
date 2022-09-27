@@ -176,4 +176,15 @@ abstract class DataSpecification implements PermissionsEnabledEntity
 
         return null;
     }
+
+    /** @return PermissionType[] */
+    public function supportsPermissions(): array
+    {
+        return [
+            PermissionType::accessData(),
+            PermissionType::view(),
+            PermissionType::edit(),
+            PermissionType::manage(),
+        ];
+    }
 }

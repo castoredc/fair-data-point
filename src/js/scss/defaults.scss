@@ -125,7 +125,7 @@ div[type='error'] {
     overflow: auto;
     display: flex;
 
-    & > form {
+    & > form, div.Form {
         height: 100%;
         flex: 1;
         display: flex;

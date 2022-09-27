@@ -21,6 +21,7 @@ import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import { View, Edit, Manage } from 'components/PermissionEditor/Permissions'
 
 interface CatalogProps extends AuthorizedRouteComponentProps {}
 
@@ -160,7 +161,14 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                             exact
                             render={props =>
                                 isGranted('manage', catalog.permissions) ? (
-                                    <PermissionEditor getObject={this.getCatalog} type="catalog" object={catalog} user={user} {...props} />
+                                    <PermissionEditor
+                                        getObject={this.getCatalog}
+                                        type="catalog"
+                                        object={catalog}
+                                        user={user}
+                                        permissions={[View, Edit, Manage]}
+                                        {...props}
+                                    />
                                 ) : (
                                     <NoPermission text="You do not have access to this page" />
                                 )

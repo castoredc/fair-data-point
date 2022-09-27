@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Enum;
 
 use App\Entity\Data\DataModel\DataModel;
+use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -26,12 +27,14 @@ class PermissionsEnabledEntityType extends Enum
     private const DATASET = 'dataset';
     private const DISTRIBUTION = 'distribution';
     private const MODEL = 'model';
+    private const DISTRIBUTION_CONTENTS = 'distributionContents';
 
     private const CLASS_MAPPING = [
         self::CATALOG => Catalog::class,
         self::DATASET => Dataset::class,
         self::DISTRIBUTION => Distribution::class,
         self::MODEL => DataModel::class,
+        self::DISTRIBUTION_CONTENTS => DistributionContents::class,
     ];
 
     /** @return class-string<object> */

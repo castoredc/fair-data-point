@@ -2,25 +2,26 @@ import React, { Component } from 'react';
 import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '@castoredc/matter';
 import { toast } from 'react-toastify';
 import ToastContent from 'components/ToastContent';
-import { PermissionType } from 'types/PermissionType';
+import {PermissionOptionType, PermissionType} from 'types/PermissionType';
 import Avatar from 'react-avatar';
 import AddUserModal from 'modals/AddUserModal';
 import ConfirmModal from 'modals/ConfirmModal';
-import { ucfirst } from '../../util';
 import { UserType } from 'types/UserType';
 import { apiClient } from 'src/js/network';
+import {Permissions} from "components/PermissionEditor/Permissions";
 
 interface PermissionEditorProps {
     user: UserType | null;
     getObject: () => void;
     object: any;
     type: string;
+    permissions: PermissionOptionType[],
 }
 
 interface PermissionEditorState {
     showModal: any;
     isLoading: boolean;
-    permissions: PermissionType[];
+    assignedPermissions: PermissionType[];
     modalData: any;
 }
 
@@ -33,7 +34,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                 remove: false,
             },
             isLoading: true,
-            permissions: [],
+            assignedPermissions: [],
             modalData: null,
         };
     }
@@ -77,7 +78,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             .get('/api/permissions/' + type + '/' + object.id)
             .then(response => {
                 this.setState({
-                    permissions: response.data.results,
+                    assignedPermissions: response.data.results,
                     isLoading: false,
                 });
             })
@@ -98,7 +99,6 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
         const { object, type } = this.props;
         const { modalData } = this.state;
 
-        //axios.post('/api/model/' + dataModel.id + '/permissions' + (modalData !== null ? '/' + modalData.user.id : ''), values)
         apiClient
             .post('/api/permissions/' + type + '/' + object.id + (modalData !== null ? '/' + modalData.user.id : ''), values)
             .then(response => {
@@ -126,7 +126,6 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
         const { object, type } = this.props;
         const { modalData } = this.state;
 
-        // axios.delete('/api/model/' + dataModel.id + '/permissions/' + modalData.user.id)
         apiClient
             .delete('/api/permissions/' + type + '/' + object.id + '/' + modalData.user.id)
             .then(() => {
@@ -147,8 +146,8 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
     };
 
     render() {
-        const { showModal, permissions, isLoading, modalData } = this.state;
-        const { type } = this.props;
+        const { showModal, assignedPermissions, isLoading, modalData } = this.state;
+        const { type, permissions } = this.props;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading users" />;
@@ -176,7 +175,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             },
         ];
 
-        const rows = permissions.map(permission => {
+        const rows = assignedPermissions.map(permission => {
             return {
                 name: (
                     <CellText>
@@ -186,7 +185,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                         </Stack>
                     </CellText>
                 ),
-                type: <CellText>{ucfirst(permission.type)}</CellText>,
+                type: <CellText>{Permissions[permission.type].labelText}</CellText>,
                 menu: (
                     <ActionsCell
                         items={[
@@ -215,20 +214,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                     onClose={() => this.closeModal('add')}
                     handleSubmit={this.handleSubmit}
                     data={modalData}
-                    permissions={[
-                        {
-                            labelText: 'View',
-                            value: 'view',
-                        },
-                        {
-                            labelText: 'Edit',
-                            value: 'edit',
-                        },
-                        {
-                            labelText: 'Manage',
-                            value: 'manage',
-                        },
-                    ]}
+                    permissions={permissions}
                 />
 
                 {modalData && (

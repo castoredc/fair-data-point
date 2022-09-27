@@ -36,4 +36,15 @@ abstract class Permission
     }
 
     abstract public function getEntity(): PermissionsEnabledEntity;
+
+    public static function entitySupportsPermission(PermissionsEnabledEntity $entity, PermissionType $type): bool
+    {
+        foreach ($entity->supportsPermissions() as $permission) {
+            if ($type->isEqualTo($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -258,4 +258,14 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
 
         return null;
     }
+
+    /** @return PermissionType[] */
+    public function supportsPermissions(): array
+    {
+        return [
+            PermissionType::view(),
+            PermissionType::edit(),
+            PermissionType::manage(),
+        ];
+    }
 }

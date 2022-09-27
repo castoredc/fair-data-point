@@ -50,7 +50,12 @@ export default class AddUserModal extends Component<AddUserModalProps, AddUserMo
 
         return (
             <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
-                <Formik initialValues={initialValues} validationSchema={edit ? UpdateUserSchema : NewUserSchema} onSubmit={handleSubmit}>
+                <Formik initialValues={{
+                    ...initialValues,
+                    ...(permissions.length === 1 && {
+                        type: permissions[0].value
+                    }),
+                }} validationSchema={edit ? UpdateUserSchema : NewUserSchema} onSubmit={handleSubmit}>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
                         return (
                             <Form>

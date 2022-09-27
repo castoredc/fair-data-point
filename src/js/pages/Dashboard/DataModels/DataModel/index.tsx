@@ -20,6 +20,7 @@ import { isGranted } from 'utils/PermissionHelper';
 import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import { apiClient } from 'src/js/network';
+import {Edit, Manage, View} from "components/PermissionEditor/Permissions";
 
 interface DataModelProps extends AuthorizedRouteComponentProps {}
 
@@ -315,7 +316,14 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             exact
                             render={props =>
                                 isGranted('manage', dataModel.permissions) ? (
-                                    <PermissionEditor getObject={this.getDataModel} type="model" object={dataModel} user={user} {...props} />
+                                    <PermissionEditor
+                                        getObject={this.getDataModel}
+                                        type="model"
+                                        object={dataModel}
+                                        user={user}
+                                        permissions={[View, Edit, Manage]}
+                                        {...props}
+                                    />
                                 ) : (
                                     <NoPermission text="You do not have access to this page" />
                                 )
