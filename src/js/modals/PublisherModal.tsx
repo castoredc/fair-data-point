@@ -33,10 +33,21 @@ export default class PublisherModal extends Component<PublisherModalProps, Publi
         const { handleSave } = this.props;
         const { type } = this.state;
 
-        handleSave({
-            type: type,
-            [type]: values,
-        });
+        if(type === 'organization') {
+            handleSave({
+                type: type,
+                organization: {
+                    ...values.organization,
+                    country: values.country,
+                },
+            });
+
+        } else {
+            handleSave({
+                type: type,
+                [type]: values,
+            });
+        }
 
         setSubmitting(false);
     };

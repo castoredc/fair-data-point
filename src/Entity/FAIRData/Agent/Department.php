@@ -10,6 +10,8 @@ use function uniqid;
 /** @ORM\Entity */
 class Department extends Agent
 {
+    public const TYPE = 'department';
+
     /**
      * @ORM\ManyToOne(targetEntity="Organization",cascade={"persist"}, inversedBy="departments")
      * @ORM\JoinColumn(name="organization", referencedColumnName="id")
