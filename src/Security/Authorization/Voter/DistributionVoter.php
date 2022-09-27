@@ -5,7 +5,6 @@ namespace App\Security\Authorization\Voter;
 
 use App\Entity\FAIRData\Distribution;
 use App\Security\User;
-use App\Type\DistributionAccessType;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -47,6 +46,10 @@ class DistributionVoter extends Voter
             return true;
         }
 
+        if ($attribute === self::ACCESS_DATA) {
+            return $distribution->getContents() !== null && $this->security->isGranted(DistributionContentsVoter::ACCESS_DATA, $distribution->getContents());
+        }
+
         if (! $user instanceof User) {
             return false;
         }
@@ -56,10 +59,6 @@ class DistributionVoter extends Voter
         }
 
         $permission = $distribution->getPermissionsForUser($user);
-
-        if ($attribute === self::ACCESS_DATA) {
-            return $this->canAccessData($distribution, $user);
-        }
 
         if ($permission === null) {
             return false;
@@ -78,26 +77,5 @@ class DistributionVoter extends Voter
         }
 
         return false;
-    }
-
-    private function canAccessData(Distribution $distribution, User $user): bool
-    {
-        if ($distribution->getContents() === null) {
-            return false;
-        }
-
-        if ($distribution->getContents()->getAccessRights() === DistributionAccessType::PUBLIC) {
-            return true;
-        }
-
-        if (! $user->hasCastorUser()) {
-            return false;
-        }
-
-        if ($distribution->getDataset()->getStudy()->getSourceId() === null) {
-            return false;
-        }
-
-        return $user->getCastorUser()->hasAccessToStudy($distribution->getDataset()->getStudy()->getSourceId());
     }
 }

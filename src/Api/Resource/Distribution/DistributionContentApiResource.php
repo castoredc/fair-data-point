@@ -29,6 +29,7 @@ class DistributionContentApiResource implements ApiResource
         $contents = $this->distribution->getContents();
 
         $data = [
+            'id' => $this->distribution->getContents()->getId(),
             'dependencies' => $contents->getDependencies() !== null ? (new DistributionContentsDependencyApiResource($contents->getDependencies()))->toArray() : null,
         ];
 
