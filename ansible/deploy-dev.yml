@@ -1,7 +1,0 @@
-- name: deploy to dev
-  hosts: dev
-  remote_user: castor
-  vars_files:
-    - vars/variables.yml
-  roles:
-    - deploy

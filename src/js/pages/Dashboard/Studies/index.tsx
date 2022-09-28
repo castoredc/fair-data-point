@@ -87,7 +87,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                 pagination: {
                     ...pagination,
                     currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageLimit,
+                    perPage: paginationCount.pageSize,
                 },
             },
             () => {
