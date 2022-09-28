@@ -183,7 +183,7 @@ final class DashboardController extends AbstractController
      */
     public function distribution(Dataset $dataset, Distribution $distribution): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted('edit', $distribution);
 
         return $this->render(
             'react.html.twig',
