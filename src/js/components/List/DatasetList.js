@@ -79,7 +79,7 @@ export default class DatasetList extends Component {
                 pagination: {
                     ...pagination,
                     currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageLimit,
+                    perPage: paginationCount.pageSize,
                 },
             },
             () => {
