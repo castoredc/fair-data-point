@@ -141,7 +141,8 @@ class SparqlClient
 
         $parsed = new SparqlResponse(
             $contents,
-            $contentType
+            $contentType,
+            $this->queryUri
         );
 
         if (strpos($contentType, 'application/sparql-results') === 0) {
