@@ -73,7 +73,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
                 pagination: {
                     ...pagination,
                     currentPage: paginationCount.currentPage + 1,
-                    perPage: paginationCount.pageLimit,
+                    perPage: paginationCount.pageSize,
                 },
             },
             () => {
