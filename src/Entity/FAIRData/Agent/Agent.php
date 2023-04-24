@@ -19,10 +19,7 @@ abstract class Agent
      */
     private ?string $id;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */
+    /** @ORM\Column(type="string", unique=true) */
     private string $slug;
 
     /** @ORM\Column(type="string") */
