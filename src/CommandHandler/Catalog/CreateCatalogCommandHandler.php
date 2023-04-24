@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
+use function uniqid;
 
 class CreateCatalogCommandHandler implements MessageHandlerInterface
 {
@@ -38,7 +39,14 @@ class CreateCatalogCommandHandler implements MessageHandlerInterface
         /** @var FAIRDataPoint[] $fdp */
         $fdp = $this->em->getRepository(FAIRDataPoint::class)->findAll();
 
-        $catalog = new Catalog($command->getSlug());
+        $slug = $command->getSlug();
+
+        // Check for duplicate slugs
+        if ($this->em->getRepository(Catalog::class)->findBySlug($slug) !== null) {
+            $slug .= '-' . uniqid();
+        }
+
+        $catalog = new Catalog($slug);
         $catalog->setFairDataPoint($fdp[0]);
         $catalog->setAcceptSubmissions($command->isAcceptSubmissions());
         $catalog->addPermissionForUser($user, PermissionType::manage());

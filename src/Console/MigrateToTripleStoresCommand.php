@@ -16,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use function assert;
 use function bin2hex;
 use function random_bytes;
 use function sprintf;

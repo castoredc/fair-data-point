@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
+use function uniqid;
 
 class UpdateStudyCommandHandler implements MessageHandlerInterface
 {
@@ -33,7 +34,14 @@ class UpdateStudyCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermissionToStudy();
         }
 
-        $study->setSlug($command->getSlug());
+        $slug = $command->getSlug();
+
+        // Check for duplicate slugs
+        if ($this->em->getRepository(Study::class)->findBySlug($slug) !== null) {
+            $slug .= '-' . uniqid();
+        }
+
+        $study->setSlug($slug);
         $study->setName($command->getName());
         $study->setSourceId($command->getSourceId());
         $study->setIsPublished($command->isPublished());

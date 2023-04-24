@@ -219,28 +219,64 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                                             <Field component={Select} options={licenses} name="license" menuPosition="fixed" menuPlacement="auto" />
                                         </FormItem>
 
-                                        <FormItem label="Access type">
-                                            <Field component={Choice} options={accessTypes} name="accessRights" collapse />
-                                        </FormItem>
-
                                         {distribution && (
-                                            <FormItem label="Publish distribution">
-                                                <Field
-                                                    component={Choice}
-                                                    options={[
-                                                        {
-                                                            labelText: 'Yes',
-                                                            value: true,
-                                                        },
-                                                        {
-                                                            labelText: 'No',
-                                                            value: false,
-                                                        },
-                                                    ]}
-                                                    collapse
-                                                    name="published"
-                                                />
-                                            </FormItem>
+                                            <>
+                                                <FormItem label="Publish distribution metadata">
+                                                    <Field
+                                                        component={Choice}
+                                                        options={[
+                                                            {
+                                                                labelText: 'Yes',
+                                                                value: true,
+                                                            },
+                                                            {
+                                                                labelText: 'No',
+                                                                value: false,
+                                                            },
+                                                        ]}
+                                                        collapse
+                                                        name="published"
+                                                    />
+                                                </FormItem>
+
+                                                <FormHeading label="Data" />
+
+                                                <FormItem label="Publish distribution data">
+                                                    <Field
+                                                        component={Choice}
+                                                        options={[
+                                                            {
+                                                                labelText: 'Yes',
+                                                                value: true,
+                                                            },
+                                                            {
+                                                                labelText: 'No',
+                                                                value: false,
+                                                            },
+                                                        ]}
+                                                        collapse
+                                                        name="public"
+                                                    />
+                                                </FormItem>
+
+                                                <FormItem label="Cache distribution data">
+                                                    <Field
+                                                        component={Choice}
+                                                        options={[
+                                                            {
+                                                                labelText: 'Yes',
+                                                                value: true,
+                                                            },
+                                                            {
+                                                                labelText: 'No',
+                                                                value: false,
+                                                            },
+                                                        ]}
+                                                        collapse
+                                                        name="cached"
+                                                    />
+                                                </FormItem>
+                                            </>
                                         )}
 
                                         <FormHeading label="Castor EDC API Credentials" />
@@ -303,11 +339,6 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     }
 }
 
-export const accessTypes = [
-    { value: 1, labelText: 'Public' },
-    { value: 2, labelText: 'Study Users' },
-];
-
 export const distributionTypes = [
     { value: 'csv', labelText: 'CSV Distribution' },
     { value: 'rdf', labelText: 'RDF Distribution' },
@@ -327,14 +358,13 @@ export const defaultData = {
     clientId: '',
     clientSecret: '',
     published: false,
+    cached: false,
+    public: false,
 };
 
 const DistributionSchema = Yup.object().shape({
     type: Yup.string().oneOf(['csv', 'rdf']).required('Please select a distribution type'),
     slug: Yup.string().required('Please select a slug'),
-    accessRights: Yup.number()
-        .oneOf(accessTypes.map(type => type.value))
-        .required('Please select an access type'),
     includeAllData: Yup.boolean()
         .nullable()
         .when('type', {
@@ -364,4 +394,6 @@ const DistributionSchema = Yup.object().shape({
         then: Yup.string().required('Please enter a client secret'),
     }),
     published: Yup.boolean().required('Please select if this distribution should be published'),
+    cached: Yup.boolean().required('Please select if this distribution should be cached'),
+    public: Yup.boolean().required('Please select if the data in this distribution should be publicly available'),
 });

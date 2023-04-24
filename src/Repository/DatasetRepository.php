@@ -12,6 +12,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use function assert;
 
 class DatasetRepository extends MetadataEnrichedEntityRepository
 {
@@ -92,5 +93,13 @@ class DatasetRepository extends MetadataEnrichedEntityRepository
         $qb->orderBy('metadata.title', 'ASC');
 
         return $qb;
+    }
+
+    public function findBySlug(string $slug): ?Dataset
+    {
+        $slug = $this->findOneBy(['slug' => $slug]);
+        assert($slug instanceof Dataset || $slug === null);
+
+        return $slug;
     }
 }

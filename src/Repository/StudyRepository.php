@@ -196,4 +196,12 @@ class StudyRepository extends EntityRepository
 
         return $study;
     }
+
+    public function findBySlug(string $slug): ?Study
+    {
+        $slug = $this->findOneBy(['slug' => $slug]);
+        assert($slug instanceof Study || $slug === null);
+
+        return $slug;
+    }
 }
