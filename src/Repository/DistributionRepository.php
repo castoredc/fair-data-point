@@ -14,6 +14,7 @@ use App\Security\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use function assert;
 
 class DistributionRepository extends MetadataEnrichedEntityRepository
 {
@@ -109,5 +110,13 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
         $qb->setParameter('user_id', $user->getId());
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug(string $slug): ?Distribution
+    {
+        $slug = $this->findOneBy(['slug' => $slug]);
+        assert($slug instanceof Distribution || $slug === null);
+
+        return $slug;
     }
 }

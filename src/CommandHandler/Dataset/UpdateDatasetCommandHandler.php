@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace App\CommandHandler\Dataset;
 
 use App\Command\Dataset\UpdateDatasetCommand;
+use App\Entity\FAIRData\Dataset;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function uniqid;
 
 class UpdateDatasetCommandHandler implements MessageHandlerInterface
 {
@@ -29,7 +31,14 @@ class UpdateDatasetCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        $dataset->setSlug($command->getSlug());
+        $slug = $command->getSlug();
+
+        // Check for duplicate slugs
+        if ($this->em->getRepository(Dataset::class)->findBySlug($slug) !== null) {
+            $slug .= '-' . uniqid();
+        }
+
+        $dataset->setSlug($slug);
         $dataset->setIsPublished($command->getPublished());
 
         $this->em->persist($dataset);

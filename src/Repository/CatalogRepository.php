@@ -9,6 +9,7 @@ use App\Entity\Metadata\CatalogMetadata;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use function assert;
 
 class CatalogRepository extends MetadataEnrichedEntityRepository
 {
@@ -65,5 +66,13 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
         $qb->orderBy('metadata.title', 'ASC');
 
         return $qb;
+    }
+
+    public function findBySlug(string $slug): ?Catalog
+    {
+        $slug = $this->findOneBy(['slug' => $slug]);
+        assert($slug instanceof Catalog || $slug === null);
+
+        return $slug;
     }
 }

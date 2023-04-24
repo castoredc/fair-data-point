@@ -10,7 +10,6 @@ use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function assert;
 
 class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
 {
@@ -26,7 +25,7 @@ class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
 
     public function __invoke(GetCatalogBySlugCommand $command): Catalog
     {
-        $catalog = $this->em->getRepository(Catalog::class)->findOneBy(['slug' => $command->getSlug()]);
+        $catalog = $this->em->getRepository(Catalog::class)->findBySlug($command->getSlug());
 
         if ($catalog === null) {
             throw new CatalogNotFound();
@@ -35,8 +34,6 @@ class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
         if (! $this->security->isGranted('view', $catalog)) {
             throw new NoAccessPermission();
         }
-
-        assert($catalog instanceof Catalog);
 
         return $catalog;
     }

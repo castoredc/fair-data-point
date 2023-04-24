@@ -38,7 +38,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
      */
     private string $id;
 
-    /** @ORM\Column(type="string") */
+    /** @ORM\Column(type="string", unique=true) */
     private string $slug;
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions", cascade={"persist"})
