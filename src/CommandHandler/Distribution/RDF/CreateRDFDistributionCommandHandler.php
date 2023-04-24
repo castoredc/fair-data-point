@@ -33,9 +33,7 @@ class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandl
         $dataModel = $this->em->getRepository(DataModel::class)->find($command->getDataModelId());
 
         $contents = new RDFDistribution(
-            $distribution,
-            $command->getAccessRights(),
-            false
+            $distribution
         );
 
         $contents->setDataModel($dataModel);

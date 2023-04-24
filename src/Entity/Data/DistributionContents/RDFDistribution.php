@@ -43,4 +43,14 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
 
         return $this->currentDataSpecificationVersion;
     }
+
+    public function getSparqlUrl(): string
+    {
+        return $this->getDistribution()->getRelativeUrl() . '/sparql';
+    }
+
+    public function getType(): string
+    {
+        return 'rdf';
+    }
 }

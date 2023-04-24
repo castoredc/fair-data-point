@@ -118,7 +118,8 @@ class SparqlClient
                     // No content
                     return new SparqlResponse(
                         $response,
-                        $contentType
+                        $contentType,
+                        $this->queryUri
                     );
 
                 default:
@@ -141,7 +142,8 @@ class SparqlClient
 
         $parsed = new SparqlResponse(
             $contents,
-            $contentType
+            $contentType,
+            $this->queryUri
         );
 
         if (strpos($contentType, 'application/sparql-results') === 0) {

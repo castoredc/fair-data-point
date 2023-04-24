@@ -14,8 +14,6 @@ abstract class UpdateDistributionCommand
 
     private string $license;
 
-    private int $accessRights;
-
     private ?string $apiUser = null;
 
     private ?SensitiveDataString $clientId = null;
@@ -24,24 +22,30 @@ abstract class UpdateDistributionCommand
 
     private bool $published;
 
+    private bool $cached;
+
+    private bool $public;
+
     public function __construct(
         Distribution $distribution,
         string $slug,
         string $license,
-        int $accessRights,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
-        bool $published
+        bool $published,
+        bool $cached,
+        bool $public
     ) {
         $this->distribution = $distribution;
         $this->slug = $slug;
         $this->license = $license;
-        $this->accessRights = $accessRights;
         $this->apiUser = $apiUser;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->published = $published;
+        $this->cached = $cached;
+        $this->public = $public;
     }
 
     public function getDistribution(): Distribution
@@ -57,11 +61,6 @@ abstract class UpdateDistributionCommand
     public function getLicense(): string
     {
         return $this->license;
-    }
-
-    public function getAccessRights(): int
-    {
-        return $this->accessRights;
     }
 
     public function getApiUser(): ?string
@@ -82,5 +81,15 @@ abstract class UpdateDistributionCommand
     public function isPublished(): bool
     {
         return $this->published;
+    }
+
+    public function isCached(): bool
+    {
+        return $this->cached;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->public;
     }
 }

@@ -57,10 +57,11 @@ abstract class UpdateDistributionCommandHandler implements MessageHandlerInterfa
 
         $distribution->setSlug($command->getSlug());
         $distribution->setLicense($license);
+        $distribution->setIsPublished($command->isPublished());
 
         $contents = $distribution->getContents();
-        $contents->setAccessRights($command->getAccessRights());
-        $contents->setIsPublished($command->isPublished());
+        $contents->setIsCached($command->isCached());
+        $contents->setIsPublic($command->isPublic());
 
         return $distribution;
     }

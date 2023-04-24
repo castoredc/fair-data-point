@@ -32,12 +32,6 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     private string $license;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Type("integer")
-     */
-    private int $accessRights;
-
-    /**
      * @Assert\NotNull(groups = {"csv"})
      * @Assert\Type("bool")
      */
@@ -82,12 +76,23 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
      */
     private bool $published;
 
+    /**
+     * @Assert\NotNull()
+     * @Assert\Type("bool")
+     */
+    private bool $cached;
+
+    /**
+     * @Assert\NotNull()
+     * @Assert\Type("bool")
+     */
+    private bool $public;
+
     protected function parse(): void
     {
         $this->type = $this->getFromData('type');
         $this->slug = $this->getFromData('slug');
         $this->license = $this->getFromData('license');
-        $this->accessRights = (int) $this->getFromData('accessRights');
         $this->includeAllData = $this->getFromData('includeAllData');
         $this->dataModel = $this->getFromData('dataModel');
         $this->dataModelVersion = $this->getFromData('dataModelVersion');
@@ -95,6 +100,8 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
         $this->clientId = $this->getFromData('clientId');
         $this->clientSecret = $this->getFromData('clientSecret');
         $this->published = boolval($this->getFromData('published'));
+        $this->cached = boolval($this->getFromData('cached'));
+        $this->public = boolval($this->getFromData('public'));
     }
 
     public function getType(): DistributionType
@@ -110,11 +117,6 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     public function getLicense(): string
     {
         return $this->license;
-    }
-
-    public function getAccessRights(): int
-    {
-        return $this->accessRights;
     }
 
     public function getIncludeAllData(): ?bool
@@ -160,6 +162,16 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     public function getPublished(): bool
     {
         return $this->published;
+    }
+
+    public function isCached(): bool
+    {
+        return $this->cached;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->public;
     }
 
     /** @inheritDoc */

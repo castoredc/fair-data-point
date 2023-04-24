@@ -22,7 +22,6 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use function assert;
 
 /**
@@ -53,15 +52,8 @@ abstract class DistributionContents implements PermissionsEnabledEntity
      */
     private Distribution $distribution;
 
-    /**
-     * @ORM\Column(name="access", type="DistributionAccessType", nullable=false)
-     *
-     * @DoctrineAssert\Enum(entity="App\Type\DistributionAccessType")
-     */
-    private int $accessRights;
-
     /** @ORM\Column(type="boolean") */
-    private bool $isPublished = false;
+    private bool $isPublic = false;
 
     /** @ORM\Column(type="boolean") */
     private bool $isCached = false;
@@ -100,11 +92,9 @@ abstract class DistributionContents implements PermissionsEnabledEntity
      */
     private Collection $permissions;
 
-    public function __construct(Distribution $distribution, int $accessRights, bool $isPublished)
+    public function __construct(Distribution $distribution)
     {
         $this->distribution = $distribution;
-        $this->accessRights = $accessRights;
-        $this->isPublished = $isPublished;
         $this->logs = new ArrayCollection();
     }
 
@@ -121,26 +111,6 @@ abstract class DistributionContents implements PermissionsEnabledEntity
     public function getStudy(): Study
     {
         return $this->getDistribution()->getStudy();
-    }
-
-    public function setAccessRights(int $accessRights): void
-    {
-        $this->accessRights = $accessRights;
-    }
-
-    public function getAccessRights(): int
-    {
-        return $this->accessRights;
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->isPublished;
-    }
-
-    public function setIsPublished(bool $isPublished): void
-    {
-        $this->isPublished = $isPublished;
     }
 
     /** @return Collection<DistributionGenerationLog> */
@@ -250,5 +220,20 @@ abstract class DistributionContents implements PermissionsEnabledEntity
     public function supportsPermissions(): array
     {
         return [PermissionType::accessData()];
+    }
+
+    public function getType(): string
+    {
+        return '';
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
     }
 }

@@ -38,7 +38,7 @@ class DistributionApiResource implements ApiResource
             'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
             'study' => $this->distribution->getDataset()->getStudy() !== null ? (new StudyApiResource($this->distribution->getDataset()->getStudy()))->toArray() : null,
             'hasApiUser' => $this->distribution->getApiUser() !== null,
-            'published' => $this->distribution->hasContents() ? $this->distribution->getContents()->isPublished() : false,
+            'published' => $this->distribution->isPublished(),
         ];
 
         if ($this->distribution->hasMetadata()) {
@@ -61,20 +61,18 @@ class DistributionApiResource implements ApiResource
 
         if ($this->distribution->hasContents()) {
             $contents = $this->distribution->getContents();
-            $distribution['accessRights'] = $contents->getAccessRights();
             $distribution['isCached'] = $contents->isCached();
+            $distribution['type'] = $contents->getType();
 
             if ($contents instanceof RDFDistribution) {
                 $distribution['fullUrl'] = $this->uriHelper->getUri($contents) . '/';
                 $distribution['accessUrl'] = $contents->getRelativeUrl();
                 $distribution['downloadUrl'] = $contents->getRelativeUrl() . '/?download=1';
-                $distribution['type'] = 'rdf';
                 $distribution['dataModel'] = (new DataModelVersionApiResource($contents->getCurrentDataModelVersion()))->toArray();
             }
 
             if ($contents instanceof CSVDistribution) {
                 $distribution['downloadUrl'] = $contents->getRelativeUrl();
-                $distribution['type'] = 'csv';
                 $distribution['dataDictionary'] = (new DataDictionaryVersionApiResource($contents->getCurrentDataDictionaryVersion()))->toArray();
             }
         }

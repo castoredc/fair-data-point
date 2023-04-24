@@ -8,7 +8,9 @@ use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
 use App\Entity\Grid\Institute;
 use App\Exception\CountryNotFound;
+use App\Exception\ErrorFetchingGridData;
 use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
 use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -62,7 +64,11 @@ class FindOrganizationsCommandHandler implements MessageHandlerInterface
 
         $organizations = $dbOrganizations;
 
-        $gridInstitutes = $this->gridApiClient->findInstitutesByNameAndCountry($command->getSearch(), $command->getCountry());
+        try {
+            $gridInstitutes = $this->gridApiClient->findInstitutesByNameAndCountry($command->getSearch(), $command->getCountry());
+        } catch (ErrorFetchingGridData | NotFound $e) {
+            $gridInstitutes = [];
+        }
 
         foreach ($gridInstitutes as $gridInstitute) {
             if (in_array($gridInstitute->getId(), $gridIds, true)) {

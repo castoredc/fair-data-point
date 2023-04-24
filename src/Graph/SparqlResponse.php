@@ -10,13 +10,15 @@ class SparqlResponse
 {
     private string $response;
     private string $contentType;
+    private string $queryUri;
     private ?Result $result = null;
     private ?Graph $graph = null;
 
-    public function __construct(string $response, string $contentType)
+    public function __construct(string $response, string $contentType, string $queryUri)
     {
         $this->response = $response;
         $this->contentType = $contentType;
+        $this->queryUri = $queryUri;
     }
 
     public function getResponse(): string
@@ -47,6 +49,16 @@ class SparqlResponse
     public function getGraph(): ?Graph
     {
         return $this->graph;
+    }
+
+    public function getQueryUri(): string
+    {
+        return $this->queryUri;
+    }
+
+    public function setQueryUri(string $queryUri): void
+    {
+        $this->queryUri = $queryUri;
     }
 
     public function getResultCount(): int
