@@ -201,7 +201,6 @@ class DistributionApiController extends ApiController
                         $parsed->getSlug(),
                         $parsed->getLicense(),
                         $dataset,
-                        $parsed->getAccessRights(),
                         $parsed->getApiUser(),
                         $parsed->getClientId(),
                         $parsed->getClientSecret(),
@@ -215,7 +214,6 @@ class DistributionApiController extends ApiController
                         $parsed->getSlug(),
                         $parsed->getLicense(),
                         $dataset,
-                        $parsed->getAccessRights(),
                         $parsed->getApiUser(),
                         $parsed->getClientId(),
                         $parsed->getClientSecret(),
@@ -269,11 +267,12 @@ class DistributionApiController extends ApiController
                         $distribution,
                         $parsed->getSlug(),
                         $parsed->getLicense(),
-                        $parsed->getAccessRights(),
                         $parsed->getApiUser(),
                         $parsed->getClientId(),
                         $parsed->getClientSecret(),
                         $parsed->getPublished(),
+                        $parsed->isCached(),
+                        $parsed->isPublic(),
                         $parsed->getDataModel(),
                         $parsed->getDataModelVersion()
                     )
@@ -283,11 +282,12 @@ class DistributionApiController extends ApiController
                     $distribution,
                     $parsed->getSlug(),
                     $parsed->getLicense(),
-                    $parsed->getAccessRights(),
                     $parsed->getApiUser(),
                     $parsed->getClientId(),
                     $parsed->getClientSecret(),
                     $parsed->getPublished(),
+                    $parsed->isCached(),
+                    $parsed->isPublic(),
                     $parsed->getDataModel(),
                     $parsed->getDataModelVersion()
                 );

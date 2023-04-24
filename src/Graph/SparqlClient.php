@@ -118,7 +118,8 @@ class SparqlClient
                     // No content
                     return new SparqlResponse(
                         $response,
-                        $contentType
+                        $contentType,
+                        $this->queryUri
                     );
 
                 default:

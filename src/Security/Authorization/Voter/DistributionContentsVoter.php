@@ -5,7 +5,6 @@ namespace App\Security\Authorization\Voter;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Security\User;
-use App\Type\DistributionAccessType;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -48,7 +47,7 @@ class DistributionContentsVoter extends Voter
 
         if (
             $this->security->isGranted('ROLE_ADMIN') ||
-            $contents->getAccessRights() === DistributionAccessType::PUBLIC
+            $contents->isPublic()
         ) {
             return true;
         }

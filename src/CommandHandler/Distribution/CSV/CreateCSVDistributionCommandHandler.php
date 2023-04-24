@@ -17,9 +17,7 @@ class CreateCSVDistributionCommandHandler extends CreateDistributionCommandHandl
         $distribution = $this->handleDistributionCreation($command);
 
         $contents = new CSVDistribution(
-            $distribution,
-            $command->getAccessRights(),
-            false
+            $distribution
         );
 
         $distribution->setContents($contents);

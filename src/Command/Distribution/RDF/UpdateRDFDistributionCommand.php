@@ -17,15 +17,16 @@ class UpdateRDFDistributionCommand extends UpdateDistributionCommand
         Distribution $distribution,
         string $slug,
         string $license,
-        int $accessRights,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
         bool $published,
+        bool $cached,
+        bool $public,
         string $dataModelId,
         string $dataModelVersionId
     ) {
-        parent::__construct($distribution, $slug, $license, $accessRights, $apiUser, $clientId, $clientSecret, $published);
+        parent::__construct($distribution, $slug, $license, $apiUser, $clientId, $clientSecret, $published, $cached, $public);
 
         $this->dataModelId = $dataModelId;
         $this->dataModelVersionId = $dataModelVersionId;

@@ -11,7 +11,6 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\EncryptionService;
-use App\Type\DistributionAccessType;
 use Exception;
 use Symfony\Component\Security\Core\Security;
 use function assert;
@@ -47,7 +46,7 @@ class RenderCSVDistributionCommandHandler extends CSVCommandHandler
         $dbStudy = $command->getDistribution()->getDistribution()->getDataset()->getStudy();
         assert($dbStudy instanceof CastorStudy);
 
-        if ($command->getDistribution()->getAccessRights() === DistributionAccessType::PUBLIC) {
+        if ($command->getDistribution()->isPublic()) {
             $this->apiClient->useApiUser($command->getDistribution()->getDistribution()->getApiUser(), $this->encryptionService);
         } else {
             if (! $user->hasCastorUser()) {

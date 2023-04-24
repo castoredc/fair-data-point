@@ -17,14 +17,13 @@ class CreateCSVDistributionCommand extends CreateDistributionCommand
         string $slug,
         string $license,
         Dataset $dataset,
-        int $accessRights,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
         string $dataDictionaryId,
         string $dataDictionaryVersionId
     ) {
-        parent::__construct($slug, $license, $dataset, $accessRights, $apiUser, $clientId, $clientSecret);
+        parent::__construct($slug, $license, $dataset, $apiUser, $clientId, $clientSecret);
 
         $this->dataDictionaryId = $dataDictionaryId;
         $this->dataDictionaryVersionId = $dataDictionaryVersionId;

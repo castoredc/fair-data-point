@@ -43,4 +43,9 @@ class CSVDistribution extends DistributionContents
     {
         return $this->getDistribution()->getRelativeUrl() . '/csv';
     }
+
+    public function getType(): string
+    {
+        return 'csv';
+    }
 }

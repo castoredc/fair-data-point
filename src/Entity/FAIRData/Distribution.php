@@ -87,6 +87,9 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
      */
     private Collection $permissions;
 
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isPublished = false;
+
     public function __construct(string $slug, Dataset $dataset)
     {
         $this->slug = $slug;
@@ -223,11 +226,6 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
         $this->contactPoints->removeElement($contactPoint);
     }
 
-    public function isPublished(): bool
-    {
-        return true;
-    }
-
     /** @return Collection<DistributionPermission> */
     public function getPermissions(): Collection
     {
@@ -257,6 +255,16 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
         }
 
         return null;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): void
+    {
+        $this->isPublished = $isPublished;
     }
 
     /** @return PermissionType[] */

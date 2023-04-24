@@ -14,8 +14,6 @@ abstract class CreateDistributionCommand
 
     private Dataset $dataset;
 
-    private int $accessRights;
-
     private ?string $apiUser = null;
 
     private ?SensitiveDataString $clientId = null;
@@ -26,7 +24,6 @@ abstract class CreateDistributionCommand
         string $slug,
         string $license,
         Dataset $dataset,
-        int $accessRights,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret
@@ -34,7 +31,6 @@ abstract class CreateDistributionCommand
         $this->slug = $slug;
         $this->license = $license;
         $this->dataset = $dataset;
-        $this->accessRights = $accessRights;
         $this->apiUser = $apiUser;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -53,11 +49,6 @@ abstract class CreateDistributionCommand
     public function getDataset(): Dataset
     {
         return $this->dataset;
-    }
-
-    public function getAccessRights(): int
-    {
-        return $this->accessRights;
     }
 
     public function getApiUser(): ?string
