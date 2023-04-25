@@ -44,6 +44,9 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
      */
     private Collection $catalogs;
 
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isArchived = false;
+
     public function getId(): string
     {
         return $this->id;
@@ -119,5 +122,10 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     public function addMetadata(FAIRDataPointMetadata $metadata): void
     {
         $this->metadata->add($metadata);
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
     }
 }

@@ -46,7 +46,8 @@ abstract class MetadataEnrichedEntityRepository extends EntityRepository
             Join::WITH,
             sprintf('metadata2.%s = %s.id AND metadata.createdAt < metadata2.createdAt', $this::TYPE, $this::TYPE)
         )
-        ->where('metadata2.id IS NULL');
+        ->where('metadata2.id IS NULL')
+        ->andWhere(sprintf('%s.isArchived = 0', $this::TYPE));
 
         $qb->orderBy('metadata.title', 'ASC');
 

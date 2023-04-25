@@ -76,6 +76,9 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
      */
     private Collection $permissions;
 
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isArchived = false;
+
     public function __construct(string $slug)
     {
         $this->slug = $slug;
@@ -233,5 +236,10 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
             PermissionType::edit(),
             PermissionType::manage(),
         ];
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
     }
 }
