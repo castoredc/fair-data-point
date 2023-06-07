@@ -134,7 +134,6 @@
                 "type": "zip",
                 "url": "https://satis.castoredc.net/dist/ciwit/bioportal-browser/ciwit-bioportal-browser-c7482962411f239fe8debc50b81373f0f205a19d-zip-eb2d49.zip",
                 "reference": "c7482962411f239fe8debc50b81373f0f205a19d",
-                "shasum": "3ea0475a7e156729ea1dec8f09cb825707d4e5f0"
             },
             "require": {
                 "ext-json": "*",
