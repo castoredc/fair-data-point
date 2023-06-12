@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { localizedText } from '../../../util';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import Layout from '../../../components/Layout';
 import Header from '../../../components/Layout/Header';
 import MainBody from '../../../components/Layout/MainBody';
@@ -44,7 +44,7 @@ export default class FAIRDataPointMain extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the FAIR Data Point information';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

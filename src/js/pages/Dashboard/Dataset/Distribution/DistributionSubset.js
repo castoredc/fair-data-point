@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DistributionContentsDependencyEditor from 'components/DependencyEditor/DistributionContentsDependencyEditor';
 import { formatQuery } from 'react-querybuilder';
 import { LoadingOverlay } from '@castoredc/matter';
@@ -58,7 +58,7 @@ export default class DistributionSubset extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the nodes';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 
@@ -87,7 +87,7 @@ export default class DistributionSubset extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the data model';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 
@@ -108,9 +108,9 @@ export default class DistributionSubset extends Component {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -141,7 +141,7 @@ export default class DistributionSubset extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 
@@ -175,7 +175,7 @@ export default class DistributionSubset extends Component {
 
                 this.getContents();
 
-                toast.success(<ToastContent type="success" message="The subset details are saved successfully" />, {
+                toast.success(<ToastMessage type="success" title="The subset details are saved successfully" />, {
                     position: 'top-right',
                 });
             })
@@ -185,7 +185,7 @@ export default class DistributionSubset extends Component {
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
                 this.setState({
                     submitDisabled: false,

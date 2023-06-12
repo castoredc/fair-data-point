@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './DataModelModules.scss';
 import { toast } from 'react-toastify';
 import { Button } from '@castoredc/matter';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DataModelModuleModal from '../../../../modals/DataModelModuleModal';
 import TripleModal from '../../../../modals/TripleModal';
 import ConfirmModal from '../../../../modals/ConfirmModal';
@@ -149,7 +149,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                 getModules();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 

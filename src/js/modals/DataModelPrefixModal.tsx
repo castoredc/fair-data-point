@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { Button, Modal } from '@castoredc/matter';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
@@ -61,7 +61,7 @@ export default class DataModelPrefixModal extends Component<DataModelPrefixModal
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from '../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import StudyStructure from './StudyStructure';
 import { Redirect } from 'react-router-dom';
 import { ValidatorForm } from 'react-form-validator-core';
@@ -60,7 +60,7 @@ export default class CSVStudyStructure extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while saving the distribution';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
 
                 this.setState({
                     submitDisabled: false,

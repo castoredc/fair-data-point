@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { Button, ChoiceOption, LoadingOverlay, Pagination, Space } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
@@ -59,9 +59,9 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading your studies" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while loading your studies" />);
                 }
             });
     };

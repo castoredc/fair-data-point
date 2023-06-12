@@ -5,7 +5,7 @@ import Routes from '../../Routes';
 import '../../scss/index.scss';
 import './App.scss';
 import {toast, ToastContainer} from 'react-toastify';
-import ToastContent from '../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import queryString from 'query-string';
 import {classNames} from '../../util';
 import {LoadingOverlay} from '@castoredc/matter';
@@ -50,7 +50,7 @@ class App extends Component<{}, AppState> {
                     isLoading: false,
                 });
 
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 
@@ -64,8 +64,8 @@ class App extends Component<{}, AppState> {
             <div className={classNames('App', embedded && 'Embedded')}>
                 <ToastContainer
                     position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
+                    autoClose={10000}
+                    hideProgressBar={true}
                     newestOnTop={false}
                     closeOnClick
                     rtl={false}

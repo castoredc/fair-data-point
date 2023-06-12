@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DistributionRecordLogsDataTable from 'components/DataTable/DistributionRecordLogsDataTable';
 import { Heading, LoadingOverlay, Tabs } from '@castoredc/matter';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 
@@ -47,7 +47,7 @@ export default class DistributionLog extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the log';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

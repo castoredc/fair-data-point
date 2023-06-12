@@ -5,7 +5,7 @@ import FormItem from '../../Form/FormItem';
 import Dropdown from '../../Input/Dropdown';
 import { Button, Heading } from '@castoredc/matter';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
 
 export default class ModuleMappingInterface extends Component {
@@ -80,7 +80,7 @@ export default class ModuleMappingInterface extends Component {
                         isLoading: false,
                     },
                     () => {
-                        toast.success(<ToastContent type="success" message="The mapping was successfully saved." />, {
+                        toast.success(<ToastMessage type="success" title="The mapping was successfully saved." />, {
                             position: 'top-right',
                         });
 
@@ -97,7 +97,7 @@ export default class ModuleMappingInterface extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while saving the mapping';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

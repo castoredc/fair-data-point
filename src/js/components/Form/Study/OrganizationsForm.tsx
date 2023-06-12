@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '@castoredc/matter';
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import Avatar from 'react-avatar';
 import ConfirmModal from '../../../modals/ConfirmModal';
 import OrganizationModal from '../../../modals/OrganizationModal';
@@ -46,9 +46,9 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -72,9 +72,9 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -107,7 +107,7 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
             apiClient
                 .post('/api/study/' + studyId + '/centers/remove', selectedOrganization)
                 .then(response => {
-                    toast.success(<ToastContent type="success" message={`${selectedOrganization.name} was successfully removed`} />, {
+                    toast.success(<ToastMessage type="success" title={`${selectedOrganization.name} was successfully removed`} />, {
                         position: 'top-right',
                     });
 
@@ -115,9 +115,9 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
                 })
                 .catch(error => {
                     if (error.response && typeof error.response.data.error !== 'undefined') {
-                        toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                        toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred" />);
+                        toast.error(<ToastMessage type="error" title="An error occurred" />);
                     }
                 });
         }

@@ -4,7 +4,7 @@ import { Heading, LoadingOverlay } from '@castoredc/matter';
 import DocumentTitle from 'components/DocumentTitle';
 import FAIRDataPointMetadataForm from 'components/Form/Metadata/FAIRDataPointMetadataForm';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
@@ -48,9 +48,9 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading the FAIR Data Point information" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while loading the FAIR Data Point information" />);
                 }
             });
     };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from '../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { CellText, DataGrid, Heading, LoadingOverlay } from '@castoredc/matter';
 import moment from 'moment/moment';
 import DistributionGenerationStatus from '../Status/DistributionGenerationStatus';
@@ -72,7 +72,7 @@ export default class DistributionRecordLogsDataTable extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the logs';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

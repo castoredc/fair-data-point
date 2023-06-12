@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../../../components/Layout/Header';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
@@ -46,7 +46,7 @@ export default class Agent extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the details';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
-import { Button, LoadingOverlay, Space } from '@castoredc/matter';
+import {Button, LoadingOverlay, Space, ToastMessage} from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import Header from 'components/Layout/Dashboard/Header';
@@ -46,9 +45,9 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading your data models" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while loading your data models" />);
                 }
             });
     };

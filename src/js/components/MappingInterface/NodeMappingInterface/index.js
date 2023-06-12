@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ChoiceOption, Heading, List, ListItem, Stack } from '@castoredc/matter';
 import StudyStructure from '../../StudyStructure/StudyStructure';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import NodeMappingInterfaceFooter from './NodeMappingInterfaceFooter';
 import TwigEditor from '../../Input/CodeEditor/TwigEditor';
 import { apiClient } from 'src/js/network';
@@ -102,7 +102,7 @@ export default class NodeMappingInterface extends Component {
                         isLoading: false,
                     },
                     () => {
-                        toast.success(<ToastContent type="success" message="The mapping was successfully saved." />, {
+                        toast.success(<ToastMessage type="success" title="The mapping was successfully saved." />, {
                             position: 'top-right',
                         });
                         onSave();
@@ -118,7 +118,7 @@ export default class NodeMappingInterface extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while saving the mapping';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

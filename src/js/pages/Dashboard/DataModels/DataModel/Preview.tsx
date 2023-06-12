@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { LoadingOverlay } from '@castoredc/matter';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DataModelModulePreview from 'components/DataModelModule/DataModelModulePreview';
 import SideTabs from 'components/SideTabs';
 import { AuthorizedRouteComponentProps } from 'components/Route';
@@ -48,9 +48,9 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 this.setState({

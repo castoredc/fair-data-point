@@ -9,7 +9,7 @@ import Select from 'components/Input/Formik/Select';
 import UriInput from 'components/Input/Formik/UriInput';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { apiClient } from '../network';
 
 type TripleModalProps = {
@@ -67,7 +67,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                         validation: error.response.values.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };

@@ -4,8 +4,7 @@ import DocumentTitle from '../../components/DocumentTitle';
 import './Login.scss';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
-import ToastContent from '../../components/ToastContent';
-import { CastorLogo, LoadingOverlay } from '@castoredc/matter';
+import { CastorLogo, LoadingOverlay, ToastMessage } from '@castoredc/matter';
 import LoginForm from '../../components/Form/LoginForm';
 import { apiClient } from 'src/js/network';
 
@@ -57,7 +56,7 @@ export default class Login extends Component {
                 this.setState({
                     isLoading: false,
                 });
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 
@@ -83,7 +82,7 @@ export default class Login extends Component {
                 this.setState({
                     isLoading: false,
                 });
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 

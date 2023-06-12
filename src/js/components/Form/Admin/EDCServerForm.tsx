@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import { Button, Stack } from '@castoredc/matter';
@@ -37,7 +37,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // New server:
                 if (!props.edcServer && response.data.id) {
                     const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`;
-                    toast.success(<ToastContent type="success" message={message} />, {
+                    toast.success(<ToastMessage type="success" title={message} />, {
                         position: 'top-right',
                     });
 
@@ -49,7 +49,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // Existing server:
                 if (props.edcServer && props.edcServer.id) {
                     const message = `The EDC Server ${response.data.name} was updated successfully`;
-                    toast.success(<ToastContent type="success" message={message} />, {
+                    toast.success(<ToastMessage type="success" title={message} />, {
                         position: 'top-right',
                     });
 
@@ -65,7 +65,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 if (error.response && error.response.status === 400) {
                     setValidation(error.response.data.fields);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };

@@ -4,7 +4,7 @@ import { ValidatorForm } from 'react-form-validator-core';
 
 import './Filters.scss';
 import { toast } from 'react-toastify';
-import ToastContent from '../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from '../Form/FormItem';
 import { MethodType, StudyType } from '../MetadataItem/EnumMappings';
 import CheckboxGroup from '../Input/CheckboxGroup';
@@ -61,9 +61,9 @@ export default class StudyFilters extends Component {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -124,7 +124,7 @@ export default class StudyFilters extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the filters';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

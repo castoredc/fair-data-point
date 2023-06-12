@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { Button, Modal } from '@castoredc/matter';
 import { DataType } from 'components/MetadataItem/EnumMappings';
 import * as Yup from 'yup';
@@ -81,7 +81,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
                 setSubmitting(false);
             });
@@ -146,7 +146,13 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                                 )}
                                 {showRepeated && (
                                     <FormItem>
-                                        <Field component={SingleChoice} labelText="Repeated" serverError={validation} name="repeated" />
+                                        <Field
+                                            component={SingleChoice}
+                                            labelText="Repeated"
+                                            serverError={validation}
+                                            name="repeated"
+                                            details="This node should be repeated for every instance of a specific survey or report"
+                                        />
                                     </FormItem>
                                 )}
 

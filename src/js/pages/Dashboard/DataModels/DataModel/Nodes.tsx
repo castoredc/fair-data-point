@@ -3,7 +3,7 @@ import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack, Tabs } 
 import AddNodeModal from '../../../../modals/AddNodeModal';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
@@ -71,13 +71,9 @@ export default class Nodes extends Component<NodesProps, NodesState> {
             .delete('/api/model/' + dataModel.id + '/v/' + version.value + '/node/' + modalData.type + `/${modalData.id}`)
             .then(() => {
                 toast.success(
-                    <ToastContent
+                    <ToastMessage
                         type="success"
-                        message={
-                            <>
-                                The <strong>{modalData.title}</strong> node was successfully removed
-                            </>
-                        }
+                        title={`The ${modalData.title} node was successfully removed`}
                     />,
                     {
                         position: 'top-right',
@@ -88,11 +84,11 @@ export default class Nodes extends Component<NodesProps, NodesState> {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
 
                     this.onSaved('remove');
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };

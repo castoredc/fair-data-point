@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import debounce from 'lodash/debounce';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
 import { Button, Choice, Dropdown, ReactSelectTypes, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
@@ -46,9 +46,9 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -73,9 +73,9 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
                 callback(null);
             });

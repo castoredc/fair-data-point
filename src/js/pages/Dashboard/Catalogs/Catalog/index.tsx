@@ -6,7 +6,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import CatalogMetadataForm from 'components/Form/Metadata/CatalogMetadataForm';
 import CatalogForm from 'components/Form/Admin/CatalogForm';
 import AddStudy from 'pages/Dashboard/Catalogs/Catalog/AddStudy';
@@ -62,9 +62,9 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading the catalog" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while loading the catalog" />);
                 }
             });
     };

@@ -6,7 +6,7 @@ import FormItem from '../../../components/Form/FormItem';
 import Input from '../../../components/Input';
 import { ValidatorForm } from 'react-form-validator-core';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import queryString from 'query-string';
 import { apiClient } from 'src/js/network';
 
@@ -81,7 +81,7 @@ export default class UserDetails extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred while updating your details" />);
+                        toast.error(<ToastMessage type="error" title="An error occurred while updating your details" />);
                     }
                     this.setState({
                         isLoading: false,

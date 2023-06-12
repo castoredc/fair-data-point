@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '@castoredc/matter';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import {PermissionOptionType, PermissionType} from 'types/PermissionType';
 import Avatar from 'react-avatar';
 import AddUserModal from 'modals/AddUserModal';
@@ -84,9 +84,9 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -104,7 +104,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             .then(response => {
                 setSubmitting(false);
 
-                toast.success(<ToastContent type="success" message={`${response.data.user.name}'s permissions were successfully set`} />, {
+                toast.success(<ToastMessage type="success" title={`${response.data.user.name}'s permissions were successfully set`} />, {
                     position: 'top-right',
                 });
 
@@ -115,9 +115,9 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                 setSubmitting(false);
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -129,7 +129,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
         apiClient
             .delete('/api/permissions/' + type + '/' + object.id + '/' + modalData.user.id)
             .then(() => {
-                toast.success(<ToastContent type="success" message={`${modalData.user.name}'s permissions were successfully revoked`} />, {
+                toast.success(<ToastMessage type="success" title={`${modalData.user.name}'s permissions were successfully revoked`} />, {
                     position: 'top-right',
                 });
 
@@ -138,9 +138,9 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -186,7 +186,11 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                         </Stack>
                     </CellText>
                 ),
-                type: <CellText>{Permissions[permission.type].labelText}</CellText>,
+                type: <CellText>
+                    <span style={{lineHeight: '34px'}}>
+                        {Permissions[permission.type].labelText}
+                    </span>
+                </CellText>,
                 menu: (
                     <ActionsCell
                         items={[
