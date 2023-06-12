@@ -32,7 +32,9 @@ class FederatedSparqlQueryRequest extends ApiRequest
     protected function parse(): void
     {
         $this->sparqlQuery = $this->getFromData('query') ?? $this->getFromQuery('query');
-        $this->distributionIds = $this->getFromData('distributions') ?? $this->getFromQuery('distributions');
+
+        $distributionIds = $this->getFromData('distributions') ?? $this->getFromQuery('distributions');
+        $this->distributionIds = explode(';', $distributionIds);
     }
 
     public function getSparqlQuery(): string

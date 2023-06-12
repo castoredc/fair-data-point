@@ -166,7 +166,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 icon: 'order',
             });
 
-            if (distribution.isCached) {
+            if (distribution.cached) {
                 sidebarItems.push({
                     to: mainUrl + '/distributions/' + distribution.slug + '/log',
                     exact: true,
