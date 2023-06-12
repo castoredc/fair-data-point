@@ -19,7 +19,7 @@ final class CastorServerApiResource extends RoleBasedApiResource
         $this->encryptionService = $encryptionService;
     }
 
-    /** @return array{id: ?int, url: string, name: string, flag: string, default: bool, client_id?: string, client_secret?: string} */
+    /** @return array{id: ?int, url: string, name: string, flag: string, default: bool, clientId?: string, clientSecret?: string} */
     public function toArray(): array
     {
         $serverSerialized = [
