@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../Form.scss';
 import FormItem from '../FormItem';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { PersonType } from 'types/PersonType';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -100,7 +100,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                         }
                     );
 
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };

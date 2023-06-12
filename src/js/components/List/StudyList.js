@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { classNames } from '../../util';
 import StudyListItem from '../ListItem/StudyListItem';
 import { toast } from 'react-toastify';
-import ToastContent from '../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import StudiesMap from '../Map/StudiesMap';
 import { Button, Heading, LoadingOverlay, Pagination } from '@castoredc/matter';
 import DataGridHelper from '../DataTable/DataGridHelper';
@@ -129,7 +129,7 @@ export default class StudyList extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the studies';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 
@@ -167,7 +167,7 @@ export default class StudyList extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the map';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

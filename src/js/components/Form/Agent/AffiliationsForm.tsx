@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import { FieldArray, Form, Formik } from 'formik';
 import AffiliationForm from 'components/Form/Agent/AffiliationForm';
@@ -45,9 +45,9 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -81,7 +81,7 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while updating your affiliations" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while updating your affiliations" />);
                 }
                 this.setState({
                     isLoading: false,

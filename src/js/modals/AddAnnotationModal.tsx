@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import debounce from 'lodash/debounce';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
 import { Button, Modal } from '@castoredc/matter';
 import { Field, Form, Formik } from 'formik';
@@ -47,9 +47,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -72,9 +72,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 callback(null);
@@ -103,9 +103,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);

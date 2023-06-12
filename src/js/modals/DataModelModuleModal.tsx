@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { Banner, Button, Modal, Space, Stack, ValidationMessage } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
 import { classNames } from '../util';
@@ -83,7 +83,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
                 setSubmitting(false);
             });
@@ -99,7 +99,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                 onSaved();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 
@@ -150,10 +150,16 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                                 </FormItem>
 
                                 <FormItem>
-                                    <Field component={SingleChoice} labelText="Repeated" name="repeated" serverError={validation} />
+                                    <Field
+                                        component={SingleChoice}
+                                        labelText="Repeated"
+                                        name="repeated"
+                                        serverError={validation}
+                                        details="This group should be repeated for every instance of a specific survey or report"
+                                    />
                                 </FormItem>
 
-                                <FormItem label="Dependent">
+                                {/*<FormItem label="Dependent">*/}
                                     {valueNodes.length === 0 ? (
                                         <ValidationMessage type="warning">
                                             <>
@@ -163,7 +169,13 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                                         </ValidationMessage>
                                     ) : (
                                         <>
-                                            <Field component={SingleChoice} labelText="Dependent" name="dependent" serverError={validation} />
+                                            <Field
+                                                component={SingleChoice}
+                                                labelText="Dependent"
+                                                name="dependent"
+                                                serverError={validation}
+                                                details="This group will only be rendered when certain criteria are met"
+                                            />
 
                                             {values.dependent && (
                                                 <>
@@ -175,7 +187,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                                             )}
                                         </>
                                     )}
-                                </FormItem>
+                                {/*</FormItem>*/}
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>
                                     <Stack alignment="normal" distribution="equalSpacing">

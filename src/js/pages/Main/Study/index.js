@@ -5,7 +5,7 @@ import { RecruitmentStatus } from '../../../components/MetadataItem/EnumMappings
 import Tags from '../../../components/Tags';
 import Contacts from '../../../components/MetadataItem/Contacts';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DatasetList from '../../../components/List/DatasetList';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
@@ -49,7 +49,7 @@ export default class Study extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the study';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

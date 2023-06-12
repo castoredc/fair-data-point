@@ -4,7 +4,7 @@ import { ValidatorForm } from 'react-form-validator-core';
 import '../Form.scss';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from './../FormItem';
 import Input from '../../Input';
 import RadioGroup from '../../Input/RadioGroup';
@@ -62,7 +62,7 @@ export default class DatasetForm extends Component {
                         submitDisabled: false,
                     });
                     history.push(mainUrl + '/datasets/' + values.slug);
-                    toast.success(<ToastContent type="success" message="The dataset details are saved successfully" />, {
+                    toast.success(<ToastMessage type="success" title="The dataset details are saved successfully" />, {
                         position: 'top-right',
                     });
                 })
@@ -72,7 +72,7 @@ export default class DatasetForm extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred" />);
+                        toast.error(<ToastMessage type="error" title="An error occurred" />);
                     }
                     this.setState({
                         submitDisabled: false,

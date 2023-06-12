@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../../../components/Layout/Header';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { classNames, localizedText } from '../../../util';
 import Yasqe from '@triply/yasqe';
 import './Query.scss';
@@ -66,7 +66,7 @@ export default class Query extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 
@@ -98,7 +98,7 @@ export default class Query extends Component {
                         );
                     })
                     .catch(error => {
-                        toast.error(<ToastContent type="error" message="An error occurred while loading the prefixes from prefix.cc" />);
+                        toast.error(<ToastMessage type="error" title="An error occurred while loading the prefixes from prefix.cc" />);
 
                         this.setState(
                             {
@@ -115,7 +115,7 @@ export default class Query extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the prefixes from the data model';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
 
                 this.createYasgui();
             });

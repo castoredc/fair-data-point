@@ -3,7 +3,7 @@ import StudiesDataTable from 'components/DataTable/StudiesDataTable';
 import { Button, Modal, Stack } from '@castoredc/matter';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import StudyForm from 'components/Form/Admin/StudyForm';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
@@ -73,7 +73,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 studyId: selectedStudy.id,
             })
             .then(response => {
-                toast.success(<ToastContent type="success" message="The study was successfully added to the catalog" />, {
+                toast.success(<ToastMessage type="success" title="The study was successfully added to the catalog" />, {
                     position: 'top-right',
                 });
 
@@ -88,7 +88,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while adding the study to the catalog';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

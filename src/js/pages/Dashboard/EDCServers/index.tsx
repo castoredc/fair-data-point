@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Heading, LoadingOverlay } from '@castoredc/matter';
 import DocumentTitle from 'components/DocumentTitle';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import { EDCServersGrid } from './EDCServersGrid';

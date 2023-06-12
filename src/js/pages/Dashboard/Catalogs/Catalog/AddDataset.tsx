@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DatasetsDataTable from 'components/DataTable/DatasetsDataTable';
 import { localizedText } from '../../../../util';
 import * as H from 'history';
@@ -74,7 +74,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                 datasetId: selectedDataset.id,
             })
             .then(response => {
-                toast.success(<ToastContent type="success" message="The dataset was successfully added to the catalog" />, {
+                toast.success(<ToastMessage type="success" title="The dataset was successfully added to the catalog" />, {
                     position: 'top-right',
                 });
 
@@ -89,7 +89,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while adding the dataset to the catalog';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

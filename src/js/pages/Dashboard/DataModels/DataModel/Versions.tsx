@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, CellText, DataGrid, Stack } from '@castoredc/matter';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DataModelVersionModal from '../../../../modals/DataModelVersionModal';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
@@ -44,7 +44,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
                 type: version,
             })
             .then(response => {
-                toast.success(<ToastContent type="success" message="A new version was successfully created" />, {
+                toast.success(<ToastMessage type="success" title="A new version was successfully created" />, {
                     position: 'top-right',
                 });
 
@@ -57,7 +57,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while creating a new version';
-                toast.error(<ToastContent type="error" message={message} />);
+                toast.error(<ToastMessage type="error" title={message} />);
             });
     };
 

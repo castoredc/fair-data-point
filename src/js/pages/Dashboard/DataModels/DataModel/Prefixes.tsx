@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { ActionsCell, Button, CellText, DataGrid, Stack } from '@castoredc/matter';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import DataModelPrefixModal from '../../../../modals/DataModelPrefixModal';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import DataGridContainer from 'components/DataTable/DataGridContainer';
@@ -74,13 +74,9 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
             .delete('/api/model/' + dataModel.id + '/v/' + version + '/prefix/' + prefixModalData.id)
             .then(() => {
                 toast.success(
-                    <ToastContent
+                    <ToastMessage
                         type="success"
-                        message={
-                            <>
-                                The <strong>{prefixModalData.title}</strong> prefix was successfully removed
-                            </>
-                        }
+                        title={`The ${prefixModalData.title} prefix was successfully removed`}
                     />,
                     {
                         position: 'top-right',
@@ -90,7 +86,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                 this.onSaved('remove');
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 

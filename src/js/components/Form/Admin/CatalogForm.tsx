@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import { Button, Stack } from '@castoredc/matter';
@@ -45,7 +45,7 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 
                 if (catalog) {
                     history.push('/dashboard/catalogs/' + values.slug);
-                    toast.success(<ToastContent type="success" message="The catalog details are saved successfully" />, {
+                    toast.success(<ToastMessage type="success" title="The catalog details are saved successfully" />, {
                         position: 'top-right',
                     });
                 } else {
@@ -60,7 +60,7 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };

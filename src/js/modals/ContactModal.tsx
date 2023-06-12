@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal } from '@castoredc/matter';
 import PersonForm from '../components/Form/Agent/PersonForm';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { apiClient } from '../network';
 
 type ContactModalProps = {
@@ -36,7 +36,7 @@ export default class ContactModal extends Component<ContactModalProps, ContactMo
                     isLoading: false,
                 });
 
-                toast.success(<ToastContent type="success" message={`${name} was successfully added as study contact`} />, {
+                toast.success(<ToastMessage type="success" title={`${name} was successfully added as study contact`} />, {
                     position: 'top-right',
                 });
 
@@ -48,7 +48,7 @@ export default class ContactModal extends Component<ContactModalProps, ContactMo
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
                 this.setState(
                     {

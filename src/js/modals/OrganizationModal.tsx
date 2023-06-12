@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal } from '@castoredc/matter';
 import OrganizationForm from 'components/Form/Agent/OrganizationForm';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { apiClient } from '../network';
 
 type OrganizationModalProps = {
@@ -49,7 +49,7 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
 
                 onClose();
 
-                toast.success(<ToastContent type="success" message={`The ${values.organization.name} center was successfully added.`} />, {
+                toast.success(<ToastMessage type="success" title={`The ${values.organization.name} center was successfully added.`} />, {
                     position: 'top-right',
                 });
             })
@@ -59,7 +59,7 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
                 this.setState(
                     {

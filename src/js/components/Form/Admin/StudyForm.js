@@ -4,7 +4,7 @@ import { ValidatorForm } from 'react-form-validator-core';
 import '../Form.scss';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import FormItem from './../FormItem';
 import Input from '../../Input';
 import Dropdown from '../../Input/Dropdown';
@@ -47,7 +47,7 @@ export default class StudyForm extends Component {
                 });
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred while retrieving the Castor servers" />);
+                toast.error(<ToastMessage type="error" title="An error occurred while retrieving the Castor servers" />);
             });
     };
 
@@ -98,7 +98,7 @@ export default class StudyForm extends Component {
                     });
 
                     if (study) {
-                        toast.success(<ToastContent type="success" message="The study details are saved successfully" />, {
+                        toast.success(<ToastMessage type="success" title="The study details are saved successfully" />, {
                             position: 'top-right',
                         });
                     }
@@ -109,7 +109,7 @@ export default class StudyForm extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred" />);
+                        toast.error(<ToastMessage type="error" title="An error occurred" />);
                     }
                     this.setState({
                         isLoading: false,

@@ -6,7 +6,7 @@ import { UpdateEDCServerModal } from 'modals/UpdateEDCServerModal';
 import { AddEDCServerModal } from 'modals/AddEDCServerModal';
 import { apiClient } from '../../../network';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 
 const EDCServersGrid = () => {
     const [showAddModal, setShowAddModal] = useState(false);
@@ -28,9 +28,9 @@ const EDCServersGrid = () => {
             .catch(error => {
                 setIsLoading(false);
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while loading the EDC Servers information" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while loading the EDC Servers information" />);
                 }
             });
     };
@@ -88,14 +88,14 @@ const EDCServersGrid = () => {
             .delete('/api/castor/servers/' + selectedServer.id)
             .then(response => {
                 const message = `The EDC Server ${selectedServer.name} with id ${selectedServer.id} was successfully deleted`;
-                toast.success(<ToastContent type="success" message={message} />, {
+                toast.success(<ToastMessage type="success" title={message} />, {
                     position: 'top-right',
                 });
 
                 getEDCServers();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
 
         closeAllModals();

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from '../../ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import MetadataVersionModal from '../../../modals/MetadataVersionModal';
 import { Button, Stack, Tabs } from '@castoredc/matter';
 import { mergeData } from '../../../util';
@@ -68,7 +68,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 
@@ -81,7 +81,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(() => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 
@@ -95,9 +95,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -150,7 +150,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
 
                 setSubmitting(false);
 
-                toast.success(<ToastContent type="success" message="The metadata are saved successfully" />, {
+                toast.success(<ToastMessage type="success" title="The metadata are saved successfully" />, {
                     position: 'top-right',
                 });
 
@@ -162,7 +162,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
 
                 this.setState({ isLoading: false });

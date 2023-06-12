@@ -169,3 +169,41 @@ div[type='error'] {
         }
     }
 }
+
+.Toastify__toast-container {
+    padding: 0;
+}
+.Toastify__toast {
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: inherit;
+}
+.Toastify__toast-body {
+    padding: 0;
+}
+
+:root {
+    --toastify-toast-width: 400px;
+}
+
+.Toastify__toast-theme--light {
+    background: none;
+}
+
+button.Toastify__close-button {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    height: 3.2rem;
+    width: 3.2rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.8rem;
+    color: rgb(111, 122, 141);
+
+    svg {
+        height: 2rem;
+        width: 2rem;
+    }
+}

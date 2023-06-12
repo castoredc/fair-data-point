@@ -5,7 +5,7 @@ import AddAnnotationModal from '../../modals/AddAnnotationModal';
 import './StudyStructure.scss';
 import ConfirmModal from '../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
-import ToastContent from 'components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
 
 interface OptionGroupProps {
@@ -72,7 +72,7 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
         apiClient
             .delete(`/api/study/${studyId}/annotations/${modalData.remove.annotation.id}`)
             .then(() => {
-                toast.success(<ToastContent type="success" message="The annotation was successfully removed" />, {
+                toast.success(<ToastMessage type="success" title="The annotation was successfully removed" />, {
                     position: 'top-right',
                 });
 
@@ -80,7 +80,7 @@ export default class OptionGroup extends Component<OptionGroupProps, OptionGroup
                 onUpdate();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />);
+                toast.error(<ToastMessage type="error" title="An error occurred" />);
             });
     };
 

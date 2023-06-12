@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import ToastContent from '../../../components/ToastContent';
+import {ToastMessage} from '@castoredc/matter';
 import { Button, Heading, LoadingOverlay, Separator, Space, Stack, StackItem } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import { localizedText } from '../../../util';
@@ -52,9 +52,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while retrieving information about the catalog" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred while retrieving information about the catalog" />);
                 }
             });
     };
@@ -74,9 +74,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />);
+                    toast.error(<ToastMessage type="error" title="An error occurred" />);
                 }
             });
     };
@@ -113,12 +113,12 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     this.setState({
                         submitDisabled: false,
                     });
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 } else if (error.response && typeof error.response.data.error !== 'undefined') {
                     this.setState({
                         submitDisabled: false,
                     });
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
+                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
                 }
             });
     };
