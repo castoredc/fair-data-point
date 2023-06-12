@@ -5,7 +5,6 @@ namespace App\Repository;
 
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\Metadata\CatalogMetadata;
 use Doctrine\ORM\NonUniqueResultException;

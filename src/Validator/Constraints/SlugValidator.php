@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use function assert;
+use function in_array;
 
 class SlugValidator extends ConstraintValidator
 {
@@ -38,24 +40,27 @@ class SlugValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, Slug::class);
         }
 
-        if(in_array($value, self::FORBIDDEN_SLUGS)) {
+        if (in_array($value, self::FORBIDDEN_SLUGS, true)) {
             $this->context->buildViolation($constraint->forbiddenSlug)
                 ->addViolation();
         }
 
-        /** @var ApiRequest $request */
         $request = $this->context->getObject();
+        assert($request instanceof ApiRequest);
         $context = $request->getContext();
 
-        if($context !== null && $context->getSlug() === $value) {
+        /** @phpstan-ignore-next-line */
+        if ($context !== null && $context->getSlug() === $value) {
             return;
         }
 
         $repository = $this->em->getRepository($constraint->getType());
 
-        if($repository->findOneBy(['slug' => $value])) {
-            $this->context->buildViolation($constraint->message)
-                ->addViolation();
+        if ($repository->findOneBy(['slug' => $value]) === null) {
+            return;
         }
+
+        $this->context->buildViolation($constraint->message)
+            ->addViolation();
     }
 }

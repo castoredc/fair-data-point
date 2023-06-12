@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Request\Catalog;
 
 use App\Api\Request\SingleApiRequest;
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AppAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CatalogApiRequest extends SingleApiRequest
 {

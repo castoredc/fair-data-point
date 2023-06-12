@@ -6,8 +6,8 @@ namespace App\Api\Request\Distribution;
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Enum\DistributionType;
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AppAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function boolval;
 

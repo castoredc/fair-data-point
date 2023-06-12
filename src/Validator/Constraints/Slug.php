@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use function array_values;
 
 /** @Annotation */
 class Slug extends Constraint
@@ -14,24 +15,20 @@ class Slug extends Constraint
     /** @var class-string<object> */
     public $type;
 
-    /**
-     * @param class-string<object> $type
-     */
+    /** @param class-string<object> $type */
     public function __construct(
         $type,
-        array $groups = null,
+        ?array $groups = null,
         $payload = null
     ) {
         $this->type = $type;
         parent::__construct([], $groups, $payload);
     }
 
-    /**
-     * @return class-string<object>
-     */
+    /** @return class-string<object> */
     public function getType()
     {
+        /** @phpstan-ignore-next-line */
         return array_values($this->type)[0];
     }
-
 }

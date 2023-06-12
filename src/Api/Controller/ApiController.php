@@ -47,7 +47,7 @@ abstract class ApiController extends AbstractController
         $request = new $requestObject($request);
         assert($request instanceof ApiRequest);
 
-        if($context !== null) {
+        if ($context !== null) {
             $request->setContext($context);
         }
 

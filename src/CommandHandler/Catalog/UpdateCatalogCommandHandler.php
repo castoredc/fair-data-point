@@ -4,12 +4,10 @@ declare(strict_types=1);
 namespace App\CommandHandler\Catalog;
 
 use App\Command\Catalog\UpdateCatalogCommand;
-use App\Entity\FAIRData\Catalog;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
-use function uniqid;
 
 class UpdateCatalogCommandHandler implements MessageHandlerInterface
 {
