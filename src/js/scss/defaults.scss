@@ -121,7 +121,7 @@ div[type='error'] {
 
 .PageTabs {
     height: 100%;
-    flex: 1;
+    //flex: 1;
     overflow: auto;
     display: flex;
 
@@ -159,7 +159,7 @@ div[type='error'] {
 
     & > div {
         /* Matter Tabs */
-        height: 100%;
+        //height: 100%;
         display: flex;
         flex-direction: column;
 
