@@ -17,7 +17,7 @@ const Body: FC<BodyProps> = ({ children, fullWidth }) => {
                         width: !!fullWidth ? '100%' : toRem(960),
                         maxWidth: '100%',
                         // marginTop: '3.2rem',
-                        overflow: 'hidden',
+                        // overflow: 'hidden',
                         height: '100%',
                         padding: '0 3.2rem',
                         display: 'flex',

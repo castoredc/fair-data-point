@@ -42,17 +42,20 @@ abstract class ApiController extends AbstractController
     }
 
     /** @throws ApiRequestParseError */
-    protected function parseRequest(string $requestObject, Request $request): ApiRequest
+    protected function parseRequest(string $requestObject, Request $request, ?object $context = null): ApiRequest
     {
         $request = new $requestObject($request);
+        assert($request instanceof ApiRequest);
+
+        if ($context !== null) {
+            $request->setContext($context);
+        }
 
         $errors = $this->validator->validate($request);
 
         if ($errors->count() > 0) {
             throw new ApiRequestParseError($errors);
         }
-
-        assert($request instanceof ApiRequest);
 
         return $request;
     }

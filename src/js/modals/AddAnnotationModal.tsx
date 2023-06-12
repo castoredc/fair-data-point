@@ -103,13 +103,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    toast.error(<ToastContent type="error" message={error.response.data.error} />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
 
                 setSubmitting(false);

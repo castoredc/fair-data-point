@@ -67,9 +67,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                         validation: error.response.values.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
             });
     };

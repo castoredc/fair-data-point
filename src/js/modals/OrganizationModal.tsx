@@ -59,9 +59,7 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
                 this.setState(
                     {

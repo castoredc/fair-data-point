@@ -5,9 +5,11 @@ namespace App\Repository;
 
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\Metadata\CatalogMetadata;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use function assert;
 
@@ -63,7 +65,14 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
             $qb->setParameter('acceptSubmissions', $acceptSubmissions);
         }
 
-        $qb->orderBy('metadata.title', 'ASC');
+        $qb->leftJoin(
+            LocalizedTextItem::class,
+            'title',
+            Join::WITH,
+            'title.parent = metadata.title AND title.language = \'en\''
+        );
+
+        $qb->orderBy('title.text', 'ASC');
 
         return $qb;
     }

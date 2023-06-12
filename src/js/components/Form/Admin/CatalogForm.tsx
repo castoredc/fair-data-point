@@ -44,6 +44,7 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                 setSubmitting(false);
 
                 if (catalog) {
+                    history.push('/dashboard/catalogs/' + values.slug);
                     toast.success(<ToastContent type="success" message="The catalog details are saved successfully" />, {
                         position: 'top-right',
                     });
@@ -59,9 +60,7 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
             });
     };
@@ -76,23 +75,28 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                     return (
                         <Form>
                             <div className="FormContent">
-                                <FormItem label="Slug">
+                                <FormItem label="Slug" tooltip="The unique identifying part of a web address, typically at the end of the URL">
                                     <Field component={Input} name="slug" serverError={validation} />
                                 </FormItem>
 
                                 <FormItem>
-                                    <Field component={SingleChoice} labelText="Accepts submissions" name="acceptSubmissions" />
+                                    <Field
+                                        component={SingleChoice}
+                                        labelText="Accepts submissions"
+                                        name="acceptSubmissions"
+                                        details="When selected, others will be able to add their study to this catalog"
+                                    />
                                 </FormItem>
 
-                                {values.acceptSubmissions && (
-                                    <FormItem>
-                                        <Field
-                                            component={SingleChoice}
-                                            labelText="Data will be accessed during submission"
-                                            name="submissionAccessesData"
-                                        />
-                                    </FormItem>
-                                )}
+                                {/*{values.acceptSubmissions && (*/}
+                                {/*    <FormItem>*/}
+                                {/*        <Field*/}
+                                {/*            component={SingleChoice}*/}
+                                {/*            labelText="Data will be accessed during submission"*/}
+                                {/*            name="submissionAccessesData"*/}
+                                {/*        />*/}
+                                {/*    </FormItem>*/}
+                                {/*)}*/}
                             </div>
 
                             {catalog ? (

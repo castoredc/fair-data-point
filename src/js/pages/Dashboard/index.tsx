@@ -89,7 +89,7 @@ export default class Dashboard extends Component<DashboardProps> {
         const { history, user } = this.props;
 
         return (
-            <div className="Dashboard" style={{ paddingTop: '4.8rem' }}>
+            <div className="Dashboard">
                 <CastorBar
                     items={[
                         {

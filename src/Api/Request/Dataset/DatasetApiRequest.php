@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\Dataset;
 
 use App\Api\Request\SingleApiRequest;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use function boolval;
 
@@ -12,6 +13,7 @@ class DatasetApiRequest extends SingleApiRequest
     /**
      * @Assert\NotBlank()
      * @Assert\Type("string")
+     * @AppAssert\Slug(type="App\Entity\FAIRData\Dataset")
      */
     private string $slug;
 

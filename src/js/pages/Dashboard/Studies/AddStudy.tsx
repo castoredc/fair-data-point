@@ -133,7 +133,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
         }
 
         return (
-            <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <div style={{ marginLeft: 'auto', marginRight: 'auto', flex: 1, overflow: 'auto' }}>
                 <DocumentTitle title="Add a study" />
 
                 <Stack distribution="center">

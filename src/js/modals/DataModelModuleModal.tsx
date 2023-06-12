@@ -83,9 +83,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
                 setSubmitting(false);
             });
@@ -101,9 +99,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                 onSaved();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />, {
-                    position: 'top-center',
-                });
+                toast.error(<ToastContent type="error" message="An error occurred" />);
             });
     };
 

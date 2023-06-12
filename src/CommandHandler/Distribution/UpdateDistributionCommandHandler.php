@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
 use function assert;
-use function uniqid;
 
 abstract class UpdateDistributionCommandHandler implements MessageHandlerInterface
 {
@@ -57,11 +56,6 @@ abstract class UpdateDistributionCommandHandler implements MessageHandlerInterfa
         $license = $this->em->getRepository(License::class)->find($command->getLicense());
 
         $slug = $command->getSlug();
-
-        // Check for duplicate slugs
-        if ($this->em->getRepository(Distribution::class)->findBySlug($slug) !== null) {
-            $slug .= '-' . uniqid();
-        }
 
         $distribution->setSlug($slug);
         $distribution->setLicense($license);

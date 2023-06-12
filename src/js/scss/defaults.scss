@@ -116,14 +116,14 @@ div[type='error'] {
     display: flex;
     flex-flow: column;
     margin-bottom: 1.6rem;
-    overflow: auto;
+    //overflow: auto;
 }
 
 .PageTabs {
     height: 100%;
     //flex: 1;
     overflow: auto;
-    display: flex;
+    //display: flex;
 
     & > form, div.Form {
         height: 100%;

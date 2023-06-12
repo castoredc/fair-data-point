@@ -95,9 +95,7 @@ const EDCServersGrid = () => {
                 getEDCServers();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />, {
-                    position: 'top-center',
-                });
+                toast.error(<ToastContent type="error" message="An error occurred" />);
             });
 
         closeAllModals();

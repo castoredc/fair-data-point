@@ -12,28 +12,41 @@ type GeneralMetadataProps = {
     validation: any;
     values: FormikValues;
     children: React.ReactNode;
+    type: string;
 };
 
 type GeneralMetadataState = {};
 
 export default class GeneralMetadata extends Component<GeneralMetadataProps, GeneralMetadataState> {
     render() {
-        const { validation, languages, licenses, children } = this.props;
+        const { validation, languages, licenses, children, type } = this.props;
 
         return (
             <div>
-                <FormItem label="Title">
+                <FormItem
+                    label="Title"
+                    details={`Name of the ${type}, with associated language tag`}
+                >
                     <Field component={LocalizedTextInput} name="title" languages={languages} serverError={validation} />
                 </FormItem>
-                <FormItem label="Description">
+                <FormItem
+                    label="Description"
+                    details={`Short description of the ${type}, with associated language tag`}
+                >
                     <Field component={LocalizedTextInput} name="description" languages={languages} serverError={validation} multiline rows="8" />
                 </FormItem>
 
-                <FormItem label="Language">
+                <FormItem
+                    label="Language"
+                    details={`The language used in the ${type}`}
+                >
                     <Field component={Select} options={languages} name="language" menuPosition="fixed" serverError={validation} />
                 </FormItem>
 
-                <FormItem label="License">
+                <FormItem
+                    label="License"
+                    details={`The reference to the usage license of the ${type}`}
+                >
                     <Field component={Select} options={licenses} name="license" serverError={validation} />
                 </FormItem>
 

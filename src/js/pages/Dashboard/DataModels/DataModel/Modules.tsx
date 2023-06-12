@@ -149,9 +149,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                 getModules();
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />, {
-                    position: 'top-center',
-                });
+                toast.error(<ToastContent type="error" message="An error occurred" />);
             });
     };
 

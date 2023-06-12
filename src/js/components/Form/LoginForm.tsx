@@ -55,7 +55,7 @@ const LoginForm: FC<LoginFormProps> = ({
                                         <p>
                                             To enter your study in the {localizedText(catalog.name, 'en')} you must be a registered Castor EDC user.
                                         </p>
-                                        <p>Please log in with your Castor EDC account and allow the application to access your information.</p>
+                                        <p>Please log in with your Castor CDMS account and allow the application to access your information.</p>
                                         {!catalog.accessingData && (
                                             <p>
                                                 The application only accesses high-level information from your study and will not download nor upload
@@ -74,7 +74,7 @@ const LoginForm: FC<LoginFormProps> = ({
                                             <p>You need to be a registered Castor EDC user in order to access this {viewName}.</p>
                                         )}
 
-                                        <p>Please log in with your Castor EDC account and allow the application to access your information.</p>
+                                        <p>Please log in with your Castor CDMS account and allow the application to access your information.</p>
                                     </div>
                                 </div>
                             )}

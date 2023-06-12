@@ -179,10 +179,10 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             return {
                 name: (
                     <CellText>
-                        <Stack wrap={false}>
+                        <Stack wrap={false} withoutExternalMargins>
                             { /* @ts-ignore */ }
-                            <Avatar name={permission.user.name} size="35px" round />
-                            <span>{permission.user.name}</span>
+                            <Avatar name={permission.user.name} size="34px" round />
+                            <span style={{lineHeight: '34px'}}>{permission.user.name}</span>
                         </Stack>
                     </CellText>
                 ),
@@ -241,7 +241,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
 
                 <DataGrid
                     accessibleName="Permissions"
-                    emptyStateContent={`This ${type} does not have any users added to it`}
+                    emptyStateContent={`There are no users added yet`}
                     rows={rows}
                     columns={columns}
                     anchorRightColumns={1}

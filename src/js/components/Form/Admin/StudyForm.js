@@ -109,9 +109,7 @@ export default class StudyForm extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred" />, {
-                            position: 'top-center',
-                        });
+                        toast.error(<ToastContent type="error" message="An error occurred" />);
                     }
                     this.setState({
                         isLoading: false,

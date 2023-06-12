@@ -151,7 +151,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <DatasetForm dataset={dataset} />
+                                    <DatasetForm dataset={dataset} mainUrl={mainUrl} />
                                 </PageBody>
                             )}
                         />

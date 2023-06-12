@@ -56,9 +56,7 @@ export default class DataModelForm extends Component<DataModelFormProps, DataMod
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
             });
     };

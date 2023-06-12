@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal } from '@castoredc/matter';
+import {Banner, Button, Modal} from '@castoredc/matter';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
@@ -59,6 +59,11 @@ export default class AddUserModal extends Component<AddUserModalProps, AddUserMo
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
                         return (
                             <Form>
+                                <Banner
+                                    type="information"
+                                    description="Please note that users need to log in to the FAIR Data Point first, before they can be invited."
+                                    customWidth="400px"
+                                />
                                 {!edit && (
                                     <FormItem label="Email address">
                                         <Field component={Input} name="email" readOnly={edit} autofocus />

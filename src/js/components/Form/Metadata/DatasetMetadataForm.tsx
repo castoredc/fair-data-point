@@ -18,11 +18,16 @@ export default class DatasetMetadataForm extends Component<DatasetMetadataFormPr
             <MetadataForm type="dataset" object={dataset} onSave={onSave} defaultData={defaultData}>
                 {(validation, languages) => (
                     <div>
-                        <FormItem label="Keywords">
+                        <FormItem label="Keywords" details="Keyword(s) describing the dataset, with associated language tag">
                             <Field component={LocalizedTextInput} name="keyword" serverError={validation} languages={languages} />
                         </FormItem>
 
-                        <Field component={OntologyConceptFormBlock} label="Themes" name="theme" />
+                        <Field
+                            component={OntologyConceptFormBlock}
+                            label="Themes"
+                            name="theme"
+                            details="Themes (ontology concepts) used to classify the cataloged resources that are part of this dataset."
+                        />
                     </div>
                 )}
             </MetadataForm>

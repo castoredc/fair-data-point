@@ -63,7 +63,7 @@ class App extends Component<{}, AppState> {
         return (
             <div className={classNames('App', embedded && 'Embedded')}>
                 <ToastContainer
-                    position="top-center"
+                    position="top-right"
                     autoClose={5000}
                     hideProgressBar={false}
                     newestOnTop={false}
@@ -71,6 +71,7 @@ class App extends Component<{}, AppState> {
                     rtl={false}
                     draggable={false}
                     pauseOnHover
+                    icon={false}
                 />
                 {isLoading ? <LoadingOverlay accessibleLabel="Loading" /> : <Routes user={user} embedded={embedded} />}
             </div>

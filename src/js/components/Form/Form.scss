@@ -54,6 +54,8 @@
             dd {
                 margin: 0 0 0 100px;
                 padding: 0 0 8px;
+                word-break: break-all;
+                overflow: hidden;
             }
         }
     }
@@ -83,6 +85,11 @@
 
 .FormItem {
     margin: 20px 0;
+
+    .FormItemDetails {
+        color: rgb(71, 84, 109);
+        margin: -0.4rem 0 0.8rem 0;
+    }
 
     &.Hidden,
     .Hidden {

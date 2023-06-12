@@ -135,9 +135,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
                 this.setState({
                     isLoading: false,

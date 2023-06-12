@@ -51,7 +51,7 @@ class SingleCatalogApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $catalog);
 
         try {
-            $parsed = $this->parseRequest(CatalogApiRequest::class, $request);
+            $parsed = $this->parseRequest(CatalogApiRequest::class, $request, $catalog);
             assert($parsed instanceof CatalogApiRequest);
 
             $bus->dispatch(

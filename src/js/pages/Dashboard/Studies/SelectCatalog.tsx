@@ -90,7 +90,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         const { isLoading, catalogs, pagination } = this.state;
 
         return (
-            <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <div style={{ marginLeft: 'auto', marginRight: 'auto', flex: 1, overflow: 'auto' }}>
                 <DocumentTitle title="Add a study" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs" />}

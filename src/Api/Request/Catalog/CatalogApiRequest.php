@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\Catalog;
 
 use App\Api\Request\SingleApiRequest;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CatalogApiRequest extends SingleApiRequest
@@ -11,6 +12,7 @@ class CatalogApiRequest extends SingleApiRequest
     /**
      * @Assert\NotBlank()
      * @Assert\Type("string")
+     * @AppAssert\Slug(type="App\Entity\FAIRData\Catalog")
      */
     private string $slug;
 

@@ -150,8 +150,8 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
                     <CellText>
                         <Stack wrap={false}>
                             { /* @ts-ignore */ }
-                            <Avatar name={organization.name} size="35px" round />
-                            <span>{organization.name}</span>
+                            <Avatar name={organization.name} size="34px" round />
+                            <span style={{lineHeight: '34px'}}>{organization.name}</span>
                         </Stack>
                     </CellText>
                 ),

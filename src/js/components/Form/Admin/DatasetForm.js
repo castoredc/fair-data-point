@@ -42,7 +42,7 @@ export default class DatasetForm extends Component {
     };
 
     handleSubmit = event => {
-        const { dataset } = this.props;
+        const { dataset, mainUrl } = this.props;
         event.preventDefault();
 
         const { data } = this.state;
@@ -61,7 +61,7 @@ export default class DatasetForm extends Component {
                         isLoading: false,
                         submitDisabled: false,
                     });
-
+                    history.push(mainUrl + '/datasets/' + values.slug);
                     toast.success(<ToastContent type="success" message="The dataset details are saved successfully" />, {
                         position: 'top-right',
                     });
@@ -72,9 +72,7 @@ export default class DatasetForm extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred" />, {
-                            position: 'top-center',
-                        });
+                        toast.error(<ToastContent type="error" message="An error occurred" />);
                     }
                     this.setState({
                         submitDisabled: false,
