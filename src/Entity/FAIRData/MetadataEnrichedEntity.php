@@ -12,4 +12,6 @@ interface MetadataEnrichedEntity
     public function getFirstMetadata(): ?Metadata;
 
     public function getLatestMetadata(): ?Metadata;
+
+    public function isArchived(): bool;
 }

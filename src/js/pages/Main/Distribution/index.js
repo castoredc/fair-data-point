@@ -152,7 +152,7 @@ export default class Distribution extends Component {
 
                                 {isGranted('access_data', distribution.permissions) && (
                                     <div className="DistributionAccessButtons">
-                                        {distribution.isCached && (
+                                        {distribution.cached && (
                                             <ListItem
                                                 link={distribution.relativeUrl + '/query'}
                                                 title="Query the data"

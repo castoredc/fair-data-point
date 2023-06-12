@@ -24,7 +24,7 @@ const DatePicker: FC<DatePickerProps> = ({ field, form, meta, readOnly, onChange
             <CastorDatePicker
                 name={field.name}
                 selected={value}
-                dateFormat="DD-MM-YYYY"
+                dateFormat="dd-MM-yyyy"
                 onChange={(date, event) => {
                     field.onChange({ target: { name: field.name, value: date } });
                 }}

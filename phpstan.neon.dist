@@ -13,8 +13,14 @@ parameters:
 			message: '#Unsafe usage of new static\(\).#'
 			path: %currentWorkingDirectory%/src/Entity/Enum/*
 		-
+			message: '#Unsafe call#'
+			path: %currentWorkingDirectory%/src/Entity/Enum/*
+		-
 			message: '#should be covariant#'
 			path: %currentWorkingDirectory%/src/Security/Providers/*
+		-
+			message: '#is unused#'
+			path: %currentWorkingDirectory%/src/Entity/Enum/*
 	symfony:
 		container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
 		console_application_loader: tests/console-application.php

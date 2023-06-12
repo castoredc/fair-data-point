@@ -61,7 +61,8 @@ class DistributionApiResource implements ApiResource
 
         if ($this->distribution->hasContents()) {
             $contents = $this->distribution->getContents();
-            $distribution['isCached'] = $contents->isCached();
+            $distribution['cached'] = $contents->isCached();
+            $distribution['public'] = $contents->isPublic();
             $distribution['type'] = $contents->getType();
 
             if ($contents instanceof RDFDistribution) {

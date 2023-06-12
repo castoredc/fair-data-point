@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Entity\Connection\DistributionDatabaseInformation;
-use App\Model\Castor\ApiClient;
-use App\Service\CastorEntityHelper;
-use App\Service\DataTransformationService;
 use App\Service\EncryptionService;
 use App\Service\TripleStoreBasedDistributionService;
-use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,33 +21,18 @@ class MigrateToTripleStoresCommand extends Command
     /** @phpcs:ignore */
     protected static $defaultName = 'app:migrate-triplestores';
 
-    private ApiClient $apiClient;
     private EntityManagerInterface $em;
-    private CastorEntityHelper $entityHelper;
-    private UriHelper $uriHelper;
     private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
     private EncryptionService $encryptionService;
-    private LoggerInterface $logger;
-    private DataTransformationService $dataTransformationService;
 
     public function __construct(
-        ApiClient $apiClient,
         EntityManagerInterface $em,
-        CastorEntityHelper $entityHelper,
-        UriHelper $uriHelper,
         TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
-        EncryptionService $encryptionService,
-        LoggerInterface $logger,
-        DataTransformationService $dataTransformationService
+        EncryptionService $encryptionService
     ) {
-        $this->apiClient = $apiClient;
         $this->em = $em;
-        $this->entityHelper = $entityHelper;
-        $this->uriHelper = $uriHelper;
         $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
         $this->encryptionService = $encryptionService;
-        $this->logger = $logger;
-        $this->dataTransformationService = $dataTransformationService;
 
         parent::__construct();
     }

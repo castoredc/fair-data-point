@@ -11,6 +11,7 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DataModel\Node\ExternalIriNode;
 use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
+use App\Entity\Data\DataModel\Node\Node;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Entity\Data\DataModel\Predicate;
@@ -59,6 +60,8 @@ class CreateDataModelVersionCommandHandler extends DataSpecificationVersionComma
         }
 
         // Add nodes
+
+        /** @var ArrayCollection<Node> $nodes */
         $nodes = new ArrayCollection();
 
         foreach ($latestVersion->getElements() as $node) {
@@ -92,6 +95,7 @@ class CreateDataModelVersionCommandHandler extends DataSpecificationVersionComma
         }
 
         // Add predicates
+        /** @var ArrayCollection<Predicate> $predicates */
         $predicates = new ArrayCollection();
 
         foreach ($latestVersion->getPredicates() as $predicate) {
@@ -112,11 +116,20 @@ class CreateDataModelVersionCommandHandler extends DataSpecificationVersionComma
             foreach ($module->getElementGroups() as $triple) {
                 assert($triple instanceof Triple);
 
+                $node = $nodes->get($triple->getSubject()->getId());
+                assert($node instanceof Node);
+
+                $predicate = $predicates->get($triple->getPredicate()->getId());
+                assert($predicate instanceof Predicate);
+
+                $object = $nodes->get($triple->getObject()->getId());
+                assert($object instanceof Node);
+
                 $newTriple = new Triple(
                     $newModule,
-                    $nodes->get($triple->getSubject()->getId()),
-                    $predicates->get($triple->getPredicate()->getId()),
-                    $nodes->get($triple->getObject()->getId())
+                    $node,
+                    $predicate,
+                    $object
                 );
 
                 $newModule->addElementGroup($newTriple);

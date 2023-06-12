@@ -66,6 +66,9 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     /** @ORM\Column(type="boolean") */
     private bool $submissionAccessesData = false;
 
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isArchived = false;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog", fetch="EAGER")
      * @ORM\OrderBy({"createdAt" = "ASC"})
@@ -292,5 +295,10 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
             PermissionType::edit(),
             PermissionType::manage(),
         ];
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
     }
 }

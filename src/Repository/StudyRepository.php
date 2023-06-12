@@ -118,7 +118,8 @@ class StudyRepository extends EntityRepository
 
         $qb->leftJoin(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
            ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.createdAt < metadata2.createdAt')
-           ->where('metadata2.id IS NULL');
+           ->where('metadata2.id IS NULL')
+            ->andWhere('study.isArchived = 0');
 
         if ($hideCatalogs !== null) {
             $qb->andWhere(':catalog_ids NOT MEMBER OF study.catalogs')

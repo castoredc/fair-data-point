@@ -92,6 +92,10 @@ class User implements UserInterface
     public function __construct(?Person $person)
     {
         $this->person = $person;
+        $this->dataSpecifications = new ArrayCollection();
+        $this->catalogs = new ArrayCollection();
+        $this->datasets = new ArrayCollection();
+        $this->distributions = new ArrayCollection();
     }
 
     public function isEqualTo(UserInterface $user): bool

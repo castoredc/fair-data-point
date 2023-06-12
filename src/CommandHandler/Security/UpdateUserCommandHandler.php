@@ -50,7 +50,7 @@ class UpdateUserCommandHandler implements MessageHandlerInterface
 
             $person = $dbPerson;
         } else {
-            $orcid = $user->hasOrcid() ? new Iri($user->getOrcid()->getOrcid()) : null;
+            $orcid = new Iri($user->getOrcid()->getOrcid());
             $person = new Person($command->getFirstName(), $command->getMiddleName(), $command->getLastName(), $command->getEmail(), null, $orcid, NameOrigin::user());
         }
 

@@ -26,7 +26,7 @@ class CatalogVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, $subject)
     {
         if (! in_array($attribute, [self::VIEW, self::ADD, self::EDIT, self::MANAGE], true)) {
             return false;

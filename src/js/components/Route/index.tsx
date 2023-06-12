@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Redirect, Route, RouteComponentProps, RouteProps } from 'react-router-dom';
-import { UserType } from '../../types/UserType';
+import { UserType } from 'types/UserType';
 
 export interface AuthorizedRouteComponentProps extends RouteComponentProps<any> {
     user: UserType | null;
@@ -8,10 +8,10 @@ export interface AuthorizedRouteComponentProps extends RouteComponentProps<any> 
 
 interface CustomRouteProps extends RouteProps {
     user: UserType | null;
-    component?: React.ComponentType<AuthorizedRouteComponentProps> | undefined;
+    routeComponent?: React.ComponentType<AuthorizedRouteComponentProps> | undefined;
 }
 
-export const PrivateRoute: FC<CustomRouteProps> = ({ component: Component, render, user, ...rest }) => {
+export const PrivateRoute: FC<CustomRouteProps> = ({ routeComponent: Component, render, user, ...rest }) => {
     if (user === null) {
         return (
             <Redirect
@@ -24,6 +24,7 @@ export const PrivateRoute: FC<CustomRouteProps> = ({ component: Component, rende
     }
 
     if (Component) {
+        // @ts-ignore
         return <Route {...rest} render={(props: RouteComponentProps<{}>) => <Component user={user} {...props} />} />;
     }
 
@@ -36,6 +37,7 @@ export const ProtectedRoute: FC<CustomRouteProps> = ({ component: Component, ren
     }
 
     if (Component) {
+        // @ts-ignore
         return <Route {...rest} render={(props: RouteComponentProps<{}>) => <Component user={user} {...props} />} />;
     }
 

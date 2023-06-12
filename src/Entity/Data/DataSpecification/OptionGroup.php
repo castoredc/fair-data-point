@@ -51,6 +51,7 @@ class OptionGroup
         $this->title = $title;
         $this->description = $description;
         $this->options = new ArrayCollection();
+        $this->elements = new ArrayCollection();
     }
 
     public function getId(): string

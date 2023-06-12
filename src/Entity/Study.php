@@ -85,6 +85,9 @@ abstract class Study implements AccessibleEntity
      */
     private Collection $mappings;
 
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isArchived = false;
+
     public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)
     {
         $this->source = $source;
@@ -93,6 +96,8 @@ abstract class Study implements AccessibleEntity
         $this->slug = $slug;
         $this->metadata = new ArrayCollection();
         $this->datasets = new ArrayCollection();
+        $this->catalogs = new ArrayCollection();
+        $this->mappings = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -276,5 +281,10 @@ abstract class Study implements AccessibleEntity
         }
 
         return null;
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
     }
 }

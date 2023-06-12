@@ -29,6 +29,16 @@ class Language
         return $this->name;
     }
 
+    public function setCode(string $code): void
+    {
+        $this->code = $code;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
     public function getAccessUrl(): string
     {
         return self::ISO_URL . $this->getCode();

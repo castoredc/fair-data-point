@@ -13,7 +13,6 @@ doctrine:
         password: '%env(DB_DEFAULT_PASS)%'
         types:
             iri:  App\Type\IriType
-            DistributionAccessType:  App\Type\DistributionAccessType
             version:  App\Type\VersionType
             StudyType:  App\Type\Enum\StudyType
             RecruitmentStatusType:  App\Type\Enum\RecruitmentStatusType

@@ -22,7 +22,11 @@ class CastorEntityRepository extends EntityRepository
         return $entity;
     }
 
-    /** @return CastorEntity[] */
+    /**
+     * @param class-string<object> $type
+     *
+     * @return CastorEntity[]
+     */
     public function findByStudyAndType(CastorStudy $study, string $type): array
     {
         return $this->createQueryBuilder('entity')

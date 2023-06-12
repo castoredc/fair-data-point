@@ -115,6 +115,11 @@ class GenerateRDFCommand extends Command
 
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
+
+            if ($distribution->isArchived()) {
+                continue;
+            }
+
             $dbStudy = $distribution->getDataset()->getStudy();
             assert($dbStudy instanceof CastorStudy);
 
@@ -146,6 +151,11 @@ class GenerateRDFCommand extends Command
 
         foreach ($rdfDistributionContents as $rdfDistributionContent) {
             $distribution = $rdfDistributionContent->getDistribution();
+
+            if ($distribution->isArchived()) {
+                continue;
+            }
+
             $log = new DistributionGenerationLog($rdfDistributionContent);
 
             $output->writeln('');

@@ -22,11 +22,11 @@ class LocalizedText
     /**
      * @ORM\OneToMany(targetEntity="LocalizedTextItem", mappedBy="parent", cascade={"persist"}, fetch = "EAGER")
      *
-     * @var Collection<mixed, LocalizedTextItem>
+     * @var Collection<LocalizedTextItem>
      */
     private Collection $texts;
 
-    /** @param Collection<mixed, LocalizedTextItem> $texts */
+    /** @param Collection<LocalizedTextItem> $texts */
     public function __construct(Collection $texts)
     {
         $this->texts = $texts;

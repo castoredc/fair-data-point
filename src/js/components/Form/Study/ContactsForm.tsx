@@ -136,6 +136,7 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
                 name: (
                     <CellText>
                         <Stack wrap={false}>
+                            { /* @ts-ignore */ }
                             <Avatar name={name} size="35px" round />
                             <span>{name}</span>
                         </Stack>

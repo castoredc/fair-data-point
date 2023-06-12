@@ -6,6 +6,7 @@ namespace App\Entity\FAIRData;
 use App\Entity\Iri;
 use App\Entity\Metadata\FAIRDataPointMetadata;
 use App\Entity\Version;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function count;
@@ -43,6 +44,14 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
      * @var Collection<string, Catalog>
      */
     private Collection $catalogs;
+
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isArchived = false;
+
+    public function __construct()
+    {
+        $this->metadata = new ArrayCollection();
+    }
 
     public function getId(): string
     {
@@ -119,5 +128,10 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     public function addMetadata(FAIRDataPointMetadata $metadata): void
     {
         $this->metadata->add($metadata);
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
     }
 }

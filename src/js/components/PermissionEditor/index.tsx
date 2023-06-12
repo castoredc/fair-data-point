@@ -180,6 +180,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                 name: (
                     <CellText>
                         <Stack wrap={false}>
+                            { /* @ts-ignore */ }
                             <Avatar name={permission.user.name} size="35px" round />
                             <span>{permission.user.name}</span>
                         </Stack>

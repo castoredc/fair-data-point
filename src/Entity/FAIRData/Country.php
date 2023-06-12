@@ -80,4 +80,29 @@ class Country implements AccessibleEntity
     {
         return '/fdp/country/' . $this->getCode();
     }
+
+    public function setCode(string $code): void
+    {
+        $this->code = $code;
+    }
+
+    public function setCastorCountryId(string $castorCountryId): void
+    {
+        $this->castorCountryId = $castorCountryId;
+    }
+
+    public function setAbbreviation(string $abbreviation): void
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
+    public function setTld(string $tld): void
+    {
+        $this->tld = $tld;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
 }

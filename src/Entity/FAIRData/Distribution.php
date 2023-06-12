@@ -90,6 +90,9 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
     /** @ORM\Column(type="boolean", options={"default":"0"}) */
     private bool $isPublished = false;
 
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isArchived = false;
+
     public function __construct(string $slug, Dataset $dataset)
     {
         $this->slug = $slug;
@@ -275,5 +278,10 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
             PermissionType::edit(),
             PermissionType::manage(),
         ];
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->isArchived;
     }
 }

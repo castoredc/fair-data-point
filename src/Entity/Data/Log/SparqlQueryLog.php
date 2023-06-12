@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\SparqlQueryLogRepository")
  * @ORM\Table(name="log_sparql_query")
  */
-final class SparqlQueryLog
+class SparqlQueryLog
 {
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)

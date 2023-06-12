@@ -149,6 +149,7 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
                 name: (
                     <CellText>
                         <Stack wrap={false}>
+                            { /* @ts-ignore */ }
                             <Avatar name={organization.name} size="35px" round />
                             <span>{organization.name}</span>
                         </Stack>

@@ -52,7 +52,7 @@ class DistributionTreeApiResource implements ApiResource
                 'id' => $dataset->getId(),
                 'slug' => $dataset->getSlug(),
                 'title' => $dataset->getLatestMetadata()->getTitle()->toArray(),
-                'distributions' => $resources['distributions'][$dataset->getId()],
+                'distributions' => array_values($resources['distributions'][$dataset->getId()]),
             ];
 
             /** @var Catalog[] $catalogs */

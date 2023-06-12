@@ -9,6 +9,7 @@ use App\Entity\Data\DataModel\Node\InternalIriNode;
 use App\Entity\Data\DataModel\Node\LiteralNode;
 use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Exception\InvalidNodeType;
 
 /**
  * @method static static externalIri()
@@ -31,7 +32,8 @@ class NodeType extends Enum
     private const RECORD = 'record';
     private const VALUE = 'value';
 
-    public function getClassName(): string
+    /** @return class-string<object> */
+    public function getClassName()
     {
         if ($this->isExternalIri()) {
             return ExternalIriNode::class;
@@ -53,6 +55,6 @@ class NodeType extends Enum
             return ValueNode::class;
         }
 
-        return '';
+        throw new InvalidNodeType();
     }
 }

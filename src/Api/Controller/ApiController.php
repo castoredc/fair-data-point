@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function array_merge;
+use function assert;
 use function count;
 use function json_decode;
 
@@ -50,6 +51,8 @@ abstract class ApiController extends AbstractController
         if ($errors->count() > 0) {
             throw new ApiRequestParseError($errors);
         }
+
+        assert($request instanceof ApiRequest);
 
         return $request;
     }
@@ -111,6 +114,8 @@ abstract class ApiController extends AbstractController
             if ($resource instanceof RoleBasedApiResource) {
                 $resource->setAdmin($this->isGranted('ROLE_ADMIN'));
             }
+
+            assert($resource instanceof ApiResource);
 
             $apiResource = $resource->toArray();
 
