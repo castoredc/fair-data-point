@@ -38,6 +38,7 @@ class Kernel extends BaseKernel
                 continue;
             }
 
+            /** @phpstan-ignore-next-line */
             yield new $class();
         }
     }

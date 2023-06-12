@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use DateTime;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 trait UpdatedAt
@@ -18,7 +17,7 @@ trait UpdatedAt
     }
 
     /** @ORM\PreUpdate */
-    public function onUpdate(LifecycleEventArgs $e): void
+    public function onUpdate(): void
     {
         $this->updatedAt = new DateTime();
     }

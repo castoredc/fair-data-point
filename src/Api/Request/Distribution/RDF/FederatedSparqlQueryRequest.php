@@ -6,6 +6,7 @@ namespace App\Api\Request\Distribution\RDF;
 use App\Api\Request\ApiRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
+use function explode;
 
 class FederatedSparqlQueryRequest extends ApiRequest
 {

@@ -96,6 +96,7 @@ abstract class DistributionContents implements PermissionsEnabledEntity
     {
         $this->distribution = $distribution;
         $this->logs = new ArrayCollection();
+        $this->permissions = new ArrayCollection();
     }
 
     public function getId(): string

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Castor\Structure\StructureCollection;
 
-use App\Entity\Castor\Structure\Survey;
+use App\Entity\Castor\Structure\StructureElement;
 use function strcasecmp;
 use function uasort;
 
@@ -11,7 +11,7 @@ class SurveyCollection extends StructureElementCollection
 {
     public function order(): void
     {
-        uasort($this->elements, static function (Survey $a, Survey $b): int {
+        uasort($this->elements, static function (StructureElement $a, StructureElement $b): int {
             return strcasecmp($a->getName(), $b->getName());
         });
     }

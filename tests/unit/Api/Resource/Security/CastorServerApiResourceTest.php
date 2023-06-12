@@ -44,8 +44,8 @@ final class CastorServerApiResourceTest extends TestCase
             'name' => 'TD1',
             'flag' => 'nl',
             'default' => true,
-            'clientId' => 'E47AFBFF-A602-43EF-8F7C-F14616BCFE3F',
-            'clientSecret' => '555d8f0fbb944546e626869a92cdfcdf',
+            'client_id' => 'E47AFBFF-A602-43EF-8F7C-F14616BCFE3F',
+            'client_secret' => '555d8f0fbb944546e626869a92cdfcdf',
         ];
 
         $resource = new CastorServerApiResource($server, true, $encryption);

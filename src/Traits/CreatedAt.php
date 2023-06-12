@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use DateTimeImmutable;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 trait CreatedAt
@@ -18,7 +17,7 @@ trait CreatedAt
     }
 
     /** @ORM\PrePersist */
-    public function onCreate(LifecycleEventArgs $e): void
+    public function onCreate(): void
     {
         $this->createdAt = new DateTimeImmutable();
     }

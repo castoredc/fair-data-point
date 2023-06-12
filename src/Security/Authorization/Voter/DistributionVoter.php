@@ -26,7 +26,7 @@ class DistributionVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, $subject)
     {
         if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA, self::MANAGE], true)) {
             return false;

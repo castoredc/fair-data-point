@@ -9,6 +9,7 @@ use App\Entity\Castor\Form\FieldOption;
 use App\Entity\Castor\Form\FieldOptionGroup;
 use App\Entity\Castor\Structure\Report;
 use App\Entity\Castor\Structure\Survey;
+use App\Exception\InvalidEntityType;
 
 /**
  * @method static static field()
@@ -31,7 +32,8 @@ class CastorEntityType extends Enum
     private const REPORT = 'report';
     private const SURVEY = 'survey';
 
-    public function getClassName(): string
+    /** @return class-string<object> */
+    public function getClassName()
     {
         if ($this->isField()) {
             return Field::class;
@@ -53,6 +55,6 @@ class CastorEntityType extends Enum
             return Survey::class;
         }
 
-        return '';
+        throw new InvalidEntityType();
     }
 }

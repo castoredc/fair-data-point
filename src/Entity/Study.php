@@ -96,6 +96,8 @@ abstract class Study implements AccessibleEntity
         $this->slug = $slug;
         $this->metadata = new ArrayCollection();
         $this->datasets = new ArrayCollection();
+        $this->catalogs = new ArrayCollection();
+        $this->mappings = new ArrayCollection();
     }
 
     public function getId(): ?string

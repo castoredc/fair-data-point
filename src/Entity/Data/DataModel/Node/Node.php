@@ -6,7 +6,9 @@ namespace App\Entity\Data\DataModel\Node;
 use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DataModel\Triple;
 use App\Entity\Data\DataSpecification\Element;
+use App\Entity\Data\DataSpecification\Version;
 use App\Entity\Enum\NodeType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_merge;
@@ -35,6 +37,14 @@ abstract class Node extends Element
      * @var Collection<Triple>
      */
     private Collection $objectTriples;
+
+    public function __construct(Version $version, string $title, ?string $description)
+    {
+        parent::__construct($version, $title, $description);
+
+        $this->subjectTriples = new ArrayCollection();
+        $this->objectTriples = new ArrayCollection();
+    }
 
     public function getType(): ?NodeType
     {

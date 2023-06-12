@@ -69,6 +69,7 @@ abstract class Version
         $this->version = $version;
         $this->groups = new ArrayCollection();
         $this->elements = new ArrayCollection();
+        $this->distributionContents = new ArrayCollection();
     }
 
     public function getId(): string

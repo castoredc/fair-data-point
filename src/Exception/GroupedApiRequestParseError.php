@@ -17,7 +17,7 @@ class GroupedApiRequestParseError extends Exception
     {
         parent::__construct();
 
-        $this->violations = $violations ?? [];
+        $this->violations = $violations;
     }
 
     /** @return array<mixed> */
