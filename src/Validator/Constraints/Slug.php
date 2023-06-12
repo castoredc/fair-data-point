@@ -16,8 +16,9 @@ class Slug extends Constraint
     public $type;
 
     /**
-     * @inheritDoc
      * @param class-string<object> $type
+     * @param string[]             $groups  An array of validation groups
+     * @param mixed                $payload Domain-specific data attached to a constraint
      */
     public function __construct(
         $type,
