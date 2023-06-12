@@ -1,27 +1,23 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import Routes from '../../Routes';
 
 import '../../scss/index.scss';
 import './App.scss';
-import { toast, ToastContainer } from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import ToastContent from '../ToastContent';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import queryString from 'query-string';
-import { classNames } from '../../util';
-import { LoadingOverlay } from '@castoredc/matter';
-import { UserType } from '../../types/UserType';
-import TagManager from 'react-gtm-module';
-import { apiClient } from 'src/js/network';
-
-interface AppProps extends RouteComponentProps<any> {}
+import {classNames} from '../../util';
+import {LoadingOverlay} from '@castoredc/matter';
+import {UserType} from 'types/UserType';
+import {apiClient} from 'src/js/network';
 
 interface AppState {
     isLoading: boolean;
     user: UserType | null;
 }
 
-class App extends Component<AppProps, AppState> {
+class App extends Component<{}, AppState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,21 +29,6 @@ class App extends Component<AppProps, AppState> {
     componentDidMount() {
         this.getUser();
     }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.location !== prevProps.location) {
-            this.onRouteChange();
-        }
-    }
-
-    onRouteChange = () => {
-        TagManager.dataLayer({
-            dataLayer: {
-                event: 'FdpPageView',
-                url: this.props.location.pathname,
-            },
-        });
-    };
 
     getUser = () => {
         apiClient
@@ -97,4 +78,4 @@ class App extends Component<AppProps, AppState> {
     }
 }
 
-export default withRouter(App);
+export default App;

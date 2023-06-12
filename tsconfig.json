@@ -24,7 +24,8 @@
     "strictNullChecks": true,
     "target": "es5",
     "checkJs": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": []
   },
   "include": ["./src/js"]
 }

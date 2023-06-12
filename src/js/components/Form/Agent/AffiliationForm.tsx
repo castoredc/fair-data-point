@@ -25,11 +25,13 @@ interface AffiliationFormProps {
 const AffiliationForm: FC<AffiliationFormProps> = ({ values, validation, countries, index, name, handleRemove, setFieldValue }) => {
     const prefix = `${name}.${index}`;
 
+    // @ts-ignore
     return (
         <div className="AffiliationForm">
             <Stack>
                 <div className="AffiliationAvatar">
                     {values.country != '' && values.organization.name != '' ? (
+                        /* @ts-ignore */
                         <Avatar name={values.organization.name} size="48px" round />
                     ) : (
                         <div className="BlankAvatar">
