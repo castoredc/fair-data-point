@@ -122,6 +122,20 @@ final class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/catalogs", name="dashboard_catalogs")
+     * @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add")
+     */
+    public function catalogs(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        return $this->render(
+            'react.html.twig',
+            ['title' => 'Catalogs']
+        );
+    }
+
+    /**
      * @Route("/dashboard/catalogs/{catalog}", name="dashboard_catalog")
      * @Route("/dashboard/catalogs/{catalog}/metadata", name="dashboard_catalog_metadata")
      * @Route("/dashboard/catalogs/{catalog}/permissions", name="dashboard_catalog_permissions")
@@ -211,28 +225,6 @@ final class DashboardController extends AbstractController
         return $this->render(
             'react.html.twig',
             ['title' => 'FDP Admin']
-        );
-    }
-
-    /** @Route("/dashboard/catalogs", name="dashboard_catalogs") */
-    public function catalogs(): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'Catalogs']
-        );
-    }
-
-    /** @Route("/dashboard/catalogs/add", name="dashboard_catalogs_add") */
-    public function addCatalog(): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        return $this->render(
-            'react.html.twig',
-            ['title' => 'Catalogs']
         );
     }
 

@@ -41,11 +41,6 @@ class CreateCatalogCommandHandler implements MessageHandlerInterface
 
         $slug = $command->getSlug();
 
-        // Check for duplicate slugs
-        if ($this->em->getRepository(Catalog::class)->findBySlug($slug) !== null) {
-            $slug .= '-' . uniqid();
-        }
-
         $catalog = new Catalog($slug);
         $catalog->setFairDataPoint($fdp[0]);
         $catalog->setAcceptSubmissions($command->isAcceptSubmissions());

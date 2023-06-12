@@ -26,8 +26,8 @@ export default class ModuleMappingInterface extends Component {
         if (mapping !== prevProps.mapping) {
             const newData = mapping
                 ? {
-                      type: mapping.element.structureType,
-                      element: mapping.element.id,
+                      type: mapping.element ? mapping.element.structureType : 'report',
+                      element: mapping.element ? mapping.element.id : null,
                   }
                 : null;
 

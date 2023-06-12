@@ -13,6 +13,7 @@ type PublishersMetadataProps = {
     validation: any;
     publishers: any;
     setValue: (field: string, value: any, shouldValidate?: boolean) => void;
+    type: string;
 };
 
 type PublishersMetadataState = {
@@ -96,7 +97,7 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
     };
 
     render() {
-        const { countries, publishers } = this.props;
+        const { countries, publishers, type } = this.props;
         const { showModal, showRemoveModal, selectedPublisher } = this.state;
 
         const publisherRows = publishers.map((publisher, index) => {
@@ -145,7 +146,10 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
                     Are you sure you want remove <strong>{selectedPublisher && selectedPublisherName}</strong> as publisher?
                 </ConfirmModal>
 
-                <Stack distribution="trailing">
+                <Stack distribution="space-between">
+                    <div className="FormItemDetails">
+                        Publishers are the entities (person or organization) responsible for the {type}.
+                    </div>
                     <Button
                         icon="add"
                         onClick={() => {

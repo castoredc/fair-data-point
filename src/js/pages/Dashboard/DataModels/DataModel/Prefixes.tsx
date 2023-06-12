@@ -90,9 +90,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                 this.onSaved('remove');
             })
             .catch(error => {
-                toast.error(<ToastContent type="error" message="An error occurred" />, {
-                    position: 'top-center',
-                });
+                toast.error(<ToastContent type="error" message="An error occurred" />);
             });
     };
 

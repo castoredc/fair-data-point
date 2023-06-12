@@ -162,9 +162,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
 
                 this.setState({ isLoading: false });
@@ -176,7 +174,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
     render() {
         const { data, validation, languages, licenses, countries, currentVersion, showModal } = this.state;
 
-        const { children } = this.props;
+        const { children, type } = this.props;
 
         return (
             <>
@@ -203,6 +201,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                                                             licenses={licenses}
                                                             countries={countries}
                                                             validation={validation}
+                                                            type={type}
                                                         >
                                                             {children && children(validation, languages)}
                                                         </GeneralMetadata>
@@ -220,6 +219,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                                                             licenses={licenses}
                                                             countries={countries}
                                                             validation={validation}
+                                                            type={type}
                                                         />
                                                     </div>
                                                 ),

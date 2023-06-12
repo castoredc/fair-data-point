@@ -1,4 +1,4 @@
-import React, { FC, FormEvent } from 'react';
+import React, {FC, FormEvent, ReactNode} from 'react';
 
 import { ChoiceOption } from '@castoredc/matter';
 import { FieldProps } from 'formik';
@@ -9,9 +9,10 @@ interface SingleChoiceProps extends FieldProps {
     onChange?: (event: FormEvent<HTMLInputElement>) => void;
     serverError?: any;
     labelText: string;
+    details?: ReactNode;
 }
 
-const SingleChoice: FC<SingleChoiceProps> = ({ field, readOnly, onChange, serverError, labelText }) => {
+const SingleChoice: FC<SingleChoiceProps> = ({ field, readOnly, onChange, serverError, labelText, details }) => {
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
     return (
@@ -20,6 +21,7 @@ const SingleChoice: FC<SingleChoiceProps> = ({ field, readOnly, onChange, server
                 checked={field.value}
                 labelText={labelText}
                 name={field.name}
+                details={details}
                 type="checkbox"
                 onChange={
                     onChange

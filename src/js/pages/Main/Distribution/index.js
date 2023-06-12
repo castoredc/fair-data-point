@@ -123,7 +123,7 @@ export default class Distribution extends Component {
                                         <Banner
                                             customIcon={<LockIcon />}
                                             title="The access to the data in this distribution is restricted"
-                                            description="In order to access the data, please log in with your Castor EDC account."
+                                            description="In order to access the data, please log in with your Castor CDMS account."
                                             actions={[
                                                 {
                                                     label: 'Log in with Castor',

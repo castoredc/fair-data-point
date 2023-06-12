@@ -10,6 +10,7 @@
         display: flex;
         overflow: hidden;
         height: 100%;
+        margin-top: 4.8rem;
 
         .Back {
             padding: 0 1.6rem;
@@ -29,12 +30,11 @@
     .DashboardBody {
         flex: 1;
         overflow: auto;
-        padding-bottom: 3.2rem;
         height: 100%;
-        padding-top: 3.2rem;
 
         & > div {
             height: 100%;
+            padding: 3.2rem 0;
         }
     }
 

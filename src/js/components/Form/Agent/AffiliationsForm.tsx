@@ -81,9 +81,7 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred while updating your affiliations" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred while updating your affiliations" />);
                 }
                 this.setState({
                     isLoading: false,

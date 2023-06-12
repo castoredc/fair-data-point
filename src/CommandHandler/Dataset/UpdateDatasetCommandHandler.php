@@ -33,11 +33,6 @@ class UpdateDatasetCommandHandler implements MessageHandlerInterface
 
         $slug = $command->getSlug();
 
-        // Check for duplicate slugs
-        if ($this->em->getRepository(Dataset::class)->findBySlug($slug) !== null) {
-            $slug .= '-' . uniqid();
-        }
-
         $dataset->setSlug($slug);
         $dataset->setIsPublished($command->getPublished());
 

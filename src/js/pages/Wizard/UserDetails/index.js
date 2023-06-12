@@ -81,9 +81,7 @@ export default class UserDetails extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastContent type="error" message="An error occurred while updating your details" />, {
-                            position: 'top-center',
-                        });
+                        toast.error(<ToastContent type="error" message="An error occurred while updating your details" />);
                     }
                     this.setState({
                         isLoading: false,

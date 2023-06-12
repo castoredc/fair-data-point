@@ -137,8 +137,8 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
                     <CellText>
                         <Stack wrap={false}>
                             { /* @ts-ignore */ }
-                            <Avatar name={name} size="35px" round />
-                            <span>{name}</span>
+                            <Avatar name={name} size="34px" round />
+                            <span style={{lineHeight: '34px'}}>{name}</span>
                         </Stack>
                     </CellText>
                 ),

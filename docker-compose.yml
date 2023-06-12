@@ -78,27 +78,6 @@ services:
     links:
       - mysql
 
-  stardog-studio:
-    container_name: stardog_studio
-    image: stardog/stardog-studio:3.7.2
-    ports:
-      - "8080:8080"
-    networks:
-      - fair-data-point
-
-  stardog:
-    container_name: stardog
-    image: stardog/stardog:7.9.1-java11-preview
-    environment:
-      - STARDOG_SERVER_JAVA_ARGS=-Xms3g -Xmx3g -XX:MaxDirectMemorySize=4g -Dlog4j2.formatMsgNoLookups=true
-    user: "1001:1002"
-    ports:
-      - "8081:5820"
-    volumes:
-      - ./docker/stardog/data:/var/opt/stardog
-    networks:
-      - fair-data-point
-
 networks:
   fair-data-point:
     driver: bridge

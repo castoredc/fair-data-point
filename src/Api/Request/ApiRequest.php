@@ -16,6 +16,8 @@ abstract class ApiRequest
     /** @var ParameterBag<mixed> */
     protected ParameterBag $query;
 
+    protected ?object $context = null;
+
     /**
      * phpcs:disable
      *
@@ -74,5 +76,15 @@ abstract class ApiRequest
     protected function getFromQuery(string $key)
     {
         return $this->query->get($key);
+    }
+
+    public function getContext(): ?object
+    {
+        return $this->context;
+    }
+
+    public function setContext(object $context): void
+    {
+        $this->context = $context;
     }
 }

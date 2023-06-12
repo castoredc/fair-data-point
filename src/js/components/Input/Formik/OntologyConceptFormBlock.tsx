@@ -10,6 +10,7 @@ import {isMultipleOption} from "components/Input/Formik/Select";
 
 interface OntologyConceptFormBlockProps extends FieldProps {
     label: string;
+    details?: string;
 }
 
 type IsMulti = boolean;
@@ -118,7 +119,7 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
     };
 
     render() {
-        const { label, field, form } = this.props;
+        const { label, details, field, form } = this.props;
         const { includeIndividuals, selectedOntology, ontologies } = this.state;
 
         const value = field.value ? field.value : [defaultData];
@@ -128,7 +129,7 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
         });
 
         return (
-            <FormItem label={label}>
+            <FormItem label={label} details={details}>
                 <div className="OntologyConceptFormBlock">
                     <div className="Header Row">
                         <div className="Ontology">Ontology</div>

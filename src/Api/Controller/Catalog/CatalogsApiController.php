@@ -57,7 +57,7 @@ class CatalogsApiController extends ApiController
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while getting the catalogs', ['exception' => $e]);
-
+            dump($e);
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -58,11 +58,6 @@ abstract class UpdateDistributionCommandHandler implements MessageHandlerInterfa
 
         $slug = $command->getSlug();
 
-        // Check for duplicate slugs
-        if ($this->em->getRepository(Distribution::class)->findBySlug($slug) !== null) {
-            $slug .= '-' . uniqid();
-        }
-
         $distribution->setSlug($slug);
         $distribution->setLicense($license);
         $distribution->setIsPublished($command->isPublished());

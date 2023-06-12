@@ -31,7 +31,7 @@ export const PrivateRoute: FC<CustomRouteProps> = ({ routeComponent: Component, 
     return <Route {...rest} render={render} />;
 };
 
-export const ProtectedRoute: FC<CustomRouteProps> = ({ component: Component, render, user, ...rest }) => {
+export const ProtectedRoute: FC<CustomRouteProps> = ({ routeComponent: Component, render, user, ...rest }) => {
     if (user === null || !user.isAdmin) {
         return <Redirect to={{ pathname: '/?unauthorized=1' }} />;
     }

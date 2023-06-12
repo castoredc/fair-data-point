@@ -65,9 +65,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 if (error.response && error.response.status === 400) {
                     setValidation(error.response.data.fields);
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
             });
     };

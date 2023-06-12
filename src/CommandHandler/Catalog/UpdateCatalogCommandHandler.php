@@ -33,11 +33,6 @@ class UpdateCatalogCommandHandler implements MessageHandlerInterface
 
         $slug = $command->getSlug();
 
-        // Check for duplicate slugs
-        if ($this->em->getRepository(Catalog::class)->findBySlug($slug) !== null) {
-            $slug .= '-' . uniqid();
-        }
-
         $catalog->setSlug($slug);
         $catalog->setAcceptSubmissions($command->isAcceptSubmissions());
 

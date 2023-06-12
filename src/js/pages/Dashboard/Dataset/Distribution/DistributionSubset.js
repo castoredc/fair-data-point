@@ -185,9 +185,7 @@ export default class DistributionSubset extends Component {
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastContent type="error" message="An error occurred" />, {
-                        position: 'top-center',
-                    });
+                    toast.error(<ToastContent type="error" message="An error occurred" />);
                 }
                 this.setState({
                     submitDisabled: false,
