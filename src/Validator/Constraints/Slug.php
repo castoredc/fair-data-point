@@ -15,7 +15,10 @@ class Slug extends Constraint
     /** @var class-string<object> */
     public $type;
 
-    /** @param class-string<object> $type */
+    /**
+     * @inheritDoc
+     * @param class-string<object> $type
+     */
     public function __construct(
         $type,
         ?array $groups = null,
