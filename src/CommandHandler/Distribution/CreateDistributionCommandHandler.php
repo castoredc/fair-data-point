@@ -11,8 +11,9 @@ use App\Entity\FAIRData\License;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
 use App\Security\User;
+use App\Service\Distribution\MysqlBasedDistributionService;
+use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
-use App\Service\TripleStoreBasedDistributionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -22,15 +23,17 @@ abstract class CreateDistributionCommandHandler implements MessageHandlerInterfa
 {
     protected EntityManagerInterface $em;
 
+    protected MysqlBasedDistributionService $mysqlBasedDistributionService;
     protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
 
     protected Security $security;
 
     protected EncryptionService $encryptionService;
 
-    public function __construct(EntityManagerInterface $em, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, Security $security, EncryptionService $encryptionService)
+    public function __construct(EntityManagerInterface $em, MysqlBasedDistributionService $mysqlBasedDistributionService, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, Security $security, EncryptionService $encryptionService)
     {
         $this->em = $em;
+        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
         $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
         $this->security = $security;
         $this->encryptionService = $encryptionService;

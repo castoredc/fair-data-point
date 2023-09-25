@@ -116,7 +116,12 @@ div[type='error'] {
     display: flex;
     flex-flow: column;
     margin-bottom: 1.6rem;
-    //overflow: auto;
+    overflow: auto;
+
+    & > form {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .PageTabs {

@@ -4,16 +4,22 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\GetRDFFromStoreCommand;
+use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
+use App\Service\Distribution\MysqlBasedDistributionService;
+use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
-use App\Service\TripleStoreBasedDistributionService;
 use App\Service\UriHelper;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
 {
+    private MysqlBasedDistributionService $mysqlBasedDistributionService;
     private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
 
     private UriHelper $uriHelper;
@@ -22,8 +28,9 @@ class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
 
     private Security $security;
 
-    public function __construct(TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, UriHelper $uriHelper, EncryptionService $encryptionService, Security $security)
+    public function __construct(MysqlBasedDistributionService $mysqlBasedDistributionService, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, UriHelper $uriHelper, EncryptionService $encryptionService, Security $security)
     {
+        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
         $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
         $this->uriHelper = $uriHelper;
         $this->encryptionService = $encryptionService;
@@ -39,12 +46,37 @@ class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
             throw new NoAccessPermission();
         }
 
-        $this->tripleStoreBasedDistributionService->createReadOnlyDatabaseApiClient($distribution->getDatabaseInformation(), $this->encryptionService);
+        $rdfDistribution = $distribution->getContents();
+        assert($rdfDistribution instanceof RDFDistribution);
 
-        if ($command->getRecord() !== null) {
-            return $this->tripleStoreBasedDistributionService->getDataFromStore($this->uriHelper->getUri($command->getDistribution()) . '/g/' . $command->getRecord());
+        $namedGraphUrl = $command->getRecord() !== null ? $this->uriHelper->getUri($command->getDistribution()) . '/g/' . $command->getRecord() : null;
+
+        if ($rdfDistribution->getDatabaseType()->isStardog()) {
+            return $this->tripleStoreBasedDistributionService->getDataFromStore(
+                $distribution->getDatabaseInformation(),
+                $this->encryptionService,
+                $namedGraphUrl
+            );
         }
 
-        return $this->tripleStoreBasedDistributionService->getDataFromStore();
+        if ($rdfDistribution->getDatabaseType()->isMysql()) {
+            $dataModel = $command->getDistribution()->getCurrentDataModelVersion();
+            $prefixes = $dataModel->getPrefixes();
+            $nameSpaces = [];
+
+            foreach ($prefixes as $prefix) {
+                /** @var NamespacePrefix $prefix */
+                $nameSpaces[$prefix->getPrefix()] = $prefix->getUri()->getValue();
+            }
+
+            return $this->mysqlBasedDistributionService->getDataFromStore(
+                $distribution->getDatabaseInformation(),
+                $this->encryptionService,
+                $namedGraphUrl,
+                $nameSpaces
+            );
+        }
+
+        throw new NotFound();
     }
 }

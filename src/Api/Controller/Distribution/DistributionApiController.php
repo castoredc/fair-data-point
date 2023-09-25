@@ -258,7 +258,7 @@ class DistributionApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataset);
 
         try {
-            $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
+            $parsed = $this->parseRequest(DistributionApiRequest::class, $request, $distribution);
             assert($parsed instanceof DistributionApiRequest);
 
             if ($distribution->getContents() instanceof RDFDistribution) {

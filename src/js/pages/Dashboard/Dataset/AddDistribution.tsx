@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DistributionForm from 'components/Form/Admin/DistributionForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
+import PageBody from "components/Layout/Dashboard/PageBody";
 
 interface AddDistributionProps extends AuthorizedRouteComponentProps {}
 
@@ -18,6 +19,8 @@ export default class AddDistribution extends Component<AddDistributionProps> {
             ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}`
             : `/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
 
-        return <DistributionForm dataset={match.params.dataset} mainUrl={mainUrl} history={history} />;
+        return <PageBody>
+            <DistributionForm dataset={match.params.dataset} mainUrl={mainUrl} history={history} />
+        </PageBody>;
     }
 }

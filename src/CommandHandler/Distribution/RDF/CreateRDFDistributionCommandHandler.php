@@ -82,8 +82,16 @@ class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandl
 
         $distribution->setDatabaseInformation($databaseInformation);
 
-        $this->tripleStoreBasedDistributionService->createDatabase($databaseInformation);
-        $this->tripleStoreBasedDistributionService->createUsers($databaseInformation, $this->encryptionService);
+        $rdfDistribution = $distribution->getContents();
+        assert($rdfDistribution instanceof RDFDistribution);
+
+        if ($rdfDistribution->getDatabaseType()->isStardog()) {
+            $this->tripleStoreBasedDistributionService->createDatabase($databaseInformation);
+            $this->tripleStoreBasedDistributionService->createUsers($databaseInformation, $this->encryptionService);
+        } elseif ($rdfDistribution->getDatabaseType()->isMysql()) {
+            $this->mysqlBasedDistributionService->createDatabase($databaseInformation);
+            $this->mysqlBasedDistributionService->createUsers($databaseInformation, $this->encryptionService);
+        }
 
         $this->em->persist($distribution);
         $this->em->persist($databaseInformation);

@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use function assert;
+use function count;
 use function in_array;
 
 class SlugValidator extends ConstraintValidator
@@ -55,8 +56,9 @@ class SlugValidator extends ConstraintValidator
         }
 
         $repository = $this->em->getRepository($constraint->getType());
+        $foundEntities = $repository->findBy(['slug' => $value]);
 
-        if ($repository->findOneBy(['slug' => $value]) === null) {
+        if (count($foundEntities) === 0) {
             return;
         }
 
