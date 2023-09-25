@@ -82,7 +82,7 @@ export default class Query extends Component {
                 }, {});
 
                 apiClient
-                    .get('https://prefix.cc/popular/all.file.json')
+                    .get('/static/prefixes.json')
                     .then(response => {
                         prefixes = {
                             prefixes,

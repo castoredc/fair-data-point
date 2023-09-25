@@ -59,8 +59,8 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange }) =
                                 strict: true,
                             });
 
-                            return (
-                                <Link
+                            // @ts-ignore
+                            return <Link
                                     to={item.disabled ? '#' : item.to}
                                     className={classNames('SideBarNavItem', item.active && 'Active', active && 'Active', item.disabled && 'Disabled')}
                                     key={`sitebar-item-${index}`}
@@ -70,8 +70,7 @@ const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange }) =
                                         {item.customIcon && <CustomIcon type={item.customIcon} />}
                                     </span>
                                     <span className="SideBarNavItemTitle">{item.title}</span>
-                                </Link>
-                            );
+                                </Link>;
                         }
                     })}
                 </div>

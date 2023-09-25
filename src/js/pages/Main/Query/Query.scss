@@ -4,6 +4,8 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    width: 100%;
 
     .QueryComponent {
         padding: 30px !important;
@@ -23,7 +25,6 @@
 
         .QueryEditor {
             flex: 1;
-            overflow: auto;
         }
     }
 
@@ -76,7 +77,6 @@
 
     .yasqe {
         transition: all 0.8s ease;
-        overflow: hidden;
         height: 100%;
         border-radius: 3px;
     }

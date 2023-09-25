@@ -49,7 +49,7 @@ class DatasetApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataset);
 
         try {
-            $parsed = $this->parseRequest(DatasetApiRequest::class, $request);
+            $parsed = $this->parseRequest(DatasetApiRequest::class, $request, $dataset);
             assert($parsed instanceof DatasetApiRequest);
             $bus->dispatch(
                 new UpdateDatasetCommand(
