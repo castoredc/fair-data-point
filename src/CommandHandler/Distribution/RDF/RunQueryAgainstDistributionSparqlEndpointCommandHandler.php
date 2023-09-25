@@ -4,25 +4,35 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\RunQueryAgainstDistributionSparqlEndpointCommand;
+use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
 use App\Graph\SparqlResponse;
+use App\Service\Distribution\MysqlBasedDistributionService;
+use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
-use App\Service\TripleStoreBasedDistributionService;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Security\Core\Security;
+use function assert;
 
 class RunQueryAgainstDistributionSparqlEndpointCommandHandler implements MessageHandlerInterface
 {
-    private TripleStoreBasedDistributionService $distributionService;
+    protected MysqlBasedDistributionService $mysqlBasedDistributionService;
+    protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
 
     private EncryptionService $encryptionService;
 
     private Security $security;
 
-    public function __construct(TripleStoreBasedDistributionService $distributionService, EncryptionService $encryptionService, Security $security)
-    {
-        $this->distributionService = $distributionService;
+    public function __construct(
+        MysqlBasedDistributionService $mysqlBasedDistributionService,
+        TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
+        EncryptionService $encryptionService,
+        Security $security
+    ) {
+        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
+        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
         $this->encryptionService = $encryptionService;
         $this->security = $security;
     }
@@ -36,10 +46,25 @@ class RunQueryAgainstDistributionSparqlEndpointCommandHandler implements Message
             throw new NoAccessPermission();
         }
 
-        return $this->distributionService->runQuery(
-            $command->getQuery(),
-            $distribution->getDatabaseInformation(),
-            $this->encryptionService
-        );
+        $rdfDistribution = $distribution->getContents();
+        assert($rdfDistribution instanceof RDFDistribution);
+
+        if ($rdfDistribution->getDatabaseType()->isStardog()) {
+            return $this->tripleStoreBasedDistributionService->runQuery(
+                $command->getQuery(),
+                $distribution->getDatabaseInformation(),
+                $this->encryptionService
+            );
+        }
+
+        if ($rdfDistribution->getDatabaseType()->isMysql()) {
+            return $this->mysqlBasedDistributionService->runQuery(
+                $command->getQuery(),
+                $distribution->getDatabaseInformation(),
+                $this->encryptionService
+            );
+        }
+
+        throw new NotFound();
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\Distribution;
 
 use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Exception\CouldNotCreateDatabase;
@@ -10,10 +10,11 @@ use App\Graph\SparqlClient;
 use App\Graph\SparqlResponse;
 use App\Model\Stardog\AdminApiClient;
 use App\Model\Stardog\DatabaseApiClient;
+use App\Service\EncryptionService;
 use EasyRdf\Graph;
 use Throwable;
 
-class TripleStoreBasedDistributionService
+class TripleStoreBasedDistributionService implements DistributionService
 {
     private string $host;
 
@@ -123,8 +124,14 @@ class TripleStoreBasedDistributionService
     }
 
     /** @return mixed */
-    public function getDataFromStore(?string $namedGraphUrl = null)
-    {
+    public function getDataFromStore(
+        DistributionDatabaseInformation $databaseInformation,
+        EncryptionService $encryptionService,
+        ?string $namedGraphUrl = null,
+        ?array $nameSpaces = null
+    ) {
+        $this->createReadOnlyDatabaseApiClient($databaseInformation, $encryptionService);
+
         return $this->client->getDataFromStore($namedGraphUrl);
     }
 

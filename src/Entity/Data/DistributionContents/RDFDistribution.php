@@ -5,7 +5,9 @@ namespace App\Entity\Data\DistributionContents;
 
 use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\Enum\RDFDistributionDatabaseType;
 use App\Entity\FAIRData\AccessibleEntity;
+use App\Entity\FAIRData\Distribution;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
@@ -15,6 +17,16 @@ use function assert;
  */
 class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
+    /** @ORM\Column(type="RDFDistributionDatabaseType") */
+    private RDFDistributionDatabaseType $databaseType;
+
+    public function __construct(Distribution $distribution)
+    {
+        parent::__construct($distribution);
+
+        $this->databaseType = RDFDistributionDatabaseType::mysql();
+    }
+
     public function getDataModel(): DataModel
     {
         assert($this->dataSpecification instanceof DataModel);
@@ -52,5 +64,15 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     public function getType(): string
     {
         return 'rdf';
+    }
+
+    public function getDatabaseType(): RDFDistributionDatabaseType
+    {
+        return $this->databaseType;
+    }
+
+    public function setDatabaseType(RDFDistributionDatabaseType $databaseType): void
+    {
+        $this->databaseType = $databaseType;
     }
 }

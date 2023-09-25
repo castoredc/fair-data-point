@@ -27,6 +27,7 @@ doctrine:
             DistributionContentsDependencyType: App\Type\Enum\DistributionContentsDependencyType
             DataDictionaryDataType: App\Type\Enum\DataDictionaryDataType
             PermissionType: App\Type\Enum\PermissionType
+            RDFDistributionDatabaseType: App\Type\Enum\RDFDistributionDatabaseType
 
     orm:
         auto_generate_proxy_classes: true

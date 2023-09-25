@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Entity\Connection\DistributionDatabaseInformation;
+use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
-use App\Service\TripleStoreBasedDistributionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
