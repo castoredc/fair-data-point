@@ -7,8 +7,8 @@ use App\Command\Study\GetPaginatedStudiesCommand;
 use App\Entity\PaginatedResultCollection;
 use App\Entity\Study;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class GetPaginatedStudiesCommandHandler

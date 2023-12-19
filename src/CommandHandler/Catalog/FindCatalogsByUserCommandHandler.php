@@ -7,8 +7,8 @@ use App\Command\Catalog\FindCatalogsByUserCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

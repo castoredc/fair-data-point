@@ -13,8 +13,8 @@ use App\Exception\SessionTimedOut;
 use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

@@ -7,8 +7,8 @@ use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\PaginatedResultCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class GetPaginatedDatasetsCommandHandler

@@ -13,8 +13,8 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\CastorEntityCollection;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

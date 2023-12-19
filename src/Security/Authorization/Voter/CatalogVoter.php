@@ -5,9 +5,9 @@ namespace App\Security\Authorization\Voter;
 
 use App\Entity\FAIRData\Catalog;
 use App\Security\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 use function in_array;
 

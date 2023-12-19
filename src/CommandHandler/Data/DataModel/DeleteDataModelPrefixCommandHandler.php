@@ -6,8 +6,8 @@ namespace App\CommandHandler\Data\DataModel;
 use App\Command\Data\DataModel\DeleteDataModelPrefixCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class DeleteDataModelPrefixCommandHandler

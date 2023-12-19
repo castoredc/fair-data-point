@@ -7,8 +7,8 @@ use App\Command\Security\RemovePermissionToEntityCommand;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class RemovePermissionToEntityCommandHandler

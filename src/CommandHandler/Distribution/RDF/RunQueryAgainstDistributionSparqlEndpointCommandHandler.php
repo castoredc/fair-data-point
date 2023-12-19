@@ -12,8 +12,8 @@ use App\Service\Distribution\MysqlBasedDistributionService;
 use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
 use Exception;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

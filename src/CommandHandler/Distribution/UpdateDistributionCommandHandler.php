@@ -12,8 +12,8 @@ use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

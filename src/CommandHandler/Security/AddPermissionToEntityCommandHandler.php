@@ -11,8 +11,8 @@ use App\Exception\UserNotFound;
 use App\Security\Permission;
 use App\Security\Providers\Castor\CastorUser;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class AddPermissionToEntityCommandHandler

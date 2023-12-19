@@ -12,8 +12,8 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

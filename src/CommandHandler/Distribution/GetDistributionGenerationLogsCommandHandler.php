@@ -8,8 +8,8 @@ use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class GetDistributionGenerationLogsCommandHandler

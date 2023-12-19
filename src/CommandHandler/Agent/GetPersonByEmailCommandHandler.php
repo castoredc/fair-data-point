@@ -8,8 +8,8 @@ use App\Entity\FAIRData\Agent\Person;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class GetPersonByEmailCommandHandler

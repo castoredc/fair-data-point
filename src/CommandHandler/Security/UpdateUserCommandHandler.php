@@ -9,8 +9,8 @@ use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Iri;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

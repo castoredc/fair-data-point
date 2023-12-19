@@ -10,8 +10,8 @@ use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class CreateDataModelCommandHandler

@@ -7,8 +7,8 @@ use App\Command\Data\DataDictionary\GetDataDictionariesCommand;
 use App\Entity\Data\DataDictionary\DataDictionary;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class GetDataDictionariesCommandHandler

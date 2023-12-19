@@ -9,8 +9,8 @@ use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 use function uniqid;
 

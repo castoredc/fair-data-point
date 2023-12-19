@@ -13,8 +13,8 @@ use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
 use App\Service\UriHelper;
 use Exception;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

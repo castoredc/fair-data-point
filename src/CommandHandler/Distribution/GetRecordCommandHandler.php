@@ -14,8 +14,8 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\EncryptionService;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
 #[AsMessageHandler]

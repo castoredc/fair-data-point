@@ -8,8 +8,8 @@ use App\Exception\NoAccessPermission;
 use App\Model\Slack\ApiClient as SlackApiClient;
 use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class UpdateConsentCommandHandler

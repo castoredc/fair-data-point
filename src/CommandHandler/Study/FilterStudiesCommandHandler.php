@@ -6,8 +6,8 @@ namespace App\CommandHandler\Study;
 use App\Command\Study\FilterStudiesCommand;
 use App\Entity\Study;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class FilterStudiesCommandHandler

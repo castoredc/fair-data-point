@@ -7,8 +7,8 @@ use App\Command\Study\AddStudyToCatalogCommand;
 use App\Exception\CatalogNotExceptingSubmissions;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class AddStudyToCatalogCommandHandler
