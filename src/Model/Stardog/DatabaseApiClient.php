@@ -24,8 +24,7 @@ class DatabaseApiClient extends BaseApiClient
         $this->database = $database;
     }
 
-    /** @return mixed */
-    public function getDataFromStore(?string $namedGraphUrl)
+    public function getDataFromStore(?string $namedGraphUrl): mixed
     {
         return $this->graphRequest(
             '/' . $this->database . ($namedGraphUrl !== null ? '/?graph=' . urlencode($namedGraphUrl) : '/?graph=stardog:context:all'),

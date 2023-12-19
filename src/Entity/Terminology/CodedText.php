@@ -23,7 +23,7 @@ class CodedText
     private string $text;
 
     /** @var OntologyConcept[]|ArrayCollection */
-    private $concepts;
+    private array|ArrayCollection $concepts;
 
     public function __construct(string $text)
     {
@@ -47,7 +47,7 @@ class CodedText
     }
 
     /** @return OntologyConcept[]|ArrayCollection */
-    public function getConcepts()
+    public function getConcepts(): array|ArrayCollection
     {
         return $this->concepts;
     }

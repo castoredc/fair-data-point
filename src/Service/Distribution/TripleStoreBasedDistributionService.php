@@ -123,13 +123,12 @@ class TripleStoreBasedDistributionService implements DistributionService
         }
     }
 
-    /** @return mixed */
     public function getDataFromStore(
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         ?string $namedGraphUrl = null,
         ?array $nameSpaces = null
-    ) {
+    ): mixed {
         $this->createReadOnlyDatabaseApiClient($databaseInformation, $encryptionService);
 
         return $this->client->getDataFromStore($namedGraphUrl);

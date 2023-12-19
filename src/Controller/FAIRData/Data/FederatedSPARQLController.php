@@ -36,7 +36,7 @@ class FederatedSPARQLController extends ApiController
             $results = $handledStamp->getResult();
             assert($results instanceof FederatedSparqlResponse);
 
-            return new Response($results->getResponse(), \Symfony\Component\HttpFoundation\Response::HTTP_OK, [
+            return new Response($results->getResponse(), Response::HTTP_OK, [
                 'Content-Type' => $results->getContentType(),
             ]);
         } catch (ApiRequestParseError $e) {
@@ -49,7 +49,7 @@ class FederatedSPARQLController extends ApiController
                 'errorMessage' => $e->getMessage(),
             ]);
 
-            return new Response('An error occurred while executing your query.', \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+            return new Response('An error occurred while executing your query.', Response::HTTP_BAD_REQUEST);
         }
     }
 

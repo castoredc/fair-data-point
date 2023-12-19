@@ -40,7 +40,7 @@ final class CastorServerApiRequestTest extends TestCase
     {
         return Request::create(
             'https://fdp.castoredc.local',
-            \Symfony\Component\HttpFoundation\Request::METHOD_POST,
+            Request::METHOD_POST,
             [],
             [],
             [],

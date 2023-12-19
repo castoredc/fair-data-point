@@ -75,7 +75,6 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     /**
      * Requests an access token using a specified grant and option set.
      *
-     * @param mixed        $grant
      * @param array<mixed> $options
      *
      * @throws IdentityProviderException
@@ -84,7 +83,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     public function getAccessTokenWithServer(
         string $server,
         int $serverId,
-        $grant,
+        mixed $grant,
         array $options = []
     ): AccessTokenInterface {
         $this->server = $server;
@@ -112,7 +111,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     }
 
     /** @param array<mixed>|string $data */
-    protected function checkResponse(ResponseInterface $response, $data): void
+    protected function checkResponse(ResponseInterface $response, array|string $data): void
     {
         // TODO: Implement checkResponse() method.
     }

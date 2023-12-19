@@ -38,7 +38,7 @@ class Organization extends Agent
      *
      * @var Department[]|ArrayCollection
      */
-    private $departments;
+    private array|ArrayCollection $departments;
 
     /** @ORM\Column(type="decimal", precision=10, scale=8, nullable=true) */
     private ?string $coordinatesLatitude = null;
@@ -101,7 +101,7 @@ class Organization extends Agent
     }
 
     /** @return Department[]|ArrayCollection */
-    public function getDepartments()
+    public function getDepartments(): array|ArrayCollection
     {
         return $this->departments;
     }
@@ -132,7 +132,7 @@ class Organization extends Agent
     }
 
     /** @param Department[]|ArrayCollection $departments */
-    public function setDepartments($departments): void
+    public function setDepartments(array|ArrayCollection $departments): void
     {
         $this->departments = $departments;
     }

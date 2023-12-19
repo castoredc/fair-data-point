@@ -119,14 +119,12 @@ class ApiClient
     }
 
     /**
-     * @return mixed
-     *
      * @throws ErrorFetchingCastorData
      * @throws SessionTimedOut
      * @throws NoAccessPermission
      * @throws NotFound
      */
-    private function request(string $uri)
+    private function request(string $uri): mixed
     {
         try {
             $response = $this->client->request(

@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\Security;
 use function array_key_exists;
 use function assert;
 use function count;
-use function get_class;
 use function sprintf;
 use function str_replace;
 use function strlen;
@@ -87,16 +86,16 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             if ($exception !== null) {
                 unset($record['context']['exception']);
 
-                $exceptionClass = get_class($exception);
+                $exceptionClass = $exception::class;
 
                 if ($exception instanceof HandlerFailedException) {
                     $exception = $exception->getPrevious();
-                    $exceptionClass .= "\n" . get_class($exception);
+                    $exceptionClass .= "\n" . $exception::class;
                 }
 
                 if ($exception->getPrevious() !== null) {
                     $previousException = $exception->getPrevious();
-                    $exceptionClass .= sprintf("\n(%s)", get_class($previousException));
+                    $exceptionClass .= sprintf("\n(%s)", $previousException::class);
                 }
 
                 $stackTrace = $exception->getTraceAsString();

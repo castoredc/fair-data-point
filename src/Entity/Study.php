@@ -56,7 +56,7 @@ abstract class Study implements AccessibleEntity
      *
      * @var StudyMetadata[]|ArrayCollection
      */
-    private $metadata;
+    private array|ArrayCollection $metadata;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study", fetch = "EAGER")
@@ -131,7 +131,7 @@ abstract class Study implements AccessibleEntity
     }
 
     /** @return StudyMetadata[]|ArrayCollection */
-    public function getMetadata()
+    public function getMetadata(): array|ArrayCollection
     {
         return $this->metadata;
     }

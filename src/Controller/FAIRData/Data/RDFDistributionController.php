@@ -87,15 +87,15 @@ class RDFDistributionController extends FAIRDataController
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NoAccessPermission) {
-                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             if ($e instanceof NotFound) {
-                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+                return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
             $this->logger->critical('An error occurred while loading the RDF for a distribution', [

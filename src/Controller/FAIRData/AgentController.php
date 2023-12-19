@@ -8,7 +8,6 @@ use App\Entity\FAIRData\Agent\Person;
 use App\Graph\Resource\Agent\Organization\OrganizationGraphResource;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

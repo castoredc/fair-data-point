@@ -23,7 +23,7 @@ class Slug extends Constraint
     public function __construct(
         $type,
         ?array $groups = null,
-        $payload = null
+        mixed $payload = null
     ) {
         $this->type = $type;
         parent::__construct([], $groups, $payload);

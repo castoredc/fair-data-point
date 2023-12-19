@@ -75,7 +75,7 @@ class RDFDistributionSPARQLController extends ApiController
                 )
             );
 
-            return new Response($results->getResponse(), \Symfony\Component\HttpFoundation\Response::HTTP_OK, [
+            return new Response($results->getResponse(), Response::HTTP_OK, [
                 'Content-Type' => $results->getContentType(),
             ]);
         } catch (ApiRequestParseError $e) {
@@ -99,7 +99,7 @@ class RDFDistributionSPARQLController extends ApiController
                 )
             );
 
-            return new Response('An error occurred while executing your query.', \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+            return new Response('An error occurred while executing your query.', Response::HTTP_BAD_REQUEST);
         }
     }
 

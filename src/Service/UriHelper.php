@@ -40,8 +40,7 @@ class UriHelper
         return $fdp->getIri()->getValue();
     }
 
-    /** @param mixed $object */
-    public function getUri($object, bool $addTrailingSlash = false): ?string
+    public function getUri(mixed $object, bool $addTrailingSlash = false): ?string
     {
         if (! $object instanceof AccessibleEntity) {
             return null;

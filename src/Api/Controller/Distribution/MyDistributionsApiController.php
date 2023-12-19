@@ -8,7 +8,6 @@ use App\Api\Resource\Distribution\DistributionTreeApiResource;
 use App\Command\Distribution\FindDistributionsByUserCommand;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;

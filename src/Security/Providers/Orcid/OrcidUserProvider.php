@@ -62,7 +62,7 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
     }
 
     /** @param array<mixed>|string $data */
-    protected function checkResponse(ResponseInterface $response, $data): void
+    protected function checkResponse(ResponseInterface $response, array|string $data): void
     {
         // TODO: Implement checkResponse() method.
     }

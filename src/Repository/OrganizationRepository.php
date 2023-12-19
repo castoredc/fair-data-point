@@ -8,11 +8,10 @@ use Doctrine\ORM\EntityRepository;
 
 class OrganizationRepository extends EntityRepository
 {
-    /** @return mixed */
     public function findOrganizations(
         ?Country $country,
         string $search
-    ) {
+    ): mixed {
         $qb = $this->createQueryBuilder('organization')
             ->select('organization');
 

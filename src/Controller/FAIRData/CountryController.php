@@ -6,7 +6,6 @@ namespace App\Controller\FAIRData;
 use App\Entity\FAIRData\Country;
 use App\Graph\Resource\CountryGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

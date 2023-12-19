@@ -188,13 +188,12 @@ class MysqlBasedDistributionService implements DistributionService
         return $parsed;
     }
 
-    /** @return mixed */
     public function getDataFromStore(
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         ?string $namedGraphUrl = null,
         ?array $nameSpaces = null
-    ) {
+    ): mixed {
         $store = $this->getArc2Store(
             self::CURRENT_STORE,
             $databaseInformation,

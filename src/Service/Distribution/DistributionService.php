@@ -15,11 +15,10 @@ interface DistributionService
 
     public function createUsers(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): void;
 
-    /** @return mixed */
     public function getDataFromStore(
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         ?string $namedGraphUrl = null,
         ?array $nameSpaces = null
-    );
+    ): mixed;
 }

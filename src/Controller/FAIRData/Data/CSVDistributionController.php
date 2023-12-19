@@ -16,7 +16,6 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -69,11 +68,11 @@ class CSVDistributionController extends FAIRDataController
             $e = $e->getPrevious();
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+                return new JsonResponse($e->toArray(), Response::HTTP_UNAUTHORIZED);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
