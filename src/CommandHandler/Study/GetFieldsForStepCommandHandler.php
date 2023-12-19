@@ -13,7 +13,7 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 
 #[AsMessageHandler]

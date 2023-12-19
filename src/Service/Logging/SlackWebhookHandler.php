@@ -9,7 +9,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function array_key_exists;
 use function assert;
 use function count;

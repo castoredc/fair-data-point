@@ -7,7 +7,7 @@ use App\Command\Terminology\DeleteAnnotationCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsMessageHandler]
 class DeleteAnnotationCommandHandler

@@ -14,7 +14,7 @@ use App\Factory\Data\DataDictionary\DataDictionaryGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function file_get_contents;
 use function json_decode;
 

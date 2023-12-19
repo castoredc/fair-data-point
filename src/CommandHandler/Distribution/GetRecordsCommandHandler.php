@@ -14,7 +14,7 @@ use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 
 #[AsMessageHandler]

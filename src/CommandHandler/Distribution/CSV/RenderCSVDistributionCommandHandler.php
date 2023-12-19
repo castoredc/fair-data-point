@@ -12,7 +12,7 @@ use App\Model\Castor\ApiClient;
 use App\Security\User;
 use App\Service\EncryptionService;
 use Exception;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler

@@ -9,7 +9,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 
 #[AsMessageHandler]

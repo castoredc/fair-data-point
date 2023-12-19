@@ -9,7 +9,7 @@ use App\Model\Slack\ApiClient as SlackApiClient;
 use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsMessageHandler]
 class UpdateConsentCommandHandler

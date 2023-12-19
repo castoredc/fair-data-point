@@ -18,7 +18,7 @@ use EasyRdf\RdfNamespace;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Throwable;
 use function assert;
 

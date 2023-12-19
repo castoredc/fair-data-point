@@ -6,7 +6,7 @@ namespace App\CommandHandler\Dataset;
 use App\Command\Dataset\GetDatasetsByStudyCommand;
 use App\Entity\PaginatedResultCollection;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function count;
 
 #[AsMessageHandler]
