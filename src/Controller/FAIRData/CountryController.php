@@ -16,7 +16,7 @@ class CountryController extends FAIRDataController
      * @Route("/fdp/country/{country}", name="agent_person")
      * @ParamConverter("country", options={"mapping": {"country": "code"}})
      */
-    public function country(Country $country, Request $request): Response
+    public function country(Country $country): Response
     {
         return new Response(
             (new CountryGraphResource($country, $this->basePurl))->toGraph()->serialise('turtle'),

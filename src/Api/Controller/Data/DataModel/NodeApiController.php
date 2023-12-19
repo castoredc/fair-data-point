@@ -115,7 +115,7 @@ class NodeApiController extends ApiController
      * @Route("/{type}/{id}", methods={"DELETE"}, name="api_node_remove")
      * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
      */
-    public function removeNode(DataModelVersion $dataModelVersion, string $type, Node $node, Request $request, MessageBusInterface $bus): Response
+    public function removeNode(DataModelVersion $dataModelVersion, string $type, Node $node, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 

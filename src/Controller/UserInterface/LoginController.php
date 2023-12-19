@@ -44,7 +44,7 @@ class LoginController extends AbstractController
     }
 
     /** @Route("/redirect-login", name="redirect_login") */
-    public function loginRedirect(Request $request): Response
+    public function loginRedirect(): Response
     {
         return $this->redirectToRoute('fdp');
     }

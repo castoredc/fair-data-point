@@ -18,7 +18,7 @@ class AgentController extends FAIRDataController
      * @Route("/fdp/person/{person}", name="agent_person")
      * @ParamConverter("person", options={"mapping": {"person": "slug"}})
      */
-    public function person(Person $person, Request $request): Response
+    public function person(Person $person): Response
     {
 //        if ($this->acceptsHttp($request)) {
 //            return $this->render('react.html.twig', $this->getAgentSeoTexts($person));
@@ -35,7 +35,7 @@ class AgentController extends FAIRDataController
      * @Route("/fdp/organization/{organization}", name="agent_organization")
      * @ParamConverter("organization", options={"mapping": {"organization": "slug"}})
      */
-    public function organization(Organization $organization, Request $request): Response
+    public function organization(Organization $organization): Response
     {
 //        if ($this->acceptsHttp($request)) {
 //            return $this->render('react.html.twig', $this->getAgentSeoTexts($organization));

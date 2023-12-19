@@ -49,13 +49,13 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return new Response($exception->getMessage(), 401);
+        return new Response($exception->getMessage(), \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
     }
 
     /** @inheritDoc */
     public function start(Request $request, ?AuthenticationException $authException = null)
     {
-        return new Response('The X-AUTH-TOKEN and X-AUTH-SERVER headers are required.', 401);
+        return new Response('The X-AUTH-TOKEN and X-AUTH-SERVER headers are required.', \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
     }
 
     /** @return array{api_token: string|null, edc_server: string|null} */

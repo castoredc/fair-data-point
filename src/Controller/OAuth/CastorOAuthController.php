@@ -19,7 +19,7 @@ class CastorOAuthController extends AbstractController
      * @Route("/connect/castor/{server}", name="connect_castor_start")
      * @ParamConverter("server", options={"mapping": {"server": "id"}})
      */
-    public function connectAction(CastorServer $server, Request $request, ClientRegistry $clientRegistry): Response
+    public function connect(CastorServer $server, Request $request, ClientRegistry $clientRegistry): Response
     {
         $request->getSession()->set('previous', $request->get('target_path'));
         $request->getSession()->set('castor.server', $server->getUrl()->getValue());
@@ -46,7 +46,7 @@ class CastorOAuthController extends AbstractController
      *
      * @Route("/login/check-castor", name="connect_castor_check")
      */
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry): void
+    public function connectCheck(ClientRegistry $clientRegistry): void
     {
     }
 }

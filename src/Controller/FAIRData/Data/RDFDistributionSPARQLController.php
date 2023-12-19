@@ -75,7 +75,7 @@ class RDFDistributionSPARQLController extends ApiController
                 )
             );
 
-            return new Response($results->getResponse(), 200, [
+            return new Response($results->getResponse(), \Symfony\Component\HttpFoundation\Response::HTTP_OK, [
                 'Content-Type' => $results->getContentType(),
             ]);
         } catch (ApiRequestParseError $e) {
@@ -99,7 +99,7 @@ class RDFDistributionSPARQLController extends ApiController
                 )
             );
 
-            return new Response('An error occurred while executing your query.', 400);
+            return new Response('An error occurred while executing your query.', \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -108,7 +108,7 @@ class RDFDistributionSPARQLController extends ApiController
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function rdfDistributionQuery(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function rdfDistributionQuery(Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();

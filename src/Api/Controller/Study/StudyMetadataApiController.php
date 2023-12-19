@@ -26,7 +26,7 @@ class StudyMetadataApiController extends ApiController
      * @Route("/api/study/{studyId}/metadata", methods={"GET"}, name="api_get_metadata")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function getMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
+    public function getMetadata(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 

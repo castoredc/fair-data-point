@@ -47,13 +47,12 @@ class DistributionGenerationLog
      *
      * @var mixed[]|null
      */
-    private ?array $errors = null;
+    private ?array $errors = [];
 
     public function __construct(DistributionContents $distribution)
     {
         $this->distribution = $distribution;
         $this->records = new ArrayCollection();
-        $this->errors = [];
     }
 
     public function getId(): string

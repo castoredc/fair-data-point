@@ -15,13 +15,12 @@ abstract class RecordData
     private ArrayCollection $data;
 
     /** @var Field[] */
-    private array $fields;
+    private array $fields = [];
 
     public function __construct(Record $record)
     {
         $this->record = $record;
         $this->data = new ArrayCollection();
-        $this->fields = [];
     }
 
     public function getFieldResultByVariableName(string $variableName): ?FieldResult

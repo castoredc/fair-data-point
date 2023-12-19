@@ -86,7 +86,7 @@ class AnnotationApiController extends ApiController
      * @Route("/{annotation}", methods={"DELETE"}, name="api_study_annotations_delete")
      * @ParamConverter("annotation", options={"mapping": {"annotation": "id"}})
      */
-    public function deleteAnnotation(Annotation $annotation, Study $study, Request $request, MessageBusInterface $bus): Response
+    public function deleteAnnotation(Annotation $annotation, Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $study);
 

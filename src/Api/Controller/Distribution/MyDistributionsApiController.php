@@ -19,7 +19,7 @@ use function assert;
 class MyDistributionsApiController extends ApiController
 {
     /** @Route("/api/distributions/tree", methods={"GET"}, name="api_distribution_tree") */
-    public function distributions(Request $request, MessageBusInterface $bus): Response
+    public function distributions(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();

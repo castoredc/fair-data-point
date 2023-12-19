@@ -24,10 +24,9 @@ final class DashboardController extends AbstractController
      *
      * @Route("/dashboard", name="redirect_dashboard")
      */
-    public function redirectToStudies(Request $request): Response
+    public function redirectToStudies(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
         return $this->redirectToRoute('dashboard_studies');
     }
 

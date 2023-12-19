@@ -34,7 +34,7 @@ class CSVDistributionController extends FAIRDataController
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function csvDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function csvDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
@@ -69,11 +69,11 @@ class CSVDistributionController extends FAIRDataController
             $e = $e->getPrevious();
 
             if ($e instanceof SessionTimedOut) {
-                return new JsonResponse($e->toArray(), 401);
+                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
             }
 
             if ($e instanceof NoAccessPermissionToStudy) {
-                return new JsonResponse($e->toArray(), 403);
+                return new JsonResponse($e->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
             }
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
