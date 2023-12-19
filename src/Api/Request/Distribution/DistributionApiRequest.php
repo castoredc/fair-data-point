@@ -176,7 +176,6 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
         return $this->public;
     }
 
-    /** @inheritDoc */
     public function getGroupSequence(): array|Assert\GroupSequence
     {
         return [

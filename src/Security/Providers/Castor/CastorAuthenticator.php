@@ -25,7 +25,6 @@ use function strtr;
 
 class CastorAuthenticator extends Authenticator
 {
-    /** @inheritDoc */
     public function supports(Request $request): ?bool
     {
         // continue ONLY if the current ROUTE matches the check ROUTE
@@ -111,7 +110,6 @@ class CastorAuthenticator extends Authenticator
         return new RedirectResponse($url);
     }
 
-    /** @inheritDoc */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $message = strtr($exception->getMessageKey(), $exception->getMessageData());

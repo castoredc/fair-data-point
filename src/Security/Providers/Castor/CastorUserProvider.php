@@ -111,7 +111,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return [];
     }
 
-    /** @param array<mixed>|string $data */
+    /** @inheritDoc */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.
