@@ -270,4 +270,9 @@ class User implements UserInterface
     {
         return $this->distributions;
     }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getId();
+    }
 }

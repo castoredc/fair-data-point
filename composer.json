@@ -5,6 +5,7 @@
         "php": "^8.2",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-simplexml": "*",
         "ext-sodium": "*",
         "beberlei/assert": "^3.3",
@@ -17,7 +18,7 @@
         "easyrdf/easyrdf": "^1.0.0",
         "fresh/doctrine-enum-bundle": "^9.0",
         "guzzlehttp/guzzle": "^6.5.8",
-        "knpuniversity/oauth2-client-bundle": "^2.5",
+        "knpuniversity/oauth2-client-bundle": "^2.18",
         "league/oauth2-client": "^2.5",
         "ml/json-ld": "^1.2",
         "semsol/arc2": "^3.0.0",
@@ -34,8 +35,7 @@
         "symfony/twig-bundle": "^6.4",
         "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "^6.4",
-        "twig/twig": "^3.3",
-        "ext-mbstring": "*"
+        "twig/twig": "^3.3"
     },
     "require-dev": {
         "castor/coding-standard": "^7.0",

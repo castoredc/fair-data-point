@@ -16,6 +16,7 @@ use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use function assert;
 use function trim;
@@ -111,7 +112,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     }
 
     /** @param array<mixed>|string $data */
-    protected function checkResponse(ResponseInterface $response, array|string $data): void
+    protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.
     }
@@ -152,5 +153,10 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
 
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        // TODO: Implement loadUserByIdentifier() method.
     }
 }

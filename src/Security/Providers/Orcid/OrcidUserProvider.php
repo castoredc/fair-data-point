@@ -10,6 +10,7 @@ use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OrcidUserProvider extends UserProvider implements UserProviderInterface
@@ -62,7 +63,7 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
     }
 
     /** @param array<mixed>|string $data */
-    protected function checkResponse(ResponseInterface $response, array|string $data): void
+    protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.
     }
@@ -80,5 +81,10 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
         return new OrcidUser($response['orcid'], $response['name'], $token->getToken());
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        // TODO: Implement loadUserByIdentifier() method.
     }
 }

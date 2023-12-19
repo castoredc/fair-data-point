@@ -14,11 +14,15 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Throwable;
 use function assert;
 
-class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
+class EdcApiTokenGuardAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     private const HEADER_X_AUTH_TOKEN = 'X-AUTH-TOKEN';
     private const HEADER_X_AUTH_SERVER = 'X-AUTH-SERVER';
@@ -53,13 +57,13 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
     }
 
     /** @inheritDoc */
-    public function start(Request $request, ?AuthenticationException $authException = null)
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         return new Response('The X-AUTH-TOKEN and X-AUTH-SERVER headers are required.', Response::HTTP_UNAUTHORIZED);
     }
 
     /** @return array{api_token: string|null, edc_server: string|null} */
-    public function getCredentials(Request $request): array
+    private function getCredentials(Request $request): array
     {
         return [
             self::CREDENTIALS_API_TOKEN => $request->headers->get(self::HEADER_X_AUTH_TOKEN),
@@ -68,7 +72,7 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
     }
 
     /** @inheritDoc */
-    public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
+    private function getUser($credentials): UserInterface
     {
         // Validate the supplied edc server
         $edcServer = $this->entityManager->getRepository(CastorServer::class)->findOneBy(['url' => $credentials[self::CREDENTIALS_EDC_SERVER]]);
@@ -120,15 +124,11 @@ class EdcApiTokenGuardAuthenticator extends AbstractGuardAuthenticator
         return $user;
     }
 
-    /** @inheritDoc */
-    public function checkCredentials($credentials, UserInterface $user): bool
+    public function authenticate(Request $request): Passport
     {
-        return true;
-    }
+        $credentials = $this->getCredentials($request);
+        $user = $this->getUser($credentials);
 
-    /** @inheritDoc */
-    public function supportsRememberMe()
-    {
-        return false;
+        return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier()));
     }
 }

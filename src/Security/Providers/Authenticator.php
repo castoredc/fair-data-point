@@ -11,6 +11,7 @@ use App\Model\Castor\ApiClient;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use function assert;
 use function http_build_query;
 
-abstract class Authenticator extends SocialAuthenticator
+abstract class Authenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
 {
     protected ClientRegistry $clientRegistry;
     protected EntityManagerInterface $em;
