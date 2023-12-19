@@ -21,6 +21,7 @@
         "knpuniversity/oauth2-client-bundle": "^2.18",
         "league/oauth2-client": "^2.5",
         "ml/json-ld": "^1.2",
+        "ramsey/uuid-doctrine": "^2.0",
         "semsol/arc2": "^3.0.0",
         "sensio/framework-extra-bundle": "^6.2",
         "stof/doctrine-extensions-bundle": "^1.4",

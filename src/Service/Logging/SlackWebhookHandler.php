@@ -52,9 +52,9 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      *
      * @param array $record
      */
-    protected function write(array|LogRecord $record): void
+    protected function write(LogRecord $record): void
     {
-        $message = $this->getSlackMessage($record);
+        $message = $this->getSlackMessage($record->toArray());
         $this->apiClient->postMessage($message);
     }
 

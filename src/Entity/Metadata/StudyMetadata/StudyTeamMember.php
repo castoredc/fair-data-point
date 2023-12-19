@@ -7,6 +7,7 @@ use App\Entity\FAIRData\Agent\Person;
 use App\Entity\Metadata\StudyMetadata;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 /**
  * @ORM\Entity
@@ -20,7 +21,8 @@ class StudyTeamMember
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 
