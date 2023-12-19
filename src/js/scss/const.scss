@@ -5,9 +5,11 @@ $logoWidth: 90px;
 
 $desktopHeaderPadding: 30px;
 $desktopHeaderHeight: $logoHeight;
+$desktopHeaderSpacingHeight: (2 * $desktopHeaderPadding) + $logoHeight;
 
 $desktopHeaderPaddingSmall: 15px;
-$desktopHeaderHeightSmall: (2 * $desktopHeaderPaddingSmall) + $logoHeight;
+$desktopHeaderHeightSmall: $logoHeight;
+$desktopHeaderSpacingHeightSmall: (2 * $desktopHeaderPaddingSmall) + $logoHeight;
 
 $mobileHeaderPadding: 15px;
 $mobileHeaderHeight: $logoHeight;

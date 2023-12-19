@@ -4,11 +4,11 @@
 header {
     &.Desktop {
         .Spacing {
-            height: $desktopHeaderHeight;
+            height: $desktopHeaderSpacingHeight;
             background: $primary-main;
 
             &.Small {
-                height: $desktopHeaderHeightSmall;
+                height: $desktopHeaderSpacingHeightSmall;
             }
         }
 
