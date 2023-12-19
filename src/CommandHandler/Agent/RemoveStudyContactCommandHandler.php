@@ -8,13 +8,13 @@ use App\Entity\FAIRData\Agent\Person;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 
-class RemoveStudyContactCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class RemoveStudyContactCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

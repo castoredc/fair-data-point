@@ -8,14 +8,14 @@ use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class GetInstitutesForStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetInstitutesForStudyCommandHandler
 {
     private CastorEntityHelper $entityHelper;
-
     private Security $security;
 
     public function __construct(CastorEntityHelper $entityHelper, Security $security)

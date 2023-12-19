@@ -8,14 +8,14 @@ use App\Entity\Study;
 use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class GetStudiesCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetStudiesCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

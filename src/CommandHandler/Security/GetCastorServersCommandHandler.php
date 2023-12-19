@@ -6,9 +6,10 @@ namespace App\CommandHandler\Security;
 use App\Command\Security\GetCastorServersCommand;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetCastorServersCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetCastorServersCommandHandler
 {
     private EntityManagerInterface $em;
 

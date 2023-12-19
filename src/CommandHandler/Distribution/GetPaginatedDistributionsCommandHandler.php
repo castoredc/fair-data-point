@@ -7,9 +7,10 @@ use App\Command\Distribution\GetPaginatedDistributionsCommand;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\PaginatedResultCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetPaginatedDistributionsCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetPaginatedDistributionsCommandHandler
 {
     private EntityManagerInterface $em;
 

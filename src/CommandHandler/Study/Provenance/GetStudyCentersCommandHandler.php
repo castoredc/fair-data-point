@@ -5,9 +5,10 @@ namespace App\CommandHandler\Study\Provenance;
 
 use App\Command\Study\Provenance\GetStudyCentersCommand;
 use App\Entity\Metadata\StudyMetadata\ParticipatingCenter;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetStudyCentersCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetStudyCentersCommandHandler
 {
     /** @return ParticipatingCenter[] */
     public function __invoke(GetStudyCentersCommand $command): array

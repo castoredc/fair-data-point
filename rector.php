@@ -6,6 +6,7 @@ use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
+use Rector\Symfony\Symfony62\Rector\Class_\MessageHandlerInterfaceToAttributeRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -22,6 +23,8 @@ return static function (RectorConfig $rectorConfig): void {
         SymfonySetList::SYMFONY_63,
         SymfonySetList::SYMFONY_CODE_QUALITY,
     ]);
+
+    $rectorConfig->rule(MessageHandlerInterfaceToAttributeRector::class);
 
     // define sets of rules
     //    $rectorConfig->sets([

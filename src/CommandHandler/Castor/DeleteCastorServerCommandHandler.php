@@ -7,9 +7,10 @@ use App\Command\Castor\DeleteCastorServerCommand;
 use App\Exception\Castor\CastorServerNotFound;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class DeleteCastorServerCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class DeleteCastorServerCommandHandler
 {
     private EntityManagerInterface $em;
 

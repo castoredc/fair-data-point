@@ -8,9 +8,10 @@ use App\CommandHandler\Data\DataSpecificationGroupCommandHandler;
 use App\Entity\Data\DataModel\DataModelGroup;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class CreateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupCommandHandler
 {
     public function __invoke(CreateDataModelModuleCommand $command): void
     {

@@ -11,16 +11,15 @@ use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class GetCastorEntityCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetCastorEntityCommandHandler
 {
     private EntityManagerInterface $em;
-
     private CastorEntityHelper $entityHelper;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, CastorEntityHelper $entityHelper, Security $security)

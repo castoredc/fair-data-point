@@ -8,14 +8,14 @@ use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class GetStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetStudyCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

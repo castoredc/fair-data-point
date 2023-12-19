@@ -10,15 +10,15 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 use function uniqid;
 
-class CreateDatasetForStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDatasetForStudyCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

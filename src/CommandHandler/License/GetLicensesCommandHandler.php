@@ -7,9 +7,10 @@ use App\Api\Resource\License\LicensesApiResource;
 use App\Command\License\GetLicensesCommand;
 use App\Entity\FAIRData\License;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetLicensesCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetLicensesCommandHandler
 {
     private EntityManagerInterface $em;
 

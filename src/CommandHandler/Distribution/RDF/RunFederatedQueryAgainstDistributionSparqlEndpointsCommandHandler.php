@@ -16,21 +16,18 @@ use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use Throwable;
 use function assert;
 
-class RunFederatedQueryAgainstDistributionSparqlEndpointsCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class RunFederatedQueryAgainstDistributionSparqlEndpointsCommandHandler
 {
     private TripleStoreBasedDistributionService $distributionService;
-
     private EntityManagerInterface $em;
-
     private EncryptionService $encryptionService;
-
     private Security $security;
-
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(TripleStoreBasedDistributionService $distributionService, EntityManagerInterface $em, EncryptionService $encryptionService, Security $security, EventDispatcherInterface $eventDispatcher)

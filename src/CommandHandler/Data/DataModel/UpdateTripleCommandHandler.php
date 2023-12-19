@@ -10,14 +10,14 @@ use App\Entity\Data\DataModel\Predicate;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class UpdateTripleCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateTripleCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

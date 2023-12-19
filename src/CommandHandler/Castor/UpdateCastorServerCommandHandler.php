@@ -8,10 +8,11 @@ use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Security\CastorServer;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function count;
 
-final class UpdateCastorServerCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class UpdateCastorServerCommandHandler
 {
     private EntityManagerInterface $em;
     private EncryptionService $encryptionService;

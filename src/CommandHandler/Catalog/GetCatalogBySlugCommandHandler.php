@@ -8,13 +8,13 @@ use App\Entity\FAIRData\Catalog;
 use App\Exception\CatalogNotFound;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 
-class GetCatalogBySlugCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetCatalogBySlugCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

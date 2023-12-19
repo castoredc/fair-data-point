@@ -6,13 +6,13 @@ namespace App\CommandHandler\Terminology;
 use App\Command\Terminology\DeleteAnnotationCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 
-class DeleteAnnotationCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DeleteAnnotationCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

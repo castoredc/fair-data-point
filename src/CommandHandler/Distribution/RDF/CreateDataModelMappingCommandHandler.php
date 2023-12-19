@@ -11,20 +11,17 @@ use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\DataTransformationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-abstract class CreateDataModelMappingCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+abstract class CreateDataModelMappingCommandHandler
 {
     protected EntityManagerInterface $em;
-
     protected Security $security;
-
     protected CastorEntityHelper $entityHelper;
-
     protected CastorStudy $study;
-
     protected DataTransformationService $dataTransformationService;
 
     public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper, DataTransformationService $dataTransformationService)

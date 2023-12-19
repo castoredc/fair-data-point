@@ -13,19 +13,17 @@ use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
 use App\Service\UriHelper;
 use Exception;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class GetRDFFromStoreCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetRDFFromStoreCommandHandler
 {
     private MysqlBasedDistributionService $mysqlBasedDistributionService;
     private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-
     private UriHelper $uriHelper;
-
     private EncryptionService $encryptionService;
-
     private Security $security;
 
     public function __construct(MysqlBasedDistributionService $mysqlBasedDistributionService, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, UriHelper $uriHelper, EncryptionService $encryptionService, Security $security)

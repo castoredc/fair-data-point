@@ -8,13 +8,13 @@ use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 
-class CreateDataModelPrefixCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDataModelPrefixCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

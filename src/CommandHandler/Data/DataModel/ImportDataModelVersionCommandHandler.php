@@ -17,12 +17,13 @@ use App\Factory\Data\DataModel\PredicateFactory;
 use App\Factory\Data\DataModel\TripleFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function file_get_contents;
 use function json_decode;
 
-class ImportDataModelVersionCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ImportDataModelVersionCommandHandler
 {
     private EntityManagerInterface $em;
     private Security $security;

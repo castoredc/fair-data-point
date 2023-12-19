@@ -6,13 +6,13 @@ namespace App\CommandHandler\Dataset;
 use App\Command\Dataset\AddDatasetToCatalogCommand;
 use App\Exception\CatalogNotExceptingSubmissions;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 
-class AddDatasetToCatalogCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class AddDatasetToCatalogCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

@@ -7,10 +7,11 @@ namespace App\CommandHandler\Tools;
 use App\Command\Tools\MetadataXmlParseCommand;
 use App\Exception\NoFieldsFound;
 use App\Exception\NoMetadataTypesFound;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function simplexml_load_string;
 
-class MetadataParseCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class MetadataParseCommandHandler
 {
     /**
      * @return array<mixed>

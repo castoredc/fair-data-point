@@ -7,9 +7,10 @@ use App\Command\Catalog\GetPaginatedCatalogsCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\PaginatedResultCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetPaginatedCatalogsCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetPaginatedCatalogsCommandHandler
 {
     private EntityManagerInterface $em;
 

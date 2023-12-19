@@ -5,9 +5,10 @@ namespace App\CommandHandler\Study\Provenance;
 
 use App\Command\Study\Provenance\GetStudyContactsCommand;
 use App\Entity\FAIRData\Agent\Person;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetStudyContactsCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetStudyContactsCommandHandler
 {
     /** @return Person[] */
     public function __invoke(GetStudyContactsCommand $command): array

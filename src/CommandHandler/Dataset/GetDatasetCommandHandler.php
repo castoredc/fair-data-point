@@ -8,14 +8,14 @@ use App\Entity\FAIRData\Dataset;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class GetDatasetCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetDatasetCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

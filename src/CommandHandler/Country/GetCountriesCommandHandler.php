@@ -7,9 +7,10 @@ use App\Api\Resource\Country\CountriesApiResource;
 use App\Command\Country\GetCountriesCommand;
 use App\Entity\FAIRData\Country;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetCountriesCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetCountriesCommandHandler
 {
     private EntityManagerInterface $em;
 

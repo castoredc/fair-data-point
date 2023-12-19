@@ -11,13 +11,13 @@ use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Castor\BioPortal\Model\Concept;
 use Castor\BioPortal\Model\Individual;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function array_merge;
 
-class FindOntologyConceptsCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class FindOntologyConceptsCommandHandler
 {
     private EntityManagerInterface $em;
-
     private ApiWrapper $bioPortalApiWrapper;
 
     public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper)

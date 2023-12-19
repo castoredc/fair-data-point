@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\CommandHandler;
 
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function count;
 use function fclose;
 use function feof;
@@ -12,7 +12,8 @@ use function fputcsv;
 use function fread;
 use function rewind;
 
-abstract class CSVCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+abstract class CSVCommandHandler
 {
     /**
      * @param string[]     $columns

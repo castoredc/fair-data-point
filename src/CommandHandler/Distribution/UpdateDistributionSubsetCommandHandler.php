@@ -7,14 +7,14 @@ use App\Command\Distribution\UpdateDistributionSubsetCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class UpdateDistributionSubsetCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateDistributionSubsetCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

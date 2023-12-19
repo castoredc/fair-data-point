@@ -6,9 +6,10 @@ namespace App\CommandHandler\Terminology;
 use App\Command\Terminology\GetOntologiesCommand;
 use App\Entity\Terminology\Ontology;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetOntologiesCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetOntologiesCommandHandler
 {
     private EntityManagerInterface $em;
 

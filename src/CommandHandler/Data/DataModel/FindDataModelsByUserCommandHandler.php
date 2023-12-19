@@ -7,14 +7,14 @@ use App\Command\Data\DataModel\FindDataModelsByUserCommand;
 use App\Entity\Data\DataModel\DataModel;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class FindDataModelsByUserCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class FindDataModelsByUserCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

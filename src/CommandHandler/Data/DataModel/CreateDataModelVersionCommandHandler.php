@@ -20,10 +20,11 @@ use App\Entity\Enum\VersionType;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class CreateDataModelVersionCommandHandler extends DataSpecificationVersionCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDataModelVersionCommandHandler extends DataSpecificationVersionCommandHandler
 {
     public function __invoke(CreateDataModelVersionCommand $command): DataModelVersion
     {

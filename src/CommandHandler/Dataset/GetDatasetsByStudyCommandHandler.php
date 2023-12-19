@@ -5,11 +5,12 @@ namespace App\CommandHandler\Dataset;
 
 use App\Command\Dataset\GetDatasetsByStudyCommand;
 use App\Entity\PaginatedResultCollection;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function count;
 
-class GetDatasetsByStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetDatasetsByStudyCommandHandler
 {
     private Security $security;
 

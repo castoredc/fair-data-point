@@ -12,17 +12,16 @@ use App\Service\Distribution\MysqlBasedDistributionService;
 use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
 use Exception;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 use function assert;
 
-class RunQueryAgainstDistributionSparqlEndpointCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class RunQueryAgainstDistributionSparqlEndpointCommandHandler
 {
     protected MysqlBasedDistributionService $mysqlBasedDistributionService;
     protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-
     private EncryptionService $encryptionService;
-
     private Security $security;
 
     public function __construct(

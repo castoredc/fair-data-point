@@ -11,13 +11,13 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\PersonAlreadyExists;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Security;
 
-class AddStudyContactCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class AddStudyContactCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)
