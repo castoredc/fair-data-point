@@ -7,6 +7,7 @@ use App\Model\Slack\ApiClient;
 use App\Security\User;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Security\Core\Security;
 use function array_key_exists;
@@ -51,7 +52,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      *
      * @param array $record
      */
-    protected function write(array $record): void
+    protected function write(array|LogRecord $record): void
     {
         $message = $this->getSlackMessage($record);
         $this->apiClient->postMessage($message);

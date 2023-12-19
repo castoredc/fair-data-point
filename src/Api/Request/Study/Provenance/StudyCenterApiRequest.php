@@ -74,7 +74,7 @@ class StudyCenterApiRequest extends SingleApiRequest implements GroupSequencePro
     }
 
     /** @inheritDoc */
-    public function getGroupSequence()
+    public function getGroupSequence(): array|Assert\GroupSequence
     {
         $sequence = ['StudyCenterApiRequest'];
 

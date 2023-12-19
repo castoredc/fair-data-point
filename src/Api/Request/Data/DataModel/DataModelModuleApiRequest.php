@@ -84,8 +84,7 @@ class DataModelModuleApiRequest extends SingleApiRequest implements GroupSequenc
         return DependencyGroup::fromData($this->dependencies);
     }
 
-    /** @inheritDoc */
-    public function getGroupSequence()
+    public function getGroupSequence(): array|Assert\GroupSequence
     {
         $sequence = ['DataModelModuleApiRequest'];
 

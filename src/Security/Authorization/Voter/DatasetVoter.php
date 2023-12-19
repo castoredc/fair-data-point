@@ -25,7 +25,7 @@ class DatasetVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function supports(string $attribute, $subject)
+    protected function supports(string $attribute, $subject): bool
     {
         if (! in_array($attribute, [self::VIEW, self::EDIT, self::MANAGE], true)) {
             return false;
