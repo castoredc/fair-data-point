@@ -6,6 +6,7 @@ namespace App\Security\Providers\Orcid;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
+use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +24,7 @@ class OrcidAuthenticator extends Authenticator
         return $request->attributes->get('_route') === 'oauth_orcid_check';
     }
 
-    /** @inheritDoc */
-    public function getUser($credentials)
+    public function getUser(AccessToken $credentials): User
     {
         $orcidUser = $this->getOrcidClient()->fetchUserFromToken($credentials);
         assert($orcidUser instanceof OrcidUser);
@@ -85,6 +85,6 @@ class OrcidAuthenticator extends Authenticator
         $accessToken = $this->fetchAccessToken($this->getOrcidClient());
         $user = $this->getUser($accessToken);
 
-        return new SelfValidatingPassport(new UserBadge($accessToken->getToken(), $user->getUserIdentifier()));
+        return new SelfValidatingPassport(new UserBadge($accessToken->getToken()));
     }
 }

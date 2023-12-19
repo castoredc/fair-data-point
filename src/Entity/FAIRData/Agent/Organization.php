@@ -36,9 +36,9 @@ class Organization extends Agent
     /**
      * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"}, fetch="EAGER")
      *
-     * @var Department[]|ArrayCollection
+     * @var ArrayCollection<Department>
      */
-    private array|ArrayCollection $departments;
+    private ArrayCollection $departments;
 
     /** @ORM\Column(type="decimal", precision=10, scale=8, nullable=true) */
     private ?string $coordinatesLatitude = null;
@@ -100,8 +100,8 @@ class Organization extends Agent
         $this->countryCode = $countryCode;
     }
 
-    /** @return Department[]|ArrayCollection */
-    public function getDepartments(): array|ArrayCollection
+    /** @return ArrayCollection<Department> */
+    public function getDepartments(): ArrayCollection
     {
         return $this->departments;
     }
@@ -131,8 +131,8 @@ class Organization extends Agent
         $this->city = $city;
     }
 
-    /** @param Department[]|ArrayCollection $departments */
-    public function setDepartments(array|ArrayCollection $departments): void
+    /** @param ArrayCollection<Department> $departments */
+    public function setDepartments(ArrayCollection $departments): void
     {
         $this->departments = $departments;
     }

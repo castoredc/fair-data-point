@@ -4,7 +4,6 @@ includes:
 parameters:
 	level: 7
 	paths:
-		- bin
 		- public
 		- src
 		- tests

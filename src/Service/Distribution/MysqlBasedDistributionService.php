@@ -9,14 +9,14 @@ use App\Exception\CouldNotCreateDatabase;
 use App\Exception\CouldNotCreateDatabaseUser;
 use App\Graph\SparqlResponse;
 use App\Service\EncryptionService;
-use ARC2;
 use ARC2_Store;
 use ARC2_StoreEndpoint;
 use Doctrine\DBAL\Configuration as DBALConfiguration;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use EasyRdf\Graph;
 use EasyRdf\Utils;
 use Throwable;
@@ -77,7 +77,6 @@ class MysqlBasedDistributionService implements DistributionService
             'host' => $this->host,
             'user' => $this->user,
             'password' => $this->pass,
-            'dbname' => null,
             'port' => $this->port,
             'driverOptions' => $this->getOptions(),
         ];
@@ -89,7 +88,7 @@ class MysqlBasedDistributionService implements DistributionService
         }
     }
 
-    /** @throws DBALException */
+    /** @throws Exception */
     public function createDistributionConnection(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): Connection
     {
         $config = new DBALConfiguration();
@@ -107,7 +106,7 @@ class MysqlBasedDistributionService implements DistributionService
         return DriverManager::getConnection($params, $config);
     }
 
-    /** @throws DBALException */
+    /** @throws Exception */
     public function getArc2Store(string $store, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService, bool $setupStore = true): ARC2_Store
     {
         $params = [
@@ -117,7 +116,7 @@ class MysqlBasedDistributionService implements DistributionService
             'store_engine_type' => 'InnoDB',
         ];
 
-        $store = ARC2::getStore($params);
+        $store = new ARC2_Store($params, $this);
 
         $store->createDBCon();
 
@@ -128,7 +127,7 @@ class MysqlBasedDistributionService implements DistributionService
         return $store;
     }
 
-    /** @throws DBALException */
+    /** @throws Exception */
     public function getArc2Endpoint(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): ARC2_StoreEndpoint
     {
         $params = [
@@ -141,7 +140,7 @@ class MysqlBasedDistributionService implements DistributionService
             'endpoint_features' => [ 'select', 'construct', 'ask', 'describe' ],
         ];
 
-        $endpoint = ARC2::getStoreEndpoint($params);
+        $endpoint = new ARC2_StoreEndpoint($params, $this);
 
         if (! $endpoint->isSetUp()) {
             $endpoint->setUp(); /* create MySQL tables */
@@ -150,7 +149,7 @@ class MysqlBasedDistributionService implements DistributionService
         return $endpoint;
     }
 
-    /** @throws DBALException */
+    /** @throws Exception */
     public function runQuery(string $query, DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): SparqlResponse
     {
         $endpoint = $this->getArc2Endpoint($databaseInformation, $encryptionService);
@@ -235,13 +234,13 @@ class MysqlBasedDistributionService implements DistributionService
             $encryptionService
         );
 
-        $store->optimizeTables();
+//        $store->optimizeTables();
     }
 
     /** @throws CouldNotConnectToMySqlServer */
     public function createDatabase(DistributionDatabaseInformation $databaseInformation): void
     {
-        $manager = new MySqlSchemaManager($this->createCreatorConnection());
+        $manager = new MySQLSchemaManager($this->createCreatorConnection(), new MySQL80Platform());
         $manager->createDatabase('`' . $databaseInformation->getDatabase() . '`');
     }
 

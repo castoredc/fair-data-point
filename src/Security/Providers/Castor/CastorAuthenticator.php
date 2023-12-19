@@ -11,6 +11,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
+use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +32,7 @@ class CastorAuthenticator extends Authenticator
         return $request->attributes->get('_route') === 'connect_castor_check';
     }
 
-    public function getUser($credentials)
+    public function getUser(AccessToken $credentials): User
     {
         $castorUser = $this->getCastorClient()->fetchUserFromToken($credentials);
         assert($castorUser instanceof CastorUser);
@@ -73,9 +74,9 @@ class CastorAuthenticator extends Authenticator
     public function authenticate(Request $request): Passport
     {
         $accessToken = $this->fetchAccessToken($this->getCastorClient());
-        $user = $this->getUser($this->fetchAccessToken($accessToken));
+        $user = $this->getUser($accessToken);
 
-        return new SelfValidatingPassport(new UserBadge($accessToken->getToken(), $user->getUserIdentifier()));
+        return new SelfValidatingPassport(new UserBadge($accessToken->getToken()));
     }
 
     private function createNewUser(CastorUser $castorUser): User

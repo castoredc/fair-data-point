@@ -69,8 +69,8 @@ class EdcApiTokenGuardAuthenticator extends AbstractAuthenticator implements Aut
         ];
     }
 
-    /** @inheritDoc */
-    private function getUser($credentials): UserInterface
+    /** @param array{api_token: string|null, edc_server: string|null} $credentials */
+    private function getUser(array $credentials): UserInterface
     {
         // Validate the supplied edc server
         $edcServer = $this->entityManager->getRepository(CastorServer::class)->findOneBy(['url' => $credentials[self::CREDENTIALS_EDC_SERVER]]);

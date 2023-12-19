@@ -6,10 +6,10 @@ namespace App\Service\Logging;
 use App\Model\Slack\ApiClient;
 use App\Security\User;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use function array_key_exists;
 use function assert;
 use function count;
@@ -35,7 +35,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         string $rootPath = '',
         ?Security $security = null
     ) {
-        parent::__construct(Logger::CRITICAL, true);
+        parent::__construct(Level::Critical, true);
 
         $this->apiClient = new ApiClient($webhookUrl);
         $this->rootPath = $rootPath;
@@ -47,11 +47,6 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param array $record
-     */
     protected function write(LogRecord $record): void
     {
         $message = $this->getSlackMessage($record->toArray());

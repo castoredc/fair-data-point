@@ -70,7 +70,6 @@ class SparqlClient
         $result = null;
         $matched = mb_eregi(self::REGEX, $processedQuery, $result);
 
-        /** @phpstan-ignore-next-line */
         if ($matched === false || count($result) !== 2) {
             // non-standard query. is this something non-standard?
             $queryVerb = null;
