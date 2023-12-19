@@ -56,9 +56,9 @@ abstract class Study implements AccessibleEntity
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study", cascade={"persist"}, fetch = "EAGER")
      *
-     * @var ArrayCollection<StudyMetadata>
+     * @var Collection<StudyMetadata>
      */
-    private ArrayCollection $metadata;
+    private Collection $metadata;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study", fetch = "EAGER")
@@ -132,8 +132,8 @@ abstract class Study implements AccessibleEntity
         $this->slug = $slug;
     }
 
-    /** @return ArrayCollection<StudyMetadata> */
-    public function getMetadata(): ArrayCollection
+    /** @return Collection<StudyMetadata> */
+    public function getMetadata(): Collection
     {
         return $this->metadata;
     }

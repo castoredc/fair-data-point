@@ -7,6 +7,7 @@ use App\Entity\FAIRData\Country;
 use App\Entity\Iri;
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function uniqid;
 
@@ -36,9 +37,9 @@ class Organization extends Agent
     /**
      * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"}, fetch="EAGER")
      *
-     * @var ArrayCollection<Department>
+     * @var Collection<Department>
      */
-    private ArrayCollection $departments;
+    private Collection $departments;
 
     /** @ORM\Column(type="decimal", precision=10, scale=8, nullable=true) */
     private ?string $coordinatesLatitude = null;
@@ -100,8 +101,8 @@ class Organization extends Agent
         $this->countryCode = $countryCode;
     }
 
-    /** @return ArrayCollection<Department> */
-    public function getDepartments(): ArrayCollection
+    /** @return Collection<Department> */
+    public function getDepartments(): Collection
     {
         return $this->departments;
     }
