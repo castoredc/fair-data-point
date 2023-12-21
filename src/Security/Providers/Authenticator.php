@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 use function assert;
 use function http_build_query;
 
-abstract class Authenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
+abstract class Authenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
     protected ClientRegistry $clientRegistry;
     protected EntityManagerInterface $em;

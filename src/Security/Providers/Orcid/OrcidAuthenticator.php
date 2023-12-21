@@ -85,6 +85,6 @@ class OrcidAuthenticator extends Authenticator
         $accessToken = $this->fetchAccessToken($this->getOrcidClient());
         $user = $this->getUser($accessToken);
 
-        return new SelfValidatingPassport(new UserBadge($accessToken->getToken()));
+        return new SelfValidatingPassport(new UserBadge($user->getId()));
     }
 }

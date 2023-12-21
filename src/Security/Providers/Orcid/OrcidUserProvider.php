@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Security\Providers\Orcid;
 
 use App\Security\Providers\UserProvider;
+use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -86,6 +87,12 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        throw new UserNotFoundException();
+        $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $identifier]);
+
+        if ($dbUser === null) {
+            throw new UserNotFoundException();
+        }
+
+        return $dbUser;
     }
 }

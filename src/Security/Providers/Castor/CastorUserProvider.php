@@ -7,6 +7,7 @@ use App\Exception\CouldNotDecrypt;
 use App\Model\Castor\ApiClient;
 use App\Security\CastorServer;
 use App\Security\Providers\UserProvider;
+use App\Security\User;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -158,6 +159,12 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        throw new UserNotFoundException();
+        $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $identifier]);
+
+        if ($dbUser === null) {
+            throw new UserNotFoundException();
+        }
+
+        return $dbUser;
     }
 }

@@ -76,7 +76,7 @@ class CastorAuthenticator extends Authenticator
         $accessToken = $this->fetchAccessToken($this->getCastorClient());
         $user = $this->getUser($accessToken);
 
-        return new SelfValidatingPassport(new UserBadge($accessToken->getToken()));
+        return new SelfValidatingPassport(new UserBadge($user->getId()));
     }
 
     private function createNewUser(CastorUser $castorUser): User
