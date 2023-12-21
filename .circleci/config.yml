@@ -3,7 +3,7 @@ version: 2.1
 executors:
   php-only:
     docker:
-      - image: cimg/php:7.4
+      - image: cimg/php:8.2
 
 
 jobs:
