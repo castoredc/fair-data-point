@@ -73,8 +73,7 @@ class StudyCenterApiRequest extends SingleApiRequest implements GroupSequencePro
         return $this->city;
     }
 
-    /** @inheritDoc */
-    public function getGroupSequence()
+    public function getGroupSequence(): array|Assert\GroupSequence
     {
         $sequence = ['StudyCenterApiRequest'];
 

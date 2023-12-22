@@ -112,8 +112,7 @@ class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequen
         return $this->elements;
     }
 
-    /** @inheritDoc */
-    public function getGroupSequence()
+    public function getGroupSequence(): array|Assert\GroupSequence
     {
         $groups = [
             'DataModelMappingApiRequest',

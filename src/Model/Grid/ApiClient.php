@@ -29,12 +29,10 @@ class ApiClient
     }
 
     /**
-     * @return mixed
-     *
      * @throws NotFound
      * @throws ErrorFetchingGridData
      */
-    private function request(string $uri)
+    private function request(string $uri): mixed
     {
         try {
             $response = $this->client->request(

@@ -10,15 +10,14 @@ use App\Entity\Data\DataModel\Node\RecordNode;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class CreateDataModelCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDataModelCommandHandler
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';
-
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

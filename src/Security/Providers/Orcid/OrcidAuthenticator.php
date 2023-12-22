@@ -6,30 +6,25 @@ namespace App\Security\Providers\Orcid;
 use App\Security\Providers\Authenticator;
 use App\Security\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
+use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use function assert;
 
 class OrcidAuthenticator extends Authenticator
 {
-    /** @inheritDoc */
-    public function supports(Request $request)
+    public function supports(Request $request): ?bool
     {
         return $request->attributes->get('_route') === 'oauth_orcid_check';
     }
 
-    /** @inheritDoc */
-    public function getCredentials(Request $request)
-    {
-        return $this->fetchAccessToken($this->getOrcidClient());
-    }
-
-    /** @inheritDoc */
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser(AccessToken $credentials): User
     {
         $orcidUser = $this->getOrcidClient()->fetchUserFromToken($credentials);
         assert($orcidUser instanceof OrcidUser);
@@ -80,9 +75,16 @@ class OrcidAuthenticator extends Authenticator
         return new RedirectResponse($url);
     }
 
-    /** @inheritDoc */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         return new Response($exception->getMessage(), Response::HTTP_FORBIDDEN);
+    }
+
+    public function authenticate(Request $request): Passport
+    {
+        $accessToken = $this->fetchAccessToken($this->getOrcidClient());
+        $user = $this->getUser($accessToken);
+
+        return new SelfValidatingPassport(new UserBadge($user->getId()));
     }
 }

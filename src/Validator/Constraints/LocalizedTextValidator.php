@@ -11,10 +11,7 @@ use function is_array;
 
 class LocalizedTextValidator extends ConstraintValidator
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (! $constraint instanceof LocalizedText) {
             throw new UnexpectedTypeException($constraint, LocalizedText::class);

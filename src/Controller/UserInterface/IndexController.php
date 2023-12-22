@@ -5,7 +5,6 @@ namespace App\Controller\UserInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,7 +15,7 @@ class IndexController extends AbstractController
      *
      * @Route("/", name="redirect_homepage")
      */
-    public function redirectToIndex(Request $request): Response
+    public function redirectToIndex(): Response
     {
         return $this->redirectToRoute('fdp');
     }

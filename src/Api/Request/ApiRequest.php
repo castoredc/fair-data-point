@@ -36,8 +36,7 @@ abstract class ApiRequest
 
     abstract protected function parse(): void;
 
-    /** @return mixed|null */
-    protected function getFromData(string $key)
+    protected function getFromData(string $key): mixed
     {
         if (! array_key_exists($key, $this->data)) {
             return null;
@@ -46,8 +45,7 @@ abstract class ApiRequest
         return $this->parseValue($this->data[$key]);
     }
 
-    /** @return mixed|null */
-    protected function getFromNestedData(string $group, string $key)
+    protected function getFromNestedData(string $group, string $key): mixed
     {
         if (! array_key_exists($group, $this->data) || ! array_key_exists($key, $this->data[$group])) {
             return null;
@@ -56,12 +54,7 @@ abstract class ApiRequest
         return $this->parseValue($this->data[$group][$key]);
     }
 
-    /**
-     * @param mixed|null $value
-     *
-     * @return mixed|null
-     */
-    private function parseValue($value)
+    private function parseValue(mixed $value): mixed
     {
         if (is_string($value)) {
             $value = trim($value);
@@ -72,8 +65,7 @@ abstract class ApiRequest
         return $value;
     }
 
-    /** @return mixed|null */
-    protected function getFromQuery(string $key)
+    protected function getFromQuery(string $key): mixed
     {
         return $this->query->get($key);
     }

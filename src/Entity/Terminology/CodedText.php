@@ -5,6 +5,7 @@ namespace App\Entity\Terminology;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 /**
  * @ORM\Entity
@@ -15,7 +16,8 @@ class CodedText
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 
@@ -23,7 +25,7 @@ class CodedText
     private string $text;
 
     /** @var OntologyConcept[]|ArrayCollection */
-    private $concepts;
+    private array|ArrayCollection $concepts;
 
     public function __construct(string $text)
     {
@@ -47,7 +49,7 @@ class CodedText
     }
 
     /** @return OntologyConcept[]|ArrayCollection */
-    public function getConcepts()
+    public function getConcepts(): array|ArrayCollection
     {
         return $this->concepts;
     }

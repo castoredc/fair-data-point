@@ -15,19 +15,17 @@ use App\Service\Distribution\MysqlBasedDistributionService;
 use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-abstract class CreateDistributionCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+abstract class CreateDistributionCommandHandler
 {
     protected EntityManagerInterface $em;
-
     protected MysqlBasedDistributionService $mysqlBasedDistributionService;
     protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-
     protected Security $security;
-
     protected EncryptionService $encryptionService;
 
     public function __construct(EntityManagerInterface $em, MysqlBasedDistributionService $mysqlBasedDistributionService, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, Security $security, EncryptionService $encryptionService)

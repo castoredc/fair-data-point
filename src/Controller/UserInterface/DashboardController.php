@@ -13,7 +13,6 @@ use App\Entity\Study;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,7 +23,7 @@ final class DashboardController extends AbstractController
      *
      * @Route("/dashboard", name="redirect_dashboard")
      */
-    public function redirectToStudies(Request $request): Response
+    public function redirectToStudies(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 

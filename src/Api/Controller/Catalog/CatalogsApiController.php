@@ -63,7 +63,7 @@ class CatalogsApiController extends ApiController
     }
 
     /** @Route("/my", methods={"GET"}, name="api_my_catalogs") */
-    public function myCatalogs(Request $request, MessageBusInterface $bus): Response
+    public function myCatalogs(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 

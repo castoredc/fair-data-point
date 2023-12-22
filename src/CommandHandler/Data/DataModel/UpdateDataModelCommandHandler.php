@@ -6,13 +6,13 @@ namespace App\CommandHandler\Data\DataModel;
 use App\Command\Data\DataModel\UpdateDataModelCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class UpdateDataModelCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateDataModelCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

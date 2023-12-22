@@ -27,7 +27,7 @@ class StudyTeamApiController extends ApiController
      * @Route("/api/study/{studyId}/team", methods={"GET"}, name="api_get_contacts")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function getTeam(Study $study, Request $request, MessageBusInterface $bus): Response
+    public function getTeam(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 

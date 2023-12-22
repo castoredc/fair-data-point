@@ -7,9 +7,10 @@ use App\Command\Data\DataModel\UpdateDataModelModuleCommand;
 use App\CommandHandler\Data\DataSpecificationGroupCommandHandler;
 use App\Entity\Data\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class UpdateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateDataModelModuleCommandHandlerHandler extends DataSpecificationGroupCommandHandler
 {
     public function __invoke(UpdateDataModelModuleCommand $command): void
     {

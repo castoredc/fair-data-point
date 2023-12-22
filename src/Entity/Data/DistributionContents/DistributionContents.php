@@ -22,6 +22,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 use function assert;
 
 /**
@@ -42,7 +43,8 @@ abstract class DistributionContents implements PermissionsEnabledEntity
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 

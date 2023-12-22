@@ -15,16 +15,15 @@ use App\Exception\OntologyNotFound;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function count;
 
-class AddAnnotationCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class AddAnnotationCommandHandler
 {
     private EntityManagerInterface $em;
-
     private ApiWrapper $bioPortalApiWrapper;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper, Security $security)

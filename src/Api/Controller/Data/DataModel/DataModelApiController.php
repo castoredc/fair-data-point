@@ -227,7 +227,7 @@ class DataModelApiController extends ApiController
      * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_model_version_export")
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
      */
-    public function exportDataModelVersion(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
+    public function exportDataModelVersion(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 

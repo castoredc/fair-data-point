@@ -18,6 +18,7 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 use function count;
 
 /**
@@ -35,7 +36,8 @@ abstract class Study implements AccessibleEntity
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private ?string $id = null;
 
@@ -54,9 +56,9 @@ abstract class Study implements AccessibleEntity
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study", cascade={"persist"}, fetch = "EAGER")
      *
-     * @var StudyMetadata[]|ArrayCollection
+     * @var Collection<StudyMetadata>
      */
-    private $metadata;
+    private Collection $metadata;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study", fetch = "EAGER")
@@ -130,8 +132,8 @@ abstract class Study implements AccessibleEntity
         $this->slug = $slug;
     }
 
-    /** @return StudyMetadata[]|ArrayCollection */
-    public function getMetadata()
+    /** @return Collection<StudyMetadata> */
+    public function getMetadata(): Collection
     {
         return $this->metadata;
     }

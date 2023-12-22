@@ -26,8 +26,6 @@ class StudyRepository extends EntityRepository
      * @param string[]|null     $hideCatalogs
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
-     *
-     * @return mixed
      */
     public function findStudies(
         ?Catalog $catalog,
@@ -40,7 +38,7 @@ class StudyRepository extends EntityRepository
         ?int $perPage,
         ?int $page,
         bool $admin
-    ) {
+    ): mixed {
         $qb = $this->createQueryBuilder('study')
                    ->select('study');
 

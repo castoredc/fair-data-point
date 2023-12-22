@@ -84,8 +84,7 @@ class DataDictionaryGroupApiRequest extends SingleApiRequest implements GroupSeq
         return DependencyGroup::fromData($this->dependencies);
     }
 
-    /** @inheritDoc */
-    public function getGroupSequence()
+    public function getGroupSequence(): array|Assert\GroupSequence
     {
         $sequence = ['DataDictionaryGroupApiRequest'];
 

@@ -6,13 +6,13 @@ namespace App\CommandHandler\Dataset;
 use App\Command\Dataset\UpdateDatasetCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class UpdateDatasetCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateDatasetCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

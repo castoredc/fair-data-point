@@ -13,14 +13,14 @@ use App\Exception\SessionTimedOut;
 use App\Exception\UserNotACastorUser;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class GetRecordsCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetRecordsCommandHandler
 {
     private CastorEntityHelper $entityHelper;
-
     private Security $security;
 
     public function __construct(CastorEntityHelper $entityHelper, Security $security)

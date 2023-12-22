@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData\Agent;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 /**
  * @ORM\Entity
@@ -15,9 +16,10 @@ abstract class Agent
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private ?string $id;
+    private ?string $id = null;
 
     /** @ORM\Column(type="string", unique=true) */
     private string $slug;
@@ -27,7 +29,6 @@ abstract class Agent
 
     public function __construct(string $slug, string $name)
     {
-        $this->id = null;
         $this->slug = $slug;
         $this->name = $name;
     }

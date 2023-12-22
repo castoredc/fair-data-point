@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.2-fpm-alpine
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -6,7 +6,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN set -xe \
     && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add bash git \
-    && pecl install xdebug-3.1.5 \
+    && apk add linux-headers \
+    && pecl install xdebug-3.3.1 \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install pdo pdo_mysql \
     && rm -rf /usr/share/php \

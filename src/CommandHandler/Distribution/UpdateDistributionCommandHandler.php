@@ -12,16 +12,15 @@ use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-abstract class UpdateDistributionCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+abstract class UpdateDistributionCommandHandler
 {
     protected EntityManagerInterface $em;
-
     protected Security $security;
-
     protected EncryptionService $encryptionService;
 
     public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)

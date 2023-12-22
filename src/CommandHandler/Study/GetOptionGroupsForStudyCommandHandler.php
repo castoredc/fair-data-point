@@ -13,14 +13,14 @@ use App\Exception\UserNotACastorUser;
 use App\Model\Castor\CastorEntityCollection;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class GetOptionGroupsForStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetOptionGroupsForStudyCommandHandler
 {
     private CastorEntityHelper $entityHelper;
-
     private Security $security;
 
     public function __construct(CastorEntityHelper $entityHelper, Security $security)

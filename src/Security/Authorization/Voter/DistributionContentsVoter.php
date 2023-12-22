@@ -5,9 +5,9 @@ namespace App\Security\Authorization\Voter;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Security\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 use function assert;
 use function in_array;
 
@@ -24,7 +24,7 @@ class DistributionContentsVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function supports(string $attribute, $subject)
+    protected function supports(string $attribute, $subject): bool
     {
         if (! in_array($attribute, [self::ACCESS_DATA, self::MANAGE], true)) {
             return false;

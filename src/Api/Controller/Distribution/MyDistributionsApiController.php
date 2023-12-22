@@ -8,7 +8,6 @@ use App\Api\Resource\Distribution\DistributionTreeApiResource;
 use App\Command\Distribution\FindDistributionsByUserCommand;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -19,7 +18,7 @@ use function assert;
 class MyDistributionsApiController extends ApiController
 {
     /** @Route("/api/distributions/tree", methods={"GET"}, name="api_distribution_tree") */
-    public function distributions(Request $request, MessageBusInterface $bus): Response
+    public function distributions(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();

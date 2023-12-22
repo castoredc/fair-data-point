@@ -9,14 +9,14 @@ use App\Entity\Study;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function strcmp;
 use function usort;
 
-class FindStudiesByUserCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class FindStudiesByUserCommandHandler
 {
     private EntityManagerInterface $em;
-
     private ApiClient $apiClient;
 
     public function __construct(EntityManagerInterface $em, ApiClient $apiClient)

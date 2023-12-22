@@ -9,25 +9,18 @@ namespace App\Tests\Helper;
 
 use ReflectionException;
 use ReflectionProperty;
-use function get_class;
 
 trait DoctrineEntityIdSetter
 {
-    /** @param mixed $id */
-    public function setEntityId(object $entity, $id): void
+    public function setEntityId(object $entity, mixed $id): void
     {
         $this->setEntityPrivatePropertyValue($entity, 'id', $id);
     }
 
-    /**
-     * @param mixed $property
-     * @param mixed $value
-     *
-     * @throws ReflectionException
-     */
-    public function setEntityPrivatePropertyValue(object $entity, $property, $value): void
+    /** @throws ReflectionException */
+    public function setEntityPrivatePropertyValue(object $entity, mixed $property, mixed $value): void
     {
-        $reflection = new ReflectionProperty(get_class($entity), $property);
+        $reflection = new ReflectionProperty($entity::class, $property);
         $reflection->setAccessible(true);
         $reflection->setValue($entity, $value);
     }

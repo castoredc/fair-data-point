@@ -8,14 +8,14 @@ use App\Entity\FAIRData\Agent\Organization;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class AddStudyCenterCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class AddStudyCenterCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

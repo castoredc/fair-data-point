@@ -5,6 +5,7 @@ namespace App\Entity\Terminology;
 
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OntologyConceptRepository")
@@ -15,7 +16,8 @@ class OntologyConcept
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 

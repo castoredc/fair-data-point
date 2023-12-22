@@ -12,16 +12,15 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Model\Grid\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class CreateAffiliationCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateAffiliationCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
-
     private ApiClient $gridApiClient;
 
     public function __construct(EntityManagerInterface $em, Security $security, ApiClient $gridApiClient)

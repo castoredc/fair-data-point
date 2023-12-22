@@ -7,6 +7,7 @@ use App\Entity\Castor\Record;
 use App\Entity\Enum\DistributionGenerationStatus;
 use App\Traits\CreatedAt;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationRecordLogRepository")
@@ -20,7 +21,8 @@ class DistributionGenerationRecordLog
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 
@@ -47,12 +49,11 @@ class DistributionGenerationRecordLog
      *
      * @var mixed[]|null
      */
-    private ?array $errors = null;
+    private ?array $errors = [];
 
     public function __construct(Record $record)
     {
         $this->record = $record;
-        $this->errors = [];
     }
 
     public function getId(): string

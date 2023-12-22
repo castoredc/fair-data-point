@@ -32,10 +32,7 @@ class SlugValidator extends ConstraintValidator
         $this->em = $em;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (! $constraint instanceof Slug) {
             throw new UnexpectedTypeException($constraint, Slug::class);

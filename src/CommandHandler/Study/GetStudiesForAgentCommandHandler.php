@@ -6,9 +6,10 @@ namespace App\CommandHandler\Study;
 use App\Command\Study\GetStudiesForAgentCommand;
 use App\Entity\Study;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetStudiesForAgentCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetStudiesForAgentCommandHandler
 {
     private EntityManagerInterface $em;
 

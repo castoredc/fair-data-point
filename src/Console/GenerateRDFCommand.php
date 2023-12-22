@@ -30,7 +30,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use function assert;
 use function count;
-use function get_class;
 use function sprintf;
 use const DATE_ATOM;
 
@@ -288,7 +287,7 @@ class GenerateRDFCommand extends Command
                         $recordLog->setStatus(DistributionGenerationStatus::success());
                     } catch (Throwable $t) {
                         $output->writeln('    - An error occurred while rendering the record:');
-                        $output->writeln('      ' . get_class($t));
+                        $output->writeln('      ' . $t::class);
 
                         if ($t->getMessage() !== '') {
                             $output->writeln('      ' . $t->getMessage());
@@ -311,7 +310,7 @@ class GenerateRDFCommand extends Command
 
                         $recordLog->addError(
                             [
-                                'exception' => get_class($t),
+                                'exception' => $t::class,
                                 'message' => $t->getMessage(),
                             ]
                         );
@@ -349,7 +348,7 @@ class GenerateRDFCommand extends Command
                     );
                 } catch (Throwable $t) {
                     $output->writeln('    - An error occurred while optimizing the triple store:');
-                    $output->writeln('      ' . get_class($t));
+                    $output->writeln('      ' . $t::class);
 
                     if ($t->getMessage() !== '') {
                         $output->writeln('      ' . $t->getMessage());
@@ -367,7 +366,7 @@ class GenerateRDFCommand extends Command
 
                     $log->addError(
                         [
-                            'exception' => get_class($t),
+                            'exception' => $t::class,
                             'message' => $t->getMessage(),
                         ]
                     );

@@ -18,12 +18,13 @@ use App\Security\CastorServer;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 use function in_array;
 
-final class CreateStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class CreateStudyCommandHandler
 {
     private EntityManagerInterface $em;
     private Security $security;

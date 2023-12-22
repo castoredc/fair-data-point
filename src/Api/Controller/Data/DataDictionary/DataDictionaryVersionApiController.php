@@ -67,7 +67,7 @@ class DataDictionaryVersionApiController extends ApiController
     }
 
     /** @Route("/export", methods={"GET"}, name="api_dictionary_version_export") */
-    public function exportDataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion, Request $request, MessageBusInterface $bus): Response
+    public function exportDataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataDictionaryVersion->getDataDictionary());
 

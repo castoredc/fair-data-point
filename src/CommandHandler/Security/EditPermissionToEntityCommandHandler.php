@@ -8,10 +8,11 @@ use App\Exception\NoAccessPermission;
 use App\Exception\UserNotFound;
 use App\Security\Permission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class EditPermissionToEntityCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class EditPermissionToEntityCommandHandler
 {
     private EntityManagerInterface $em;
     private Security $security;

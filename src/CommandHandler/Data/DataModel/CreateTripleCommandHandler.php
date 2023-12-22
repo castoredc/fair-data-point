@@ -13,14 +13,14 @@ use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class CreateTripleCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateTripleCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

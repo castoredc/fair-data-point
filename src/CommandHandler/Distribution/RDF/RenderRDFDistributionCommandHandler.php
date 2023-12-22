@@ -17,25 +17,20 @@ use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 use function assert;
 
-class RenderRDFDistributionCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class RenderRDFDistributionCommandHandler
 {
     private ApiClient $apiClient;
-
     private Security $security;
-
     private CastorEntityHelper $entityHelper;
-
     private UriHelper $uriHelper;
-
     private EncryptionService $encryptionService;
-
     private LoggerInterface $logger;
-
     private DataTransformationService $dataTransformationService;
 
     public function __construct(

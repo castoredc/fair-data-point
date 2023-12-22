@@ -5,9 +5,9 @@ namespace App\Security\Authorization\Voter;
 
 use App\Entity\FAIRData\Distribution;
 use App\Security\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 use function assert;
 use function in_array;
 
@@ -26,7 +26,7 @@ class DistributionVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function supports(string $attribute, $subject)
+    protected function supports(string $attribute, $subject): bool
     {
         if (! in_array($attribute, [self::VIEW, self::EDIT, self::ACCESS_DATA, self::MANAGE], true)) {
             return false;

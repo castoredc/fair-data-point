@@ -13,12 +13,13 @@ use App\Exception\Upload\InvalidJSON;
 use App\Factory\Data\DataDictionary\DataDictionaryGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function file_get_contents;
 use function json_decode;
 
-class ImportDataDictionaryCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ImportDataDictionaryCommandHandler
 {
     private EntityManagerInterface $em;
     private Security $security;

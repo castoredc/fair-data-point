@@ -20,11 +20,12 @@ use App\Exception\NoAccessPermission;
 use EasyRdf\Graph;
 use EasyRdf\Literal;
 use EasyRdf\RdfNamespace;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class GetDataModelRDFPreviewCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetDataModelRDFPreviewCommandHandler
 {
     private Security $security;
 

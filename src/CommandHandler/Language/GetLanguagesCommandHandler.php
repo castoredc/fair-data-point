@@ -7,9 +7,10 @@ use App\Api\Resource\Language\LanguagesApiResource;
 use App\Command\Language\GetLanguagesCommand;
 use App\Entity\FAIRData\Language;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetLanguagesCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetLanguagesCommandHandler
 {
     private EntityManagerInterface $em;
 

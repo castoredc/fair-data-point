@@ -6,13 +6,13 @@ namespace App\CommandHandler\Data\DataModel;
 use App\Command\Data\DataModel\DeleteDataModelModuleCommand;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class DeleteDataModelModuleCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DeleteDataModelModuleCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

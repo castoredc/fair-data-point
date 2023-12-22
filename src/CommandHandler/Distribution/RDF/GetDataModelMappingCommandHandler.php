@@ -11,15 +11,15 @@ use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 use function count;
 
-class GetDataModelMappingCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetDataModelMappingCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

@@ -83,7 +83,7 @@ final class CastorServersApiController extends ApiController
     }
 
     /** @Route("/api/castor/servers/{id}", methods={"DELETE"}, name="delete_add_server") */
-    public function deleteServer(int $id, Request $request, MessageBusInterface $bus): Response
+    public function deleteServer(int $id, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 

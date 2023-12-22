@@ -5,9 +5,9 @@ namespace App\Security\Authorization\Voter;
 
 use App\Entity\Data\DataSpecification\DataSpecification;
 use App\Security\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 use function assert;
 use function in_array;
 
@@ -25,7 +25,7 @@ class DataSpecificationVoter extends Voter
     }
 
     /** @inheritDoc */
-    protected function supports(string $attribute, $subject)
+    protected function supports(string $attribute, $subject): bool
     {
         if (! in_array($attribute, [self::VIEW, self::ADD, self::EDIT, self::MANAGE], true)) {
             return false;

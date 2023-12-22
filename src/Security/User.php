@@ -16,6 +16,7 @@ use App\Traits\UpdatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
 use function in_array;
@@ -36,7 +37,8 @@ class User implements UserInterface
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
     /**
@@ -269,5 +271,10 @@ class User implements UserInterface
     public function getDistributions(): Collection
     {
         return $this->distributions;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getId();
     }
 }

@@ -9,6 +9,7 @@ use App\Traits\CreatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationLogRepository")
@@ -22,7 +23,8 @@ class DistributionGenerationLog
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 
@@ -47,13 +49,12 @@ class DistributionGenerationLog
      *
      * @var mixed[]|null
      */
-    private ?array $errors = null;
+    private ?array $errors = [];
 
     public function __construct(DistributionContents $distribution)
     {
         $this->distribution = $distribution;
         $this->records = new ArrayCollection();
-        $this->errors = [];
     }
 
     public function getId(): string

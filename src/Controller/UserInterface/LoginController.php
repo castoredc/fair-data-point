@@ -6,7 +6,6 @@ namespace App\Controller\UserInterface;
 use App\Entity\FAIRData\Catalog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,7 +43,7 @@ class LoginController extends AbstractController
     }
 
     /** @Route("/redirect-login", name="redirect_login") */
-    public function loginRedirect(Request $request): Response
+    public function loginRedirect(): Response
     {
         return $this->redirectToRoute('fdp');
     }

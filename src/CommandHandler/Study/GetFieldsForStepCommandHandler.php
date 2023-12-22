@@ -12,14 +12,14 @@ use App\Exception\SessionTimedOut;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
 use App\Security\User;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class GetFieldsForStepCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetFieldsForStepCommandHandler
 {
     private ApiClient $apiClient;
-
     private Security $security;
 
     public function __construct(ApiClient $apiClient, Security $security)

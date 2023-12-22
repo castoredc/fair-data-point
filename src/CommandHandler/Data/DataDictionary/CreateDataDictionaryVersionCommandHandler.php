@@ -10,10 +10,11 @@ use App\Entity\Data\DataDictionary\DataDictionaryVersion;
 use App\Entity\Enum\VersionType;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
-class CreateDataDictionaryVersionCommandHandler extends DataSpecificationVersionCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDataDictionaryVersionCommandHandler extends DataSpecificationVersionCommandHandler
 {
     public function __invoke(CreateDataDictionaryVersionCommand $command): DataDictionaryVersion
     {

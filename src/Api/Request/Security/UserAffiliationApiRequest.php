@@ -126,8 +126,7 @@ class UserAffiliationApiRequest extends GroupedApiRequest implements GroupSequen
         return $this->position;
     }
 
-    /** @inheritDoc */
-    public function getGroupSequence()
+    public function getGroupSequence(): array|Assert\GroupSequence
     {
         $sequence = ['UserAffiliationApiRequest'];
 

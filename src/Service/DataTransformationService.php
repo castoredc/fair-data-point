@@ -53,7 +53,7 @@ class DataTransformationService
     }
 
     /** @return false|string[] */
-    public function parseSyntax(string $syntax)
+    public function parseSyntax(string $syntax): false|array
     {
         try {
             $tokens = $this->twig->tokenize(new Source($syntax, 'template'));

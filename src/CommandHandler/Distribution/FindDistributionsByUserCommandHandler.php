@@ -6,11 +6,12 @@ namespace App\CommandHandler\Distribution;
 use App\Command\Distribution\FindDistributionsByUserCommand;
 use App\Entity\FAIRData\Distribution;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function array_merge;
 use function array_unique;
 
-class FindDistributionsByUserCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class FindDistributionsByUserCommandHandler
 {
     private EntityManagerInterface $em;
 

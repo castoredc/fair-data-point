@@ -6,9 +6,10 @@ namespace App\CommandHandler\FAIRDataPoint;
 use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class GetFAIRDataPointCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class GetFAIRDataPointCommandHandler
 {
     private EntityManagerInterface $em;
 

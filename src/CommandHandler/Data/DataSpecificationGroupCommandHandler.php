@@ -8,7 +8,7 @@ use App\Entity\Data\DataSpecification\Dependency\DependencyRule;
 use App\Entity\Data\DataSpecification\Element;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 use function class_exists;
 

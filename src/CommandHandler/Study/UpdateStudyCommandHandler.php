@@ -9,15 +9,15 @@ use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 use function uniqid;
 
-class UpdateStudyCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateStudyCommandHandler
 {
     private EntityManagerInterface $em;
-
     private Security $security;
 
     public function __construct(EntityManagerInterface $em, Security $security)

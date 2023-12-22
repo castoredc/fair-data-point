@@ -8,9 +8,10 @@ use App\CommandHandler\Data\DataSpecificationGroupCommandHandler;
 use App\Entity\Data\DataDictionary\DataDictionaryGroup;
 use App\Entity\Data\DataDictionary\Variable;
 use App\Exception\NoAccessPermission;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class CreateDataDictionaryGroupCommandHandlerHandler extends DataSpecificationGroupCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CreateDataDictionaryGroupCommandHandlerHandler extends DataSpecificationGroupCommandHandler
 {
     public function __invoke(CreateDataDictionaryGroupCommand $command): void
     {

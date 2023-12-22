@@ -6,13 +6,13 @@ namespace App\Service\Logging;
 use App\Model\Slack\ApiClient;
 use App\Security\User;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Security\Core\Security;
 use function array_key_exists;
 use function assert;
 use function count;
-use function get_class;
 use function sprintf;
 use function str_replace;
 use function strlen;
@@ -35,7 +35,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         string $rootPath = '',
         ?Security $security = null
     ) {
-        parent::__construct(Logger::CRITICAL, true);
+        parent::__construct(Level::Critical, true);
 
         $this->apiClient = new ApiClient($webhookUrl);
         $this->rootPath = $rootPath;
@@ -47,14 +47,9 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param array $record
-     */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        $message = $this->getSlackMessage($record);
+        $message = $this->getSlackMessage($record->toArray());
         $this->apiClient->postMessage($message);
     }
 
@@ -87,16 +82,16 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             if ($exception !== null) {
                 unset($record['context']['exception']);
 
-                $exceptionClass = get_class($exception);
+                $exceptionClass = $exception::class;
 
                 if ($exception instanceof HandlerFailedException) {
                     $exception = $exception->getPrevious();
-                    $exceptionClass .= "\n" . get_class($exception);
+                    $exceptionClass .= "\n" . $exception::class;
                 }
 
                 if ($exception->getPrevious() !== null) {
                     $previousException = $exception->getPrevious();
-                    $exceptionClass .= sprintf("\n(%s)", get_class($previousException));
+                    $exceptionClass .= sprintf("\n(%s)", $previousException::class);
                 }
 
                 $stackTrace = $exception->getTraceAsString();

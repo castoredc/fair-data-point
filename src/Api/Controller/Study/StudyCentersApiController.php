@@ -28,7 +28,7 @@ class StudyCentersApiController extends ApiController
      * @Route("/api/study/{studyId}/centers", methods={"GET"}, name="api_get_centers")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
      */
-    public function getCenters(Study $study, Request $request, MessageBusInterface $bus): Response
+    public function getCenters(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 

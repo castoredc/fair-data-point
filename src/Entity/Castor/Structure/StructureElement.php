@@ -15,14 +15,13 @@ abstract class StructureElement extends CastorEntity
     protected ?string $name = null;
 
     /** @var Step[] */
-    protected array $steps;
+    protected array $steps = [];
 
     public function __construct(string $id, CastorStudy $study, StructureType $structureType, string $name)
     {
         parent::__construct($id, $name, $study, $structureType);
 
         $this->name = $name;
-        $this->steps = [];
     }
 
     public function addStep(Step $step): void

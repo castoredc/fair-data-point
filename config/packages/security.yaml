@@ -8,18 +8,16 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: ~
             provider: castor
             logout:
                 path:       logout
                 target:     fdp
                 invalidate_session: true
-            guard:
-                authenticators:
-                    - App\Security\EdcApiTokenGuardAuthenticator
-                    - App\Security\Providers\Castor\CastorAuthenticator
-                    - App\Security\Providers\Orcid\OrcidAuthenticator
-                entry_point: App\Security\Providers\Castor\CastorAuthenticator
+            custom_authenticators:
+                - App\Security\EdcApiTokenGuardAuthenticator
+                - App\Security\Providers\Castor\CastorAuthenticator
+                - App\Security\Providers\Orcid\OrcidAuthenticator
+            entry_point: App\Security\Providers\Castor\CastorAuthenticator
 
             # activate different ways to authenticate
 

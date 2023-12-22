@@ -7,9 +7,10 @@ use App\Command\Data\DataDictionary\UpdateDataDictionaryGroupCommand;
 use App\CommandHandler\Data\DataSpecificationGroupCommandHandler;
 use App\Entity\Data\DataDictionary\Variable;
 use App\Exception\NoAccessPermission;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class UpdateDataDictionaryGroupCommandHandlerHandler extends DataSpecificationGroupCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class UpdateDataDictionaryGroupCommandHandlerHandler extends DataSpecificationGroupCommandHandler
 {
     public function __invoke(UpdateDataDictionaryGroupCommand $command): void
     {

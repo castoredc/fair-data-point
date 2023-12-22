@@ -39,14 +39,12 @@ abstract class BaseApiClient
     /**
      * @param array<string, mixed> $data
      *
-     * @return mixed
-     *
      * @throws ErrorFetchingStardogData
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    protected function jsonRequest(string $uri, string $method, array $data)
+    protected function jsonRequest(string $uri, string $method, array $data): mixed
     {
         return json_decode((string) $this->handleRequest($method, $uri, [
             'auth' => [
@@ -60,14 +58,12 @@ abstract class BaseApiClient
     /**
      * @param array<string, mixed> $data
      *
-     * @return mixed
-     *
      * @throws ErrorFetchingStardogData
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    protected function multipartRequest(string $uri, string $method, array $data)
+    protected function multipartRequest(string $uri, string $method, array $data): mixed
     {
         return json_decode((string) $this->handleRequest($method, $uri, [
             'auth' => [
@@ -84,14 +80,12 @@ abstract class BaseApiClient
     }
 
     /**
-     * @return mixed
-     *
      * @throws ErrorFetchingStardogData
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    protected function graphRequest(string $uri, string $method, ?string $data)
+    protected function graphRequest(string $uri, string $method, ?string $data): mixed
     {
         return (string) $this->handleRequest($method, $uri, [
             'auth' => [
@@ -106,14 +100,12 @@ abstract class BaseApiClient
     /**
      * @param array<string, mixed> $options
      *
-     * @return mixed
-     *
      * @throws ErrorFetchingStardogData
      * @throws NoAccessPermission
      * @throws NotFound
      * @throws SessionTimedOut
      */
-    private function handleRequest(string $method, string $uri, array $options)
+    private function handleRequest(string $method, string $uri, array $options): mixed
     {
         try {
             $response = $this->client->request(

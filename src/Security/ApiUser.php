@@ -8,6 +8,7 @@ use App\Entity\Encryption\SensitiveDataString;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 use function json_encode;
 
 /**
@@ -19,7 +20,8 @@ class ApiUser
     /**
      * @ORM\Id
      * @ORM\Column(type="guid", length=190)
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private string $id;
 

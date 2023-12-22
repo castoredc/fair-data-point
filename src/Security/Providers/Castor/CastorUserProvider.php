@@ -7,6 +7,7 @@ use App\Exception\CouldNotDecrypt;
 use App\Model\Castor\ApiClient;
 use App\Security\CastorServer;
 use App\Security\Providers\UserProvider;
+use App\Security\User;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -16,6 +17,8 @@ use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use function assert;
 use function trim;
@@ -75,7 +78,6 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     /**
      * Requests an access token using a specified grant and option set.
      *
-     * @param mixed        $grant
      * @param array<mixed> $options
      *
      * @throws IdentityProviderException
@@ -84,7 +86,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     public function getAccessTokenWithServer(
         string $server,
         int $serverId,
-        $grant,
+        mixed $grant,
         array $options = []
     ): AccessTokenInterface {
         $this->server = $server;
@@ -111,7 +113,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return [];
     }
 
-    /** @param array<mixed>|string $data */
+    /** @inheritDoc */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.
@@ -153,5 +155,16 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
 
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $identifier]);
+
+        if ($dbUser === null) {
+            throw new UserNotFoundException();
+        }
+
+        return $dbUser;
     }
 }

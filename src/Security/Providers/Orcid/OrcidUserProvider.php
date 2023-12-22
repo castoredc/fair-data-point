@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace App\Security\Providers\Orcid;
 
 use App\Security\Providers\UserProvider;
+use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OrcidUserProvider extends UserProvider implements UserProviderInterface
@@ -61,7 +64,7 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         return ['/authenticate'];
     }
 
-    /** @param array<mixed>|string $data */
+    /** @inheritDoc */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.
@@ -80,5 +83,16 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
         return new OrcidUser($response['orcid'], $response['name'], $token->getToken());
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $dbUser = $this->em->getRepository(User::class)->findOneBy(['id' => $identifier]);
+
+        if ($dbUser === null) {
+            throw new UserNotFoundException();
+        }
+
+        return $dbUser;
     }
 }

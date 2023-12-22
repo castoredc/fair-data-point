@@ -13,17 +13,15 @@ class Institute
     private string $name;
 
     /** @var Address[] */
-    private array $addresses;
+    private array $addresses = [];
 
     /** @var Iri[] */
-    private array $links;
+    private array $links = [];
 
     public function __construct(string $id, string $name)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->addresses = [];
-        $this->links = [];
     }
 
     public function getId(): string
