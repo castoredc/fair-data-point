@@ -25,7 +25,7 @@
         "semsol/arc2": "^3.0.0",
         "sensio/framework-extra-bundle": "^6.2",
         "stof/doctrine-extensions-bundle": "^1.4",
-        "symfony/console": "^6.4",
+        "symfony/console": "^7.0",
         "symfony/dotenv": "^6.4",
         "symfony/flex": "^1.9.10",
         "symfony/framework-bundle": "^6.4",
