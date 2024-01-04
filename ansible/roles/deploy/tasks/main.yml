@@ -1,12 +1,12 @@
-- include: facts.yml
-- include: create-dirs.yml
-- include: git.yml
-- include: release-dirs.yml
-- include: composer.yml
-- include: migrations.yml
-- include: ui.yml
-- include: finish-release.yml
-- include: clean-releases.yml
+- include_tasks: facts.yml
+- include_tasks: create-dirs.yml
+- include_tasks: git.yml
+- include_tasks: release-dirs.yml
+- include_tasks: composer.yml
+- include_tasks: migrations.yml
+- include_tasks: ui.yml
+- include_tasks: finish-release.yml
+- include_tasks: clean-releases.yml
 
 #- name: Create var directory
 #  file:
