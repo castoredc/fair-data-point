@@ -24,6 +24,7 @@
         "ramsey/uuid-doctrine": "^2.0",
         "semsol/arc2": "^3.0.0",
         "sensio/framework-extra-bundle": "^6.2",
+        "sentry/sentry-symfony": "^4.13",
         "stof/doctrine-extensions-bundle": "^1.4",
         "symfony/console": "^6.4",
         "symfony/dotenv": "^6.4",
@@ -59,7 +60,8 @@
         "allow-plugins": {
             "symfony/flex": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "php-http/discovery": true
         }
     },
     "autoload": {
