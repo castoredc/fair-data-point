@@ -43,7 +43,7 @@ class StudyMetadata
     private string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"})
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
      */
     private Study $study;

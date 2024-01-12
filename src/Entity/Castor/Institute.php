@@ -21,7 +21,7 @@ class Institute
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
      */
     private CastorStudy $study;

@@ -35,7 +35,7 @@ class Organization extends Agent
     private string $city;
 
     /**
-     * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"})
      *
      * @var Collection<Department>
      */

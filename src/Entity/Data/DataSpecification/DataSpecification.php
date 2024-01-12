@@ -52,7 +52,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     private Collection $distributionContents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Version", mappedBy="dataSpecification", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Version", mappedBy="dataSpecification", cascade={"persist"})
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<Version>
