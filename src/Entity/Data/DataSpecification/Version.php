@@ -52,7 +52,7 @@ abstract class Version
     private Collection $distributionContents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Group", mappedBy="version", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Group", mappedBy="version", cascade={"persist"})
      * @ORM\OrderBy({"order" = "ASC", "id" = "ASC"})
      *
      * @var Collection<Group>
@@ -60,7 +60,7 @@ abstract class Version
     private Collection $groups;
 
     /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="version", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="version", cascade={"persist"})
      *
      * @var Collection<Element>
      */

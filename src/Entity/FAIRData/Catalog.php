@@ -41,7 +41,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     private string $slug;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"})
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
      */
     private ?FAIRDataPoint $fairDataPoint = null;
@@ -72,7 +72,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     private bool $isArchived = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog")
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<CatalogMetadata>

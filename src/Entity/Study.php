@@ -81,7 +81,7 @@ abstract class Study implements AccessibleEntity
     private bool $isPublished = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataSpecification\Mapping\Mapping", mappedBy="study", cascade={"persist", "remove"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataSpecification\Mapping\Mapping", mappedBy="study", cascade={"persist", "remove"})
      *
      * @var Collection<Mapping>
      */

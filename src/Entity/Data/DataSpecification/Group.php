@@ -52,14 +52,14 @@ abstract class Group
     private bool $isDependent = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="group", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="group", cascade={"persist"})
      *
      * @var Collection<Element>
      */
     private Collection $elements;
 
     /**
-     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="group", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="group", cascade={"persist"})
      *
      * @var Collection<ElementGroup>
      */

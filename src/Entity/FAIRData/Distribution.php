@@ -61,7 +61,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
     private ?License $license = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DistributionMetadata", mappedBy="distribution", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DistributionMetadata", mappedBy="distribution")
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<DistributionMetadata>

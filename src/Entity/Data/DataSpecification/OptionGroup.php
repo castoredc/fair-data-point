@@ -33,7 +33,7 @@ class OptionGroup
     private ?string $description = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist"})
      * @ORM\OrderBy({"value" = "ASC", "id" = "ASC"})
      *
      * @var Collection<OptionGroupOption>

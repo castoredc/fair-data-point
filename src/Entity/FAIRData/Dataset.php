@@ -61,7 +61,7 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     private ?Study $study = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DatasetMetadata", mappedBy="dataset", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DatasetMetadata", mappedBy="dataset")
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<DatasetMetadata>
