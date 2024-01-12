@@ -27,7 +27,7 @@ abstract class Group
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="uuid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */

@@ -2054,10 +2054,6 @@ CREATE TABLE `ontology` (
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '(DC2Type:iri)',
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `bio_portal_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `0454bc56-454b-48cd-9de3-b8b6c288db13` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `http://purl.bioontology.org/ontology/PATO/` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Phenotypic Quality Ontology` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `PATO` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
