@@ -33,7 +33,7 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     private ?Iri $purl;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\FAIRDataPointMetadata", mappedBy="fdp")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\FAIRDataPointMetadata", mappedBy="fdp", fetch="EAGER")
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<FAIRDataPointMetadata>

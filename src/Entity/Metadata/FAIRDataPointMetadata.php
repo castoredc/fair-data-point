@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FAIRDataPointMetadata extends Metadata
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\FAIRDataPoint", inversedBy="metadata")
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\FAIRDataPoint", inversedBy="metadata", fetch="EAGER")
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id", nullable=FALSE)
      */
     private FAIRDataPoint $fdp;

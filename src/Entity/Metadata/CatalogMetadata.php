@@ -18,7 +18,7 @@ use function count;
 class CatalogMetadata extends Metadata
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Catalog", inversedBy="metadata")
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Catalog", inversedBy="metadata", fetch="EAGER")
      * @ORM\JoinColumn(name="catalog", referencedColumnName="id", nullable=FALSE)
      */
     private Catalog $catalog;

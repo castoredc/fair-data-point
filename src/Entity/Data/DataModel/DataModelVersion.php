@@ -21,14 +21,14 @@ use function is_a;
 class DataModelVersion extends Version
 {
     /**
-     * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<NamespacePrefix>
      */
     private Collection $prefixes;
 
     /**
-     * @ORM\OneToMany(targetEntity="Predicate", mappedBy="dataModel", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Predicate", mappedBy="dataModel", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<Predicate>
      */

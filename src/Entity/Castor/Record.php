@@ -33,7 +33,7 @@ class Record
     /**
      * phpcs:enable
      *
-     * @ORM\ManyToOne(targetEntity="Institute", inversedBy="records",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Institute", fetch="EAGER", inversedBy="records",cascade={"persist"})
      * @ORM\JoinColumns({
      *      @ORM\JoinColumn(name="institute_id", referencedColumnName="id", nullable=FALSE),
      *      @ORM\JoinColumn(name="study_id", referencedColumnName="study_id", nullable=FALSE)

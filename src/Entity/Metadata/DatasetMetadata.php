@@ -18,7 +18,7 @@ use function count;
 class DatasetMetadata extends Metadata
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="metadata")
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="metadata", fetch="EAGER")
      * @ORM\JoinColumn(name="dataset", referencedColumnName="id", nullable=FALSE)
      */
     private Dataset $dataset;

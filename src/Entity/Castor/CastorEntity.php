@@ -35,7 +35,7 @@ abstract class CastorEntity
     protected string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy", fetch="EAGER")
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
      */
     protected ?CastorStudy $study = null;
@@ -50,7 +50,7 @@ abstract class CastorEntity
     protected string $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Terminology\Annotation", mappedBy="entity", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Terminology\Annotation", mappedBy="entity", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<string, Annotation>
      */

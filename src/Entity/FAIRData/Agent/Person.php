@@ -47,7 +47,7 @@ class Person extends Agent
     private NameOrigin $nameOrigin;
 
     /**
-     * @ORM\OneToMany(targetEntity="Affiliation", mappedBy="person", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Affiliation", mappedBy="person", cascade={"persist"}, fetch="EAGER")
      *
      * @var Collection<Affiliation>
      */
