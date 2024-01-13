@@ -8,7 +8,9 @@ use App\CommandHandler\Distribution\CreateDistributionCommandHandler;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\LanguageNotFound;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateCSVDistributionCommandHandler extends CreateDistributionCommandHandler
 {
     /** @throws LanguageNotFound */

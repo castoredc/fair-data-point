@@ -7,7 +7,9 @@ use App\Command\Metadata\UpdateStudyMetadataCommand;
 use App\Entity\Terminology\CodedText;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class UpdateStudyMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public function __invoke(UpdateStudyMetadataCommand $command): void

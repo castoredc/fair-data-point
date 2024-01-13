@@ -12,7 +12,9 @@ use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\UserNotACastorUser;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateDataModelModuleMappingCommandHandler extends CreateDataModelMappingCommandHandler
 {
     /**

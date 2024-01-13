@@ -7,7 +7,9 @@ use App\Command\Metadata\CreateFAIRDataPointMetadataCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Metadata\FAIRDataPointMetadata;
 use App\Exception\NoAccessPermission;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateFAIRDataPointMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public function __invoke(CreateFAIRDataPointMetadataCommand $command): void

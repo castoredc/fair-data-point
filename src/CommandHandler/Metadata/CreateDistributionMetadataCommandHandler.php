@@ -6,7 +6,9 @@ namespace App\CommandHandler\Metadata;
 use App\Command\Metadata\CreateDistributionMetadataCommand;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Exception\NoAccessPermission;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public function __invoke(CreateDistributionMetadataCommand $command): void

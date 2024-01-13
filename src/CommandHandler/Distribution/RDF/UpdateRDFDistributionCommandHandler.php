@@ -10,8 +10,10 @@ use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
+#[AsMessageHandler]
 class UpdateRDFDistributionCommandHandler extends UpdateDistributionCommandHandler
 {
     /** @throws LanguageNotFound */
