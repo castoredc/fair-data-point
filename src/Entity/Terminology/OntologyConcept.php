@@ -6,6 +6,7 @@ namespace App\Entity\Terminology;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OntologyConceptRepository")
@@ -19,7 +20,7 @@ class OntologyConcept
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="iri") */
     private Iri $url;
@@ -46,7 +47,7 @@ class OntologyConcept
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getUrl(): Iri

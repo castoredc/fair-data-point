@@ -6,6 +6,7 @@ namespace App\Entity\Data\DistributionContents\Dependency;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -23,7 +24,7 @@ class Dependency
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
@@ -33,7 +34,7 @@ class Dependency
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getGroup(): ?DependencyGroup

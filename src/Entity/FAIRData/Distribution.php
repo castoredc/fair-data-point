@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use function count;
 
 /**
@@ -38,7 +39,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="string", unique=true) */
     private string $slug;
@@ -106,7 +107,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getSlug(): string

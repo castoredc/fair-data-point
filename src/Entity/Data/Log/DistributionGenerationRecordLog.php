@@ -8,6 +8,7 @@ use App\Entity\Enum\DistributionGenerationStatus;
 use App\Traits\CreatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationRecordLogRepository")
@@ -24,7 +25,7 @@ class DistributionGenerationRecordLog
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Record", cascade={"persist"})
@@ -58,7 +59,7 @@ class DistributionGenerationRecordLog
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getRecord(): Record

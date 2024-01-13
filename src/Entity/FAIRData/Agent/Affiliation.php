@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData\Agent;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /** @ORM\Entity */
 class Affiliation
@@ -15,7 +16,7 @@ class Affiliation
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Person", cascade={"persist"}, inversedBy="affiliations")
@@ -48,7 +49,7 @@ class Affiliation
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getPerson(): Person

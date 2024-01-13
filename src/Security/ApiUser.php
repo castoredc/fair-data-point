@@ -9,6 +9,7 @@ use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use function json_encode;
 
 /**
@@ -23,7 +24,7 @@ class ApiUser
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="string", length=255) */
     private string $emailAddress;
@@ -48,7 +49,7 @@ class ApiUser
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getEmailAddress(): string

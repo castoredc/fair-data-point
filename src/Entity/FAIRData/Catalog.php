@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use function array_merge;
 use function count;
 
@@ -35,7 +36,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="string", unique=true) */
     private string $slug;
@@ -97,7 +98,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function setId(string $id): void

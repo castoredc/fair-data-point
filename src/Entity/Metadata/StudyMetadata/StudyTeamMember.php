@@ -8,6 +8,7 @@ use App\Entity\Metadata\StudyMetadata;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -24,7 +25,7 @@ class StudyTeamMember
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Metadata\StudyMetadata", inversedBy="studyTeamMembers", cascade={"persist", "remove"})
@@ -50,7 +51,7 @@ class StudyTeamMember
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getMetadata(): StudyMetadata

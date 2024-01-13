@@ -6,6 +6,7 @@ namespace App\Entity\Terminology;
 use App\Entity\Castor\CastorEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -19,7 +20,7 @@ class Annotation
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity", inversedBy="annotations", cascade={"persist"})
@@ -41,7 +42,7 @@ class Annotation
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getEntity(): CastorEntity

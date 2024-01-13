@@ -23,7 +23,7 @@ class FieldDependency
 
     public function getId(): ?string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function setId(?string $id): void
