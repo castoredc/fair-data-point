@@ -96,9 +96,6 @@
     "doctrine/sql-formatter": {
         "version": "1.1.0"
     },
-    "easyrdf/easyrdf": {
-        "version": "0.9.1"
-    },
     "fresh/doctrine-enum-bundle": {
         "version": "6.0",
         "recipe": {

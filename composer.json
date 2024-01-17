@@ -15,7 +15,7 @@
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "2.16.3",
-        "easyrdf/easyrdf": "^1.0.0",
+        "sweetrdf/easyrdf": "^1.0.0",
         "fresh/doctrine-enum-bundle": "^9.0",
         "guzzlehttp/guzzle": "^6.5.8",
         "knpuniversity/oauth2-client-bundle": "^2.18",
@@ -110,6 +110,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:castoredc/arc2.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sweetrdf/easyrdf.git"
         }
     ]
 }
