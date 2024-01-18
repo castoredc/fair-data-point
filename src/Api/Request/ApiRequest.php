@@ -67,7 +67,7 @@ abstract class ApiRequest
 
     protected function getFromQuery(string $key): mixed
     {
-        return $this->query->get($key);
+        return $this->query->all()[$key];
     }
 
     public function getContext(): ?object
