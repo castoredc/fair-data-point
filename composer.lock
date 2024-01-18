@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bad500c5b466fe83a864180f09da8dc3",
+    "content-hash": "790fd506b5d907ccc7632ddb4960ff18",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -3964,16 +3964,16 @@
         },
         {
             "name": "semsol/arc2",
-            "version": "3.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/castoredc/arc2.git",
-                "reference": "d7a7f47cefa553d13d2c0949aaa233255ce29dc8"
+                "reference": "321b7dec3d266416871e13bd0dcd4bf723750310"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/castoredc/arc2/zipball/d7a7f47cefa553d13d2c0949aaa233255ce29dc8",
-                "reference": "d7a7f47cefa553d13d2c0949aaa233255ce29dc8",
+                "url": "https://api.github.com/repos/castoredc/arc2/zipball/321b7dec3d266416871e13bd0dcd4bf723750310",
+                "reference": "321b7dec3d266416871e13bd0dcd4bf723750310",
                 "shasum": ""
             },
             "require": {
@@ -3985,6 +3985,7 @@
                 "friendsofphp/php-cs-fixer": "^3",
                 "phpunit/phpunit": "^9"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -4047,9 +4048,9 @@
             ],
             "support": {
                 "issues": "https://github.com/semsol/arc2/issues",
-                "source": "https://github.com/castoredc/arc2/tree/3.0.0"
+                "source": "https://github.com/castoredc/arc2/tree/master"
             },
-            "time": "2023-12-19T14:24:33+00:00"
+            "time": "2024-01-18T15:02:03+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -9822,16 +9823,16 @@
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "1.3.58",
+            "version": "1.3.59",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-doctrine.git",
-                "reference": "03b7d3f3b220758f7cb6d1f644c2cb7cc1e01667"
+                "reference": "9534fcd0b6906c62594146b506acadeabd3a99b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/03b7d3f3b220758f7cb6d1f644c2cb7cc1e01667",
-                "reference": "03b7d3f3b220758f7cb6d1f644c2cb7cc1e01667",
+                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/9534fcd0b6906c62594146b506acadeabd3a99b3",
+                "reference": "9534fcd0b6906c62594146b506acadeabd3a99b3",
                 "shasum": ""
             },
             "require": {
@@ -9886,9 +9887,9 @@
             "description": "Doctrine extensions for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-doctrine/issues",
-                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.3.58"
+                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.3.59"
             },
-            "time": "2024-01-17T09:38:54+00:00"
+            "time": "2024-01-18T09:41:35+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -10547,12 +10548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b7a13fc786f4fc7204a1b302e29a44bc6542bdd0"
+                "reference": "f81bd7cb90f5f30d3b246e342843ae905947158f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b7a13fc786f4fc7204a1b302e29a44bc6542bdd0",
-                "reference": "b7a13fc786f4fc7204a1b302e29a44bc6542bdd0",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f81bd7cb90f5f30d3b246e342843ae905947158f",
+                "reference": "f81bd7cb90f5f30d3b246e342843ae905947158f",
                 "shasum": ""
             },
             "conflict": {
@@ -11008,8 +11009,8 @@
                 "serluck/phpwhois": "<=4.2.6",
                 "sfroemken/url_redirect": "<=1.2.1",
                 "sheng/yiicms": "<=1.2",
-                "shopware/core": "<=6.4.20",
-                "shopware/platform": "<=6.4.20",
+                "shopware/core": "<=6.5.7.3",
+                "shopware/platform": "<=6.5.7.3",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<=5.7.17",
                 "shopware/storefront": "<=6.4.8.1",
@@ -11269,7 +11270,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-16T18:04:59+00:00"
+            "time": "2024-01-17T21:04:22+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -12430,6 +12431,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "semsol/arc2": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
