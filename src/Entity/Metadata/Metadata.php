@@ -13,6 +13,7 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -26,11 +27,11 @@ abstract class Metadata
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
@@ -80,7 +81,7 @@ abstract class Metadata
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getTitle(): ?LocalizedText

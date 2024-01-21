@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use function count;
 
 /**
@@ -20,11 +21,11 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="iri") */
     private Iri $iri;
@@ -33,7 +34,7 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     private ?Iri $purl;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\FAIRDataPointMetadata", mappedBy="fdp", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\FAIRDataPointMetadata", mappedBy="fdp")
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<FAIRDataPointMetadata>
@@ -57,7 +58,7 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function setId(string $id): void

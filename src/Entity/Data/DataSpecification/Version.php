@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -28,11 +29,11 @@ abstract class Version
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataSpecification", inversedBy="versions",cascade={"persist"})
@@ -52,7 +53,7 @@ abstract class Version
     private Collection $distributionContents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Group", mappedBy="version", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Group", mappedBy="version", cascade={"persist"})
      * @ORM\OrderBy({"order" = "ASC", "id" = "ASC"})
      *
      * @var Collection<Group>
@@ -60,7 +61,7 @@ abstract class Version
     private Collection $groups;
 
     /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="version", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="version", cascade={"persist"})
      *
      * @var Collection<Element>
      */
@@ -76,7 +77,7 @@ abstract class Version
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getVersion(): VersionNumber

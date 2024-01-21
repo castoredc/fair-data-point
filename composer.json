@@ -14,15 +14,15 @@
         "composer/package-versions-deprecated": "1.11.99.5",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/orm": "^2.10",
-        "easyrdf/easyrdf": "^1.0.0",
+        "doctrine/orm": "2.17.3",
+        "sweetrdf/easyrdf": "^1.0.0",
         "fresh/doctrine-enum-bundle": "^9.0",
         "guzzlehttp/guzzle": "^6.5.8",
         "knpuniversity/oauth2-client-bundle": "^2.18",
         "league/oauth2-client": "^2.5",
         "ml/json-ld": "^1.2",
         "ramsey/uuid-doctrine": "^2.0",
-        "semsol/arc2": "^3.0.0",
+        "semsol/arc2": "dev-master",
         "sensio/framework-extra-bundle": "^6.2",
         "sentry/sentry-symfony": "^4.13",
         "stof/doctrine-extensions-bundle": "^1.4",
@@ -48,7 +48,7 @@
         "phpstan/phpstan-phpunit": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.3",
         "phpstan/phpstan-symfony": "^1.2",
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "^10.5",
         "rector/rector": "*",
         "roave/security-advisories": "dev-master"
     },
@@ -110,6 +110,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:castoredc/arc2.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:sweetrdf/easyrdf.git"
         }
     ]
 }

@@ -15,11 +15,13 @@ use App\Exception\CouldNotCreateDatabaseUser;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
 use App\Exception\LanguageNotFound;
 use Exception;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 use function assert;
 use function bin2hex;
 use function random_bytes;
 
+#[AsMessageHandler]
 class CreateRDFDistributionCommandHandler extends CreateDistributionCommandHandler
 {
     /**

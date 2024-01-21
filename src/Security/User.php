@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;
 use function in_array;
@@ -36,11 +37,11 @@ class User implements UserInterface
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Agent\Person", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
@@ -206,7 +207,7 @@ class User implements UserInterface
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function hasCastorUser(): bool

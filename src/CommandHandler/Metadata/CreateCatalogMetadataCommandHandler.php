@@ -8,7 +8,9 @@ use App\Entity\Iri;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public function __invoke(CreateCatalogMetadataCommand $command): void

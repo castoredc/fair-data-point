@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -32,11 +33,11 @@ abstract class DataSpecification implements PermissionsEnabledEntity
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="string") */
     private string $title;
@@ -52,7 +53,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     private Collection $distributionContents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Version", mappedBy="dataSpecification", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Version", mappedBy="dataSpecification", cascade={"persist"})
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<Version>
@@ -81,7 +82,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getTitle(): string

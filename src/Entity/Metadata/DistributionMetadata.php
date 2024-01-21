@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class DistributionMetadata extends Metadata
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="metadata", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="metadata")
      * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=FALSE)
      */
     private Distribution $distribution;

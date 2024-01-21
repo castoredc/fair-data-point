@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -20,11 +21,11 @@ class OptionGroup
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="string") */
     private string $title;
@@ -33,7 +34,7 @@ class OptionGroup
     private ?string $description = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist"})
      * @ORM\OrderBy({"value" = "ASC", "id" = "ASC"})
      *
      * @var Collection<OptionGroupOption>
@@ -58,7 +59,7 @@ class OptionGroup
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getTitle(): string

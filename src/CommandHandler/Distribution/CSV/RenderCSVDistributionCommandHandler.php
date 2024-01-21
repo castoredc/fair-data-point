@@ -13,8 +13,10 @@ use App\Security\User;
 use App\Service\EncryptionService;
 use Exception;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 
+#[AsMessageHandler]
 class RenderCSVDistributionCommandHandler extends CSVCommandHandler
 {
     private ApiClient $apiClient;

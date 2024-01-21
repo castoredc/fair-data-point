@@ -7,6 +7,7 @@ use App\Entity\Iri;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -19,11 +20,11 @@ class Predicate
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="predicates", cascade={"persist"})
@@ -42,7 +43,7 @@ class Predicate
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getDataModel(): DataModelVersion

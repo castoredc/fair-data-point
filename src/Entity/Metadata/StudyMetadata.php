@@ -23,6 +23,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use function array_merge;
 
 /**
@@ -36,14 +37,14 @@ class StudyMetadata
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"})
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
      */
     private Study $study;
@@ -378,7 +379,7 @@ class StudyMetadata
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getLogo(): ?Iri

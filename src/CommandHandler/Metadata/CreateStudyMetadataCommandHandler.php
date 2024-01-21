@@ -9,7 +9,9 @@ use App\Entity\Terminology\CodedText;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateStudyMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';

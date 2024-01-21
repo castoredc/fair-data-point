@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -27,11 +28,11 @@ abstract class Group
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Version", inversedBy="groups", cascade={"persist"})
@@ -52,14 +53,14 @@ abstract class Group
     private bool $isDependent = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="group", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="group", cascade={"persist"})
      *
      * @var Collection<Element>
      */
     private Collection $elements;
 
     /**
-     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="group", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="group", cascade={"persist"})
      *
      * @var Collection<ElementGroup>
      */
@@ -85,7 +86,7 @@ abstract class Group
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function setId(string $id): void

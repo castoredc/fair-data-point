@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 use function array_merge;
 use function count;
 
@@ -31,17 +32,17 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /** @ORM\Column(type="string", unique=true) */
     private string $slug;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"})
      * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
      */
     private ?FAIRDataPoint $fairDataPoint = null;
@@ -72,7 +73,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     private bool $isArchived = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog")
      * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<CatalogMetadata>
@@ -97,7 +98,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function setId(string $id): void

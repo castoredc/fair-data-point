@@ -16,8 +16,10 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\UserNotACastorUser;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function array_key_exists;
 
+#[AsMessageHandler]
 class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCommandHandler
 {
     /**

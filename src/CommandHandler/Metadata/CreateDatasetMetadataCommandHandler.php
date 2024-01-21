@@ -7,7 +7,9 @@ use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
 {
     public function __invoke(CreateDatasetMetadataCommand $command): void

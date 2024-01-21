@@ -8,6 +8,7 @@ use App\Entity\Study;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -23,11 +24,11 @@ abstract class Mapping
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="guid", length=190)
+     * @ORM\Column(type="uuid")
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private string $id;
+    private UuidInterface|string $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="mappings",cascade={"persist"})
@@ -49,7 +50,7 @@ abstract class Mapping
 
     public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getVersion(): Version
