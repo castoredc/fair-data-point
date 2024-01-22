@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
@@ -60,7 +60,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the datasets';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -89,7 +89,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while creating a new dataset';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

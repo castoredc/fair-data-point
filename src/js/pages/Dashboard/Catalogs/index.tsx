@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { Button, LoadingOverlay, Pagination, Space } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import { localizedText } from '../../../util';
-import Header from 'components/Layout/Dashboard/Header';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
-import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
+import DashboardTab from 'components/Layout/DashboardTab';
 
 interface CatalogsProps extends AuthorizedRouteComponentProps {}
 
@@ -58,9 +58,9 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading your catalogs" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your catalogs" />);
                 }
             });
     };
@@ -91,20 +91,20 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
         const { isLoading, catalogs, pagination } = this.state;
 
         return (
-            <PageBody>
+            <DashboardTab>
                 <DocumentTitle title="Catalogs" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs" />}
 
                 <Space bottom="comfortable" />
 
-                <Header title="My catalogs" type="Section">
+                <DashboardTabHeader title="My catalogs" type="Section">
                     {isAdmin(user) && (
                         <Button buttonType="primary" onClick={() => history.push('/dashboard/catalogs/add')}>
                             Add catalog
                         </Button>
                     )}
-                </Header>
+                </DashboardTabHeader>
 
                 <div>
                     {catalogs.map(catalog => {
@@ -130,7 +130,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                         />
                     )}
                 </div>
-            </PageBody>
+            </DashboardTab>
         );
     }
 }

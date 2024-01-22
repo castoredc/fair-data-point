@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import { Button, Heading, LoadingOverlay, Separator, Space, Stack, StackItem } from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay, Space, Stack } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import { localizedText } from '../../../util';
-import { toRem } from '@castoredc/matter-utils';
-import DocumentTitle from 'components/DocumentTitle';
-import BackButton from 'components/BackButton';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
+import SelectPage from 'components/SelectPage';
 
 interface AddStudyProps extends AuthorizedRouteComponentProps {}
 
@@ -52,9 +50,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while retrieving information about the catalog" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while retrieving information about the catalog" />);
                 }
             });
     };
@@ -74,9 +72,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -113,12 +111,12 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     this.setState({
                         submitDisabled: false,
                     });
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else if (error.response && typeof error.response.data.error !== 'undefined') {
                     this.setState({
                         submitDisabled: false,
                     });
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 }
             });
     };
@@ -133,24 +131,18 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
         }
 
         return (
-            <div style={{ marginLeft: 'auto', marginRight: 'auto', flex: 1, overflow: 'auto' }}>
-                <DocumentTitle title="Add a study" />
-
-                <Stack distribution="center">
-                    <StackItem style={{ width: toRem(480), marginTop: '3.2rem' }}>
-                        <BackButton to="/dashboard/studies/add">Back to catalogs</BackButton>
-
-                        <Heading type="Section">Choose a Study</Heading>
-
-                        <p>
-                            {`Please choose an item from your list of studies that you’d like to include in the ${localizedText(
-                                catalog.metadata.title,
-                                'en'
-                            )}.`}
-                        </p>
-
-                        <Separator />
-
+            <SelectPage
+                title="Add a study"
+                description={`Please choose an item from your list of studies that you’d like to include in the ${localizedText(
+                    catalog.metadata.title,
+                    'en'
+                )}.`}
+                backButton={{
+                    to: '/dashboard/studies/add',
+                    label: 'Back to catalogs',
+                }}
+            >
+            
                         {studies.length > 0 && selectedStudy && (
                             <div>
                                 <ListItem key={selectedStudy.sourceId} title={selectedStudy.name} selectable={true} active={true} icon="study" />
@@ -186,9 +178,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                             })}
 
                         {studies.length == 0 && <div className="NoResults">No studies found.</div>}
-                    </StackItem>
-                </Stack>
-            </div>
+            </SelectPage>
         );
     }
 }

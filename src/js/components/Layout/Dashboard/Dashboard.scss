@@ -1,31 +1,18 @@
 @import '../../../scss/const';
 @import '../../../scss/colors';
 
-.DashboardTab {
-    height: 100%;
+.DashboardBody {
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - $navbarHeight - $pagePadding);
+    padding: 0 3.2rem $pagePadding 3.2rem;
     display: flex;
     flex-direction: column;
-
-    .DashboardList {
-        flex: 1;
-        overflow: auto;
-    }
 }
 
 .DashboardHeader {
     .HeaderTitle {
         //border-bottom: 1px solid $neutral-40;
         margin-bottom: 10px;
-
-        h2 {
-            font-size: 16px;
-            font-weight: 600;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.5;
-            letter-spacing: normal;
-            color: $neutral-800;
-            margin-bottom: 0;
-        }
     }
 }

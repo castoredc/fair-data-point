@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Banner, Button, LoadingOverlay, Separator, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
-import {Banner, Button, LoadingOverlay, Separator, Stack} from '@castoredc/matter';
 import FormHeading from '../FormHeading';
 import { Field, Form, Formik } from 'formik';
 import Choice from 'components/Input/Formik/Choice';
@@ -85,7 +85,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(error => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -99,7 +99,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -123,7 +123,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 });
             })
             .catch(() => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -141,7 +141,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
                 if (distribution) {
                     history.push(mainUrl + '/distributions/' + values.slug);
-                    toast.success(<ToastMessage type="success" title="The distribution details are saved successfully" />, {
+                    toast.success(<ToastItem type="success" title="The distribution details are saved successfully" />, {
                         position: 'top-right',
                     });
                 } else {
@@ -156,7 +156,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);

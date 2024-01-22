@@ -35,7 +35,7 @@ const AffiliationForm: FC<AffiliationFormProps> = ({ values, validation, countri
                         <Avatar name={values.organization.name} size="48px" round />
                     ) : (
                         <div className="BlankAvatar">
-                            <CustomIcon type="center" width={28} height={28} />
+                            <CustomIcon type="center" width={20} height={20} />
                         </div>
                     )}
                 </div>

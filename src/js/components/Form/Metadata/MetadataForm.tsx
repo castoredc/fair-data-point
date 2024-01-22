@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, Stack } from '@castoredc/matter';
 import MetadataVersionModal from '../../../modals/MetadataVersionModal';
-import { Button, Stack, Tabs } from '@castoredc/matter';
 import { mergeData } from '../../../util';
 import { Form, Formik } from 'formik';
 import GeneralMetadata from 'components/Form/Metadata/FormGroups/GeneralMetadata';
 import PublishersMetadata from 'components/Form/Metadata/FormGroups/PublishersMetadata';
 import { apiClient } from 'src/js/network';
+import PageTabs from 'components/PageTabs';
 
 type MetadataFormProps = {
     object: any;
@@ -68,7 +69,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(error => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -81,7 +82,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 });
             })
             .catch(() => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -95,9 +96,9 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -122,7 +123,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             },
             () => {
                 handleSubmit();
-            }
+            },
         );
     };
 
@@ -150,7 +151,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
 
                 setSubmitting(false);
 
-                toast.success(<ToastMessage type="success" title="The metadata are saved successfully" />, {
+                toast.success(<ToastItem type="success" title="The metadata are saved successfully" />, {
                     position: 'top-right',
                 });
 
@@ -162,7 +163,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({ isLoading: false });
@@ -179,67 +180,75 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         return (
             <>
                 <Formik initialValues={data} onSubmit={this.handleSubmit}>
-                    {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
                         return (
-                            <div className="PageTabs">
-                                <Form>
-                                    <MetadataVersionModal
-                                        open={showModal}
-                                        currentVersion={currentVersion}
-                                        onClose={this.closeModal}
-                                        handleSave={versionType => this.handleVersionUpdate(versionType, setFieldValue, handleSubmit)}
-                                    />
-                                    <Tabs
-                                        tabs={{
-                                            metadata: {
-                                                title: 'Metadata',
-                                                content: (
-                                                    <div className="FullHeightPageTab">
-                                                        <GeneralMetadata
-                                                            values={values}
-                                                            languages={languages}
-                                                            licenses={licenses}
-                                                            countries={countries}
-                                                            validation={validation}
-                                                            type={type}
-                                                        >
-                                                            {children && children(validation, languages)}
-                                                        </GeneralMetadata>
-                                                    </div>
-                                                ),
-                                            },
-                                            publishers: {
-                                                title: 'Publishers',
-                                                content: (
-                                                    <div className="FullHeightPageTab">
-                                                        <PublishersMetadata
-                                                            publishers={values.publishers}
-                                                            setValue={setFieldValue}
-                                                            languages={languages}
-                                                            licenses={licenses}
-                                                            countries={countries}
-                                                            validation={validation}
-                                                            type={type}
-                                                        />
-                                                    </div>
-                                                ),
-                                            },
-                                        }}
-                                    />
+                            <Form>
+                                <MetadataVersionModal
+                                    open={showModal}
+                                    currentVersion={currentVersion}
+                                    onClose={this.closeModal}
+                                    handleSave={versionType => this.handleVersionUpdate(versionType, setFieldValue, handleSubmit)}
+                                />
+                                <PageTabs
+                                    tabs={{
+                                        metadata: {
+                                            title: 'Metadata',
+                                            content: (
+                                                <div className="FullHeightPageTab">
+                                                    <GeneralMetadata
+                                                        values={values}
+                                                        languages={languages}
+                                                        licenses={licenses}
+                                                        countries={countries}
+                                                        validation={validation}
+                                                        type={type}
+                                                    >
+                                                        {children && children(validation, languages)}
+                                                    </GeneralMetadata>
+                                                </div>
+                                            ),
+                                        },
+                                        publishers: {
+                                            title: 'Publishers',
+                                            content: (
+                                                <div className="FullHeightPageTab">
+                                                    <PublishersMetadata
+                                                        publishers={values.publishers}
+                                                        setValue={setFieldValue}
+                                                        languages={languages}
+                                                        licenses={licenses}
+                                                        countries={countries}
+                                                        validation={validation}
+                                                        type={type}
+                                                    />
+                                                </div>
+                                            ),
+                                        },
+                                    }}
+                                />
 
-                                    <div className="FormButtons">
-                                        <Stack distribution="trailing">
-                                            <Button
-                                                buttonType="primary"
-                                                onClick={() => this.showVersionModal(setFieldValue, handleSubmit)}
-                                                disabled={isSubmitting}
-                                            >
-                                                Save
-                                            </Button>
-                                        </Stack>
-                                    </div>
-                                </Form>
-                            </div>
+                                <div className="FormButtons">
+                                    <Stack distribution="trailing">
+                                        <Button
+                                            buttonType="primary"
+                                            onClick={() => this.showVersionModal(setFieldValue, handleSubmit)}
+                                            disabled={isSubmitting}
+                                        >
+                                            Save
+                                        </Button>
+                                    </Stack>
+                                </div>
+                            </Form>
                         );
                     }}
                 </Formik>

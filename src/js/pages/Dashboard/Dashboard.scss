@@ -1,16 +1,15 @@
+@import '../../scss/const';
 @import '../../scss/colors';
 
 .Dashboard {
-    overflow: hidden;
-    display: flex;
-    flex-flow: column;
-    height: 100vh;
-
     .Main {
         display: flex;
         overflow: hidden;
-        height: 100%;
-        margin-top: 4.8rem;
+        min-height: calc(-48px + 100vh);
+        position: fixed;
+        top: 48px;
+        left: 0;
+        right: 0;
 
         .Back {
             padding: 0 1.6rem;
@@ -20,21 +19,10 @@
             margin-left: auto;
             margin-right: auto;
             overflow: auto;
-
-            > div {
-                height: 100%;
-            }
-        }
-    }
-
-    .DashboardBody {
-        flex: 1;
-        overflow: hidden;
-        height: 100%;
-
-        & > div {
-            height: 100%;
-            margin: 0;
+            width: 960px;
+            max-width: 100%;
+            padding: $pagePadding 3.2rem $pagePadding 3.2rem;
+            display: flex;
         }
     }
 

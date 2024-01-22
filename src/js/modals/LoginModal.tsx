@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import LoginForm from 'components/Form/LoginForm';
+import ToastItem from 'components/ToastItem';
 import { Modal } from '@castoredc/matter';
+import LoginForm from 'components/Form/LoginForm';
 import { ServerType } from 'types/ServerType';
 import { apiClient } from '../network';
 
@@ -46,7 +46,7 @@ export default class LoginModal extends Component<LoginModalProps, LoginModalSta
                 this.setState({
                     isLoading: false,
                 });
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 

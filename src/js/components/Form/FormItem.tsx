@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { classNames } from '../../util';
-import {FormLabel, Tooltip} from '@castoredc/matter';
-import {InfoIcon} from "@castoredc/matter-icons";
+import { FormLabel, Tooltip } from '@castoredc/matter';
+import { InfoIcon } from '@castoredc/matter-icons';
 
 interface FormItemProps {
     label?: string;

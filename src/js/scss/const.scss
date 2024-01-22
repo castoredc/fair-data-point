@@ -7,7 +7,11 @@ $desktopHeaderPadding: 30px;
 $desktopHeaderHeight: $logoHeight;
 
 $desktopHeaderPaddingSmall: 15px;
-$desktopHeaderHeightSmall: (2 * $desktopHeaderPaddingSmall) + $logoHeight;
+$desktopHeaderHeightSmall: $logoHeight;
 
 $mobileHeaderPadding: 15px;
 $mobileHeaderHeight: $logoHeight;
+
+// Dashboard
+$navbarHeight: 48px;
+$pagePadding: 24px;

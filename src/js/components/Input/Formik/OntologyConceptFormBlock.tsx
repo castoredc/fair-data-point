@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import debounce from 'lodash/debounce';
-import {ToastMessage} from '@castoredc/matter';
+import { Button, Choice, DefaultOptionType, Dropdown, ReactSelectTypes } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
-import { Button, Choice, Dropdown, ReactSelectTypes, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import { apiClient } from 'src/js/network';
-import {isMultipleOption} from "components/Input/Formik/Select";
+import { isMultipleOption } from 'components/Input/Formik/Select';
 
 interface OntologyConceptFormBlockProps extends FieldProps {
     label: string;
@@ -46,9 +46,9 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -73,9 +73,9 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 callback(null);
             });

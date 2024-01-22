@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { Button, LoadingOverlay } from '@castoredc/matter';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
@@ -19,7 +19,7 @@ import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
-import {Edit, Manage, View} from "components/PermissionEditor/Permissions";
+import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any;
@@ -62,9 +62,9 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading your dataset" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your dataset" />);
                 }
             });
     };
@@ -151,7 +151,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <DatasetForm dataset={dataset} mainUrl={mainUrl} />
+                                    <DatasetForm dataset={dataset} mainUrl={mainUrl} {...props} />
                                 </PageBody>
                             )}
                         />
@@ -160,7 +160,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <DatasetMetadataForm dataset={dataset} onSave={this.getDataset} />
+                                    <DatasetMetadataForm dataset={dataset} onSave={this.getDataset} {...props} />
                                 </PageBody>
                             )}
                         />

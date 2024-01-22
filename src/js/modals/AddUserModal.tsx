@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Banner, Button, Modal} from '@castoredc/matter';
+import { Banner, Button, Modal } from '@castoredc/matter';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';

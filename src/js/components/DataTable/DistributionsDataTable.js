@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { CellText, DataGrid, Icon, IconCell, LoadingOverlay } from '@castoredc/matter';
 import { localizedText } from '../../util';
 import DataGridContainer from './DataGridContainer';
@@ -60,7 +60,7 @@ export default class DistributionsDataTable extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distributions';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

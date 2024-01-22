@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Routes from '../../Routes';
 
 import '../../scss/index.scss';
 import './App.scss';
-import {toast, ToastContainer} from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import { toast, ToastContainer } from 'react-toastify';
+import { LoadingOverlay } from '@castoredc/matter';
 import queryString from 'query-string';
-import {classNames} from '../../util';
-import {LoadingOverlay} from '@castoredc/matter';
-import {UserType} from 'types/UserType';
-import {apiClient} from 'src/js/network';
+import { classNames } from '../../util';
+import { UserType } from 'types/UserType';
+import { apiClient } from 'src/js/network';
+import ToastItem from 'components/ToastItem';
 
 interface AppState {
     isLoading: boolean;
@@ -50,7 +50,7 @@ class App extends Component<{}, AppState> {
                     isLoading: false,
                 });
 
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 

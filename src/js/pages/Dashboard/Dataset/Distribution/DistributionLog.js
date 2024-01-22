@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import DistributionRecordLogsDataTable from 'components/DataTable/DistributionRecordLogsDataTable';
-import { Heading, LoadingOverlay, Tabs } from '@castoredc/matter';
+import { Heading, LoadingOverlay } from '@castoredc/matter';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import PageTabs from 'components/PageTabs';
 
 export default class DistributionLog extends Component {
     constructor(props) {
@@ -47,7 +48,7 @@ export default class DistributionLog extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the log';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -70,7 +71,8 @@ export default class DistributionLog extends Component {
         let tabs = {
             records: {
                 title: 'Record logs',
-                content: <DistributionRecordLogsDataTable history={history} dataset={dataset} distribution={distribution} log={match.params.log} />,
+                content: <DistributionRecordLogsDataTable history={history} dataset={dataset}
+                                                          distribution={distribution} log={match.params.log} />,
             },
         };
 
@@ -94,9 +96,7 @@ export default class DistributionLog extends Component {
 
         return (
             <PageBody>
-                <div className="PageTabs">
-                    <Tabs onChange={this.changeTab} selected={selectedTab} tabs={tabs} />
-                </div>
+                <PageTabs onChange={this.changeTab} selected={selectedTab} tabs={tabs} />
             </PageBody>
         );
     }

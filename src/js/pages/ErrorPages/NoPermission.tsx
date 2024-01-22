@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import DocumentTitle from 'components/DocumentTitle';
-import { Banner, Heading, Stack, StackItem } from '@castoredc/matter';
+import { Banner, Stack, StackItem } from '@castoredc/matter';
 import { toRem } from '@castoredc/matter-utils';
 import BackButton from 'components/BackButton';
-import { useHistory } from 'react-router-dom';
 
 interface NoPermissionProps {
     text: string;

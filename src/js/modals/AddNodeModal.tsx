@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { Button, Modal } from '@castoredc/matter';
 import { DataType } from 'components/MetadataItem/EnumMappings';
 import * as Yup from 'yup';
@@ -81,7 +81,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 setSubmitting(false);
             });

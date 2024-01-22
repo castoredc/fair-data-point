@@ -3,14 +3,14 @@ import { classNames, localizedText } from '../../../util';
 import ListItem from '../../../components/ListItem';
 import Header from '../../../components/Layout/Header';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Banner } from '@castoredc/matter';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import MetadataSideBar from '../../../components/MetadataSideBar';
 import './Distribution.scss';
 import { isGranted } from 'utils/PermissionHelper';
-import { Banner } from '@castoredc/matter';
 import { LockIcon } from '@castoredc/matter-icons';
 import { apiClient } from 'src/js/network';
 
@@ -51,7 +51,7 @@ export default class Distribution extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

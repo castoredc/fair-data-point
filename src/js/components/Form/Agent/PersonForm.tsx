@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import '../Form.scss';
 import FormItem from '../FormItem';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button } from '@castoredc/matter';
 import { PersonType } from 'types/PersonType';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import * as Yup from 'yup';
-import { Button } from '@castoredc/matter';
 import { FormikHelpers } from 'formik/dist/types';
 import { apiClient } from 'src/js/network';
 
@@ -100,7 +100,7 @@ export default class PersonForm extends Component<PersonFormProps, PersonFormSta
                         }
                     );
 
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { CellText, DataGrid, Heading, Icon, IconCell, LoadingOverlay } from '@castoredc/matter';
 import { MethodType, StudyType } from '../MetadataItem/EnumMappings';
 import './DataTable.scss';
@@ -81,7 +81,7 @@ export default class StudiesDataTable extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the studies';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -110,7 +110,7 @@ export default class StudiesDataTable extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the filters';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

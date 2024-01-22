@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import { Heading, LoadingOverlay, Pagination, Separator, Stack, StackItem } from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay, Pagination } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import { localizedText } from '../../../util';
-import { toRem } from '@castoredc/matter-utils';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
-import DocumentTitle from 'components/DocumentTitle';
-import BackButton from 'components/BackButton';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
+import SelectPage from 'components/SelectPage';
 
-interface SelectCatalogProps extends AuthorizedRouteComponentProps {}
+interface SelectCatalogProps extends AuthorizedRouteComponentProps {
+}
 
 interface SelectCatalogState {
     catalogs: any;
@@ -58,9 +57,9 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -78,7 +77,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
             },
             () => {
                 this.getCatalogs();
-            }
+            },
         );
     };
 
@@ -90,48 +89,41 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         const { isLoading, catalogs, pagination } = this.state;
 
         return (
-            <div style={{ marginLeft: 'auto', marginRight: 'auto', flex: 1, overflow: 'auto' }}>
-                <DocumentTitle title="Add a study" />
-
+            <SelectPage
+                title="Choose a catalog"
+                description="Please choose a catalog where you would like to add your study to."
+                backButton={{
+                    to: '/dashboard/studies',
+                    label: 'Back to studies',
+                }}
+            >
                 {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs" />}
 
-                <Stack distribution="center">
-                    <StackItem style={{ width: toRem(480), marginTop: '3.2rem' }}>
-                        <BackButton to="/dashboard/studies">Back to studies</BackButton>
-
-                        <Heading type="Section">Choose a Catalog</Heading>
-
-                        <p>Please choose a catalog where you would like to add your study to.</p>
-
-                        <Separator />
-
-                        {catalogs.length > 0 ? (
-                            catalogs.map(catalog => {
-                                return (
-                                    <ListItem
-                                        key={catalog.id}
-                                        title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
-                                        link={`/dashboard/studies/add/${catalog.slug}`}
-                                        customIcon="catalog"
-                                    />
-                                );
-                            })
-                        ) : (
-                            <div className="NoResults">No catalogs found.</div>
-                        )}
-
-                        {pagination && (
-                            <Pagination
-                                accessibleName="Pagination"
-                                onChange={this.handlePagination}
-                                pageSize={pagination.perPage}
-                                currentPage={pagination.currentPage - 1}
-                                totalItems={pagination.totalResults}
+                {catalogs.length > 0 ? (
+                    catalogs.map(catalog => {
+                        return (
+                            <ListItem
+                                key={catalog.id}
+                                title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
+                                link={`/dashboard/studies/add/${catalog.slug}`}
+                                customIcon="catalog"
                             />
-                        )}
-                    </StackItem>
-                </Stack>
-            </div>
+                        );
+                    })
+                ) : (
+                    <div className="NoResults">No catalogs found.</div>
+                )}
+
+                {pagination && (
+                    <Pagination
+                        accessibleName="Pagination"
+                        onChange={this.handlePagination}
+                        pageSize={pagination.perPage}
+                        currentPage={pagination.currentPage - 1}
+                        totalItems={pagination.totalResults}
+                    />
+                )}
+            </SelectPage>
         );
     }
 }

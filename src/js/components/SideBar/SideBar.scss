@@ -1,3 +1,4 @@
+@import '../../scss/const';
 @import '../../scss/colors';
 
 .SideBar {
@@ -8,7 +9,7 @@
     background: $pale-grey;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: calc(100vh - $navbarHeight);
 
     .SideBarNav {
         margin: 0 16px;

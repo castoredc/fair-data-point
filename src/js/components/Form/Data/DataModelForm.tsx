@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
-import { Button, Stack } from '@castoredc/matter';
 import * as H from 'history';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import * as Yup from 'yup';
 import { apiClient } from 'src/js/network';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface DataModelFormProps {
     dataModel?: any;
@@ -41,7 +42,8 @@ export default class DataModelForm extends Component<DataModelFormProps, DataMod
                 setSubmitting(false);
 
                 if (dataModel) {
-                    toast.success(<ToastMessage type="success" title="The data model details are saved successfully" />, {
+                    toast.success(<ToastItem type="success"
+                                                title="The data model details are saved successfully" />, {
                         position: 'top-right',
                     });
                 } else {
@@ -56,7 +58,7 @@ export default class DataModelForm extends Component<DataModelFormProps, DataMod
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -66,38 +68,51 @@ export default class DataModelForm extends Component<DataModelFormProps, DataMod
         const { dataModel } = this.props;
 
         return (
-            <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={DataModelSchema}>
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                    return (
-                        <Form>
-                            <div className="FormContent">
-                                <FormItem label="Title">
-                                    <Field component={Input} name="title" serverError={validation} />
-                                </FormItem>
-                                <FormItem label="Description">
-                                    <Field component={Input} name="description" serverError={validation} multiline />
-                                </FormItem>
-                            </div>
-
-                            {dataModel ? (
-                                <div className="FormButtons">
-                                    <Stack distribution="trailing">
-                                        <Button disabled={isSubmitting} type="submit">
-                                            Update data model
-                                        </Button>
-                                    </Stack>
+            <PageBody>
+                <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={DataModelSchema}>
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
+                        return (
+                            <Form>
+                                <div className="FormContent">
+                                    <FormItem label="Title">
+                                        <Field component={Input} name="title" serverError={validation} />
+                                    </FormItem>
+                                    <FormItem label="Description">
+                                        <Field component={Input} name="description" serverError={validation}
+                                               multiline />
+                                    </FormItem>
                                 </div>
-                            ) : (
-                                <footer>
-                                    <Button disabled={isSubmitting} type="submit">
-                                        Add data model
-                                    </Button>
-                                </footer>
-                            )}
-                        </Form>
-                    );
-                }}
-            </Formik>
+
+                                {dataModel ? (
+                                    <div className="FormButtons">
+                                        <Stack distribution="trailing">
+                                            <Button disabled={isSubmitting} type="submit">
+                                                Update data model
+                                            </Button>
+                                        </Stack>
+                                    </div>
+                                ) : (
+                                    <footer>
+                                        <Button disabled={isSubmitting} type="submit">
+                                            Add data model
+                                        </Button>
+                                    </footer>
+                                )}
+                            </Form>
+                        );
+                    }}
+                </Formik>
+            </PageBody>
         );
     }
 }

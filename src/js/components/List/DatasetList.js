@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { classNames, localizedText } from '../../util';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { LoadingOverlay, Pagination } from '@castoredc/matter';
 import DataGridHelper from '../DataTable/DataGridHelper';
 import ListItem from 'components/ListItem';
@@ -67,7 +67,7 @@ export default class DatasetList extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the datasets';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

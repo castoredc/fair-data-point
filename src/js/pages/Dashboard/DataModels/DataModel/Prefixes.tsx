@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import { ActionsCell, Button, CellText, DataGrid, Stack } from '@castoredc/matter';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { ActionsCell, Button, CellText, DataGrid, Stack, ToastMessage } from '@castoredc/matter';
 import DataModelPrefixModal from '../../../../modals/DataModelPrefixModal';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import DataGridContainer from 'components/DataTable/DataGridContainer';
@@ -86,7 +86,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                 this.onSaved('remove');
             })
             .catch(error => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 

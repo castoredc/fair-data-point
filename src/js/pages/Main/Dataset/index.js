@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { localizedText } from '../../../util';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import Layout from '../../../components/Layout';
 import Header from '../../../components/Layout/Header';
 import MainBody from '../../../components/Layout/MainBody';
@@ -44,7 +44,7 @@ export default class Dataset extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the dataset';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

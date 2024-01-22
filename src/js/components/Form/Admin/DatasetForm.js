@@ -4,13 +4,13 @@ import { ValidatorForm } from 'react-form-validator-core';
 import '../Form.scss';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import { Button, Icon, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import Input from '../../Input';
 import RadioGroup from '../../Input/RadioGroup';
 import { mergeData } from '../../../util';
-import { Button, Icon, Stack } from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
+import ToastItem from 'components/ToastItem';
 
 export default class DatasetForm extends Component {
     constructor(props) {
@@ -42,7 +42,7 @@ export default class DatasetForm extends Component {
     };
 
     handleSubmit = event => {
-        const { dataset, mainUrl } = this.props;
+        const { dataset, mainUrl, history } = this.props;
         event.preventDefault();
 
         const { data } = this.state;
@@ -61,8 +61,8 @@ export default class DatasetForm extends Component {
                         isLoading: false,
                         submitDisabled: false,
                     });
-                    history.push(mainUrl + '/datasets/' + values.slug);
-                    toast.success(<ToastMessage type="success" title="The dataset details are saved successfully" />, {
+                    history.push(mainUrl + '/datasets/' + data.slug);
+                    toast.success(<ToastItem type="success" title="The dataset details are saved successfully" />, {
                         position: 'top-right',
                     });
                 })
@@ -72,7 +72,8 @@ export default class DatasetForm extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastMessage type="error" title="An error occurred" />);
+                        toast.error(<ToastItem type="error" title="An error occurred" />);
+                        console.log(error);
                     }
                     this.setState({
                         submitDisabled: false,

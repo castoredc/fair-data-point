@@ -1,4 +1,4 @@
-import React, {FC, FormEvent, ReactNode} from 'react';
+import React, { FC, FormEvent, ReactNode } from 'react';
 
 import { ChoiceOption } from '@castoredc/matter';
 import { FieldProps } from 'formik';

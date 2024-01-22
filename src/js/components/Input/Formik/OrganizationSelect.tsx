@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, DefaultOptionType, Dropdown, Stack, TextInput } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
-import { Button, Dropdown, Stack, TextInput, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import { AsyncDropdownIndicator } from 'components/Input/Formik/Select';
 import debounce from 'lodash/debounce';
@@ -50,9 +50,9 @@ export default class OrganizationSelect extends Component<OrganizationSelectProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 callback(null);

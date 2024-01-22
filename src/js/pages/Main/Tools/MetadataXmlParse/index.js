@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, CellText, DataGrid, FileSelector, Stack } from '@castoredc/matter';
 import Layout from '../../../../components/Layout';
 import MainBody from '../../../../components/Layout/MainBody';
-import { Button, CellText, DataGrid, FileSelector, Stack } from '@castoredc/matter';
 import { downloadFile } from '../../../../util';
 import './MetadataXmlParse.scss';
 import DataGridContainer from '../../../../components/DataTable/DataGridContainer';
@@ -24,7 +24,7 @@ export default class MetadataXmlParse extends Component {
             const file = e.target.files[0];
 
             if (file.type !== 'text/xml') {
-                toast.error(<ToastMessage type="error" title="This file is not an XML file." />);
+                toast.error(<ToastItem type="error" title="This file is not an XML file." />);
 
                 return;
             }
@@ -56,9 +56,9 @@ export default class MetadataXmlParse extends Component {
                     });
 
                     if (error.response && typeof error.response.data.error !== 'undefined') {
-                        toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                        toast.error(<ToastItem type="error" title={error.response.data.error} />);
                     } else {
-                        toast.error(<ToastMessage type="error" title="An error occurred while transforming the XML." />);
+                        toast.error(<ToastItem type="error" title="An error occurred while transforming the XML." />);
                     }
                 });
         }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './MetadataItem.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { apiClient } from 'src/js/network';
 
 export default class License extends Component {
@@ -35,7 +35,7 @@ export default class License extends Component {
                     isLoading: false,
                 });
 
-                toast.error(<ToastMessage type="error" title="Could not load license information." />);
+                toast.error(<ToastItem type="error" title="Could not load license information." />);
             });
     };
 

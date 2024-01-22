@@ -17,73 +17,8 @@ ul {
     list-style-type: none;
 }
 
-.IconRight {
-    float: right;
-    display: block;
-    margin-top: 4px;
-}
-
-.Icon.Rotated {
-    transform: rotate(180deg);
-}
-
-.ToggleArrow {
-    width: 18px;
-    height: 18px;
-    float: right;
-
-    svg path {
-        fill: $neutral-500;
-    }
-
-    &.Active {
-        svg {
-            transform: rotate(180deg);
-        }
-    }
-}
-
-.IconHover {
-    display: none;
-}
-
-.HasHoverableIcon {
-    &:hover .IconHover {
-        display: block;
-    }
-}
-
-.TopLevelContainer.Embedded .container {
-    max-width: none;
-    //max-width: 600px;
-}
-
 .AddButton.btn {
     padding: 5px 20px 5px 15px;
-}
-
-.BackButton.btn {
-    padding: 5px 0;
-    color: $neutral-400;
-    text-decoration: none;
-
-    .Icon {
-        margin-right: 3px;
-
-        path {
-            fill: $neutral-400;
-        }
-    }
-
-    &:hover,
-    &:active {
-        color: $neutral-700;
-        text-decoration: none;
-
-        .Icon path {
-            fill: $neutral-700;
-        }
-    }
 }
 
 .btn-primary .Icon {
@@ -94,121 +29,10 @@ ul {
     }
 }
 
-.btn .spinner-border {
-    margin-right: 5px;
-}
-
 .NoResults {
     text-align: center;
     padding: 50px 0;
     color: $neutral-80;
     font-size: 16px;
     width: 100%;
-}
-
-div[type='error'] {
-    width: 100%;
-    max-width: 40rem;
-}
-
-.PageBody {
-    flex: 1;
-    display: flex;
-    flex-flow: column;
-    margin-bottom: 1.6rem;
-    overflow: auto;
-
-    & > form {
-        display: flex;
-        flex-direction: column;
-    }
-}
-
-.PageTabs {
-    height: 100%;
-    //flex: 1;
-    overflow: auto;
-    //display: flex;
-
-    & > form, div.Form {
-        height: 100%;
-        flex: 1;
-        display: flex;
-        flex-flow: column;
-        overflow: auto;
-
-        & > div:first-child {
-            // TabsWrapper
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: auto;
-
-            & > div:first-child {
-                // ScrollableContainer
-                height: auto;
-            }
-
-            & div > div:first-child {
-                // Matter Tabs
-                height: auto;
-            }
-        }
-    }
-
-    .FullHeightPageTab {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    & > div {
-        /* Matter Tabs */
-        //height: 100%;
-        display: flex;
-        flex-direction: column;
-
-        & > div[role='tabpanel'] {
-            flex: 1;
-            overflow: auto;
-        }
-    }
-}
-
-.Toastify__toast-container {
-    padding: 0;
-}
-.Toastify__toast {
-    padding: 0;
-    border-radius: 0;
-    box-shadow: none;
-    font-family: inherit;
-}
-.Toastify__toast-body {
-    padding: 0;
-}
-
-:root {
-    --toastify-toast-width: 400px;
-}
-
-.Toastify__toast-theme--light {
-    background: none;
-}
-
-button.Toastify__close-button {
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    height: 3.2rem;
-    width: 3.2rem;
-    background: transparent;
-    border: none;
-    border-radius: 0.8rem;
-    color: rgb(111, 122, 141);
-
-    svg {
-        height: 2rem;
-        width: 2rem;
-    }
 }

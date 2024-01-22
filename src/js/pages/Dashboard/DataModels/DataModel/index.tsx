@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { LoadingOverlay } from '@castoredc/matter';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
@@ -20,7 +20,7 @@ import { isGranted } from 'utils/PermissionHelper';
 import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import { apiClient } from 'src/js/network';
-import {Edit, Manage, View} from "components/PermissionEditor/Permissions";
+import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
 
 interface DataModelProps extends AuthorizedRouteComponentProps {}
 
@@ -104,7 +104,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the data model';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -139,9 +139,9 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -172,7 +172,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the nodes';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -198,7 +198,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the prefixes';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -297,7 +297,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                         },
                     ]}
                 />
-                <Body fullWidth={true}>
+                <Body>
                     <Header title={dataModel.title} />
 
                     <Switch>

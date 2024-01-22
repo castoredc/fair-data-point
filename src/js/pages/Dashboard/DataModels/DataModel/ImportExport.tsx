@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Heading, Stack } from '@castoredc/matter';
 import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import File from 'components/Input/Formik/File';
-import {ToastMessage} from '@castoredc/matter';
 import { downloadFile, isNumeric } from '../../../../util';
 import * as Yup from 'yup';
 import { AuthorizedRouteComponentProps } from 'components/Route';
@@ -68,10 +68,10 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                         if ('model' in json) {
                             setFieldValue('version', json.version.version);
                         } else {
-                            toast.error(<ToastMessage type="error" title="Please upload a valid model export." />);
+                            toast.error(<ToastItem type="error" title="Please upload a valid model export." />);
                         }
                     } else {
-                        toast.error(<ToastMessage type="error" title="Please upload a valid model export." />);
+                        toast.error(<ToastItem type="error" title="Please upload a valid model export." />);
                     }
                 };
             }
@@ -95,7 +95,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
             .then(response => {
                 setSubmitting(false);
 
-                toast.success(<ToastMessage type="success" title="The model was successfully imported." />, {
+                toast.success(<ToastItem type="success" title="The model was successfully imported." />, {
                     position: 'top-right',
                 });
 
@@ -107,9 +107,9 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                 setSubmitting(false);
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while importing the model." />);
+                    toast.error(<ToastItem type="error" title="An error occurred while importing the model." />);
                 }
             });
     };

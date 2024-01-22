@@ -4,13 +4,13 @@ import { ValidatorForm } from 'react-form-validator-core';
 
 import './Filters.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Heading, LoadingOverlay } from '@castoredc/matter';
 import FormItem from '../Form/FormItem';
 import { MethodType, StudyType } from '../MetadataItem/EnumMappings';
 import CheckboxGroup from '../Input/CheckboxGroup';
 import { classNames } from '../../util';
 import Dropdown from '../Input/Dropdown';
-import { Heading, LoadingOverlay } from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
 
 export default class StudyFilters extends Component {
@@ -61,9 +61,9 @@ export default class StudyFilters extends Component {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -124,7 +124,7 @@ export default class StudyFilters extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the filters';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 

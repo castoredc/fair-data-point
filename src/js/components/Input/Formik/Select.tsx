@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 
-import { Dropdown, Icon, ReactSelectTypes, DefaultOptionType } from '@castoredc/matter';
+import { DefaultOptionType, Dropdown, Icon, ReactSelectTypes } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
+
 type IsMulti = boolean;
 
 interface SelectProps extends FieldProps, Omit<ReactSelectTypes.Props, "form"> {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import DataModelMappingsDataTable from 'components/DataTable/DataModelMappingsDataTable';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import { Dropdown as CastorDropdown, LoadingOverlay, Stack, Tabs } from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Dropdown as CastorDropdown, LoadingOverlay, Stack } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
 import MappingInterface from 'components/MappingInterface';
 import Split from 'components/Layout/Split';
@@ -53,7 +53,7 @@ export default class DistributionContentsRdf extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the data model';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -86,7 +86,14 @@ export default class DistributionContentsRdf extends Component {
     };
 
     render() {
-        const { selectedMapping, addedMapping, isLoadingDataModel, dataModel, currentVersion, selectedType } = this.state;
+        const {
+            selectedMapping,
+            addedMapping,
+            isLoadingDataModel,
+            dataModel,
+            currentVersion,
+            selectedType,
+        } = this.state;
         const { distribution, dataset } = this.props;
 
         if (isLoadingDataModel) {
@@ -127,40 +134,38 @@ export default class DistributionContentsRdf extends Component {
                     }}
                 >
                     <Split sizes={[50, 50]}>
-                        <div className="PageTabs">
-                            <Tabs
-                                onChange={this.changeTab}
-                                selected={selectedType}
-                                tabs={{
-                                    node: {
-                                        title: 'Nodes',
-                                        content: (
-                                            <DataModelMappingsDataTable
-                                                dataset={dataset}
-                                                distribution={distribution}
-                                                onClick={this.selectMapping}
-                                                lastHandledMapping={addedMapping}
-                                                versionId={currentVersion}
-                                                type="node"
-                                            />
-                                        ),
-                                    },
-                                    module: {
-                                        title: 'Groups',
-                                        content: (
-                                            <DataModelMappingsDataTable
-                                                dataset={dataset}
-                                                distribution={distribution}
-                                                onClick={this.selectMapping}
-                                                lastHandledMapping={addedMapping}
-                                                versionId={currentVersion}
-                                                type="module"
-                                            />
-                                        ),
-                                    },
-                                }}
-                            />
-                        </div>
+                        <PageTabs
+                            onChange={this.changeTab}
+                            selected={selectedType}
+                            tabs={{
+                                node: {
+                                    title: 'Nodes',
+                                    content: (
+                                        <DataModelMappingsDataTable
+                                            dataset={dataset}
+                                            distribution={distribution}
+                                            onClick={this.selectMapping}
+                                            lastHandledMapping={addedMapping}
+                                            versionId={currentVersion}
+                                            type="node"
+                                        />
+                                    ),
+                                },
+                                module: {
+                                    title: 'Groups',
+                                    content: (
+                                        <DataModelMappingsDataTable
+                                            dataset={dataset}
+                                            distribution={distribution}
+                                            onClick={this.selectMapping}
+                                            lastHandledMapping={addedMapping}
+                                            versionId={currentVersion}
+                                            type="module"
+                                        />
+                                    ),
+                                },
+                            }}
+                        />
 
                         <MappingInterface
                             dataset={dataset}

@@ -1,0 +1,61 @@
+@import '../../scss/const';
+
+
+
+.PageTabs {
+  height: 100%;
+  //flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+
+  & > form, div.Form {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    overflow: auto;
+
+    & > div:first-child {
+      // TabsWrapper
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+
+      & > div:first-child {
+        // ScrollableContainer
+        height: auto;
+      }
+
+      & div > div:first-child {
+        // Matter Tabs
+        height: auto;
+      }
+    }
+  }
+
+  .FullHeightPageTab {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & > div {
+    /* Matter TabsWrapper */
+    //height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    & > div:first-child {
+      flex: 0;
+    }
+
+    & > div[role='tabpanel'] {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}

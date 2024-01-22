@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Highlight from '../Highlight';
-import { Banner, Tabs } from '@castoredc/matter';
+import { Banner } from '@castoredc/matter';
 import ScrollShadow from '../ScrollShadow';
 import VisNetwork from '../Visualization/Network';
 import { CopyIcon, DecisionIcon } from '@castoredc/matter-icons';
+import PageTabs from 'components/PageTabs';
 
 export default class DataModelModulePreview extends Component {
     constructor(props) {
@@ -132,8 +133,7 @@ export default class DataModelModulePreview extends Component {
         });
 
         return (
-            <div className="PageTabs">
-                <Tabs
+            <PageTabs
                     onChange={this.changeTab}
                     selected={selectedTab}
                     tabs={{
@@ -167,7 +167,6 @@ export default class DataModelModulePreview extends Component {
                         },
                     }}
                 />
-            </div>
         );
     }
 }

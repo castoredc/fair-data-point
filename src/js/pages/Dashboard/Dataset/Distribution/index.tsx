@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { Button, LoadingOverlay } from '@castoredc/matter';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
@@ -66,9 +66,9 @@ export default class Distribution extends Component<DistributionProps, Distribut
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading your distribution" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your distribution" />);
                 }
             });
     };
@@ -94,7 +94,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -196,7 +196,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     items={sidebarItems}
                 />
 
-                <Body fullWidth={true}>
+                <Body>
                     <Header title={title} fullWidth={true}>
                         <Button
                             buttonType="contentOnly"

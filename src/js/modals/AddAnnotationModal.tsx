@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 import debounce from 'lodash/debounce';
-import {ToastMessage} from '@castoredc/matter';
-import FormItem from 'components/Form/FormItem';
 import { Button, Modal } from '@castoredc/matter';
+import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
 import Select, { AsyncSelect } from 'components/Input/Formik/Select';
 import * as Yup from 'yup';
@@ -47,9 +47,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -72,9 +72,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 callback(null);
@@ -103,9 +103,9 @@ export default class AddAnnotationModal extends Component<AddAnnotationModalProp
                         validation: error.response.data.fields,
                     });
                 } else if (error.response) {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 setSubmitting(false);

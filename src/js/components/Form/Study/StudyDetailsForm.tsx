@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 
 import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
@@ -11,7 +12,6 @@ import Select from 'components/Input/Formik/Select';
 import DatePicker from 'components/Input/Formik/DatePicker';
 import OntologyConceptFormBlock from 'components/Input/Formik/OntologyConceptFormBlock';
 import LocalizedTextInput from 'components/Input/Formik/LocalizedTextInput';
-import {ToastMessage} from '@castoredc/matter';
 import Choice from 'components/Input/Formik/Choice';
 import * as Yup from 'yup';
 import { apiClient } from 'src/js/network';
@@ -72,9 +72,9 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -93,7 +93,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                 });
             })
             .catch(error => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 
@@ -122,7 +122,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                     isLoading: false,
                 });
 
-                toast.success(<ToastMessage type="success" title="The study details are saved successfully" />, {
+                toast.success(<ToastItem type="success" title="The study details are saved successfully" />, {
                     position: 'top-right',
                 });
 
@@ -135,7 +135,7 @@ export default class StudyDetailsForm extends Component<StudyDetailsFormProps, S
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 this.setState({
                     isLoading: false,

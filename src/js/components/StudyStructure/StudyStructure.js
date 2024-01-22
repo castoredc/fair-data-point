@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './StudyStructure.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { LoadingOverlay, Tabs } from '@castoredc/matter';
 import FieldListItem from '../ListItem/FieldListItem';
 import StudyStructureNavigator from './StudyStructureNavigator';
-import { LoadingOverlay, Tabs } from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
 
 export default class StudyStructure extends Component {
@@ -64,9 +64,9 @@ export default class StudyStructure extends Component {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -125,9 +125,9 @@ export default class StudyStructure extends Component {
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({

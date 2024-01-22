@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, DefaultOptionType, Dropdown, ReactSelectTypes, TextInput } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
-import { Button, Dropdown, TextInput, ReactSelectTypes, DefaultOptionType } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import { OrganizationType } from 'types/OrganizationType';
 import FieldErrors from 'components/Input/Formik/Errors';
@@ -79,9 +79,9 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
                     });
 
                     if (error.response && typeof error.response.data.error !== 'undefined') {
-                        toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                        toast.error(<ToastItem type="error" title={error.response.data.error} />);
                     } else {
-                        toast.error(<ToastMessage type="error" title="An error occurred" />);
+                        toast.error(<ToastItem type="error" title="An error occurred" />);
                     }
                 });
         } else {

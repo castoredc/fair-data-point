@@ -5,10 +5,10 @@ import { ArrowLeftIcon } from '@castoredc/matter-icons';
 import { classNames } from '../../util';
 import { useHistory } from 'react-router-dom';
 
-interface BackButtonProps {
+export interface BackButtonProps {
     to?: string;
     returnButton?: boolean;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     sidebar?: boolean;
 }
 

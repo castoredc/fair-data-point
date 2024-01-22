@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import './Dashboard.scss';
+import './PageBody.scss';
 
 type PageBodyProps = {
     children: React.ReactNode;

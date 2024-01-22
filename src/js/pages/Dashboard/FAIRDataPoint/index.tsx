@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { localizedText } from '../../../util';
-import { Heading, LoadingOverlay } from '@castoredc/matter';
+import { LoadingOverlay } from '@castoredc/matter';
 import DocumentTitle from 'components/DocumentTitle';
 import FAIRDataPointMetadataForm from 'components/Form/Metadata/FAIRDataPointMetadataForm';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import DashboardTab from 'components/Layout/DashboardTab';
+import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 
 interface FAIRDataPointProps extends AuthorizedRouteComponentProps {}
 
@@ -48,9 +49,9 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading the FAIR Data Point information" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading the FAIR Data Point information" />);
                 }
             });
     };
@@ -61,15 +62,15 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
         const title = fdp ? (fdp.hasMetadata ? localizedText(fdp.metadata.title, 'en') : 'FAIR Data Point') : 'FAIR Data Point';
 
         return (
-            <PageBody>
+            <DashboardTab>
                 <DocumentTitle title="FAIR Data Point" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading FAIR Data Point information" />}
 
-                <Heading type="Section">{title}</Heading>
+                <DashboardTabHeader type="Section" title={title} />
 
                 {fdp && <FAIRDataPointMetadataForm fdp={fdp} onSave={this.getFairDataPoint} />}
-            </PageBody>
+            </DashboardTab>
         );
     }
 }

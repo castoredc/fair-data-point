@@ -6,7 +6,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import CatalogMetadataForm from 'components/Form/Metadata/CatalogMetadataForm';
 import CatalogForm from 'components/Form/Admin/CatalogForm';
 import AddStudy from 'pages/Dashboard/Catalogs/Catalog/AddStudy';
@@ -21,7 +21,7 @@ import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
-import { View, Edit, Manage } from 'components/PermissionEditor/Permissions'
+import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
 
 interface CatalogProps extends AuthorizedRouteComponentProps {}
 
@@ -62,9 +62,9 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading the catalog" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading the catalog" />);
                 }
             });
     };

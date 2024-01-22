@@ -4,13 +4,13 @@ import { ValidatorForm } from 'react-form-validator-core';
 import '../Form.scss';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import Input from '../../Input';
 import Dropdown from '../../Input/Dropdown';
 import RadioGroup from '../../Input/RadioGroup';
 import { mergeData } from '../../../util';
-import { Button, Stack } from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
 
 export default class StudyForm extends Component {
@@ -47,7 +47,7 @@ export default class StudyForm extends Component {
                 });
             })
             .catch(error => {
-                toast.error(<ToastMessage type="error" title="An error occurred while retrieving the Castor servers" />);
+                toast.error(<ToastItem type="error" title="An error occurred while retrieving the Castor servers" />);
             });
     };
 
@@ -98,7 +98,7 @@ export default class StudyForm extends Component {
                     });
 
                     if (study) {
-                        toast.success(<ToastMessage type="success" title="The study details are saved successfully" />, {
+                        toast.success(<ToastItem type="success" title="The study details are saved successfully" />, {
                             position: 'top-right',
                         });
                     }
@@ -109,7 +109,7 @@ export default class StudyForm extends Component {
                             validation: error.response.data.fields,
                         });
                     } else {
-                        toast.error(<ToastMessage type="error" title="An error occurred" />);
+                        toast.error(<ToastItem type="error" title="An error occurred" />);
                     }
                     this.setState({
                         isLoading: false,

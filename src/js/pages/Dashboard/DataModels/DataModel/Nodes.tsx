@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack, Tabs } from '@castoredc/matter';
+import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack, ToastMessage } from '@castoredc/matter';
 import AddNodeModal from '../../../../modals/AddNodeModal';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import PageTabs from 'components/PageTabs';
 
 interface NodesProps extends AuthorizedRouteComponentProps {
     nodes: any;
@@ -77,18 +78,18 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     />,
                     {
                         position: 'top-right',
-                    }
+                    },
                 );
 
                 this.onSaved('remove');
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
 
                     this.onSaved('remove');
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -243,167 +244,165 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     </Stack>
                 </div>
 
-                <div className="PageTabs">
-                    <Tabs
-                        selected={match.params.nodeType}
-                        onChange={selectedKey => {
-                            const newUrl = `/dashboard/data-models/${dataModel.id}/${version.label}/nodes/${selectedKey}`;
-                            history.push(newUrl);
-                        }}
-                        tabs={{
-                            internal: {
-                                title: 'Internal',
-                                content: (
-                                    <DataGrid
-                                        accessibleName="Internal nodes"
-                                        emptyStateContent="This data model does not have internal nodes"
-                                        rows={internalNodeRows}
-                                        anchorRightColumns={1}
-                                        columns={[
-                                            {
-                                                Header: 'Title',
-                                                accessor: 'title',
-                                            },
-                                            {
-                                                Header: 'Slug',
-                                                accessor: 'value',
-                                            },
-                                            {
-                                                Header: <Icon description="Repeated" type="tickSmall" />,
-                                                accessor: 'repeated',
-                                                disableResizing: true,
-                                                isInteractive: true,
-                                                width: 32,
-                                            },
-                                            {
-                                                accessor: 'menu',
-                                                disableGroupBy: true,
-                                                disableResizing: true,
-                                                isInteractive: true,
-                                                isSticky: true,
-                                                maxWidth: 34,
-                                                minWidth: 34,
-                                                width: 34,
-                                            },
-                                        ]}
-                                    />
-                                ),
-                            },
-                            external: {
-                                title: 'External',
-                                content: (
-                                    <DataGrid
-                                        accessibleName="External nodes"
-                                        emptyStateContent="This data model does not have external nodes"
-                                        rows={externalNodeRows}
-                                        anchorRightColumns={1}
-                                        columns={[
-                                            {
-                                                Header: 'Title',
-                                                accessor: 'title',
-                                            },
-                                            {
-                                                Header: 'Short',
-                                                accessor: 'short',
-                                            },
-                                            {
-                                                Header: 'URI',
-                                                accessor: 'uri',
-                                            },
-                                            {
-                                                accessor: 'menu',
-                                                disableGroupBy: true,
-                                                disableResizing: true,
-                                                isInteractive: true,
-                                                isSticky: true,
-                                                maxWidth: 34,
-                                                minWidth: 34,
-                                                width: 34,
-                                            },
-                                        ]}
-                                    />
-                                ),
-                            },
-                            literal: {
-                                title: 'Literal',
-                                content: (
-                                    <DataGrid
-                                        accessibleName="Literal nodes"
-                                        emptyStateContent="This data model does not have literal nodes"
-                                        rows={literalNodeRows}
-                                        anchorRightColumns={1}
-                                        columns={[
-                                            {
-                                                Header: 'Title',
-                                                accessor: 'title',
-                                            },
-                                            {
-                                                Header: 'Value',
-                                                accessor: 'value',
-                                            },
-                                            {
-                                                Header: 'Data type',
-                                                accessor: 'dataType',
-                                            },
-                                            {
-                                                accessor: 'menu',
-                                                disableGroupBy: true,
-                                                disableResizing: true,
-                                                isInteractive: true,
-                                                isSticky: true,
-                                                maxWidth: 34,
-                                                minWidth: 34,
-                                                width: 34,
-                                            },
-                                        ]}
-                                    />
-                                ),
-                            },
-                            value: {
-                                title: 'Value',
-                                content: (
-                                    <DataGrid
-                                        accessibleName="Value nodes"
-                                        emptyStateContent="This data model does not have value nodes"
-                                        rows={valueNodeRows}
-                                        anchorRightColumns={1}
-                                        columns={[
-                                            {
-                                                Header: 'Title',
-                                                accessor: 'title',
-                                            },
-                                            {
-                                                Header: 'Type of value',
-                                                accessor: 'type',
-                                            },
-                                            {
-                                                Header: 'Data type',
-                                                accessor: 'dataType',
-                                            },
-                                            {
-                                                Header: <Icon description="Repeated" type="tickSmall" />,
-                                                accessor: 'repeated',
-                                                disableResizing: true,
-                                                isInteractive: true,
-                                                width: 32,
-                                            },
-                                            {
-                                                accessor: 'menu',
-                                                disableGroupBy: true,
-                                                disableResizing: true,
-                                                isInteractive: true,
-                                                isSticky: true,
-                                                maxWidth: 34,
-                                                minWidth: 34,
-                                                width: 34,
-                                            },
-                                        ]}
-                                    />
-                                ),
-                            },
-                        }}
-                    />
-                </div>
+                <PageTabs
+                    selected={match.params.nodeType}
+                    onChange={selectedKey => {
+                        const newUrl = `/dashboard/data-models/${dataModel.id}/${version.label}/nodes/${selectedKey}`;
+                        history.push(newUrl);
+                    }}
+                    tabs={{
+                        internal: {
+                            title: 'Internal',
+                            content: (
+                                <DataGrid
+                                    accessibleName="Internal nodes"
+                                    emptyStateContent="This data model does not have internal nodes"
+                                    rows={internalNodeRows}
+                                    anchorRightColumns={1}
+                                    columns={[
+                                        {
+                                            Header: 'Title',
+                                            accessor: 'title',
+                                        },
+                                        {
+                                            Header: 'Slug',
+                                            accessor: 'value',
+                                        },
+                                        {
+                                            Header: <Icon description="Repeated" type="tickSmall" />,
+                                            accessor: 'repeated',
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            width: 32,
+                                        },
+                                        {
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
+                                        },
+                                    ]}
+                                />
+                            ),
+                        },
+                        external: {
+                            title: 'External',
+                            content: (
+                                <DataGrid
+                                    accessibleName="External nodes"
+                                    emptyStateContent="This data model does not have external nodes"
+                                    rows={externalNodeRows}
+                                    anchorRightColumns={1}
+                                    columns={[
+                                        {
+                                            Header: 'Title',
+                                            accessor: 'title',
+                                        },
+                                        {
+                                            Header: 'Short',
+                                            accessor: 'short',
+                                        },
+                                        {
+                                            Header: 'URI',
+                                            accessor: 'uri',
+                                        },
+                                        {
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
+                                        },
+                                    ]}
+                                />
+                            ),
+                        },
+                        literal: {
+                            title: 'Literal',
+                            content: (
+                                <DataGrid
+                                    accessibleName="Literal nodes"
+                                    emptyStateContent="This data model does not have literal nodes"
+                                    rows={literalNodeRows}
+                                    anchorRightColumns={1}
+                                    columns={[
+                                        {
+                                            Header: 'Title',
+                                            accessor: 'title',
+                                        },
+                                        {
+                                            Header: 'Value',
+                                            accessor: 'value',
+                                        },
+                                        {
+                                            Header: 'Data type',
+                                            accessor: 'dataType',
+                                        },
+                                        {
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
+                                        },
+                                    ]}
+                                />
+                            ),
+                        },
+                        value: {
+                            title: 'Value',
+                            content: (
+                                <DataGrid
+                                    accessibleName="Value nodes"
+                                    emptyStateContent="This data model does not have value nodes"
+                                    rows={valueNodeRows}
+                                    anchorRightColumns={1}
+                                    columns={[
+                                        {
+                                            Header: 'Title',
+                                            accessor: 'title',
+                                        },
+                                        {
+                                            Header: 'Type of value',
+                                            accessor: 'type',
+                                        },
+                                        {
+                                            Header: 'Data type',
+                                            accessor: 'dataType',
+                                        },
+                                        {
+                                            Header: <Icon description="Repeated" type="tickSmall" />,
+                                            accessor: 'repeated',
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            width: 32,
+                                        },
+                                        {
+                                            accessor: 'menu',
+                                            disableGroupBy: true,
+                                            disableResizing: true,
+                                            isInteractive: true,
+                                            isSticky: true,
+                                            maxWidth: 34,
+                                            minWidth: 34,
+                                            width: 34,
+                                        },
+                                    ]}
+                                />
+                            ),
+                        },
+                    }}
+                />
             </PageBody>
         );
     }

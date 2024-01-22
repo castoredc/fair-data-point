@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '@castoredc/matter';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import {PermissionOptionType, PermissionType} from 'types/PermissionType';
+import ToastItem from 'components/ToastItem';
+import { PermissionOptionType, PermissionType } from 'types/PermissionType';
 import Avatar from 'react-avatar';
 import AddUserModal from 'modals/AddUserModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import { UserType } from 'types/UserType';
 import { apiClient } from 'src/js/network';
-import {Permissions} from "components/PermissionEditor/Permissions";
+import { Permissions } from 'components/PermissionEditor/Permissions';
 
 interface PermissionEditorProps {
     user: UserType | null;
@@ -84,9 +84,9 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
 
                 this.setState({
@@ -104,7 +104,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             .then(response => {
                 setSubmitting(false);
 
-                toast.success(<ToastMessage type="success" title={`${response.data.user.name}'s permissions were successfully set`} />, {
+                toast.success(<ToastItem type="success" title={`${response.data.user.name}'s permissions were successfully set`} />, {
                     position: 'top-right',
                 });
 
@@ -115,9 +115,9 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                 setSubmitting(false);
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -129,7 +129,7 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
         apiClient
             .delete('/api/permissions/' + type + '/' + object.id + '/' + modalData.user.id)
             .then(() => {
-                toast.success(<ToastMessage type="success" title={`${modalData.user.name}'s permissions were successfully revoked`} />, {
+                toast.success(<ToastItem type="success" title={`${modalData.user.name}'s permissions were successfully revoked`} />, {
                     position: 'top-right',
                 });
 
@@ -138,9 +138,9 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
             })
             .catch(error => {
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };

@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react';
 
-import { Button, Menu, Icon } from '@castoredc/matter';
+import { Button, Icon, Menu } from '@castoredc/matter';
 import './DropdownButton.scss';
 import { classNames } from '../../util';
 import EventListener from '../EventListener';

@@ -1,7 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import './Dashboard.scss';
-import { Heading, Stack, StackItem } from '@castoredc/matter';
-import { toRem } from '@castoredc/matter-utils';
+import { Stack, StackItem, ViewHeader } from '@castoredc/matter';
 import { HeadingType } from '@castoredc/matter/lib/types/types/heading';
 
 type HeaderProps = {
@@ -13,24 +12,17 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = ({ title, badge, children, type, fullWidth }) => {
     return (
-        <div
-            className="DashboardHeader"
-            style={{
-                width: !!fullWidth ? '100%' : toRem(960),
-                maxWidth: '100%',
-            }}
-        >
-            <Stack distribution="equalSpacing">
-                <StackItem className="HeaderTitle">
-                    <Stack>
-                        <Heading type={type ?? 'Subsection'} style={{ margin: 0 }}>
-                            {title}
-                        </Heading>
+        <div className="DashboardHeader">
+            <ViewHeader>
+                <Stack distribution="space-between" withoutExternalMargins>
+                    <div className="HeaderTitle">
+                        {title}
                         {badge && badge}
-                    </Stack>
-                </StackItem>
-                <StackItem className="HeaderActions">{children}</StackItem>
-            </Stack>
+                    </div>
+
+                    <StackItem className="HeaderActions">{children}</StackItem>
+                </Stack>
+            </ViewHeader>
         </div>
     );
 };

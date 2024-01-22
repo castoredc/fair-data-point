@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
-import { Button, Stack } from '@castoredc/matter';
-import { Field, Form, Formik, FormikProvider, useFormik } from 'formik';
+import { Field, Form, FormikProvider, useFormik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import { apiClient } from 'src/js/network';
@@ -37,7 +37,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // New server:
                 if (!props.edcServer && response.data.id) {
                     const message = `The EDC Server ${response.data.name} was saved successfully with id ${response.data.id}`;
-                    toast.success(<ToastMessage type="success" title={message} />, {
+                    toast.success(<ToastItem type="success" title={message} />, {
                         position: 'top-right',
                     });
 
@@ -49,7 +49,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 // Existing server:
                 if (props.edcServer && props.edcServer.id) {
                     const message = `The EDC Server ${response.data.name} was updated successfully`;
-                    toast.success(<ToastMessage type="success" title={message} />, {
+                    toast.success(<ToastItem type="success" title={message} />, {
                         position: 'top-right',
                     });
 
@@ -65,7 +65,7 @@ const EDCServerForm = (props: EDCServerFormProps) => {
                 if (error.response && error.response.status === 400) {
                     setValidation(error.response.data.fields);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };

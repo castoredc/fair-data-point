@@ -1,0 +1,17 @@
+@import '../../scss/const';
+
+$tabHeaderHeight: 35px + 16px;
+
+.TabsWrapper {
+  width: 100%;
+  & > div {
+    // Matter Index
+    display: flex;
+    flex-direction: column;
+
+    & > div[role=tabpanel] {
+      height: calc(100vh - $navbarHeight - (2 * $pagePadding) - $tabHeaderHeight);
+      overflow: auto;
+    }
+  }
+}

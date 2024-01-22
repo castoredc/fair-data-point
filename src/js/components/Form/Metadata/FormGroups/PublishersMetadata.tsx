@@ -4,7 +4,7 @@ import { ucfirst } from '../../../../util';
 import PublisherModal from '../../../../modals/PublisherModal';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 
 type PublishersMetadataProps = {
     languages: any;
@@ -66,7 +66,7 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
             setValue('publishers', newPublishers);
         } else {
             toast.error(
-                <ToastMessage type="error" title="The publisher was already associated with this metadata and was, therefore, not added again." />
+                <ToastItem type="error" title="The publisher was already associated with this metadata and was, therefore, not added again." />
             );
         }
 

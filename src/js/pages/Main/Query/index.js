@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Header from '../../../components/Layout/Header';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Banner, Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import { classNames, localizedText } from '../../../util';
 import Yasqe from '@triply/yasqe';
 import './Query.scss';
 import SPARQLDataTable from '../../../components/Yasr/SPARQLDataTable';
-import { Banner, Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import Split from '../../../components/Layout/Split';
@@ -66,7 +66,7 @@ export default class Query extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the distribution';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
             });
     };
 
@@ -98,7 +98,7 @@ export default class Query extends Component {
                         );
                     })
                     .catch(error => {
-                        toast.error(<ToastMessage type="error" title="An error occurred while loading the prefixes from prefix.cc" />);
+                        toast.error(<ToastItem type="error" title="An error occurred while loading the prefixes from prefix.cc" />);
 
                         this.setState(
                             {
@@ -115,7 +115,7 @@ export default class Query extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while loading the prefixes from the data model';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
 
                 this.createYasgui();
             });

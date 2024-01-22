@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {Button, LoadingOverlay, Space, ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay, Space } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
-import Header from 'components/Layout/Dashboard/Header';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isAdmin } from 'utils/PermissionHelper';
-import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import DashboardTab from 'components/Layout/DashboardTab';
+import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 
 interface DataModelsProps extends AuthorizedRouteComponentProps {}
 
@@ -45,9 +46,9 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading your data models" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your data models" />);
                 }
             });
     };
@@ -61,20 +62,20 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
         const { isLoading, dataModels } = this.state;
 
         return (
-            <PageBody>
+            <DashboardTab>
                 <DocumentTitle title="Data models" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading data models" />}
 
                 <Space bottom="comfortable" />
 
-                <Header title="My data models" type="Section">
+                <DashboardTabHeader title="My data models" type="Section">
                     {isAdmin(user) && (
                         <Button buttonType="primary" onClick={() => history.push('/dashboard/data-models/add')}>
                             Add data model
                         </Button>
                     )}
-                </Header>
+                </DashboardTabHeader>
 
                 <div>
                     {dataModels.map(model => {
@@ -83,7 +84,7 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
 
                     {dataModels.length == 0 && <div className="NoResults">No data models found.</div>}
                 </div>
-            </PageBody>
+            </DashboardTab>
         );
     }
 }

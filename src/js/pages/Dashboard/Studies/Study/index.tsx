@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import { Banner, Button, LoadingOverlay } from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay } from '@castoredc/matter';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../../util';
@@ -58,9 +58,9 @@ export default class Study extends Component<StudyProps, StudyState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading the study" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading the study" />);
                 }
             });
     };

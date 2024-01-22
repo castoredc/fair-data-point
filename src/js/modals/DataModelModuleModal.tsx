@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
-import { Banner, Button, Modal, Space, Stack, ValidationMessage } from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, Modal, Space, Stack, ValidationMessage } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
 import { classNames } from '../util';
 import DependencyModal from 'modals/DependencyModal';
@@ -83,7 +83,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                         validation: error.response.data.fields,
                     });
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
                 setSubmitting(false);
             });
@@ -99,7 +99,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                 onSaved();
             })
             .catch(error => {
-                toast.error(<ToastMessage type="error" title="An error occurred" />);
+                toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
 

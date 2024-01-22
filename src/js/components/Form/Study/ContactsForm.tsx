@@ -3,7 +3,7 @@ import { ActionsCell, Button, CellText, DataGrid, LoadingOverlay, Stack } from '
 
 import '../Form.scss';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import Avatar from 'react-avatar';
 import { PersonType } from 'types/PersonType';
 import ContactModal from '../../../modals/ContactModal';
@@ -56,9 +56,9 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred" />);
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
             });
     };
@@ -92,7 +92,7 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
             apiClient
                 .post('/api/study/' + studyId + '/team/remove', selectedContact)
                 .then(response => {
-                    toast.success(<ToastMessage type="success" title={`${name} was successfully removed as study contact`} />, {
+                    toast.success(<ToastItem type="success" title={`${name} was successfully removed as study contact`} />, {
                         position: 'top-right',
                     });
 
@@ -100,9 +100,9 @@ export default class ContactsForm extends Component<ContactsFormProps, ContactsF
                 })
                 .catch(error => {
                     if (error.response && typeof error.response.data.error !== 'undefined') {
-                        toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                        toast.error(<ToastItem type="error" title={error.response.data.error} />);
                     } else {
-                        toast.error(<ToastMessage type="error" title="An error occurred" />);
+                        toast.error(<ToastItem type="error" title="An error occurred" />);
                     }
                 });
         }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import StudyStructure from './StudyStructure';
 import { Redirect } from 'react-router-dom';
 import { ValidatorForm } from 'react-form-validator-core';
-import { Button, LoadingOverlay, Stack, Tabs } from '@castoredc/matter';
 import { apiClient } from 'src/js/network';
+import PageTabs from 'components/PageTabs';
 
 export default class CSVStudyStructure extends Component {
     constructor(props) {
@@ -60,7 +61,7 @@ export default class CSVStudyStructure extends Component {
                     error.response && typeof error.response.data.error !== 'undefined'
                         ? error.response.data.error
                         : 'An error occurred while saving the distribution';
-                toast.error(<ToastMessage type="error" title={message} />);
+                toast.error(<ToastItem type="error" title={message} />);
 
                 this.setState({
                     submitDisabled: false,
@@ -82,51 +83,50 @@ export default class CSVStudyStructure extends Component {
 
         return (
             <div className="PageBody">
-                <ValidatorForm className="FullHeightForm" ref={node => (this.form = node)} onSubmit={this.saveDistribution}>
-                    <div className="PageTabs">
-                        <Tabs
-                            onChange={this.changeTab}
-                            selected={selectedType}
-                            tabs={{
-                                study: {
-                                    title: 'Study',
-                                    content: (
-                                        <StudyStructure
-                                            selectable
-                                            onSelect={this.handleSelect}
-                                            selection={distributionContents}
-                                            studyId={studyId}
-                                            contents={structure.study}
-                                        />
-                                    ),
-                                },
-                                report: {
-                                    title: 'Reports',
-                                    content: (
-                                        <StudyStructure
-                                            selectable
-                                            onSelect={this.handleSelect}
-                                            selection={distributionContents}
-                                            studyId={studyId}
-                                            contents={structure.report}
-                                        />
-                                    ),
-                                },
-                                survey: {
-                                    title: 'Surveys',
-                                    content: (
-                                        <StudyStructure
-                                            selectable
-                                            onSelect={this.handleSelect}
-                                            selection={distributionContents}
-                                            studyId={studyId}
-                                            contents={structure.survey}
-                                        />
-                                    ),
-                                },
-                            }}
-                        />
-                    </div>
+                <ValidatorForm className="FullHeightForm" ref={node => (this.form = node)}
+                               onSubmit={this.saveDistribution}>
+                    <PageTabs
+                        onChange={this.changeTab}
+                        selected={selectedType}
+                        tabs={{
+                            study: {
+                                title: 'Study',
+                                content: (
+                                    <StudyStructure
+                                        selectable
+                                        onSelect={this.handleSelect}
+                                        selection={distributionContents}
+                                        studyId={studyId}
+                                        contents={structure.study}
+                                    />
+                                ),
+                            },
+                            report: {
+                                title: 'Reports',
+                                content: (
+                                    <StudyStructure
+                                        selectable
+                                        onSelect={this.handleSelect}
+                                        selection={distributionContents}
+                                        studyId={studyId}
+                                        contents={structure.report}
+                                    />
+                                ),
+                            },
+                            survey: {
+                                title: 'Surveys',
+                                content: (
+                                    <StudyStructure
+                                        selectable
+                                        onSelect={this.handleSelect}
+                                        selection={distributionContents}
+                                        studyId={studyId}
+                                        contents={structure.survey}
+                                    />
+                                ),
+                            },
+                        }}
+                    />
 
                     <div className="FormButtons">
                         <Stack distribution="trailing" alignment="end">

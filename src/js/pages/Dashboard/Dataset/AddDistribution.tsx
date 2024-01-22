@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DistributionForm from 'components/Form/Admin/DistributionForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import PageBody from "components/Layout/Dashboard/PageBody";
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface AddDistributionProps extends AuthorizedRouteComponentProps {}
 

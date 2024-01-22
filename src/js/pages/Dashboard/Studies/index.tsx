@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import {ToastMessage} from '@castoredc/matter';
+import ToastItem from 'components/ToastItem';
 import { Button, ChoiceOption, LoadingOverlay, Pagination, Space } from '@castoredc/matter';
 import ListItem from 'components/ListItem';
 import DocumentTitle from 'components/DocumentTitle';
 import DataGridHelper from 'components/DataTable/DataGridHelper';
 import { isAdmin } from 'utils/PermissionHelper';
-import Header from 'components/Layout/Dashboard/Header';
 import ScrollShadow from 'components/ScrollShadow';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
+import DashboardTab from 'components/Layout/DashboardTab';
+import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 
 interface StudiesProps extends AuthorizedRouteComponentProps {}
 
@@ -59,9 +60,9 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                 });
 
                 if (error.response && typeof error.response.data.error !== 'undefined') {
-                    toast.error(<ToastMessage type="error" title={error.response.data.error} />);
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastMessage type="error" title="An error occurred while loading your studies" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your studies" />);
                 }
             });
     };
@@ -105,14 +106,14 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
         const { isLoading, studies, pagination, viewAll } = this.state;
 
         return (
-            <div className="DashboardTab">
+            <DashboardTab>
                 <DocumentTitle title="Studies" />
 
                 {isLoading && <LoadingOverlay accessibleLabel="Loading studies" />}
 
                 <Space bottom="comfortable" />
 
-                <Header
+                <DashboardTabHeader
                     title="My studies"
                     type="Section"
                     badge={isAdmin(user) ? <ChoiceOption labelText="View all studies" checked={viewAll} onChange={this.handleView} /> : undefined}
@@ -120,7 +121,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                     <Button buttonType="primary" onClick={() => history.push('/dashboard/studies/add')}>
                         Add study
                     </Button>
-                </Header>
+                </DashboardTabHeader>
 
                 <ScrollShadow className="DashboardList">
                     {studies.map(study => {
@@ -148,7 +149,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                         />
                     )}
                 </div>
-            </div>
+            </DashboardTab>
         );
     }
 }
