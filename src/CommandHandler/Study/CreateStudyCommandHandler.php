@@ -60,7 +60,7 @@ final class CreateStudyCommandHandler
         }
 
         $slugify = new Slugify();
-        $slug = $slugify->slugify($command->getName());
+        $slug = $slugify->slugify($command->getName() . ' ' . uniqid());
 
         // TODO check if slug exists
 

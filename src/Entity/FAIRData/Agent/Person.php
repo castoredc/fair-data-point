@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use function array_filter;
 use function implode;
 use function strtolower;
+use function uniqid;
 
 /** @ORM\Entity */
 class Person extends Agent
@@ -65,7 +66,7 @@ class Person extends Agent
 
         $slugify = new Slugify();
         $fullName = $this->getFullName();
-        parent::__construct($slugify->slugify($fullName), $fullName);
+        parent::__construct($slugify->slugify($fullName . ' ' . uniqid()), $fullName);
 
         $this->affiliations = new ArrayCollection();
     }
