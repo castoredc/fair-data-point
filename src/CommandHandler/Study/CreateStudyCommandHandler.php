@@ -22,6 +22,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
 use function in_array;
+use function uniqid;
 
 #[AsMessageHandler]
 final class CreateStudyCommandHandler
