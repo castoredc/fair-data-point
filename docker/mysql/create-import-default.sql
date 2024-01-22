@@ -2063,7 +2063,7 @@ CREATE TABLE `ontology` (
 --
 
 /*!40000 ALTER TABLE `ontology` DISABLE KEYS */;
-INSERT INTO `ontology` (`id`, `url`, `name`, `bio_portal_id`, `0454bc56-454b-48cd-9de3-b8b6c288db13`, `http://purl.bioontology.org/ontology/PATO/`, `Phenotypic Quality Ontology`, `PATO`) VALUES ('0454bc56-454b-48cd-9de3-b8b6c288db13','http://purl.bioontology.org/ontology/PATO/','Phenotypic Quality Ontology','PATO',NULL,NULL,NULL,NULL),('6963da22-fe2e-41b9-a55c-f751c56272f7','http://purl.bioontology.org/ontology/SNOMEDCT','SNOMED CT','SNOMEDCT',NULL,NULL,NULL,NULL),('93a4f622-f86c-4533-aab6-2962003cfa9c','https://purl.org/vodan/whocovid19crfsemdatamodel/','WHO COVID-19 Rapid Version CRF semantic data model','COVIDCRFRAPID',NULL,NULL,NULL,NULL),('dc463847-3105-4f03-ba04-4b5226e274f3','http://purl.bioontology.org/ontology/HL7/','Health Level Seven Reference Implementation Model, Version 3','HL7',NULL,NULL,NULL,NULL);
+INSERT INTO `ontology` (`id`, `url`, `name`, `bio_portal_id`) VALUES ('0454bc56-454b-48cd-9de3-b8b6c288db13','http://purl.bioontology.org/ontology/PATO/','Phenotypic Quality Ontology','PATO'),('6963da22-fe2e-41b9-a55c-f751c56272f7','http://purl.bioontology.org/ontology/SNOMEDCT','SNOMED CT','SNOMEDCT'),('93a4f622-f86c-4533-aab6-2962003cfa9c','https://purl.org/vodan/whocovid19crfsemdatamodel/','WHO COVID-19 Rapid Version CRF semantic data model','COVIDCRFRAPID'),('dc463847-3105-4f03-ba04-4b5226e274f3','http://purl.bioontology.org/ontology/HL7/','Health Level Seven Reference Implementation Model, Version 3','HL7');
 /*!40000 ALTER TABLE `ontology` ENABLE KEYS */;
 
 --
