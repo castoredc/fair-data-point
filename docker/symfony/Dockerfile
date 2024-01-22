@@ -7,9 +7,10 @@ RUN set -xe \
     && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add bash git \
     && apk add linux-headers \
+    && apk add icu-dev \
     && pecl install xdebug-3.3.1 \
     && docker-php-ext-enable xdebug \
-    && docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-install pdo pdo_mysql intl \
     && rm -rf /usr/share/php \
     && rm -rf /tmp/* \
     && apk del  .phpize-deps \
