@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Predicate;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\Predicate;
 use App\Entity\Iri;
 
 class PredicateFactory

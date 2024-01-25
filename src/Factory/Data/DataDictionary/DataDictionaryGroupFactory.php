@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataDictionary;
 
-use App\Entity\Data\DataDictionary\DataDictionaryGroup;
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Factory\Data\DataSpecification\Dependency\DependencyGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 

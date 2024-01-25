@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataDictionary;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataSpecification\Dependency\Dependency;
-use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
-use App\Entity\Data\DataSpecification\Dependency\DependencyRule;
+use App\Entity\DataSpecification\Common\Dependency\Dependency;
+use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
+use App\Entity\DataSpecification\Common\Dependency\DependencyRule;
 use function array_pop;
 
 class DataDictionaryDependencyApiResource implements ApiResource

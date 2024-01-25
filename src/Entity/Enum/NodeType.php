@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Enum;
 
-use App\Entity\Data\DataModel\Node\ExternalIriNode;
-use App\Entity\Data\DataModel\Node\InternalIriNode;
-use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\RecordNode;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\InternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\LiteralNode;
+use App\Entity\DataSpecification\DataModel\Node\RecordNode;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Exception\InvalidNodeType;
 
 /**

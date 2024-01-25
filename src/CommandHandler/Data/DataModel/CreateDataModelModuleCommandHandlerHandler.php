@@ -5,8 +5,8 @@ namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateDataModelModuleCommand;
 use App\CommandHandler\Data\DataSpecificationGroupCommandHandler;
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

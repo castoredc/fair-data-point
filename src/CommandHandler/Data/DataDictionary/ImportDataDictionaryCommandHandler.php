@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataDictionary;
 
 use App\Command\Data\DataDictionary\ImportDataDictionaryCommand;
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Exception\InvalidDataDictionaryVersion;
 use App\Exception\NoAccessPermission;
 use App\Exception\Upload\EmptyFile;

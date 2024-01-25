@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\Triple;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\Triple;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class TripleFactory

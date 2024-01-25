@@ -5,9 +5,9 @@ namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\UpdateRDFDistributionCommand;
 use App\CommandHandler\Distribution\UpdateDistributionCommandHandler;
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\DistributionContents\RDFDistribution;
+use App\Entity\DataSpecification\DataModel\DataModel;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

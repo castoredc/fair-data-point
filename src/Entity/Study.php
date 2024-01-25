@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Entity\Data\DataSpecification\Element;
-use App\Entity\Data\DataSpecification\Group;
-use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
-use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
-use App\Entity\Data\DataSpecification\Mapping\Mapping;
-use App\Entity\Data\DataSpecification\Version as DataSpecificationVersion;
+use App\Entity\DataSpecification\Common\Element;
+use App\Entity\DataSpecification\Common\Group;
+use App\Entity\DataSpecification\Common\Mapping\ElementMapping;
+use App\Entity\DataSpecification\Common\Mapping\GroupMapping;
+use App\Entity\DataSpecification\Common\Mapping\Mapping;
+use App\Entity\DataSpecification\Common\Version as DataSpecificationVersion;
 use App\Entity\Enum\StudySource;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
@@ -17,8 +17,6 @@ use App\Entity\Metadata\StudyMetadata;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function count;
 

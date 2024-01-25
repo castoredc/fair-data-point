@@ -10,7 +10,6 @@ use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use function assert;
 
 #[AsMessageHandler]
 class RemoveStudyCenterCommandHandler
@@ -30,10 +29,9 @@ class RemoveStudyCenterCommandHandler
             throw new NoAccessPermissionToStudy();
         }
 
-        $repository = $this->em->getRepository(Organization::class);
+        $organizationRepository = $this->em->getRepository(Organization::class);
 
-        $organization = $repository->find($command->getId());
-        assert($organization instanceof Organization || $organization === null);
+        $organization = $organizationRepository->find($command->getId());
 
         if ($organization === null) {
             throw new NotFound();

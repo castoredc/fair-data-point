@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\CreateDataModelModuleMappingCommand;
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
-use App\Entity\Data\DataSpecification\Mapping\Mapping;
+use App\Entity\DataSpecification\Common\Mapping\GroupMapping;
+use App\Entity\DataSpecification\Common\Mapping\Mapping;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\Enum\CastorEntityType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;

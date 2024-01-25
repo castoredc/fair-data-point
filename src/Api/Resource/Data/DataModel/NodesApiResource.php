@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\Node\Node;
 use App\Entity\Enum\NodeType;
 use function assert;
 

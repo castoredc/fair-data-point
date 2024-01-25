@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DistributionContents;
 
-use App\Entity\Data\DataSpecification\DataSpecification;
-use App\Entity\Data\DataSpecification\Element;
-use App\Entity\Data\DataSpecification\Group;
-use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
-use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
-use App\Entity\Data\DataSpecification\Version;
 use App\Entity\Data\DistributionContents\Dependency\DependencyGroup;
 use App\Entity\Data\Log\DistributionGenerationLog;
+use App\Entity\DataSpecification\Common\DataSpecification;
+use App\Entity\DataSpecification\Common\Element;
+use App\Entity\DataSpecification\Common\Group;
+use App\Entity\DataSpecification\Common\Mapping\ElementMapping;
+use App\Entity\DataSpecification\Common\Mapping\GroupMapping;
+use App\Entity\DataSpecification\Common\Version;
 use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\Permission\DistributionContentsPermission;
@@ -21,8 +21,6 @@ use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function assert;
 

@@ -6,8 +6,8 @@ namespace App\Api\Resource\Data\DataModel;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\Data\Visualization\VisualizationEdgeApiResource;
 use App\Api\Resource\Data\Visualization\VisualizationNodeApiResource;
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\Triple;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\Triple;
 use function array_values;
 use function assert;
 

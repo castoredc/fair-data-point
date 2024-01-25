@@ -9,16 +9,14 @@ use App\Api\Resource\Data\DataDictionary\DataDictionaryGroupsApiResource;
 use App\Command\Data\DataDictionary\CreateDataDictionaryGroupCommand;
 use App\Command\Data\DataDictionary\DeleteDataDictionaryGroupCommand;
 use App\Command\Data\DataDictionary\UpdateDataDictionaryGroupCommand;
-use App\Entity\Data\DataDictionary\DataDictionaryGroup;
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Exception\ApiRequestParseError;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**

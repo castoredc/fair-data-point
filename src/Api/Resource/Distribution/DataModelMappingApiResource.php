@@ -8,11 +8,11 @@ use App\Api\Resource\Castor\CastorEntitiesApiResource;
 use App\Api\Resource\Castor\CastorEntityApiResource;
 use App\Api\Resource\Data\DataModel\DataModelModuleApiResource;
 use App\Api\Resource\Data\DataModel\NodeApiResource;
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
-use App\Entity\Data\DataSpecification\Mapping\GroupMapping;
+use App\Entity\DataSpecification\Common\Mapping\ElementMapping;
+use App\Entity\DataSpecification\Common\Mapping\GroupMapping;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use function assert;
 
 class DataModelMappingApiResource implements ApiResource

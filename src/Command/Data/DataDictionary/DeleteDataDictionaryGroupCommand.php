@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataDictionary;
 
-use App\Entity\Data\DataDictionary\DataDictionaryGroup;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
 
 class DeleteDataDictionaryGroupCommand
 {

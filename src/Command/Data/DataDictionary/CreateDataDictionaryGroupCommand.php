@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataDictionary;
 
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
-use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
+use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 
 class CreateDataDictionaryGroupCommand
 {

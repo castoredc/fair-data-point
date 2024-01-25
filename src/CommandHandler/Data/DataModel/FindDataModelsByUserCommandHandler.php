@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\FindDataModelsByUserCommand;
-use App\Entity\Data\DataModel\DataModel;
+use App\Entity\DataSpecification\DataModel\DataModel;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;

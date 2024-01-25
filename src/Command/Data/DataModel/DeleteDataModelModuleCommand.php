@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
 
 class DeleteDataModelModuleCommand
 {

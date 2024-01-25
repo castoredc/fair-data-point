@@ -9,9 +9,9 @@ use App\Api\Resource\Distribution\DataModelMappingApiResource;
 use App\Command\Distribution\RDF\CreateDataModelModuleMappingCommand;
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
 use App\Command\Distribution\RDF\GetDataModelMappingCommand;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataSpecification\Mapping\Mapping;
 use App\Entity\Data\DistributionContents\RDFDistribution;
+use App\Entity\DataSpecification\Common\Mapping\Mapping;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\Enum\DataModelMappingType;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -24,14 +24,12 @@ use App\Exception\InvalidEntityType;
 use App\Exception\MappingAlreadyExists;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
-use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**

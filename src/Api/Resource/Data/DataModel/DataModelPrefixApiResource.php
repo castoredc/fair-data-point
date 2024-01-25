@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 
 class DataModelPrefixApiResource implements ApiResource
 {

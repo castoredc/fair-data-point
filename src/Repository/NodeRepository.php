@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\RecordNode;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\RecordNode;
 use App\Entity\Enum\NodeType;
 use Doctrine\ORM\EntityRepository;
 use function assert;

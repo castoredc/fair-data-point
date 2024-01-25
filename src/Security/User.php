@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\Data\DataSpecification\DataSpecificationPermission;
+use App\Entity\DataSpecification\Common\DataSpecificationPermission;
 use App\Entity\Enum\Wizard;
 use App\Entity\FAIRData\Agent\Person;
 use App\Entity\FAIRData\Permission\CatalogPermission;
@@ -15,8 +15,6 @@ use App\Traits\CreatedAt;
 use App\Traits\UpdatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function array_merge;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\GetRDFFromStoreCommand;
-use App\Entity\Data\DataModel\NamespacePrefix;
 use App\Entity\Data\DistributionContents\RDFDistribution;
+use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Service\Distribution\MysqlBasedDistributionService;

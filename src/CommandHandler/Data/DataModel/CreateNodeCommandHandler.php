@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateNodeCommand;
-use App\Entity\Data\DataModel\Node\ExternalIriNode;
-use App\Entity\Data\DataModel\Node\InternalIriNode;
-use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\InternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\LiteralNode;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\InvalidValueType;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataDictionary;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataDictionary\DataDictionaryGroup;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
 use function sprintf;
 
 class DataDictionaryGroupApiResource implements ApiResource

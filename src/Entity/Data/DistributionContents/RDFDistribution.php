@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DistributionContents;
 
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\DataModel;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\Enum\RDFDistributionDatabaseType;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Distribution;
-use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
 /**

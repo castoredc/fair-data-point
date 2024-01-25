@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateDataModelCommand;
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Node\RecordNode;
+use App\Entity\DataSpecification\DataModel\DataModel;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\Node\RecordNode;
 use App\Entity\Version;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;

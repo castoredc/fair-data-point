@@ -3,18 +3,16 @@ declare(strict_types=1);
 
 namespace App\Controller\UserInterface;
 
-use App\Entity\Data\DataModel\DataModel;
-use App\Entity\Data\DataModel\DataModelVersion;
 use App\Entity\Data\Log\DistributionGenerationLog;
+use App\Entity\DataSpecification\DataModel\DataModel;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\Study;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 final class DashboardController extends AbstractController
 {

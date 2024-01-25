@@ -40,7 +40,6 @@ class CreateAffiliationCommandHandler
 
         if ($command->getOrganizationSource()->isDatabase()) {
             $organization = $this->em->getRepository(Organization::class)->find($command->getOrganizationId());
-            assert($organization instanceof Organization || $organization === null);
 
             if ($organization === null) {
                 throw new NotFound();

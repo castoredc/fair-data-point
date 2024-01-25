@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\GetDataModelMappingCommand;
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
+use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -40,9 +41,10 @@ class GetDataModelMappingCommandHandler
         $results = [];
 
         if ($command->getType()->isNode()) {
-            $repository = $this->em->getRepository(Node::class);
+            $nodeRepository = $this->em->getRepository(Node::class);
+            assert($nodeRepository instanceof NodeRepository);
 
-            $valueNodes = $repository->findNodesByType($command->getDataModelVersion(), NodeType::value());
+            $valueNodes = $nodeRepository->findNodesByType($command->getDataModelVersion(), NodeType::value());
 
             foreach ($valueNodes as $valueNode) {
                 assert($valueNode instanceof ValueNode);

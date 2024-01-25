@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateTripleCommand;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\DataModel\Predicate;
-use App\Entity\Data\DataModel\Triple;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\Predicate;
+use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
+use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -33,8 +34,10 @@ class CreateTripleCommandHandler
     public function __invoke(CreateTripleCommand $command): void
     {
         $module = $command->getModule();
+
         $dataModelVersion = $module->getVersion();
         assert($dataModelVersion instanceof DataModelVersion);
+
         $dataModel = $dataModelVersion->getDataSpecification();
 
         if (! $this->security->isGranted('edit', $dataModel)) {
@@ -42,6 +45,7 @@ class CreateTripleCommandHandler
         }
 
         $nodeRepository = $this->em->getRepository(Node::class);
+        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModelVersion);

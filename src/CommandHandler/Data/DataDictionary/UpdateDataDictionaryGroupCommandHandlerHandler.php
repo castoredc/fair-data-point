@@ -5,7 +5,7 @@ namespace App\CommandHandler\Data\DataDictionary;
 
 use App\Command\Data\DataDictionary\UpdateDataDictionaryGroupCommand;
 use App\CommandHandler\Data\DataSpecificationGroupCommandHandler;
-use App\Entity\Data\DataDictionary\Variable;
+use App\Entity\DataSpecification\DataDictionary\Variable;
 use App\Exception\NoAccessPermission;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

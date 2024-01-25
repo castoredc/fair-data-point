@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\CommandHandler\Distribution\RDF;
 
 use App\Command\Distribution\RDF\CreateDataModelNodeMappingCommand;
-use App\Entity\Data\DataModel\Node\ValueNode;
-use App\Entity\Data\DataSpecification\Mapping\ElementMapping;
-use App\Entity\Data\DataSpecification\Mapping\Mapping;
+use App\Entity\DataSpecification\Common\Mapping\ElementMapping;
+use App\Entity\DataSpecification\Common\Mapping\Mapping;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\Enum\CastorEntityType;
 use App\Entity\Enum\StructureType;
 use App\Exception\Distribution\RDF\InvalidSyntax;

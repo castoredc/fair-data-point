@@ -10,7 +10,6 @@ use App\Exception\StudyNotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use function assert;
 
 #[AsMessageHandler]
 class GetStudyCommandHandler
@@ -35,8 +34,6 @@ class GetStudyCommandHandler
         if (! $this->security->isGranted('view', $study)) {
             throw new NoAccessPermissionToStudy();
         }
-
-        assert($study instanceof Study);
 
         return $study;
     }

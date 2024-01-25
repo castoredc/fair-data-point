@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security\Authorization\Voter;
 
-use App\Entity\Data\DataSpecification\DataSpecification;
+use App\Entity\DataSpecification\Common\DataSpecification;
 use App\Security\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\CreateDataModelPrefixCommand;
-use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;

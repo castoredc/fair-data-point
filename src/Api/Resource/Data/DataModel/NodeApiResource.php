@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\Node\ExternalIriNode;
-use App\Entity\Data\DataModel\Node\InternalIriNode;
-use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\InternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\LiteralNode;
+use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 
 class NodeApiResource implements ApiResource
 {

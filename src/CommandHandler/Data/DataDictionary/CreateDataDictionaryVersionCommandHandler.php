@@ -5,8 +5,8 @@ namespace App\CommandHandler\Data\DataDictionary;
 
 use App\Command\Data\DataDictionary\CreateDataDictionaryVersionCommand;
 use App\CommandHandler\Data\DataSpecificationVersionCommandHandler;
-use App\Entity\Data\DataDictionary\DataDictionaryGroup;
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Entity\Enum\VersionType;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;

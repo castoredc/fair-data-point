@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\Visualization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\Triple;
+use App\Entity\DataSpecification\DataModel\Triple;
 
 class VisualizationEdgeApiResource implements ApiResource
 {

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Factory\Data\DataSpecification\Dependency\DependencyGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 

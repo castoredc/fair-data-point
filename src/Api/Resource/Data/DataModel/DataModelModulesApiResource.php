@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Resource\Data\DataModel;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\Data\DataModel\DataModelGroup;
-use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use function assert;
 
 class DataModelModulesApiResource implements ApiResource

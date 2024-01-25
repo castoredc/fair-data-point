@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\Data\DataDictionary;
 
 use App\Api\Request\SingleApiRequest;
-use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
+use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function count;

@@ -9,16 +9,14 @@ use App\Api\Resource\Data\DataModel\DataModelPrefixesApiResource;
 use App\Command\Data\DataModel\CreateDataModelPrefixCommand;
 use App\Command\Data\DataModel\DeleteDataModelPrefixCommand;
 use App\Command\Data\DataModel\UpdateDataModelPrefixCommand;
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**

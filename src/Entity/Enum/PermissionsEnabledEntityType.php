@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Enum;
 
-use App\Entity\Data\DataModel\DataModel;
 use App\Entity\Data\DistributionContents\DistributionContents;
+use App\Entity\DataSpecification\DataModel\DataModel;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;

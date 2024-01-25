@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class CreateDataModelPrefixCommand
 {

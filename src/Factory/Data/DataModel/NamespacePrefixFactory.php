@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataModel;
 
-use App\Entity\Data\DataModel\NamespacePrefix;
+use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 use App\Entity\Iri;
 
 class NamespacePrefixFactory

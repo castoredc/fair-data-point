@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataModel;
 
 use App\Command\Data\DataModel\ImportDataModelVersionCommand;
-use App\Entity\Data\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Exception\InvalidDataModelVersion;
 use App\Exception\NoAccessPermission;
 use App\Exception\Upload\EmptyFile;

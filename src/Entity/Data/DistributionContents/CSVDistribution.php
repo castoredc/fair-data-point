@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\DistributionContents;
 
-use App\Entity\Data\DataDictionary\DataDictionary;
-use App\Entity\Data\DataDictionary\DataDictionaryVersion;
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\DataSpecification\DataDictionary\DataDictionary;
+use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use function assert;
 
 /**

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\Data;
 
-use App\Entity\Data\DataSpecification\Dependency\DependencyGroup;
-use App\Entity\Data\DataSpecification\Dependency\DependencyRule;
+use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
+use App\Entity\DataSpecification\Common\Dependency\DependencyRule;
 use App\Exception\InvalidEntityType;
 use App\Service\VersionNumberHelper;
 use Doctrine\Common\Collections\ArrayCollection;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Data\DataDictionary;
 
 use App\Command\Data\DataDictionary\GetDataDictionariesCommand;
-use App\Entity\Data\DataDictionary\DataDictionary;
+use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;

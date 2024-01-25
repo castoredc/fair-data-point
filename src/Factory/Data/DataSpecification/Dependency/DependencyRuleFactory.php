@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataSpecification\Dependency;
 
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataSpecification\Dependency\DependencyRule;
+use App\Entity\DataSpecification\Common\Dependency\DependencyRule;
+use App\Entity\DataSpecification\DataModel\Node\Node;
 use App\Entity\Enum\DependencyOperatorType;
 use Doctrine\Common\Collections\ArrayCollection;
 

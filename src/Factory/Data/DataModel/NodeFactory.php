@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Factory\Data\DataModel;
 
-use App\Entity\Data\DataModel\DataModelVersion;
-use App\Entity\Data\DataModel\Node\ExternalIriNode;
-use App\Entity\Data\DataModel\Node\InternalIriNode;
-use App\Entity\Data\DataModel\Node\LiteralNode;
-use App\Entity\Data\DataModel\Node\Node;
-use App\Entity\Data\DataModel\Node\RecordNode;
-use App\Entity\Data\DataModel\Node\ValueNode;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\DataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\InternalIriNode;
+use App\Entity\DataSpecification\DataModel\Node\LiteralNode;
+use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\RecordNode;
+use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\XsdDataType;
 use App\Entity\Iri;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Data\DataModel;
 
-use App\Entity\Data\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Node\Node;
 
 class RemoveNodeCommand
 {
