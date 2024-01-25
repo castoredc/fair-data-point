@@ -8,6 +8,7 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\Enum\RDFDistributionDatabaseType;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Distribution;
+use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
 /**

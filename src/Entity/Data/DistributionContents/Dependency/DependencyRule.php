@@ -6,6 +6,7 @@ namespace App\Entity\Data\DistributionContents\Dependency;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\Enum\DependencyOperatorType;
 use App\Entity\Enum\DistributionContentsDependencyType;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity

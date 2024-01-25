@@ -6,6 +6,7 @@ namespace App\Entity\DataSpecification\DataModel;
 use App\Entity\DataSpecification\Common\ElementGroup;
 use App\Entity\DataSpecification\Common\Group;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity

@@ -5,6 +5,7 @@ namespace App\Entity\Data\DistributionContents;
 
 use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
+use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
 /**
