@@ -77,13 +77,13 @@ abstract class DistributionContents implements PermissionsEnabledEntity
     private ?DependencyGroup $dependencies = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\DataSpecification", inversedBy="distributionContents")
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\DataSpecification", inversedBy="distributionContents")
      * @ORM\JoinColumn(name="data_specification", referencedColumnName="id", nullable=false)
      */
     protected DataSpecification $dataSpecification;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Version", inversedBy="distributionContents")
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Version", inversedBy="distributionContents")
      * @ORM\JoinColumn(name="data_specification_version", referencedColumnName="id", nullable=false)
      */
     protected Version $currentDataSpecificationVersion;

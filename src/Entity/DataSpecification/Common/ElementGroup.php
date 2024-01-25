@@ -15,7 +15,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\HasLifecycleCallbacks
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\Data\DataModel\Triple",
+ *     "model" = "App\Entity\DataSpecification\DataModel\Triple",
  * })
  */
 abstract class ElementGroup

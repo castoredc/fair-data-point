@@ -21,7 +21,7 @@ class DependencyRule extends Dependency
     private ?string $nodeId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataModel\Node\ValueNode", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\ValueNode", cascade={"persist"})
      * @ORM\JoinColumn(name="node", referencedColumnName="id", nullable=true)
      */
     private ?ValueNode $node;

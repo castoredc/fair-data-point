@@ -37,7 +37,7 @@ abstract class Mapping
     private Study $study;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Version")
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Version")
      * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
      */
     private Version $version;

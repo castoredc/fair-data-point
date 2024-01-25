@@ -18,8 +18,8 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\HasLifecycleCallbacks
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\Data\DataModel\DataModelGroup",
- *     "dictionary" = "App\Entity\Data\DataDictionary\DataDictionaryGroup",
+ *     "model" = "App\Entity\DataSpecification\DataModel\DataModelGroup",
+ *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup",
  * })
  */
 abstract class Group
@@ -67,7 +67,7 @@ abstract class Group
     private Collection $elementGroups;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Data\DataSpecification\Dependency\DependencyGroup", cascade={"persist"}, fetch = "EAGER")
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\Common\Dependency\DependencyGroup", cascade={"persist"}, fetch = "EAGER")
      * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
      */
     protected ?DependencyGroup $dependencies = null;

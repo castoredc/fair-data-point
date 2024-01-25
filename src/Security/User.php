@@ -59,7 +59,7 @@ class User implements UserInterface
     private ?OrcidUser $orcid = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataSpecification\DataSpecificationPermission", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\Common\DataSpecificationPermission", mappedBy="user", cascade={"persist", "remove"})
      *
      * @var Collection<DataSpecificationPermission>
      */

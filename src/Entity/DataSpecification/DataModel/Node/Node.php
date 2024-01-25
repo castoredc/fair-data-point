@@ -25,14 +25,14 @@ use const SORT_REGULAR;
 abstract class Node extends Element
 {
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModel\Triple", mappedBy="subject")
+     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\DataModel\Triple", mappedBy="subject")
      *
      * @var Collection<Triple>
      */
     private Collection $subjectTriples;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DataModel\Triple", mappedBy="object")
+     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\DataModel\Triple", mappedBy="object")
      *
      * @var Collection<Triple>
      */

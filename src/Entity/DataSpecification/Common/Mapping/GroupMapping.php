@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupMapping extends Mapping
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Group")
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Group")
      * @ORM\JoinColumn(name="groupId", referencedColumnName="id")
      */
     private ?Group $group = null;

@@ -19,8 +19,8 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\HasLifecycleCallbacks
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\Data\DataModel\DataModelVersion",
- *     "dictionary" = "App\Entity\Data\DataDictionary\DataDictionaryVersion",
+ *     "model" = "App\Entity\DataSpecification\DataModel\DataModelVersion",
+ *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion",
  * })
  */
 abstract class Version

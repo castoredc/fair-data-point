@@ -12,7 +12,6 @@ use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Iri;
 use App\Exception\InvalidNodeType;
 use App\Exception\NoAccessPermission;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -45,7 +44,6 @@ class CreateTripleCommandHandler
         }
 
         $nodeRepository = $this->em->getRepository(Node::class);
-        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModelVersion);

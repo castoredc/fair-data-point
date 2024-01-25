@@ -10,7 +10,6 @@ use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -42,7 +41,6 @@ class GetDataModelMappingCommandHandler
 
         if ($command->getType()->isNode()) {
             $nodeRepository = $this->em->getRepository(Node::class);
-            assert($nodeRepository instanceof NodeRepository);
 
             $valueNodes = $nodeRepository->findNodesByType($command->getDataModelVersion(), NodeType::value());
 

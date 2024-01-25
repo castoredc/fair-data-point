@@ -9,7 +9,6 @@ use App\Entity\DataSpecification\DataModel\Node\Node;
 use App\Entity\DataSpecification\DataModel\Predicate;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
-use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -40,7 +39,6 @@ class UpdateTripleCommandHandler
         }
 
         $nodeRepository = $this->em->getRepository(Node::class);
-        assert($nodeRepository instanceof NodeRepository);
 
         if ($command->getSubjectType()->isRecord()) {
             $subject = $nodeRepository->findRecordNodeForModel($dataModelVersion);

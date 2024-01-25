@@ -17,7 +17,7 @@ class DependencyRule extends Dependency
     private string $elementId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Element", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Element", cascade={"persist"})
      * @ORM\JoinColumn(name="element", referencedColumnName="id", nullable=false)
      */
     private Element $element;

@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ElementMapping extends Mapping
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DataSpecification\Element")
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Element")
      * @ORM\JoinColumn(name="element", referencedColumnName="id")
      */
     private ?Element $element = null;
