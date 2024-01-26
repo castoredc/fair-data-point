@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataModel\DataModelPrefixApiRequest;
+use App\Api\Request\DataSpecification\Common\DataSpecificationPrefixApiRequest;
 use App\Api\Resource\DataSpecification\DataModel\DataModelPrefixesApiResource;
 use App\Command\DataSpecification\DataModel\CreateDataModelPrefixCommand;
 use App\Command\DataSpecification\DataModel\DeleteDataModelPrefixCommand;
@@ -12,13 +12,11 @@ use App\Command\DataSpecification\DataModel\UpdateDataModelPrefixCommand;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**
@@ -41,8 +39,8 @@ class DataModelPrefixApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         try {
-            $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
-            assert($parsed instanceof DataModelPrefixApiRequest);
+            $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
+            assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
             $bus->dispatch(new CreateDataModelPrefixCommand($dataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
 
@@ -69,8 +67,8 @@ class DataModelPrefixApiController extends ApiController
         }
 
         try {
-            $parsed = $this->parseRequest(DataModelPrefixApiRequest::class, $request);
-            assert($parsed instanceof DataModelPrefixApiRequest);
+            $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
+            assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
             $bus->dispatch(new UpdateDataModelPrefixCommand($prefix, $parsed->getPrefix(), $parsed->getUri()));
 

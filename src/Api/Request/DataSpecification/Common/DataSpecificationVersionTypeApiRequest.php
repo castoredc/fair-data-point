@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Data\DataModel;
+namespace App\Api\Request\DataSpecification\Common;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\VersionType;
-use Symfony\Component\Validator\Constraints as Assert;
 
-class DataModelVersionTypeApiRequest extends SingleApiRequest
+class DataSpecificationVersionTypeApiRequest extends SingleApiRequest
 {
     /**
      * @Assert\NotBlank()

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataModel\NodeApiRequest;
+use App\Api\Request\DataSpecification\DataModel\NodeApiRequest;
 use App\Api\Resource\DataSpecification\DataModel\NodesApiResource;
 use App\Command\DataSpecification\DataModel\CreateNodeCommand;
 use App\Command\DataSpecification\DataModel\EditNodeCommand;

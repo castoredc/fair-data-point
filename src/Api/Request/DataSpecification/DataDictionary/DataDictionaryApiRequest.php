@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Data\DataDictionary;
+namespace App\Api\Request\DataSpecification\DataDictionary;
 
 use App\Api\Request\SingleApiRequest;
 use Symfony\Component\Validator\Constraints as Assert;

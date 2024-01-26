@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\DataSpecification\DataDictionary;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataDictionary\DataDictionaryVersionTypeApiRequest;
+use App\Api\Request\DataSpecification\DataDictionary\DataDictionaryVersionTypeApiRequest;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionExportApiResource;
 use App\Command\DataSpecification\DataDictionary\CreateDataDictionaryVersionCommand;

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Data\DataModel;
+namespace App\Api\Request\DataSpecification\DataDictionary;
 
 use App\Api\Request\SingleFormApiRequest;
 use App\Entity\Version;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DataModelVersionApiRequest extends SingleFormApiRequest
+class DataDictionaryVersionApiRequest extends SingleFormApiRequest
 {
     /**
      * @Assert\NotBlank()

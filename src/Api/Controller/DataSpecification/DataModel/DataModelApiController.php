@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataModel\DataModelApiRequest;
-use App\Api\Request\Data\DataModel\DataModelVersionApiRequest;
-use App\Api\Request\Data\DataModel\DataModelVersionTypeApiRequest;
+use App\Api\Request\DataSpecification\Common\DataSpecificationVersionApiRequest;
+use App\Api\Request\DataSpecification\Common\DataSpecificationVersionTypeApiRequest;
+use App\Api\Request\DataSpecification\DataModel\DataModelApiRequest;
 use App\Api\Resource\DataSpecification\DataModel\DataModelApiResource;
 use App\Api\Resource\DataSpecification\DataModel\DataModelsApiResource;
 use App\Api\Resource\DataSpecification\DataModel\DataModelVersionApiResource;
@@ -155,8 +155,8 @@ class DataModelApiController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataModel);
 
         try {
-            $parsed = $this->parseRequest(DataModelVersionTypeApiRequest::class, $request);
-            assert($parsed instanceof DataModelVersionTypeApiRequest);
+            $parsed = $this->parseRequest(DataSpecificationVersionTypeApiRequest::class, $request);
+            assert($parsed instanceof DataSpecificationVersionTypeApiRequest);
 
             $envelope = $bus->dispatch(new CreateDataModelVersionCommand($dataModel, $parsed->getVersionType()));
 
@@ -192,8 +192,8 @@ class DataModelApiController extends ApiController
                 throw new NoFileSpecified();
             }
 
-            $parsed = $this->parseRequest(DataModelVersionApiRequest::class, $request);
-            assert($parsed instanceof DataModelVersionApiRequest);
+            $parsed = $this->parseRequest(DataSpecificationVersionApiRequest::class, $request);
+            assert($parsed instanceof DataSpecificationVersionApiRequest);
 
             $envelope = $bus->dispatch(new ImportDataModelVersionCommand($dataModel, $file, $parsed->getVersion()));
 

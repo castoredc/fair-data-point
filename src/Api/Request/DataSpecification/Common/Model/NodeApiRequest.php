@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Data\DataModel;
+namespace App\Api\Request\DataSpecification\Common\Model;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\XsdDataType;
-use Symfony\Component\Validator\Constraints as Assert;
-use function boolval;
 
-class NodeApiRequest extends SingleApiRequest
+abstract class NodeApiRequest extends SingleApiRequest
 {
     /**
      * @Assert\NotBlank()
@@ -25,16 +23,12 @@ class NodeApiRequest extends SingleApiRequest
     /** @Assert\Type("string") */
     private ?string $dataType = null;
 
-    /** @Assert\Type("bool") */
-    private bool $repeated;
-
     protected function parse(): void
     {
         $this->title = $this->getFromData('title');
         $this->description = $this->getFromData('description');
         $this->value = $this->getFromData('value');
         $this->dataType = $this->getFromData('dataType');
-        $this->repeated = boolval($this->getFromData('repeated'));
     }
 
     public function getTitle(): string
@@ -55,10 +49,5 @@ class NodeApiRequest extends SingleApiRequest
     public function getDataType(): ?XsdDataType
     {
         return $this->dataType !== null ? XsdDataType::fromString($this->dataType) : null;
-    }
-
-    public function isRepeated(): bool
-    {
-        return $this->repeated;
     }
 }

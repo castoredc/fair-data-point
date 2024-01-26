@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataModel\TripleApiRequest;
+use App\Api\Request\DataSpecification\Common\Model\TripleApiRequest;
 use App\Api\Resource\DataSpecification\DataModel\TriplesApiResource;
 use App\Command\DataSpecification\DataModel\CreateTripleCommand;
 use App\Command\DataSpecification\DataModel\DeleteTripleCommand;
@@ -12,13 +12,11 @@ use App\Command\DataSpecification\DataModel\UpdateTripleCommand;
 use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\DataSpecification\DataModel\Triple;
 use App\Exception\ApiRequestParseError;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**

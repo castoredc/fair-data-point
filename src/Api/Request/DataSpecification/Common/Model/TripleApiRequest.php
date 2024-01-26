@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Data\DataModel;
+namespace App\Api\Request\DataSpecification\Common\Model;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\NodeType;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class TripleApiRequest extends SingleApiRequest
 {

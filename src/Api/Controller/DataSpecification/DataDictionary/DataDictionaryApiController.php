@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\DataSpecification\DataDictionary;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Data\DataDictionary\DataDictionaryVersionApiRequest;
+use App\Api\Request\DataSpecification\DataDictionary\DataDictionaryVersionApiRequest;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryApiResource;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
 use App\Command\DataSpecification\DataDictionary\ImportDataDictionaryCommand;

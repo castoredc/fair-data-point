@@ -1,28 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\Data\DataModel;
+namespace App\Api\Request\DataSpecification\DataModel;
 
-use App\Api\Request\SingleApiRequest;
+use App\Api\Request\DataSpecification\Common\DataSpecificationModuleApiRequest;
 use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function count;
 
-class DataModelModuleApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
+class DataModelModuleApiRequest extends DataSpecificationModuleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
-    private string $title;
-
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("int")
-     */
-    private int $order;
-
     /**
      * @Assert\NotNull()
      * @Assert\Type("bool")
@@ -43,21 +30,11 @@ class DataModelModuleApiRequest extends SingleApiRequest implements GroupSequenc
 
     protected function parse(): void
     {
-        $this->title = $this->getFromData('title');
-        $this->order = $this->getFromData('order');
+        parent::parse();
+
         $this->repeated = $this->getFromData('repeated');
         $this->dependent = $this->getFromData('dependent');
         $this->dependencies = $this->getFromData('dependencies');
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getOrder(): int
-    {
-        return $this->order;
     }
 
     public function isRepeated(): bool
