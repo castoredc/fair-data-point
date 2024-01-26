@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Command\DataSpecification\DataModel;
+namespace App\Command\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\Common\Model\CreateModelModuleCommand;
 use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
-use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
-class CreateDataModelModuleCommand extends CreateModelModuleCommand
+class CreateMetadataModelModuleCommand extends CreateModelModuleCommand
 {
-    private DataModelVersion $dataModelVersion;
+    private MetadataModelVersion $metadataModelVersion;
 
     private bool $isRepeated;
 
@@ -17,19 +17,19 @@ class CreateDataModelModuleCommand extends CreateModelModuleCommand
 
     private ?DependencyGroup $dependencies = null;
 
-    public function __construct(DataModelVersion $dataModelVersion, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
+    public function __construct(MetadataModelVersion $metadataModelVersion, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
     {
         parent::__construct($title, $order);
 
-        $this->dataModelVersion = $dataModelVersion;
+        $this->metadataModelVersion = $metadataModelVersion;
         $this->isRepeated = $isRepeated;
         $this->isDependent = $isDependent;
         $this->dependencies = $dependencies;
     }
 
-    public function getDataModelVersion(): DataModelVersion
+    public function getMetadataModelVersion(): MetadataModelVersion
     {
-        return $this->dataModelVersion;
+        return $this->metadataModelVersion;
     }
 
     public function isRepeated(): bool

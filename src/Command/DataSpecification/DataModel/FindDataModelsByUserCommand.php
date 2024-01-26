@@ -3,19 +3,8 @@ declare(strict_types=1);
 
 namespace App\Command\DataSpecification\DataModel;
 
-use App\Security\User;
+use App\Command\DataSpecification\Common\Model\FindModelsByUserCommand;
 
-class FindDataModelsByUserCommand
+class FindDataModelsByUserCommand extends FindModelsByUserCommand
 {
-    private User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
 }

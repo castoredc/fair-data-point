@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Command\DataSpecification\DataModel;
+namespace App\Command\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\Common\Model\CreateTripleCommand as CommonCreateTripleCommand;
-use App\Entity\DataSpecification\DataModel\DataModelGroup;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Entity\Enum\NodeType;
 
 class CreateTripleCommand extends CommonCreateTripleCommand
 {
-    private DataModelGroup $module;
+    private MetadataModelGroup $module;
 
     public function __construct(
-        DataModelGroup $module,
+        MetadataModelGroup $module,
         NodeType $objectType,
         ?string $objectValue,
         ?string $predicateValue,
@@ -24,7 +24,7 @@ class CreateTripleCommand extends CommonCreateTripleCommand
         $this->module = $module;
     }
 
-    public function getModule(): DataModelGroup
+    public function getModule(): MetadataModelGroup
     {
         return $this->module;
     }

@@ -80,7 +80,7 @@ class MetadataModelVersion extends Version
 
     public function addPrefix(NamespacePrefix $prefix): void
     {
-        $prefix->setDataModelVersion($this);
+        $prefix->setMetadataModelVersion($this);
         $this->prefixes->add($prefix);
     }
 

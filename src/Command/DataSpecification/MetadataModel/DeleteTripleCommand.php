@@ -1,0 +1,21 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Command\DataSpecification\MetadataModel;
+
+use App\Entity\DataSpecification\MetadataModel\Triple;
+
+class DeleteTripleCommand
+{
+    private Triple $triple;
+
+    public function __construct(Triple $triple)
+    {
+        $this->triple = $triple;
+    }
+
+    public function getTriple(): Triple
+    {
+        return $this->triple;
+    }
+}
