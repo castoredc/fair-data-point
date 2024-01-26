@@ -5,9 +5,9 @@ namespace App\Entity\DataSpecification\Common\Model;
 
 use App\Entity\Iri;
 use App\Traits\CreatedAndUpdated;
-use Ramsey\Uuid\UuidInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
 
 /** @ORM\MappedSuperclass */
 abstract class Predicate

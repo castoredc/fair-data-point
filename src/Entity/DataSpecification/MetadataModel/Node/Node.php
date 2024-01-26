@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\MetadataModel\Node;
 
 use App\Entity\DataSpecification\Common\Element;
+use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\Triple;
@@ -22,7 +23,7 @@ use const SORT_REGULAR;
  * @ORM\Table(name="metadata_model_node")
  * @ORM\HasLifecycleCallbacks
  */
-abstract class Node extends Element
+abstract class Node extends Element implements CommonNode
 {
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\MetadataModel\Triple", mappedBy="subject")

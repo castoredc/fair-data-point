@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\DataModel\Node;
 
 use App\Entity\DataSpecification\Common\Element;
+use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\DataSpecification\DataModel\Triple;
@@ -22,7 +23,7 @@ use const SORT_REGULAR;
  * @ORM\Table(name="data_model_node")
  * @ORM\HasLifecycleCallbacks
  */
-abstract class Node extends Element
+abstract class Node extends Element implements CommonNode
 {
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\DataModel\Triple", mappedBy="subject")

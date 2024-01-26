@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\Common\Version;
+use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\Enum\NodeType;
 use App\Entity\Version as VersionNumber;
 use Doctrine\Common\Collections\ArrayCollection;

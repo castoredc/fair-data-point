@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240126094346 extends AbstractMigration
+final class Version20240126095741 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -44,9 +44,9 @@ final class Version20240126094346 extends AbstractMigration
         $this->addSql('ALTER TABLE metadata_model_prefix ADD CONSTRAINT FK_F802EAEBDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id)');
         $this->addSql('ALTER TABLE metadata_model_prefix ADD CONSTRAINT FK_F802EAEB16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id)');
         $this->addSql('ALTER TABLE metadata_model_prefix ADD CONSTRAINT FK_F802EAEB992ABE46 FOREIGN KEY (data_model) REFERENCES metadata_model_version (id)');
-        $this->addSql('ALTER TABLE metadata_model_triple ADD CONSTRAINT FK_2F9F501BFBCE3E7A FOREIGN KEY (subject) REFERENCES data_model_node (id)');
+        $this->addSql('ALTER TABLE metadata_model_triple ADD CONSTRAINT FK_2F9F501BFBCE3E7A FOREIGN KEY (subject) REFERENCES metadata_model_node (id)');
         $this->addSql('ALTER TABLE metadata_model_triple ADD CONSTRAINT FK_2F9F501B301BAA7B FOREIGN KEY (predicate) REFERENCES metadata_model_predicate (id)');
-        $this->addSql('ALTER TABLE metadata_model_triple ADD CONSTRAINT FK_2F9F501BA8ADABEC FOREIGN KEY (object) REFERENCES data_model_node (id)');
+        $this->addSql('ALTER TABLE metadata_model_triple ADD CONSTRAINT FK_2F9F501BA8ADABEC FOREIGN KEY (object) REFERENCES metadata_model_node (id)');
         $this->addSql('ALTER TABLE metadata_model_triple ADD CONSTRAINT FK_2F9F501BBF396750 FOREIGN KEY (id) REFERENCES data_specification_elementgroup (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE metadata_model_version ADD CONSTRAINT FK_82AFF578BF396750 FOREIGN KEY (id) REFERENCES data_specification_version (id) ON DELETE CASCADE');
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\Common\ElementGroup;
+use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
+use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\DataSpecification\Common\Model\Triple as CommonTriple;
-use App\Entity\DataSpecification\DataModel\DataModelVersion;
-use App\Entity\DataSpecification\DataModel\Node\Node;
-use App\Entity\DataSpecification\DataModel\Predicate;
+use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
@@ -19,7 +19,7 @@ use function assert;
 class Triple extends ElementGroup implements CommonTriple
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\Node", inversedBy="subjectTriples", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\Node", inversedBy="subjectTriples", cascade={"persist"})
      * @ORM\JoinColumn(name="subject", referencedColumnName="id", nullable=false)
      */
     private Node $subject;
@@ -31,7 +31,7 @@ class Triple extends ElementGroup implements CommonTriple
     private Predicate $predicate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\Node", inversedBy="objectTriples", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\Node", inversedBy="objectTriples", cascade={"persist"})
      * @ORM\JoinColumn(name="object", referencedColumnName="id", nullable=false)
      */
     private Node $object;
@@ -50,8 +50,10 @@ class Triple extends ElementGroup implements CommonTriple
         return $this->subject;
     }
 
-    public function setSubject(Node $subject): void
+    public function setSubject(CommonNode $subject): void
     {
+        assert($subject instanceof Node);
+
         $this->subject = $subject;
     }
 
@@ -60,8 +62,10 @@ class Triple extends ElementGroup implements CommonTriple
         return $this->predicate;
     }
 
-    public function setPredicate(Predicate $predicate): void
+    public function setPredicate(CommonPredicate $predicate): void
     {
+        assert($predicate instanceof Predicate);
+
         $this->predicate = $predicate;
     }
 
@@ -70,15 +74,17 @@ class Triple extends ElementGroup implements CommonTriple
         return $this->object;
     }
 
-    public function setObject(Node $object): void
+    public function setObject(CommonNode $object): void
     {
+        assert($object instanceof Node);
+
         $this->object = $object;
     }
 
-    public function getDataModelVersion(): DataModelVersion
+    public function getDataModelVersion(): MetadataModelVersion
     {
         $version = $this->getGroup()->getVersion();
-        assert($version instanceof DataModelVersion);
+        assert($version instanceof MetadataModelVersion);
 
         return $version;
     }
