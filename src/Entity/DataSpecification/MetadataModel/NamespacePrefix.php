@@ -19,13 +19,13 @@ class NamespacePrefix extends CommonNamespacePrefix
      */
     private MetadataModelVersion $metadataModel;
 
-    public function getDataModelVersion(): MetadataModelVersion
+    public function getMetadataModelVersion(): MetadataModelVersion
     {
         return $this->metadataModel;
     }
 
-    public function setDataModelVersion(MetadataModelVersion $dataModel): void
+    public function setMetadataModelVersion(MetadataModelVersion $metadataModelVersion): void
     {
-        $this->metadataModel = $dataModel;
+        $this->metadataModel = $metadataModelVersion;
     }
 }

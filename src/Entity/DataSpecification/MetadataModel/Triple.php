@@ -81,7 +81,7 @@ class Triple extends ElementGroup implements CommonTriple
         $this->object = $object;
     }
 
-    public function getDataModelVersion(): MetadataModelVersion
+    public function getMetadataModelVersion(): MetadataModelVersion
     {
         $version = $this->getGroup()->getVersion();
         assert($version instanceof MetadataModelVersion);

@@ -89,7 +89,7 @@ class MetadataModelVersion extends Version
         $this->prefixes->removeElement($prefix);
     }
 
-    public function getDataModel(): MetadataModel
+    public function getMetadataModel(): MetadataModel
     {
         assert($this->dataSpecification instanceof MetadataModel);
 

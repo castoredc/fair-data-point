@@ -14,9 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RecordNode extends Node
 {
-    public function __construct(MetadataModelVersion $dataModel)
+    public function __construct(MetadataModelVersion $metadataModelVersion)
     {
-        parent::__construct($dataModel, 'Record', null);
+        parent::__construct($metadataModelVersion, 'Record', null);
     }
 
     public function getType(): ?NodeType

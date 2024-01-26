@@ -20,11 +20,11 @@ class Predicate extends CommonPredicate
      */
     private MetadataModelVersion $metadataModel;
 
-    public function __construct(MetadataModelVersion $dataModel, Iri $iri)
+    public function __construct(MetadataModelVersion $metadataModelVersion, Iri $iri)
     {
         parent::__construct($iri);
 
-        $this->metadataModel = $dataModel;
+        $this->metadataModel = $metadataModelVersion;
     }
 
     public function getMetadataModel(): MetadataModelVersion

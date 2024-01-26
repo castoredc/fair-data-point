@@ -57,7 +57,7 @@ abstract class Node extends Element implements CommonNode
         return null;
     }
 
-    public function getDataModelVersion(): MetadataModelVersion
+    public function getMetadataModelVersion(): MetadataModelVersion
     {
         $version = $this->getVersion();
         assert($version instanceof MetadataModelVersion);
