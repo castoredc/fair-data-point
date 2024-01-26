@@ -6,11 +6,9 @@ namespace App\CommandHandler\Study;
 use App\Command\Study\GetPaginatedStudiesCommand;
 use App\Entity\PaginatedResultCollection;
 use App\Entity\Study;
-use App\Repository\StudyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use function assert;
 
 #[AsMessageHandler]
 class GetPaginatedStudiesCommandHandler
@@ -27,7 +25,6 @@ class GetPaginatedStudiesCommandHandler
     public function __invoke(GetPaginatedStudiesCommand $command): PaginatedResultCollection
     {
         $studyRepository = $this->em->getRepository(Study::class);
-        assert($studyRepository instanceof StudyRepository);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 

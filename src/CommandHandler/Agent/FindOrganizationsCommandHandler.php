@@ -12,7 +12,6 @@ use App\Exception\ErrorFetchingGridData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Model\Grid\ApiClient;
-use App\Repository\OrganizationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -48,7 +47,6 @@ class FindOrganizationsCommandHandler
         }
 
         $repository = $this->em->getRepository(Organization::class);
-        assert($repository instanceof OrganizationRepository);
 
         /** @var Organization[] $dbOrganizations */
         $dbOrganizations = $repository->findOrganizations($country, $command->getSearch());

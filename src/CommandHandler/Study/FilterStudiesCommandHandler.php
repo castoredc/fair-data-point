@@ -5,11 +5,9 @@ namespace App\CommandHandler\Study;
 
 use App\Command\Study\FilterStudiesCommand;
 use App\Entity\Study;
-use App\Repository\StudyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use function assert;
 
 #[AsMessageHandler]
 class FilterStudiesCommandHandler
@@ -27,7 +25,6 @@ class FilterStudiesCommandHandler
     public function __invoke(FilterStudiesCommand $command): array
     {
         $studyRepository = $this->em->getRepository(Study::class);
-        assert($studyRepository instanceof StudyRepository);
 
         $isAdmin = $this->security->isGranted('ROLE_ADMIN');
 

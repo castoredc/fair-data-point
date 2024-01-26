@@ -7,7 +7,6 @@ use App\Command\Study\UpdateStudyCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -38,7 +37,6 @@ class UpdateStudyCommandHandler
         $slug = $command->getSlug();
 
         $studyRepository = $this->em->getRepository(Study::class);
-        assert($studyRepository instanceof StudyRepository);
 
         if ($studyRepository->findBySlug($slug) !== null) {
             $slug .= '-' . uniqid();

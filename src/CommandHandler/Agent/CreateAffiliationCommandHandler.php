@@ -44,6 +44,8 @@ class CreateAffiliationCommandHandler
             if ($organization === null) {
                 throw new NotFound();
             }
+
+            assert($organization instanceof Organization);
         } elseif ($command->getOrganizationSource()->isGrid()) {
             try {
                 $gridInstitute = $this->gridApiClient->getInstituteById($command->getOrganizationId());

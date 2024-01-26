@@ -14,7 +14,6 @@ use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,7 +55,6 @@ class ImportStudyCommandHandler
         $this->apiClient->setUser($user->getCastorUser());
 
         $studyRepository = $this->em->getRepository(Study::class);
-        assert($studyRepository instanceof StudyRepository);
 
         if ($studyRepository->studyExists(StudySource::castor(), $command->getId())) {
             $study = $studyRepository->findStudyBySourceAndId(StudySource::castor(), $command->getId());

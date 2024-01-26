@@ -14,7 +14,6 @@ use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
-use App\Repository\StudyRepository;
 use App\Security\CastorServer;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
@@ -56,7 +55,6 @@ final class CreateStudyCommandHandler
         $source = $command->getSource();
 
         $studyRepository = $this->em->getRepository(Study::class);
-        assert($studyRepository instanceof StudyRepository);
 
         if ($command->getSourceId() !== null && $studyRepository->studyExists($source, $command->getSourceId())) {
             throw new StudyAlreadyExists();
