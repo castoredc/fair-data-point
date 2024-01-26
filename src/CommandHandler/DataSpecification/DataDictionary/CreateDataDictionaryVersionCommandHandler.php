@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\DataDictionary;
 
 use App\Command\DataSpecification\DataDictionary\CreateDataDictionaryVersionCommand;
-use App\CommandHandler\DataSpecification\DataSpecificationVersionCommandHandler;
+use App\CommandHandler\DataSpecification\Common\DataSpecificationVersionCommandHandler;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Entity\Enum\VersionType;

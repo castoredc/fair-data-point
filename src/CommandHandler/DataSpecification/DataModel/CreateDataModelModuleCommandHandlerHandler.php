@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\DataModel;
 
 use App\Command\DataSpecification\DataModel\CreateDataModelModuleCommand;
-use App\CommandHandler\DataSpecification\DataSpecificationGroupCommandHandler;
+use App\CommandHandler\DataSpecification\Common\DataSpecificationGroupCommandHandler;
 use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;

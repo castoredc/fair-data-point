@@ -19,7 +19,7 @@ use function count;
 use const SORT_REGULAR;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\NodeRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\DataSpecification\MetadataModel\NodeRepository")
  * @ORM\Table(name="metadata_model_node")
  * @ORM\HasLifecycleCallbacks
  */

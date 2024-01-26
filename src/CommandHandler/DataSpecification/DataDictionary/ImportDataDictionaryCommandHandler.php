@@ -5,12 +5,12 @@ namespace App\CommandHandler\DataSpecification\DataDictionary;
 
 use App\Command\DataSpecification\DataDictionary\ImportDataDictionaryCommand;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
-use App\Exception\InvalidDataDictionaryVersion;
+use App\Exception\DataSpecification\DataDictionary\InvalidDataDictionaryVersion;
 use App\Exception\NoAccessPermission;
 use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
-use App\Factory\Data\DataDictionary\DataDictionaryGroupFactory;
+use App\Factory\DataSpecification\DataDictionary\DataDictionaryGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\DataModel;
 
 use App\Command\DataSpecification\DataModel\UpdateDataModelModuleCommand;
-use App\CommandHandler\DataSpecification\DataSpecificationGroupCommandHandler;
+use App\CommandHandler\DataSpecification\Common\DataSpecificationGroupCommandHandler;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

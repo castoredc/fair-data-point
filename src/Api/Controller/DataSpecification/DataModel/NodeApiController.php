@@ -13,15 +13,13 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\DataSpecification\DataModel\Node\Node;
 use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;
-use App\Exception\InvalidNodeType;
-use App\Exception\NodeInUseByTriples;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
+use App\Exception\DataSpecification\Common\Model\NodeInUseByTriples;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**

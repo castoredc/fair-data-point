@@ -10,7 +10,7 @@ use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\DataSpecification\DataModel\Predicate;
 use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Iri;
-use App\Exception\InvalidNodeType;
+use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;

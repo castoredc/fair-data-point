@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\DataModel;
 
 use App\Command\DataSpecification\DataModel\RemoveNodeCommand;
+use App\Exception\DataSpecification\Common\Model\NodeInUseByTriples;
 use App\Exception\NoAccessPermission;
-use App\Exception\NodeInUseByTriples;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

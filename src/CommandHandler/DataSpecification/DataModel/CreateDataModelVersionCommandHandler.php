@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\DataModel;
 
 use App\Command\DataSpecification\DataModel\CreateDataModelVersionCommand;
-use App\CommandHandler\DataSpecification\DataSpecificationVersionCommandHandler;
+use App\CommandHandler\DataSpecification\Common\DataSpecificationVersionCommandHandler;
 use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\DataSpecification\DataModel\NamespacePrefix;
@@ -17,7 +17,7 @@ use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\DataSpecification\DataModel\Predicate;
 use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Enum\VersionType;
-use App\Exception\InvalidNodeType;
+use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\NoAccessPermission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

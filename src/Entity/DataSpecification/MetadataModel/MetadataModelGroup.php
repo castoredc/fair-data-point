@@ -5,6 +5,7 @@ namespace App\Entity\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\Common\ElementGroup;
 use App\Entity\DataSpecification\Common\Group;
+use App\Entity\DataSpecification\Common\Version;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,6 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MetadataModelGroup extends Group
 {
+    public function __construct(string $title, int $order, Version $version)
+    {
+        parent::__construct($title, $order, false, false, $version);
+    }
+
     public function addTriple(Triple $triple): void
     {
         $this->addElementGroup($triple);
