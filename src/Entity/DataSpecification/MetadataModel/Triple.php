@@ -1,17 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\DataSpecification\DataModel;
+namespace App\Entity\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\Common\ElementGroup;
 use App\Entity\DataSpecification\Common\Model\Triple as CommonTriple;
+use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\DataModel\Predicate;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="data_model_triple")
+ * @ORM\Table(name="metadata_model_triple")
  * @ORM\HasLifecycleCallbacks
  */
 class Triple extends ElementGroup implements CommonTriple
@@ -34,7 +36,7 @@ class Triple extends ElementGroup implements CommonTriple
      */
     private Node $object;
 
-    public function __construct(DataModelGroup $module, Node $subject, Predicate $predicate, Node $object)
+    public function __construct(MetadataModelGroup $module, Node $subject, Predicate $predicate, Node $object)
     {
         parent::__construct($module);
 

@@ -15,13 +15,18 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\HasLifecycleCallbacks
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
+ *     "node" = "App\Entity\DataSpecification\DataModel\Node\Node",
  *     "model_externalIri" = "App\Entity\DataSpecification\DataModel\Node\ExternalIriNode",
  *     "model_internalIri" = "App\Entity\DataSpecification\DataModel\Node\InternalIriNode",
  *     "model_literal" = "App\Entity\DataSpecification\DataModel\Node\LiteralNode",
  *     "model_record" = "App\Entity\DataSpecification\DataModel\Node\RecordNode",
  *     "model_value" = "App\Entity\DataSpecification\DataModel\Node\ValueNode",
  *     "dictionary_variable" = "App\Entity\DataSpecification\DataDictionary\Variable",
- *     "node" = "App\Entity\DataSpecification\DataModel\Node\Node"
+ *     "metadata_model_node" = "App\Entity\DataSpecification\MetadataModel\Node\Node",
+ *     "metadata_model_externalIri" = "App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode",
+ *     "metadata_model_literal" = "App\Entity\DataSpecification\MetadataModel\Node\LiteralNode",
+ *     "metadata_model_record" = "App\Entity\DataSpecification\MetadataModel\Node\RecordNode",
+ *     "metadata_model_value" = "App\Entity\DataSpecification\MetadataModel\Node\ValueNode"
  * })
  */
 abstract class Element

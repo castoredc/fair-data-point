@@ -16,6 +16,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "model" = "App\Entity\DataSpecification\DataModel\Triple",
+ *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\Triple",
  * })
  */
 abstract class ElementGroup

@@ -25,7 +25,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\DiscriminatorMap({
  *     "model" = "App\Entity\DataSpecification\DataModel\DataModel",
  *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionary",
- *     "metadata-model" = "App\Entity\DataSpecification\MetadataModel\MetadataModel",
+ *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModel",
  * })
  */
 abstract class DataSpecification implements PermissionsEnabledEntity

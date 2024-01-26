@@ -20,6 +20,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "model" = "App\Entity\DataSpecification\DataModel\DataModelVersion",
+ *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelVersion",
  *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion",
  * })
  */
