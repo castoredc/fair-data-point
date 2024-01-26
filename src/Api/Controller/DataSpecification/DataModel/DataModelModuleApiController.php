@@ -27,7 +27,7 @@ use function assert;
  */
 class DataModelModuleApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_model_modules") */
+    /** @Route("", methods={"GET"}, name="api_data_model_modules") */
     public function getModules(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -35,7 +35,7 @@ class DataModelModuleApiController extends ApiController
         return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_model_module_add") */
+    /** @Route("", methods={"POST"}, name="api_data_model_module_add") */
     public function addModule(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
@@ -57,7 +57,7 @@ class DataModelModuleApiController extends ApiController
     }
 
     /**
-     * @Route("/{module}", methods={"POST"}, name="api_model_module_update")
+     * @Route("/{module}", methods={"POST"}, name="api_data_model_module_update")
      * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
     public function updateModule(DataModelVersion $dataModelVersion, DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
@@ -88,7 +88,7 @@ class DataModelModuleApiController extends ApiController
     }
 
     /**
-     * @Route("/{module}", methods={"DELETE"}, name="api_model_module_delete")
+     * @Route("/{module}", methods={"DELETE"}, name="api_data_model_module_delete")
      * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
     public function deleteModule(DataModelVersion $dataModelVersion, DataModelGroup $module, MessageBusInterface $bus): Response

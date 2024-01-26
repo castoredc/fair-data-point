@@ -35,7 +35,7 @@ class TripleApiController extends ApiController
         return new JsonResponse((new TriplesApiResource($module))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_triple_add") */
+    /** @Route("", methods={"POST"}, name="api_metadata_model_triple_add") */
     public function addTriple(MetadataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
@@ -57,7 +57,7 @@ class TripleApiController extends ApiController
     }
 
     /**
-     * @Route("/{triple}", methods={"POST"}, name="api_triple_update")
+     * @Route("/{triple}", methods={"POST"}, name="api_metadata_model_triple_update")
      * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
      */
     public function updateTriple(MetadataModelGroup $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
@@ -88,7 +88,7 @@ class TripleApiController extends ApiController
     }
 
     /**
-     * @Route("/{triple}", methods={"DELETE"}, name="api_triple_delete")
+     * @Route("/{triple}", methods={"DELETE"}, name="api_metadata_model_triple_delete")
      * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
      */
     public function deleteTriple(MetadataModelGroup $module, Triple $triple, MessageBusInterface $bus): Response

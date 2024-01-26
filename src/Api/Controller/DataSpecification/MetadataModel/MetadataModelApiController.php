@@ -43,7 +43,7 @@ use function assert;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/** @Route("/api/model") */
+/** @Route("/api/metadata-model") */
 class MetadataModelApiController extends ApiController
 {
     /** @Route("", methods={"POST"}, name="api_metadata_model_add") */
@@ -70,7 +70,7 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /** @Route("/my", methods={"GET"}, name="api_my_data_models") */
+    /** @Route("/my", methods={"GET"}, name="api_my_metadata_models") */
     public function myMetadataModels(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

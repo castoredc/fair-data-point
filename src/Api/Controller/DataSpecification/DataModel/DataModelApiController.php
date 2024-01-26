@@ -46,7 +46,7 @@ use const JSON_PRETTY_PRINT;
 /** @Route("/api/model") */
 class DataModelApiController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_model_add") */
+    /** @Route("", methods={"POST"}, name="api_data_model_add") */
     public function addDataModel(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -99,7 +99,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}", methods={"GET"}, name="api_model")
+     * @Route("/{model}", methods={"GET"}, name="api_data_model")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function dataModel(DataModel $dataModel): Response
@@ -114,7 +114,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}", methods={"POST"}, name="api_model_update")
+     * @Route("/{model}", methods={"POST"}, name="api_data_model_update")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function updateDataModel(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
@@ -138,7 +138,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}/v/{version}", methods={"GET"}, name="api_model_version")
+     * @Route("/{model}/v/{version}", methods={"GET"}, name="api_data_model_version")
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
      */
     public function dataModelVersion(DataModelVersion $dataModelVersion): Response
@@ -149,7 +149,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}/v", methods={"POST"}, name="api_model_version_create")
+     * @Route("/{model}/v", methods={"POST"}, name="api_data_model_version_create")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function createDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
@@ -179,7 +179,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}/import", methods={"POST"}, name="api_model_import")
+     * @Route("/{model}/import", methods={"POST"}, name="api_data_model_import")
      * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
      */
     public function importDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
@@ -224,7 +224,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_model_version_export")
+     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_data_model_version_export")
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
      */
     public function exportDataModelVersion(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
@@ -244,7 +244,7 @@ class DataModelApiController extends ApiController
     }
 
     /**
-     * @Route("/{model}/v/{version}/rdf", methods={"GET"}, name="api_model_rdf_preview")
+     * @Route("/{model}/v/{version}/rdf", methods={"GET"}, name="api_data_model_rdf_preview")
      * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
      */
     public function dataModelRDFPreview(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response

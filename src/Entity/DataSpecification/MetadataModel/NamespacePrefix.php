@@ -15,7 +15,7 @@ class NamespacePrefix extends CommonNamespacePrefix
 {
     /**
      * @ORM\ManyToOne(targetEntity="MetadataModelVersion", inversedBy="prefixes",cascade={"persist"})
-     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="metadata_model", referencedColumnName="id", nullable=false)
      */
     private MetadataModelVersion $metadataModel;
 

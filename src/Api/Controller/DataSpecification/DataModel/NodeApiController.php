@@ -30,7 +30,7 @@ use function assert;
  */
 class NodeApiController extends ApiController
 {
-    /** @Route("", name="api_node") */
+    /** @Route("", name="api_data_model_node") */
     public function nodes(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -38,7 +38,7 @@ class NodeApiController extends ApiController
         return new JsonResponse((new NodesApiResource($dataModelVersion))->toArray());
     }
 
-    /** @Route("/{type}", methods={"GET"}, name="api_node_type") */
+    /** @Route("/{type}", methods={"GET"}, name="api_data_model_node_type") */
     public function nodesByType(DataModelVersion $dataModelVersion, string $type): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -48,7 +48,7 @@ class NodeApiController extends ApiController
         return new JsonResponse((new NodesApiResource($dataModelVersion, $nodeType))->toArray());
     }
 
-    /** @Route("/{type}", methods={"POST"}, name="api_node_add") */
+    /** @Route("/{type}", methods={"POST"}, name="api_data_model_node_add") */
     public function addNode(DataModelVersion $dataModelVersion, string $type, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
@@ -78,7 +78,7 @@ class NodeApiController extends ApiController
     }
 
     /**
-     * @Route("/{type}/{id}", methods={"POST"}, name="api_node_edit")
+     * @Route("/{type}/{id}", methods={"POST"}, name="api_data_model_node_edit")
      * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
      */
     public function editNode(DataModelVersion $dataModelVersion, string $type, Node $node, Request $request, MessageBusInterface $bus): Response
@@ -112,7 +112,7 @@ class NodeApiController extends ApiController
     }
 
     /**
-     * @Route("/{type}/{id}", methods={"DELETE"}, name="api_node_remove")
+     * @Route("/{type}/{id}", methods={"DELETE"}, name="api_data_model_node_remove")
      * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
      */
     public function removeNode(DataModelVersion $dataModelVersion, string $type, Node $node, MessageBusInterface $bus): Response

@@ -27,7 +27,7 @@ use function assert;
  */
 class DataModelPrefixApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_model_prefixes") */
+    /** @Route("", methods={"GET"}, name="api_data_model_prefixes") */
     public function getPrefixes(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -35,7 +35,7 @@ class DataModelPrefixApiController extends ApiController
         return new JsonResponse((new DataModelPrefixesApiResource($dataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_model_prefix_add") */
+    /** @Route("", methods={"POST"}, name="api_data_model_prefix_add") */
     public function addPrefix(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
@@ -57,7 +57,7 @@ class DataModelPrefixApiController extends ApiController
     }
 
     /**
-     * @Route("/{prefix}", methods={"POST"}, name="api_model_prefix_update")
+     * @Route("/{prefix}", methods={"POST"}, name="api_data_model_prefix_update")
      * @ParamConverter("prefix", options={"mapping": {"prefix": "id"}})
      */
     public function updatePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
@@ -88,7 +88,7 @@ class DataModelPrefixApiController extends ApiController
     }
 
     /**
-     * @Route("/{prefix}", methods={"DELETE"}, name="api_model_prefix_delete")
+     * @Route("/{prefix}", methods={"DELETE"}, name="api_data_model_prefix_delete")
      * @ParamConverter("prefix", options={"mapping": {"prefix": "id"}})
      */
     public function deletePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, MessageBusInterface $bus): Response
