@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\DataModel;
 
 use App\Entity\DataSpecification\Common\ElementGroup;
+use App\Entity\DataSpecification\Common\Model\ModelVersion;
 use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
 use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\DataSpecification\Common\Model\Triple as CommonTriple;
@@ -87,5 +88,10 @@ class Triple extends ElementGroup implements CommonTriple
         assert($version instanceof DataModelVersion);
 
         return $version;
+    }
+
+    public function getDataSpecificationVersion(): ModelVersion
+    {
+        return $this->getDataModelVersion();
     }
 }

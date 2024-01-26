@@ -5,8 +5,6 @@ namespace App\Api\Resource\DataSpecification\Common;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\DataSpecification\Common\DataSpecification;
-use App\Entity\DataSpecification\Common\Version;
-use function assert;
 
 abstract class DataSpecificationApiResource implements ApiResource
 {

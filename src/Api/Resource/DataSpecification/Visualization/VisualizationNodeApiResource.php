@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\DataSpecification\Visualization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\DataSpecification\DataModel\Node\Node;
+use App\Entity\DataSpecification\Common\Model\Node;
 
 class VisualizationNodeApiResource implements ApiResource
 {

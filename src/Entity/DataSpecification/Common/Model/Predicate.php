@@ -46,7 +46,7 @@ abstract class Predicate
         $this->iri = $iri;
     }
 
-    public function getDataSpecification(): ModelVersion
+    public function getDataSpecificationVersion(): ModelVersion
     {
         throw new NotFound();
     }

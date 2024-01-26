@@ -16,4 +16,6 @@ interface Triple
     public function getObject(): Node;
 
     public function setObject(Node $object): void;
+
+    public function getDataSpecificationVersion(): ModelVersion;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\DataSpecification\Visualization;
 
 use App\Api\Resource\ApiResource;
-use App\Entity\DataSpecification\DataModel\Triple;
+use App\Entity\DataSpecification\Common\Model\Triple;
 
 class VisualizationEdgeApiResource implements ApiResource
 {
@@ -18,7 +18,7 @@ class VisualizationEdgeApiResource implements ApiResource
     /** @return array<mixed> */
     public function toArray(): array
     {
-        $prefixes = $this->triple->getDataModelVersion()->getPrefixes();
+        $prefixes = $this->triple->getDataSpecificationVersion()->getPrefixes();
 
         $predicateIri = $this->triple->getPredicate()->getIri();
 

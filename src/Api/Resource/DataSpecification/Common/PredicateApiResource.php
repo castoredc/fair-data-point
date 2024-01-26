@@ -20,7 +20,7 @@ class PredicateApiResource implements ApiResource
     {
         return [
             'id' => $this->predicate->getId(),
-            'value' => (new IriApiResource($this->predicate->getDataSpecification(), $this->predicate->getIri()))->toArray(),
+            'value' => (new IriApiResource($this->predicate->getDataSpecificationVersion(), $this->predicate->getIri()))->toArray(),
             'base' => $this->predicate->getIri()->getBase(),
         ];
     }

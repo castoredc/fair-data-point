@@ -7,6 +7,10 @@ use App\Entity\Enum\NodeType;
 
 interface Node
 {
+    public function getId(): string;
+
+    public function getTitle(): string;
+
     public function getType(): ?NodeType;
 
     public function getValue(): ?string;

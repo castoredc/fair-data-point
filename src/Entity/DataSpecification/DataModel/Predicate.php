@@ -38,7 +38,7 @@ class Predicate extends CommonPredicate
         $this->dataModel = $dataModel;
     }
 
-    public function getDataSpecification(): ModelVersion
+    public function getDataSpecificationVersion(): ModelVersion
     {
         return $this->dataModel;
     }
