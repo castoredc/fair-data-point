@@ -72,7 +72,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
         const { modelId, versionId, onSaved } = this.props;
 
         apiClient
-            .post('/api/model/' + modelId + '/v/' + versionId + '/module' + (values.id ? '/' + values.id : ''), values)
+            .post('/api/data-model/' + modelId + '/v/' + versionId + '/module' + (values.id ? '/' + values.id : ''), values)
             .then(() => {
                 onSaved();
                 setSubmitting(false);
@@ -93,7 +93,7 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
         const { modelId, versionId, onSaved } = this.props;
 
         apiClient
-            .delete('/api/model/' + modelId + '/v/' + versionId + '/module/' + id)
+            .delete('/api/data-model/' + modelId + '/v/' + versionId + '/module/' + id)
             .then(() => {
                 callback();
                 onSaved();

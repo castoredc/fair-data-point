@@ -43,7 +43,7 @@ use function assert;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/** @Route("/api/model") */
+/** @Route("/api/data-model") */
 class DataModelApiController extends ApiController
 {
     /** @Route("", methods={"POST"}, name="api_data_model_add") */

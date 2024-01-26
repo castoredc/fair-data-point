@@ -46,7 +46,7 @@ export default class DataModelPrefixModal extends Component<DataModelPrefixModal
         const { modelId, versionId, onSaved } = this.props;
 
         apiClient
-            .post('/api/model/' + modelId + '/v/' + versionId + '/prefix' + (values.id ? '/' + values.id : ''), {
+            .post('/api/data-model/' + modelId + '/v/' + versionId + '/prefix' + (values.id ? '/' + values.id : ''), {
                 prefix: values.prefix,
                 uri: values.uri,
             })

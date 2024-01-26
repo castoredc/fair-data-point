@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 /**
- * @Route("/api/model/{model}/v/{version}/prefix")
+ * @Route("/api/data-model/{model}/v/{version}/prefix")
  * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
  */
 class DataModelPrefixApiController extends ApiController

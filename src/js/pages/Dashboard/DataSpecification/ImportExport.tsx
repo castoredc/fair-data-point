@@ -37,7 +37,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
         this.setState({ isExporting: true });
 
         apiClient({
-            url: '/api/model/' + dataModel.id + '/v/' + version + '/export',
+            url: '/api/data-model/' + dataSpecification.id + '/v/' + version + '/export',
             method: 'GET',
             responseType: 'blob',
         }).then(response => {
@@ -87,7 +87,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
         formData.append('version', values.version);
 
         apiClient
-            .post('/api/model/' + dataModel.id + '/import', formData, {
+            .post('/api/data-model/' + dataSpecification.id + '/import', formData, {
                 headers: {
                     'content-type': 'multipart/form-data',
                 },

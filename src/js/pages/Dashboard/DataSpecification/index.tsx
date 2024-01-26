@@ -69,7 +69,6 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
         });
 
         apiClient
-            .get('/api/model/' + match.params.model)
             .then(response => {
                 const versions = response.data.versions.map(version => {
                     return { value: version.id, label: version.version };
