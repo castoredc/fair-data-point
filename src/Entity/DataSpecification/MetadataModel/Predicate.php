@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\MetadataModel;
 
+use App\Entity\DataSpecification\Common\Model\ModelVersion;
 use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,5 +36,10 @@ class Predicate extends CommonPredicate
     public function setMetadataModel(MetadataModelVersion $metadataModel): void
     {
         $this->metadataModel = $metadataModel;
+    }
+
+    public function getDataSpecification(): ModelVersion
+    {
+        return $this->metadataModel;
     }
 }

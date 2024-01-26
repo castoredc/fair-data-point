@@ -5,7 +5,7 @@ namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModel\NodeApiRequest;
-use App\Api\Resource\Data\DataModel\NodesApiResource;
+use App\Api\Resource\DataSpecification\DataModel\NodesApiResource;
 use App\Command\DataSpecification\DataModel\CreateNodeCommand;
 use App\Command\DataSpecification\DataModel\EditNodeCommand;
 use App\Command\DataSpecification\DataModel\RemoveNodeCommand;

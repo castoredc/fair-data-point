@@ -5,7 +5,7 @@ namespace App\Api\Controller\DataSpecification\DataDictionary;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataDictionary\DataDictionaryGroupApiRequest;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryGroupsApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryGroupsApiResource;
 use App\Command\DataSpecification\DataDictionary\CreateDataDictionaryGroupCommand;
 use App\Command\DataSpecification\DataDictionary\DeleteDataDictionaryGroupCommand;
 use App\Command\DataSpecification\DataDictionary\UpdateDataDictionaryGroupCommand;

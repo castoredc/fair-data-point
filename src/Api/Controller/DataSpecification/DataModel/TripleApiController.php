@@ -5,7 +5,7 @@ namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModel\TripleApiRequest;
-use App\Api\Resource\Data\DataModel\TriplesApiResource;
+use App\Api\Resource\DataSpecification\DataModel\TriplesApiResource;
 use App\Command\DataSpecification\DataModel\CreateTripleCommand;
 use App\Command\DataSpecification\DataModel\DeleteTripleCommand;
 use App\Command\DataSpecification\DataModel\UpdateTripleCommand;

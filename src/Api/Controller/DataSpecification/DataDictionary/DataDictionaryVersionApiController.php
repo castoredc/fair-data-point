@@ -5,8 +5,8 @@ namespace App\Api\Controller\DataSpecification\DataDictionary;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataDictionary\DataDictionaryVersionTypeApiRequest;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryVersionApiResource;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryVersionExportApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionExportApiResource;
 use App\Command\DataSpecification\DataDictionary\CreateDataDictionaryVersionCommand;
 use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;

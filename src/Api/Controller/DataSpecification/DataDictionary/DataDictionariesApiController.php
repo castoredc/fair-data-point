@@ -5,8 +5,8 @@ namespace App\Api\Controller\DataSpecification\DataDictionary;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataDictionary\DataDictionaryApiRequest;
-use App\Api\Resource\Data\DataDictionary\DataDictionariesApiResource;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionariesApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryApiResource;
 use App\Command\DataSpecification\DataDictionary\CreateDataDictionaryCommand;
 use App\Command\DataSpecification\DataDictionary\GetDataDictionariesCommand;
 use App\Exception\ApiRequestParseError;

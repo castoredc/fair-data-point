@@ -5,7 +5,7 @@ namespace App\Api\Controller\DataSpecification\DataModel;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataModel\DataModelPrefixApiRequest;
-use App\Api\Resource\Data\DataModel\DataModelPrefixesApiResource;
+use App\Api\Resource\DataSpecification\DataModel\DataModelPrefixesApiResource;
 use App\Command\DataSpecification\DataModel\CreateDataModelPrefixCommand;
 use App\Command\DataSpecification\DataModel\DeleteDataModelPrefixCommand;
 use App\Command\DataSpecification\DataModel\UpdateDataModelPrefixCommand;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Command\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\Common\Model\CreateModelModuleCommand;
-use App\Entity\DataSpecification\Common\Dependency\DependencyGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class CreateMetadataModelModuleCommand extends CreateModelModuleCommand

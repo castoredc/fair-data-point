@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\ApiResource;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryApiResource;
-use App\Api\Resource\Data\DataModel\DataModelApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryApiResource;
+use App\Api\Resource\DataSpecification\DataModel\DataModelApiResource;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\FAIRData\Distribution;

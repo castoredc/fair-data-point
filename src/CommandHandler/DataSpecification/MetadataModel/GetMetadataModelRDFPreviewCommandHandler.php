@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\CommandHandler\DataSpecification\MetadataModel;
 
-use App\Api\Resource\Data\MetadataModel\MetadataModelModuleRDFPreviewApiResource;
-use App\Api\Resource\Data\MetadataModel\MetadataModelRDFPreviewApiResource;
+use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelModuleRDFPreviewApiResource;
+use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelRDFPreviewApiResource;
 use App\Command\DataSpecification\MetadataModel\GetMetadataModelRDFPreviewCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
-use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\Common\Model;
 
 use App\Entity\Iri;
+use App\Exception\NotFound;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
@@ -43,5 +44,10 @@ abstract class Predicate
     public function setIri(Iri $iri): void
     {
         $this->iri = $iri;
+    }
+
+    public function getDataSpecification(): ModelVersion
+    {
+        throw new NotFound();
     }
 }

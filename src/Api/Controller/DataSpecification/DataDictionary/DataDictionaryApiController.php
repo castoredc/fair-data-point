@@ -5,8 +5,8 @@ namespace App\Api\Controller\DataSpecification\DataDictionary;
 
 use App\Api\Controller\ApiController;
 use App\Api\Request\Data\DataDictionary\DataDictionaryVersionApiRequest;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryApiResource;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryVersionApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
 use App\Command\DataSpecification\DataDictionary\ImportDataDictionaryCommand;
 use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 use App\Exception\ApiRequestParseError;
