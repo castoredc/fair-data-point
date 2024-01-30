@@ -6,6 +6,7 @@ namespace App\Entity\Enum;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\DataSpecification\DataModel\DataModel;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
@@ -26,8 +27,9 @@ class PermissionsEnabledEntityType extends Enum
     private const CATALOG = 'catalog';
     private const DATASET = 'dataset';
     private const DISTRIBUTION = 'distribution';
-    private const MODEL = 'model';
+    private const MODEL = 'data-model';
     private const DISTRIBUTION_CONTENTS = 'distributionContents';
+    private const METADATA_MODEL = 'metadata-model';
 
     private const CLASS_MAPPING = [
         self::CATALOG => Catalog::class,
@@ -35,6 +37,7 @@ class PermissionsEnabledEntityType extends Enum
         self::DISTRIBUTION => Distribution::class,
         self::MODEL => DataModel::class,
         self::DISTRIBUTION_CONTENTS => DistributionContents::class,
+        self::METADATA_MODEL => MetadataModel::class,
     ];
 
     /** @return class-string<object> */

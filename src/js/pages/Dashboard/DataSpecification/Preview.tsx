@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { LoadingOverlay } from '@castoredc/matter';
-import DataModelModulePreview from 'components/DataModelModule/DataModelModulePreview';
+import DataSpecificationModulePreview from 'components/DataSpecificationModule/DataSpecificationModulePreview';
 import SideTabs from 'components/SideTabs';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
+import { getType } from '../../../util';
 
 interface PreviewProps extends AuthorizedRouteComponentProps {
-    dataModel: any;
+    type: string;
+    dataSpecification: any;
     version: any;
 }
 
@@ -32,14 +34,14 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
     }
 
     getPreviews = () => {
-        const { dataModel, version } = this.props;
+        const { type, dataSpecification, version } = this.props;
 
         this.setState({
             isLoading: true,
         });
 
         apiClient
-            .get('/api/model/' + dataModel.id + '/v/' + version + '/rdf')
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/rdf')
             .then(response => {
                 this.setState({
                     previews: response.data,
@@ -60,6 +62,7 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
     };
 
     render() {
+        const { type } = this.props;
         const { isLoading, previews } = this.state;
 
         if (isLoading) {
@@ -67,7 +70,7 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
         }
 
         if (previews.modules.length === 0) {
-            return <div className="NoResults">This data model does not have groups.</div>;
+            return <div className="NoResults">This {getType(type)} does not have groups.</div>;
         }
 
         const tabs = previews.modules.map(element => {
@@ -92,7 +95,7 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
                 title: element.title,
                 icons: icons,
                 content: (
-                    <DataModelModulePreview
+                    <DataSpecificationModulePreview
                         repeated={element.repeated}
                         dependent={element.dependent}
                         dependencies={element.dependencies}
@@ -110,8 +113,8 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
                     title="Groups"
                     tabs={[
                         {
-                            title: 'Full data model',
-                            content: <DataModelModulePreview rdf={previews.full} visualization={previews.visualization} />,
+                            title: `Full ${getType(type)}`,
+                            content: <DataSpecificationModulePreview rdf={previews.full} visualization={previews.visualization} />,
                         },
                         {
                             type: 'separator',

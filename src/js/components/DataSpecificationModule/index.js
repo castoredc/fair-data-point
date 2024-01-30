@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import TripleGroup from './TripleGroup';
 import { Button, Stack } from '@castoredc/matter';
 
-export default class DataModelModule extends Component {
+export default class DataSpecificationModule extends Component {
     render() {
         const { groupedTriples, openModuleModal, openTripleModal, openRemoveTripleModal, openAddModuleModal } = this.props;
 
         return (
-            <div className="DataModelModule">
+            <div className="DataSpecificationModule">
                 <div className="ButtonBar">
                     <Stack distribution="trailing">
                         <Button icon="edit" buttonType="secondary" onClick={openModuleModal}>
@@ -24,8 +24,8 @@ export default class DataModelModule extends Component {
                     </Stack>
                 </div>
 
-                <div className="DataModelTable LargeTable">
-                    <div className="DataModelTableHeader TableHeader">
+                <div className="DataSpecificationTable LargeTable">
+                    <div className="DataSpecificationTableHeader TableHeader">
                         <div>Subject</div>
                         <div>Predicate</div>
                         <div>Object</div>
@@ -34,7 +34,7 @@ export default class DataModelModule extends Component {
                     {groupedTriples.length === 0 ? (
                         <div className="NoResults">This group does not contain triples.</div>
                     ) : (
-                        <div className="DataModelTableBody TableBody">
+                        <div className="DataSpecificationTableBody TableBody">
                             {groupedTriples.map(element => {
                                 return (
                                     <TripleGroup

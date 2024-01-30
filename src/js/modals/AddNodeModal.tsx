@@ -69,7 +69,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
         const { type, modelId, versionId, onSaved, data } = this.props;
 
         apiClient
-            .post('/api/model/' + modelId + '/v/' + versionId + '/node/' + type + (data ? `/${data.id}` : ''), values)
+            .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/node/' + type + (data ? `/${data.id}` : ''), values)
             .then(response => {
                 setSubmitting(false);
 

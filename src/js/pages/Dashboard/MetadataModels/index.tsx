@@ -10,33 +10,33 @@ import { apiClient } from 'src/js/network';
 import DashboardTab from 'components/Layout/DashboardTab';
 import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
 
-interface DataModelsProps extends AuthorizedRouteComponentProps {}
+interface MetadataModelsProps extends AuthorizedRouteComponentProps {}
 
-interface DataModelsState {
-    dataModels: any;
+interface MetadataModelsState {
+    metadataModels: any;
     isLoading: boolean;
 }
 
-export default class DataModels extends Component<DataModelsProps, DataModelsState> {
+export default class MetadataModels extends Component<MetadataModelsProps, MetadataModelsState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            dataModels: [],
+            metadataModels: [],
             isLoading: false,
         };
     }
 
-    getDataModels = () => {
+    getMetadataModels = () => {
         this.setState({
             isLoading: true,
         });
 
         apiClient
-            .get('/api/data-model/my')
+            .get('/api/metadata-model/my')
             .then(response => {
                 this.setState({
-                    dataModels: response.data,
+                    metadataModels: response.data,
                     isLoading: false,
                 });
             })
@@ -48,41 +48,41 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
                 if (error.response && typeof error.response.data.error !== 'undefined') {
                     toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
-                    toast.error(<ToastItem type="error" title="An error occurred while loading your data models" />);
+                    toast.error(<ToastItem type="error" title="An error occurred while loading your metadata models" />);
                 }
             });
     };
 
     componentDidMount() {
-        this.getDataModels();
+        this.getMetadataModels();
     }
 
     render() {
         const { history, user } = this.props;
-        const { isLoading, dataModels } = this.state;
+        const { isLoading, metadataModels } = this.state;
 
         return (
             <DashboardTab>
-                <DocumentTitle title="Data models" />
+                <DocumentTitle title="Metadata models" />
 
-                {isLoading && <LoadingOverlay accessibleLabel="Loading data models" />}
+                {isLoading && <LoadingOverlay accessibleLabel="Loading metadata models" />}
 
                 <Space bottom="comfortable" />
 
-                <DashboardTabHeader title="My data models" type="Section">
+                <DashboardTabHeader title="My metadata models" type="Section">
                     {isAdmin(user) && (
-                        <Button buttonType="primary" onClick={() => history.push('/dashboard/data-models/add')}>
-                            Add data model
+                        <Button buttonType="primary" onClick={() => history.push('/dashboard/metadata-models/add')}>
+                            Add metadata model
                         </Button>
                     )}
                 </DashboardTabHeader>
 
                 <div>
-                    {dataModels.map(model => {
-                        return <ListItem selectable={false} link={`/dashboard/data-models/${model.id}`} title={model.title} />;
+                    {metadataModels.map(model => {
+                        return <ListItem selectable={false} link={`/dashboard/metadata-models/${model.id}`} title={model.title} />;
                     })}
 
-                    {dataModels.length == 0 && <div className="NoResults">No data models found.</div>}
+                    {metadataModels.length == 0 && <div className="NoResults">No metadata models found.</div>}
                 </div>
             </DashboardTab>
         );

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import FormItem from 'components/Form/FormItem';
 import { Button, Choice, Modal } from '@castoredc/matter';
+import { getType } from '../util';
 
 type DataModelVersionModalProps = {
+    type: string;
     latestVersion: string;
     show: boolean;
     handleClose: () => void;
@@ -14,7 +16,7 @@ type DataModelVersionModalState = {
     newVersion: string | null;
 };
 
-export default class DataModelVersionModal extends Component<DataModelVersionModalProps, DataModelVersionModalState> {
+export default class DataSpecificationVersionModal extends Component<DataModelVersionModalProps, DataModelVersionModalState> {
     constructor(props) {
         super(props);
 
@@ -51,7 +53,7 @@ export default class DataModelVersionModal extends Component<DataModelVersionMod
     };
 
     render() {
-        const { show, handleClose, handleSave, latestVersion } = this.props;
+        const { type, show, handleClose, handleSave, latestVersion } = this.props;
         const { versionType, newVersion } = this.state;
 
         return (
@@ -65,7 +67,7 @@ export default class DataModelVersionModal extends Component<DataModelVersionMod
                     value={versionType ? versionType : undefined}
                     name="versionType"
                     onChange={this.handleChange}
-                    labelText="Please indicate to what extent you are making changes in the data model"
+                    labelText={`Please indicate to what extent you are making changes in the ${getType(type)}`}
                 />
 
                 <FormItem label="Latest version">{latestVersion}</FormItem>

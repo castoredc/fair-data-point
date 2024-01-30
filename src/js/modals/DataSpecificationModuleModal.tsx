@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button, Modal, Space, Stack, ValidationMessage } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
-import { classNames } from '../util';
+import { classNames, getType } from '../util';
 import DependencyModal from 'modals/DependencyModal';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -19,6 +19,7 @@ type DataModelModuleModalProps = {
     show: boolean;
     data: any;
     orderOptions: any;
+    type: string;
     modelId: string;
     versionId: string;
     onSaved: () => void;
@@ -33,7 +34,7 @@ type DataModelModuleModalState = {
     showDependencyModal: boolean;
 };
 
-export default class DataModelModuleModal extends Component<DataModelModuleModalProps, DataModelModuleModalState> {
+export default class DataSpecificationModuleModal extends Component<DataModelModuleModalProps, DataModelModuleModalState> {
     constructor(props) {
         super(props);
 
@@ -55,9 +56,13 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
     }
 
     handleNewData = () => {
-        const { data, orderOptions } = this.props;
+        const { data, orderOptions, type } = this.props;
 
-        let newData = defaultData;
+        let newData = {
+            ...defaultData,
+            ...(type === 'data-model' && defaultDataModelData),
+            ...(type === 'metadata-model' && defaultMetadataModelData),
+        };
 
         if (data !== null) {
             newData = data;
@@ -69,10 +74,10 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { modelId, versionId, onSaved } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
-            .post('/api/data-model/' + modelId + '/v/' + versionId + '/module' + (values.id ? '/' + values.id : ''), values)
+            .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/module' + (values.id ? '/' + values.id : ''), values)
             .then(() => {
                 onSaved();
                 setSubmitting(false);
@@ -90,10 +95,10 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
     };
 
     handleDelete = (id, callback) => {
-        const { modelId, versionId, onSaved } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
-            .delete('/api/data-model/' + modelId + '/v/' + versionId + '/module/' + id)
+            .delete('/api/' + type + '/' + modelId + '/v/' + versionId + '/module/' + id)
             .then(() => {
                 callback();
                 onSaved();
@@ -116,14 +121,15 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
     };
 
     render() {
-        const { show, handleClose, orderOptions, valueNodes, prefixes } = this.props;
+        const { type, show, handleClose, orderOptions, valueNodes, prefixes } = this.props;
         const { initialValues, validation, showDependencyModal } = this.state;
 
         const title = initialValues.id ? 'Edit group' : 'Add group';
+        const schema = type === 'data-model' ? DataModelModuleSchema : MetadataModelModuleSchema;
 
         return (
             <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
-                <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={DataModelModuleSchema}>
+                <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={schema}>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                         return (
                             <Form>
@@ -149,45 +155,47 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
                                     <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
-                                <FormItem>
-                                    <Field
-                                        component={SingleChoice}
-                                        labelText="Repeated"
-                                        name="repeated"
-                                        serverError={validation}
-                                        details="This group should be repeated for every instance of a specific survey or report"
-                                    />
-                                </FormItem>
+                                {type === 'data-model' && <>
+                                    <FormItem>
+                                        <Field
+                                            component={SingleChoice}
+                                            labelText="Repeated"
+                                            name="repeated"
+                                            serverError={validation}
+                                            details="This group should be repeated for every instance of a specific survey or report"
+                                        />
+                                    </FormItem>
 
-                                {/*<FormItem label="Dependent">*/}
-                                    {valueNodes.length === 0 ? (
-                                        <ValidationMessage type="warning">
-                                            <>
-                                                There are no value nodes added to this data model. <br />
-                                                Please add a value node in order to set up dependencies.
-                                            </>
-                                        </ValidationMessage>
-                                    ) : (
-                                        <>
-                                            <Field
-                                                component={SingleChoice}
-                                                labelText="Dependent"
-                                                name="dependent"
-                                                serverError={validation}
-                                                details="This group will only be rendered when certain criteria are met"
-                                            />
-
-                                            {values.dependent && (
+                                    {/*<FormItem label="Dependent">*/}
+                                        {valueNodes.length === 0 ? (
+                                            <ValidationMessage type="warning">
                                                 <>
-                                                    <Space bottom="default" />
-                                                    <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">
-                                                        Edit dependencies
-                                                    </Button>
+                                                    There are no value nodes added to this {getType(type)}. <br />
+                                                    Please add a value node in order to set up dependencies.
                                                 </>
-                                            )}
-                                        </>
-                                    )}
-                                {/*</FormItem>*/}
+                                            </ValidationMessage>
+                                        ) : (
+                                            <>
+                                                <Field
+                                                    component={SingleChoice}
+                                                    labelText="Dependent"
+                                                    name="dependent"
+                                                    serverError={validation}
+                                                    details="This group will only be rendered when certain criteria are met"
+                                                />
+
+                                                {values.dependent && (
+                                                    <>
+                                                        <Space bottom="default" />
+                                                        <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">
+                                                            Edit dependencies
+                                                        </Button>
+                                                    </>
+                                                )}
+                                            </>
+                                        )}
+                                    {/*</FormItem>*/}
+                                </>}
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>
                                     <Stack alignment="normal" distribution="equalSpacing">
@@ -220,6 +228,9 @@ export default class DataModelModuleModal extends Component<DataModelModuleModal
 const defaultData = {
     title: '',
     order: '',
+};
+
+const defaultDataModelData = {
     repeated: false,
     dependent: false,
     dependencies: {
@@ -229,9 +240,16 @@ const defaultData = {
     },
 };
 
+const defaultMetadataModelData = {};
+
 const DataModelModuleSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
     order: Yup.string().required('Please select a position'),
     repeated: Yup.boolean(),
     dependent: Yup.boolean(),
+});
+
+const MetadataModelModuleSchema = Yup.object().shape({
+    title: Yup.string().required('Please enter a title'),
+    order: Yup.string().required('Please select a position'),
 });

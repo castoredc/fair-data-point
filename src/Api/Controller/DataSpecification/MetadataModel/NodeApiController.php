@@ -26,7 +26,7 @@ use function assert;
 
 /**
  * @Route("/api/metadata-model/{model}/v/{version}/node")
- * @ParamConverter("dataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
+ * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
  */
 class NodeApiController extends ApiController
 {

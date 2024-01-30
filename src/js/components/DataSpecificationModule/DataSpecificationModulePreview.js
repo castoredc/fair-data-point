@@ -6,7 +6,7 @@ import VisNetwork from '../Visualization/Network';
 import { CopyIcon, DecisionIcon } from '@castoredc/matter-icons';
 import PageTabs from 'components/PageTabs';
 
-export default class DataModelModulePreview extends Component {
+export default class DataSpecificationModulePreview extends Component {
     constructor(props) {
         super(props);
         this.state = {

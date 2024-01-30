@@ -37,7 +37,7 @@ export default class DataModelForm extends Component<DataModelFormProps, DataMod
         const { dataModel, history } = this.props;
 
         apiClient
-            .post('/api/model' + (dataModel ? '/' + dataModel.id : ''), values)
+            .post('/api/data-model' + (dataModel ? '/' + dataModel.id : ''), values)
             .then(response => {
                 setSubmitting(false);
 
@@ -124,5 +124,5 @@ export const defaultData = {
 
 const DataModelSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
-    description: Yup.string(),
+    description: Yup.string().nullable(),
 });

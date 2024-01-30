@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { Button, CellText, DataGrid, Stack } from '@castoredc/matter';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import DataModelVersionModal from '../../../../modals/DataModelVersionModal';
+import DataSpecificationVersionModal from 'modals/DataSpecificationVersionModal';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
+import { getType, ucfirst } from '../../../util';
 
 interface VersionsProps extends AuthorizedRouteComponentProps {
-    getDataModel: () => void;
-    dataModel: any;
+    type: string;
+    getDataSpecification: () => void;
+    dataSpecification: any;
 }
 
 interface VersionsState {
@@ -37,10 +39,10 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
     };
 
     createNewVersion = version => {
-        const { dataModel, getDataModel } = this.props;
+        const { type, dataSpecification, getDataSpecification } = this.props;
 
         apiClient
-            .post('/api/model/' + dataModel.id + '/v', {
+            .post('/api/' + type + '/' + dataSpecification.id + '/v', {
                 type: version,
             })
             .then(response => {
@@ -50,7 +52,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
 
                 this.closeModal();
 
-                getDataModel();
+                getDataSpecification();
             })
             .catch(error => {
                 const message =
@@ -63,9 +65,9 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
 
     render() {
         const { showModal } = this.state;
-        const { dataModel } = this.props;
+        const { type, dataSpecification } = this.props;
 
-        const latestVersion = dataModel.versions.slice(-1)[0].version;
+        const latestVersion = dataSpecification.versions.slice(-1)[0].version;
 
         const columns = [
             {
@@ -82,7 +84,7 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
             },
         ];
 
-        const rows = dataModel.versions.map(version => {
+        const rows = dataSpecification.versions.map(version => {
             return {
                 version: <CellText>{version.version}</CellText>,
                 moduleCount: <CellText>{version.count.modules}</CellText>,
@@ -92,7 +94,8 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
 
         return (
             <PageBody>
-                <DataModelVersionModal
+                <DataSpecificationVersionModal
+                    type={type}
                     show={showModal}
                     latestVersion={latestVersion}
                     handleClose={() => {
@@ -110,8 +113,8 @@ export default class Versions extends Component<VersionsProps, VersionsState> {
                 </div>
 
                 <DataGrid
-                    accessibleName="Data model versions"
-                    emptyStateContent="This data model does not have any versions"
+                    accessibleName={`${ucfirst(getType(type))} versions`}
+                    emptyStateContent={`This ${getType(type)} does not have any versions`}
                     rows={rows}
                     columns={columns}
                 />

@@ -1,6 +1,6 @@
-@import '../../../../scss/colors';
+@import '../../../scss/colors';
 
-.DataModelTableHeader {
+.DataSpecificationTableHeader {
     font-weight: bold;
     display: flex;
 
@@ -12,8 +12,8 @@
     }
 }
 
-.DataModelTableBody {
-    .DataModelTriple {
+.DataSpecificationTableBody {
+    .DataSpecificationTriple {
         display: flex;
         border-bottom: solid 1px $neutral-40;
 
@@ -21,21 +21,21 @@
             background: $neutral-20;
         }
 
-        .DataModelSubject,
-        .DataModelPredicate,
-        .DataModelObject {
+        .DataSpecificationSubject,
+        .DataSpecificationPredicate,
+        .DataSpecificationObject {
             padding-left: 10px;
             padding-right: 10px;
         }
 
-        .DataModelSubject {
+        .DataSpecificationSubject {
             width: 33%;
             flex: 0 0 33%;
             padding-top: 10px;
             padding-bottom: 10px;
         }
 
-        .DataModelPredicateObjects {
+        .DataSpecificationPredicateObjects {
             width: 66%;
             flex: 0 0 66%;
 
@@ -48,13 +48,13 @@
                     border-bottom: 0;
                 }
 
-                .DataModelPredicate,
-                .DataModelObjects {
+                .DataSpecificationPredicate,
+                .DataSpecificationObjects {
                     width: 50%;
                     flex: 0 50%;
                 }
 
-                .DataModelObject {
+                .DataSpecificationObject {
                     border-bottom: solid 1px $neutral-40;
                     display: flex;
                     justify-content: space-between;
@@ -75,8 +75,8 @@
     }
 }
 
-.DataModelTriple,
-.DataModelTableHeader,
+.DataSpecificationTriple,
+.DataSpecificationTableHeader,
 .TriplePredicate {
     color: $neutral-800;
 }
@@ -112,6 +112,6 @@
     }
 }
 
-.DataModelModuleAlerts > div {
+.DataSpecificationModuleAlerts > div {
     margin-bottom: 5px;
 }

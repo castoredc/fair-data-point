@@ -7,6 +7,7 @@ import FAIRDataPoint from 'pages/Dashboard/FAIRDataPoint';
 import EDCServers from 'pages/Dashboard/EDCServers';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import TabsWrapper from 'components/TabsWrapper';
+import MetadataModels from 'pages/Dashboard/MetadataModels';
 
 interface DashboardProps extends AuthorizedRouteComponentProps {}
 export const DashboardTabs: FunctionComponent<DashboardProps> = ({ history, location, match, user }) => {
@@ -14,6 +15,7 @@ export const DashboardTabs: FunctionComponent<DashboardProps> = ({ history, loca
         '/dashboard/studies': 'studies',
         '/dashboard/catalogs': 'catalogs',
         '/dashboard/data-models': 'dataModels',
+        '/dashboard/metadata-models': 'metadataModels',
         '/dashboard/fdp': 'fdp',
         '/dashboard/edc-servers': 'edcServers',
     };
@@ -30,6 +32,10 @@ export const DashboardTabs: FunctionComponent<DashboardProps> = ({ history, loca
         dataModels: {
             content: <DataModels history={history} location={location} match={match} user={user} />,
             title: 'Data models',
+        },
+        metadataModels: {
+            content: <MetadataModels history={history} location={location} match={match} user={user} />,
+            title: 'Metadata models',
         },
         ...(isAdmin(user) && {
             fdp: {

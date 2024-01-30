@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack, ToastMessage } from '@castoredc/matter';
-import AddNodeModal from '../../../../modals/AddNodeModal';
-import ConfirmModal from '../../../../modals/ConfirmModal';
+import AddNodeModal from 'modals/AddNodeModal';
+import ConfirmModal from 'modals/ConfirmModal';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
 import PageTabs from 'components/PageTabs';
+import { getType } from '../../../util';
 
 interface NodesProps extends AuthorizedRouteComponentProps {
+    type: string;
     nodes: any;
     getNodes: () => void;
-    dataModel: any;
+    dataSpecification: any;
     version: any;
 }
 
@@ -65,11 +67,11 @@ export default class Nodes extends Component<NodesProps, NodesState> {
     };
 
     removeNode = () => {
-        const { dataModel, version } = this.props;
+        const { type, dataSpecification, version } = this.props;
         const { modalData } = this.state;
 
         apiClient
-            .delete('/api/model/' + dataModel.id + '/v/' + version.value + '/node/' + modalData.type + `/${modalData.id}`)
+            .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version.value + '/node/' + modalData.type + `/${modalData.id}`)
             .then(() => {
                 toast.success(
                     <ToastMessage
@@ -96,37 +98,37 @@ export default class Nodes extends Component<NodesProps, NodesState> {
 
     render() {
         const { showModal, modalData } = this.state;
-        const { dataModel, nodes, version, history, match } = this.props;
+        const { type, dataSpecification, nodes, version, history, match } = this.props;
 
         if (nodes === null) {
             return null;
         }
 
-        const internalNodeRows = nodes.internal.map(item => {
-            return {
-                title: <CellText>{item.title}</CellText>,
-                value: <CellText>{item.value}</CellText>,
-                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
-                menu: (
-                    <ActionsCell
-                        items={[
-                            {
-                                destination: () => {
-                                    this.openModal('add', item);
+        const internalNodeRows = type === 'data-model' ? nodes.internal.map(item => {
+                return {
+                    title: <CellText>{item.title}</CellText>,
+                    value: <CellText>{item.value}</CellText>,
+                    repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                    menu: (
+                        <ActionsCell
+                            items={[
+                                {
+                                    destination: () => {
+                                        this.openModal('add', item);
+                                    },
+                                    label: 'Edit node',
                                 },
-                                label: 'Edit node',
-                            },
-                            {
-                                destination: () => {
-                                    this.openModal('remove', item);
+                                {
+                                    destination: () => {
+                                        this.openModal('remove', item);
+                                    },
+                                    label: 'Delete node',
                                 },
-                                label: 'Delete node',
-                            },
-                        ]}
-                    />
-                ),
-            };
-        });
+                            ]}
+                        />
+                    ),
+                };
+            }) : [];
 
         const externalNodeRows = nodes.external.map(item => {
             return {
@@ -216,7 +218,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     onClose={() => this.closeModal('add')}
                     onSaved={() => this.onSaved('add')}
                     type={selectedType}
-                    modelId={dataModel.id}
+                    modelId={dataSpecification.id}
                     versionId={version.value}
                     data={modalData}
                 />
@@ -247,16 +249,16 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                 <PageTabs
                     selected={match.params.nodeType}
                     onChange={selectedKey => {
-                        const newUrl = `/dashboard/data-models/${dataModel.id}/${version.label}/nodes/${selectedKey}`;
+                        const newUrl = `/dashboard/${type}s/${dataSpecification.id}/${version.label}/nodes/${selectedKey}`;
                         history.push(newUrl);
                     }}
                     tabs={{
-                        internal: {
+                    ...type === 'data-model' && {internal: {
                             title: 'Internal',
                             content: (
                                 <DataGrid
                                     accessibleName="Internal nodes"
-                                    emptyStateContent="This data model does not have internal nodes"
+                                    emptyStateContent={`This ${getType(type)} does not have internal nodes`}
                                     rows={internalNodeRows}
                                     anchorRightColumns={1}
                                     columns={[
@@ -288,13 +290,13 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                                     ]}
                                 />
                             ),
-                        },
+                        }},
                         external: {
                             title: 'External',
                             content: (
                                 <DataGrid
                                     accessibleName="External nodes"
-                                    emptyStateContent="This data model does not have external nodes"
+                                    emptyStateContent={`This ${getType(type)} does not have external nodes`}
                                     rows={externalNodeRows}
                                     anchorRightColumns={1}
                                     columns={[
@@ -329,7 +331,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                             content: (
                                 <DataGrid
                                     accessibleName="Literal nodes"
-                                    emptyStateContent="This data model does not have literal nodes"
+                                    emptyStateContent={`This ${getType(type)} does not have literal nodes`}
                                     rows={literalNodeRows}
                                     anchorRightColumns={1}
                                     columns={[
@@ -364,7 +366,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                             content: (
                                 <DataGrid
                                     accessibleName="Value nodes"
-                                    emptyStateContent="This data model does not have value nodes"
+                                    emptyStateContent={`This ${getType(type)} does not have value nodes`}
                                     rows={valueNodeRows}
                                     anchorRightColumns={1}
                                     columns={[

@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
-import './DataModelModules.scss';
+import './DataSpecificationModules.scss';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button } from '@castoredc/matter';
-import DataModelModuleModal from '../../../../modals/DataModelModuleModal';
-import TripleModal from '../../../../modals/TripleModal';
-import ConfirmModal from '../../../../modals/ConfirmModal';
+import DataSpecificationModuleModal from 'modals/DataSpecificationModuleModal';
+import TripleModal from 'modals/TripleModal';
+import ConfirmModal from 'modals/ConfirmModal';
 import SideTabs from 'components/SideTabs';
-import DataModelModule from 'components/DataModelModule/DataModelModule';
+import DataSpecificationModule from 'components/DataSpecificationModule';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
+import { getType } from '../../../util';
 
 interface ModulesProps extends AuthorizedRouteComponentProps {
     modules: any;
     nodes: any;
     prefixes: any;
     getModules: () => void;
-    dataModel: any;
+    dataSpecification: any;
     version: any;
+    type: string;
 }
 
 interface ModulesState {
@@ -44,10 +46,13 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
     }
 
     getOrderOptions = () => {
-        const { modules } = this.props;
+        const { modules, type } = this.props;
         const { currentModule } = this.state;
 
-        let order = [{ value: 1, label: 'At the beginning of the data model' }];
+        let order = [{
+            value: 1,
+            label: 'At the beginning of the ' + getType(type),
+        }];
 
         if (modules.length === 0) {
             return order;
@@ -139,11 +144,11 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
     };
 
     removeTriple = () => {
-        const { dataModel, version, getModules } = this.props;
+        const { type, dataSpecification, version, getModules } = this.props;
         const { currentModule, tripleModalData } = this.state;
 
         apiClient
-            .delete('/api/model/' + dataModel.id + '/v/' + version + '/module/' + currentModule.id + '/triple/' + tripleModalData.id)
+            .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/module/' + currentModule.id + '/triple/' + tripleModalData.id)
             .then(() => {
                 this.closeModal('removeTriple');
                 getModules();
@@ -154,7 +159,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
     };
 
     render() {
-        const { dataModel, version, modules, nodes, prefixes } = this.props;
+        const { type, dataSpecification, version, modules, nodes, prefixes } = this.props;
         const { showModal, currentModule, moduleModalData, tripleModalData } = this.state;
 
         if (nodes === null) {
@@ -165,14 +170,15 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
 
         return (
             <PageBody>
-                <DataModelModuleModal
+                <DataSpecificationModuleModal
+                    type={type}
                     orderOptions={orderOptions}
                     show={showModal.module}
                     handleClose={() => {
                         this.closeModal('module');
                     }}
                     onSaved={this.onModuleSaved}
-                    modelId={dataModel.id}
+                    modelId={dataSpecification.id}
                     versionId={version}
                     data={moduleModalData}
                     valueNodes={nodes.value}
@@ -180,12 +186,13 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                 />
 
                 <TripleModal
+                    type={type}
                     show={showModal.triple}
                     handleClose={() => {
                         this.closeModal('triple');
                     }}
                     onSaved={this.onTripleSaved}
-                    modelId={dataModel.id}
+                    modelId={dataSpecification.id}
                     versionId={version}
                     module={currentModule}
                     nodes={nodes}
@@ -206,7 +213,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
 
                 {modules.length === 0 ? (
                     <div className="NoResults">
-                        This data model does not have any groups.
+                        This {getType(type)} does not have any groups.
                         <br />
                         <br />
                         <Button icon="add" onClick={() => this.openModuleModal(null)}>
@@ -240,14 +247,14 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                                 title: element.title,
                                 icons: icons,
                                 content: (
-                                    <DataModelModule
+                                    <DataSpecificationModule
                                         key={element.id}
                                         id={element.id}
                                         title={element.title}
                                         repeated={element.repeated}
                                         order={element.order}
                                         groupedTriples={element.groupedTriples}
-                                        modelId={dataModel.id}
+                                        modelId={dataSpecification.id}
                                         versionId={version}
                                         openModuleModal={() =>
                                             this.openModuleModal({

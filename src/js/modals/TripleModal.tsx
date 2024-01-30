@@ -13,6 +13,7 @@ import ToastItem from 'components/ToastItem';
 import { apiClient } from '../network';
 
 type TripleModalProps = {
+    type: string,
     show: boolean;
     handleClose: () => void;
     data: any;
@@ -50,10 +51,10 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { modelId, versionId, module, onSaved } = this.props;
+        const { type, modelId, versionId, module, onSaved } = this.props;
 
         apiClient
-            .post('/api/model/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (values.id ? '/' + values.id : ''), values)
+            .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/module/' + module.id + '/triple' + (values.id ? '/' + values.id : ''), values)
             .then(response => {
                 setSubmitting(false);
 

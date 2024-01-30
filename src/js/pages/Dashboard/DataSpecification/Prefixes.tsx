@@ -2,17 +2,19 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { ActionsCell, Button, CellText, DataGrid, Stack, ToastMessage } from '@castoredc/matter';
-import DataModelPrefixModal from '../../../../modals/DataModelPrefixModal';
-import ConfirmModal from '../../../../modals/ConfirmModal';
+import DataSpecificationPrefixModal from 'modals/DataSpecificationPrefixModal';
+import ConfirmModal from 'modals/ConfirmModal';
 import DataGridContainer from 'components/DataTable/DataGridContainer';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
+import { getType } from '../../../util';
 
 interface PrefixesProps extends AuthorizedRouteComponentProps {
+    type: string;
     prefixes: any;
     getPrefixes: () => void;
-    dataModel: any;
+    dataSpecification: any;
     version: any;
 }
 
@@ -67,16 +69,16 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
     };
 
     removePrefix = () => {
-        const { dataModel, version } = this.props;
+        const { type, dataSpecification, version } = this.props;
         const { prefixModalData } = this.state;
 
         apiClient
-            .delete('/api/model/' + dataModel.id + '/v/' + version + '/prefix/' + prefixModalData.id)
+            .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/prefix/' + prefixModalData.id)
             .then(() => {
                 toast.success(
                     <ToastMessage
                         type="success"
-                        title={`The ${prefixModalData.title} prefix was successfully removed`}
+                        title={`The prefix was successfully removed`}
                     />,
                     {
                         position: 'top-right',
@@ -92,7 +94,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
 
     render() {
         const { showModal, prefixModalData } = this.state;
-        const { dataModel, prefixes, version } = this.props;
+        const { type, dataSpecification, prefixes, version } = this.props;
 
         const columns = [
             {
@@ -144,7 +146,8 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
 
         return (
             <PageBody>
-                <DataModelPrefixModal
+                <DataSpecificationPrefixModal
+                    type={type}
                     show={showModal.add}
                     handleClose={() => {
                         this.closeModal('add');
@@ -152,7 +155,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                     onSaved={() => {
                         this.onSaved('add');
                     }}
-                    modelId={dataModel.id}
+                    modelId={dataSpecification.id}
                     versionId={version}
                     data={prefixModalData}
                 />
@@ -189,7 +192,7 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
                     <DataGrid
                         accessibleName="Prefixes"
                         anchorRightColumns={1}
-                        emptyStateContent="This data model does not have prefixes"
+                        emptyStateContent={`This ${getType(type)} does not have prefixes`}
                         rows={rows}
                         columns={columns}
                     />

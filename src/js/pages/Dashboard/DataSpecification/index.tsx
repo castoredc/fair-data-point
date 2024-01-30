@@ -8,24 +8,29 @@ import Header from 'components/Layout/Dashboard/Header';
 import Body from 'components/Layout/Dashboard/Body';
 import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
-import ImportExport from 'pages/Dashboard/DataModels/DataModel/ImportExport';
-import Modules from 'pages/Dashboard/DataModels/DataModel/Modules';
-import Nodes from 'pages/Dashboard/DataModels/DataModel/Nodes';
-import Prefixes from 'pages/Dashboard/DataModels/DataModel/Prefixes';
-import Versions from 'pages/Dashboard/DataModels/DataModel/Versions';
-import Preview from 'pages/Dashboard/DataModels/DataModel/Preview';
-import DataModelForm from 'components/Form/Data/DataModelForm';
+import ImportExport from 'pages/Dashboard/DataSpecification/ImportExport';
+import Modules from 'pages/Dashboard/DataSpecification/Modules';
+import Nodes from 'pages/Dashboard/DataSpecification/Nodes';
+import Prefixes from 'pages/Dashboard/DataSpecification/Prefixes';
+import Versions from 'pages/Dashboard/DataSpecification/Versions';
+import Preview from 'pages/Dashboard/DataSpecification/Preview';
+import DataModelForm from 'components/Form/DataSpecification/DataModelForm';
+import MetadataModelForm from 'components/Form/DataSpecification/MetadataModelForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import PermissionEditor from 'components/PermissionEditor';
 import NoPermission from 'pages/ErrorPages/NoPermission';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
 import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
+import DataSpecificationDetails from 'pages/Dashboard/DataSpecification/DataSpecificationDetails';
+import { getType, ucfirst } from '../../../util';
 
-interface DataModelProps extends AuthorizedRouteComponentProps {}
+interface DataSpecificationProps extends AuthorizedRouteComponentProps {
+    type: string;
+}
 
-interface DataModelState {
-    dataModel: any;
+interface DataSpecificationState {
+    dataSpecification: any;
     isLoading: boolean;
     versions: any;
     currentVersion: any;
@@ -34,12 +39,12 @@ interface DataModelState {
     prefixes: any;
 }
 
-export default class DataModel extends Component<DataModelProps, DataModelState> {
+export default class DataSpecification extends Component<DataSpecificationProps, DataSpecificationState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            dataModel: null,
+            dataSpecification: null,
             isLoading: true,
             versions: [],
             currentVersion: null,
@@ -50,25 +55,26 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     }
 
     componentDidMount() {
-        this.getDataModel();
+        this.getDataSpecification();
     }
 
     componentDidUpdate(prevProps) {
         const { match } = this.props;
 
         if (match.params.version !== prevProps.match.params.version) {
-            this.getDataModel();
+            this.getDataSpecification();
         }
     }
 
-    getDataModel = (callback = () => {}) => {
-        const { match } = this.props;
+    getDataSpecification = (callback = () => {}) => {
+        const { type, match } = this.props;
 
         this.setState({
             isLoading: true,
         });
 
         apiClient
+            .get('/api/' + type + '/' + match.params.model)
             .then(response => {
                 const versions = response.data.versions.map(version => {
                     return { value: version.id, label: version.version };
@@ -81,7 +87,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
 
                 this.setState(
                     {
-                        dataModel: response.data,
+                        dataSpecification: response.data,
                         isLoading: false,
                         versions: versions,
                         currentVersion: versions.find(({ label }) => label === currentVersion),
@@ -124,12 +130,13 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     };
 
     getModules = () => {
-        const { dataModel, currentVersion } = this.state;
+        const { dataSpecification, currentVersion } = this.state;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
         apiClient
-            .get('/api/model/' + dataModel.id + '/v/' + currentVersion.value + '/module')
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + currentVersion.value + '/module')
             .then(response => {
                 this.setState({
                     modules: response.data,
@@ -150,12 +157,13 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     };
 
     getNodes = () => {
-        const { dataModel, currentVersion } = this.state;
+        const { dataSpecification, currentVersion } = this.state;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
         apiClient
-            .get('/api/model/' + dataModel.id + '/v/' + currentVersion.value + '/node')
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + currentVersion.value + '/node')
             .then(response => {
                 this.setState({
                     nodes: response.data,
@@ -176,12 +184,13 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     };
 
     getPrefixes = () => {
-        const { dataModel, currentVersion } = this.state;
+        const { dataSpecification, currentVersion } = this.state;
+        const { type } = this.props;
 
         this.setState({ isLoading: true });
 
         apiClient
-            .get('/api/model/' + dataModel.id + '/v/' + currentVersion.value + '/prefix')
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + currentVersion.value + '/prefix')
             .then(response => {
                 this.setState({
                     prefixes: response.data,
@@ -202,45 +211,47 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
     };
 
     render() {
-        const { history, location, user } = this.props;
-        const { isLoading, dataModel, versions, currentVersion, modules, nodes, prefixes } = this.state;
+        const { type, history, location, user } = this.props;
+        const { isLoading, dataSpecification, versions, currentVersion, modules, nodes, prefixes } = this.state;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading data model" />;
         }
 
-        if (!isGranted('edit', dataModel.permissions)) {
+        if (!isGranted('edit', dataSpecification.permissions)) {
             return <NoPermission text="You do not have permission to edit this data model" />;
         }
 
+        const mainUrl = type === 'data-model' ? '/dashboard/data-models' : '/dashboard/metadata-models';
+
         return (
             <>
-                <DocumentTitle title={dataModel.title} />
+                <DocumentTitle title={dataSpecification.title} />
 
                 <SideBar
                     back={{
-                        to: '/dashboard/data-models',
-                        title: 'Back to data models',
+                        to: mainUrl,
+                        title: 'Back to ' + getType(type) + 's',
                     }}
                     location={location}
                     onVersionChange={this.handleVersionChange}
                     items={[
                         {
-                            to: '/dashboard/data-models/' + dataModel.id,
+                            to: mainUrl + '/' + dataSpecification.id,
                             exact: true,
-                            title: 'Data model',
+                            title: ucfirst(getType(type)),
                             icon: 'structure',
                         },
                         {
-                            to: '/dashboard/data-models/' + dataModel.id + '/versions',
+                            to: mainUrl + '/' + dataSpecification.id + '/versions',
                             exact: true,
                             title: 'Versions',
                             customIcon: 'versions',
                         },
-                        ...(isGranted('manage', dataModel.permissions)
+                        ...(isGranted('manage', dataSpecification.permissions)
                             ? [
                                   {
-                                      to: '/dashboard/data-models/' + dataModel.id + '/permissions',
+                                      to: mainUrl + '/' + dataSpecification.id + '/permissions',
                                       exact: true,
                                       title: 'Permissions',
                                       icon: 'usersLight',
@@ -259,19 +270,19 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             type: 'separator',
                         },
                         {
-                            to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/modules',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/modules',
                             exact: true,
                             title: 'Groups',
                             customIcon: 'modules',
                         },
                         {
-                            to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/nodes/internal',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes/' + (type === 'data-model' ? 'internal' : 'external'),
                             exact: true,
                             title: 'Nodes',
                             customIcon: 'node',
                         },
                         {
-                            to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/prefixes',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/prefixes',
                             exact: true,
                             title: 'Prefixes',
                             customIcon: 'prefix',
@@ -280,7 +291,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             type: 'separator',
                         },
                         {
-                            to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/import-export',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/import-export',
                             exact: true,
                             title: 'Import/export',
                             icon: 'upload',
@@ -289,7 +300,7 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             type: 'separator',
                         },
                         {
-                            to: '/dashboard/data-models/' + dataModel.id + '/' + currentVersion.label + '/preview',
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/preview',
                             exact: true,
                             title: 'Preview',
                             customIcon: 'preview',
@@ -297,28 +308,48 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                     ]}
                 />
                 <Body>
-                    <Header title={dataModel.title} />
+                    <Header title={dataSpecification.title} />
 
                     <Switch>
                         <Route
-                            path="/dashboard/data-models/:model"
+                            path={[
+                                "/dashboard/data-models/:model",
+                                "/dashboard/metadata-models/:model",
+                            ]}
                             exact
-                            render={props => <DataModelForm history={history} dataModel={dataModel} />}
+                            render={props => <DataSpecificationDetails
+                                type={type}
+                                dataSpecification={dataSpecification}
+                                user={user}
+                                {...props}
+                            />}
                         />
                         <Route
-                            path="/dashboard/data-models/:model/versions"
+                            path={[
+                                "/dashboard/data-models/:model/versions",
+                                "/dashboard/metadata-models/:model/versions"
+                            ]}
                             exact
-                            render={props => <Versions getDataModel={this.getDataModel} dataModel={dataModel} user={user} {...props} />}
+                            render={props => <Versions
+                                type={type}
+                                getDataSpecification={this.getDataSpecification}
+                                dataSpecification={dataSpecification}
+                                user={user}
+                                {...props}
+                            />}
                         />
                         <Route
-                            path="/dashboard/data-models/:model/permissions"
+                            path={[
+                                "/dashboard/data-models/:model/permissions",
+                                "/dashboard/metadata-models/:model/permissions"
+                            ]}
                             exact
                             render={props =>
-                                isGranted('manage', dataModel.permissions) ? (
+                                isGranted('manage', dataSpecification.permissions) ? (
                                     <PermissionEditor
-                                        getObject={this.getDataModel}
-                                        type="model"
-                                        object={dataModel}
+                                        getObject={this.getDataSpecification}
+                                        type={type}
+                                        object={dataSpecification}
                                         user={user}
                                         permissions={[View, Edit, Manage]}
                                         {...props}
@@ -329,15 +360,19 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             }
                         />
                         <Route
-                            path="/dashboard/data-models/:model/:version/modules"
+                            path={[
+                                "/dashboard/data-models/:model/:version/modules",
+                                "/dashboard/metadata-models/:model/:version/modules"
+                            ]}
                             exact
                             render={props => (
                                 <Modules
+                                    type={type}
                                     modules={modules}
                                     nodes={nodes}
                                     prefixes={prefixes}
                                     getModules={this.getModules}
-                                    dataModel={dataModel}
+                                    dataSpecification={dataSpecification}
                                     version={currentVersion.value}
                                     user={user}
                                     {...props}
@@ -345,20 +380,35 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             )}
                         />
                         <Route
-                            path="/dashboard/data-models/:model/:version/nodes/:nodeType"
+                            path={[
+                                "/dashboard/data-models/:model/:version/nodes/:nodeType",
+                                "/dashboard/metadata-models/:model/:version/nodes/:nodeType"
+                            ]}
                             exact
                             render={props => (
-                                <Nodes nodes={nodes} getNodes={this.getNodes} dataModel={dataModel} version={currentVersion} user={user} {...props} />
+                                <Nodes
+                                    type={type}
+                                    nodes={nodes}
+                                    getNodes={this.getNodes}
+                                    dataSpecification={dataSpecification}
+                                    version={currentVersion}
+                                    user={user}
+                                    {...props}
+                                />
                             )}
                         />
                         <Route
-                            path="/dashboard/data-models/:model/:version/prefixes"
+                            path={[
+                                "/dashboard/data-models/:model/:version/prefixes",
+                                "/dashboard/metadata-models/:model/:version/prefixes"
+                            ]}
                             exact
                             render={props => (
                                 <Prefixes
+                                    type={type}
                                     prefixes={prefixes}
                                     getPrefixes={this.getPrefixes}
-                                    dataModel={dataModel}
+                                    dataSpecification={dataSpecification}
                                     version={currentVersion.value}
                                     user={user}
                                     {...props}
@@ -366,18 +416,31 @@ export default class DataModel extends Component<DataModelProps, DataModelState>
                             )}
                         />
                         <Route
-                            path="/dashboard/data-models/:model/:version/preview"
+                            path={[
+                                "/dashboard/data-models/:model/:version/preview",
+                                "/dashboard/metadata-models/:model/:version/preview"
+                            ]}
                             exact
-                            render={props => <Preview dataModel={dataModel} version={currentVersion.value} user={user} {...props} />}
+                            render={props => <Preview
+                                type={type}
+                                dataSpecification={dataSpecification}
+                                version={currentVersion.value}
+                                user={user}
+                                {...props}
+                            />}
                         />
                         <Route
-                            path="/dashboard/data-models/:model/:version/import-export"
+                            path={[
+                                "/dashboard/data-models/:model/:version/import-export",
+                                "/dashboard/metadata-models/:model/:version/import-export"
+                            ]}
                             exact
                             render={props => (
                                 <ImportExport
-                                    dataModel={dataModel}
+                                    type={type}
+                                    dataSpecification={dataSpecification}
                                     version={currentVersion.value}
-                                    getDataModel={this.getDataModel}
+                                    getDataSpecification={this.getDataSpecification}
                                     user={user}
                                     {...props}
                                 />

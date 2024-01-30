@@ -11,8 +11,11 @@ import Study from 'pages/Dashboard/Studies/Study';
 import AddCatalog from 'pages/Dashboard/Catalogs/AddCatalog';
 import Catalog from 'pages/Dashboard/Catalogs/Catalog';
 import AddDataModel from 'pages/Dashboard/DataModels/AddDataModel';
-import DataModel from 'pages/Dashboard/DataModels/DataModel';
+import DataSpecification from 'src/js/pages/Dashboard/DataSpecification';
 import NotFound from 'pages/ErrorPages/NotFound';
+import AddMetadataModel from 'pages/Dashboard/MetadataModels/AddMetadataModel';
+import { DataModel } from 'pages/Dashboard/DataModels/DataModel';
+import { MetadataModel } from 'pages/Dashboard/MetadataModels/MetadataModel';
 
 export class DashboardRoutes extends Component<{ user: UserType | null }> {
     render() {
@@ -63,6 +66,15 @@ export class DashboardRoutes extends Component<{ user: UserType | null }> {
             <PrivateRoute path="/dashboard/data-models/:model/:version" routeComponent={DataModel}
                           user={user} />
             <PrivateRoute path="/dashboard/data-models/:model" routeComponent={DataModel} user={user} />
+
+            <PrivateRoute path="/dashboard/metadata-models" exact routeComponent={DashboardTabs} user={user} />
+            <PrivateRoute path="/dashboard/metadata-models/add" exact routeComponent={AddMetadataModel}
+                          user={user} />
+
+            <PrivateRoute path="/dashboard/metadata-models/:model/:version" routeComponent={MetadataModel}
+                          user={user} />
+            <PrivateRoute path="/dashboard/metadata-models/:model" routeComponent={MetadataModel} user={user} />
+
 
             <Route component={NotFound} />
         </Switch>;

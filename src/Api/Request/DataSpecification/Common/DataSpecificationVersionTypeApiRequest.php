@@ -5,6 +5,7 @@ namespace App\Api\Request\DataSpecification\Common;
 
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\VersionType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class DataSpecificationVersionTypeApiRequest extends SingleApiRequest
 {

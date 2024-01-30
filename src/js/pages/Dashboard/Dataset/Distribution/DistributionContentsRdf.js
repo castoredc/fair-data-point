@@ -35,7 +35,7 @@ export default class DistributionContentsRdf extends Component {
         });
 
         apiClient
-            .get('/api/model/' + distribution.dataModel.dataModel)
+            .get('/api/data-model/' + distribution.dataModel.dataModel)
             .then(response => {
                 this.setState({
                     dataModel: response.data,

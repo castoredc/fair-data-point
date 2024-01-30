@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DataModelForm from 'components/Form/Data/DataModelForm';
+import DataModelForm from 'components/Form/DataSpecification/DataModelForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import SelectPage from 'components/SelectPage';
 

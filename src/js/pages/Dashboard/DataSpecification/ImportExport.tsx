@@ -6,16 +6,17 @@ import FormItem from 'components/Form/FormItem';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import File from 'components/Input/Formik/File';
-import { downloadFile, isNumeric } from '../../../../util';
+import { downloadFile, isNumeric } from '../../../util';
 import * as Yup from 'yup';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
-import { apiClient } from 'src/js/network';
+import { apiClient } from '../../../network';
 
 interface ImportExportProps extends AuthorizedRouteComponentProps {
-    dataModel: any;
+    type: string;
+    dataSpecification: any;
     version: string;
-    getDataModel: (callback) => void;
+    getDataSpecification: (callback) => void;
 }
 
 interface ImportExportState {
@@ -32,12 +33,12 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
     }
 
     export = () => {
-        const { dataModel, version } = this.props;
+        const { type, dataSpecification, version } = this.props;
 
         this.setState({ isExporting: true });
 
         apiClient({
-            url: '/api/data-model/' + dataSpecification.id + '/v/' + version + '/export',
+            url: '/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/export',
             method: 'GET',
             responseType: 'blob',
         }).then(response => {
@@ -79,7 +80,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
     };
 
     import = (values, { setSubmitting }) => {
-        const { dataModel, history, getDataModel } = this.props;
+        const { type, dataSpecification, history, getDataSpecification } = this.props;
 
         const formData = new FormData();
 
@@ -87,7 +88,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
         formData.append('version', values.version);
 
         apiClient
-            .post('/api/data-model/' + dataSpecification.id + '/import', formData, {
+            .post('/api/' + type + '/' + dataSpecification.id + '/import', formData, {
                 headers: {
                     'content-type': 'multipart/form-data',
                 },
@@ -99,8 +100,8 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                     position: 'top-right',
                 });
 
-                getDataModel(() => {
-                    history.push(`/dashboard/data-models/${response.data.dataModel}/${response.data.version}/modules`);
+                getDataSpecification(() => {
+                    history.push(`/dashboard/data-models/${response.data.dataSpecification}/${response.data.version}/modules`);
                 });
             })
             .catch(error => {
@@ -116,10 +117,10 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
 
     render() {
         const { isExporting } = this.state;
-        const { dataModel } = this.props;
+        const { dataSpecification } = this.props;
 
         const ImportSchema = Yup.object().shape({
-            file: Yup.mixed().required('Please upload a data model file'),
+            file: Yup.mixed().required('Please upload a file'),
             version: Yup.string()
                 .required()
                 .test('isValidVersion', 'Please enter a valid version number (X.X.X)', value => {
@@ -135,7 +136,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                     return isNumeric(parsedVersion[0]) && isNumeric(parsedVersion[1]) && isNumeric(parsedVersion[2]);
                 })
                 .test('isNonExistentVersion', 'This version already exists', value => {
-                    return dataModel.versions.find(({ version }) => version === value) === undefined;
+                    return dataSpecification.versions.find(({ version }) => version === value) === undefined;
                 }),
         });
 

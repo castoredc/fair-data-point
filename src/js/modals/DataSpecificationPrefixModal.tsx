@@ -8,7 +8,8 @@ import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import { apiClient } from '../network';
 
-type DataModelPrefixModalProps = {
+type DataSpecificationPrefixModalProps = {
+    type: string,
     show: boolean;
     handleClose: () => void;
     data: any;
@@ -17,12 +18,12 @@ type DataModelPrefixModalProps = {
     versionId: string;
 };
 
-type DataModelPrefixModalState = {
+type DataSpecificationPrefixModalState = {
     validation: any;
     initialValues: any;
 };
 
-export default class DataModelPrefixModal extends Component<DataModelPrefixModalProps, DataModelPrefixModalState> {
+export default class DataSpecificationPrefixModal extends Component<DataSpecificationPrefixModalProps, DataSpecificationPrefixModalState> {
     constructor(props) {
         super(props);
 
@@ -43,10 +44,10 @@ export default class DataModelPrefixModal extends Component<DataModelPrefixModal
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { modelId, versionId, onSaved } = this.props;
+        const { type, modelId, versionId, onSaved } = this.props;
 
         apiClient
-            .post('/api/data-model/' + modelId + '/v/' + versionId + '/prefix' + (values.id ? '/' + values.id : ''), {
+            .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/prefix' + (values.id ? '/' + values.id : ''), {
                 prefix: values.prefix,
                 uri: values.uri,
             })
