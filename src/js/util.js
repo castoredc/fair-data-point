@@ -146,3 +146,14 @@ export const downloadFile = (contents, filename) => {
 export const cloneIfComposite = (children, props) => {
     return children && children.type && typeof children.type !== 'string' ? cloneElement(children, props) : children;
 };
+
+export const getType = (type) => {
+    switch (type) {
+        case 'data-model':
+            return 'data model';
+        case 'metadata-model':
+            return 'metadata model'
+        default:
+            return '';
+    }
+}

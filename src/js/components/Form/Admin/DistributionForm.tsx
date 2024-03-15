@@ -105,7 +105,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
     getDataModels = () => {
         apiClient
-            .get('/api/model/my')
+            .get('/api/data-model/my')
             .then(response => {
                 this.setState({
                     dataModels: response.data.map(dataModel => {

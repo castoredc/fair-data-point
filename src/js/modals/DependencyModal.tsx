@@ -4,7 +4,7 @@ import { formatQuery } from 'react-querybuilder';
 import { Banner, Modal } from '@castoredc/matter';
 import { PrefixType } from 'types/PrefixType';
 import { NodeType } from 'types/NodeType';
-import { DependenciesType } from 'types/ModuleType';
+import { DependenciesType, DependencyGroupType } from 'types/ModuleType';
 import { RuleGroupType } from 'react-querybuilder/types/types';
 
 type DependencyModalProps = {
@@ -13,7 +13,8 @@ type DependencyModalProps = {
     handleClose: () => void;
     valueNodes: NodeType[];
     prefixes: PrefixType[];
-    dependencies: DependenciesType[] | null;
+    dependencies: DependencyGroupType | null;
+    modelType: string;
 };
 
 type DependencyModalState = {
@@ -82,7 +83,7 @@ export default class DependencyModal extends Component<DependencyModalProps, Dep
     };
 
     render() {
-        const { show, valueNodes, prefixes, dependencies } = this.props;
+        const { modelType, show, valueNodes, prefixes, dependencies } = this.props;
         const { lengthValid } = this.state;
 
         return (
@@ -96,6 +97,7 @@ export default class DependencyModal extends Component<DependencyModalProps, Dep
                 )}
 
                 <ModuleDependencyEditor
+                    modelType={modelType}
                     valueNodes={valueNodes}
                     prefixes={prefixes}
                     value={dependencies}

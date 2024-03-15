@@ -33,7 +33,7 @@ export default class DataModels extends Component<DataModelsProps, DataModelsSta
         });
 
         apiClient
-            .get('/api/model/my')
+            .get('/api/data-model/my')
             .then(response => {
                 this.setState({
                     dataModels: response.data,

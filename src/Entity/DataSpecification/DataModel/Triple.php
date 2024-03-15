@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace App\Entity\DataSpecification\DataModel;
 
 use App\Entity\DataSpecification\Common\ElementGroup;
+use App\Entity\DataSpecification\Common\Model\ModelVersion;
+use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
+use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
+use App\Entity\DataSpecification\Common\Model\Triple as CommonTriple;
 use App\Entity\DataSpecification\DataModel\Node\Node;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
@@ -13,7 +17,7 @@ use function assert;
  * @ORM\Table(name="data_model_triple")
  * @ORM\HasLifecycleCallbacks
  */
-class Triple extends ElementGroup
+class Triple extends ElementGroup implements CommonTriple
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\Node", inversedBy="subjectTriples", cascade={"persist"})
@@ -47,8 +51,10 @@ class Triple extends ElementGroup
         return $this->subject;
     }
 
-    public function setSubject(Node $subject): void
+    public function setSubject(CommonNode $subject): void
     {
+        assert($subject instanceof Node);
+
         $this->subject = $subject;
     }
 
@@ -57,8 +63,10 @@ class Triple extends ElementGroup
         return $this->predicate;
     }
 
-    public function setPredicate(Predicate $predicate): void
+    public function setPredicate(CommonPredicate $predicate): void
     {
+        assert($predicate instanceof Predicate);
+
         $this->predicate = $predicate;
     }
 
@@ -67,8 +75,10 @@ class Triple extends ElementGroup
         return $this->object;
     }
 
-    public function setObject(Node $object): void
+    public function setObject(CommonNode $object): void
     {
+        assert($object instanceof Node);
+
         $this->object = $object;
     }
 
@@ -78,5 +88,10 @@ class Triple extends ElementGroup
         assert($version instanceof DataModelVersion);
 
         return $version;
+    }
+
+    public function getDataSpecificationVersion(): ModelVersion
+    {
+        return $this->getDataModelVersion();
     }
 }

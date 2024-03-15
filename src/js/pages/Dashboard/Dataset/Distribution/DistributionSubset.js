@@ -42,7 +42,7 @@ export default class DistributionSubset extends Component {
         });
 
         apiClient
-            .get('/api/model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/node')
+            .get('/api/data-model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/node')
             .then(response => {
                 this.setState({
                     nodes: response.data,
@@ -70,7 +70,7 @@ export default class DistributionSubset extends Component {
         });
 
         apiClient
-            .get('/api/model/' + distribution.dataModel.dataModel)
+            .get('/api/data-model/' + distribution.dataModel.dataModel)
             .then(response => {
                 this.setState({
                     dataModel: response.data,

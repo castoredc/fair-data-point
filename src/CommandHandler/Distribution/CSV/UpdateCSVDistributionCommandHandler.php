@@ -8,7 +8,7 @@ use App\CommandHandler\Distribution\UpdateDistributionCommandHandler;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
-use App\Exception\InvalidDataModelVersion;
+use App\Exception\DataSpecification\DataModel\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;

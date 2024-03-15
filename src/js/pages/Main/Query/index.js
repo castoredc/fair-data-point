@@ -74,7 +74,7 @@ export default class Query extends Component {
         const { distribution } = this.state;
 
         apiClient
-            .get('/api/model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/prefix')
+            .get('/api/data-model/' + distribution.dataModel.dataModel + '/v/' + distribution.dataModel.id + '/prefix')
             .then(response => {
                 let prefixes = response.data.reduce(function (map, obj) {
                     map[obj.prefix] = obj.uri;

@@ -42,7 +42,7 @@ const LoginForm: FC<LoginFormProps> = ({
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
-                const viewName = LoginViews[view] || LoginViews['generic'];
+                const viewName = view ? LoginViews[view] : LoginViews['generic'];
 
                 return (
                     <Form>

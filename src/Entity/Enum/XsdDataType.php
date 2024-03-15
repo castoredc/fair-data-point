@@ -20,6 +20,7 @@ use function in_array;
  * @method static static gYearMonth()
  * @method static static gMonthDay()
  * @method static static string()
+ * @method static static langString()
  * @method static static boolean()
  * @method bool isFloat()
  * @method bool isDouble()
@@ -34,6 +35,7 @@ use function in_array;
  * @method bool isGYearMonth()
  * @method bool isGMonthDay()
  * @method bool isString()
+ * @method bool isLangString()
  * @method bool isBoolean()
  * @inheritDoc
  */
@@ -60,7 +62,8 @@ class XsdDataType extends Enum
 
     // String
     public const STRING = 'string';
-    public const STRING_TYPES = [self::STRING];
+    public const LANG_STRING = 'langString';
+    public const STRING_TYPES = [self::STRING, self::LANG_STRING];
 
     // Boolean
     public const BOOLEAN = 'boolean';
@@ -80,7 +83,26 @@ class XsdDataType extends Enum
         self::G_YEAR_MONTH,
         self::G_MONTH_DAY,
         self::STRING,
+        self::LANG_STRING,
         self::BOOLEAN,
+    ];
+
+    public const LABELS = [
+        self::FLOAT => 'Float (number)',
+        self::DOUBLE => 'Double (number)',
+        self::DECIMAL => 'Decimal (number)',
+        self::INTEGER => 'Integer (number)',
+        self::DATE_TIME => 'Date and time (date/time)',
+        self::DATE => 'Date (date/time)',
+        self::TIME => 'Time (date/time)',
+        self::G_DAY => 'Day (date/time)',
+        self::G_MONTH => 'Month (date/time)',
+        self::G_YEAR => 'Year (date/time)',
+        self::G_YEAR_MONTH => 'Year and month (date/time)',
+        self::G_MONTH_DAY => 'Month and day (date/time)',
+        self::STRING => 'String',
+        self::LANG_STRING => 'Localized string',
+        self::BOOLEAN => 'Boolean',
     ];
 
     public function isNumberType(): bool

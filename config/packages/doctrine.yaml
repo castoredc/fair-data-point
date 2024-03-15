@@ -28,6 +28,7 @@ doctrine:
             DataDictionaryDataType: App\Type\Enum\DataDictionaryDataType
             PermissionType: App\Type\Enum\PermissionType
             RDFDistributionDatabaseType: App\Type\Enum\RDFDistributionDatabaseType
+            MetadataFieldType: App\Type\Enum\MetadataFieldType
 
     orm:
         auto_generate_proxy_classes: true

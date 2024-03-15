@@ -5,8 +5,8 @@ namespace App\Api\Resource\Distribution;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
-use App\Api\Resource\Data\DataDictionary\DataDictionaryVersionApiResource;
-use App\Api\Resource\Data\DataModel\DataModelVersionApiResource;
+use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
+use App\Api\Resource\DataSpecification\DataModel\DataModelVersionApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;

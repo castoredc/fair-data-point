@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\DataModel;
 
+use App\Entity\DataSpecification\Common\Model\ModelVersion;
+use App\Entity\DataSpecification\Common\Model\NamespacePrefix as CommonNamespacePrefix;
+use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
+use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\DataModel\Node\Node;
 use App\Entity\Enum\NodeType;
@@ -18,7 +22,7 @@ use function is_a;
  * @ORM\Table(name="data_model_version")
  * @ORM\HasLifecycleCallbacks
  */
-class DataModelVersion extends Version
+class DataModelVersion extends Version implements ModelVersion
 {
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"})
@@ -66,8 +70,10 @@ class DataModelVersion extends Version
         return $this->predicates;
     }
 
-    public function addPredicate(Predicate $predicate): void
+    public function addPredicate(CommonPredicate $predicate): void
     {
+        assert($predicate instanceof Predicate);
+
         $predicate->setDataModel($this);
         $this->predicates->add($predicate);
     }
@@ -78,14 +84,18 @@ class DataModelVersion extends Version
         return $this->prefixes;
     }
 
-    public function addPrefix(NamespacePrefix $prefix): void
+    public function addPrefix(CommonNamespacePrefix $prefix): void
     {
+        assert($prefix instanceof NamespacePrefix);
+
         $prefix->setDataModelVersion($this);
         $this->prefixes->add($prefix);
     }
 
-    public function removePrefix(NamespacePrefix $prefix): void
+    public function removePrefix(CommonNamespacePrefix $prefix): void
     {
+        assert($prefix instanceof NamespacePrefix);
+
         $this->prefixes->removeElement($prefix);
     }
 
@@ -96,8 +106,10 @@ class DataModelVersion extends Version
         return $this->dataSpecification;
     }
 
-    public function addNode(Node $node): void
+    public function addNode(CommonNode $node): void
     {
+        assert($node instanceof Node);
+
         $this->addElement($node);
     }
 }

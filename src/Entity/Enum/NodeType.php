@@ -9,7 +9,7 @@ use App\Entity\DataSpecification\DataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\DataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\DataModel\Node\RecordNode;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode;
-use App\Exception\InvalidNodeType;
+use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 
 /**
  * @method static static externalIri()

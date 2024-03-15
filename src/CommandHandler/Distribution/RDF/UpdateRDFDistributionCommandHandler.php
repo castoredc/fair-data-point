@@ -8,7 +8,7 @@ use App\CommandHandler\Distribution\UpdateDistributionCommandHandler;
 use App\Entity\Data\DistributionContents\RDFDistribution;
 use App\Entity\DataSpecification\DataModel\DataModel;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
-use App\Exception\InvalidDataModelVersion;
+use App\Exception\DataSpecification\DataModel\InvalidDataModelVersion;
 use App\Exception\LanguageNotFound;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;

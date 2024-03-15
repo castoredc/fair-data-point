@@ -20,6 +20,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "model" = "App\Entity\DataSpecification\DataModel\DataModelVersion",
+ *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelVersion",
  *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion",
  * })
  */
@@ -67,11 +68,19 @@ abstract class Version
      */
     protected Collection $elements;
 
+    /**
+     * @ORM\OneToMany(targetEntity="OptionGroup", mappedBy="version", cascade={"persist"})
+     *
+     * @var Collection<OptionGroup>
+     */
+    protected Collection $optionGroups;
+
     public function __construct(VersionNumber $version)
     {
         $this->version = $version;
         $this->groups = new ArrayCollection();
         $this->elements = new ArrayCollection();
+        $this->optionGroups = new ArrayCollection();
         $this->distributionContents = new ArrayCollection();
     }
 
@@ -191,5 +200,22 @@ abstract class Version
     public function removeElement(Element $element): void
     {
         $this->elements->removeElement($element);
+    }
+
+    /** @return Collection<OptionGroup> */
+    public function getOptionGroups(): Collection
+    {
+        return $this->optionGroups;
+    }
+
+    public function addOptionGroup(OptionGroup $optionGroup): void
+    {
+        $optionGroup->setVersion($this);
+        $this->optionGroups->add($optionGroup);
+    }
+
+    public function removeOptionGroup(OptionGroup $optionGroup): void
+    {
+        $this->optionGroups->removeElement($optionGroup);
     }
 }
