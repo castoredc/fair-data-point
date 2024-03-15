@@ -50,6 +50,7 @@ class ImportMetadataModelVersionCommandHandler
         $this->namespacePrefixFactory = $namespacePrefixFactory;
         $this->nodeFactory = $nodeFactory;
         $this->predicateFactory = $predicateFactory;
+        $this->optionGroupFactory = $optionGroupFactory;
         $this->metadataModelModuleFactory = $metadataModelModuleFactory;
         $this->tripleFactory = $tripleFactory;
     }

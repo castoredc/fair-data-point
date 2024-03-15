@@ -31,7 +31,7 @@ class ValueNode extends Node
      * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup")
      * @ORM\JoinColumn(name="option_group_id", referencedColumnName="id")
      */
-    private ?MetadataModelOptionGroup $optionGroup = null;
+    private OptionGroup|MetadataModelOptionGroup|null $optionGroup = null;
 
     public function isAnnotatedValue(): bool
     {
@@ -75,7 +75,11 @@ class ValueNode extends Node
 
     public function getOptionGroup(): ?MetadataModelOptionGroup
     {
-        return $this->optionGroup;
+        if ($this->optionGroup instanceof MetadataModelOptionGroup) {
+            return $this->optionGroup;
+        }
+
+        return null;
     }
 
     public function setOptionGroup(?OptionGroup $optionGroup): void

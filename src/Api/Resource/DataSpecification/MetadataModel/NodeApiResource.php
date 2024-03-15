@@ -33,16 +33,18 @@ class NodeApiResource implements ApiResource
 
         if ($this->node instanceof ExternalIriNode) {
             $data['value'] = (new IriApiResource($this->node->getMetadataModelVersion(), $this->node->getIri()))->toArray();
-        } elseif ($this->node instanceof LiteralNode || $this->node instanceof ValueNode) {
+        } elseif ($this->node instanceof LiteralNode) {
             $data['value'] = [
-                'dataType' => $this->node->getDataType() !== null ? $this->node->getDataType()->toString() : null,
+                'dataType' => $this->node->getDataType()->toString(),
                 'value' => $this->node->getValue(),
             ];
-        }
-
-        if ($this->node instanceof ValueNode) {
-            $data['value']['fieldType'] = $this->node->getFieldType()->toString();
-            $data['value']['optionGroup'] = $this->node->getOptionGroup() !== null ? (new OptionGroupApiResource($this->node->getOptionGroup()))->toArray() : null;
+        } elseif ($this->node instanceof ValueNode) {
+            $data['value'] = [
+                'dataType' => $this->node->getDataType()->toString(),
+                'value' => $this->node->getValue(),
+                'fieldType' => $this->node->getFieldType()?->toString(),
+                'optionGroup' => $this->node->getOptionGroup() !== null ? (new OptionGroupApiResource($this->node->getOptionGroup()))->toArray() : null,
+            ];
         }
 
         return $data;

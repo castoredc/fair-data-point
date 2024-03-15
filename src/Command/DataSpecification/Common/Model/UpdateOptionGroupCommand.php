@@ -30,7 +30,7 @@ abstract class UpdateOptionGroupCommand
         return $this->description;
     }
 
-    /** @return array<array{title: string, description: string|null, value: string, order: int|null}> */
+    /** @return array<array{id: string|null, title: string, description: string|null, value: string, order: int|null}> */
     public function getOptions(): array
     {
         return $this->options;
