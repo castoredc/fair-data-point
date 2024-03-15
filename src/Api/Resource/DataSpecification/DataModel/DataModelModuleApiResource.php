@@ -14,6 +14,7 @@ class DataModelModuleApiResource extends DataSpecificationModuleApiResource
         parent::__construct($module, $groupTriples);
     }
 
+    /** @return array<mixed> */
     public function toArray(): array
     {
         $return = parent::toArray();

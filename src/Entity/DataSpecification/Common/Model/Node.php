@@ -15,6 +15,7 @@ interface Node
 
     public function getValue(): ?string;
 
+    /** @return array<mixed> */
     public function getTriples(): array;
 
     public function hasTriples(): bool;
