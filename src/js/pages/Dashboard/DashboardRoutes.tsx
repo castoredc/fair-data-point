@@ -11,7 +11,6 @@ import Study from 'pages/Dashboard/Studies/Study';
 import AddCatalog from 'pages/Dashboard/Catalogs/AddCatalog';
 import Catalog from 'pages/Dashboard/Catalogs/Catalog';
 import AddDataModel from 'pages/Dashboard/DataModels/AddDataModel';
-import DataSpecification from 'src/js/pages/Dashboard/DataSpecification';
 import NotFound from 'pages/ErrorPages/NotFound';
 import AddMetadataModel from 'pages/Dashboard/MetadataModels/AddMetadataModel';
 import { DataModel } from 'pages/Dashboard/DataModels/DataModel';

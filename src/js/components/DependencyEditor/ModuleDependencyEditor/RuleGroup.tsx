@@ -1,7 +1,11 @@
+// @ts-nocheck
 import { Stack } from '@castoredc/matter';
-import React from 'react';
+import React, { FC } from 'react';
+import { RuleGroupProps as QueryBuilderRuleGroupProps } from 'react-querybuilder/types/types';
 
-export const RuleGroup = ({ id, parentId, combinator = 'and', rules = [], translations, schema, not }) => {
+interface RuleGroupProps extends QueryBuilderRuleGroupProps {};
+
+export const RuleGroup: FC<RuleGroupProps> = ({ id, parentId, combinator, rules = [], translations, schema, not }) => {
     const {
         combinators,
         controls,
@@ -53,6 +57,10 @@ export const RuleGroup = ({ id, parentId, combinator = 'and', rules = [], transl
     const level = getLevel(id);
 
     const length = rules.length - 1;
+
+    if(combinator === undefined) {
+        combinator = 'and';
+    }
 
     return (
         <div className={`RuleGroup`} data-rule-group-id={id} data-level={level}>

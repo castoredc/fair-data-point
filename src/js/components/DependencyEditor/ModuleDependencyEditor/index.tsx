@@ -5,18 +5,35 @@ import QueryBuilder from 'react-querybuilder';
 import { RuleGroup } from './RuleGroup';
 import { Rule } from './Rule';
 import { ValueEditor } from './ValueEditor';
+import { NodeType, NodeValueType } from 'types/NodeType';
+import { PrefixType } from 'types/PrefixType';
+import { DependenciesType, DependencyGroupType } from 'types/ModuleType';
+import { RuleGroupType } from 'react-querybuilder/types/types';
 
-export default class ModuleDependencyEditor extends Component {
+type ModuleDependencyEditorProps = {
+    modelType: string;
+    valueNodes: NodeType[];
+    prefixes: PrefixType[];
+    value: DependencyGroupType | null;
+    handleChange: (query) => void;
+    save: (valid) => void;
+};
+
+type ModuleDependencyEditorState = {
+    fields: { name: string; label: string; dataType: NodeValueType['dataType'] ; valueType: NodeValueType['value'] }[];
+};
+
+export default class ModuleDependencyEditor extends Component<ModuleDependencyEditorProps, ModuleDependencyEditorState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            fields: props.valueNodes.map(node => {
+            fields: props.valueNodes.map((node: NodeType) => {
                 return {
                     name: node.id,
                     label: node.title,
-                    dataType: node.value.dataType,
-                    valueType: node.value.value,
+                    dataType: (node.value !== null && 'dataType' in node.value) ? node.value.dataType : null,
+                    valueType: node.value !== null ? node.value.value : null,
                 };
             }),
         };
@@ -26,18 +43,24 @@ export default class ModuleDependencyEditor extends Component {
         const { fields } = this.state;
 
         const fieldObject = fields.find(item => item.name === field);
-        return operators.filter(operator => operator.types.includes(fieldObject.valueType));
+
+        if(fieldObject === undefined || fieldObject.valueType === null) {
+            return [];
+        }
+
+        return operators.filter(operator => operator.types.includes(fieldObject.valueType as string));
     };
 
     render() {
         const { prefixes, handleChange, value, save } = this.props;
         const { fields } = this.state;
+        const ruleGroup = value as RuleGroupType;
 
         return (
             <>
                 <div className="DependencyEditor">
                     <QueryBuilder
-                        query={value}
+                        query={ruleGroup}
                         fields={fields}
                         showCombinatorsBetweenRules={true}
                         onQueryChange={handleChange}
@@ -61,33 +84,33 @@ export default class ModuleDependencyEditor extends Component {
                             combinatorSelector: props => (
                                 <Dropdown
                                     value={props.options.find(option => option.name === props.value)}
-                                    onChange={e => props.handleOnChange(e.value)}
+                                    onChange={e => props.handleOnChange(e != null ? e.value : '')}
                                     menuPosition="fixed"
                                     width="minimum"
                                     options={props.options.map(option => {
-                                        return { value: option.name, label: option.label };
+                                        return { value: option.name, label: option.label, name: option.name };
                                     })}
                                 />
                             ),
                             fieldSelector: props => (
                                 <Dropdown
                                     value={props.options.find(option => option.name === props.value)}
-                                    onChange={e => props.handleOnChange(e.value)}
+                                    onChange={e => props.handleOnChange(e != null ? e.value : '')}
                                     menuPosition="fixed"
                                     width="tiny"
                                     options={props.options.map(option => {
-                                        return { value: option.name, label: option.label };
+                                        return { value: option.name, label: option.label, name: option.name };
                                     })}
                                 />
                             ),
                             operatorSelector: props => (
                                 <Dropdown
                                     value={props.options.find(option => option.name === props.value)}
-                                    onChange={e => props.handleOnChange(e.value)}
+                                    onChange={e => props.handleOnChange(e != null ? e.value : '')}
                                     menuPosition="fixed"
                                     width="minimum"
                                     options={props.options.map(option => {
-                                        return { value: option.name, label: option.label };
+                                        return { value: option.name, label: option.label, name: option.name };
                                     })}
                                 />
                             ),

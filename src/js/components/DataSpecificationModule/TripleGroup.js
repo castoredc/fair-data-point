@@ -11,10 +11,10 @@ export default class TripleGroup extends Component {
         };
 
         return (
-            <div className="DataModelTriple">
-                <div className="DataModelSubject">{Node(title, type, value, repeated)}</div>
+            <div className="DataSpecificationTriple">
+                <div className="DataSpecificationSubject">{Node(title, type, value, repeated)}</div>
 
-                <div className="DataModelPredicateObjects">
+                <div className="DataSpecificationPredicateObjects">
                     {predicates.map(predicate => {
                         return (
                             <TriplePredicate
@@ -45,9 +45,9 @@ export class TriplePredicate extends Component {
 
         return (
             <div className="TriplePredicateObject">
-                <div className="DataModelPredicate">{value.prefixedValue ? value.prefixedValue : value.value}</div>
+                <div className="DataSpecificationPredicate">{value.prefixedValue ? value.prefixedValue : value.value}</div>
 
-                <div className="DataModelObjects">
+                <div className="DataSpecificationObjects">
                     {objects.map(object => {
                         return (
                             <TripleObject
@@ -88,10 +88,10 @@ export class TripleObject extends Component {
         };
 
         return (
-            <div className="DataModelObject">
+            <div className="DataSpecificationObject">
                 {Node(title, type, value, repeated)}
 
-                <div className="DataModelTripleActions" ref={this.ref}>
+                <div className="DataSpecificationTripleActions" ref={this.ref}>
                     <ActionMenu
                         accessibleLabel="Contextual menu"
                         // container={this.ref.current}

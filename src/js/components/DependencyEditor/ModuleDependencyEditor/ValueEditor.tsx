@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { TextInput } from '@castoredc/matter';
 import MaskedInput from 'react-text-mask';
+import { ValueEditorProps as QueryBuilderValueEditorProps } from 'react-querybuilder/types/types';
+import { PrefixType } from 'types/PrefixType';
 
-export const ValueEditor = ({ field, fieldData, operator, handleOnChange, value, values, prefixes }) => {
+interface ValueEditorProps extends QueryBuilderValueEditorProps {
+    prefixes: PrefixType[]
+};
+
+export const ValueEditor: FC<ValueEditorProps> = ({ field, fieldData, operator, handleOnChange, value, values, prefixes }) => {
     const handleUrlChange = (value, prefixes) => {
         let newValue = value;
         const regex = /^([^:]*):(.*)/;
@@ -31,7 +37,7 @@ export const ValueEditor = ({ field, fieldData, operator, handleOnChange, value,
     }
 
     if (fieldData.dataType === 'date' || fieldData.dataType === 'dateTime' || fieldData.dataType === 'time') {
-        let mask = [];
+        let mask: any[] = [];
         let placeholder = '';
 
         if (fieldData.dataType === 'date') {
@@ -50,6 +56,7 @@ export const ValueEditor = ({ field, fieldData, operator, handleOnChange, value,
                 mask={mask}
                 className="ValueEditor"
                 ref={r => {
+                    // @ts-ignore
                     this.input = r;
                 }}
                 value={value}
