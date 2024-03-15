@@ -13,6 +13,7 @@ use App\Exception\Upload\InvalidJSON;
 use App\Factory\DataSpecification\MetadataModel\MetadataModelModuleFactory;
 use App\Factory\DataSpecification\MetadataModel\NamespacePrefixFactory;
 use App\Factory\DataSpecification\MetadataModel\NodeFactory;
+use App\Factory\DataSpecification\MetadataModel\OptionGroupFactory;
 use App\Factory\DataSpecification\MetadataModel\PredicateFactory;
 use App\Factory\DataSpecification\MetadataModel\TripleFactory;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +31,7 @@ class ImportMetadataModelVersionCommandHandler
     private NamespacePrefixFactory $namespacePrefixFactory;
     private NodeFactory $nodeFactory;
     private PredicateFactory $predicateFactory;
+    private OptionGroupFactory $optionGroupFactory;
     private MetadataModelModuleFactory $metadataModelModuleFactory;
     private TripleFactory $tripleFactory;
 
@@ -39,6 +41,7 @@ class ImportMetadataModelVersionCommandHandler
         NamespacePrefixFactory $namespacePrefixFactory,
         NodeFactory $nodeFactory,
         PredicateFactory $predicateFactory,
+        OptionGroupFactory $optionGroupFactory,
         MetadataModelModuleFactory $metadataModelModuleFactory,
         TripleFactory $tripleFactory
     ) {
@@ -82,6 +85,7 @@ class ImportMetadataModelVersionCommandHandler
         $modules = $json['modules'];
         $prefixes = $json['prefixes'];
         $predicates = $json['predicates'];
+        $optionGroups = $json['optionGroups'];
 
         if ($metadataModel->hasVersion($version)) {
             throw new InvalidMetadataModelVersion();
@@ -112,6 +116,15 @@ class ImportMetadataModelVersionCommandHandler
             $newPredicate = $this->predicateFactory->createFromJson($newVersion, $predicate);
             $newPredicates->set($predicate['id'], $newPredicate);
             $newVersion->addPredicate($newPredicate);
+        }
+
+        // Add option groups
+        $newOptionGroups = new ArrayCollection();
+
+        foreach ($optionGroups as $optionGroup) {
+            $newOptionGroup = $this->optionGroupFactory->createFromJson($newVersion, $optionGroup);
+            $newOptionGroups->set($optionGroup['id'], $newOptionGroup);
+            $newVersion->addOptionGroup($newOptionGroup);
         }
 
         // Add modules

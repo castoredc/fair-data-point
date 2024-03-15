@@ -38,6 +38,29 @@ export const DataType = {
     boolean: 'Boolean',
 };
 
+export const MetadataFieldType = {
+    input: 'Input',
+    inputLocale: 'Input (localized)',
+    textarea: 'Textarea',
+    textareaLocale: 'Input (localized)',
+    ontologyConceptBrowser: 'Ontology concept browser',
+    datePicker: 'Datepicker',
+    timePicker: 'Timepicker',
+    dateAndTimePicker: 'Date and timepicker',
+    checkbox: 'Checkbox',
+    checkboxes: 'Checkboxes',
+    radioButtons: 'Radio buttons',
+    dropdown: 'Dropdown',
+};
+
+export const ResourceType = {
+    catalog: 'Catalog',
+    dataset: 'Dataset',
+    distribution: 'Distribution',
+    study: 'Study',
+    fdp: 'FAIR Data Point',
+};
+
 export const ValueType = {
     plain: 'Plain',
     annotated: 'Annotated',

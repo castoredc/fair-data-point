@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Request\DataSpecification\Common\Model;
+namespace App\Api\Request\DataSpecification\MetadataModel;
 
 use App\Api\Request\SingleApiRequest;
-use App\Entity\Enum\XsdDataType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-abstract class NodeApiRequest extends SingleApiRequest
+class OptionGroupApiRequest extends SingleApiRequest
 {
     /**
      * @Assert\NotBlank()
@@ -18,18 +17,17 @@ abstract class NodeApiRequest extends SingleApiRequest
     /** @Assert\Type("string") */
     private ?string $description = null;
 
-    /** @Assert\Type("string") */
-    private string $value;
-
-    /** @Assert\Type("string") */
-    private ?string $dataType = null;
+    /**
+     * @var mixed[]
+     * @AppAssert\OptionGroupOptions
+     */
+    private array $options;
 
     protected function parse(): void
     {
         $this->title = $this->getFromData('title');
         $this->description = $this->getFromData('description');
-        $this->value = $this->getFromData('value');
-        $this->dataType = $this->getFromData('dataType');
+        $this->options = $this->getFromData('options');
     }
 
     public function getTitle(): string
@@ -42,13 +40,17 @@ abstract class NodeApiRequest extends SingleApiRequest
         return $this->description;
     }
 
-    public function getValue(): string
+    /** @return array<array{title: string, description: string|null, value: string, order: int|null}> */
+    public function getOptions(): array
     {
-        return $this->value;
-    }
+        return $this->options;
 
-    public function getDataType(): ?XsdDataType
-    {
-        return $this->dataType !== null ? XsdDataType::fromString($this->dataType) : null;
+//        $options = [];
+//
+//        foreach ($this->options as $item) {
+//            $options[] = MetadataModelOptionGroupOption::fromData($item);
+//        }
+//
+//        return $options;
     }
 }

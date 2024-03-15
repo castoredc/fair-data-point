@@ -14,8 +14,6 @@ import Nodes from 'pages/Dashboard/DataSpecification/Nodes';
 import Prefixes from 'pages/Dashboard/DataSpecification/Prefixes';
 import Versions from 'pages/Dashboard/DataSpecification/Versions';
 import Preview from 'pages/Dashboard/DataSpecification/Preview';
-import DataModelForm from 'components/Form/DataSpecification/DataModelForm';
-import MetadataModelForm from 'components/Form/DataSpecification/MetadataModelForm';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { isGranted } from 'utils/PermissionHelper';
 import PermissionEditor from 'components/PermissionEditor';
@@ -24,6 +22,7 @@ import { apiClient } from '../../../network';
 import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
 import DataSpecificationDetails from 'pages/Dashboard/DataSpecification/DataSpecificationDetails';
 import { getType, ucfirst } from '../../../util';
+import OptionGroups from 'pages/Dashboard/DataSpecification/OptionGroups';
 
 interface DataSpecificationProps extends AuthorizedRouteComponentProps {
     type: string;
@@ -37,6 +36,23 @@ interface DataSpecificationState {
     modules: any;
     nodes: any;
     prefixes: any;
+    optionGroups: any;
+    types: {
+        fieldTypes: {
+            plain: {
+                value: string,
+                label: string
+            }[],
+            annotated: {
+                value: string,
+                label: string
+            }[]
+        },
+        dataTypes: {
+            value: string,
+            label: string
+        }[],
+    };
 }
 
 export default class DataSpecification extends Component<DataSpecificationProps, DataSpecificationState> {
@@ -51,6 +67,14 @@ export default class DataSpecification extends Component<DataSpecificationProps,
             modules: [],
             nodes: null,
             prefixes: [],
+            optionGroups: [],
+            types: {
+                fieldTypes: {
+                    plain: [],
+                    annotated: [],
+                },
+                dataTypes: [],
+            },
         };
     }
 
@@ -66,7 +90,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
         }
     }
 
-    getDataSpecification = (callback = () => {}) => {
+    getDataSpecification = (callback = () => {
+    }) => {
         const { type, match } = this.props;
 
         this.setState({
@@ -97,7 +122,11 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         this.getModules();
                         this.getNodes();
                         this.getPrefixes();
-                    }
+                        if(type === 'metadata-model') {
+                            this.getOptionGroups();
+                        }
+                        this.getTypes();
+                    },
                 );
             })
             .catch(error => {
@@ -210,9 +239,63 @@ export default class DataSpecification extends Component<DataSpecificationProps,
             });
     };
 
+    getOptionGroups = () => {
+        const { dataSpecification, currentVersion } = this.state;
+        const { type } = this.props;
+
+        this.setState({ isLoading: true });
+
+        apiClient
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + currentVersion.value + '/option-group')
+            .then(response => {
+                this.setState({
+                    optionGroups: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                const message =
+                    error.response && typeof error.response.data.error !== 'undefined'
+                        ? error.response.data.error
+                        : 'An error occurred while loading the option groups';
+                toast.error(<ToastItem type="error" title={message} />);
+            });
+    };
+
+    getTypes = () => {
+        const { dataSpecification, currentVersion } = this.state;
+        const { type } = this.props;
+
+        this.setState({ isLoading: true });
+
+        apiClient
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + currentVersion.value + '/types')
+            .then(response => {
+                this.setState({
+                    types: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    isLoading: false,
+                });
+
+                const message =
+                    error.response && typeof error.response.data.error !== 'undefined'
+                        ? error.response.data.error
+                        : 'An error occurred while loading the types';
+                toast.error(<ToastItem type="error" title={message} />);
+            });
+    };
+
     render() {
         const { type, history, location, user } = this.props;
-        const { isLoading, dataSpecification, versions, currentVersion, modules, nodes, prefixes } = this.state;
+        const { isLoading, dataSpecification, versions, currentVersion, modules, nodes, prefixes, optionGroups, types } = this.state;
 
         if (isLoading) {
             return <LoadingOverlay accessibleLabel="Loading data model" />;
@@ -250,13 +333,13 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         },
                         ...(isGranted('manage', dataSpecification.permissions)
                             ? [
-                                  {
-                                      to: mainUrl + '/' + dataSpecification.id + '/permissions',
-                                      exact: true,
-                                      title: 'Permissions',
-                                      icon: 'usersLight',
-                                  },
-                              ]
+                                {
+                                    to: mainUrl + '/' + dataSpecification.id + '/permissions',
+                                    exact: true,
+                                    title: 'Permissions',
+                                    icon: 'usersLight',
+                                },
+                            ]
                             : []),
                         {
                             type: 'separator',
@@ -269,6 +352,12 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         {
                             type: 'separator',
                         },
+                        ...(type === 'metadata-model' ? [{
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/option-group',
+                            exact: true,
+                            title: 'Option groups',
+                            icon: 'radioOptions',
+                        }] : []),
                         {
                             to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/modules',
                             exact: true,
@@ -313,8 +402,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                     <Switch>
                         <Route
                             path={[
-                                "/dashboard/data-models/:model",
-                                "/dashboard/metadata-models/:model",
+                                '/dashboard/data-models/:model',
+                                '/dashboard/metadata-models/:model',
                             ]}
                             exact
                             render={props => <DataSpecificationDetails
@@ -326,8 +415,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         />
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/versions",
-                                "/dashboard/metadata-models/:model/versions"
+                                '/dashboard/data-models/:model/versions',
+                                '/dashboard/metadata-models/:model/versions',
                             ]}
                             exact
                             render={props => <Versions
@@ -340,8 +429,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         />
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/permissions",
-                                "/dashboard/metadata-models/:model/permissions"
+                                '/dashboard/data-models/:model/permissions',
+                                '/dashboard/metadata-models/:model/permissions',
                             ]}
                             exact
                             render={props =>
@@ -359,10 +448,25 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                                 )
                             }
                         />
+                        {type === 'metadata-model' && <Route
+                            path="/dashboard/metadata-models/:model/:version/option-group"
+                            exact
+                            render={props => (
+                                <OptionGroups
+                                    type={type}
+                                    optionGroups={optionGroups}
+                                    getOptionGroups={this.getOptionGroups}
+                                    dataSpecification={dataSpecification}
+                                    version={currentVersion.value}
+                                    user={user}
+                                    {...props}
+                                />
+                            )}
+                        />}
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/:version/modules",
-                                "/dashboard/metadata-models/:model/:version/modules"
+                                '/dashboard/data-models/:model/:version/modules',
+                                '/dashboard/metadata-models/:model/:version/modules',
                             ]}
                             exact
                             render={props => (
@@ -381,8 +485,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         />
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/:version/nodes/:nodeType",
-                                "/dashboard/metadata-models/:model/:version/nodes/:nodeType"
+                                '/dashboard/data-models/:model/:version/nodes/:nodeType',
+                                '/dashboard/metadata-models/:model/:version/nodes/:nodeType',
                             ]}
                             exact
                             render={props => (
@@ -393,14 +497,15 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                                     dataSpecification={dataSpecification}
                                     version={currentVersion}
                                     user={user}
+                                    types={types}
                                     {...props}
                                 />
                             )}
                         />
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/:version/prefixes",
-                                "/dashboard/metadata-models/:model/:version/prefixes"
+                                '/dashboard/data-models/:model/:version/prefixes',
+                                '/dashboard/metadata-models/:model/:version/prefixes',
                             ]}
                             exact
                             render={props => (
@@ -417,8 +522,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         />
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/:version/preview",
-                                "/dashboard/metadata-models/:model/:version/preview"
+                                '/dashboard/data-models/:model/:version/preview',
+                                '/dashboard/metadata-models/:model/:version/preview',
                             ]}
                             exact
                             render={props => <Preview
@@ -431,8 +536,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         />
                         <Route
                             path={[
-                                "/dashboard/data-models/:model/:version/import-export",
-                                "/dashboard/metadata-models/:model/:version/import-export"
+                                '/dashboard/data-models/:model/:version/import-export',
+                                '/dashboard/metadata-models/:model/:version/import-export',
                             ]}
                             exact
                             render={props => (

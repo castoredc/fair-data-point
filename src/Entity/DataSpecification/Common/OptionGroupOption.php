@@ -9,10 +9,14 @@ use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="data_dictionary_option_option")
  * @ORM\HasLifecycleCallbacks
+ * @ORM\DiscriminatorMap({
+ *       "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroupOption",
+ *   })
  */
-class OptionGroupOption
+abstract class OptionGroupOption
 {
     /**
      * @ORM\Id
@@ -31,18 +35,21 @@ class OptionGroupOption
     /** @ORM\Column(type="text") */
     private string $value;
 
+    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    protected ?int $order;
+
     /**
      * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="options", cascade={"persist"})
      * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=false)
      */
     private OptionGroup $optionGroup;
 
-    public function __construct(string $id, string $title, ?string $description, string $value)
+    public function __construct(string $title, ?string $description, string $value, ?int $order)
     {
-        $this->id = $id;
         $this->title = $title;
         $this->description = $description;
         $this->value = $value;
+        $this->order = $order;
     }
 
     public function getId(): string
@@ -88,5 +95,15 @@ class OptionGroupOption
     public function setOptionGroup(OptionGroup $optionGroup): void
     {
         $this->optionGroup = $optionGroup;
+    }
+
+    public function getOrder(): ?int
+    {
+        return $this->order;
+    }
+
+    public function setOrder(?int $order): void
+    {
+        $this->order = $order;
     }
 }

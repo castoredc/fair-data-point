@@ -21,6 +21,23 @@ type AddNodeModalProps = {
     modelId: string;
     versionId: string;
     type: string;
+    modelType: string;
+    types: {
+        fieldTypes: {
+            plain: {
+                value: string,
+                label: string
+            }[],
+            annotated: {
+                value: string,
+                label: string
+            }[]
+        },
+        dataTypes: {
+            value: string,
+            label: string
+        }[],
+    };
 };
 
 type AddNodeModalState = {
@@ -28,7 +45,7 @@ type AddNodeModalState = {
     initialValues: any;
 };
 
-export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeModalState> {
+export default class NodeModal extends Component<AddNodeModalProps, AddNodeModalState> {
     constructor(props) {
         super(props);
 
@@ -46,11 +63,19 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
         if (initialValues.value !== '') {
             if (type === 'external') {
                 initialValues.value = initialValues.value.value;
-            } else if (type === 'literal' || type === 'value') {
+            } else if (type === 'literal') {
                 initialValues = {
                     ...initialValues,
                     value: initialValues.value.value,
                     dataType: initialValues.value.dataType,
+                };
+            } else if (type === 'value') {
+                initialValues = {
+                    ...initialValues,
+                    value: initialValues.value.value,
+                    dataType: initialValues.value.dataType,
+                    fieldType: initialValues.value.fieldType,
+                    optionGroup: initialValues.value.optionGroup
                 };
             }
         }
@@ -66,10 +91,10 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { type, modelId, versionId, onSaved, data } = this.props;
+        const { modelType, type, modelId, versionId, onSaved, data } = this.props;
 
         apiClient
-            .post('/api/' + type + '/' + modelId + '/v/' + versionId + '/node/' + type + (data ? `/${data.id}` : ''), values)
+            .post('/api/' + modelType + '/' + modelId + '/v/' + versionId + '/node/' + type + (data ? `/${data.id}` : ''), values)
             .then(response => {
                 setSubmitting(false);
 
@@ -88,7 +113,7 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
     };
 
     render() {
-        const { data, type, open, onClose } = this.props;
+        const { modelType, data, type, open, onClose, types } = this.props;
         const { validation, initialValues } = this.state;
 
         const title = data ? `Edit ${type} node` : `Add ${type} node`;
@@ -97,8 +122,22 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
             <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
                 <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                        const showDataTypes = values.type === 'literal' || (values.type === 'value' && values.value === 'plain');
-                        const showRepeated = values.type === 'internal' || values.type === 'value';
+                        const isPlainValue = (values.type === 'value' && values.value === 'plain');
+                        const isAnnotatedValue = (values.type === 'value' && values.value === 'annotated');
+
+                        const showDataTypes = values.type === 'literal' || isPlainValue;
+                        const showRepeated = modelType === 'data-model' && (values.type === 'internal' || values.type === 'value');
+
+                        const showFieldTypes = modelType === 'metadata-model' && (isPlainValue || isAnnotatedValue);
+                        console.log(values.type);
+                        console.log(values.dataType);
+
+                        let fieldTypes = [];
+                        if(showFieldTypes && isPlainValue) {
+                            fieldTypes = values.dataType ? types.fieldTypes[values.value][values.dataType] : [];
+                        } else if(showFieldTypes && isAnnotatedValue) {
+                            fieldTypes = types.fieldTypes[values.value];
+                        }
 
                         return (
                             <Form>
@@ -119,17 +158,6 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                                     </FormItem>
                                 )}
 
-                                {showDataTypes && (
-                                    <FormItem label="Data type">
-                                        <Field component={Select} options={dataTypes} serverError={validation} name="dataType" />
-                                    </FormItem>
-                                )}
-
-                                {values.type === 'literal' && (
-                                    <FormItem label="Value">
-                                        <Field component={Input} name="value" serverError={validation} />
-                                    </FormItem>
-                                )}
                                 {values.type === 'value' && (
                                     <FormItem label="Value">
                                         <Field
@@ -144,6 +172,25 @@ export default class AddNodeModal extends Component<AddNodeModalProps, AddNodeMo
                                         />
                                     </FormItem>
                                 )}
+
+                                {showDataTypes && (
+                                    <FormItem label="Data type">
+                                        <Field component={Select} options={types.dataTypes} serverError={validation} name="dataType" />
+                                    </FormItem>
+                                )}
+
+                                {showFieldTypes && (
+                                    <FormItem label="Field type">
+                                        <Field component={Select} options={fieldTypes} serverError={validation} name="fieldType" />
+                                    </FormItem>
+                                )}
+
+                                {values.type === 'literal' && (
+                                    <FormItem label="Value">
+                                        <Field component={Input} name="value" serverError={validation} />
+                                    </FormItem>
+                                )}
+
                                 {showRepeated && (
                                     <FormItem>
                                         <Field
@@ -176,23 +223,6 @@ const defaultData = {
     dataType: '',
     repeated: false,
 };
-
-const dataTypes = [
-    { value: 'float', label: DataType['float'] },
-    { value: 'double', label: DataType['double'] },
-    { value: 'decimal', label: DataType['decimal'] },
-    { value: 'integer', label: DataType['integer'] },
-    { value: 'dateTime', label: DataType['dateTime'] },
-    { value: 'date', label: DataType['date'] },
-    { value: 'time', label: DataType['time'] },
-    { value: 'gDay', label: DataType['gDay'] },
-    { value: 'gMonth', label: DataType['gMonth'] },
-    { value: 'gYear', label: DataType['gYear'] },
-    { value: 'gYearMonth', label: DataType['gYearMonth'] },
-    { value: 'gMonthDay', label: DataType['gMonthDay'] },
-    { value: 'string', label: DataType['string'] },
-    { value: 'boolean', label: DataType['boolean'] },
-];
 
 const NodeSchema = Yup.object().shape({
     type: Yup.string().required(),

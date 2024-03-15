@@ -66,7 +66,7 @@ abstract class Element
      * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="elements")
      * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=true)
      */
-    private ?OptionGroup $optionGroup;
+    private ?OptionGroup $optionGroup = null;
 
     public function __construct(Version $version, string $title, ?string $description)
     {

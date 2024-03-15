@@ -59,7 +59,7 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(new CreateNodeCommand($metadataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
+            $bus->dispatch(new CreateNodeCommand($metadataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType(), $parsed->getFieldType()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -93,7 +93,7 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(new EditNodeCommand($node, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
+            $bus->dispatch(new EditNodeCommand($node, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType(), $parsed->getFieldType()));
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {

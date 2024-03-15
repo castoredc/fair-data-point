@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
-import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack, ToastMessage } from '@castoredc/matter';
-import AddNodeModal from 'modals/AddNodeModal';
+import {
+    ActionsCell,
+    Button,
+    CellText,
+    DataGrid,
+    Icon,
+    IconCell,
+    LoadingOverlay,
+    Stack,
+    ToastMessage,
+} from '@castoredc/matter';
+import NodeModal from 'modals/NodeModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
@@ -8,7 +18,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import PageTabs from 'components/PageTabs';
-import { getType } from '../../../util';
+import { getType, ucfirst } from '../../../util';
 
 interface NodesProps extends AuthorizedRouteComponentProps {
     type: string;
@@ -16,6 +26,22 @@ interface NodesProps extends AuthorizedRouteComponentProps {
     getNodes: () => void;
     dataSpecification: any;
     version: any;
+    types: {
+        fieldTypes: {
+            plain: {
+                value: string,
+                label: string
+            }[],
+            annotated: {
+                value: string,
+                label: string
+            }[]
+        },
+        dataTypes: {
+            value: string,
+            label: string
+        }[],
+    };
 }
 
 interface NodesState {
@@ -98,10 +124,10 @@ export default class Nodes extends Component<NodesProps, NodesState> {
 
     render() {
         const { showModal, modalData } = this.state;
-        const { type, dataSpecification, nodes, version, history, match } = this.props;
+        const { type, dataSpecification, nodes, version, history, match, types } = this.props;
 
-        if (nodes === null) {
-            return null;
+        if (nodes === null || types.dataTypes.length === 0) {
+            return <LoadingOverlay accessibleLabel="Loading data model" />;
         }
 
         const internalNodeRows = type === 'data-model' ? nodes.internal.map(item => {
@@ -183,11 +209,35 @@ export default class Nodes extends Component<NodesProps, NodesState> {
         });
 
         const valueNodeRows = nodes.value.map(item => {
+            const dataType = item.value.dataType && types.dataTypes.find(dataType => dataType.value === item.value.dataType);
+
+            let fieldType: {
+                value: string,
+                label: string
+            } | undefined = undefined;
+
+            console.log(item.value);
+
+
+            if(item.value.fieldType && item.value.value === 'plain') {
+                fieldType = types.fieldTypes[item.value.value][item.value.dataType].find(fieldType => fieldType.value === item.value.fieldType);
+            } else if(item.value.fieldType && item.value.value === 'annotated') {
+                fieldType = types.fieldTypes[item.value.value].find(fieldType => fieldType.value === item.value.fieldType);
+            }
+
+            console.log(fieldType);
+
             return {
                 title: <CellText>{item.title}</CellText>,
-                type: <CellText>{item.value.value}</CellText>,
-                dataType: <CellText>{item.value.dataType}</CellText>,
-                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                type: <CellText>{ucfirst(item.value.value)}</CellText>,
+                dataType: <CellText>{dataType ? dataType.label : ''}</CellText>,
+                ...(type === 'data-model' ? {
+                    repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined
+                }: {}),
+                ...(type === 'metadata-model' ? {
+                    fieldType: <CellText>{fieldType ? fieldType.label : ''}</CellText>,
+                    optionGroup: <CellText>{item.value.optionGroup ? item.value.optionGroup.title : ''}</CellText>,
+                }: {}),
                 menu: (
                     <ActionsCell
                         items={[
@@ -213,7 +263,8 @@ export default class Nodes extends Component<NodesProps, NodesState> {
 
         return (
             <PageBody>
-                <AddNodeModal
+                <NodeModal
+                    modelType={type}
                     open={showModal.add}
                     onClose={() => this.closeModal('add')}
                     onSaved={() => this.onSaved('add')}
@@ -221,6 +272,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     modelId={dataSpecification.id}
                     versionId={version.value}
                     data={modalData}
+                    types={types}
                 />
 
                 {modalData && (
@@ -382,13 +434,23 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                                             Header: 'Data type',
                                             accessor: 'dataType',
                                         },
-                                        {
+                                        ...(type === 'data-model' ? [{
                                             Header: <Icon description="Repeated" type="tickSmall" />,
                                             accessor: 'repeated',
                                             disableResizing: true,
                                             isInteractive: true,
                                             width: 32,
-                                        },
+                                        }] : []),
+                                        ...(type === 'metadata-model' ? [
+                                            {
+                                                Header: 'Field type',
+                                                accessor: 'fieldType',
+                                            },
+                                            {
+                                                Header: 'Option group',
+                                                accessor: 'optionGroup',
+                                            }
+                                        ] : []),
                                         {
                                             accessor: 'menu',
                                             disableGroupBy: true,

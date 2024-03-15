@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\DataSpecification\Common\OptionGroupsApiResource;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class MetadataModelVersionExportApiResource implements ApiResource
@@ -25,6 +26,7 @@ class MetadataModelVersionExportApiResource implements ApiResource
             'modules' => (new MetadataModelModulesApiResource($this->metadataModelVersion, false))->toArray(),
             'prefixes' => (new MetadataModelPrefixesApiResource($this->metadataModelVersion))->toArray(),
             'predicates' => (new PredicatesApiResource($this->metadataModelVersion))->toArray(),
+            'optionGroups' => (new OptionGroupsApiResource($this->metadataModelVersion))->toArray(),
         ];
     }
 }

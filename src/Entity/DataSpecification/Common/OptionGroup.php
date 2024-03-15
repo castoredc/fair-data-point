@@ -12,10 +12,15 @@ use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="data_dictionary_option_group")
  * @ORM\HasLifecycleCallbacks
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *      "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup",
+ *  })
  */
-class OptionGroup
+abstract class OptionGroup
 {
     use CreatedAndUpdated;
 
@@ -34,8 +39,14 @@ class OptionGroup
     private ?string $description = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist"})
-     * @ORM\OrderBy({"value" = "ASC", "id" = "ASC"})
+     * @ORM\ManyToOne(targetEntity="Version", inversedBy="optionGroups", cascade={"persist"})
+     * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
+     */
+    private Version $version;
+
+    /**
+     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Collection<OptionGroupOption>
      */
@@ -48,9 +59,9 @@ class OptionGroup
      */
     private Collection $elements;
 
-    public function __construct(string $id, string $title, ?string $description)
+    public function __construct(Version $version, string $title, ?string $description)
     {
-        $this->id = $id;
+        $this->version = $version;
         $this->title = $title;
         $this->description = $description;
         $this->options = new ArrayCollection();
@@ -60,6 +71,16 @@ class OptionGroup
     public function getId(): string
     {
         return (string) $this->id;
+    }
+
+    public function getVersion(): Version
+    {
+        return $this->version;
+    }
+
+    public function setVersion(Version $version): void
+    {
+        $this->version = $version;
     }
 
     public function getTitle(): string
@@ -86,6 +107,18 @@ class OptionGroup
     public function getOptions(): Collection
     {
         return $this->options;
+    }
+
+    /** @return array<string, OptionGroupOption> */
+    public function getOptionsWithId(): array
+    {
+        $options = [];
+
+        foreach ($this->options as $option) {
+            $options[$option->getId()] = $option;
+        }
+
+        return $options;
     }
 
     /** @param Collection<OptionGroupOption> $options */

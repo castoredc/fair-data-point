@@ -58,6 +58,8 @@ class EditNodeCommandHandler
             } else {
                 throw new InvalidValueType();
             }
+
+            $node->setFieldType($command->getFieldType());
         } else {
             throw new InvalidNodeType();
         }

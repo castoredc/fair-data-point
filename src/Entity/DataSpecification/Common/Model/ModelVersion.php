@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\Common\Model;
 
+use App\Entity\DataSpecification\Common\OptionGroup;
 use App\Entity\Enum\NodeType;
 use Doctrine\Common\Collections\Collection;
 
@@ -24,4 +25,11 @@ interface ModelVersion
     public function removePrefix(NamespacePrefix $prefix): void;
 
     public function addNode(Node $node): void;
+
+    /** @return Collection<OptionGroup> */
+    public function getOptionGroups(): Collection;
+
+    public function addOptionGroup(OptionGroup $optionGroup): void;
+
+    public function removeOptionGroup(OptionGroup $optionGroup): void;
 }

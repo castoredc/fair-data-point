@@ -5,6 +5,7 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Common\IriApiResource;
+use App\Api\Resource\DataSpecification\Common\OptionGroupApiResource;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
@@ -22,23 +23,28 @@ class NodeApiResource implements ApiResource
     /** @return array<mixed> */
     public function toArray(): array
     {
-        $value = $this->node->getValue() ?? null;
+        $data = [
+            'id' => $this->node->getId(),
+            'type' => $this->node->getType()->toString(),
+            'title' => $this->node->getTitle(),
+            'description' => $this->node->getDescription(),
+            'value' => $this->node->getValue() ?? null,
+        ];
 
         if ($this->node instanceof ExternalIriNode) {
-            $value = (new IriApiResource($this->node->getMetadataModelVersion(), $this->node->getIri()))->toArray();
+            $data['value'] = (new IriApiResource($this->node->getMetadataModelVersion(), $this->node->getIri()))->toArray();
         } elseif ($this->node instanceof LiteralNode || $this->node instanceof ValueNode) {
-            $value = [
+            $data['value'] = [
                 'dataType' => $this->node->getDataType() !== null ? $this->node->getDataType()->toString() : null,
                 'value' => $this->node->getValue(),
             ];
         }
 
-        return [
-            'id' => $this->node->getId(),
-            'type' => $this->node->getType()->toString(),
-            'title' => $this->node->getTitle(),
-            'description' => $this->node->getDescription(),
-            'value' => $value,
-        ];
+        if ($this->node instanceof ValueNode) {
+            $data['value']['fieldType'] = $this->node->getFieldType()->toString();
+            $data['value']['optionGroup'] = $this->node->getOptionGroup() !== null ? (new OptionGroupApiResource($this->node->getOptionGroup()))->toArray() : null;
+        }
+
+        return $data;
     }
 }

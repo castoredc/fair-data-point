@@ -6,6 +6,8 @@ namespace App\CommandHandler\DataSpecification\MetadataModel;
 use App\Command\DataSpecification\MetadataModel\CreateMetadataModelVersionCommand;
 use App\CommandHandler\DataSpecification\Common\DataSpecificationVersionCommandHandler;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroupOption;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
@@ -59,6 +61,24 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
             $newVersion->addPrefix(new NamespacePrefix($prefix->getPrefix(), $prefix->getUri()));
         }
 
+        // Add option groups
+        foreach ($latestVersion->getOptionGroups() as $optionGroup) {
+            $newOptionGroup = new MetadataModelOptionGroup($newVersion, $optionGroup->getTitle(), $optionGroup->getDescription());
+
+            foreach ($optionGroup->getOptions() as $option) {
+                $newOption = new MetadataModelOptionGroupOption(
+                    $option->getTitle(),
+                    $option->getDescription(),
+                    $option->getValue(),
+                    $option->getOrder()
+                );
+
+                $newOptionGroup->addOption($newOption);
+            }
+
+            $newVersion->addOptionGroup($optionGroup);
+        }
+
         // Add nodes
 
         /** @var ArrayCollection<Node> $nodes */
@@ -77,6 +97,8 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
             } elseif ($node instanceof ValueNode) {
                 $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
+                $newNode->setFieldType($node->getFieldType());
+                $newNode->setOptionGroup($node->getOptionGroup());
 
                 if (! $node->isAnnotatedValue()) {
                     $newNode->setDataType($node->getDataType());

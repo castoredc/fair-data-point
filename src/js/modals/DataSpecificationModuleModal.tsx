@@ -14,6 +14,7 @@ import { NodeType } from 'types/NodeType';
 import { PrefixType } from 'types/PrefixType';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
+import { DataType, ResourceType } from 'components/MetadataItem/EnumMappings';
 
 type DataModelModuleModalProps = {
     show: boolean;
@@ -127,6 +128,8 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
         const title = initialValues.id ? 'Edit group' : 'Add group';
         const schema = type === 'data-model' ? DataModelModuleSchema : MetadataModelModuleSchema;
 
+        const showDependencies = type === 'metadata-model' || (type === 'data-model' && valueNodes.length > 0);
+
         return (
             <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={schema}>
@@ -134,12 +137,14 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                         return (
                             <Form>
                                 <DependencyModal
+                                    modelType={type}
                                     show={showDependencyModal}
                                     handleClose={this.closeDependencyModal}
                                     save={dependencies => {
-                                        setFieldValue('dependencies', dependencies);
-                                        this.setState({
-                                            showDependencyModal: false,
+                                        setFieldValue('dependencies', dependencies).then(() => {
+                                            this.setState({
+                                                showDependencyModal: false,
+                                            });
                                         });
                                     }}
                                     valueNodes={valueNodes}
@@ -165,37 +170,37 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                             details="This group should be repeated for every instance of a specific survey or report"
                                         />
                                     </FormItem>
-
-                                    {/*<FormItem label="Dependent">*/}
-                                        {valueNodes.length === 0 ? (
-                                            <ValidationMessage type="warning">
-                                                <>
-                                                    There are no value nodes added to this {getType(type)}. <br />
-                                                    Please add a value node in order to set up dependencies.
-                                                </>
-                                            </ValidationMessage>
-                                        ) : (
-                                            <>
-                                                <Field
-                                                    component={SingleChoice}
-                                                    labelText="Dependent"
-                                                    name="dependent"
-                                                    serverError={validation}
-                                                    details="This group will only be rendered when certain criteria are met"
-                                                />
-
-                                                {values.dependent && (
-                                                    <>
-                                                        <Space bottom="default" />
-                                                        <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">
-                                                            Edit dependencies
-                                                        </Button>
-                                                    </>
-                                                )}
-                                            </>
-                                        )}
-                                    {/*</FormItem>*/}
                                 </>}
+
+                                <FormItem>
+                                    {!showDependencies ? (
+                                        <ValidationMessage type="warning">
+                                            <>
+                                                There are no value nodes added to this {getType(type)}. <br />
+                                                Please add a value node in order to set up dependencies.
+                                            </>
+                                        </ValidationMessage>
+                                    ) : (
+                                        <>
+                                            <Field
+                                                component={SingleChoice}
+                                                labelText="Dependent"
+                                                name="dependent"
+                                                serverError={validation}
+                                                details="This group will only be rendered when certain criteria are met"
+                                            />
+
+                                            {values.dependent && (
+                                                <>
+                                                    <Space bottom="default" />
+                                                    <Button buttonType="secondary" onClick={this.openDependencyModal} icon="decision">
+                                                        Edit dependencies
+                                                    </Button>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </FormItem>
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>
                                     <Stack alignment="normal" distribution="equalSpacing">
@@ -228,10 +233,6 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
 const defaultData = {
     title: '',
     order: '',
-};
-
-const defaultDataModelData = {
-    repeated: false,
     dependent: false,
     dependencies: {
         rules: [],
@@ -240,7 +241,19 @@ const defaultDataModelData = {
     },
 };
 
+const defaultDataModelData = {
+    repeated: false,
+};
+
 const defaultMetadataModelData = {};
+
+const dataTypes = [
+    { value: 'catalog', label: ResourceType['catalog'] },
+    { value: 'dataset', label: ResourceType['dataset'] },
+    { value: 'distribution', label: ResourceType['distribution'] },
+    { value: 'study', label: ResourceType['study'] },
+    { value: 'fdp', label: ResourceType['fdp'] },
+];
 
 const DataModelModuleSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
