@@ -9,7 +9,7 @@ use App\Exception\NoAccessPermission;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class UpdateMetadataModelModuleCommandHandlerHandler extends DataSpecificationGroupCommandHandler
+class UpdateMetadataModelModuleCommandHandler extends DataSpecificationGroupCommandHandler
 {
     public function __invoke(UpdateMetadataModelModuleCommand $command): void
     {
