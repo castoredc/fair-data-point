@@ -5,10 +5,11 @@ namespace App\Command\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\Enum\MetadataFieldType;
+use App\Entity\Enum\ResourceType;
 
 class UpdateMetadataModelFieldCommand
 {
-    public function __construct(private MetadataModelField $field, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup)
+    public function __construct(private MetadataModelField $field, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup, private ResourceType $resourceType)
     {
     }
 
@@ -45,5 +46,10 @@ class UpdateMetadataModelFieldCommand
     public function getOptionGroup(): ?string
     {
         return $this->optionGroup;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return $this->resourceType;
     }
 }

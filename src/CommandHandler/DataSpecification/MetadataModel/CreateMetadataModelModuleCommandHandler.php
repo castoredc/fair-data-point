@@ -21,7 +21,7 @@ class CreateMetadataModelModuleCommandHandler extends DataSpecificationGroupComm
             throw new NoAccessPermission();
         }
 
-        $module = new MetadataModelGroup($command->getTitle(), $command->getOrder(), $metadataModelVersion);
+        $module = new MetadataModelGroup($command->getTitle(), $command->getOrder(), $command->getResourceType(), $metadataModelVersion);
         $metadataModelVersion->addGroup($module);
 
         $this->em->persist($module);

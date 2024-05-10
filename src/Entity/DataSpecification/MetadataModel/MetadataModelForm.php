@@ -10,9 +10,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
-use function array_diff;
-use function array_unique;
-use function in_array;
 
 /**
  * @ORM\Entity
@@ -43,12 +40,8 @@ class MetadataModelForm
     /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
     private ?int $order;
 
-    /**
-     * @ORM\Column(type="ResourcesType", nullable="true")
-     *
-     * @var ResourceType[]
-     */
-    private ?array $resourceTypes = null;
+    /** @ORM\Column(type="ResourceType") */
+    private ResourceType $resourceType;
 
     /**
      * @ORM\OneToMany(targetEntity="MetadataModelField", mappedBy="form", cascade={"persist"})
@@ -57,12 +50,11 @@ class MetadataModelForm
      */
     private Collection $fields;
 
-    /** @param ResourceType[] $resourceTypes */
-    public function __construct(string $title, int $order, array $resourceTypes, MetadataModelVersion $version)
+    public function __construct(string $title, int $order, ResourceType $resourceType, MetadataModelVersion $version)
     {
         $this->title = $title;
         $this->order = $order;
-        $this->resourceTypes = $resourceTypes;
+        $this->resourceType = $resourceType;
         $this->metadataModel = $version;
 
         $this->fields = new ArrayCollection();
@@ -104,26 +96,14 @@ class MetadataModelForm
         return $this->fields;
     }
 
-    public function addResourceType(ResourceType $type): void
+    public function getResourceType(): ResourceType
     {
-        $this->resourceTypes[] = $type;
-        $this->resourceTypes = array_unique($this->resourceTypes);
+        return $this->resourceType;
     }
 
-    public function removeResourceType(ResourceType $type): void
+    public function setResourceType(ResourceType $resourceType): void
     {
-        $this->resourceTypes = array_diff($this->resourceTypes, [$type]);
-    }
-
-    /** @return ResourceType[] */
-    public function getResourceTypes(): array
-    {
-        return $this->resourceTypes;
-    }
-
-    public function hasResourceType(ResourceType $type): bool
-    {
-        return in_array($type, $this->resourceTypes, true);
+        $this->resourceType = $resourceType;
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

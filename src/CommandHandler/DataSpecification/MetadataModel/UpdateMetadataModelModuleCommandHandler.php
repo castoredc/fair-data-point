@@ -31,6 +31,7 @@ class UpdateMetadataModelModuleCommandHandler extends DataSpecificationGroupComm
 
         $module->setTitle($command->getTitle());
         $module->setOrder($command->getOrder());
+        $module->getResourceType($command->getResourceType());
 
         $metadataModelVersion->addGroup($module);
 

@@ -30,6 +30,7 @@ doctrine:
             RDFDistributionDatabaseType: App\Type\Enum\RDFDistributionDatabaseType
             MetadataFieldType: App\Type\Enum\MetadataFieldType
             ResourcesType: App\Type\Enum\ResourcesType
+            ResourceType: App\Type\Enum\ResourceType
 
     orm:
         auto_generate_proxy_classes: true

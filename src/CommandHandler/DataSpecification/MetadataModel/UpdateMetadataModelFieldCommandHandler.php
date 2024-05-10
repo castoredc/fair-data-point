@@ -7,6 +7,7 @@ use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelFieldCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
+use App\Exception\DataSpecification\MetadataModel\NodeAlreadyUsed;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,6 +51,10 @@ class UpdateMetadataModelFieldCommandHandler
             throw new NotFound();
         }
 
+        if ($node->hasField() && $node->getField() !== $field) {
+            throw new NodeAlreadyUsed($node->getField()->getTitle());
+        }
+
         $form->removeField($field);
 
         $field->setTitle($command->getTitle());
@@ -58,6 +63,7 @@ class UpdateMetadataModelFieldCommandHandler
         $field->setFieldType($command->getFieldType());
         $field->setOptionGroup($optionGroup);
         $field->setNode($node);
+        $field->setResourceType($command->getResourceType());
 
         $form->addField($field);
 

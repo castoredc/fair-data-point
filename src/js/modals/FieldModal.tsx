@@ -83,7 +83,7 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
             label: 'At the beginning',
         }];
 
-        if (form.fields.length === 0) {
+        if (form === null || form.fields.length === 0) {
             return order;
         }
 
@@ -117,9 +117,12 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
                     this.setState({
                         validation: error.response.data.fields,
                     });
+                } else if (error.response) {
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
                     toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
+
                 setSubmitting(false);
             });
     };
@@ -225,7 +228,7 @@ const NodeSchema = Yup.object().shape({
     description: Yup.string().nullable(),
     node: Yup.string().required('Please select a node'),
     fieldType: Yup.string().required('Please select a field type'),
-    optionGroup: Yup.string().when(['nodeData', 'fieldType'], {
+    optionGroup: Yup.string().nullable().when(['nodeData', 'fieldType'], {
         is: (nodeData, fieldType) => (nodeData && nodeData.value === 'annotated') && fieldType !== 'ontologyConceptBrowser',
         then: schema => schema.required('Please select an option group'),
     }),

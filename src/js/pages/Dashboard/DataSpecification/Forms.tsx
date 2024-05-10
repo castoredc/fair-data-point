@@ -12,6 +12,7 @@ import { getType } from '../../../util';
 import MetadataFormModal from 'modals/MetadataFormModal';
 import DataSpecificationForm from 'components/DataSpecification/DataSpecificationForm';
 import FieldModal from 'modals/FieldModal';
+import { ResourceType } from 'components/MetadataItem/EnumMappings';
 
 interface FormsProps extends AuthorizedRouteComponentProps {
     forms: any;
@@ -248,6 +249,7 @@ export default class Forms extends Component<FormsProps, FormsState> {
                                 number: element.order,
                                 title: element.title,
                                 icons: icons,
+                                badge: element.resourceType,
                                 content: (
                                     <DataSpecificationForm
                                         key={element.id}
@@ -259,6 +261,7 @@ export default class Forms extends Component<FormsProps, FormsState> {
                                                 id: element.id,
                                                 title: element.title,
                                                 order: element.order,
+                                                resourceType: element.resourceType,
                                             })
                                         }
                                         openFieldModal={fieldData => this.openFieldModal(element, fieldData)}

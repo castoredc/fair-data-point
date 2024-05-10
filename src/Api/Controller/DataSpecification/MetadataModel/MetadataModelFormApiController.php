@@ -44,7 +44,14 @@ class MetadataModelFormApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelFormApiRequest::class, $request);
             assert($parsed instanceof MetadataModelFormApiRequest);
 
-            $bus->dispatch(new CreateMetadataModelFormCommand($metadataModelVersion, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(
+                new CreateMetadataModelFormCommand(
+                    $metadataModelVersion,
+                    $parsed->getTitle(),
+                    $parsed->getOrder(),
+                    $parsed->getResourceType()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -60,8 +67,12 @@ class MetadataModelFormApiController extends ApiController
      * @Route("/{form}", methods={"POST"}, name="api_metadata_model_form_update")
      * @ParamConverter("form", options={"mapping": {"form": "id"}})
      */
-    public function updateForm(MetadataModelVersion $metadataModelVersion, MetadataModelForm $form, Request $request, MessageBusInterface $bus): Response
-    {
+    public function updateForm(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelForm $form,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($form->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -72,16 +83,26 @@ class MetadataModelFormApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelFormApiRequest::class, $request);
             assert($parsed instanceof MetadataModelFormApiRequest);
 
-            $bus->dispatch(new UpdateMetadataModelFormCommand($form, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(
+                new UpdateMetadataModelFormCommand(
+                    $form,
+                    $parsed->getTitle(),
+                    $parsed->getOrder(),
+                    $parsed->getResourceType()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a data model form', [
-                'exception' => $e,
-                'FormID' => $form->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a data model form',
+                [
+                    'exception' => $e,
+                    'FormID' => $form->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -91,8 +112,11 @@ class MetadataModelFormApiController extends ApiController
      * @Route("/{form}", methods={"DELETE"}, name="api_metadata_model_form_delete")
      * @ParamConverter("form", options={"mapping": {"form": "id"}})
      */
-    public function deleteForm(MetadataModelVersion $metadataModelVersion, MetadataModelForm $form, MessageBusInterface $bus): Response
-    {
+    public function deleteForm(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelForm $form,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($form->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -104,10 +128,13 @@ class MetadataModelFormApiController extends ApiController
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while deleting a form', [
-                'exception' => $e,
-                'FormID' => $form->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while deleting a form',
+                [
+                    'exception' => $e,
+                    'FormID' => $form->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

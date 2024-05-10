@@ -44,7 +44,14 @@ class MetadataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelModuleApiRequest::class, $request);
             assert($parsed instanceof MetadataModelModuleApiRequest);
 
-            $bus->dispatch(new CreateMetadataModelModuleCommand($metadataModelVersion, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(
+                new CreateMetadataModelModuleCommand(
+                    $metadataModelVersion,
+                    $parsed->getTitle(),
+                    $parsed->getOrder(),
+                    $parsed->getResourceType()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -60,8 +67,12 @@ class MetadataModelModuleApiController extends ApiController
      * @Route("/{module}", methods={"POST"}, name="api_metadata_model_module_update")
      * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
-    public function updateModule(MetadataModelVersion $metadataModelVersion, MetadataModelGroup $module, Request $request, MessageBusInterface $bus): Response
-    {
+    public function updateModule(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelGroup $module,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $metadataModelVersion) {
@@ -72,16 +83,26 @@ class MetadataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelModuleApiRequest::class, $request);
             assert($parsed instanceof MetadataModelModuleApiRequest);
 
-            $bus->dispatch(new UpdateMetadataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder()));
+            $bus->dispatch(
+                new UpdateMetadataModelModuleCommand(
+                    $module,
+                    $parsed->getTitle(),
+                    $parsed->getOrder(),
+                    $parsed->getResourceType()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a data model module', [
-                'exception' => $e,
-                'ModuleID' => $module->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a data model module',
+                [
+                    'exception' => $e,
+                    'ModuleID' => $module->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -91,8 +112,11 @@ class MetadataModelModuleApiController extends ApiController
      * @Route("/{module}", methods={"DELETE"}, name="api_metadata_model_module_delete")
      * @ParamConverter("module", options={"mapping": {"module": "id"}})
      */
-    public function deleteModule(MetadataModelVersion $metadataModelVersion, MetadataModelGroup $module, MessageBusInterface $bus): Response
-    {
+    public function deleteModule(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelGroup $module,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $metadataModelVersion) {
@@ -104,10 +128,13 @@ class MetadataModelModuleApiController extends ApiController
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while deleting a data model module', [
-                'exception' => $e,
-                'ModuleID' => $module->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while deleting a data model module',
+                [
+                    'exception' => $e,
+                    'ModuleID' => $module->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

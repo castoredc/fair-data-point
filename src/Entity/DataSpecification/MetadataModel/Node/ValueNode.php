@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\MetadataModel\Node;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,6 +19,9 @@ class ValueNode extends Node
 
     /** @ORM\Column(type="XsdDataType") */
     private XsdDataType $dataType;
+
+    /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelField", mappedBy="node") */
+    private ?MetadataModelField $field = null;
 
     public function isAnnotatedValue(): bool
     {
@@ -47,5 +51,15 @@ class ValueNode extends Node
     public function setDataType(XsdDataType $dataType): void
     {
         $this->dataType = $dataType;
+    }
+
+    public function getField(): ?MetadataModelField
+    {
+        return $this->field;
+    }
+
+    public function hasField(): bool
+    {
+        return $this->field !== null;
     }
 }

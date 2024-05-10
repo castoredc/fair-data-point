@@ -7,6 +7,7 @@ namespace App\Entity\Enum;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Study;
 
 /**
@@ -22,12 +23,14 @@ use App\Entity\Study;
  */
 class ResourceType extends Enum
 {
+    private const FDP = 'fdp';
     private const CATALOG = 'catalog';
     private const DATASET = 'dataset';
     private const DISTRIBUTION = 'distribution';
     private const STUDY = 'study';
 
     private const CLASS_MAPPING = [
+        self::FDP => FAIRDataPoint::class,
         self::CATALOG => Catalog::class,
         self::DATASET => Dataset::class,
         self::DISTRIBUTION => Distribution::class,
@@ -35,6 +38,7 @@ class ResourceType extends Enum
     ];
 
     public const TYPES = [
+        self::FDP,
         self::CATALOG,
         self::DATASET,
         self::DISTRIBUTION,

@@ -10,9 +10,6 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
-use function array_diff;
-use function array_unique;
-use function in_array;
 
 /**
  * @ORM\Entity
@@ -46,12 +43,8 @@ class MetadataModelField
     /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
     private ?int $order;
 
-    /**
-     * @ORM\Column(type="ResourcesType", nullable="true")
-     *
-     * @var ResourceType[]
-     */
-    private array $resourceTypes;
+    /** @ORM\Column(type="ResourceType") */
+    private ResourceType $resourceType;
 
     /**
      * @ORM\ManyToOne(targetEntity="MetadataModelForm", inversedBy="fields", cascade={"persist"})
@@ -69,13 +62,12 @@ class MetadataModelField
     private ?MetadataModelOptionGroup $optionGroup = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", nullable=false)
      */
     private ValueNode $node;
 
-    /** @param ResourceType[] $resourceTypes */
-    public function __construct(string $title, ?string $description, int $order, ValueNode $node, MetadataFieldType $fieldType, ?MetadataModelOptionGroup $optionGroup, array $resourceTypes, MetadataModelForm $form)
+    public function __construct(string $title, ?string $description, int $order, ValueNode $node, MetadataFieldType $fieldType, ?MetadataModelOptionGroup $optionGroup, ResourceType $resourceType, MetadataModelForm $form)
     {
         $this->title = $title;
         $this->description = $description;
@@ -83,7 +75,7 @@ class MetadataModelField
         $this->node = $node;
         $this->fieldType = $fieldType;
         $this->optionGroup = $optionGroup;
-        $this->resourceTypes = $resourceTypes;
+        $this->resourceType = $resourceType;
         $this->form = $form;
         $this->metadataModel = $form->getMetadataModelVersion();
     }
@@ -128,26 +120,14 @@ class MetadataModelField
         $this->order = $order;
     }
 
-    public function addResourceType(ResourceType $type): void
+    public function getResourceType(): ResourceType
     {
-        $this->resourceTypes[] = $type;
-        $this->resourceTypes = array_unique($this->resourceTypes);
+        return $this->resourceType;
     }
 
-    public function removeResourceType(ResourceType $type): void
+    public function setResourceType(ResourceType $resourceType): void
     {
-        $this->resourceTypes = array_diff($this->resourceTypes, [$type]);
-    }
-
-    /** @return ResourceType[] */
-    public function getResourceTypes(): array
-    {
-        return $this->resourceTypes;
-    }
-
-    public function hasResourceType(ResourceType $type): bool
-    {
-        return in_array($type, $this->resourceTypes, true);
+        $this->resourceType = $resourceType;
     }
 
     public function getNode(): ValueNode

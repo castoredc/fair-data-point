@@ -8,6 +8,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
+use App\Exception\DataSpecification\MetadataModel\NodeAlreadyUsed;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,6 +54,10 @@ class CreateMetadataModelFieldCommandHandler
 
         assert($node instanceof ValueNode);
 
+        if ($node->hasField()) {
+            throw new NodeAlreadyUsed($node->getField()->getTitle());
+        }
+
         $field = new MetadataModelField(
             $command->getTitle(),
             $command->getDescription(),
@@ -60,7 +65,7 @@ class CreateMetadataModelFieldCommandHandler
             $node,
             $command->getFieldType(),
             $optionGroup,
-            [],
+            $command->getResourceType(),
             $form
         );
 

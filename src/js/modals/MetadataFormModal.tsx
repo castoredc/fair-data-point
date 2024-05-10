@@ -10,6 +10,7 @@ import Input from 'components/Input/Formik/Input';
 import Select from 'components/Input/Formik/Select';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
+import { ResourceType } from 'components/MetadataItem/EnumMappings';
 
 type MetadataFormModalProps = {
     show: boolean;
@@ -102,6 +103,8 @@ export default class MetadataFormModal extends Component<MetadataFormModalProps,
         const { type, show, handleClose, orderOptions } = this.props;
         const { initialValues, validation } = this.state;
 
+        console.log(resourceTypes);
+
         const title = initialValues.id ? 'Edit form' : 'Add form';
         return (
             <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
@@ -115,6 +118,10 @@ export default class MetadataFormModal extends Component<MetadataFormModalProps,
 
                                 <FormItem label="Position">
                                     <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
+                                </FormItem>
+
+                                <FormItem label="Type">
+                                    <Field component={Select} options={resourceTypes} name="resourceType" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>
@@ -148,9 +155,18 @@ export default class MetadataFormModal extends Component<MetadataFormModalProps,
 const defaultData = {
     title: '',
     order: '',
+    resourceType: '',
 };
 
 const MetadataModelFormSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
     order: Yup.string().required('Please select a position'),
 });
+
+const resourceTypes = [
+    { value: 'fdp', label: ResourceType.fdp },
+    { value: 'catalog', label: ResourceType.catalog },
+    { value: 'dataset', label: ResourceType.dataset },
+    { value: 'distribution', label: ResourceType.distribution },
+    { value: 'study', label: ResourceType.study },
+];

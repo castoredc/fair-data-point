@@ -26,7 +26,7 @@ class CreateMetadataModelFormCommandHandler
             throw new NoAccessPermission();
         }
 
-        $form = new MetadataModelForm($command->getTitle(), $command->getOrder(), [], $metadataModelVersion);
+        $form = new MetadataModelForm($command->getTitle(), $command->getOrder(), $command->getResourceType(), $metadataModelVersion);
         $metadataModelVersion->addForm($form);
 
         $this->em->persist($form);

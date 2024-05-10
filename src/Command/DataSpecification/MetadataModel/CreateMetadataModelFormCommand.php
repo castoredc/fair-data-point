@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace App\Command\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\Enum\ResourceType;
 
 class CreateMetadataModelFormCommand
 {
-    public function __construct(private MetadataModelVersion $metadataModelVersion, private string $title, private int $order)
+    public function __construct(private MetadataModelVersion $metadataModelVersion, private string $title, private int $order, private ResourceType $resourceType)
     {
     }
 
@@ -24,5 +25,10 @@ class CreateMetadataModelFormCommand
     public function getOrder(): int
     {
         return $this->order;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return $this->resourceType;
     }
 }

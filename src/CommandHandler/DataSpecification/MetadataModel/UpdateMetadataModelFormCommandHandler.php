@@ -30,6 +30,7 @@ class UpdateMetadataModelFormCommandHandler
 
         $form->setTitle($command->getTitle());
         $form->setOrder($command->getOrder());
+        $form->setResourceType($command->getResourceType());
 
         $metadataModelVersion->addForm($form);
 

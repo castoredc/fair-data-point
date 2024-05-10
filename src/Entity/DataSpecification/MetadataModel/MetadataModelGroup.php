@@ -9,9 +9,6 @@ use App\Entity\DataSpecification\Common\Version;
 use App\Entity\Enum\ResourceType;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function array_diff;
-use function array_unique;
-use function in_array;
 
 /**
  * @ORM\Entity
@@ -20,15 +17,13 @@ use function in_array;
  */
 class MetadataModelGroup extends Group
 {
-    /**
-     * @ORM\Column(type="ResourcesType", nullable="true")
-     *
-     * @var ResourceType[]
-     */
-    private ?array $resourceTypes = null;
+    /** @ORM\Column(type="ResourceType") */
+    private ResourceType $resourceType;
 
-    public function __construct(string $title, int $order, Version $version)
+    public function __construct(string $title, int $order, ResourceType $resourceType, Version $version)
     {
+        $this->resourceType = $resourceType;
+
         parent::__construct($title, $order, false, false, $version);
     }
 
@@ -43,37 +38,13 @@ class MetadataModelGroup extends Group
         return $this->getElementGroups();
     }
 
-    public function addResourceType(ResourceType $type): void
+    public function getResourceType(): ResourceType
     {
-        if ($this->resourceTypes === null) {
-            $this->resourceTypes = [];
-        }
-
-        $this->resourceTypes[] = $type;
-        $this->resourceTypes = array_unique($this->resourceTypes);
+        return $this->resourceType;
     }
 
-    public function removeResourceType(ResourceType $type): void
+    public function setResourceType(ResourceType $resourceType): void
     {
-        if ($this->resourceTypes === null) {
-            $this->resourceTypes = [];
-        }
-
-        $this->resourceTypes = array_diff($this->resourceTypes, [$type]);
-    }
-
-    /** @return ResourceType[] */
-    public function getResourceTypes(): array
-    {
-        return $this->resourceTypes;
-    }
-
-    public function hasResourceType(ResourceType $type): bool
-    {
-        if ($this->resourceTypes === null) {
-            return false;
-        }
-
-        return in_array($type, $this->resourceTypes, true);
+        $this->resourceType = $resourceType;
     }
 }

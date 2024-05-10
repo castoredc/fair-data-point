@@ -12,6 +12,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Exception\DataSpecification\MetadataModel\NodeAlreadyUsed;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function dump;
 
 /**
  * @Route("/api/metadata-model/{model}/v/{version}/form/{form}/field")
@@ -30,20 +30,41 @@ use function dump;
 class MetadataModelFieldApiController extends ApiController
 {
     /** @Route("", methods={"POST"}, name="api_metadata_model_field_add") */
-    public function addField(MetadataModelVersion $metadataModelVersion, MetadataModelForm $form, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addField(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelForm $form,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(MetadataModelFieldApiRequest::class, $request);
             assert($parsed instanceof MetadataModelFieldApiRequest);
 
-            $bus->dispatch(new CreateMetadataModelFieldCommand($form, $parsed->getTitle(), $parsed->getDescription(), $parsed->getOrder(), $parsed->getNode(), $parsed->getFieldType(), $parsed->getOptionGroup()));
+            $bus->dispatch(
+                new CreateMetadataModelFieldCommand(
+                    $form,
+                    $parsed->getTitle(),
+                    $parsed->getDescription(),
+                    $parsed->getOrder(),
+                    $parsed->getNode(),
+                    $parsed->getFieldType(),
+                    $parsed->getOptionGroup(),
+                    $form->getResourceType()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
+            if ($e instanceof NodeAlreadyUsed) {
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
+            }
+
             $this->logger->critical('An error occurred while creating a field', ['exception' => $e]);
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -54,8 +75,13 @@ class MetadataModelFieldApiController extends ApiController
      * @Route("/{field}", methods={"POST"}, name="api_metadata_model_field_update")
      * @ParamConverter("field", options={"mapping": {"field": "id"}})
      */
-    public function updateField(MetadataModelVersion $metadataModelVersion, MetadataModelForm $form, MetadataModelField $field, Request $request, MessageBusInterface $bus): Response
-    {
+    public function updateField(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelForm $form,
+        MetadataModelField $field,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($field->getForm() !== $form || $form->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -66,18 +92,36 @@ class MetadataModelFieldApiController extends ApiController
             $parsed = $this->parseRequest(MetadataModelFieldApiRequest::class, $request);
             assert($parsed instanceof MetadataModelFieldApiRequest);
 
-            $bus->dispatch(new UpdateMetadataModelFieldCommand($field, $parsed->getTitle(), $parsed->getDescription(), $parsed->getOrder(), $parsed->getNode(), $parsed->getFieldType(), $parsed->getOptionGroup()));
+            $bus->dispatch(
+                new UpdateMetadataModelFieldCommand(
+                    $field,
+                    $parsed->getTitle(),
+                    $parsed->getDescription(),
+                    $parsed->getOrder(),
+                    $parsed->getNode(),
+                    $parsed->getFieldType(),
+                    $parsed->getOptionGroup(),
+                    $form->getResourceType()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a data model field', [
-                'exception' => $e,
-                'FieldID' => $field->getId(),
-            ]);
+            $e = $e->getPrevious();
 
-            dump($e);
+            if ($e instanceof NodeAlreadyUsed) {
+                return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
+            }
+
+            $this->logger->critical(
+                'An error occurred while updating a data model field',
+                [
+                    'exception' => $e,
+                    'FieldID' => $field->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -87,8 +131,12 @@ class MetadataModelFieldApiController extends ApiController
      * @Route("/{field}", methods={"DELETE"}, name="api_metadata_model_field_delete")
      * @ParamConverter("field", options={"mapping": {"field": "id"}})
      */
-    public function deleteField(MetadataModelVersion $metadataModelVersion, MetadataModelForm $form, MetadataModelField $field, MessageBusInterface $bus): Response
-    {
+    public function deleteField(
+        MetadataModelVersion $metadataModelVersion,
+        MetadataModelForm $form,
+        MetadataModelField $field,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($field->getForm() !== $form || $form->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -100,10 +148,15 @@ class MetadataModelFieldApiController extends ApiController
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while deleting a field', [
-                'exception' => $e,
-                'FieldID' => $field->getId(),
-            ]);
+            $e = $e->getPrevious();
+
+            $this->logger->critical(
+                'An error occurred while deleting a field',
+                [
+                    'exception' => $e,
+                    'FieldID' => $field->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
