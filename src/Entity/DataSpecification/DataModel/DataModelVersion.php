@@ -52,7 +52,7 @@ class DataModelVersion extends Version implements ModelVersion
         $return = [];
 
         foreach ($this->elements as $node) {
-            if (! is_a($node, $nodeType->getClassName())) {
+            if (! is_a($node, $nodeType->getClassNameForDataModel())) {
                 continue;
             }
 
