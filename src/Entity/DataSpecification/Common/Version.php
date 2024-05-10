@@ -63,6 +63,7 @@ abstract class Version
 
     /**
      * @ORM\OneToMany(targetEntity="Element", mappedBy="version", cascade={"persist"})
+     * @ORM\OrderBy({"title" = "ASC"})
      *
      * @var Collection<Element>
      */
@@ -70,6 +71,7 @@ abstract class Version
 
     /**
      * @ORM\OneToMany(targetEntity="OptionGroup", mappedBy="version", cascade={"persist"})
+     * @ORM\OrderBy({"title" = "ASC"})
      *
      * @var Collection<OptionGroup>
      */

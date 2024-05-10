@@ -26,6 +26,7 @@ class DataModelVersion extends Version implements ModelVersion
 {
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"})
+     * @ORM\OrderBy({"prefix" = "ASC"})
      *
      * @var Collection<NamespacePrefix>
      */
