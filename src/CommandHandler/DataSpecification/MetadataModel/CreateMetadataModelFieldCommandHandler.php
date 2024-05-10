@@ -7,11 +7,13 @@ use App\Command\DataSpecification\MetadataModel\CreateMetadataModelFieldCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use function assert;
 
 #[AsMessageHandler]
 class CreateMetadataModelFieldCommandHandler
@@ -48,6 +50,8 @@ class CreateMetadataModelFieldCommandHandler
         if ($node === null) {
             throw new NotFound();
         }
+
+        assert($node instanceof ValueNode);
 
         $field = new MetadataModelField(
             $command->getTitle(),

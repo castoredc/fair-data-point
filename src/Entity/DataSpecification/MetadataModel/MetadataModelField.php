@@ -55,7 +55,7 @@ class MetadataModelField
 
     /**
      * @ORM\ManyToOne(targetEntity="MetadataModelForm", inversedBy="fields", cascade={"persist"})
-     * @ORM\JoinColumn(name="form_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="form_id", referencedColumnName="id", nullable=false)
      */
     private MetadataModelForm $form;
 
@@ -70,7 +70,7 @@ class MetadataModelField
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
-     * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", nullable=false)
      */
     private ValueNode $node;
 
@@ -147,7 +147,7 @@ class MetadataModelField
 
     public function hasResourceType(ResourceType $type): bool
     {
-        return in_array($type, $this->resourceTypes);
+        return in_array($type, $this->resourceTypes, true);
     }
 
     public function getNode(): ValueNode

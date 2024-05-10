@@ -123,7 +123,7 @@ class MetadataModelForm
 
     public function hasResourceType(ResourceType $type): bool
     {
-        return in_array($type, $this->resourceTypes);
+        return in_array($type, $this->resourceTypes, true);
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

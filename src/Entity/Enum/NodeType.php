@@ -9,6 +9,7 @@ use App\Entity\DataSpecification\DataModel\Node\InternalIriNode as DataModelInte
 use App\Entity\DataSpecification\DataModel\Node\LiteralNode as DataModelLiteralNode;
 use App\Entity\DataSpecification\DataModel\Node\RecordNode as DataModelRecordNode;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode as DataModelValueNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode as MetadataModelInternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode as MetadataModelExternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode as MetadataModelLiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode as MetadataModelRecordNode;

@@ -74,6 +74,6 @@ class MetadataModelGroup extends Group
             return false;
         }
 
-        return in_array($type, $this->resourceTypes);
+        return in_array($type, $this->resourceTypes, true);
     }
 }

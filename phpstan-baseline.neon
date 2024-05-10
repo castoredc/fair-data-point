@@ -1,11 +1,246 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Constant PROJECT_ROOT not found\\.$#"
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$email follows optional parameter \\$middleName\\.$#"
 			count: 1
-			path: bin/include/check-env.php
+			path: src/Command/Agent/AddStudyContactCommand.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, string\\|null given\\.$#"
-			count: 2
-			path: bin/include/check-env.php
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$firstName follows optional parameter \\$id\\.$#"
+			count: 1
+			path: src/Command/Agent/AddStudyContactCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$lastName follows optional parameter \\$middleName\\.$#"
+			count: 1
+			path: src/Command/Agent/AddStudyContactCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$departmentSource follows optional parameter \\$organizationCity\\.$#"
+			count: 1
+			path: src/Command/Agent/CreateAffiliationCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$organizationCountry follows optional parameter \\$organizationCity\\.$#"
+			count: 1
+			path: src/Command/Agent/CreateAffiliationCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$position follows optional parameter \\$departmentName\\.$#"
+			count: 1
+			path: src/Command/Agent/CreateAffiliationCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$acceptSubmissions follows optional parameter \\$search\\.$#"
+			count: 1
+			path: src/Command/Catalog/GetPaginatedCatalogsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page follows optional parameter \\$search\\.$#"
+			count: 1
+			path: src/Command/Catalog/GetPaginatedCatalogsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$perPage follows optional parameter \\$search\\.$#"
+			count: 1
+			path: src/Command/Catalog/GetPaginatedCatalogsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$value follows optional parameter \\$description\\.$#"
+			count: 1
+			path: src/Command/DataSpecification/Common/Model/CreateNodeCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$options follows optional parameter \\$description\\.$#"
+			count: 1
+			path: src/Command/DataSpecification/Common/Model/CreateOptionGroupCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$subjectType follows optional parameter \\$predicateValue\\.$#"
+			count: 1
+			path: src/Command/DataSpecification/Common/Model/CreateTripleCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$value follows optional parameter \\$description\\.$#"
+			count: 1
+			path: src/Command/DataSpecification/Common/Model/EditNodeCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$options follows optional parameter \\$description\\.$#"
+			count: 1
+			path: src/Command/DataSpecification/Common/Model/UpdateOptionGroupCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$subjectType follows optional parameter \\$predicateValue\\.$#"
+			count: 1
+			path: src/Command/DataSpecification/Common/Model/UpdateTripleCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page follows optional parameter \\$hideCatalogs\\.$#"
+			count: 1
+			path: src/Command/Dataset/GetPaginatedDatasetsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$perPage follows optional parameter \\$hideCatalogs\\.$#"
+			count: 1
+			path: src/Command/Dataset/GetPaginatedDatasetsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page follows optional parameter \\$search\\.$#"
+			count: 1
+			path: src/Command/Distribution/GetPaginatedDistributionsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$perPage follows optional parameter \\$search\\.$#"
+			count: 1
+			path: src/Command/Distribution/GetPaginatedDistributionsCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$cached follows optional parameter \\$clientSecret\\.$#"
+			count: 1
+			path: src/Command/Distribution/UpdateDistributionCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$public follows optional parameter \\$clientSecret\\.$#"
+			count: 1
+			path: src/Command/Distribution/UpdateDistributionCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$published follows optional parameter \\$clientSecret\\.$#"
+			count: 1
+			path: src/Command/Distribution/UpdateDistributionCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$themeTaxonomy follows optional parameter \\$logo\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateCatalogMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$publishers follows optional parameter \\$license\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$versionUpdate follows optional parameter \\$license\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$conditions follows optional parameter \\$summary\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$briefSummary follows optional parameter \\$scientificName\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$estimatedEnrollment follows optional parameter \\$intervention\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$type follows optional parameter \\$summary\\.$#"
+			count: 1
+			path: src/Command/Metadata/CreateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$conditions follows optional parameter \\$summary\\.$#"
+			count: 1
+			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$briefSummary follows optional parameter \\$scientificName\\.$#"
+			count: 1
+			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$estimatedEnrollment follows optional parameter \\$intervention\\.$#"
+			count: 1
+			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$type follows optional parameter \\$summary\\.$#"
+			count: 1
+			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$email follows optional parameter \\$middleName\\.$#"
+			count: 1
+			path: src/Command/Security/UpdateUserCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$lastName follows optional parameter \\$middleName\\.$#"
+			count: 1
+			path: src/Command/Security/UpdateUserCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$manuallyEntered follows optional parameter \\$name\\.$#"
+			count: 1
+			path: src/Command/Study/CreateStudyCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page follows optional parameter \\$hideCatalogs\\.$#"
+			count: 1
+			path: src/Command/Study/GetPaginatedStudiesCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$perPage follows optional parameter \\$hideCatalogs\\.$#"
+			count: 1
+			path: src/Command/Study/GetPaginatedStudiesCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$published follows optional parameter \\$name\\.$#"
+			count: 1
+			path: src/Command/Study/UpdateStudyCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$slug follows optional parameter \\$name\\.$#"
+			count: 1
+			path: src/Command/Study/UpdateStudyCommand.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$record follows optional parameter \\$updatedOn\\.$#"
+			count: 1
+			path: src/Entity/Castor/Data/FieldResult.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$layout follows optional parameter \\$description\\.$#"
+			count: 1
+			path: src/Entity/Castor/Form/FieldOptionGroup.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$surveySteps follows optional parameter \\$description\\.$#"
+			count: 1
+			path: src/Entity/Castor/Structure/Survey.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$coordinatesLatitude follows optional parameter \\$countryCode\\.$#"
+			count: 1
+			path: src/Entity/FAIRData/Agent/Organization.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$coordinatesLongitude follows optional parameter \\$countryCode\\.$#"
+			count: 1
+			path: src/Entity/FAIRData/Agent/Organization.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$city follows optional parameter \\$countryCode\\.$#"
+			count: 1
+			path: src/Entity/FAIRData/Agent/Organization.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$city follows optional parameter \\$lng\\.$#"
+			count: 1
+			path: src/Entity/Grid/Address.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$countryCode follows optional parameter \\$lng\\.$#"
+			count: 1
+			path: src/Entity/Grid/Address.php
+
+		-
+			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$primary follows optional parameter \\$lng\\.$#"
+			count: 1
+			path: src/Entity/Grid/Address.php

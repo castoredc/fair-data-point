@@ -97,8 +97,6 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
             } elseif ($node instanceof ValueNode) {
                 $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
-                $newNode->setFieldType($node->getFieldType());
-                $newNode->setOptionGroup($node->getOptionGroup());
 
                 if (! $node->isAnnotatedValue()) {
                     $newNode->setDataType($node->getDataType());
