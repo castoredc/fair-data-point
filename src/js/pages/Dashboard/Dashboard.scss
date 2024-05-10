@@ -30,7 +30,10 @@
         display: flex;
         flex-flow: column;
         height: 100%;
-        overflow: auto;
+
+        * {
+            box-sizing: border-box;
+        }
 
         .TableHeader {
             padding: 10px 0;

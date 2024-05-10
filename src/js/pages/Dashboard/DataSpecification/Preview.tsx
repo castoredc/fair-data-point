@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { LoadingOverlay } from '@castoredc/matter';
-import DataSpecificationModulePreview from 'components/DataSpecificationModule/DataSpecificationModulePreview';
+import DataSpecificationModulePreview from 'components/DataSpecification/DataSpecificationModulePreview';
 import SideTabs from 'components/SideTabs';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';

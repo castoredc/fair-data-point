@@ -10,7 +10,7 @@ import Input from 'components/Input/Formik/Input';
 import Choice from 'components/Input/Formik/Choice';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
-import { mergeData } from '../util';
+import { getType, mergeData } from '../util';
 import { apiClient } from '../network';
 
 type AddNodeModalProps = {
@@ -25,9 +25,11 @@ type AddNodeModalProps = {
     types: {
         fieldTypes: {
             plain: {
-                value: string,
-                label: string
-            }[],
+                [key: string]: {
+                    value: string,
+                    label: string
+                }[],
+            },
             annotated: {
                 value: string,
                 label: string
@@ -38,6 +40,7 @@ type AddNodeModalProps = {
             label: string
         }[],
     };
+    optionGroups: any;
 };
 
 type AddNodeModalState = {
@@ -56,7 +59,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { open, data, type } = this.props;
+        const { open, data, type, modelType } = this.props;
 
         let initialValues = data ? mergeData(defaultData, data) : defaultData;
 
@@ -74,8 +77,6 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                     ...initialValues,
                     value: initialValues.value.value,
                     dataType: initialValues.value.dataType,
-                    fieldType: initialValues.value.fieldType,
-                    optionGroup: initialValues.value.optionGroup
                 };
             }
         }
@@ -85,6 +86,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                 initialValues: {
                     ...initialValues,
                     type: type,
+                    modelType: modelType,
                 },
             });
         }
@@ -113,7 +115,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
     };
 
     render() {
-        const { modelType, data, type, open, onClose, types } = this.props;
+        const { modelType, data, type, open, onClose, types, optionGroups } = this.props;
         const { validation, initialValues } = this.state;
 
         const title = data ? `Edit ${type} node` : `Add ${type} node`;
@@ -127,17 +129,6 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
 
                         const showDataTypes = values.type === 'literal' || isPlainValue;
                         const showRepeated = modelType === 'data-model' && (values.type === 'internal' || values.type === 'value');
-
-                        const showFieldTypes = modelType === 'metadata-model' && (isPlainValue || isAnnotatedValue);
-                        console.log(values.type);
-                        console.log(values.dataType);
-
-                        let fieldTypes = [];
-                        if(showFieldTypes && isPlainValue) {
-                            fieldTypes = values.dataType ? types.fieldTypes[values.value][values.dataType] : [];
-                        } else if(showFieldTypes && isAnnotatedValue) {
-                            fieldTypes = types.fieldTypes[values.value];
-                        }
 
                         return (
                             <Form>
@@ -176,12 +167,6 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                 {showDataTypes && (
                                     <FormItem label="Data type">
                                         <Field component={Select} options={types.dataTypes} serverError={validation} name="dataType" />
-                                    </FormItem>
-                                )}
-
-                                {showFieldTypes && (
-                                    <FormItem label="Field type">
-                                        <Field component={Select} options={fieldTypes} serverError={validation} name="fieldType" />
                                     </FormItem>
                                 )}
 
@@ -234,7 +219,10 @@ const NodeSchema = Yup.object().shape({
             is: 'external',
             then: Yup.string().url('Please enter a valid URL'),
         }),
-    repeated: Yup.boolean().required('Please select if this node should be repeated'),
+    repeated: Yup.boolean().when(['modelType', 'type'], {
+        is: (modelType, type) => modelType === 'data-model' && (type === 'internal' || type === 'value'),
+        then: schema => schema.required('Please select if this node should be repeated'),
+    }),
     dataType: Yup.string().when(['type', 'value'], {
         is: (type, value) => type === 'literal' || (type === 'value' && value === 'plain'),
         then: schema => schema.required('Please select a data type'),

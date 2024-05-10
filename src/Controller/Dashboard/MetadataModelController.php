@@ -52,6 +52,7 @@ final class MetadataModelController extends AbstractController
 
     /**
      * @Route("/dashboard/metadata-models/{model}/{version}/modules", name="dashboard_metadata_model_modules")
+     * @Route("/dashboard/metadata-models/{model}/{version}/forms", name="dashboard_metadata_model_forms")
      * @Route("/dashboard/metadata-models/{model}/{version}/option-group", name="dashboard_metadata_model_option_groups")
      * @Route("/dashboard/metadata-models/{model}/{version}/prefixes", name="dashboard_metadata_model_prefixes")
      * @Route("/dashboard/metadata-models/{model}/{version}/preview", name="dashboard_metadata_model_preview")

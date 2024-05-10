@@ -7,7 +7,7 @@ import DataSpecificationModuleModal from 'modals/DataSpecificationModuleModal';
 import TripleModal from 'modals/TripleModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import SideTabs from 'components/SideTabs';
-import DataSpecificationModule from 'components/DataSpecificationModule';
+import DataSpecificationModule from 'src/js/components/DataSpecification/DataSpecificationModule';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';

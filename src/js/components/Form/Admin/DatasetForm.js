@@ -73,7 +73,6 @@ export default class DatasetForm extends Component {
                         });
                     } else {
                         toast.error(<ToastItem type="error" title="An error occurred" />);
-                        console.log(error);
                     }
                     this.setState({
                         submitDisabled: false,

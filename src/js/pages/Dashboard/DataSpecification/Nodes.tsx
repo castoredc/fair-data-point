@@ -29,9 +29,11 @@ interface NodesProps extends AuthorizedRouteComponentProps {
     types: {
         fieldTypes: {
             plain: {
-                value: string,
-                label: string
-            }[],
+                [key: string]: {
+                    value: string,
+                    label: string
+                }[],
+            },
             annotated: {
                 value: string,
                 label: string
@@ -42,6 +44,7 @@ interface NodesProps extends AuthorizedRouteComponentProps {
             label: string
         }[],
     };
+    optionGroups: any;
 }
 
 interface NodesState {
@@ -124,37 +127,37 @@ export default class Nodes extends Component<NodesProps, NodesState> {
 
     render() {
         const { showModal, modalData } = this.state;
-        const { type, dataSpecification, nodes, version, history, match, types } = this.props;
+        const { type, dataSpecification, nodes, version, history, match, types, optionGroups } = this.props;
 
         if (nodes === null || types.dataTypes.length === 0) {
             return <LoadingOverlay accessibleLabel="Loading data model" />;
         }
 
-        const internalNodeRows = type === 'data-model' ? nodes.internal.map(item => {
-                return {
-                    title: <CellText>{item.title}</CellText>,
-                    value: <CellText>{item.value}</CellText>,
-                    repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
-                    menu: (
-                        <ActionsCell
-                            items={[
-                                {
-                                    destination: () => {
-                                        this.openModal('add', item);
-                                    },
-                                    label: 'Edit node',
+        const internalNodeRows = nodes.internal.map(item => {
+            return {
+                title: <CellText>{item.title}</CellText>,
+                value: <CellText>{item.value}</CellText>,
+                repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                menu: (
+                    <ActionsCell
+                        items={[
+                            {
+                                destination: () => {
+                                    this.openModal('add', item);
                                 },
-                                {
-                                    destination: () => {
-                                        this.openModal('remove', item);
-                                    },
-                                    label: 'Delete node',
+                                label: 'Edit node',
+                            },
+                            {
+                                destination: () => {
+                                    this.openModal('remove', item);
                                 },
-                            ]}
-                        />
-                    ),
-                };
-            }) : [];
+                                label: 'Delete node',
+                            },
+                        ]}
+                    />
+                ),
+            };
+        });
 
         const externalNodeRows = nodes.external.map(item => {
             return {
@@ -216,16 +219,11 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                 label: string
             } | undefined = undefined;
 
-            console.log(item.value);
-
-
             if(item.value.fieldType && item.value.value === 'plain') {
-                fieldType = types.fieldTypes[item.value.value][item.value.dataType].find(fieldType => fieldType.value === item.value.fieldType);
+                fieldType = types.fieldTypes.plain[item.value.dataType].find(fieldType => fieldType.value === item.value.fieldType);
             } else if(item.value.fieldType && item.value.value === 'annotated') {
-                fieldType = types.fieldTypes[item.value.value].find(fieldType => fieldType.value === item.value.fieldType);
+                fieldType = types.fieldTypes.annotated.find(fieldType => fieldType.value === item.value.fieldType);
             }
-
-            console.log(fieldType);
 
             return {
                 title: <CellText>{item.title}</CellText>,
@@ -273,6 +271,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     versionId={version.value}
                     data={modalData}
                     types={types}
+                    optionGroups={optionGroups}
                 />
 
                 {modalData && (
@@ -305,7 +304,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                         history.push(newUrl);
                     }}
                     tabs={{
-                    ...type === 'data-model' && {internal: {
+                        internal: {
                             title: 'Internal',
                             content: (
                                 <DataGrid
@@ -342,7 +341,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                                     ]}
                                 />
                             ),
-                        }},
+                        },
                         external: {
                             title: 'External',
                             content: (
@@ -441,16 +440,6 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                                             isInteractive: true,
                                             width: 32,
                                         }] : []),
-                                        ...(type === 'metadata-model' ? [
-                                            {
-                                                Header: 'Field type',
-                                                accessor: 'fieldType',
-                                            },
-                                            {
-                                                Header: 'Option group',
-                                                accessor: 'optionGroup',
-                                            }
-                                        ] : []),
                                         {
                                             accessor: 'menu',
                                             disableGroupBy: true,
