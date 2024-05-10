@@ -13,7 +13,6 @@ use function assert;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="metadata_model_node_value")
  */
 class ValueNode extends Node

@@ -10,7 +10,6 @@ use function assert;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="distribution_csv")
  */
 class CSVDistribution extends DistributionContents
