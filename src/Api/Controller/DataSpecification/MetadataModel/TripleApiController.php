@@ -20,6 +20,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function dump;
 
 /**
  * @Route("/api/metadata-model/{model}/v/{version}/module/{module}/triple")
@@ -51,6 +52,7 @@ class TripleApiController extends ApiController
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $this->logger->critical('An error occurred while adding a data model triple', ['exception' => $e]);
+            dump($e->getPrevious());
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

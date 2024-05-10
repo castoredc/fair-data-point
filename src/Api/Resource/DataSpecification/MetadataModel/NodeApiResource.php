@@ -40,9 +40,8 @@ class NodeApiResource implements ApiResource
             ];
         } elseif ($this->node instanceof ValueNode) {
             $data['value'] = [
-                'dataType' => $this->node->getDataType()->toString(),
+                'dataType' => $this->node->getDataType()?->toString(),
                 'value' => $this->node->getValue(),
-                'fieldType' => $this->node->getFieldType()?->toString(),
                 'optionGroup' => $this->node->getOptionGroup() !== null ? (new OptionGroupApiResource($this->node->getOptionGroup()))->toArray() : null,
             ];
         }

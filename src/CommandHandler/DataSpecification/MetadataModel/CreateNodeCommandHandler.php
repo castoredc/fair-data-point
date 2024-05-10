@@ -5,6 +5,7 @@ namespace App\CommandHandler\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\MetadataModel\CreateNodeCommand;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Iri;
@@ -46,6 +47,9 @@ class CreateNodeCommandHandler
         if ($type->isExternalIri()) {
             $node = new ExternalIriNode($metadataModelVersion, $command->getTitle(), $command->getDescription());
             $node->setIri(new Iri($command->getValue()));
+        } elseif ($type->isInternalIri()) {
+            $node = new InternalIriNode($metadataModelVersion, $command->getTitle(), $command->getDescription());
+            $node->setSlug($command->getValue());
         } elseif ($type->isLiteral()) {
             $node = new LiteralNode($metadataModelVersion, $command->getTitle(), $command->getDescription());
             $node->setValue($command->getValue());
@@ -61,8 +65,6 @@ class CreateNodeCommandHandler
             } else {
                 throw new InvalidValueType();
             }
-
-            $node->setFieldType($command->getFieldType());
         } else {
             throw new InvalidNodeType();
         }

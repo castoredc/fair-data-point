@@ -26,6 +26,7 @@ class NodesApiResource implements ApiResource
     {
         $data = [
             'external' => [],
+            'internal' => [],
             'literal' => [],
             'record' => [],
             'value' => [],

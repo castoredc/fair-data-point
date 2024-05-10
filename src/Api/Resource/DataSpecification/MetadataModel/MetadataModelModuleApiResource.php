@@ -5,6 +5,7 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\DataSpecification\Common\DataSpecificationModuleApiResource;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
+use App\Entity\Enum\ResourceType;
 use function assert;
 
 class MetadataModelModuleApiResource extends DataSpecificationModuleApiResource
@@ -26,6 +27,12 @@ class MetadataModelModuleApiResource extends DataSpecificationModuleApiResource
             $return['groupedTriples'] = (new GroupedTriplesApiResource($module))->toArray();
         } else {
             $return['triples'] = (new TriplesApiResource($module))->toArray();
+        }
+
+        $return['resourceTypes'] = [];
+
+        foreach (ResourceType::TYPES as $TYPE) {
+            $return['resourceTypes'][$TYPE] = $module->hasResourceType(ResourceType::fromString($TYPE));
         }
 
         return $return;

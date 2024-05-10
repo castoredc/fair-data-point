@@ -121,8 +121,18 @@ class MetadataFieldType extends Enum
         self::DROPDOWN,
     ];
 
+    public const HAS_OPTION_GROUP = [
+        self::CHECKBOXES,
+        self::RADIO_BUTTONS,
+        self::DROPDOWN,
+    ];
+
     public const TYPES = [
         self::TYPE_PLAIN => self::PLAIN_VALUE_TYPES,
         self::TYPE_ANNOTATED => self::ANNOTATED_VALUE_TYPES,
     ];
+
+    public function hasOptionGroup(): bool {
+        return in_array($this->toString(), self::HAS_OPTION_GROUP, true);
+    }
 }

@@ -26,6 +26,7 @@ class MetadataModelVersion extends Version implements ModelVersion
 {
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="metadataModel", cascade={"persist"})
+     * @ORM\OrderBy({"prefix" = "ASC"})
      *
      * @var Collection<NamespacePrefix>
      */
@@ -38,12 +39,29 @@ class MetadataModelVersion extends Version implements ModelVersion
      */
     private Collection $predicates;
 
+    /**
+     * @ORM\OneToMany(targetEntity="MetadataModelForm", mappedBy="metadataModel", cascade={"persist"})
+     * @ORM\OrderBy({"order" = "ASC"})
+     *
+     * @var Collection<MetadataModelForm>
+     */
+    private Collection $forms;
+
+    /**
+     * @ORM\OneToMany(targetEntity="MetadataModelField", mappedBy="metadataModel", cascade={"persist"})
+     *
+     * @var Collection<MetadataModelField>
+     */
+    private Collection $fields;
+
     public function __construct(VersionNumber $version)
     {
         parent::__construct($version);
 
         $this->prefixes = new ArrayCollection();
         $this->predicates = new ArrayCollection();
+        $this->forms = new ArrayCollection();
+        $this->fields = new ArrayCollection();
     }
 
     /** @return Node[] */
@@ -111,5 +129,59 @@ class MetadataModelVersion extends Version implements ModelVersion
         assert($node instanceof Node);
 
         $this->addElement($node);
+    }
+
+    /** @return Collection<MetadataModelForm> */
+    public function getForms(): Collection
+    {
+        return $this->forms;
+    }
+
+    /** @return Collection<MetadataModelField> */
+    public function getFields(): Collection
+    {
+        return $this->fields;
+    }
+
+    public function addForm(MetadataModelForm $form): void
+    {
+        $newFormOrder = $form->getOrder();
+        $newForms = new ArrayCollection();
+
+        $order = 1;
+        foreach ($this->forms as $currentForm) {
+            /** @var MetadataModelForm $currentForm */
+            $newOrder = $order >= $newFormOrder ? $order + 1 : $order;
+            $currentForm->setOrder($newOrder);
+            $newForms->add($currentForm);
+
+            $order++;
+        }
+
+        $newForms->add($form);
+        $this->forms = $newForms;
+    }
+
+    public function reorderForms(): void
+    {
+        $newForms = new ArrayCollection();
+        $order = 1;
+
+        foreach ($this->forms as $currentForm) {
+            /** @var MetadataModelForm $currentForm */
+            $currentForm->setOrder($order);
+            $newForms->add($currentForm);
+
+            $order++;
+        }
+
+        $this->forms = $newForms;
+    }
+
+    public function removeForm(MetadataModelForm $form): void
+    {
+        $this->forms->removeElement($form);
+
+        $this->reorderForms();
     }
 }
