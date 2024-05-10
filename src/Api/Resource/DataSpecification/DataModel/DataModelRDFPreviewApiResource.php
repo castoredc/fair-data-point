@@ -11,23 +11,12 @@ use function array_values;
 
 class DataModelRDFPreviewApiResource implements ApiResource
 {
-    /** @var Triple[] */
-    private array $triples;
-
-    /** @var DataModelModuleRDFPreviewApiResource[] */
-    private array $modulePreviews;
-
-    private string $rdfPreview;
-
     /**
      * @param Triple[]                               $triples
      * @param DataModelModuleRDFPreviewApiResource[] $modulePreviews
      */
-    public function __construct(array $triples, array $modulePreviews, string $rdfPreview)
+    public function __construct(private array $triples, private array $modulePreviews, private string $rdfPreview)
     {
-        $this->triples = $triples;
-        $this->modulePreviews = $modulePreviews;
-        $this->rdfPreview = $rdfPreview;
     }
 
     /** @return array<mixed> */

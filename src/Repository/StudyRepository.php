@@ -37,7 +37,7 @@ class StudyRepository extends EntityRepository
         ?array $country,
         ?int $perPage,
         ?int $page,
-        bool $admin
+        bool $admin,
     ): mixed {
         $qb = $this->createQueryBuilder('study')
                    ->select('study');
@@ -80,9 +80,9 @@ class StudyRepository extends EntityRepository
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             return 0;
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException) {
             return 0;
         }
     }
@@ -107,7 +107,7 @@ class StudyRepository extends EntityRepository
         ?array $studyType,
         ?array $methodType,
         ?array $country,
-        bool $admin
+        bool $admin,
     ): QueryBuilder {
         if ($catalog !== null) {
             $qb->innerJoin('study.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')

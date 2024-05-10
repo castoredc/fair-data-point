@@ -8,12 +8,9 @@ use function sprintf;
 
 class VariableNotSelected extends Exception
 {
-    private string $variableName;
-
-    public function __construct(string $variableName)
+    public function __construct(private string $variableName)
     {
         parent::__construct();
-        $this->variableName = $variableName;
     }
 
     /** @return array<mixed> */

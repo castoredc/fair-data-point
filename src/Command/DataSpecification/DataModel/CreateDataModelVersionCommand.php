@@ -9,13 +9,9 @@ use App\Entity\Enum\VersionType;
 
 class CreateDataModelVersionCommand extends CreateModelVersionCommand
 {
-    private DataModel $dataModel;
-
-    public function __construct(DataModel $dataModel, VersionType $versionType)
+    public function __construct(private DataModel $dataModel, VersionType $versionType)
     {
         parent::__construct($versionType);
-
-        $this->dataModel = $dataModel;
     }
 
     public function getDataModel(): DataModel

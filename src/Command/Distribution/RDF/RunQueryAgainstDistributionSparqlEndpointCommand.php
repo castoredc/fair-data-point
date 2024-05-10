@@ -7,13 +7,8 @@ use App\Entity\Data\DistributionContents\RDFDistribution;
 
 class RunQueryAgainstDistributionSparqlEndpointCommand
 {
-    private RDFDistribution $distribution;
-    private string $query;
-
-    public function __construct(RDFDistribution $distribution, string $query)
+    public function __construct(private RDFDistribution $distribution, private string $query)
     {
-        $this->distribution = $distribution;
-        $this->query = $query;
     }
 
     public function getDistribution(): RDFDistribution

@@ -11,11 +11,8 @@ use function array_pop;
 
 class DataDictionaryDependencyApiResource implements ApiResource
 {
-    private Dependency $dependency;
-
-    public function __construct(Dependency $dependency)
+    public function __construct(private Dependency $dependency)
     {
-        $this->dependency = $dependency;
     }
 
     /** @return array<mixed> */
@@ -25,7 +22,7 @@ class DataDictionaryDependencyApiResource implements ApiResource
 
         $array = [
             'id' => $this->dependency->getId(),
-            'group' => $this->dependency->getGroup() !== null ? $this->dependency->getGroup()->getId() : null,
+            'group' => $this->dependency->getGroup()?->getId(),
         ];
 
         if ($this->dependency instanceof DependencyGroup) {

@@ -21,19 +21,11 @@ class MigrateToTripleStoresCommand extends Command
     /** @phpcs:ignore */
     protected static $defaultName = 'app:migrate-triplestores';
 
-    private EntityManagerInterface $em;
-    private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-    private EncryptionService $encryptionService;
-
     public function __construct(
-        EntityManagerInterface $em,
-        TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
-        EncryptionService $encryptionService
+        private EntityManagerInterface $em,
+        private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
+        private EncryptionService $encryptionService,
     ) {
-        $this->em = $em;
-        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
-        $this->encryptionService = $encryptionService;
-
         parent::__construct();
     }
 

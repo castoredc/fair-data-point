@@ -8,29 +8,8 @@ use App\Entity\Enum\MetadataFieldType;
 
 class CreateMetadataModelFieldCommand
 {
-    private MetadataModelForm $form;
-
-    private string $title;
-
-    private ?string $description;
-
-    private int $order;
-
-    private string $node;
-
-    private MetadataFieldType $fieldType;
-
-    private ?string $optionGroup;
-
-    public function __construct(MetadataModelForm $form, string $title, ?string $description, int $order, string $node, MetadataFieldType $fieldType, ?string $optionGroup)
+    public function __construct(private MetadataModelForm $form, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup)
     {
-        $this->form = $form;
-        $this->title = $title;
-        $this->description = $description;
-        $this->order = $order;
-        $this->node = $node;
-        $this->fieldType = $fieldType;
-        $this->optionGroup = $optionGroup;
     }
 
     public function getForm(): MetadataModelForm

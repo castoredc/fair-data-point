@@ -15,11 +15,8 @@ class RecordDataCollection
 
     private ReportData $reportData;
 
-    private Record $record;
-
-    public function __construct(Record $record)
+    public function __construct(private Record $record)
     {
-        $this->record = $record;
     }
 
     public function getRecord(): Record

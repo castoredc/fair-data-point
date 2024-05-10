@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class MetadataModelFormsApiResource implements ApiResource
 {
-    private MetadataModelVersion $metadataModel;
-
-    public function __construct(MetadataModelVersion $metadataModel)
+    public function __construct(private MetadataModelVersion $metadataModel)
     {
-        $this->metadataModel = $metadataModel;
     }
 
     /** @return array<mixed> */

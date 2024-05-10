@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class GetMetadataModelRDFPreviewCommand
 {
-    private MetadataModelVersion $metadataModelVersion;
-
-    public function __construct(MetadataModelVersion $metadataModelVersion)
+    public function __construct(private MetadataModelVersion $metadataModelVersion)
     {
-        $this->metadataModelVersion = $metadataModelVersion;
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

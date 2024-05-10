@@ -34,7 +34,7 @@ class OrganizationApiResource extends AgentApiResource
             'type' => 'organization',
             'country' => $agent->getCountry()->getCode(),
             'city' => $agent->getCity(),
-            'homepage' => $agent->getHomepage() !== null ? $agent->getHomepage()->getValue() : null,
+            'homepage' => $agent->getHomepage()?->getValue(),
             'coordinates' => $coordinates,
             'source' => 'database',
         ]);

@@ -12,11 +12,8 @@ use const DATE_ATOM;
 
 class CatalogApiResource implements ApiResource
 {
-    private Catalog $catalog;
-
-    public function __construct(Catalog $catalog)
+    public function __construct(private Catalog $catalog)
     {
-        $this->catalog = $catalog;
     }
 
     /** @return array<mixed> */
@@ -46,13 +43,13 @@ class CatalogApiResource implements ApiResource
                 ],
                 'description' => $metadata->getDescription()->toArray(),
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
-                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
-                'homepage' => $metadata->getHomepage() !== null ? $metadata->getHomepage()->getValue() : null,
-                'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
+                'language' => $metadata->getLanguage()?->getCode(),
+                'license' => $metadata->getLicense()?->getSlug(),
+                'homepage' => $metadata->getHomepage()?->getValue(),
+                'logo' => $metadata->getLogo()?->getValue(),
                 'themeTaxonomy' => (new OntologyConceptsApiResource($metadata->getThemeTaxonomies()->toArray()))->toArray(),
                 'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

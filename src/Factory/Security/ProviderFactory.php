@@ -14,23 +14,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ProviderFactory
 {
-    private UrlGeneratorInterface $generator;
-
-    private EntityManagerInterface $em;
-
-    private ApiClient $apiClient;
-    private EncryptionService $encryptionService;
-
     public function __construct(
-        UrlGeneratorInterface $generator,
-        EntityManagerInterface $em,
-        ApiClient $apiClient,
-        EncryptionService $encryptionService
+        private UrlGeneratorInterface $generator,
+        private EntityManagerInterface $em,
+        private ApiClient $apiClient,
+        private EncryptionService $encryptionService,
     ) {
-        $this->generator = $generator;
-        $this->em = $em;
-        $this->apiClient = $apiClient;
-        $this->encryptionService = $encryptionService;
     }
 
     /**
@@ -43,7 +32,7 @@ class ProviderFactory
         array $options,
         string $redirectUri,
         array $redirectParams = [],
-        array $collaborators = []
+        array $collaborators = [],
     ): UserProviderInterface {
         $options['redirectUri'] = $this->generator->generate(
             $redirectUri,

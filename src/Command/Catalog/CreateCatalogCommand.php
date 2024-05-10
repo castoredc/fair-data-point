@@ -5,17 +5,8 @@ namespace App\Command\Catalog;
 
 class CreateCatalogCommand
 {
-    private string $slug;
-
-    private bool $acceptSubmissions;
-
-    private ?bool $submissionAccessesData = null;
-
-    public function __construct(string $slug, bool $acceptSubmissions, ?bool $submissionAccessesData)
+    public function __construct(private string $slug, private bool $acceptSubmissions, private ?bool $submissionAccessesData = null)
     {
-        $this->slug = $slug;
-        $this->acceptSubmissions = $acceptSubmissions;
-        $this->submissionAccessesData = $submissionAccessesData;
     }
 
     public function getSlug(): string

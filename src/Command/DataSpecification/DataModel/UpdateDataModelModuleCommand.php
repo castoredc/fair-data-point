@@ -9,22 +9,9 @@ use App\Entity\DataSpecification\DataModel\DataModelGroup;
 
 class UpdateDataModelModuleCommand extends UpdateModelModuleCommand
 {
-    private DataModelGroup $module;
-
-    private bool $isRepeated;
-
-    private bool $isDependent;
-
-    private ?DependencyGroup $dependencies = null;
-
-    public function __construct(DataModelGroup $module, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
+    public function __construct(private DataModelGroup $module, string $title, int $order, private bool $isRepeated, private bool $isDependent, private ?DependencyGroup $dependencies = null)
     {
         parent::__construct($title, $order);
-
-        $this->module = $module;
-        $this->isRepeated = $isRepeated;
-        $this->isDependent = $isDependent;
-        $this->dependencies = $dependencies;
     }
 
     public function getModule(): DataModelGroup

@@ -5,11 +5,8 @@ namespace App\Command\Catalog;
 
 class GetCatalogBySlugCommand
 {
-    private string $slug;
-
-    public function __construct(string $slug)
+    public function __construct(private string $slug)
     {
-        $this->slug = $slug;
     }
 
     public function getSlug(): string

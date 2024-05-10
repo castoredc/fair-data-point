@@ -7,12 +7,9 @@ use App\Entity\Study;
 
 class GetStudyContactsCommand
 {
-    private Study $study;
-
     public function __construct(
-        Study $study
+        private Study $study,
     ) {
-        $this->study = $study;
     }
 
     public function getStudy(): Study

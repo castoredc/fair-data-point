@@ -25,20 +25,8 @@ use function json_decode;
 
 abstract class ApiController extends AbstractController
 {
-    protected ApiClient $apiClient;
-
-    protected ValidatorInterface $validator;
-
-    protected LoggerInterface $logger;
-
-    protected EntityManagerInterface $em;
-
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em)
+    public function __construct(protected ApiClient $apiClient, protected ValidatorInterface $validator, protected LoggerInterface $logger, protected EntityManagerInterface $em)
     {
-        $this->apiClient = $apiClient;
-        $this->validator = $validator;
-        $this->logger = $logger;
-        $this->em = $em;
     }
 
     /** @throws ApiRequestParseError */
@@ -103,7 +91,7 @@ abstract class ApiController extends AbstractController
         string $apiResourceType,
         PaginatedResultCollection $collection,
         ?array $attributes = null,
-        ?UriHelper $uriHelper = null
+        ?UriHelper $uriHelper = null,
     ): JsonResponse {
         $results = [];
 

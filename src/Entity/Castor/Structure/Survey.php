@@ -11,14 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 /** @ORM\Entity */
 class Survey extends StructureElement
 {
-    private ?string $description = null;
-
     /** @param SurveyStep[] $surveySteps */
-    public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, array $surveySteps)
+    public function __construct(string $id, CastorStudy $study, ?string $name, private ?string $description = null, array $surveySteps)
     {
         parent::__construct($id, $study, StructureType::survey(), $name);
 
-        $this->description = $description;
         $this->steps = $surveySteps;
     }
 

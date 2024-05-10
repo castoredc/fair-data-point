@@ -5,26 +5,8 @@ namespace App\Entity\Grid;
 
 class Address
 {
-    private int $number;
-
-    private ?float $lat = null;
-
-    private ?float $lng = null;
-
-    private bool $primary;
-
-    private string $city;
-
-    private string $countryCode;
-
-    public function __construct(int $number, ?float $lat, ?float $lng, bool $primary, string $city, string $countryCode)
+    public function __construct(private int $number, private ?float $lat = null, private ?float $lng = null, private bool $primary, private string $city, private string $countryCode)
     {
-        $this->number = $number;
-        $this->lat = $lat;
-        $this->lng = $lng;
-        $this->primary = $primary;
-        $this->city = $city;
-        $this->countryCode = $countryCode;
     }
 
     public function getNumber(): int

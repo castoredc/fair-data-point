@@ -7,24 +7,12 @@ use App\Entity\Study;
 
 class CreateStudyCenterCommand
 {
-    private Study $study;
-
-    private string $name;
-
-    private string $country;
-
-    private string $city;
-
     public function __construct(
-        Study $study,
-        string $name,
-        string $country,
-        string $city
+        private Study $study,
+        private string $name,
+        private string $country,
+        private string $city,
     ) {
-        $this->study = $study;
-        $this->name = $name;
-        $this->country = $country;
-        $this->city = $city;
     }
 
     public function getStudy(): Study

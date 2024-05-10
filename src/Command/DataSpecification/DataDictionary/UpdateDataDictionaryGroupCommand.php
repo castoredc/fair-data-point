@@ -8,26 +8,8 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
 
 class UpdateDataDictionaryGroupCommand
 {
-    private DataDictionaryGroup $group;
-
-    private string $title;
-
-    private int $order;
-
-    private bool $isRepeated;
-
-    private bool $isDependent;
-
-    private ?DependencyGroup $dependencies = null;
-
-    public function __construct(DataDictionaryGroup $group, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
+    public function __construct(private DataDictionaryGroup $group, private string $title, private int $order, private bool $isRepeated, private bool $isDependent, private ?DependencyGroup $dependencies = null)
     {
-        $this->group = $group;
-        $this->title = $title;
-        $this->order = $order;
-        $this->isRepeated = $isRepeated;
-        $this->isDependent = $isDependent;
-        $this->dependencies = $dependencies;
     }
 
     public function getGroup(): DataDictionaryGroup

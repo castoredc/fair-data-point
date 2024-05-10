@@ -8,13 +8,9 @@ use App\Entity\FAIRData\License;
 
 class LicensesApiResource implements ApiResource
 {
-    /** @var License[] */
-    private array $licenses;
-
     /** @param License[] $licenses */
-    public function __construct(array $licenses)
+    public function __construct(private array $licenses)
     {
-        $this->licenses = $licenses;
     }
 
     /** @return array<mixed> */

@@ -9,11 +9,8 @@ use const DATE_ATOM;
 
 class DataSpecificationVersionApiResource implements ApiResource
 {
-    private Version $dataSpecificationVersion;
-
-    public function __construct(Version $dataSpecificationVersion)
+    public function __construct(private Version $dataSpecificationVersion)
     {
-        $this->dataSpecificationVersion = $dataSpecificationVersion;
     }
 
     /** @return array<mixed> */
@@ -28,7 +25,7 @@ class DataSpecificationVersionApiResource implements ApiResource
                 'nodes' => $this->dataSpecificationVersion->getElements()->count(),
             ],
             'createdAt' => $this->dataSpecificationVersion->getCreatedAt()->format(DATE_ATOM),
-            'updatedAt' => $this->dataSpecificationVersion->getUpdatedAt() !== null ? $this->dataSpecificationVersion->getUpdatedAt()->format(DATE_ATOM) : null,
+            'updatedAt' => $this->dataSpecificationVersion->getUpdatedAt()?->format(DATE_ATOM),
         ];
     }
 }

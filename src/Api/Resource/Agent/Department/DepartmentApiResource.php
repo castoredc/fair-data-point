@@ -11,12 +11,9 @@ use function assert;
 
 class DepartmentApiResource extends AgentApiResource
 {
-    private bool $includeOrganization;
-
-    public function __construct(Department $department, bool $includeOrganization)
+    public function __construct(Department $department, private bool $includeOrganization)
     {
         $this->agent = $department;
-        $this->includeOrganization = $includeOrganization;
     }
 
     /** @return array<mixed> */

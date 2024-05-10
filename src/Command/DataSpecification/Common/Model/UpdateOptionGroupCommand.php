@@ -5,19 +5,9 @@ namespace App\Command\DataSpecification\Common\Model;
 
 abstract class UpdateOptionGroupCommand
 {
-    private string $title;
-
-    private ?string $description = null;
-
-    /** @var array<array{id: string|null, title: string, description: string|null, value: string, order: int|null}> */
-    private array $options;
-
     /** @param array<array{id: string|null, title: string, description: string|null, value: string, order: int|null}> $options */
-    public function __construct(string $title, ?string $description, array $options)
+    public function __construct(private string $title, private ?string $description = null, private array $options)
     {
-        $this->title = $title;
-        $this->description = $description;
-        $this->options = $options;
     }
 
     public function getTitle(): string

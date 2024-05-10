@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 
 class DeleteMetadataModelFieldCommand
 {
-    private MetadataModelField $field;
-
-    public function __construct(MetadataModelField $field)
+    public function __construct(private MetadataModelField $field)
     {
-        $this->field = $field;
     }
 
     public function getField(): MetadataModelField

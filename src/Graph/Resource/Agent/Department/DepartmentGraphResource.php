@@ -10,12 +10,8 @@ use EasyRdf\Graph;
 
 class DepartmentGraphResource extends AgentGraphResource
 {
-    private Department $department;
-
-    public function __construct(Department $department, string $baseUrl)
+    public function __construct(private Department $department, string $baseUrl)
     {
-        $this->department = $department;
-
         parent::__construct($department, $baseUrl);
     }
 

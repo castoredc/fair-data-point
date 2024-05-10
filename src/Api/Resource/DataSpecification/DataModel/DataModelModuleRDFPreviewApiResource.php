@@ -13,14 +13,8 @@ use function assert;
 
 class DataModelModuleRDFPreviewApiResource implements ApiResource
 {
-    private DataModelGroup $module;
-
-    private string $rdfPreview;
-
-    public function __construct(DataModelGroup $module, string $rdfPreview)
+    public function __construct(private DataModelGroup $module, private string $rdfPreview)
     {
-        $this->module = $module;
-        $this->rdfPreview = $rdfPreview;
     }
 
     /** @return array<mixed> */

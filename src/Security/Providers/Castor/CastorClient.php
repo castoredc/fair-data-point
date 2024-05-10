@@ -22,16 +22,9 @@ class CastorClient extends OAuth2Client
     public const SESSION_SERVER_KEY = 'castor.server';
     public const SESSION_SERVER_ID_KEY = 'castor.server_id';
 
-    private CastorUserProvider $provider;
-
-    private RequestStack $requestStack;
-
-    public function __construct(CastorUserProvider $provider, RequestStack $requestStack)
+    public function __construct(private CastorUserProvider $provider, private RequestStack $requestStack)
     {
         parent::__construct($provider, $requestStack);
-
-        $this->provider = $provider;
-        $this->requestStack = $requestStack;
     }
 
     /**

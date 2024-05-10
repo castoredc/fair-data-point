@@ -8,29 +8,8 @@ use App\Entity\Enum\MetadataFieldType;
 
 class UpdateMetadataModelFieldCommand
 {
-    private MetadataModelField $field;
-
-    private string $title;
-
-    private ?string $description;
-
-    private int $order;
-
-    private string $node;
-
-    private MetadataFieldType $fieldType;
-
-    private ?string $optionGroup;
-
-    public function __construct(MetadataModelField $field, string $title, ?string $description, int $order, string $node, MetadataFieldType $fieldType, ?string $optionGroup)
+    public function __construct(private MetadataModelField $field, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup)
     {
-        $this->field = $field;
-        $this->title = $title;
-        $this->description = $description;
-        $this->order = $order;
-        $this->node = $node;
-        $this->fieldType = $fieldType;
-        $this->optionGroup = $optionGroup;
     }
 
     public function getField(): MetadataModelField

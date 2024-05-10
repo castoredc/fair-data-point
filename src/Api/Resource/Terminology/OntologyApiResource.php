@@ -8,11 +8,8 @@ use App\Entity\Terminology\Ontology;
 
 class OntologyApiResource implements ApiResource
 {
-    private Ontology $ontology;
-
-    public function __construct(Ontology $ontology)
+    public function __construct(private Ontology $ontology)
     {
-        $this->ontology = $ontology;
     }
 
     /** @return array<mixed> */

@@ -9,17 +9,8 @@ use App\Security\User;
 
 class EditPermissionToEntityCommand
 {
-    private PermissionsEnabledEntity $entity;
-
-    private User $user;
-
-    private PermissionType $type;
-
-    public function __construct(PermissionsEnabledEntity $entity, User $user, PermissionType $type)
+    public function __construct(private PermissionsEnabledEntity $entity, private User $user, private PermissionType $type)
     {
-        $this->entity = $entity;
-        $this->user = $user;
-        $this->type = $type;
     }
 
     public function getEntity(): PermissionsEnabledEntity

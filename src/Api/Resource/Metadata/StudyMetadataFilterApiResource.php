@@ -10,13 +10,9 @@ use function sort;
 
 class StudyMetadataFilterApiResource implements ApiResource
 {
-    /** @var StudyMetadata[] */
-    private array $metadata;
-
     /** @param StudyMetadata[] $metadata */
-    public function __construct(array $metadata)
+    public function __construct(private array $metadata)
     {
-        $this->metadata = $metadata;
     }
 
     /** @return array<mixed> */

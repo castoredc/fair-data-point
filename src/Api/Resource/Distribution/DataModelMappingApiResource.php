@@ -17,11 +17,8 @@ use function assert;
 
 class DataModelMappingApiResource implements ApiResource
 {
-    private object $element;
-
-    public function __construct(object $element)
+    public function __construct(private object $element)
     {
-        $this->element = $element;
     }
 
     /** @return array<mixed> */

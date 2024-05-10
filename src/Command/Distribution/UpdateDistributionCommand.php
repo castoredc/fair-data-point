@@ -8,44 +8,17 @@ use App\Entity\FAIRData\Distribution;
 
 abstract class UpdateDistributionCommand
 {
-    private Distribution $distribution;
-
-    private string $slug;
-
-    private string $license;
-
-    private ?string $apiUser = null;
-
-    private ?SensitiveDataString $clientId = null;
-
-    private ?SensitiveDataString $clientSecret = null;
-
-    private bool $published;
-
-    private bool $cached;
-
-    private bool $public;
-
     public function __construct(
-        Distribution $distribution,
-        string $slug,
-        string $license,
-        ?string $apiUser,
-        ?SensitiveDataString $clientId,
-        ?SensitiveDataString $clientSecret,
-        bool $published,
-        bool $cached,
-        bool $public
+        private Distribution $distribution,
+        private string $slug,
+        private string $license,
+        private ?string $apiUser = null,
+        private ?SensitiveDataString $clientId = null,
+        private ?SensitiveDataString $clientSecret = null,
+        private bool $published,
+        private bool $cached,
+        private bool $public,
     ) {
-        $this->distribution = $distribution;
-        $this->slug = $slug;
-        $this->license = $license;
-        $this->apiUser = $apiUser;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->published = $published;
-        $this->cached = $cached;
-        $this->public = $public;
     }
 
     public function getDistribution(): Distribution

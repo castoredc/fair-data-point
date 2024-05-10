@@ -33,26 +33,8 @@ class MysqlBasedDistributionService implements DistributionService
     public const CURRENT_STORE = 'current';
     public const PREVIOUS_STORE = 'previous';
 
-    private string $host;
-
-    private string $user;
-
-    private string $pass;
-
-    private int $port;
-
-    private bool $useSsl;
-
-    private string $certificate;
-
-    public function __construct(string $host = '', string $user = '', string $pass = '', int $port = 3306, bool $useSsl = false, string $certificate = '')
+    public function __construct(private string $host = '', private string $user = '', private string $pass = '', private int $port = 3306, private bool $useSsl = false, private string $certificate = '')
     {
-        $this->host = $host;
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->port = $port;
-        $this->useSsl = $useSsl;
-        $this->certificate = $certificate;
     }
 
     /** @return mixed[] */
@@ -83,7 +65,7 @@ class MysqlBasedDistributionService implements DistributionService
 
         try {
             return DriverManager::getConnection($params, $config);
-        } catch (Throwable $t) {
+        } catch (Throwable) {
             throw new CouldNotConnectToMySqlServer();
         }
     }
@@ -191,7 +173,7 @@ class MysqlBasedDistributionService implements DistributionService
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         ?string $namedGraphUrl = null,
-        ?array $nameSpaces = null
+        ?array $nameSpaces = null,
     ): mixed {
         $store = $this->getArc2Store(
             self::CURRENT_STORE,
@@ -212,7 +194,7 @@ class MysqlBasedDistributionService implements DistributionService
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         Graph $graph,
-        string $graphUrl
+        string $graphUrl,
     ): void {
         $store = $this->getArc2Store(
             self::CURRENT_STORE,
@@ -226,7 +208,7 @@ class MysqlBasedDistributionService implements DistributionService
 
     public function optimizeStore(
         DistributionDatabaseInformation $databaseInformation,
-        EncryptionService $encryptionService
+        EncryptionService $encryptionService,
     ): void {
         $store = $this->getArc2Store(
             self::CURRENT_STORE,

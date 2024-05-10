@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Enum;
 
+use function in_array;
+
 /**
  * @method static static input()
  * @method static static inputLocale()
@@ -132,7 +134,8 @@ class MetadataFieldType extends Enum
         self::TYPE_ANNOTATED => self::ANNOTATED_VALUE_TYPES,
     ];
 
-    public function hasOptionGroup(): bool {
+    public function hasOptionGroup(): bool
+    {
         return in_array($this->toString(), self::HAS_OPTION_GROUP, true);
     }
 }

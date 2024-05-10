@@ -20,13 +20,8 @@ use function assert;
 #[AsMessageHandler]
 class GetRecordsCommandHandler
 {
-    private CastorEntityHelper $entityHelper;
-    private Security $security;
-
-    public function __construct(CastorEntityHelper $entityHelper, Security $security)
+    public function __construct(private CastorEntityHelper $entityHelper, private Security $security)
     {
-        $this->entityHelper = $entityHelper;
-        $this->security = $security;
     }
 
     /**

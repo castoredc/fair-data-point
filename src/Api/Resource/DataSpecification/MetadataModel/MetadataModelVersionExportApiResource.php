@@ -9,11 +9,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class MetadataModelVersionExportApiResource implements ApiResource
 {
-    private MetadataModelVersion $metadataModelVersion;
-
-    public function __construct(MetadataModelVersion $metadataModelVersion)
+    public function __construct(private MetadataModelVersion $metadataModelVersion)
     {
-        $this->metadataModelVersion = $metadataModelVersion;
     }
 
     /** @return array<mixed> */

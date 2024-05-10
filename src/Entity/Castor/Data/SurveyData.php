@@ -20,6 +20,7 @@ class SurveyData extends InstanceDataCollection
     public function __construct(Record $record)
     {
         parent::__construct($record);
+
         $this->surveyInstances = new ArrayCollection();
     }
 

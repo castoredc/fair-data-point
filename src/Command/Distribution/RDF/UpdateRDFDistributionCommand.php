@@ -9,10 +9,6 @@ use App\Entity\FAIRData\Distribution;
 
 class UpdateRDFDistributionCommand extends UpdateDistributionCommand
 {
-    private string $dataModelId;
-
-    private string $dataModelVersionId;
-
     public function __construct(
         Distribution $distribution,
         string $slug,
@@ -23,13 +19,10 @@ class UpdateRDFDistributionCommand extends UpdateDistributionCommand
         bool $published,
         bool $cached,
         bool $public,
-        string $dataModelId,
-        string $dataModelVersionId
+        private string $dataModelId,
+        private string $dataModelVersionId,
     ) {
         parent::__construct($distribution, $slug, $license, $apiUser, $clientId, $clientSecret, $published, $cached, $public);
-
-        $this->dataModelId = $dataModelId;
-        $this->dataModelVersionId = $dataModelVersionId;
     }
 
     public function getDataModelId(): string

@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\DataModel\Triple;
 
 class DeleteTripleCommand
 {
-    private Triple $triple;
-
-    public function __construct(Triple $triple)
+    public function __construct(private Triple $triple)
     {
-        $this->triple = $triple;
     }
 
     public function getTriple(): Triple

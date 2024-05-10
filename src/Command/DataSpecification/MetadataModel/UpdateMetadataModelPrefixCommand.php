@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 
 class UpdateMetadataModelPrefixCommand extends UpdateModelPrefixCommand
 {
-    private NamespacePrefix $metadataModelPrefix;
-
-    public function __construct(NamespacePrefix $metadataModelPrefix, string $prefix, string $uri)
+    public function __construct(private NamespacePrefix $metadataModelPrefix, string $prefix, string $uri)
     {
         parent::__construct($prefix, $uri);
-
-        $this->metadataModelPrefix = $metadataModelPrefix;
     }
 
     public function getMetadataModelPrefix(): NamespacePrefix

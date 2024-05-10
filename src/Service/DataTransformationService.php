@@ -29,12 +29,8 @@ class DataTransformationService
     public const ALLOWED_PROPERTIES = [];
     public const ALLOWED_FUNCTIONS = ['range'];
 
-    protected Environment $twig;
-
-    public function __construct(Environment $twig)
+    public function __construct(protected Environment $twig)
     {
-        $this->twig = $twig;
-
         $this->setUpSandBox();
     }
 
@@ -65,7 +61,7 @@ class DataTransformationService
             return array_filter(array_keys($this->getTwigVariableNames($bodyNode)), static function (string $v): bool {
                 return substr($v, 0, 1) !== '_';
             });
-        } catch (SyntaxError $e) {
+        } catch (SyntaxError) {
             return false;
         }
     }

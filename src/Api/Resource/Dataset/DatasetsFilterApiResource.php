@@ -9,13 +9,9 @@ use App\Entity\FAIRData\Dataset;
 
 class DatasetsFilterApiResource implements ApiResource
 {
-    /** @var Dataset[] */
-    private array $datasets;
-
     /** @param Dataset[] $datasets */
-    public function __construct(array $datasets)
+    public function __construct(private array $datasets)
     {
-        $this->datasets = $datasets;
     }
 
     /** @return array<mixed> */

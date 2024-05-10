@@ -19,15 +19,8 @@ use function assert;
 #[AsMessageHandler]
 abstract class UpdateDistributionCommandHandler
 {
-    protected EntityManagerInterface $em;
-    protected Security $security;
-    protected EncryptionService $encryptionService;
-
-    public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected EncryptionService $encryptionService)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->encryptionService = $encryptionService;
     }
 
     /** @throws LanguageNotFound */

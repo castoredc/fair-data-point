@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 
 class UpdateDataModelPrefixCommand extends UpdateModelPrefixCommand
 {
-    private NamespacePrefix $dataModelPrefix;
-
-    public function __construct(NamespacePrefix $dataModelPrefix, string $prefix, string $uri)
+    public function __construct(private NamespacePrefix $dataModelPrefix, string $prefix, string $uri)
     {
         parent::__construct($prefix, $uri);
-
-        $this->dataModelPrefix = $dataModelPrefix;
     }
 
     public function getDataModelPrefix(): NamespacePrefix

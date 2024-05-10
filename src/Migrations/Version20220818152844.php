@@ -19,16 +19,16 @@ final class Version20220818152844 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql(
-            <<<SQL
+            <<<'SQL'
 CREATE TABLE log_sparql_query (
-	id INT AUTO_INCREMENT NOT NULL,
-	distribution_id TINYTEXT NOT NULL,
-	user_id TINYTEXT NOT NULL,
-	user_email TINYTEXT NOT NULL,
-	queried_on DATETIME NOT NULL,
-	sparql_query LONGTEXT NOT NULL,
-	result_count INT NOT NULL,
-	error LONGTEXT DEFAULT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
+    distribution_id TINYTEXT NOT NULL,
+    user_id TINYTEXT NOT NULL,
+    user_email TINYTEXT NOT NULL,
+    queried_on DATETIME NOT NULL,
+    sparql_query LONGTEXT NOT NULL,
+    result_count INT NOT NULL,
+    error LONGTEXT DEFAULT NULL,
 PRIMARY KEY ( id )) DEFAULT CHARACTER 
 SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = INNODB
 SQL

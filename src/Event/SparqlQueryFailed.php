@@ -10,17 +10,8 @@ class SparqlQueryFailed extends Event
 {
     public const NAME = 'sparql.query.failed';
 
-    private string $distributionId;
-    private UserInterface $user;
-    private string $query;
-    private string $error;
-
-    public function __construct(string $distributionId, UserInterface $user, string $query, string $error)
+    public function __construct(private string $distributionId, private UserInterface $user, private string $query, private string $error)
     {
-        $this->distributionId = $distributionId;
-        $this->user = $user;
-        $this->query = $query;
-        $this->error = $error;
     }
 
     public function getDistributionId(): string

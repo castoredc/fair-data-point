@@ -11,14 +11,8 @@ use function assert;
 
 class NodesApiResource implements ApiResource
 {
-    private DataModelVersion $dataModel;
-
-    private ?NodeType $type;
-
-    public function __construct(DataModelVersion $dataModel, ?NodeType $type = null)
+    public function __construct(private DataModelVersion $dataModel, private ?NodeType $type = null)
     {
-        $this->dataModel = $dataModel;
-        $this->type = $type;
     }
 
     /** @return array<mixed> */

@@ -11,37 +11,23 @@ use App\Entity\Terminology\OntologyConcept;
 
 class CreateCatalogMetadataCommand extends CreateMetadataCommand
 {
-    private Catalog $catalog;
-
-    private ?string $homepage = null;
-
-    private ?string $logo = null;
-
-    /** @var OntologyConcept[] */
-    private array $themeTaxonomy;
-
     /**
      * @param Agent[]           $publishers
      * @param OntologyConcept[] $themeTaxonomy
      */
     public function __construct(
-        Catalog $catalog,
+        private Catalog $catalog,
         ?LocalizedText $title,
         ?LocalizedText $description,
         ?string $language,
         ?string $license,
         VersionType $versionUpdate,
         array $publishers,
-        ?string $homepage,
-        ?string $logo,
-        array $themeTaxonomy
+        private ?string $homepage = null,
+        private ?string $logo = null,
+        private array $themeTaxonomy,
     ) {
         parent::__construct($title, $description, $language, $license, $versionUpdate, $publishers);
-
-        $this->catalog = $catalog;
-        $this->homepage = $homepage;
-        $this->logo = $logo;
-        $this->themeTaxonomy = $themeTaxonomy;
     }
 
     public function getCatalog(): Catalog

@@ -5,12 +5,9 @@ namespace App\Command\Castor;
 
 final class DeleteCastorServerCommand
 {
-    private int $id;
-
     /** @param int $id The server ID that shall be deleted */
-    public function __construct(int $id)
+    public function __construct(private int $id)
     {
-        $this->id = $id;
     }
 
     /** @return int The server ID that shall be deleted */

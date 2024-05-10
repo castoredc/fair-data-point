@@ -8,14 +8,8 @@ use App\Entity\FAIRData\Dataset;
 
 class AddDatasetToCatalogCommand
 {
-    private Dataset $dataset;
-
-    private Catalog $catalog;
-
-    public function __construct(Dataset $dataset, Catalog $catalog)
+    public function __construct(private Dataset $dataset, private Catalog $catalog)
     {
-        $this->dataset = $dataset;
-        $this->catalog = $catalog;
     }
 
     public function getDataset(): Dataset

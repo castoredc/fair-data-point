@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\DataModel\DataModel;
 
 class UpdateDataModelCommand extends UpdateModelCommand
 {
-    private DataModel $dataModel;
-
-    public function __construct(DataModel $dataModel, string $title, ?string $description)
+    public function __construct(private DataModel $dataModel, string $title, ?string $description)
     {
         parent::__construct($title, $description);
-
-        $this->dataModel = $dataModel;
     }
 
     public function getDataModel(): DataModel

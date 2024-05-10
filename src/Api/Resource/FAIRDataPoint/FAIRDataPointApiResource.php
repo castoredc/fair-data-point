@@ -10,11 +10,8 @@ use const DATE_ATOM;
 
 class FAIRDataPointApiResource implements ApiResource
 {
-    private FAIRDataPoint $fairDataPoint;
-
-    public function __construct(FAIRDataPoint $fairDataPoint)
+    public function __construct(private FAIRDataPoint $fairDataPoint)
     {
-        $this->fairDataPoint = $fairDataPoint;
     }
 
     /** @return array<mixed> */
@@ -40,10 +37,10 @@ class FAIRDataPointApiResource implements ApiResource
                 ],
                 'description' => $metadata->getDescription()->toArray(),
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
-                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
+                'language' => $metadata->getLanguage()?->getCode(),
+                'license' => $metadata->getLicense()?->getSlug(),
                 'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

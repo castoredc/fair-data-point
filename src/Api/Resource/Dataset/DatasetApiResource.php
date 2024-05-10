@@ -12,11 +12,8 @@ use const DATE_ATOM;
 
 class DatasetApiResource implements ApiResource
 {
-    private Dataset $dataset;
-
-    public function __construct(Dataset $dataset)
+    public function __construct(private Dataset $dataset)
     {
-        $this->dataset = $dataset;
     }
 
     /** @return array<mixed> */
@@ -45,12 +42,12 @@ class DatasetApiResource implements ApiResource
                 ],
                 'description' => $metadata->getDescription()->toArray(),
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
-                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
+                'language' => $metadata->getLanguage()?->getCode(),
+                'license' => $metadata->getLicense()?->getSlug(),
                 'theme' => (new OntologyConceptsApiResource($metadata->getThemes()->toArray()))->toArray(),
-                'keyword' => $metadata->getKeyword() !== null ? $metadata->getKeyword()->toArray() : null,
+                'keyword' => $metadata->getKeyword()?->toArray(),
                 'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

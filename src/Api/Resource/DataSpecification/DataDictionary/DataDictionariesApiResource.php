@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 
 class DataDictionariesApiResource implements ApiResource
 {
-    /** @var DataDictionary[] */
-    private array $dataDictionaries;
-
     /** @param DataDictionary[] $dataDictionaries */
-    public function __construct(array $dataDictionaries)
+    public function __construct(private array $dataDictionaries)
     {
-        $this->dataDictionaries = $dataDictionaries;
     }
 
     /** @return array<mixed> */

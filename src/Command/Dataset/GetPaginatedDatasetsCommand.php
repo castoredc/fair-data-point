@@ -8,28 +8,9 @@ use App\Entity\FAIRData\Catalog;
 
 class GetPaginatedDatasetsCommand
 {
-    private ?Catalog $catalog;
-
-    private ?Agent $agent;
-
-    private ?string $search = null;
-
-    private int $perPage;
-
-    private int $page;
-
-    /** @var string[]|null */
-    private ?array $hideCatalogs = null;
-
     /** @param string[]|null $hideCatalogs */
-    public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $hideCatalogs, int $perPage, int $page)
+    public function __construct(private ?Catalog $catalog, private ?Agent $agent, private ?string $search = null, private ?array $hideCatalogs = null, private int $perPage, private int $page)
     {
-        $this->catalog = $catalog;
-        $this->agent = $agent;
-        $this->search = $search;
-        $this->hideCatalogs = $hideCatalogs;
-        $this->perPage = $perPage;
-        $this->page = $page;
     }
 
     public function getCatalog(): ?Catalog

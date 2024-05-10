@@ -11,33 +11,22 @@ use App\Entity\Terminology\OntologyConcept;
 
 class CreateDatasetMetadataCommand extends CreateMetadataCommand
 {
-    private Dataset $dataset;
-
-    /** @var OntologyConcept[] */
-    private array $theme;
-
-    private ?LocalizedText $keyword = null;
-
     /**
      * @param Agent[]           $publishers
      * @param OntologyConcept[] $theme
      */
     public function __construct(
-        Dataset $dataset,
+        private Dataset $dataset,
         ?LocalizedText $title,
         ?LocalizedText $description,
         ?string $language,
         ?string $license,
         VersionType $versionUpdate,
         array $publishers,
-        array $theme,
-        ?LocalizedText $keyword
+        private array $theme,
+        private ?LocalizedText $keyword = null,
     ) {
         parent::__construct($title, $description, $language, $license, $versionUpdate, $publishers);
-
-        $this->dataset = $dataset;
-        $this->theme = $theme;
-        $this->keyword = $keyword;
     }
 
     public function getDataset(): Dataset

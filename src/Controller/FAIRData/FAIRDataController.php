@@ -15,19 +15,12 @@ use function in_array;
 
 abstract class FAIRDataController extends AbstractController
 {
-    protected UriHelper $uriHelper;
-
     protected string $baseUri;
 
     protected string $basePurl;
 
-    protected LoggerInterface $logger;
-
-    public function __construct(UriHelper $uriHelper, LoggerInterface $logger)
+    public function __construct(protected UriHelper $uriHelper, protected LoggerInterface $logger)
     {
-        $this->uriHelper = $uriHelper;
-        $this->logger = $logger;
-
         $this->baseUri = $uriHelper->getBaseUri();
         $this->basePurl = $uriHelper->getBasePurl();
 

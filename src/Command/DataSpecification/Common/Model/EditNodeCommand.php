@@ -7,20 +7,8 @@ use App\Entity\Enum\XsdDataType;
 
 abstract class EditNodeCommand
 {
-    private string $title;
-
-    private ?string $description = null;
-
-    private string $value;
-
-    private ?XsdDataType $dataType = null;
-
-    public function __construct(string $title, ?string $description, string $value, ?XsdDataType $dataType)
+    public function __construct(private string $title, private ?string $description = null, private string $value, private ?XsdDataType $dataType = null)
     {
-        $this->title = $title;
-        $this->description = $description;
-        $this->value = $value;
-        $this->dataType = $dataType;
     }
 
     public function getTitle(): string

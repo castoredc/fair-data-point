@@ -8,11 +8,8 @@ use App\Entity\Castor\Structure\Step\Step;
 
 class StepApiResource implements ApiResource
 {
-    private Step $step;
-
-    public function __construct(Step $step)
+    public function __construct(private Step $step)
     {
-        $this->step = $step;
     }
 
     /** @return array<mixed> */

@@ -10,14 +10,8 @@ use function assert;
 
 class MetadataModelModulesApiResource implements ApiResource
 {
-    private MetadataModelVersion $metadataModel;
-
-    private bool $groupTriples;
-
-    public function __construct(MetadataModelVersion $metadataModel, bool $groupTriples = true)
+    public function __construct(private MetadataModelVersion $metadataModel, private bool $groupTriples = true)
     {
-        $this->metadataModel = $metadataModel;
-        $this->groupTriples = $groupTriples;
     }
 
     /** @return array<mixed> */

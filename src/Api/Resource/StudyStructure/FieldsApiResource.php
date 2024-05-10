@@ -8,13 +8,9 @@ use App\Entity\Castor\Form\Field;
 
 class FieldsApiResource implements ApiResource
 {
-    /** @var Field[] */
-    private array $fields;
-
     /** @param Field[] $fields */
-    public function __construct(array $fields)
+    public function __construct(private array $fields)
     {
-        $this->fields = $fields;
     }
 
     /** @return array<mixed> */

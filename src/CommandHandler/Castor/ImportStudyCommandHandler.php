@@ -24,15 +24,8 @@ use function assert;
 #[AsMessageHandler]
 class ImportStudyCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private ApiClient $apiClient;
-
-    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $apiClient)
+    public function __construct(private EntityManagerInterface $em, private Security $security, private ApiClient $apiClient)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->apiClient = $apiClient;
     }
 
     /**

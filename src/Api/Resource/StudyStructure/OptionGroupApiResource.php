@@ -9,11 +9,8 @@ use App\Entity\Castor\Form\FieldOptionGroup;
 
 class OptionGroupApiResource implements ApiResource
 {
-    private FieldOptionGroup $optionGroup;
-
-    public function __construct(FieldOptionGroup $optionGroup)
+    public function __construct(private FieldOptionGroup $optionGroup)
     {
-        $this->optionGroup = $optionGroup;
     }
 
     /** @return array<mixed> */

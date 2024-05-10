@@ -12,13 +12,9 @@ use function array_values;
 
 class DistributionTreeApiResource implements ApiResource
 {
-    /** @var Distribution[] */
-    private array $distributions;
-
     /** @param Distribution[] $distributions */
-    public function __construct(array $distributions)
+    public function __construct(private array $distributions)
     {
-        $this->distributions = $distributions;
     }
 
     /** @return array<mixed> */

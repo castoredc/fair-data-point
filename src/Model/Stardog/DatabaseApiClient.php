@@ -15,13 +15,9 @@ use function urlencode;
 
 class DatabaseApiClient extends BaseApiClient
 {
-    protected ?string $database;
-
-    public function __construct(?string $database, string $host, string $user, string $pass, int $port)
+    public function __construct(protected ?string $database, string $host, string $user, string $pass, int $port)
     {
         parent::__construct($host, $user, $pass, $port);
-
-        $this->database = $database;
     }
 
     public function getDataFromStore(?string $namedGraphUrl): mixed

@@ -66,6 +66,7 @@ class Person extends Agent
 
         $slugify = new Slugify();
         $fullName = $this->getFullName();
+
         parent::__construct($slugify->slugify($fullName . ' ' . uniqid()), $fullName);
 
         $this->affiliations = new ArrayCollection();
@@ -76,6 +77,7 @@ class Person extends Agent
         $names = array_filter([$this->firstName, $this->middleName, $this->lastName]);
 
         $fullName = implode(' ', $names);
+
         parent::setName($fullName);
 
         return $fullName;

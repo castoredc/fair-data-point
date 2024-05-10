@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 
 class UpdateMetadataModelCommand extends UpdateModelCommand
 {
-    private MetadataModel $metadataModel;
-
-    public function __construct(MetadataModel $metadataModel, string $title, ?string $description)
+    public function __construct(private MetadataModel $metadataModel, string $title, ?string $description)
     {
         parent::__construct($title, $description);
-
-        $this->metadataModel = $metadataModel;
     }
 
     public function getMetadataModel(): MetadataModel

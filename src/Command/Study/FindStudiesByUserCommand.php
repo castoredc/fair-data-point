@@ -7,17 +7,8 @@ use App\Security\User;
 
 class FindStudiesByUserCommand
 {
-    private User $user;
-
-    private bool $loadFromCastor;
-
-    private bool $hideExistingStudies;
-
-    public function __construct(User $user, bool $loadFromCastor, bool $hideExistingStudies = false)
+    public function __construct(private User $user, private bool $loadFromCastor, private bool $hideExistingStudies = false)
     {
-        $this->user = $user;
-        $this->loadFromCastor = $loadFromCastor;
-        $this->hideExistingStudies = $hideExistingStudies;
     }
 
     public function getUser(): User

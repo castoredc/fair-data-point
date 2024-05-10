@@ -8,11 +8,8 @@ use App\Entity\Castor\Structure\StructureCollection\StructureElementCollection;
 
 class StructureElementCollectionApiResource implements ApiResource
 {
-    private StructureElementCollection $collection;
-
-    public function __construct(StructureElementCollection $collection)
+    public function __construct(private StructureElementCollection $collection)
     {
-        $this->collection = $collection;
     }
 
     /** @return array<mixed> */

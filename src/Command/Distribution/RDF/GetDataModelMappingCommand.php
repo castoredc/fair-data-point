@@ -9,17 +9,8 @@ use App\Entity\Enum\DataModelMappingType;
 
 class GetDataModelMappingCommand
 {
-    private RDFDistribution $distribution;
-
-    private DataModelVersion $dataModelVersion;
-
-    private DataModelMappingType $type;
-
-    public function __construct(RDFDistribution $distribution, DataModelVersion $dataModelVersion, DataModelMappingType $type)
+    public function __construct(private RDFDistribution $distribution, private DataModelVersion $dataModelVersion, private DataModelMappingType $type)
     {
-        $this->distribution = $distribution;
-        $this->dataModelVersion = $dataModelVersion;
-        $this->type = $type;
     }
 
     public function getDistribution(): RDFDistribution

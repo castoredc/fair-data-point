@@ -62,7 +62,6 @@ final class Version20240510174041 extends AbstractMigration
         $this->addSql('DROP TABLE metadata_model_form');
         $this->addSql('ALTER TABLE metadata_model_node_value ADD field_type VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:MetadataFieldType)\'');
 
-
         $this->addSql('ALTER TABLE metadata_model_node_internal DROP FOREIGN KEY FK_A8A6ABF3BF396750');
         $this->addSql('DROP TABLE metadata_model_node_internal');
 

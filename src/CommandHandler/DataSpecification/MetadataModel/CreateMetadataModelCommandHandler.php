@@ -17,13 +17,9 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class CreateMetadataModelCommandHandler
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';
-    private EntityManagerInterface $em;
-    private Security $security;
 
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(private EntityManagerInterface $em, private Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     public function __invoke(CreateMetadataModelCommand $command): MetadataModel

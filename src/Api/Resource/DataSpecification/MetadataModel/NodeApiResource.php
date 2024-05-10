@@ -13,11 +13,8 @@ use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 
 class NodeApiResource implements ApiResource
 {
-    private Node $node;
-
-    public function __construct(Node $node)
+    public function __construct(private Node $node)
     {
-        $this->node = $node;
     }
 
     /** @return array<mixed> */

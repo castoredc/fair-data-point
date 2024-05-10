@@ -35,7 +35,7 @@ class PersonApiResource extends AgentApiResource
             'fullName' => $agent->getFullName(),
             'nameOrigin' => $agent->getNameOrigin()->toString(),
             'email' => $agent->getEmail(),
-            'orcid' => $agent->getOrcid() !== null ? $agent->getOrcid()->getValue() : null,
+            'orcid' => $agent->getOrcid()?->getValue(),
             'affiliations' => $affiliations,
         ]);
     }

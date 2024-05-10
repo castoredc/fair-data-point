@@ -17,11 +17,8 @@ class DatasetVoter extends Voter
     public const EDIT = 'edit';
     public const MANAGE = 'manage';
 
-    private Security $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     /** @inheritDoc */

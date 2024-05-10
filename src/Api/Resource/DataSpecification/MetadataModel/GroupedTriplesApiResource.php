@@ -12,11 +12,8 @@ use function assert;
 
 class GroupedTriplesApiResource implements ApiResource
 {
-    private MetadataModelGroup $module;
-
-    public function __construct(MetadataModelGroup $module)
+    public function __construct(private MetadataModelGroup $module)
     {
-        $this->module = $module;
     }
 
     /** @return array<mixed> */

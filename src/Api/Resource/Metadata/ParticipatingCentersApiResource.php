@@ -8,13 +8,9 @@ use App\Entity\Metadata\StudyMetadata\ParticipatingCenter;
 
 class ParticipatingCentersApiResource implements ApiResource
 {
-    /** @var ParticipatingCenter[] */
-    private array $participatingCenters;
-
     /** @param ParticipatingCenter[] $participatingCenters */
-    public function __construct(array $participatingCenters)
+    public function __construct(private array $participatingCenters)
     {
-        $this->participatingCenters = $participatingCenters;
     }
 
     /** @return array<mixed> */

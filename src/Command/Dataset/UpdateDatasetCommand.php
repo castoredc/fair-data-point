@@ -7,17 +7,8 @@ use App\Entity\FAIRData\Dataset;
 
 class UpdateDatasetCommand
 {
-    private Dataset $dataset;
-
-    private string $slug;
-
-    private bool $published;
-
-    public function __construct(Dataset $dataset, string $slug, bool $published)
+    public function __construct(private Dataset $dataset, private string $slug, private bool $published)
     {
-        $this->dataset = $dataset;
-        $this->slug = $slug;
-        $this->published = $published;
     }
 
     public function getDataset(): Dataset

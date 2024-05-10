@@ -22,19 +22,8 @@ use function assert;
 #[AsMessageHandler]
 abstract class CreateDistributionCommandHandler
 {
-    protected EntityManagerInterface $em;
-    protected MysqlBasedDistributionService $mysqlBasedDistributionService;
-    protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-    protected Security $security;
-    protected EncryptionService $encryptionService;
-
-    public function __construct(EntityManagerInterface $em, MysqlBasedDistributionService $mysqlBasedDistributionService, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, Security $security, EncryptionService $encryptionService)
+    public function __construct(protected EntityManagerInterface $em, protected MysqlBasedDistributionService $mysqlBasedDistributionService, protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, protected Security $security, protected EncryptionService $encryptionService)
     {
-        $this->em = $em;
-        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
-        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
-        $this->security = $security;
-        $this->encryptionService = $encryptionService;
     }
 
     protected function handleDistributionCreation(CreateDistributionCommand $command): Distribution

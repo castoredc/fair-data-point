@@ -47,9 +47,7 @@ class Organization extends Agent
     /** @ORM\Column(type="decimal", precision=11, scale=8, nullable=true) */
     private ?string $coordinatesLongitude = null;
 
-    private ?string $countryCode = null;
-
-    public function __construct(?string $slug, string $name, ?Iri $homepage, ?string $countryCode, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
+    public function __construct(?string $slug, string $name, ?Iri $homepage, private ?string $countryCode = null, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
     {
         $slugify = new Slugify();
 
@@ -60,7 +58,6 @@ class Organization extends Agent
         parent::__construct($slug, $name);
 
         $this->homepage = $homepage;
-        $this->countryCode = $countryCode;
         $this->city = $city;
         $this->coordinatesLatitude = $coordinatesLatitude;
         $this->coordinatesLongitude = $coordinatesLongitude;

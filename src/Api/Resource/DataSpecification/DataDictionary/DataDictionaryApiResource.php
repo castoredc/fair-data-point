@@ -10,14 +10,8 @@ use function assert;
 
 class DataDictionaryApiResource implements ApiResource
 {
-    private DataDictionary $dataDictionary;
-
-    private bool $includeVersions;
-
-    public function __construct(DataDictionary $dataDictionary, bool $includeVersions = true)
+    public function __construct(private DataDictionary $dataDictionary, private bool $includeVersions = true)
     {
-        $this->dataDictionary = $dataDictionary;
-        $this->includeVersions = $includeVersions;
     }
 
     /** @return array<mixed> */

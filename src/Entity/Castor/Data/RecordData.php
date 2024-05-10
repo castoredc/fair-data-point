@@ -9,17 +9,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class RecordData
 {
-    protected Record $record;
-
     /** @var ArrayCollection<FieldResult[]> */
     private ArrayCollection $data;
 
     /** @var Field[] */
     private array $fields = [];
 
-    public function __construct(Record $record)
+    public function __construct(protected Record $record)
     {
-        $this->record = $record;
         $this->data = new ArrayCollection();
     }
 

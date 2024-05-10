@@ -18,15 +18,8 @@ use function assert;
 #[AsMessageHandler]
 class GetCastorEntityCommandHandler
 {
-    private EntityManagerInterface $em;
-    private CastorEntityHelper $entityHelper;
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, CastorEntityHelper $entityHelper, Security $security)
+    public function __construct(private EntityManagerInterface $em, private CastorEntityHelper $entityHelper, private Security $security)
     {
-        $this->em = $em;
-        $this->entityHelper = $entityHelper;
-        $this->security = $security;
     }
 
     /**

@@ -7,20 +7,8 @@ use App\Entity\FAIRData\Catalog;
 
 class UpdateCatalogCommand
 {
-    private Catalog $catalog;
-
-    private string $slug;
-
-    private bool $acceptSubmissions;
-
-    private ?bool $submissionAccessesData = null;
-
-    public function __construct(Catalog $catalog, string $slug, bool $acceptSubmissions, ?bool $submissionAccessesData)
+    public function __construct(private Catalog $catalog, private string $slug, private bool $acceptSubmissions, private ?bool $submissionAccessesData = null)
     {
-        $this->catalog = $catalog;
-        $this->slug = $slug;
-        $this->acceptSubmissions = $acceptSubmissions;
-        $this->submissionAccessesData = $submissionAccessesData;
     }
 
     public function getCatalog(): Catalog

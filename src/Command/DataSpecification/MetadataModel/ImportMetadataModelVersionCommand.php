@@ -10,13 +10,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImportMetadataModelVersionCommand extends ImportVersionCommand
 {
-    private MetadataModel $metadataModel;
-
-    public function __construct(MetadataModel $metadataModel, UploadedFile $file, Version $version)
+    public function __construct(private MetadataModel $metadataModel, UploadedFile $file, Version $version)
     {
         parent::__construct($file, $version);
-
-        $this->metadataModel = $metadataModel;
     }
 
     public function getMetadataModel(): MetadataModel

@@ -5,15 +5,9 @@ namespace App\Command\Distribution\RDF;
 
 class RunFederatedQueryAgainstDistributionSparqlEndpointsCommand
 {
-    /** @var string[] */
-    private array $distributionIds;
-    private string $query;
-
     /** @param string[] $distributionIds */
-    public function __construct(array $distributionIds, string $query)
+    public function __construct(private array $distributionIds, private string $query)
     {
-        $this->distributionIds = $distributionIds;
-        $this->query = $query;
     }
 
     /** @return string[] */

@@ -8,32 +8,14 @@ use App\Entity\FAIRData\Dataset;
 
 abstract class CreateDistributionCommand
 {
-    private string $slug;
-
-    private string $license;
-
-    private Dataset $dataset;
-
-    private ?string $apiUser = null;
-
-    private ?SensitiveDataString $clientId = null;
-
-    private ?SensitiveDataString $clientSecret = null;
-
     public function __construct(
-        string $slug,
-        string $license,
-        Dataset $dataset,
-        ?string $apiUser,
-        ?SensitiveDataString $clientId,
-        ?SensitiveDataString $clientSecret
+        private string $slug,
+        private string $license,
+        private Dataset $dataset,
+        private ?string $apiUser = null,
+        private ?SensitiveDataString $clientId = null,
+        private ?SensitiveDataString $clientSecret = null,
     ) {
-        $this->slug = $slug;
-        $this->license = $license;
-        $this->dataset = $dataset;
-        $this->apiUser = $apiUser;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
     }
 
     public function getSlug(): string

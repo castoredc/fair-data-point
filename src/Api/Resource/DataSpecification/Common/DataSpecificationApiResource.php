@@ -8,14 +8,8 @@ use App\Entity\DataSpecification\Common\DataSpecification;
 
 abstract class DataSpecificationApiResource implements ApiResource
 {
-    private DataSpecification $dataSpecification;
-
-    private bool $includeVersions;
-
-    public function __construct(DataSpecification $dataSpecification, bool $includeVersions = true)
+    public function __construct(private DataSpecification $dataSpecification, private bool $includeVersions = true)
     {
-        $this->dataSpecification = $dataSpecification;
-        $this->includeVersions = $includeVersions;
     }
 
     /** @return array<mixed> */

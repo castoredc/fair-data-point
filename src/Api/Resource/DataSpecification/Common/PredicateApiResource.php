@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\Common\Model\Predicate;
 
 class PredicateApiResource implements ApiResource
 {
-    private Predicate $predicate;
-
-    public function __construct(Predicate $predicate)
+    public function __construct(private Predicate $predicate)
     {
-        $this->predicate = $predicate;
     }
 
     /** @return array<mixed> */

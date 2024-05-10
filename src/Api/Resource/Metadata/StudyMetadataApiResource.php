@@ -11,11 +11,8 @@ use const DATE_ATOM;
 
 class StudyMetadataApiResource implements ApiResource
 {
-    private StudyMetadata $studyMetadata;
-
-    public function __construct(StudyMetadata $studyMetadata)
+    public function __construct(private StudyMetadata $studyMetadata)
     {
-        $this->studyMetadata = $studyMetadata;
     }
 
     /** @return array<mixed> */
@@ -29,14 +26,14 @@ class StudyMetadataApiResource implements ApiResource
             'briefSummary' => $this->studyMetadata->getBriefSummary(),
             'summary' => $this->studyMetadata->getSummary(),
             'studyType' => $this->studyMetadata->getType()->toString(),
-            'condition' => $this->studyMetadata->getCondition() !== null ? $this->studyMetadata->getCondition()->getText() : null,
-            'intervention' => $this->studyMetadata->getIntervention() !== null ? $this->studyMetadata->getIntervention()->getText() : null,
+            'condition' => $this->studyMetadata->getCondition()?->getText(),
+            'intervention' => $this->studyMetadata->getIntervention()?->getText(),
             'estimatedEnrollment' => $this->studyMetadata->getEstimatedEnrollment(),
-            'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate() !== null ? $this->studyMetadata->getEstimatedStudyStartDate()->format('Y-m-d') : null,
-            'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate() !== null ? $this->studyMetadata->getEstimatedStudyCompletionDate()->format('Y-m-d') : null,
-            'recruitmentStatus' => $this->studyMetadata->getRecruitmentStatus() !== null ? $this->studyMetadata->getRecruitmentStatus()->toString() : null,
+            'estimatedStudyStartDate' => $this->studyMetadata->getEstimatedStudyStartDate()?->format('Y-m-d'),
+            'estimatedStudyCompletionDate' => $this->studyMetadata->getEstimatedStudyCompletionDate()?->format('Y-m-d'),
+            'recruitmentStatus' => $this->studyMetadata->getRecruitmentStatus()?->toString(),
             'methodType' => $this->studyMetadata->getMethodType()->toString(),
-            'logo' => $this->studyMetadata->getLogo() !== null ? $this->studyMetadata->getLogo()->getValue() : null,
+            'logo' => $this->studyMetadata->getLogo()?->getValue(),
             'contacts' => (new AgentsApiResource($this->studyMetadata->getContacts()))->toArray(),
             'organizations' => (new AgentsApiResource($this->studyMetadata->getOrganizations()))->toArray(),
             'version' => [
@@ -45,7 +42,7 @@ class StudyMetadataApiResource implements ApiResource
             'issued' => $this->studyMetadata->getStudy()->getFirstMetadata()->getCreatedAt()->format(DATE_ATOM),
             'modified' => $this->studyMetadata->getCreatedAt()->format(DATE_ATOM),
             'conditions' => (new OntologyConceptsApiResource($this->studyMetadata->getConditions()->toArray()))->toArray(),
-            'keywords' => $this->studyMetadata->getKeywords() !== null ? $this->studyMetadata->getKeywords()->toArray() : null,
+            'keywords' => $this->studyMetadata->getKeywords()?->toArray(),
         ];
     }
 }

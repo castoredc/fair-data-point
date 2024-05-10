@@ -8,11 +8,8 @@ use App\Entity\Terminology\Annotation;
 
 class AnnotationApiResource implements ApiResource
 {
-    private Annotation $annotation;
-
-    public function __construct(Annotation $annotation)
+    public function __construct(private Annotation $annotation)
     {
-        $this->annotation = $annotation;
     }
 
     /** @return array<mixed> */

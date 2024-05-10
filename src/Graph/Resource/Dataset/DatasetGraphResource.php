@@ -11,11 +11,8 @@ use EasyRdf\Graph;
 
 class DatasetGraphResource extends GraphResource
 {
-    private Dataset $dataset;
-
-    public function __construct(Dataset $dataset, string $baseUrl)
+    public function __construct(private Dataset $dataset, string $baseUrl)
     {
-        $this->dataset = $dataset;
         parent::__construct($dataset, $baseUrl);
     }
 

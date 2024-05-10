@@ -7,28 +7,13 @@ use App\Entity\Enum\StudySource;
 
 final class CreateStudyCommand
 {
-    private StudySource $source;
-
-    private ?string $sourceId = null;
-
-    private ?int $sourceServer = null;
-
-    private ?string $name = null;
-
-    private bool $manuallyEntered;
-
     public function __construct(
-        StudySource $source,
-        ?string $sourceId,
-        ?int $sourceServer,
-        ?string $name,
-        bool $manuallyEntered
+        private StudySource $source,
+        private ?string $sourceId = null,
+        private ?int $sourceServer = null,
+        private ?string $name = null,
+        private bool $manuallyEntered,
     ) {
-        $this->source = $source;
-        $this->sourceId = $sourceId;
-        $this->sourceServer = $sourceServer;
-        $this->name = $name;
-        $this->manuallyEntered = $manuallyEntered;
     }
 
     public function getSource(): StudySource

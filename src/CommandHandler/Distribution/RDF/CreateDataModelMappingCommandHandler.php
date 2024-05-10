@@ -18,18 +18,10 @@ use function assert;
 #[AsMessageHandler]
 abstract class CreateDataModelMappingCommandHandler
 {
-    protected EntityManagerInterface $em;
-    protected Security $security;
-    protected CastorEntityHelper $entityHelper;
     protected CastorStudy $study;
-    protected DataTransformationService $dataTransformationService;
 
-    public function __construct(EntityManagerInterface $em, Security $security, CastorEntityHelper $entityHelper, DataTransformationService $dataTransformationService)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected CastorEntityHelper $entityHelper, protected DataTransformationService $dataTransformationService)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->entityHelper = $entityHelper;
-        $this->dataTransformationService = $dataTransformationService;
     }
 
     protected function setup(CreateDataModelMappingCommand $command): void

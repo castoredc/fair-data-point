@@ -10,21 +10,17 @@ use App\Entity\FAIRData\LocalizedText;
 
 class CreateDistributionMetadataCommand extends CreateMetadataCommand
 {
-    private Distribution $distribution;
-
     /** @param Agent[] $publishers */
     public function __construct(
-        Distribution $distribution,
+        private Distribution $distribution,
         ?LocalizedText $title,
         ?LocalizedText $description,
         ?string $language,
         ?string $license,
         VersionType $versionUpdate,
-        array $publishers
+        array $publishers,
     ) {
         parent::__construct($title, $description, $language, $license, $versionUpdate, $publishers);
-
-        $this->distribution = $distribution;
     }
 
     public function getDistribution(): Distribution

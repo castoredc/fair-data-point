@@ -5,17 +5,8 @@ namespace App\Command\Security;
 
 class UpdateUserCommand
 {
-    private string $firstName;
-    private ?string $middleName = null;
-    private string $lastName;
-    private string $email;
-
-    public function __construct(string $firstName, ?string $middleName, string $lastName, string $email)
+    public function __construct(private string $firstName, private ?string $middleName = null, private string $lastName, private string $email)
     {
-        $this->firstName = $firstName;
-        $this->middleName = $middleName;
-        $this->lastName = $lastName;
-        $this->email = $email;
     }
 
     public function getFirstName(): string

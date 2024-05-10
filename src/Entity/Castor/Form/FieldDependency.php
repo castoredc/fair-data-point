@@ -5,20 +5,8 @@ namespace App\Entity\Castor\Form;
 
 class FieldDependency
 {
-    private ?string $id = null;
-
-    private ?string $parentId = null;
-
-    private ?string $value = null;
-
-    private ?string $description = null;
-
-    public function __construct(?string $id, ?string $parentId, ?string $value, ?string $description)
+    public function __construct(private ?string $id = null, private ?string $parentId = null, private ?string $value = null, private ?string $description = null)
     {
-        $this->id = $id;
-        $this->parentId = $parentId;
-        $this->value = $value;
-        $this->description = $description;
     }
 
     public function getId(): ?string

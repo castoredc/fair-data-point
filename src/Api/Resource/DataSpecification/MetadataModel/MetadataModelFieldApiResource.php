@@ -9,11 +9,8 @@ use function sprintf;
 
 class MetadataModelFieldApiResource
 {
-    private MetadataModelField $field;
-
-    public function __construct(MetadataModelField $field)
+    public function __construct(private MetadataModelField $field)
     {
-        $this->field = $field;
     }
 
     /** @return array<mixed> */

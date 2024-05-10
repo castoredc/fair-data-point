@@ -10,16 +10,9 @@ use function uasort;
 
 class Phase extends StructureElement
 {
-    private ?string $description = null;
-
-    private ?int $position = null;
-
-    public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, ?int $position)
+    public function __construct(string $id, CastorStudy $study, ?string $name, private ?string $description = null, private ?int $position = null)
     {
         parent::__construct($id, $study, StructureType::study(), $name);
-
-        $this->description = $description;
-        $this->position = $position;
     }
 
     public function getDescription(): ?string

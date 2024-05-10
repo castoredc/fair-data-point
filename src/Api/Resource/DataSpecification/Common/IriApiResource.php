@@ -9,14 +9,8 @@ use App\Entity\Iri;
 
 class IriApiResource implements ApiResource
 {
-    private ModelVersion $dataSpecification;
-
-    private Iri $iri;
-
-    public function __construct(ModelVersion $dataSpecification, Iri $iri)
+    public function __construct(private ModelVersion $dataSpecification, private Iri $iri)
     {
-        $this->dataSpecification = $dataSpecification;
-        $this->iri = $iri;
     }
 
     /** @return array<mixed> */

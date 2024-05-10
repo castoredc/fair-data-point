@@ -17,13 +17,8 @@ use function array_merge;
 #[AsMessageHandler]
 class FindOntologyConceptsCommandHandler
 {
-    private EntityManagerInterface $em;
-    private ApiWrapper $bioPortalApiWrapper;
-
-    public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper)
+    public function __construct(private EntityManagerInterface $em, private ApiWrapper $bioPortalApiWrapper)
     {
-        $this->em = $em;
-        $this->bioPortalApiWrapper = $bioPortalApiWrapper;
     }
 
     /** @return (Concept|Individual)[] */

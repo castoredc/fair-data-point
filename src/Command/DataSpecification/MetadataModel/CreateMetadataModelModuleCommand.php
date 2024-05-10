@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class CreateMetadataModelModuleCommand extends CreateModelModuleCommand
 {
-    private MetadataModelVersion $metadataModelVersion;
-
-    public function __construct(MetadataModelVersion $metadataModelVersion, string $title, int $order)
+    public function __construct(private MetadataModelVersion $metadataModelVersion, string $title, int $order)
     {
         parent::__construct($title, $order);
-
-        $this->metadataModelVersion = $metadataModelVersion;
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

@@ -42,7 +42,6 @@ abstract class Version
      */
     protected DataSpecification $dataSpecification;
 
-
     /** @ORM\Column(type="version") */
     private VersionNumber $version;
 

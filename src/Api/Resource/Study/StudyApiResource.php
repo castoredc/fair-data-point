@@ -11,12 +11,8 @@ use App\Entity\Study;
 
 class StudyApiResource extends RoleBasedApiResource
 {
-    private Study $study;
-
-    public function __construct(Study $study, bool $isAdmin = false)
+    public function __construct(private Study $study, bool $isAdmin = false)
     {
-        $this->study = $study;
-
         parent::setAdmin($isAdmin);
     }
 
@@ -31,7 +27,7 @@ class StudyApiResource extends RoleBasedApiResource
         $sourceServer = null;
 
         if ($this->study instanceof CastorStudy) {
-            $sourceServer = $this->study->getServer() !== null ? $this->study->getServer()->getId() : null;
+            $sourceServer = $this->study->getServer()?->getId();
         }
 
         $data = [

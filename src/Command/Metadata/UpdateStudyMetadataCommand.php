@@ -13,66 +13,23 @@ use DateTimeImmutable;
 
 class UpdateStudyMetadataCommand
 {
-    private StudyMetadata $metadata;
-
-    private string $briefName;
-
-    private ?string $scientificName = null;
-
-    private string $briefSummary;
-
-    private ?string $summary = null;
-
-    private StudyType $type;
-
-    private ?string $intervention = null;
-
-    private ?int $estimatedEnrollment;
-
-    private ?DateTimeImmutable $estimatedStudyStartDate = null;
-
-    private ?DateTimeImmutable $estimatedStudyCompletionDate = null;
-
-    private ?RecruitmentStatus $recruitmentStatus = null;
-
-    private ?MethodType $methodType = null;
-
-    /** @var OntologyConcept[] */
-    private array $conditions;
-
-    private ?LocalizedText $keywords = null;
-
     /** @param OntologyConcept[] $conditions */
     public function __construct(
-        StudyMetadata $metadata,
-        string $briefName,
-        ?string $scientificName,
-        string $briefSummary,
-        ?string $summary,
-        StudyType $type,
-        array $conditions,
-        ?string $intervention,
-        ?int $estimatedEnrollment,
-        ?DateTimeImmutable $estimatedStudyStartDate,
-        ?DateTimeImmutable $estimatedStudyCompletionDate,
-        ?RecruitmentStatus $recruitmentStatus,
-        ?MethodType $methodType,
-        ?LocalizedText $keywords
+        private StudyMetadata $metadata,
+        private string $briefName,
+        private ?string $scientificName = null,
+        private string $briefSummary,
+        private ?string $summary = null,
+        private StudyType $type,
+        private array $conditions,
+        private ?string $intervention = null,
+        private ?int $estimatedEnrollment,
+        private ?DateTimeImmutable $estimatedStudyStartDate = null,
+        private ?DateTimeImmutable $estimatedStudyCompletionDate = null,
+        private ?RecruitmentStatus $recruitmentStatus = null,
+        private ?MethodType $methodType = null,
+        private ?LocalizedText $keywords = null,
     ) {
-        $this->metadata = $metadata;
-        $this->briefName = $briefName;
-        $this->scientificName = $scientificName;
-        $this->briefSummary = $briefSummary;
-        $this->summary = $summary;
-        $this->type = $type;
-        $this->conditions = $conditions;
-        $this->intervention = $intervention;
-        $this->estimatedEnrollment = $estimatedEnrollment;
-        $this->estimatedStudyStartDate = $estimatedStudyStartDate;
-        $this->estimatedStudyCompletionDate = $estimatedStudyCompletionDate;
-        $this->recruitmentStatus = $recruitmentStatus;
-        $this->methodType = $methodType;
-        $this->keywords = $keywords;
     }
 
     public function getMetadata(): StudyMetadata

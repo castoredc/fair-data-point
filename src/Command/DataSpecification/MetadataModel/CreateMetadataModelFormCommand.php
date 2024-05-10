@@ -7,18 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class CreateMetadataModelFormCommand
 {
-    private MetadataModelVersion $metadataModelVersion;
-
-    private string $title;
-
-    private int $order;
-
-    public function __construct(MetadataModelVersion $metadataModelVersion, string $title, int $order)
+    public function __construct(private MetadataModelVersion $metadataModelVersion, private string $title, private int $order)
     {
-        $this->title = $title;
-        $this->order = $order;
-
-        $this->metadataModelVersion = $metadataModelVersion;
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

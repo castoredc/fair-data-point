@@ -24,19 +24,10 @@ use function http_build_query;
 
 abstract class Authenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
-    protected ClientRegistry $clientRegistry;
-    protected EntityManagerInterface $em;
-    protected RouterInterface $router;
-    protected ApiClient $apiClient;
     protected ?User $currentUser = null;
 
-    public function __construct(ApiClient $apiClient, ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router, Security $security)
+    public function __construct(protected ApiClient $apiClient, protected ClientRegistry $clientRegistry, protected EntityManagerInterface $em, protected RouterInterface $router, Security $security)
     {
-        $this->clientRegistry = $clientRegistry;
-        $this->em = $em;
-        $this->router = $router;
-        $this->apiClient = $apiClient;
-
         $user = $security->getUser();
         assert($user === null || $user instanceof User);
         $this->currentUser = $user;
@@ -45,7 +36,7 @@ abstract class Authenticator extends OAuth2Authenticator implements Authenticati
     protected function detectIfEqualToLoggedInUser(?ProviderUser $providerUser): void
     {
         // Detect if provider user is attached to the current logged in user, if not throw error
-        if ($providerUser === null || $providerUser->getUser() === null || $this->currentUser === null) {
+        if ($providerUser?->getUser() === null || $this->currentUser === null) {
             return;
         }
 
@@ -92,7 +83,7 @@ abstract class Authenticator extends OAuth2Authenticator implements Authenticati
 
             assert($dataset instanceof Dataset || $dataset === null);
 
-            $study = $dataset !== null ? $dataset->getStudy() : null;
+            $study = $dataset?->getStudy();
 
             if ($study !== null) {
                 assert($study instanceof CastorStudy);

@@ -75,7 +75,7 @@ class CastorServer
     public function updateClientCredentials(
         EncryptionService $encryptionService,
         string $clientId,
-        string $clientSecret
+        string $clientSecret,
     ): void {
         $encryptedClientId = json_encode($encryptionService->encrypt(new SensitiveDataString($clientId)));
 
@@ -162,7 +162,7 @@ class CastorServer
     /** @throws CouldNotTransformEncryptedStringToJson */
     public function updatePropertiesFromCommand(
         UpdateCastorServerCommand $command,
-        EncryptionService $encryptionService
+        EncryptionService $encryptionService,
     ): void {
         $this->name = $command->getName();
         $this->flag = $command->getFlag();

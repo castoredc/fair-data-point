@@ -22,15 +22,8 @@ use function count;
 #[AsMessageHandler]
 class AddAnnotationCommandHandler
 {
-    private EntityManagerInterface $em;
-    private ApiWrapper $bioPortalApiWrapper;
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, ApiWrapper $bioPortalApiWrapper, Security $security)
+    public function __construct(private EntityManagerInterface $em, private ApiWrapper $bioPortalApiWrapper, private Security $security)
     {
-        $this->em = $em;
-        $this->bioPortalApiWrapper = $bioPortalApiWrapper;
-        $this->security = $security;
     }
 
     public function __invoke(AddAnnotationCommand $command): void

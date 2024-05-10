@@ -9,11 +9,8 @@ use function sprintf;
 
 class MetadataModelFormApiResource
 {
-    private MetadataModelForm $form;
-
-    public function __construct(MetadataModelForm $form)
+    public function __construct(private MetadataModelForm $form)
     {
-        $this->form = $form;
     }
 
     /** @return array<mixed> */

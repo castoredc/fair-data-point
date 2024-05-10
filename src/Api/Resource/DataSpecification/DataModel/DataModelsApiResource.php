@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\DataModel\DataModel;
 
 class DataModelsApiResource implements ApiResource
 {
-    /** @var DataModel[] */
-    private array $dataModels;
-
     /** @param DataModel[] $dataModels */
-    public function __construct(array $dataModels)
+    public function __construct(private array $dataModels)
     {
-        $this->dataModels = $dataModels;
     }
 
     /** @return array<mixed> */

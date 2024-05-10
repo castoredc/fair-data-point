@@ -8,11 +8,8 @@ use App\Entity\Metadata\StudyMetadata;
 
 class ConsentApiResource implements ApiResource
 {
-    private StudyMetadata $studyMetadata;
-
-    public function __construct(StudyMetadata $studyMetadata)
+    public function __construct(private StudyMetadata $studyMetadata)
     {
-        $this->studyMetadata = $studyMetadata;
     }
 
     /** @return array<mixed> */

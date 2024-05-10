@@ -27,15 +27,9 @@ use function assert;
 abstract class CreateMetadataCommandHandler
 {
     public const DEFAULT_VERSION_NUMBER = '1.0.0';
-    protected EntityManagerInterface $em;
-    protected Security $security;
-    protected VersionNumberHelper $versionNumberHelper;
 
-    public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected VersionNumberHelper $versionNumberHelper)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->versionNumberHelper = $versionNumberHelper;
     }
 
     protected function parseLocalizedText(?LocalizedText $localizedText): ?LocalizedText

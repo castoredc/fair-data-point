@@ -9,19 +9,15 @@ use App\Entity\Enum\NodeType;
 
 class CreateTripleCommand extends CommonCreateTripleCommand
 {
-    private MetadataModelGroup $module;
-
     public function __construct(
-        MetadataModelGroup $module,
+        private MetadataModelGroup $module,
         NodeType $objectType,
         ?string $objectValue,
         ?string $predicateValue,
         NodeType $subjectType,
-        ?string $subjectValue
+        ?string $subjectValue,
     ) {
         parent::__construct($objectType, $objectValue, $predicateValue, $subjectType, $subjectValue);
-
-        $this->module = $module;
     }
 
     public function getModule(): MetadataModelGroup

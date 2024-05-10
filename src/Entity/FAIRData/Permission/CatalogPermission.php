@@ -32,6 +32,7 @@ class CatalogPermission extends Permission
     public function __construct(User $user, PermissionType $type, Catalog $catalog)
     {
         parent::__construct($user, $type);
+
         $this->catalog = $catalog;
     }
 

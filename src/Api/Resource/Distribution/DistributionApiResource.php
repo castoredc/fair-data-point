@@ -16,14 +16,8 @@ use const DATE_ATOM;
 
 class DistributionApiResource implements ApiResource
 {
-    private Distribution $distribution;
-
-    private UriHelper $uriHelper;
-
-    public function __construct(Distribution $distribution, UriHelper $uriHelper)
+    public function __construct(private Distribution $distribution, private UriHelper $uriHelper)
     {
-        $this->distribution = $distribution;
-        $this->uriHelper = $uriHelper;
     }
 
     /** @return array<mixed> */
@@ -35,7 +29,7 @@ class DistributionApiResource implements ApiResource
             'slug' => $this->distribution->getSlug(),
             'hasMetadata' => $this->distribution->hasMetadata(),
             'hasContents' => $this->distribution->hasContents(),
-            'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
+            'license' => $this->distribution->getLicense()?->getSlug(),
             'study' => $this->distribution->getDataset()->getStudy() !== null ? (new StudyApiResource($this->distribution->getDataset()->getStudy()))->toArray() : null,
             'hasApiUser' => $this->distribution->getApiUser() !== null,
             'published' => $this->distribution->isPublished(),
@@ -52,10 +46,10 @@ class DistributionApiResource implements ApiResource
                 ],
                 'description' => $metadata->getDescription()->toArray(),
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
-                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
+                'language' => $metadata->getLanguage()?->getCode(),
+                'license' => $metadata->getLicense()?->getSlug(),
                 'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

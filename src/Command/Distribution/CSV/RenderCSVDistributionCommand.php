@@ -9,19 +9,9 @@ use App\Entity\FAIRData\Catalog;
 
 class RenderCSVDistributionCommand
 {
-    /** @var Record[] */
-    private array $records;
-
-    private CSVDistribution $distribution;
-
-    private Catalog $catalog;
-
     /** @param Record[] $records */
-    public function __construct(array $records, CSVDistribution $distribution, Catalog $catalog)
+    public function __construct(private array $records, private CSVDistribution $distribution, private Catalog $catalog)
     {
-        $this->records = $records;
-        $this->distribution = $distribution;
-        $this->catalog = $catalog;
     }
 
     /** @return Record[] */

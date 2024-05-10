@@ -7,11 +7,8 @@ use App\Entity\Study;
 
 class CreateDatasetForStudyCommand
 {
-    private Study $study;
-
-    public function __construct(Study $study)
+    public function __construct(private Study $study)
     {
-        $this->study = $study;
     }
 
     public function getStudy(): Study

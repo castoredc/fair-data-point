@@ -8,11 +8,8 @@ use App\Security\Permission;
 
 class PermissionApiResource implements ApiResource
 {
-    private Permission $permission;
-
-    public function __construct(Permission $permission)
+    public function __construct(private Permission $permission)
     {
-        $this->permission = $permission;
     }
 
     /** @return array<mixed> */
@@ -21,7 +18,7 @@ class PermissionApiResource implements ApiResource
         return [
             'user' => [
                 'id' => $this->permission->getUser()->getId(),
-                'name' => $this->permission->getUser()->getPerson() !== null ? $this->permission->getUser()->getPerson()->getName() : '',
+                'name' => $this->permission->getUser()->getPerson()?->getName() ?? '',
             ],
             'type' => $this->permission->getType()->toString(),
         ];

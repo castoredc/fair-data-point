@@ -11,11 +11,8 @@ use EasyRdf\Graph;
 
 class DistributionGraphResource extends GraphResource
 {
-    private Distribution $distribution;
-
-    public function __construct(Distribution $distribution, string $baseUrl)
+    public function __construct(private Distribution $distribution, string $baseUrl)
     {
-        $this->distribution = $distribution;
         parent::__construct($distribution, $baseUrl);
     }
 

@@ -19,6 +19,6 @@ interface DistributionService
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         ?string $namedGraphUrl = null,
-        ?array $nameSpaces = null
+        ?array $nameSpaces = null,
     ): mixed;
 }

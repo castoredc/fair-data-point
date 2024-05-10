@@ -14,17 +14,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class UpdateConsentCommandHandler
 {
-    private EntityManagerInterface $em;
-    private SlackApiClient $slackApiClient;
-    private UriHelper $uriHelper;
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, SlackApiClient $slackApiClient, UriHelper $uriHelper, Security $security)
+    public function __construct(private EntityManagerInterface $em, private SlackApiClient $slackApiClient, private UriHelper $uriHelper, private Security $security)
     {
-        $this->em = $em;
-        $this->slackApiClient = $slackApiClient;
-        $this->uriHelper = $uriHelper;
-        $this->security = $security;
     }
 
     public function __invoke(UpdateConsentCommand $command): void

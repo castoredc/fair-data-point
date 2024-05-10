@@ -25,30 +25,15 @@ use function assert;
 #[AsMessageHandler]
 class RenderRDFDistributionCommandHandler
 {
-    private ApiClient $apiClient;
-    private Security $security;
-    private CastorEntityHelper $entityHelper;
-    private UriHelper $uriHelper;
-    private EncryptionService $encryptionService;
-    private LoggerInterface $logger;
-    private DataTransformationService $dataTransformationService;
-
     public function __construct(
-        ApiClient $apiClient,
-        Security $security,
-        CastorEntityHelper $entityHelper,
-        UriHelper $uriHelper,
-        EncryptionService $encryptionService,
-        LoggerInterface $logger,
-        DataTransformationService $dataTransformationService
+        private ApiClient $apiClient,
+        private Security $security,
+        private CastorEntityHelper $entityHelper,
+        private UriHelper $uriHelper,
+        private EncryptionService $encryptionService,
+        private LoggerInterface $logger,
+        private DataTransformationService $dataTransformationService,
     ) {
-        $this->apiClient = $apiClient;
-        $this->security = $security;
-        $this->entityHelper = $entityHelper;
-        $this->uriHelper = $uriHelper;
-        $this->encryptionService = $encryptionService;
-        $this->logger = $logger;
-        $this->dataTransformationService = $dataTransformationService;
     }
 
     /** @throws Exception */

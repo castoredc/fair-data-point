@@ -9,12 +9,8 @@ use EasyRdf\Graph;
 
 class OrganizationGraphResource extends AgentGraphResource
 {
-    private Organization $organization;
-
-    public function __construct(Organization $organization, string $baseUrl)
+    public function __construct(private Organization $organization, string $baseUrl)
     {
-        $this->organization = $organization;
-
         parent::__construct($organization, $baseUrl);
     }
 

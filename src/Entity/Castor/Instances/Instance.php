@@ -8,17 +8,8 @@ use DateTime;
 
 abstract class Instance
 {
-    protected string $id;
-
-    protected Record $record;
-
-    protected DateTime $createdOn;
-
-    public function __construct(string $id, Record $record, DateTime $createdOn)
+    public function __construct(protected string $id, protected Record $record, protected DateTime $createdOn)
     {
-        $this->id = $id;
-        $this->record = $record;
-        $this->createdOn = $createdOn;
     }
 
     public function getId(): string

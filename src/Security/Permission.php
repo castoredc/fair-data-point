@@ -9,14 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 /** @ORM\MappedSuperclass */
 abstract class Permission
 {
-    protected User $user;
-
     /** @ORM\Column(type="PermissionType") */
     protected PermissionType $type;
 
-    public function __construct(User $user, PermissionType $type)
+    public function __construct(protected User $user, PermissionType $type)
     {
-        $this->user = $user;
         $this->type = $type;
     }
 

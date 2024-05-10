@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\DataModel\DataModelGroup;
 
 class DeleteDataModelModuleCommand
 {
-    private DataModelGroup $module;
-
-    public function __construct(DataModelGroup $module)
+    public function __construct(private DataModelGroup $module)
     {
-        $this->module = $module;
     }
 
     public function getModule(): DataModelGroup

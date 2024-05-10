@@ -10,11 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class MetadataModelModuleFactory
 {
-    private DependencyGroupFactory $dependencyGroupFactory;
-
-    public function __construct(DependencyGroupFactory $dependencyGroupFactory)
+    public function __construct(private DependencyGroupFactory $dependencyGroupFactory)
     {
-        $this->dependencyGroupFactory = $dependencyGroupFactory;
     }
 
     /** @param array<mixed> $data */

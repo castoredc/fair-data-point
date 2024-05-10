@@ -31,6 +31,7 @@ class DataSpecificationPermission extends Permission
     public function __construct(User $user, PermissionType $type, DataSpecification $dataSpecification)
     {
         parent::__construct($user, $type);
+
         $this->dataSpecification = $dataSpecification;
     }
 

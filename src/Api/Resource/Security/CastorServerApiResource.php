@@ -9,14 +9,9 @@ use App\Service\EncryptionService;
 
 final class CastorServerApiResource extends RoleBasedApiResource
 {
-    private CastorServer $server;
-    private EncryptionService $encryptionService;
-
-    public function __construct(CastorServer $server, bool $isAdmin, EncryptionService $encryptionService)
+    public function __construct(private CastorServer $server, bool $isAdmin, private EncryptionService $encryptionService)
     {
-        $this->server = $server;
         $this->isAdmin = $isAdmin;
-        $this->encryptionService = $encryptionService;
     }
 
     /** @return array{id: ?int, url: string, name: string, flag: string, default: bool, clientId?: string, clientSecret?: string} */

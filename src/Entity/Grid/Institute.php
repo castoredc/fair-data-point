@@ -8,20 +8,14 @@ use function count;
 
 class Institute
 {
-    private string $id;
-
-    private string $name;
-
     /** @var Address[] */
     private array $addresses = [];
 
     /** @var Iri[] */
     private array $links = [];
 
-    public function __construct(string $id, string $name)
+    public function __construct(private string $id, private string $name)
     {
-        $this->id = $id;
-        $this->name = $name;
     }
 
     public function getId(): string

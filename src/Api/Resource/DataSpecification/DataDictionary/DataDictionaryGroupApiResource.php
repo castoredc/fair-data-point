@@ -9,11 +9,8 @@ use function sprintf;
 
 class DataDictionaryGroupApiResource implements ApiResource
 {
-    private DataDictionaryGroup $group;
-
-    public function __construct(DataDictionaryGroup $group)
+    public function __construct(private DataDictionaryGroup $group)
     {
-        $this->group = $group;
     }
 
     /** @return array<mixed> */

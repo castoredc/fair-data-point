@@ -8,11 +8,8 @@ use App\Entity\Castor\Institute;
 
 class InstituteApiResource implements ApiResource
 {
-    private Institute $institute;
-
-    public function __construct(Institute $institute)
+    public function __construct(private Institute $institute)
     {
-        $this->institute = $institute;
     }
 
     /** @return array<mixed> */

@@ -13,14 +13,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class CreateMetadataModelFormCommandHandler
 {
-    protected EntityManagerInterface $em;
-
-    protected Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     public function __invoke(CreateMetadataModelFormCommand $command): void

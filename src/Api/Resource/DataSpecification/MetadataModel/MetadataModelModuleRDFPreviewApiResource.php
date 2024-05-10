@@ -13,14 +13,8 @@ use function assert;
 
 class MetadataModelModuleRDFPreviewApiResource implements ApiResource
 {
-    private MetadataModelGroup $module;
-
-    private string $rdfPreview;
-
-    public function __construct(MetadataModelGroup $module, string $rdfPreview)
+    public function __construct(private MetadataModelGroup $module, private string $rdfPreview)
     {
-        $this->module = $module;
-        $this->rdfPreview = $rdfPreview;
     }
 
     /** @return array<mixed> */

@@ -21,15 +21,8 @@ use function in_array;
 #[AsMessageHandler]
 class FindOrganizationsCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private ApiClient $gridApiClient;
-
-    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $gridApiClient)
+    public function __construct(private EntityManagerInterface $em, private Security $security, private ApiClient $gridApiClient)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->gridApiClient = $gridApiClient;
     }
 
     /** @return array<Institute|Organization> */
@@ -65,7 +58,7 @@ class FindOrganizationsCommandHandler
 
         try {
             $gridInstitutes = $this->gridApiClient->findInstitutesByNameAndCountry($command->getSearch(), $command->getCountry());
-        } catch (ErrorFetchingGridData | NotFound $e) {
+        } catch (ErrorFetchingGridData | NotFound) {
             $gridInstitutes = [];
         }
 

@@ -7,14 +7,8 @@ use App\Entity\Data\DistributionContents\RDFDistribution;
 
 class GetRDFFromStoreCommand
 {
-    private RDFDistribution $distribution;
-
-    private ?string $record = null;
-
-    public function __construct(RDFDistribution $distribution, ?string $record)
+    public function __construct(private RDFDistribution $distribution, private ?string $record = null)
     {
-        $this->distribution = $distribution;
-        $this->record = $record;
     }
 
     public function getDistribution(): RDFDistribution

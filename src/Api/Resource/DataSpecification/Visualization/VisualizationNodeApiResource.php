@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\Common\Model\Node;
 
 class VisualizationNodeApiResource implements ApiResource
 {
-    private Node $node;
-
-    public function __construct(Node $node)
+    public function __construct(private Node $node)
     {
-        $this->node = $node;
     }
 
     /** @return array<mixed> */

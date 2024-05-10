@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 
 class DeleteMetadataModelFormCommand
 {
-    private MetadataModelForm $form;
-
-    public function __construct(MetadataModelForm $form)
+    public function __construct(private MetadataModelForm $form)
     {
-        $this->form = $form;
     }
 
     public function getForm(): MetadataModelForm

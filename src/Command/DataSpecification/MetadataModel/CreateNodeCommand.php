@@ -10,13 +10,9 @@ use App\Entity\Enum\XsdDataType;
 
 class CreateNodeCommand extends CommonCreateNodeCommand
 {
-    private MetadataModelVersion $metadataModelVersion;
-
-    public function __construct(MetadataModelVersion $metadataModelVersion, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType)
+    public function __construct(private MetadataModelVersion $metadataModelVersion, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType)
     {
         parent::__construct($type, $title, $description, $value, $dataType);
-
-        $this->metadataModelVersion = $metadataModelVersion;
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

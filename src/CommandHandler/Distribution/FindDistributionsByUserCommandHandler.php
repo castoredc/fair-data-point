@@ -13,11 +13,8 @@ use function array_unique;
 #[AsMessageHandler]
 class FindDistributionsByUserCommandHandler
 {
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     /** @return Distribution[] */

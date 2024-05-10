@@ -8,16 +8,9 @@ use App\Entity\Study;
 
 class StudiesApiResource implements ApiResource
 {
-    /** @var Study[] */
-    private array $studies;
-
-    private bool $isAdmin;
-
     /** @param Study[] $studies */
-    public function __construct(array $studies, bool $isAdmin)
+    public function __construct(private array $studies, private bool $isAdmin)
     {
-        $this->studies = $studies;
-        $this->isAdmin = $isAdmin;
     }
 
     /** @return array<mixed> */

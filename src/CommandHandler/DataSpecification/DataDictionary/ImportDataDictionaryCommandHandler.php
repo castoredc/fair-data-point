@@ -21,18 +21,11 @@ use function json_decode;
 #[AsMessageHandler]
 class ImportDataDictionaryCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private DataDictionaryGroupFactory $dataDictionaryGroupFactory;
-
     public function __construct(
-        EntityManagerInterface $em,
-        Security $security,
-        DataDictionaryGroupFactory $dataDictionaryGroupFactory
+        private EntityManagerInterface $em,
+        private Security $security,
+        private DataDictionaryGroupFactory $dataDictionaryGroupFactory,
     ) {
-        $this->em = $em;
-        $this->security = $security;
-        $this->dataDictionaryGroupFactory = $dataDictionaryGroupFactory;
     }
 
     public function __invoke(ImportDataDictionaryCommand $command): DataDictionaryVersion

@@ -7,17 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 
 class UpdateMetadataModelFormCommand
 {
-    private MetadataModelForm $form;
-
-    private string $title;
-
-    private int $order;
-
-    public function __construct(MetadataModelForm $form, string $title, int $order)
+    public function __construct(private MetadataModelForm $form, private string $title, private int $order)
     {
-        $this->form = $form;
-        $this->title = $title;
-        $this->order = $order;
     }
 
     public function getForm(): MetadataModelForm

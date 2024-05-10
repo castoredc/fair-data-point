@@ -10,11 +10,8 @@ use EasyRdf\Graph;
 
 class CatalogGraphResource extends GraphResource
 {
-    private Catalog $catalog;
-
-    public function __construct(Catalog $catalog, string $baseUrl)
+    public function __construct(private Catalog $catalog, string $baseUrl)
     {
-        $this->catalog = $catalog;
         parent::__construct($catalog, $baseUrl);
     }
 

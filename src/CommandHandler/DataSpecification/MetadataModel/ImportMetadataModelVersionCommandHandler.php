@@ -26,33 +26,16 @@ use function json_decode;
 #[AsMessageHandler]
 class ImportMetadataModelVersionCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private NamespacePrefixFactory $namespacePrefixFactory;
-    private NodeFactory $nodeFactory;
-    private PredicateFactory $predicateFactory;
-    private OptionGroupFactory $optionGroupFactory;
-    private MetadataModelModuleFactory $metadataModelModuleFactory;
-    private TripleFactory $tripleFactory;
-
     public function __construct(
-        EntityManagerInterface $em,
-        Security $security,
-        NamespacePrefixFactory $namespacePrefixFactory,
-        NodeFactory $nodeFactory,
-        PredicateFactory $predicateFactory,
-        OptionGroupFactory $optionGroupFactory,
-        MetadataModelModuleFactory $metadataModelModuleFactory,
-        TripleFactory $tripleFactory
+        private EntityManagerInterface $em,
+        private Security $security,
+        private NamespacePrefixFactory $namespacePrefixFactory,
+        private NodeFactory $nodeFactory,
+        private PredicateFactory $predicateFactory,
+        private OptionGroupFactory $optionGroupFactory,
+        private MetadataModelModuleFactory $metadataModelModuleFactory,
+        private TripleFactory $tripleFactory,
     ) {
-        $this->em = $em;
-        $this->security = $security;
-        $this->namespacePrefixFactory = $namespacePrefixFactory;
-        $this->nodeFactory = $nodeFactory;
-        $this->predicateFactory = $predicateFactory;
-        $this->optionGroupFactory = $optionGroupFactory;
-        $this->metadataModelModuleFactory = $metadataModelModuleFactory;
-        $this->tripleFactory = $tripleFactory;
     }
 
     public function __invoke(ImportMetadataModelVersionCommand $command): MetadataModelVersion

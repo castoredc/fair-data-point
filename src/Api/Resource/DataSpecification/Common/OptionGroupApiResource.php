@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\Common\OptionGroup;
 
 class OptionGroupApiResource implements ApiResource
 {
-    private OptionGroup $optionGroup;
-
-    public function __construct(OptionGroup $optionGroup)
+    public function __construct(private OptionGroup $optionGroup)
     {
-        $this->optionGroup = $optionGroup;
     }
 
     /** @return array<mixed> */

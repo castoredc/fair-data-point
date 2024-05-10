@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 
 class DeleteMetadataModelPrefixCommand
 {
-    private NamespacePrefix $metadataModelPrefix;
-
-    public function __construct(NamespacePrefix $metadataModelPrefix)
+    public function __construct(private NamespacePrefix $metadataModelPrefix)
     {
-        $this->metadataModelPrefix = $metadataModelPrefix;
     }
 
     public function getMetadataModelPrefix(): NamespacePrefix

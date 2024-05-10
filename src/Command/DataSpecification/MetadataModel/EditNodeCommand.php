@@ -9,13 +9,9 @@ use App\Entity\Enum\XsdDataType;
 
 class EditNodeCommand extends CommonEditNodeCommand
 {
-    private Node $node;
-
-    public function __construct(Node $node, string $title, ?string $description, string $value, ?XsdDataType $dataType)
+    public function __construct(private Node $node, string $title, ?string $description, string $value, ?XsdDataType $dataType)
     {
         parent::__construct($title, $description, $value, $dataType);
-
-        $this->node = $node;
     }
 
     public function getNode(): Node

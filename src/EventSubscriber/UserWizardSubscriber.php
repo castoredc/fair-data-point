@@ -24,13 +24,8 @@ use function urlencode;
 
 class UserWizardSubscriber implements EventSubscriberInterface
 {
-    private Security $security;
-    private RouterInterface $router;
-
-    public function __construct(Security $security, RouterInterface $router)
+    public function __construct(private Security $security, private RouterInterface $router)
     {
-        $this->security = $security;
-        $this->router = $router;
     }
 
     public function onKernelController(ControllerEvent $event): void

@@ -38,38 +38,17 @@ class GenerateRDFCommand extends Command
     /** @phpcs:ignore */
     protected static $defaultName = 'app:generate-rdf';
 
-    private ApiClient $apiClient;
-    private EntityManagerInterface $em;
-    private CastorEntityHelper $entityHelper;
-    private UriHelper $uriHelper;
-    private MysqlBasedDistributionService $mysqlBasedDistributionService;
-
-    private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-    private EncryptionService $encryptionService;
-    private LoggerInterface $logger;
-    private DataTransformationService $dataTransformationService;
-
     public function __construct(
-        ApiClient $apiClient,
-        EntityManagerInterface $em,
-        CastorEntityHelper $entityHelper,
-        UriHelper $uriHelper,
-        MysqlBasedDistributionService $mysqlBasedDistributionService,
-        TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
-        EncryptionService $encryptionService,
-        LoggerInterface $logger,
-        DataTransformationService $dataTransformationService
+        private ApiClient $apiClient,
+        private EntityManagerInterface $em,
+        private CastorEntityHelper $entityHelper,
+        private UriHelper $uriHelper,
+        private MysqlBasedDistributionService $mysqlBasedDistributionService,
+        private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
+        private EncryptionService $encryptionService,
+        private LoggerInterface $logger,
+        private DataTransformationService $dataTransformationService,
     ) {
-        $this->apiClient = $apiClient;
-        $this->em = $em;
-        $this->entityHelper = $entityHelper;
-        $this->uriHelper = $uriHelper;
-        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
-        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
-        $this->encryptionService = $encryptionService;
-        $this->logger = $logger;
-        $this->dataTransformationService = $dataTransformationService;
-
         parent::__construct();
     }
 
@@ -200,7 +179,7 @@ class GenerateRDFCommand extends Command
             $distributionUri = $this->uriHelper->getUri($rdfDistributionContent);
             $graphUri = $distributionUri . '/g';
 
-            $output->writeln(sprintf("Last import: \t %s", $lastImport !== null ? $lastImport->format(DATE_ATOM) : 'Never'));
+            $output->writeln(sprintf("Last import: \t %s", $lastImport?->format(DATE_ATOM) ?? 'Never'));
             $output->writeln(sprintf("URI: \t\t %s", $distributionUri));
             $output->writeln(sprintf("API user: \t <%s>", $apiUser->getEmailAddress()));
 

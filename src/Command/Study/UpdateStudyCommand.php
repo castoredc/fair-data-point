@@ -7,32 +7,14 @@ use App\Entity\Study;
 
 final class UpdateStudyCommand
 {
-    private Study $study;
-
-    private ?string $sourceId = null;
-
-    private ?int $sourceServer = null;
-
-    private ?string $name = null;
-
-    private string $slug;
-
-    private bool $published;
-
     public function __construct(
-        Study $study,
-        ?string $sourceId,
-        ?int $sourceServer,
-        ?string $name,
-        string $slug,
-        bool $published
+        private Study $study,
+        private ?string $sourceId = null,
+        private ?int $sourceServer = null,
+        private ?string $name = null,
+        private string $slug,
+        private bool $published,
     ) {
-        $this->study = $study;
-        $this->sourceId = $sourceId;
-        $this->sourceServer = $sourceServer;
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->published = $published;
     }
 
     public function getStudy(): Study

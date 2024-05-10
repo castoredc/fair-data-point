@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 
 class UpdateMetadataModelModuleCommand extends UpdateModelModuleCommand
 {
-    private MetadataModelGroup $module;
-
-    public function __construct(MetadataModelGroup $module, string $title, int $order)
+    public function __construct(private MetadataModelGroup $module, string $title, int $order)
     {
         parent::__construct($title, $order);
-
-        $this->module = $module;
     }
 
     public function getModule(): MetadataModelGroup

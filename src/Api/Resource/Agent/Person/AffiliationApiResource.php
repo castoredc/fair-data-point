@@ -10,11 +10,8 @@ use App\Entity\FAIRData\Agent\Affiliation;
 
 class AffiliationApiResource implements ApiResource
 {
-    private Affiliation $affiliation;
-
-    public function __construct(Affiliation $affiliation)
+    public function __construct(private Affiliation $affiliation)
     {
-        $this->affiliation = $affiliation;
     }
 
     /** @return array<mixed> */

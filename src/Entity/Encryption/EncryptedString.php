@@ -9,14 +9,8 @@ use const JSON_THROW_ON_ERROR;
 
 class EncryptedString implements JsonSerializable
 {
-    private string $cipherText;
-
-    private string $nonce;
-
-    public function __construct(string $cipherText, string $nonce)
+    public function __construct(private string $cipherText, private string $nonce)
     {
-        $this->cipherText = $cipherText;
-        $this->nonce = $nonce;
     }
 
     public function getCipherText(): string

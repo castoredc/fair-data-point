@@ -17,15 +17,9 @@ class ApiClient
 {
     private Client $client;
 
-    private ApiEndpoint $endpoint;
-
-    private InstituteFactory $instituteFactory;
-
-    public function __construct(ApiEndpoint $endpoint, InstituteFactory $instituteFactory)
+    public function __construct(private ApiEndpoint $endpoint, private InstituteFactory $instituteFactory)
     {
         $this->client = new Client();
-        $this->endpoint = $endpoint;
-        $this->instituteFactory = $instituteFactory;
     }
 
     /**

@@ -11,11 +11,8 @@ use EasyRdf\Literal;
 
 class StudyGraphResource extends GraphResource
 {
-    private Study $study;
-
-    public function __construct(Study $study, string $baseUrl)
+    public function __construct(private Study $study, string $baseUrl)
     {
-        $this->study = $study;
         parent::__construct($study, $baseUrl);
     }
 

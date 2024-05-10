@@ -9,11 +9,8 @@ use const DATE_ATOM;
 
 class DataDictionaryVersionApiResource implements ApiResource
 {
-    private DataDictionaryVersion $dataDictionaryVersion;
-
-    public function __construct(DataDictionaryVersion $dataDictionaryVersion)
+    public function __construct(private DataDictionaryVersion $dataDictionaryVersion)
     {
-        $this->dataDictionaryVersion = $dataDictionaryVersion;
     }
 
     /** @return array<mixed> */
@@ -27,7 +24,7 @@ class DataDictionaryVersionApiResource implements ApiResource
                 'groups' => $this->dataDictionaryVersion->getGroups()->count(),
             ],
             'createdAt' => $this->dataDictionaryVersion->getCreatedAt()->format(DATE_ATOM),
-            'updatedAt' => $this->dataDictionaryVersion->getUpdatedAt() !== null ? $this->dataDictionaryVersion->getUpdatedAt()->format(DATE_ATOM) : null,
+            'updatedAt' => $this->dataDictionaryVersion->getUpdatedAt()?->format(DATE_ATOM),
         ];
     }
 }

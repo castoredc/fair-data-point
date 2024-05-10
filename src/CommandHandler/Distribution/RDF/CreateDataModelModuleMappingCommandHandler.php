@@ -26,6 +26,7 @@ class CreateDataModelModuleMappingCommandHandler extends CreateDataModelMappingC
     public function __invoke(CreateDataModelModuleMappingCommand $command): Mapping
     {
         parent::setup($command);
+
         $dataModelVersion = $command->getDataModelVersion();
 
         $module = $this->em->getRepository(DataModelGroup::class)->find($command->getModule());

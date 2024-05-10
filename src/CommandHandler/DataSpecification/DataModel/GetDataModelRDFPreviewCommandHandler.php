@@ -27,11 +27,8 @@ use function assert;
 #[AsMessageHandler]
 class GetDataModelRDFPreviewCommandHandler
 {
-    private Security $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     /**

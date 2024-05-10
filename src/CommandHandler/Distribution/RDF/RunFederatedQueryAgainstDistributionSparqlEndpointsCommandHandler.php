@@ -24,19 +24,8 @@ use function assert;
 #[AsMessageHandler]
 class RunFederatedQueryAgainstDistributionSparqlEndpointsCommandHandler
 {
-    private TripleStoreBasedDistributionService $distributionService;
-    private EntityManagerInterface $em;
-    private EncryptionService $encryptionService;
-    private Security $security;
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(TripleStoreBasedDistributionService $distributionService, EntityManagerInterface $em, EncryptionService $encryptionService, Security $security, EventDispatcherInterface $eventDispatcher)
+    public function __construct(private TripleStoreBasedDistributionService $distributionService, private EntityManagerInterface $em, private EncryptionService $encryptionService, private Security $security, private EventDispatcherInterface $eventDispatcher)
     {
-        $this->distributionService = $distributionService;
-        $this->em = $em;
-        $this->encryptionService = $encryptionService;
-        $this->security = $security;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /** @throws Exception */

@@ -18,13 +18,11 @@ use EasyRdf\Literal;
 
 abstract class GraphResource
 {
-    protected string $baseUrl;
     protected string $url;
 
-    public function __construct(AccessibleEntity $entity, string $baseUrl)
+    public function __construct(AccessibleEntity $entity, protected string $baseUrl)
     {
         $this->url = $entity->getRelativeUrl();
-        $this->baseUrl = $baseUrl;
     }
 
     public function toGraph(): Graph

@@ -9,13 +9,9 @@ use App\Entity\Grid\Institute;
 
 class OrganizationSearchApiResource implements ApiResource
 {
-    /** @var array<Organization|Institute> */
-    private array $organizations;
-
     /** @param array<Organization|Institute> $organizations */
-    public function __construct(array $organizations)
+    public function __construct(private array $organizations)
     {
-        $this->organizations = $organizations;
     }
 
     /** @return array<mixed> */

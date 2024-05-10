@@ -10,11 +10,8 @@ use EasyRdf\Graph;
 
 class FAIRDataPointGraphResource extends GraphResource
 {
-    private FAIRDataPoint $fairDataPoint;
-
-    public function __construct(FAIRDataPoint $fairDataPoint, string $baseUrl)
+    public function __construct(private FAIRDataPoint $fairDataPoint, string $baseUrl)
     {
-        $this->fairDataPoint = $fairDataPoint;
         parent::__construct($fairDataPoint, $baseUrl);
     }
 

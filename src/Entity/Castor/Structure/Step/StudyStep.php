@@ -8,13 +8,9 @@ use App\Entity\Enum\StructureType;
 
 class StudyStep extends Step
 {
-    private string $parentId;
-
-    public function __construct(string $id, CastorStudy $study, ?string $stepDescription, ?string $stepName, ?int $stepOrder, string $parentId)
+    public function __construct(string $id, CastorStudy $study, ?string $stepDescription, ?string $stepName, ?int $stepOrder, private string $parentId)
     {
         parent::__construct($id, $study, StructureType::study(), $stepDescription, $stepName, $stepOrder);
-
-        $this->parentId = $parentId;
     }
 
     public function getParentId(): string

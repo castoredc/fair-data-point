@@ -8,23 +8,8 @@ use App\Entity\Enum\XsdDataType;
 
 abstract class CreateNodeCommand
 {
-    private NodeType $type;
-
-    private string $title;
-
-    private ?string $description = null;
-
-    private string $value;
-
-    private ?XsdDataType $dataType = null;
-
-    public function __construct(NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType)
+    public function __construct(private NodeType $type, private string $title, private ?string $description = null, private string $value, private ?XsdDataType $dataType = null)
     {
-        $this->type = $type;
-        $this->title = $title;
-        $this->description = $description;
-        $this->value = $value;
-        $this->dataType = $dataType;
     }
 
     public function getType(): NodeType

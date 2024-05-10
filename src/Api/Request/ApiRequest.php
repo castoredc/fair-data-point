@@ -13,9 +13,6 @@ abstract class ApiRequest
     /** @var array<mixed> */
     protected array $data = [];
 
-    /** @var ParameterBag<mixed> */
-    protected ParameterBag $query;
-
     protected ?object $context = null;
 
     /**
@@ -26,10 +23,9 @@ abstract class ApiRequest
      *
      * phpcs:enable
      */
-    public function __construct(?array $data, ParameterBag $query)
+    public function __construct(?array $data, protected ParameterBag $query)
     {
         $this->data = $data ?? [];
-        $this->query = $query;
 
         $this->parse();
     }

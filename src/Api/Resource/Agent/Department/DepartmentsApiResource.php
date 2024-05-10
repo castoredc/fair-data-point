@@ -8,15 +8,9 @@ use App\Entity\FAIRData\Agent\Department;
 
 class DepartmentsApiResource implements ApiResource
 {
-    /** @var Department[] */
-    private array $departments;
-    private bool $includeOrganization;
-
     /** @param Department[] $departments */
-    public function __construct(array $departments, bool $includeOrganization)
+    public function __construct(private array $departments, private bool $includeOrganization)
     {
-        $this->departments = $departments;
-        $this->includeOrganization = $includeOrganization;
     }
 
     /** @return array<mixed> */
