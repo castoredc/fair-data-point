@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
@@ -78,6 +79,12 @@ abstract class Metadata
 
     /** @ORM\Column(type="iri", nullable=true) */
     private ?Iri $landingPage = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelVersion", inversedBy="assignedMetadata")
+     * @ORM\JoinColumn(name="metadata_model_version_id", referencedColumnName="id")
+     */
+    private ?MetadataModelVersion $metadataModelVersion;
 
     public function getId(): string
     {
@@ -166,5 +173,15 @@ abstract class Metadata
     public function setLandingPage(?Iri $landingPage): void
     {
         $this->landingPage = $landingPage;
+    }
+
+    public function getMetadataModelVersion(): ?MetadataModelVersion
+    {
+        return $this->metadataModelVersion;
+    }
+
+    public function setMetadataModelVersion(?MetadataModelVersion $metadataModelVersion): void
+    {
+        $this->metadataModelVersion = $metadataModelVersion;
     }
 }

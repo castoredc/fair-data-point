@@ -5,6 +5,7 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\CreateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
@@ -38,6 +39,9 @@ abstract class CreateDistributionCommandHandler
             throw new NoAccessPermission();
         }
 
+        $defaultMetadataModel = $this->em->getRepository(MetadataModel::class)->find($command->getDefaultMetadataModelId());
+        assert($defaultMetadataModel instanceof MetadataModel);
+
         $slug = $command->getSlug();
 
         $distribution = new Distribution(
@@ -47,6 +51,7 @@ abstract class CreateDistributionCommandHandler
 
         $license = $this->em->getRepository(License::class)->find($command->getLicense());
         $distribution->setLicense($license);
+        $distribution->setDefaultMetadataModel($defaultMetadataModel);
 
         if ($command->getApiUser() !== null && $command->getClientId() !== null && $command->getClientSecret() !== null) {
             $apiUser = new ApiUser($command->getApiUser(), $study->getServer());

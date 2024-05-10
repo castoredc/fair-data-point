@@ -12,6 +12,7 @@ class UpdateRDFDistributionCommand extends UpdateDistributionCommand
     public function __construct(
         Distribution $distribution,
         string $slug,
+        string $defaultMetadataModelId,
         string $license,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
@@ -22,7 +23,18 @@ class UpdateRDFDistributionCommand extends UpdateDistributionCommand
         private string $dataModelId,
         private string $dataModelVersionId,
     ) {
-        parent::__construct($distribution, $slug, $license, $apiUser, $clientId, $clientSecret, $published, $cached, $public);
+        parent::__construct(
+            $distribution,
+            $slug,
+            $defaultMetadataModelId,
+            $license,
+            $apiUser,
+            $clientId,
+            $clientSecret,
+            $published,
+            $cached,
+            $public
+        );
     }
 
     public function getDataModelId(): string

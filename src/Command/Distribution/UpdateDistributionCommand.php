@@ -11,6 +11,7 @@ abstract class UpdateDistributionCommand
     public function __construct(
         private Distribution $distribution,
         private string $slug,
+        private string $defaultMetadataModelId,
         private string $license,
         private ?string $apiUser = null,
         private ?SensitiveDataString $clientId = null,
@@ -29,6 +30,11 @@ abstract class UpdateDistributionCommand
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function getDefaultMetadataModelId(): string
+    {
+        return $this->defaultMetadataModelId;
     }
 
     public function getLicense(): string

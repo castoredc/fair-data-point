@@ -55,7 +55,8 @@ class DatasetApiController extends ApiController
                 new UpdateDatasetCommand(
                     $dataset,
                     $parsed->getSlug(),
-                    $parsed->getPublished()
+                    $parsed->getPublished(),
+                    $parsed->getDefaultMetadataModel()
                 )
             );
 
@@ -63,11 +64,14 @@ class DatasetApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a dataset', [
-                'exception' => $e,
-                'Dataset' => $dataset->getSlug(),
-                'DatasetID' => $dataset->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a dataset',
+                [
+                    'exception' => $e,
+                    'Dataset' => $dataset->getSlug(),
+                    'DatasetID' => $dataset->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -82,14 +86,16 @@ class DatasetApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new GetPaginatedDistributionsCommand(
-                null,
-                $dataset,
-                null,
-                $parsed->getSearch(),
-                $parsed->getPerPage(),
-                $parsed->getPage()
-            ));
+            $envelope = $bus->dispatch(
+                new GetPaginatedDistributionsCommand(
+                    null,
+                    $dataset,
+                    null,
+                    $parsed->getSearch(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -105,11 +111,14 @@ class DatasetApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the distributions for a dataset', [
-                'exception' => $e,
-                'Dataset' => $dataset->getSlug(),
-                'DatasetID' => $dataset->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the distributions for a dataset',
+                [
+                    'exception' => $e,
+                    'Dataset' => $dataset->getSlug(),
+                    'DatasetID' => $dataset->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

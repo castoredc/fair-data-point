@@ -55,18 +55,27 @@ class SingleCatalogApiController extends ApiController
             assert($parsed instanceof CatalogApiRequest);
 
             $bus->dispatch(
-                new UpdateCatalogCommand($catalog, $parsed->getSlug(), $parsed->isAcceptSubmissions(), $parsed->isSubmissionAccessesData())
+                new UpdateCatalogCommand(
+                    $catalog,
+                    $parsed->getSlug(),
+                    $parsed->isAcceptSubmissions(),
+                    $parsed->isSubmissionAccessesData(),
+                    $parsed->getDefaultMetadataModel()
+                )
             );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating the catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating the catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -84,14 +93,16 @@ class SingleCatalogApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
-                $catalog,
-                null,
-                $parsed->getSearch(),
-                $parsed->getHideParents(),
-                $parsed->getPerPage(),
-                $parsed->getPage()
-            ));
+            $envelope = $bus->dispatch(
+                new GetPaginatedDatasetsCommand(
+                    $catalog,
+                    null,
+                    $parsed->getSearch(),
+                    $parsed->getHideParents(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -106,11 +117,14 @@ class SingleCatalogApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the datasets for a catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the datasets for a catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -128,7 +142,16 @@ class SingleCatalogApiController extends ApiController
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new FilterStudiesCommand($catalog, null, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
+            $envelope = $bus->dispatch(
+                new FilterStudiesCommand(
+                    $catalog,
+                    null,
+                    $parsed->getSearch(),
+                    $parsed->getStudyType(),
+                    $parsed->getMethodType(),
+                    $parsed->getCountry()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -137,11 +160,14 @@ class SingleCatalogApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the map information for a catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the map information for a catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

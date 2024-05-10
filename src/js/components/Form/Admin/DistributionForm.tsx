@@ -28,10 +28,12 @@ interface DistributionFormState {
     languages: any;
     licenses: any;
     dataModels: any;
+    metadataModels: any;
     distribution: any;
     hasLoadedLanguages: any;
     hasLoadedLicenses: any;
     hasLoadedDataModels: any;
+    hasLoadedMetadataModels: any;
     update: boolean;
     validation?: any;
 }
@@ -51,7 +53,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
         if (typeof data.dataModel === 'object' && data.dataModel !== '') {
             data = {
                 ...data,
-                dataModel: data.dataModel.dataModel,
+                dataModel: data.dataModel.dataSpecification,
                 dataModelVersion: data.dataModel.id,
             };
         }
@@ -66,6 +68,8 @@ export default class DistributionForm extends Component<DistributionFormProps, D
             hasLoadedDataModels: false,
             distribution: props.distribution ? props.distribution : null,
             update: !!props.distribution,
+            metadataModels: [],
+            hasLoadedMetadataModels: false,
         };
     }
 
@@ -73,6 +77,7 @@ export default class DistributionForm extends Component<DistributionFormProps, D
         this.getLanguages();
         this.getLicenses();
         this.getDataModels();
+        this.getMetadataModels();
     }
 
     getLanguages = () => {
@@ -126,6 +131,30 @@ export default class DistributionForm extends Component<DistributionFormProps, D
                 toast.error(<ToastItem type="error" title="An error occurred" />);
             });
     };
+    getMetadataModels = () => {
+        apiClient
+            .get('/api/metadata-model/my')
+            .then(response => {
+                this.setState({
+                    metadataModels: response.data.map(metadataModel => {
+                        const versions = metadataModel.versions.map(version => {
+                            return { value: version.id, label: version.version };
+                        });
+
+                        return {
+                            label: metadataModel.title,
+                            value: metadataModel.id,
+                            versions: versions,
+                        };
+                    }),
+                    hasLoadedMetadataModels: true,
+                });
+            })
+            .catch(() => {
+                toast.error(<ToastItem type="error" title="An error occurred" />);
+            });
+    };
+
 
     handleSubmit = (values, { setSubmitting }) => {
         const { dataset, distribution, mainUrl, history } = this.props;
@@ -164,9 +193,9 @@ export default class DistributionForm extends Component<DistributionFormProps, D
     };
 
     render() {
-        const { initialValues, licenses, dataModels, distribution, hasLoadedLanguages, hasLoadedLicenses, hasLoadedDataModels } = this.state;
+        const { initialValues, licenses, dataModels, metadataModels, distribution, hasLoadedLanguages, hasLoadedLicenses, hasLoadedDataModels, hasLoadedMetadataModels } = this.state;
 
-        if (!hasLoadedLanguages || !hasLoadedLicenses || !hasLoadedDataModels) {
+        if (!hasLoadedLanguages || !hasLoadedLicenses || !hasLoadedDataModels || !hasLoadedMetadataModels) {
             return <LoadingOverlay accessibleLabel="Loading distribution" />;
         }
 
@@ -228,6 +257,17 @@ export default class DistributionForm extends Component<DistributionFormProps, D
 
                                         <FormItem label="Slug" tooltip="The unique identifying part of a web address, typically at the end of the URL">
                                             <Field component={Input} name="slug" />
+                                        </FormItem>
+
+                                        <FormItem label="Default metadata model">
+                                            <Field
+                                                component={Select}
+                                                options={metadataModels}
+                                                name="defaultMetadataModel"
+                                                menuPosition="fixed"
+                                                menuPlacement="auto"
+                                                details="Please select which semantic metadata model you want to use as default"
+                                            />
                                         </FormItem>
 
                                         <FormItem label="License" details="The reference to the usage license of the distribution">
@@ -392,6 +432,7 @@ export const distributionTypes = [
 export const defaultData = {
     type: '',
     slug: '',
+    defaultMetadataModel: '',
     accessRights: null,
     includeAllData: false,
     dataModel: '',
@@ -410,6 +451,7 @@ export const defaultData = {
 const DistributionSchema = Yup.object().shape({
     type: Yup.string().oneOf(['csv', 'rdf']).required('Please select a distribution type'),
     slug: Yup.string().required('Please select a slug'),
+    defaultMetadataModel: Yup.string().required('Please select a metadata model'),
     includeAllData: Yup.boolean()
         .nullable()
         .when('type', {

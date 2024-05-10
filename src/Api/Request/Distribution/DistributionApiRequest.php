@@ -31,6 +31,12 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
      * @Assert\NotBlank()
      * @Assert\Type("string")
      */
+    private string $defaultMetadataModel;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     */
     private string $license;
 
     /**
@@ -94,6 +100,7 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     {
         $this->type = $this->getFromData('type');
         $this->slug = $this->getFromData('slug');
+        $this->defaultMetadataModel = $this->getFromData('defaultMetadataModel');
         $this->license = $this->getFromData('license');
         $this->includeAllData = $this->getFromData('includeAllData');
         $this->dataModel = $this->getFromData('dataModel');
@@ -114,6 +121,11 @@ class DistributionApiRequest extends SingleApiRequest implements GroupSequencePr
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function getDefaultMetadataModel(): string
+    {
+        return $this->defaultMetadataModel;
     }
 
     public function getLicense(): string

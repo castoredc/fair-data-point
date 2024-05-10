@@ -199,6 +199,7 @@ class DistributionApiController extends ApiController
                 $envelope = $bus->dispatch(
                     new CreateCSVDistributionCommand(
                         $parsed->getSlug(),
+                        $parsed->getDefaultMetadataModel(),
                         $parsed->getLicense(),
                         $dataset,
                         $parsed->getApiUser(),
@@ -212,6 +213,7 @@ class DistributionApiController extends ApiController
                 $envelope = $bus->dispatch(
                     new CreateRDFDistributionCommand(
                         $parsed->getSlug(),
+                        $parsed->getDefaultMetadataModel(),
                         $parsed->getLicense(),
                         $dataset,
                         $parsed->getApiUser(),

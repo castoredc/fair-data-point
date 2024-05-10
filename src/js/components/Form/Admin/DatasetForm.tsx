@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../Form.scss';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
+import { Button, Icon, LoadingOverlay, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import * as H from 'history';
@@ -13,13 +13,15 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import * as Yup from 'yup';
 import { apiClient } from 'src/js/network';
 import Select from 'components/Input/Formik/Select';
+import { Link } from 'react-router-dom';
 
-interface CatalogFormProps {
-    catalog?: any;
+interface DatasetFormProps {
+    dataset?: any;
     history: H.History;
+    mainUrl: string;
 }
 
-interface CatalogFormState {
+interface DatasetFormState {
     initialValues: any;
     update: boolean;
     validation?: any;
@@ -27,14 +29,14 @@ interface CatalogFormState {
     hasLoadedMetadataModels: boolean;
 }
 
-export default class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
+export default class DatasetForm extends Component<DatasetFormProps, DatasetFormState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            initialValues: props.catalog ? mergeData(defaultData, props.catalog) : defaultData,
+            initialValues: props.dataset ? mergeData(defaultData, props.dataset) : defaultData,
             validation: {},
-            update: !!props.catalog,
+            update: !!props.dataset,
             metadataModels: [],
             hasLoadedMetadataModels: false,
         };
@@ -69,21 +71,18 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
     };
 
     handleSubmit = (values, { setSubmitting }) => {
-        const { catalog, history } = this.props;
+        const { dataset, history, mainUrl } = this.props;
 
         apiClient
-            .post('/api/catalog' + (catalog ? '/' + catalog.slug : ''), values)
+            .post('/api/dataset/' + dataset.slug, values)
             .then(response => {
                 setSubmitting(false);
 
-                if (catalog) {
-                    history.push('/dashboard/catalogs/' + values.slug);
-                    toast.success(<ToastItem type="success" title="The catalog details are saved successfully" />, {
-                        position: 'top-right',
-                    });
-                } else {
-                    history.push('/dashboard/catalogs/' + response.data.slug + '/metadata');
-                }
+                history.push(mainUrl + '/datasets/' + values.slug);
+                toast.success(<ToastItem type="success" title="The dataset details are saved successfully" />, {
+                    position: 'top-right',
+                });
+
             })
             .catch(error => {
                 setSubmitting(false);
@@ -100,19 +99,46 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 
     render() {
         const { initialValues, validation, hasLoadedMetadataModels, metadataModels } = this.state;
-        const { catalog } = this.props;
+        const { dataset } = this.props;
 
         if (!hasLoadedMetadataModels) {
-            return <LoadingOverlay accessibleLabel="Loading catalog" />;
+            return <LoadingOverlay accessibleLabel="Loading dataset" />;
         }
 
         return (
-            <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={CatalogSchema}>
+            <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={DatasetSchema}>
                 {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
                     return (
                         <Form>
                             <div className="FormContent">
-                                <FormItem label="Slug" tooltip="The unique identifying part of a web address, typically at the end of the URL">
+                                {dataset.study && (
+                                    <FormItem label="Study">
+                                        <div className="StudyLink">
+                                            <div className="StudyIcon">
+                                                <Icon type="study" width="32px" height="32px" />
+                                            </div>
+                                            <div className="StudyDetails">
+                                                <div className="StudyName">
+                                                    <dl>
+                                                        <dt>Brief name</dt>
+                                                        <dd>
+                                                            {dataset.study.hasMetadata ? dataset.study.metadata.briefName : <span className="None">None</span>}
+                                                        </dd>
+                                                        <dt>Study name</dt>
+                                                        <dd>{dataset.study.name}</dd>
+                                                    </dl>
+                                                </div>
+                                                {/* @ts-ignore */}
+                                                <Link to={`/dashboard/studies/${dataset.study.id}`}>
+                                                    <Button buttonType="secondary">Open study</Button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </FormItem>
+                                )}
+
+                                <FormItem label="Slug"
+                                          tooltip="The unique identifying part of a web address, typically at the end of the URL">
                                     <Field component={Input} name="slug" serverError={validation} />
                                 </FormItem>
 
@@ -130,28 +156,20 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                                 <FormItem>
                                     <Field
                                         component={SingleChoice}
-                                        labelText="Accepts submissions"
-                                        name="acceptSubmissions"
-                                        details="When selected, others will be able to add their study to this catalog"
+                                        labelText="Publish dataset"
+                                        name="published"
+                                        details="When selected, others will be able to view metadata of this dataset"
                                     />
                                 </FormItem>
                             </div>
 
-                            {catalog ? (
-                                <div className="FormButtons">
-                                    <Stack distribution="trailing">
-                                        <Button disabled={isSubmitting} type="submit">
-                                            Update catalog
-                                        </Button>
-                                    </Stack>
-                                </div>
-                            ) : (
-                                <footer>
+                            <div className="FormButtons">
+                                <Stack distribution="trailing">
                                     <Button disabled={isSubmitting} type="submit">
-                                        Add catalog
+                                        Update dataset
                                     </Button>
-                                </footer>
-                            )}
+                                </Stack>
+                            </div>
                         </Form>
                     );
                 }}
@@ -163,16 +181,11 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 export const defaultData = {
     slug: '',
     defaultMetadataModel: '',
-    acceptSubmissions: false,
-    submissionAccessesData: false,
+    published: false,
 };
 
-const CatalogSchema = Yup.object().shape({
+const DatasetSchema = Yup.object().shape({
     slug: Yup.string().required('Please enter a slug'),
     defaultMetadataModel: Yup.string().required('Please select a metadata model'),
-    acceptSubmissions: Yup.boolean().required('Please enter if this catalog accepts submissions'),
-    submissionAccessesData: Yup.boolean().when('acceptSubmissions', {
-        is: true,
-        then: Yup.boolean().required('Please enter if the submission accesses data in the process'),
-    }),
+    published: Yup.boolean().required('Please enter if the dataset is published'),
 });

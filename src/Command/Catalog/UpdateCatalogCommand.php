@@ -7,8 +7,13 @@ use App\Entity\FAIRData\Catalog;
 
 class UpdateCatalogCommand
 {
-    public function __construct(private Catalog $catalog, private string $slug, private bool $acceptSubmissions, private ?bool $submissionAccessesData = null)
-    {
+    public function __construct(
+        private Catalog $catalog,
+        private string $slug,
+        private bool $acceptSubmissions,
+        private ?bool $submissionAccessesData = null,
+        private string $defaultMetadataModelId,
+    ) {
     }
 
     public function getCatalog(): Catalog
@@ -29,5 +34,10 @@ class UpdateCatalogCommand
     public function isSubmissionAccessesData(): ?bool
     {
         return $this->submissionAccessesData;
+    }
+
+    public function getDefaultMetadataModelId(): string
+    {
+        return $this->defaultMetadataModelId;
     }
 }

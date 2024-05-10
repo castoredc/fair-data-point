@@ -5,6 +5,7 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\UpdateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
 use App\Exception\LanguageNotFound;
@@ -35,6 +36,9 @@ abstract class UpdateDistributionCommandHandler
             throw new NoAccessPermission();
         }
 
+        $defaultMetadataModel = $this->em->getRepository(MetadataModel::class)->find($command->getDefaultMetadataModelId());
+        assert($defaultMetadataModel instanceof MetadataModel);
+
         if ($command->getApiUser() !== null && $command->getClientId() !== null && $command->getClientSecret() !== null) {
             $apiUser = new ApiUser($command->getApiUser(), $study->getServer());
             $apiUser->setDecryptedClientId($this->encryptionService, $command->getClientId()->exposeAsString());
@@ -52,6 +56,7 @@ abstract class UpdateDistributionCommandHandler
         $distribution->setSlug($slug);
         $distribution->setLicense($license);
         $distribution->setIsPublished($command->isPublished());
+        $distribution->setDefaultMetadataModel($defaultMetadataModel);
 
         $contents = $distribution->getContents();
         $contents->setIsCached($command->isCached());

@@ -10,6 +10,7 @@ abstract class CreateDistributionCommand
 {
     public function __construct(
         private string $slug,
+        private string $defaultMetadataModelId,
         private string $license,
         private Dataset $dataset,
         private ?string $apiUser = null,
@@ -21,6 +22,11 @@ abstract class CreateDistributionCommand
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function getDefaultMetadataModelId(): string
+    {
+        return $this->defaultMetadataModelId;
     }
 
     public function getLicense(): string

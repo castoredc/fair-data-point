@@ -23,6 +23,7 @@ class CatalogApiResource implements ApiResource
             'relativeUrl' => $this->catalog->getRelativeUrl(),
             'id' => $this->catalog->getId(),
             'slug' => $this->catalog->getSlug(),
+            'defaultMetadataModel' => $this->catalog->getDefaultMetadataModel()?->getId(),
             'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
             'submissionAccessesData' => $this->catalog->isSubmissionAccessingData(),
             'hasMetadata' => $this->catalog->hasMetadata(),

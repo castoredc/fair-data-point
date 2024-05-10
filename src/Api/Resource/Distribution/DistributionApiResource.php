@@ -27,6 +27,7 @@ class DistributionApiResource implements ApiResource
             'relativeUrl' => $this->distribution->getRelativeUrl(),
             'id' => $this->distribution->getId(),
             'slug' => $this->distribution->getSlug(),
+            'defaultMetadataModel' => $this->distribution->getDefaultMetadataModel()?->getId(),
             'hasMetadata' => $this->distribution->hasMetadata(),
             'hasContents' => $this->distribution->hasContents(),
             'license' => $this->distribution->getLicense()?->getSlug(),

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Permission\DatasetPermission;
 use App\Entity\Metadata\DatasetMetadata;
@@ -81,6 +82,12 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
 
     /** @ORM\Column(type="boolean", options={"default":"0"}) */
     private bool $isArchived = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="datasets")
+     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
+     */
+    private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(string $slug)
     {
@@ -244,5 +251,15 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     public function isArchived(): bool
     {
         return $this->isArchived;
+    }
+
+    public function getDefaultMetadataModel(): ?MetadataModel
+    {
+        return $this->defaultMetadataModel;
+    }
+
+    public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
+    {
+        $this->defaultMetadataModel = $defaultMetadataModel;
     }
 }

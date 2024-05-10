@@ -11,6 +11,7 @@ class CreateRDFDistributionCommand extends CreateDistributionCommand
 {
     public function __construct(
         string $slug,
+        string $defaultMetadataModelId,
         string $license,
         Dataset $dataset,
         ?string $apiUser,
@@ -19,7 +20,7 @@ class CreateRDFDistributionCommand extends CreateDistributionCommand
         private string $dataModelId,
         private string $dataModelVersionId,
     ) {
-        parent::__construct($slug, $license, $dataset, $apiUser, $clientId, $clientSecret);
+        parent::__construct($slug, $defaultMetadataModelId, $license, $dataset, $apiUser, $clientId, $clientSecret);
     }
 
     public function getDataModelId(): string

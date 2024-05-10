@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Permission\CatalogPermission;
 use App\Entity\Metadata\CatalogMetadata;
@@ -87,9 +88,16 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
      */
     private Collection $permissions;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="catalogs")
+     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
+     */
+    private ?MetadataModel $defaultMetadataModel = null;
+
     public function __construct(string $slug)
     {
         $this->slug = $slug;
+
         $this->datasets = new ArrayCollection();
         $this->studies = new ArrayCollection();
         $this->metadata = new ArrayCollection();
@@ -303,5 +311,15 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     public function isArchived(): bool
     {
         return $this->isArchived;
+    }
+
+    public function getDefaultMetadataModel(): ?MetadataModel
+    {
+        return $this->defaultMetadataModel;
+    }
+
+    public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
+    {
+        $this->defaultMetadataModel = $defaultMetadataModel;
     }
 }

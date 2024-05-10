@@ -23,6 +23,7 @@ class DatasetApiResource implements ApiResource
             'relativeUrl' => $this->dataset->getRelativeUrl(),
             'id' => $this->dataset->getId(),
             'slug' => $this->dataset->getSlug(),
+            'defaultMetadataModel' => $this->dataset->getDefaultMetadataModel()?->getId(),
             'hasMetadata' => $this->dataset->hasMetadata(),
             'published' => $this->dataset->isPublished(),
             'study' => $this->dataset->getStudy() !== null ? (new StudyApiResource($this->dataset->getStudy()))->toArray() : null,

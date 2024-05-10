@@ -12,6 +12,7 @@ class UpdateCSVDistributionCommand extends UpdateDistributionCommand
     public function __construct(
         Distribution $distribution,
         string $slug,
+        string $defaultMetadataModelId,
         string $license,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
@@ -22,7 +23,18 @@ class UpdateCSVDistributionCommand extends UpdateDistributionCommand
         private string $dataDictionaryId,
         private string $dataDictionaryVersionId,
     ) {
-        parent::__construct($distribution, $slug, $license, $apiUser, $clientId, $clientSecret, $published, $cached, $public);
+        parent::__construct(
+            $distribution,
+            $slug,
+            $defaultMetadataModelId,
+            $license,
+            $apiUser,
+            $clientId,
+            $clientSecret,
+            $published,
+            $cached,
+            $public
+        );
     }
 
     public function getDataDictionaryId(): string

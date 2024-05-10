@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\Catalog;
 
 use App\Command\Catalog\UpdateCatalogCommand;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,10 +25,14 @@ class UpdateCatalogCommandHandler
             throw new NoAccessPermission();
         }
 
+        $defaultMetadataModel = $this->em->getRepository(MetadataModel::class)->find($command->getDefaultMetadataModelId());
+        assert($defaultMetadataModel instanceof MetadataModel);
+
         $slug = $command->getSlug();
 
         $catalog->setSlug($slug);
         $catalog->setAcceptSubmissions($command->isAcceptSubmissions());
+        $catalog->setDefaultMetadataModel($defaultMetadataModel);
 
         $submissionsAccessesData = $command->isAcceptSubmissions() ? $command->isSubmissionAccessesData() : false;
         $catalog->setSubmissionAccessesData($submissionsAccessesData);
