@@ -36,6 +36,7 @@ export const DataType = {
     gMonthDay: 'Month and day (date/time)',
     string: 'String',
     boolean: 'Boolean',
+    url: 'URL',
 };
 
 export const MetadataFieldType = {
@@ -46,11 +47,15 @@ export const MetadataFieldType = {
     ontologyConceptBrowser: 'Ontology concept browser',
     datePicker: 'Datepicker',
     timePicker: 'Timepicker',
-    dateAndTimePicker: 'Date and timepicker',
+    // dateAndTimePicker: 'Date and timepicker',
     checkbox: 'Checkbox',
     checkboxes: 'Checkboxes',
     radioButtons: 'Radio buttons',
     dropdown: 'Dropdown',
+    languagePicker: 'Language picker',
+    licensePicker: 'License picker',
+    countryPicker: 'Country picker',
+    agentSelector: 'Agent selector'
 };
 
 export const ResourceType = {

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, Stack } from '@castoredc/matter';
 import { MetadataFieldType } from 'components/MetadataItem/EnumMappings';
+import { TickSmallIcon } from '@castoredc/matter-icons';
 
 export interface DataSpecificationFormProps {
     fields: any[],
@@ -51,6 +52,7 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
                             node: <CellText>{node.title}</CellText>,
                             fieldType: <CellText>{MetadataFieldType[field.fieldType]}</CellText>,
                             optionGroup: <CellText>{optionGroup ? optionGroup.title : ''}</CellText>,
+                            required: field.isRequired ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
                             menu: (
                                 <ActionsCell
                                     items={[
@@ -95,6 +97,13 @@ const DataSpecificationForm: FC<DataSpecificationFormProps> = ({
                         {
                             Header: 'Option group',
                             accessor: 'optionGroup',
+                        },
+                        {
+                            Header: 'Required',
+                            accessor: 'required',
+                            disableResizing: true,
+                            isInteractive: true,
+                            width: 80,
                         },
                         {
                             accessor: 'menu',

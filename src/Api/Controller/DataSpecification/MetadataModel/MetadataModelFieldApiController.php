@@ -51,7 +51,8 @@ class MetadataModelFieldApiController extends ApiController
                     $parsed->getNode(),
                     $parsed->getFieldType(),
                     $parsed->getOptionGroup(),
-                    $form->getResourceType()
+                    $form->getResourceType(),
+                    $parsed->getIsRequired()
                 )
             );
 
@@ -101,7 +102,8 @@ class MetadataModelFieldApiController extends ApiController
                     $parsed->getNode(),
                     $parsed->getFieldType(),
                     $parsed->getOptionGroup(),
-                    $form->getResourceType()
+                    $form->getResourceType(),
+                    $parsed->getIsRequired()
                 )
             );
 

@@ -9,7 +9,7 @@ use App\Entity\Enum\ResourceType;
 
 class UpdateMetadataModelFieldCommand
 {
-    public function __construct(private MetadataModelField $field, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup, private ResourceType $resourceType)
+    public function __construct(private MetadataModelField $field, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup, private ResourceType $resourceType, private bool $isRequired)
     {
     }
 
@@ -51,5 +51,10 @@ class UpdateMetadataModelFieldCommand
     public function getResourceType(): ResourceType
     {
         return $this->resourceType;
+    }
+
+    public function getIsRequired(): bool
+    {
+        return $this->isRequired;
     }
 }

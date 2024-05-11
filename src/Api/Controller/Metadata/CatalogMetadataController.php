@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Metadata\CatalogMetadataApiRequest;
+use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateCatalogMetadataCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
@@ -29,21 +29,15 @@ class CatalogMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $catalog);
 
         try {
-            $parsed = $this->parseRequest(CatalogMetadataApiRequest::class, $request);
-            assert($parsed instanceof CatalogMetadataApiRequest);
+            $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);
+            assert($parsed instanceof CreateMetadataVersionApiRequest);
 
             $bus->dispatch(
                 new CreateCatalogMetadataCommand(
                     $catalog,
-                    $parsed->getTitle(),
-                    $parsed->getDescription(),
-                    $parsed->getLanguage(),
-                    $parsed->getLicense(),
-                    $parsed->getVersionUpdate(),
-                    $parsed->getPublishers(),
-                    $parsed->getHomepage(),
-                    $parsed->getLogo(),
-                    $parsed->getThemeTaxonomy()
+                    $parsed->getVersionType(),
+                    $parsed->getModel(),
+                    $parsed->getModelVersion(),
                 )
             );
 

@@ -9,6 +9,7 @@ use App\Exception\NoAccessPermission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use function assert;
 
 #[AsMessageHandler]
 class UpdateCatalogCommandHandler

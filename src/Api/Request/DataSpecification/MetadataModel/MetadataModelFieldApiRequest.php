@@ -6,6 +6,7 @@ namespace App\Api\Request\DataSpecification\MetadataModel;
 use App\Api\Request\SingleApiRequest;
 use App\Entity\Enum\MetadataFieldType;
 use Symfony\Component\Validator\Constraints as Assert;
+use function boolval;
 
 class MetadataModelFieldApiRequest extends SingleApiRequest
 {
@@ -39,6 +40,12 @@ class MetadataModelFieldApiRequest extends SingleApiRequest
     /** @Assert\Type("string") */
     private ?string $optionGroup = null;
 
+    /**
+     * @Assert\NotNull()
+     * @Assert\Type("bool")
+     */
+    private bool $isRequired;
+
     protected function parse(): void
     {
         $this->title = $this->getFromData('title');
@@ -47,6 +54,7 @@ class MetadataModelFieldApiRequest extends SingleApiRequest
         $this->node = $this->getFromData('node');
         $this->fieldType = $this->getFromData('fieldType');
         $this->optionGroup = $this->getFromData('optionGroup');
+        $this->isRequired = boolval($this->getFromData('isRequired'));
     }
 
     public function getTitle(): string
@@ -77,5 +85,10 @@ class MetadataModelFieldApiRequest extends SingleApiRequest
     public function getOptionGroup(): ?string
     {
         return $this->optionGroup;
+    }
+
+    public function getIsRequired(): bool
+    {
+        return $this->isRequired;
     }
 }

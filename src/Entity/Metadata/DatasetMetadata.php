@@ -5,6 +5,7 @@ namespace App\Entity\Metadata;
 
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -87,5 +88,10 @@ class DatasetMetadata extends Metadata
     public function setKeyword(?LocalizedText $keyword): void
     {
         $this->keyword = $keyword;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return $this->dataset;
     }
 }

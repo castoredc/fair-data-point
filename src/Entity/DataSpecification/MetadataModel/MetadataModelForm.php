@@ -45,6 +45,7 @@ class MetadataModelForm
 
     /**
      * @ORM\OneToMany(targetEntity="MetadataModelField", mappedBy="form", cascade={"persist"})
+     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Collection<MetadataModelField>
      */

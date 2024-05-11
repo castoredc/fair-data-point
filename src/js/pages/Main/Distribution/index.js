@@ -82,7 +82,7 @@ export default class Distribution extends Component {
         const breadcrumbs = getBreadCrumbs(location, { distribution });
 
         const restricted = distribution && (distribution.accessRights === 2 || distribution.accessRights === 3);
-        const title = distribution ? localizedText(distribution.metadata.title, 'en') : null;
+        const title = distribution ? localizedText(distribution.legacy.metadata.title, 'en') : null;
 
         return (
             <Layout className="Distribution" title={title} isLoading={isLoadingDistribution} embedded={embedded}>
@@ -101,13 +101,13 @@ export default class Distribution extends Component {
                     {distribution && (
                         <>
                             <div className="MainCol">
-                                {distribution.metadata.description && (
-                                    <div className="InformationDescription">{localizedText(distribution.metadata.description, 'en', true)}</div>
+                                {distribution.legacy.metadata.description && (
+                                    <div className="InformationDescription">{localizedText(distribution.legacy.metadata.description, 'en', true)}</div>
                                 )}
                             </div>
 
                             <div className="SideCol">
-                                <MetadataSideBar type="distribution" metadata={distribution.metadata} name={title} />
+                                <MetadataSideBar type="distribution" metadata={distribution.legacy.metadata} name={title} />
                             </div>
 
                             <hr className="Separator" />

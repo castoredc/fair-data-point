@@ -3,19 +3,32 @@ import { classNames, cloneIfComposite } from '../../util';
 import EventListener from '../EventListener';
 import './ScrollShadow.scss';
 
-const ScrollShadow = ({ children, className }) => {
-    const scrollable = useRef(null);
+type ScrollShadowProps = {
+    children: React.ReactNode;
+    className?: string;
+};
+
+const ScrollShadow: React.FC<ScrollShadowProps> = ({ children, className }) => {
+    const scrollable = useRef<HTMLDivElement>(null);
     const [topShadow, setTopShadow] = useState(false);
     const [bottomShadow, setBottomShadow] = useState(false);
 
     const updateShadows = useCallback(() => {
-        if (!scrollable.current) return;
-        const { clientHeight, scrollHeight, scrollTop } = scrollable.current;
-        setTopShadow(scrollTop > 0);
-        setBottomShadow(scrollTop < scrollHeight - clientHeight);
+        if (scrollable.current) {
+            const { clientHeight, scrollHeight, scrollTop } = scrollable.current;
+            setTopShadow(scrollTop > 0);
+            setBottomShadow(scrollTop < scrollHeight - clientHeight);
+        }
     }, []);
 
-    useEffect(updateShadows, []);
+    useEffect(() => {
+        updateShadows();
+        // Also update shadows when window resizes
+        window.addEventListener('resize', updateShadows);
+        return () => {
+            window.removeEventListener('resize', updateShadows);
+        };
+    }, [updateShadows]);
 
     return (
         <div className={classNames(className, 'ScrollShadow', topShadow && 'topShadow', bottomShadow && 'bottomShadow')}>

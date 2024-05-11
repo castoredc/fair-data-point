@@ -9,7 +9,7 @@ use App\Entity\Enum\ResourceType;
 
 class CreateMetadataModelFieldCommand
 {
-    public function __construct(private MetadataModelForm $form, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup, private ResourceType $resourceType)
+    public function __construct(private MetadataModelForm $form, private string $title, private ?string $description, private int $order, private string $node, private MetadataFieldType $fieldType, private ?string $optionGroup, private ResourceType $resourceType, private bool $isRequired)
     {
     }
 
@@ -51,5 +51,10 @@ class CreateMetadataModelFieldCommand
     public function getResourceType(): ResourceType
     {
         return $this->resourceType;
+    }
+
+    public function getIsRequired(): bool
+    {
+        return $this->isRequired;
     }
 }

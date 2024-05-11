@@ -64,6 +64,7 @@ class UpdateMetadataModelFieldCommandHandler
         $field->setOptionGroup($optionGroup);
         $field->setNode($node);
         $field->setResourceType($command->getResourceType());
+        $field->setIsRequired($command->getIsRequired());
 
         $form->addField($field);
 

@@ -5,6 +5,7 @@ namespace App\Api\Resource\Catalog;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Catalog;
 use function count;
@@ -27,17 +28,18 @@ class CatalogApiResource implements ApiResource
             'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
             'submissionAccessesData' => $this->catalog->isSubmissionAccessingData(),
             'hasMetadata' => $this->catalog->hasMetadata(),
+            'metadata' => $this->catalog->hasMetadata() ? (new MetadataApiResource($this->catalog->getLatestMetadata()))->toArray() : null,
             'count' => [
                 'study' => count($this->catalog->getStudies(false)),
                 'dataset' => count($this->catalog->getDatasets(false)),
             ],
         ];
 
-        if ($this->catalog->hasMetadata()) {
+        if ($this->catalog->hasMetadata() && $this->catalog->getLatestMetadata()->getMetadataModelVersion() === null) {
             $first = $this->catalog->getFirstMetadata();
             $metadata = $this->catalog->getLatestMetadata();
 
-            $catalog['metadata'] = [
+            $catalog['legacy']['metadata'] = [
                 'title' => $metadata->getTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),

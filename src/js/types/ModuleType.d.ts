@@ -21,6 +21,7 @@ export type DependencyDescription = {
 };
 
 export type DependencyGroupType = {
+    type: 'group';
     id: string;
     group: string | null;
     combinator: string;
@@ -29,6 +30,7 @@ export type DependencyGroupType = {
 };
 
 export type DependencyRuleType = {
+    type: 'rule';
     id: string;
     group: string | null;
     field: string;

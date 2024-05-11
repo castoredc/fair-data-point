@@ -245,22 +245,18 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                             return {
                                 number: element.order,
                                 title: element.title,
+                                badge: element.resourceType ?? null,
                                 icons: icons,
                                 content: (
                                     <DataSpecificationModule
                                         key={element.id}
-                                        id={element.id}
-                                        title={element.title}
-                                        repeated={element.repeated}
-                                        order={element.order}
                                         groupedTriples={element.groupedTriples}
-                                        modelId={dataSpecification.id}
-                                        versionId={version}
                                         openModuleModal={() =>
                                             this.openModuleModal({
                                                 id: element.id,
                                                 title: element.title,
                                                 order: element.order,
+                                                resourceType: element.resourceType,
                                                 repeated: element.repeated,
                                                 dependent: element.dependent,
                                                 dependencies: element.dependencies,

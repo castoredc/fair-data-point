@@ -54,7 +54,7 @@ export default class Dataset extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, { dataset });
 
-        const title = dataset ? localizedText(dataset.metadata.title, 'en') : null;
+        const title = dataset ? localizedText(dataset.legacy.metadata.title, 'en') : null;
 
         return (
             <Layout className="Dataset" title={title} isLoading={isLoadingDataset} embedded={embedded}>
@@ -64,13 +64,13 @@ export default class Dataset extends Component {
                     {dataset && (
                         <>
                             <div className="MainCol">
-                                {dataset.metadata.description && (
-                                    <div className="InformationDescription">{localizedText(dataset.metadata.description, 'en', true)}</div>
+                                {dataset.legacy.metadata.description && (
+                                    <div className="InformationDescription">{localizedText(dataset.legacy.metadata.description, 'en', true)}</div>
                                 )}
                             </div>
 
                             <div className="SideCol">
-                                <MetadataSideBar type="dataset" metadata={dataset.metadata} name={title} />
+                                <MetadataSideBar type="dataset" metadata={dataset.legacy.metadata} name={title} />
                             </div>
 
                             <AssociatedItemsBar items={dataset.count} current="distribution" />

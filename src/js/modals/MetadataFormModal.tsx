@@ -103,8 +103,6 @@ export default class MetadataFormModal extends Component<MetadataFormModalProps,
         const { type, show, handleClose, orderOptions } = this.props;
         const { initialValues, validation } = this.state;
 
-        console.log(resourceTypes);
-
         const title = initialValues.id ? 'Edit form' : 'Add form';
         return (
             <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
@@ -161,6 +159,7 @@ const defaultData = {
 const MetadataModelFormSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
     order: Yup.string().required('Please select a position'),
+    resourceType: Yup.string().required('Please select a type'),
 });
 
 const resourceTypes = [

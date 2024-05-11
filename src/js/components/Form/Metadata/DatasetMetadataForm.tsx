@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MetadataForm from './MetadataForm';
+import LegacyMetadataForm from './LegacyMetadataForm';
 import FormItem from '../FormItem';
 import LocalizedTextInput from 'components/Input/Formik/LocalizedTextInput';
 import { Field } from 'formik';
@@ -15,7 +15,7 @@ export default class DatasetMetadataForm extends Component<DatasetMetadataFormPr
         const { dataset, onSave } = this.props;
 
         return (
-            <MetadataForm type="dataset" object={dataset} onSave={onSave} defaultData={defaultData}>
+            <LegacyMetadataForm type="dataset" object={dataset} onSave={onSave} defaultData={defaultData}>
                 {(validation, languages) => (
                     <div>
                         <FormItem label="Keywords" details="Keyword(s) describing the dataset, with associated language tag">
@@ -30,7 +30,7 @@ export default class DatasetMetadataForm extends Component<DatasetMetadataFormPr
                         />
                     </div>
                 )}
-            </MetadataForm>
+            </LegacyMetadataForm>
         );
     }
 }

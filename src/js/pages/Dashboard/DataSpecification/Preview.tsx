@@ -114,7 +114,12 @@ export default class Preview extends Component<PreviewProps, PreviewState> {
                     tabs={[
                         {
                             title: `Full ${getType(type)}`,
-                            content: <DataSpecificationModulePreview rdf={previews.full} visualization={previews.visualization} />,
+                            content: <DataSpecificationModulePreview
+                                rdf={previews.full}
+                                visualization={previews.visualization}
+                                repeated={false}
+                                dependent={false}
+                            />,
                         },
                         {
                             type: 'separator',

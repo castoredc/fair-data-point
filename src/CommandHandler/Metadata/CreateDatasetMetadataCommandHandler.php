@@ -6,12 +6,16 @@ namespace App\CommandHandler\Metadata;
 use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Exception\NoAccessPermission;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Exception\NotFound;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
 {
+    /**
+     * @throws NotFound
+     * @throws NoAccessPermission
+     */
     public function __invoke(CreateDatasetMetadataCommand $command): void
     {
         $dataset = $command->getDataset();
@@ -21,27 +25,18 @@ class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
         }
 
         $metadata = new DatasetMetadata($dataset);
-
-        $newVersion = $this->versionNumberHelper->getNewVersion($dataset->getLatestMetadataVersion(), $command->getVersionUpdate());
-        $metadata->setVersion($newVersion);
-
-        $metadata->setTitle($this->parseLocalizedText($command->getTitle()));
-        $metadata->setDescription($this->parseLocalizedText($command->getDescription()));
-
-        if ($command->getLanguage() !== null) {
-            $metadata->setLanguage($this->getLanguage($command->getLanguage()));
-        }
-
-        if ($command->getLicense() !== null) {
-            $metadata->setLicense($this->getLicense($command->getLicense()));
-        }
-
-        $metadata->setPublishers($this->parsePublishers($command->getPublishers()));
-
-        $theme = $this->parseOntologyConcepts($command->getTheme());
-
-        $metadata->setThemes(new ArrayCollection($theme));
-        $metadata->setKeyword($this->parseLocalizedText($command->getKeyword()));
+        $metadata->setVersion(
+            $this->versionNumberHelper->getNewVersion(
+                $dataset->getLatestMetadataVersion(),
+                $command->getVersionType()
+            )
+        );
+        $metadata->setMetadataModelVersion(
+            $this->getMetadataModelVersion(
+                $command->getModelId(),
+                $command->getModelVersionId()
+            )
+        );
 
         $dataset->addMetadata($metadata);
 

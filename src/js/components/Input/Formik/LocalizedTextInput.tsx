@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 
 import { Button, DefaultOptionType, Dropdown, TextInput } from '@castoredc/matter';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
@@ -42,6 +42,8 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
 
     const value = field.value ? field.value : [defaultData];
 
+    console.log(field);
+
     return (
         <div className="Input LocalizedTextInput">
             <div className="LocalizedTextInputItems">
@@ -49,8 +51,8 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                     const first = index === 0;
 
                     return (
-                        <>
-                            <div key={`${field.name}-${index}`} className="LocalizedTextInputItem">
+                        <Fragment key={`${field.name}-${index}`} >
+                            <div className="LocalizedTextInputItem">
                                 <div className="LocalizedTextInputText">
                                     <TextInput
                                         name="text"
@@ -90,7 +92,7 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                                 </div>
                             </div>
                             <FieldErrors field={field} serverErrors={serverErrors} index={index} />
-                        </>
+                        </Fragment>
                     );
                 })}
             </div>

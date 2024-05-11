@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Metadata\FAIRDataPointMetadataApiRequest;
+use App\Api\Request\Metadata\FAIRDataPointCreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateFAIRDataPointMetadataCommand;
 use App\Exception\ApiRequestParseError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,8 +24,8 @@ class FAIRDataPointMetadataController extends ApiController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         try {
-            $parsed = $this->parseRequest(FAIRDataPointMetadataApiRequest::class, $request);
-            assert($parsed instanceof FAIRDataPointMetadataApiRequest);
+            $parsed = $this->parseRequest(FAIRDataPointCreateMetadataVersionApiRequest::class, $request);
+            assert($parsed instanceof FAIRDataPointCreateMetadataVersionApiRequest);
 
             $bus->dispatch(
                 new CreateFAIRDataPointMetadataCommand(
@@ -33,7 +33,7 @@ class FAIRDataPointMetadataController extends ApiController
                     $parsed->getDescription(),
                     $parsed->getLanguage(),
                     $parsed->getLicense(),
-                    $parsed->getVersionUpdate(),
+                    $parsed->getVersionType(),
                     $parsed->getPublishers()
                 )
             );

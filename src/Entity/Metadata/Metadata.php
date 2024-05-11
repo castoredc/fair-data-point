@@ -8,6 +8,7 @@ use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Iri;
 use App\Entity\Version;
 use App\Traits\CreatedAndUpdated;
@@ -183,5 +184,10 @@ abstract class Metadata
     public function setMetadataModelVersion(?MetadataModelVersion $metadataModelVersion): void
     {
         $this->metadataModelVersion = $metadataModelVersion;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return null;
     }
 }

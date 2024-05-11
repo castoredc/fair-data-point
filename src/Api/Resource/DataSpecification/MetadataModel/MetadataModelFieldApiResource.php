@@ -25,6 +25,7 @@ class MetadataModelFieldApiResource
             'resourceType' => $this->field->getResourceType()->toString(),
             'fieldType' => $this->field->getFieldType()->toString(),
             'optionGroup' => $this->field->getOptionGroup()?->getId(),
+            'isRequired' => $this->field->isRequired(),
         ];
     }
 }

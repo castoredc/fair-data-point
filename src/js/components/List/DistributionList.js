@@ -116,8 +116,8 @@ export default class DistributionList extends Component {
                             return (
                                 <ListItem
                                     key={distribution.id}
-                                    title={localizedText(distribution.metadata.title, 'en')}
-                                    description={localizedText(distribution.metadata.description, 'en')}
+                                    title={localizedText(distribution.legacy.metadata.title, 'en')}
+                                    description={localizedText(distribution.legacy.metadata.description, 'en')}
                                     link={distribution.relativeUrl}
                                     state={state}
                                     newWindow={embedded}

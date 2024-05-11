@@ -28,7 +28,7 @@ export const getBreadCrumbs = (location, data) => {
         catalog
             ? {
                   type: 'catalog',
-                  title: catalog.hasMetadata ? catalog.metadata.title : 'Catalog',
+                  title: catalog.hasMetadata ? catalog.legacy.metadata.title : 'Catalog',
                   data: catalog,
                   path: catalog.relativeUrl,
                   state: { fdp, catalog },
@@ -46,7 +46,7 @@ export const getBreadCrumbs = (location, data) => {
         dataset
             ? {
                   type: 'dataset',
-                  title: dataset.hasMetadata ? dataset.metadata.title : 'Dataset',
+                  title: dataset.hasMetadata ? dataset.legacy.metadata.title : 'Dataset',
                   data: dataset,
                   path: dataset.relativeUrl,
                   state: { fdp, catalog, study, dataset },
@@ -55,7 +55,7 @@ export const getBreadCrumbs = (location, data) => {
         distribution
             ? {
                   type: 'distribution',
-                  title: distribution.hasMetadata ? distribution.metadata.title : 'Distribution',
+                  title: distribution.hasMetadata ? distribution.legacy.metadata.title : 'Distribution',
                   data: distribution,
                   path: distribution.relativeUrl,
                   state: { fdp, catalog, study, dataset, distribution },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MetadataForm from './MetadataForm';
+import LegacyMetadataForm from './LegacyMetadataForm';
 
 type DistributionMetadataFormProps = {
     distribution: any;
@@ -10,6 +10,6 @@ export default class DistributionMetadataForm extends Component<DistributionMeta
     render() {
         const { distribution, onSave } = this.props;
 
-        return <MetadataForm type="distribution" object={distribution} onSave={onSave} />;
+        return <LegacyMetadataForm type="distribution" object={distribution} onSave={onSave} />;
     }
 }

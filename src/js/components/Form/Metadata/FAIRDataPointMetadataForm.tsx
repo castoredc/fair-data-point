@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MetadataForm from './MetadataForm';
+import LegacyMetadataForm from './LegacyMetadataForm';
 
 type FAIRDataPointMetadataFormProps = {
     fdp: any;
@@ -10,6 +10,6 @@ export default class FAIRDataPointMetadataForm extends Component<FAIRDataPointMe
     render() {
         const { fdp, onSave } = this.props;
 
-        return <MetadataForm type="fdp" object={fdp} onSave={onSave} />;
+        return <LegacyMetadataForm type="fdp" object={fdp} onSave={onSave} />;
     }
 }

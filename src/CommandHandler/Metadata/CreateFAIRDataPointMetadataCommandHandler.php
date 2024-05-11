@@ -7,11 +7,16 @@ use App\Command\Metadata\CreateFAIRDataPointMetadataCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Metadata\FAIRDataPointMetadata;
 use App\Exception\NoAccessPermission;
+use App\Exception\NotFound;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class CreateFAIRDataPointMetadataCommandHandler extends CreateMetadataCommandHandler
 {
+    /**
+     * @throws NotFound
+     * @throws NoAccessPermission
+     */
     public function __invoke(CreateFAIRDataPointMetadataCommand $command): void
     {
         if (! $this->security->isGranted('ROLE_ADMIN')) {
@@ -23,22 +28,18 @@ class CreateFAIRDataPointMetadataCommandHandler extends CreateMetadataCommandHan
         $fdp = $fdp[0];
 
         $metadata = new FAIRDataPointMetadata($fdp);
-
-        $newVersion = $this->versionNumberHelper->getNewVersion($fdp->getLatestMetadataVersion(), $command->getVersionUpdate());
-        $metadata->setVersion($newVersion);
-
-        $metadata->setTitle($this->parseLocalizedText($command->getTitle()));
-        $metadata->setDescription($this->parseLocalizedText($command->getDescription()));
-
-        if ($command->getLanguage() !== null) {
-            $metadata->setLanguage($this->getLanguage($command->getLanguage()));
-        }
-
-        if ($command->getLicense() !== null) {
-            $metadata->setLicense($this->getLicense($command->getLicense()));
-        }
-
-        $metadata->setPublishers($this->parsePublishers($command->getPublishers()));
+        $metadata->setVersion(
+            $this->versionNumberHelper->getNewVersion(
+                $fdp->getLatestMetadataVersion(),
+                $command->getVersionType()
+            )
+        );
+        $metadata->setMetadataModelVersion(
+            $this->getMetadataModelVersion(
+                $command->getModelId(),
+                $command->getModelVersionId()
+            )
+        );
 
         $fdp->addMetadata($metadata);
 

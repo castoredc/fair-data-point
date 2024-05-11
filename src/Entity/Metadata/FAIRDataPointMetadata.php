@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Metadata;
 
 use App\Entity\FAIRData\FAIRDataPoint;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,5 +33,10 @@ class FAIRDataPointMetadata extends Metadata
     public function setFAIRDataPoint(FAIRDataPoint $fdp): void
     {
         $this->fdp = $fdp;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return $this->fdp;
     }
 }

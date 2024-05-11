@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Metadata\DistributionMetadataApiRequest;
+use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateDistributionMetadataCommand;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
@@ -29,18 +29,15 @@ class DistributionMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $distribution);
 
         try {
-            $parsed = $this->parseRequest(DistributionMetadataApiRequest::class, $request);
-            assert($parsed instanceof DistributionMetadataApiRequest);
+            $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);
+            assert($parsed instanceof CreateMetadataVersionApiRequest);
 
             $bus->dispatch(
                 new CreateDistributionMetadataCommand(
                     $distribution,
-                    $parsed->getTitle(),
-                    $parsed->getDescription(),
-                    $parsed->getLanguage(),
-                    $parsed->getLicense(),
-                    $parsed->getVersionUpdate(),
-                    $parsed->getPublishers()
+                    $parsed->getVersionType(),
+                    $parsed->getModel(),
+                    $parsed->getModelVersion(),
                 )
             );
 

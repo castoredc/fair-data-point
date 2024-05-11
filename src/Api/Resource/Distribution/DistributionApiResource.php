@@ -7,6 +7,7 @@ use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
 use App\Api\Resource\DataSpecification\DataModel\DataModelVersionApiResource;
+use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
@@ -29,6 +30,7 @@ class DistributionApiResource implements ApiResource
             'slug' => $this->distribution->getSlug(),
             'defaultMetadataModel' => $this->distribution->getDefaultMetadataModel()?->getId(),
             'hasMetadata' => $this->distribution->hasMetadata(),
+            'metadata' => $this->distribution->hasMetadata() ? (new MetadataApiResource($this->distribution->getLatestMetadata()))->toArray() : null,
             'hasContents' => $this->distribution->hasContents(),
             'license' => $this->distribution->getLicense()?->getSlug(),
             'study' => $this->distribution->getDataset()->getStudy() !== null ? (new StudyApiResource($this->distribution->getDataset()->getStudy()))->toArray() : null,
@@ -36,11 +38,11 @@ class DistributionApiResource implements ApiResource
             'published' => $this->distribution->isPublished(),
         ];
 
-        if ($this->distribution->hasMetadata()) {
+        if ($this->distribution->hasMetadata() && $this->distribution->getLatestMetadata()->getMetadataModelVersion() === null) {
             $first = $this->distribution->getFirstMetadata();
             $metadata = $this->distribution->getLatestMetadata();
 
-            $distribution['metadata'] = [
+            $distribution['legacy']['metadata'] = [
                 'title' => $metadata->getTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),

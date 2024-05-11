@@ -14,11 +14,14 @@ use function in_array;
  * @method static static ontologyConceptBrowser()
  * @method static static datePicker()
  * @method static static timePicker()
- * @method static static dateAndTimePicker()
+// * @method static static dateAndTimePicker()
  * @method static static checkbox()
  * @method static static checkboxes()
  * @method static static radioButtons()
  * @method static static dropdown()
+ * @method static static languagePicker()
+ * @method static static licensePicker()
+ * @method static static countryPicker()
  * @method bool isInput()
  * @method bool isInputLocale()
  * @method bool isTextarea()
@@ -26,11 +29,14 @@ use function in_array;
  * @method bool isOntologyConceptBrowser()
  * @method bool isDatePicker()
  * @method bool isTimePicker()
- * @method bool isDateAndTimePicker()
+// * @method bool isDateAndTimePicker()
  * @method bool isCheckbox()
  * @method bool isCheckboxes()
  * @method bool isRadioButtons()
  * @method bool isDropdown()
+ * @method bool isLanguagePicker()
+ * @method bool isLicensePicker()
+ * @method bool isCountryPicker()
  * @inheritDoc
  */
 class MetadataFieldType extends Enum
@@ -42,11 +48,15 @@ class MetadataFieldType extends Enum
     public const ONTOLOGY_CONCEPT_BROWSER = 'ontologyConceptBrowser';
     public const DATE_PICKER = 'datePicker';
     public const TIME_PICKER = 'timePicker';
-    public const DATE_AND_TIMEPICKER = 'dateAndTimePicker';
+//    public const DATE_AND_TIMEPICKER = 'dateAndTimePicker';
     public const CHECKBOX = 'checkbox';
     public const CHECKBOXES = 'checkboxes';
     public const RADIO_BUTTONS = 'radioButtons';
     public const DROPDOWN = 'dropdown';
+    public const LANGUAGE_PICKER = 'languagePicker';
+    public const LICENSE_PICKER = 'licensePicker';
+    public const COUNTRY_PICKER = 'countryPicker';
+    public const AGENT_SELECTOR = 'agentSelector';
 
     public const LABELS = [
         self::INPUT => 'Input',
@@ -56,11 +66,44 @@ class MetadataFieldType extends Enum
         self::ONTOLOGY_CONCEPT_BROWSER => 'Ontology concept browser',
         self::DATE_PICKER => 'Date picker',
         self::TIME_PICKER => 'Time picker',
-        self::DATE_AND_TIMEPICKER => 'Date and Timepicker',
+//        self::DATE_AND_TIMEPICKER => 'Date and Timepicker',
         self::CHECKBOX => 'Checkbox',
         self::CHECKBOXES => 'Checkboxes',
         self::RADIO_BUTTONS => 'Radio buttons',
         self::DROPDOWN => 'Dropdown',
+        self::LANGUAGE_PICKER => 'Language picker',
+        self::LICENSE_PICKER => 'License picker',
+        self::COUNTRY_PICKER => 'Country picker',
+        self::AGENT_SELECTOR => 'Agent selector',
+    ];
+
+    public const DEFAULT_VALUES = [
+        self::INPUT => '',
+        self::INPUT_LOCALE => [
+            [
+                'text' => '',
+                'language' => null,
+            ]
+        ],
+        self::TEXTAREA => '',
+        self::TEXTAREA_LOCALE => [
+            [
+                'text' => '',
+                'language' => null,
+            ]
+        ],
+        self::ONTOLOGY_CONCEPT_BROWSER => [],
+        self::DATE_PICKER => '',
+        self::TIME_PICKER => '',
+//        self::DATE_AND_TIMEPICKER => '',
+        self::CHECKBOX => false,
+        self::CHECKBOXES => [],
+        self::RADIO_BUTTONS => '',
+        self::DROPDOWN => '',
+        self::LANGUAGE_PICKER => '',
+        self::LICENSE_PICKER => '',
+        self::COUNTRY_PICKER => '',
+        self::AGENT_SELECTOR => [],
     ];
 
     public const TYPE_ANNOTATED = 'annotated';
@@ -79,9 +122,9 @@ class MetadataFieldType extends Enum
         XsdDataType::INTEGER => [
             self::INPUT,
         ],
-        XsdDataType::DATE_TIME => [
-            self::DATE_AND_TIMEPICKER,
-        ],
+//        XsdDataType::DATE_TIME => [
+//            self::DATE_AND_TIMEPICKER,
+//        ],
         XsdDataType::DATE => [
             self::DATE_PICKER,
         ],
@@ -114,13 +157,20 @@ class MetadataFieldType extends Enum
         XsdDataType::BOOLEAN => [
             self::CHECKBOX,
         ],
+        XsdDataType::URL => [
+            self::INPUT,
+        ],
     ];
 
     public const ANNOTATED_VALUE_TYPES = [
-        self::ONTOLOGY_CONCEPT_BROWSER,
         self::CHECKBOXES,
         self::RADIO_BUTTONS,
         self::DROPDOWN,
+        self::AGENT_SELECTOR,
+        self::ONTOLOGY_CONCEPT_BROWSER,
+        self::LANGUAGE_PICKER,
+        self::LICENSE_PICKER,
+        self::COUNTRY_PICKER,
     ];
 
     public const HAS_OPTION_GROUP = [
@@ -137,5 +187,10 @@ class MetadataFieldType extends Enum
     public function hasOptionGroup(): bool
     {
         return in_array($this->toString(), self::HAS_OPTION_GROUP, true);
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return self::DEFAULT_VALUES[$this->toString()];
     }
 }

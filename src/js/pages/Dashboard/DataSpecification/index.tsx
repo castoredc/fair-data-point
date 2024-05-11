@@ -125,10 +125,10 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                     () => {
                         callback();
                         this.getModules();
-                        this.getForms();
                         this.getNodes();
                         this.getPrefixes();
                         if (type === 'metadata-model') {
+                            this.getForms();
                             this.getOptionGroups();
                         }
                         this.getTypes();

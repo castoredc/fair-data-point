@@ -22,6 +22,7 @@ use function in_array;
  * @method static static string()
  * @method static static langString()
  * @method static static boolean()
+ * @method static static url()
  * @method bool isFloat()
  * @method bool isDouble()
  * @method bool isDecimal()
@@ -37,6 +38,7 @@ use function in_array;
  * @method bool isString()
  * @method bool isLangString()
  * @method bool isBoolean()
+ * @method bool isUrl()
  * @inheritDoc
  */
 class XsdDataType extends Enum
@@ -69,6 +71,9 @@ class XsdDataType extends Enum
     public const BOOLEAN = 'boolean';
     public const BOOLEAN_TYPES = [self::BOOLEAN];
 
+    // URL
+    public const URL = 'url';
+
     public const ANY_TYPES = [
         self::FLOAT,
         self::DOUBLE,
@@ -85,6 +90,7 @@ class XsdDataType extends Enum
         self::STRING,
         self::LANG_STRING,
         self::BOOLEAN,
+        self::URL,
     ];
 
     public const LABELS = [
@@ -103,6 +109,7 @@ class XsdDataType extends Enum
         self::STRING => 'String',
         self::LANG_STRING => 'Localized string',
         self::BOOLEAN => 'Boolean',
+        self::URL => 'URL',
     ];
 
     public function isNumberType(): bool

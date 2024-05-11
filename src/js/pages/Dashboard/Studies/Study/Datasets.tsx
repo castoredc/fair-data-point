@@ -117,7 +117,7 @@ export default class Datasets extends Component<DatasetsProps, DatasetsState> {
                                 selectable={false}
                                 disabled={!isGranted('edit', dataset.permissions)}
                                 link={`/dashboard/studies/${studyId}/datasets/${dataset.slug}`}
-                                title={dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset'}
+                                title={dataset.hasMetadata ? localizedText(dataset.legacy.metadata.title, 'en') : 'Untitled dataset'}
                             />
                         );
                     })}

@@ -61,19 +61,32 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { open, data, nodes } = this.props;
 
-        let initialValues = data ? mergeData(defaultData, data) : defaultData;
-
-        const selectedNode = nodes.value.find((node) => node.id === initialValues.node);
-
         if (open !== prevProps.open) {
             this.setState({
-                initialValues: {
-                    ...initialValues,
-                    nodeData: selectedNode ? selectedNode.value : null,
-                },
+                initialValues: this.handleNewData(),
             });
         }
     }
+
+    handleNewData = () => {
+        const { data, nodes } = this.props;
+
+        let newData = {
+            ...defaultData,
+            nodeData: null,
+        };
+
+        if (data !== null) {
+            newData = data;
+        } else {
+            newData.order = this.getOrderOptions().slice(-1)[0].value;
+        }
+
+        const selectedNode = nodes.value.find((node) => node.id === newData.node);
+        newData.nodeData = selectedNode ? selectedNode.value : null;
+
+        return newData;
+    };
 
     getOrderOptions = () => {
         const { data, form } = this.props;
@@ -195,11 +208,19 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
                                     }}/>
                                 </FormItem>
 
-                                {isAnnotatedValue && values.fieldType !== 'ontologyConceptBrowser' && (
+                                {isAnnotatedValue && optionGroupFields.includes(values.fieldType) && (
                                     <FormItem label="Option group">
                                         <Field component={Select} options={optionGroupItems} serverError={validation} name="optionGroup" />
                                     </FormItem>
                                 )}
+
+                                <FormItem>
+                                    <Field
+                                        component={SingleChoice}
+                                        labelText="Required"
+                                        name="isRequired"
+                                    />
+                                </FormItem>
 
                                 <Button buttonType="primary" type="submit" disabled={isSubmitting}>
                                     {title}
@@ -217,10 +238,11 @@ const defaultData = {
     title: '',
     description: '',
     node: '',
-    order: '',
+    order: 1,
     fieldType: '',
     optionGroup: '',
     nodeData: null,
+    isRequired: false,
 };
 
 const NodeSchema = Yup.object().shape({
@@ -229,7 +251,12 @@ const NodeSchema = Yup.object().shape({
     node: Yup.string().required('Please select a node'),
     fieldType: Yup.string().required('Please select a field type'),
     optionGroup: Yup.string().nullable().when(['nodeData', 'fieldType'], {
-        is: (nodeData, fieldType) => (nodeData && nodeData.value === 'annotated') && fieldType !== 'ontologyConceptBrowser',
+        is: (nodeData, fieldType) => (nodeData && nodeData.value === 'annotated') && optionGroupFields.includes(fieldType),
         then: schema => schema.required('Please select an option group'),
     }),
+    isRequired: Yup.boolean().required('Please select if this field is required'),
 });
+
+const optionGroupFields = [
+    'checkboxes', 'radioButtons', 'dropdown'
+]

@@ -93,7 +93,7 @@ export default class Catalog extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, { fdp, catalog });
 
-        const title = catalog ? localizedText(catalog.metadata.title, 'en') : null;
+        const title = catalog ? localizedText(catalog.legacy.metadata.title, 'en') : null;
 
         return (
             <Layout className="Catalog" title={title} isLoading={isLoadingFDP || isLoadingCatalog} embedded={embedded}>
@@ -103,12 +103,12 @@ export default class Catalog extends Component {
                     {catalog && (
                         <>
                             <div className="MainCol">
-                                {catalog.metadata.description && !embedded && (
-                                    <div className="InformationDescription">{localizedText(catalog.metadata.description, 'en', true)}</div>
+                                {catalog.legacy.metadata.description && !embedded && (
+                                    <div className="InformationDescription">{localizedText(catalog.legacy.metadata.description, 'en', true)}</div>
                                 )}
                             </div>
                             <div className="SideCol">
-                                <MetadataSideBar type="catalog" metadata={catalog.metadata} name={title} />
+                                <MetadataSideBar type="catalog" metadata={catalog.legacy.metadata} name={title} />
                             </div>
 
                             <AssociatedItemsBar items={catalog.count} current={currentItem} onClick={this.handleItemChange} />

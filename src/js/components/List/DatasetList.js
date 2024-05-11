@@ -115,8 +115,8 @@ export default class DatasetList extends Component {
                             return (
                                 <ListItem
                                     key={dataset.id}
-                                    title={localizedText(dataset.metadata.title, 'en')}
-                                    description={localizedText(dataset.metadata.description, 'en')}
+                                    title={localizedText(dataset.legacy.metadata.title, 'en')}
+                                    description={localizedText(dataset.legacy.metadata.description, 'en')}
                                     link={dataset.relativeUrl}
                                     state={state}
                                     newWindow={embedded}

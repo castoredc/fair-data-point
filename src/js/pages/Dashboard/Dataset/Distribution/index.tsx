@@ -118,7 +118,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
         const study = match.params.study;
         const dataset = match.params.dataset;
 
-        const title = distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution';
+        const title = distribution.hasMetadata ? localizedText(distribution.legacy.metadata.title, 'en') : 'Untitled distribution';
 
         const mainUrl = match.params.study
             ? '/dashboard/studies/' + match.params.study + '/datasets/' + dataset

@@ -5,6 +5,7 @@ namespace App\Api\Resource\Dataset;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Dataset;
@@ -25,6 +26,7 @@ class DatasetApiResource implements ApiResource
             'slug' => $this->dataset->getSlug(),
             'defaultMetadataModel' => $this->dataset->getDefaultMetadataModel()?->getId(),
             'hasMetadata' => $this->dataset->hasMetadata(),
+            'metadata' => $this->dataset->hasMetadata() ? (new MetadataApiResource($this->dataset->getLatestMetadata()))->toArray() : null,
             'published' => $this->dataset->isPublished(),
             'study' => $this->dataset->getStudy() !== null ? (new StudyApiResource($this->dataset->getStudy()))->toArray() : null,
             'count' => [
@@ -32,11 +34,11 @@ class DatasetApiResource implements ApiResource
             ],
         ];
 
-        if ($this->dataset->hasMetadata()) {
+        if ($this->dataset->hasMetadata() && $this->dataset->getLatestMetadata()->getMetadataModelVersion() === null) {
             $first = $this->dataset->getFirstMetadata();
             $metadata = $this->dataset->getLatestMetadata();
 
-            $dataset['metadata'] = [
+            $dataset['legacy']['metadata'] = [
                 'title' => $metadata->getTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),

@@ -1,34 +1,30 @@
 import React, { Component } from 'react';
-import { Button, Choice, Modal } from '@castoredc/matter';
+import { Button, Modal } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
+import { Field, Form, Formik } from 'formik';
+import Choice from 'components/Input/Formik/Choice';
+import Select from 'components/Input/Formik/Select';
+import * as Yup from 'yup';
+import { apiClient } from '../network';
+import { toast } from 'react-toastify';
+import ToastItem from 'components/ToastItem';
 
 type MetadataVersionModalProps = {
     currentVersion: string;
     open: boolean;
     onClose: () => void;
     handleSave: (versionType: string) => void;
+    metadataModels: any[],
+    type: string,
+    objectId: string,
 };
 
-type MetadataVersionModalState = {
-    versionType: string | null;
-    newVersion: string | null;
-};
-
-export default class MetadataVersionModal extends Component<MetadataVersionModalProps, MetadataVersionModalState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            versionType: null,
-            newVersion: null,
-        };
-    }
-
-    handleChange = event => {
+export default class MetadataVersionModal extends Component<MetadataVersionModalProps> {
+    generateVersionNumber = (versionType) => {
         const { currentVersion } = this.props;
-        const versionType = event.target.value;
 
-        const parsedVersion = currentVersion.split('.');
+        const version = currentVersion ?? '0.0.0';
+        const parsedVersion = version.split('.');
 
         const major = parseInt(parsedVersion[0]);
         const minor = parseInt(parsedVersion[1]);
@@ -44,46 +40,121 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
             newVersion = major + '.' + minor + '.' + (patch + 1);
         }
 
-        this.setState({
-            versionType: versionType,
-            newVersion: newVersion,
-        });
+        return newVersion;
+    };
+
+
+    handleSubmit = (values, { setSubmitting }) => {
+        const { objectId, type, handleSave } = this.props;
+
+        apiClient
+            .post('/api/metadata/' + type + (type === 'fdp' ? '' : '/' + objectId), values)
+            .then(response => {
+                setSubmitting(false);
+
+                toast.success(<ToastItem type="success" title="The metadata are saved successfully" />, {
+                    position: 'top-right',
+                });
+
+                handleSave(values.newVersion);
+            })
+            .catch(error => {
+                toast.error(<ToastItem type="error" title="An error occurred" />);
+
+                setSubmitting(false);
+            });
     };
 
     render() {
-        const { open, onClose, handleSave, currentVersion } = this.props;
-        const { versionType, newVersion } = this.state;
+        const { open, onClose, handleSave, currentVersion, metadataModels } = this.props;
 
-        const title = 'Save metadata';
+        const title = 'New metadata version';
 
         return (
             <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
-                <Choice
-                    options={[
-                        { value: 'major', labelText: 'Major changes' },
-                        { value: 'minor', labelText: 'Minor changes' },
-                        { value: 'patch', labelText: 'Patch' },
-                    ]}
-                    value={versionType ? versionType : undefined}
-                    name="versionType"
-                    onChange={this.handleChange}
-                    labelText="Please indicate to what extent you made changes in the metadata"
-                />
+                <Formik initialValues={{
+                    versionType: '',
+                    model: '',
+                    modelVersion: '',
+                    newVersion: '',
+                }} onSubmit={this.handleSubmit} validationSchema={VersionSchema}>
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          setValues,
+                          setFieldValue,
+                      }) => {
 
-                {currentVersion && <FormItem label="Current version">{currentVersion}</FormItem>}
+                        const model = values.model ? metadataModels.find((metadataModel => metadataModel.value === values.model)) : null;
 
-                {newVersion && <FormItem label="New version">{newVersion}</FormItem>}
+                        const versions = model ? model.versions : [];
 
-                <Button
-                    type="submit"
-                    disabled={versionType === null}
-                    onClick={() => {
-                        handleSave(versionType ? versionType : '');
+                        return (
+                            <Form style={{ width: 400 }}>
+                                <FormItem
+                                    label="Please indicate to what extent you are going to make changes to the metadata, in order to generate a version number">
+                                    <Field
+                                        component={Choice}
+                                        options={[
+                                            { value: 'major', labelText: 'Major changes' },
+                                            { value: 'minor', labelText: 'Minor changes' },
+                                            { value: 'patch', labelText: 'Patch' },
+                                        ]}
+                                        onChange={e => {
+                                            setFieldValue('versionType', e.target.value);
+                                            setFieldValue('newVersion', this.generateVersionNumber(e.target.value));
+                                        }}
+                                        name="versionType"
+                                    />
+                                </FormItem>
+
+                                <FormItem label="Metadata model">
+                                    <Field
+                                        component={Select}
+                                        options={metadataModels}
+                                        name="model"
+                                        menuPosition="fixed"
+                                        menuPlacement="auto"
+                                        onChange={(e) => {
+                                        setFieldValue('model', e.value);
+                                        setFieldValue('modelVersion', '');
+                                    }}/>
+                                </FormItem>
+
+                                <FormItem label="Metadata model version">
+                                    <Field
+                                        component={Select}
+                                        options={versions}
+                                        name="modelVersion"
+                                        menuPosition="fixed"
+                                        menuPlacement="auto"
+                                    />
+                                </FormItem>
+
+                                {currentVersion && <FormItem label="Current version">{currentVersion}</FormItem>}
+
+                                {values.newVersion !== '' && <FormItem label="New version">{values.newVersion}</FormItem>}
+
+                                <Button type="submit" disabled={isSubmitting}>
+                                    Create new version
+                                </Button>
+                            </Form>
+
+                        );
                     }}
-                >
-                    Save metadata
-                </Button>
+                </Formik>
             </Modal>
         );
     }
 }
+
+const VersionSchema = Yup.object().shape({
+    versionType: Yup.string().required('Please select an option'),
+    model: Yup.string().required('Please select a metadata model'),
+    modelVersion: Yup.string().required('Please select a metadata model version'),
+});

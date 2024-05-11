@@ -66,6 +66,7 @@ class CreateMetadataModelFieldCommandHandler
             $command->getFieldType(),
             $optionGroup,
             $command->getResourceType(),
+            $command->getIsRequired(),
             $form
         );
 

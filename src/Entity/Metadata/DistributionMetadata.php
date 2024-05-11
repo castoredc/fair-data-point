@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Metadata;
 
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,5 +33,10 @@ class DistributionMetadata extends Metadata
     public function setDistribution(Distribution $distribution): void
     {
         $this->distribution = $distribution;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return $this->distribution;
     }
 }

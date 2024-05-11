@@ -67,7 +67,10 @@ class MetadataModelField
      */
     private ValueNode $node;
 
-    public function __construct(string $title, ?string $description, int $order, ValueNode $node, MetadataFieldType $fieldType, ?MetadataModelOptionGroup $optionGroup, ResourceType $resourceType, MetadataModelForm $form)
+    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    private bool $isRequired = false;
+
+    public function __construct(string $title, ?string $description, int $order, ValueNode $node, MetadataFieldType $fieldType, ?MetadataModelOptionGroup $optionGroup, ResourceType $resourceType, bool $isRequired, MetadataModelForm $form)
     {
         $this->title = $title;
         $this->description = $description;
@@ -76,6 +79,7 @@ class MetadataModelField
         $this->fieldType = $fieldType;
         $this->optionGroup = $optionGroup;
         $this->resourceType = $resourceType;
+        $this->isRequired = $isRequired;
         $this->form = $form;
         $this->metadataModel = $form->getMetadataModelVersion();
     }
@@ -163,5 +167,15 @@ class MetadataModelField
     public function getForm(): MetadataModelForm
     {
         return $this->form;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->isRequired;
+    }
+
+    public function setIsRequired(bool $isRequired): void
+    {
+        $this->isRequired = $isRequired;
     }
 }

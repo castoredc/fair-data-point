@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller\Metadata;
 
 use App\Api\Controller\ApiController;
-use App\Api\Request\Metadata\DatasetMetadataApiRequest;
+use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
@@ -29,20 +29,15 @@ class DatasetMetadataController extends ApiController
         $this->denyAccessUnlessGranted('edit', $dataset);
 
         try {
-            $parsed = $this->parseRequest(DatasetMetadataApiRequest::class, $request);
-            assert($parsed instanceof DatasetMetadataApiRequest);
+            $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);
+            assert($parsed instanceof CreateMetadataVersionApiRequest);
 
             $bus->dispatch(
                 new CreateDatasetMetadataCommand(
                     $dataset,
-                    $parsed->getTitle(),
-                    $parsed->getDescription(),
-                    $parsed->getLanguage(),
-                    $parsed->getLicense(),
-                    $parsed->getVersionUpdate(),
-                    $parsed->getPublishers(),
-                    $parsed->getTheme(),
-                    $parsed->getKeyword()
+                    $parsed->getVersionType(),
+                    $parsed->getModel(),
+                    $parsed->getModelVersion(),
                 )
             );
 

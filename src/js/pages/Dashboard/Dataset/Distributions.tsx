@@ -88,7 +88,7 @@ export default class Distributions extends Component<DistributionsProps, Distrib
                                 selectable={false}
                                 disabled={!isGranted('edit', distribution.permissions)}
                                 link={`${mainUrl}/distributions/${distribution.slug}`}
-                                title={distribution.hasMetadata ? localizedText(distribution.metadata.title, 'en') : 'Untitled distribution'}
+                                title={distribution.hasMetadata ? localizedText(distribution.legacy.metadata.title, 'en') : 'Untitled distribution'}
                             />
                         );
                     })}

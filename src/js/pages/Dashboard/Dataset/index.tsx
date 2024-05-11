@@ -89,7 +89,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
             return <NoPermission text="You do not have permission to edit this dataset" />;
         }
 
-        const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
+        const title = dataset.hasMetadata ? localizedText(dataset.legacy.metadata.title, 'en') : 'Untitled dataset';
 
         const mainUrl = match.params.study ? '/dashboard/studies/' + match.params.study : '/dashboard/catalogs/' + match.params.catalog;
 

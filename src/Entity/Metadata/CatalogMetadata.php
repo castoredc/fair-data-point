@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\Metadata;
 
 use App\Entity\FAIRData\Catalog;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Iri;
 use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\Collection;
@@ -97,5 +98,10 @@ class CatalogMetadata extends Metadata
     public function removeThemeTaxonomy(OntologyConcept $themeTaxonomy): void
     {
         $this->themeTaxonomies->removeElement($themeTaxonomy);
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return $this->catalog;
     }
 }
