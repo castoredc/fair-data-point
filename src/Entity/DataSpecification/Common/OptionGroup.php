@@ -143,4 +143,11 @@ abstract class OptionGroup
     {
         return $this->elements;
     }
+
+    public function getOption(string $value): ?OptionGroupOption
+    {
+        return $this->options->findFirst(static function (int $key, OptionGroupOption $option) use ($value) {
+            return $option->getValue() === $value;
+        });
+    }
 }

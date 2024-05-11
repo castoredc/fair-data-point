@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Enum;
 
+use App\Validator\Constraints\AgentArray;
+use App\Validator\Constraints\LocalizedText;
 use function in_array;
 
 /**
@@ -14,7 +16,7 @@ use function in_array;
  * @method static static ontologyConceptBrowser()
  * @method static static datePicker()
  * @method static static timePicker()
-// * @method static static dateAndTimePicker()
+ * // * @method static static dateAndTimePicker()
  * @method static static checkbox()
  * @method static static checkboxes()
  * @method static static radioButtons()
@@ -22,6 +24,7 @@ use function in_array;
  * @method static static languagePicker()
  * @method static static licensePicker()
  * @method static static countryPicker()
+ * @method static static agentSelector()
  * @method bool isInput()
  * @method bool isInputLocale()
  * @method bool isTextarea()
@@ -29,7 +32,7 @@ use function in_array;
  * @method bool isOntologyConceptBrowser()
  * @method bool isDatePicker()
  * @method bool isTimePicker()
-// * @method bool isDateAndTimePicker()
+ * // * @method bool isDateAndTimePicker()
  * @method bool isCheckbox()
  * @method bool isCheckboxes()
  * @method bool isRadioButtons()
@@ -37,6 +40,7 @@ use function in_array;
  * @method bool isLanguagePicker()
  * @method bool isLicensePicker()
  * @method bool isCountryPicker()
+ * @method bool isAgentSelector()
  * @inheritDoc
  */
 class MetadataFieldType extends Enum
@@ -83,14 +87,14 @@ class MetadataFieldType extends Enum
             [
                 'text' => '',
                 'language' => null,
-            ]
+            ],
         ],
         self::TEXTAREA => '',
         self::TEXTAREA_LOCALE => [
             [
                 'text' => '',
                 'language' => null,
-            ]
+            ],
         ],
         self::ONTOLOGY_CONCEPT_BROWSER => [],
         self::DATE_PICKER => '',
@@ -104,6 +108,67 @@ class MetadataFieldType extends Enum
         self::LICENSE_PICKER => '',
         self::COUNTRY_PICKER => '',
         self::AGENT_SELECTOR => [],
+    ];
+
+    public const VALIDATORS = [
+        self::INPUT => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::INPUT_LOCALE => [
+            'app' => true,
+            'type' => LocalizedText::class,
+        ],
+        self::TEXTAREA => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::TEXTAREA_LOCALE => [
+            'app' => true,
+            'type' => LocalizedText::class,
+        ],
+        self::ONTOLOGY_CONCEPT_BROWSER => null,
+        self::DATE_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::TIME_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+//        self::DATE_AND_TIMEPICKER => '',
+        self::CHECKBOX => [
+            'app' => false,
+            'type' => 'bool',
+        ],
+        self::CHECKBOXES => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::RADIO_BUTTONS => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::DROPDOWN => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::LANGUAGE_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::LICENSE_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::COUNTRY_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::AGENT_SELECTOR => [
+            'app' => true,
+            'type' => AgentArray::class,
+        ],
     ];
 
     public const TYPE_ANNOTATED = 'annotated';
@@ -192,5 +257,11 @@ class MetadataFieldType extends Enum
     public function getDefaultValue(): mixed
     {
         return self::DEFAULT_VALUES[$this->toString()];
+    }
+
+    /** @return array{app: bool, type: string}|null */
+    public function getValidator(): ?array
+    {
+        return self::VALIDATORS[$this->toString()];
     }
 }

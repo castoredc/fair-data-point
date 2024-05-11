@@ -39,7 +39,7 @@ class DatasetApiResource implements ApiResource
             $metadata = $this->dataset->getLatestMetadata();
 
             $dataset['legacy']['metadata'] = [
-                'title' => $metadata->getTitle()->toArray(),
+                'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],

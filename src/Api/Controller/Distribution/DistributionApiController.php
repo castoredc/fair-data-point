@@ -268,6 +268,7 @@ class DistributionApiController extends ApiController
                     new UpdateRDFDistributionCommand(
                         $distribution,
                         $parsed->getSlug(),
+                        $parsed->getDefaultMetadataModel(),
                         $parsed->getLicense(),
                         $parsed->getApiUser(),
                         $parsed->getClientId(),
@@ -283,6 +284,7 @@ class DistributionApiController extends ApiController
                 new UpdateCSVDistributionCommand(
                     $distribution,
                     $parsed->getSlug(),
+                    $parsed->getDefaultMetadataModel(),
                     $parsed->getLicense(),
                     $parsed->getApiUser(),
                     $parsed->getClientId(),

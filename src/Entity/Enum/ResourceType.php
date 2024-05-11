@@ -11,10 +11,12 @@ use App\Entity\FAIRData\FAIRDataPoint;
 use App\Entity\Study;
 
 /**
+ * @method static static fdp()
  * @method static static catalog()
  * @method static static dataset()
  * @method static static distribution()
  * @method static static study()
+ * @method bool isFdp()
  * @method bool isCatalog()
  * @method bool isDataset()
  * @method bool isDistribution()

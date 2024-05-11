@@ -57,6 +57,7 @@ export const localizedText = (texts, language = 'en', paragraph = false) => {
     if (paragraph) {
         return paragraphText(texts[0].text);
     }
+
     return texts[0].text;
 };
 

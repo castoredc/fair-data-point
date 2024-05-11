@@ -59,8 +59,8 @@ class SingleCatalogApiController extends ApiController
                     $catalog,
                     $parsed->getSlug(),
                     $parsed->isAcceptSubmissions(),
-                    $parsed->isSubmissionAccessesData(),
-                    $parsed->getDefaultMetadataModel()
+                    $parsed->getDefaultMetadataModel(),
+                    $parsed->isSubmissionAccessesData()
                 )
             );
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller;
 
 use App\Api\Request\ApiRequest;
+use App\Api\Request\DynamicApiRequest;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\RoleBasedApiResource;
 use App\Api\Resource\Security\PermissionsApiResource;
@@ -74,6 +75,23 @@ abstract class ApiController extends AbstractController
         }
 
         return $return;
+    }
+
+    /** @throws ApiRequestParseError */
+    protected function parseDynamicRequest(string $requestObject, Request $request, object $context): ApiRequest
+    {
+        $request = new $requestObject($request);
+        assert($request instanceof DynamicApiRequest);
+
+        $request->setContext($context);
+
+        $errors = $this->validator->validate($request->getValues(), $request->getConstraints());
+
+        if ($errors->count() > 0) {
+            throw new ApiRequestParseError($errors);
+        }
+
+        return $request;
     }
 
     /** @param string[]|null $attributes */

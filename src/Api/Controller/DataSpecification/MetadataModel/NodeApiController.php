@@ -49,8 +49,12 @@ class NodeApiController extends ApiController
     }
 
     /** @Route("/{type}", methods={"POST"}, name="api_metadata_model_node_add") */
-    public function addNode(MetadataModelVersion $metadataModelVersion, string $type, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addNode(
+        MetadataModelVersion $metadataModelVersion,
+        string $type,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
 
         $nodeType = NodeType::fromString($type);
@@ -59,7 +63,17 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(new CreateNodeCommand($metadataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
+            $bus->dispatch(
+                new CreateNodeCommand(
+                    $metadataModelVersion,
+                    $nodeType,
+                    $parsed->getTitle(),
+                    $parsed->getDescription(),
+                    $parsed->getValue(),
+                    $parsed->getDataType(),
+                    $parsed->getUseAsTitle()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -81,8 +95,13 @@ class NodeApiController extends ApiController
      * @Route("/{type}/{id}", methods={"POST"}, name="api_metadata_model_node_edit")
      * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
      */
-    public function editNode(MetadataModelVersion $metadataModelVersion, string $type, Node $node, Request $request, MessageBusInterface $bus): Response
-    {
+    public function editNode(
+        MetadataModelVersion $metadataModelVersion,
+        string $type,
+        Node $node,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
 
         if ($node->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -93,7 +112,16 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(new EditNodeCommand($node, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType()));
+            $bus->dispatch(
+                new EditNodeCommand(
+                    $node,
+                    $parsed->getTitle(),
+                    $parsed->getDescription(),
+                    $parsed->getValue(),
+                    $parsed->getDataType(),
+                    $parsed->getUseAsTitle()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -101,11 +129,14 @@ class NodeApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while editing a data model node', [
-                'exception' => $e,
-                'Node' => $node->getTitle(),
-                'NodeId' => $node->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while editing a data model node',
+                [
+                    'exception' => $e,
+                    'Node' => $node->getTitle(),
+                    'NodeId' => $node->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -115,8 +146,12 @@ class NodeApiController extends ApiController
      * @Route("/{type}/{id}", methods={"DELETE"}, name="api_metadata_model_node_remove")
      * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
      */
-    public function removeNode(MetadataModelVersion $metadataModelVersion, string $type, Node $node, MessageBusInterface $bus): Response
-    {
+    public function removeNode(
+        MetadataModelVersion $metadataModelVersion,
+        string $type,
+        Node $node,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
 
         if ($node->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -134,11 +169,14 @@ class NodeApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
-            $this->logger->critical('An error occurred while editing a data model node', [
-                'exception' => $e,
-                'Node' => $node->getTitle(),
-                'NodeId' => $node->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while editing a data model node',
+                [
+                    'exception' => $e,
+                    'Node' => $node->getTitle(),
+                    'NodeId' => $node->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

@@ -3,7 +3,7 @@ import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button, Modal } from '@castoredc/matter';
-import { DataType } from 'components/MetadataItem/EnumMappings';
+import { DataType, ResourceType } from 'components/MetadataItem/EnumMappings';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -77,6 +77,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                     ...initialValues,
                     value: initialValues.value.value,
                     dataType: initialValues.value.dataType,
+                    useAsTitle: initialValues.value.useAsTitle,
                 };
             }
         }
@@ -130,6 +131,8 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                         const showDataTypes = values.type === 'literal' || isPlainValue;
                         const showRepeated = modelType === 'data-model' && (values.type === 'internal' || values.type === 'value');
 
+                        const showTitle = modelType === 'metadata-model' && (values.type === 'value' && values.value === 'plain' && values.dataType === 'langString')
+
                         return (
                             <Form>
                                 <FormItem label="Title">
@@ -170,6 +173,12 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                     </FormItem>
                                 )}
 
+                                {showTitle && (
+                                    <FormItem label="Use as title for">
+                                        <Field component={Select} options={resourceTypes} serverError={validation} name="useAsTitle" />
+                                    </FormItem>
+                                )}
+
                                 {values.type === 'literal' && (
                                     <FormItem label="Value">
                                         <Field component={Input} name="value" serverError={validation} />
@@ -206,6 +215,7 @@ const defaultData = {
     description: '',
     value: '',
     dataType: '',
+    useAsTitle: null,
     repeated: false,
 };
 
@@ -227,4 +237,14 @@ const NodeSchema = Yup.object().shape({
         is: (type, value) => type === 'literal' || (type === 'value' && value === 'plain'),
         then: schema => schema.required('Please select a data type'),
     }),
+    useAsTitle: Yup.string().nullable(),
 });
+
+const resourceTypes = [
+    { value: null, label: 'Do not use as title' },
+    { value: 'fdp', label: ResourceType.fdp },
+    { value: 'catalog', label: ResourceType.catalog },
+    { value: 'dataset', label: ResourceType.dataset },
+    { value: 'distribution', label: ResourceType.distribution },
+    { value: 'study', label: ResourceType.study },
+];

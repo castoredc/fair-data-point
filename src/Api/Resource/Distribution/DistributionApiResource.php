@@ -43,7 +43,7 @@ class DistributionApiResource implements ApiResource
             $metadata = $this->distribution->getLatestMetadata();
 
             $distribution['legacy']['metadata'] = [
-                'title' => $metadata->getTitle()->toArray(),
+                'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],

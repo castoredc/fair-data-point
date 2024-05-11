@@ -40,7 +40,7 @@ class CatalogApiResource implements ApiResource
             $metadata = $this->catalog->getLatestMetadata();
 
             $catalog['legacy']['metadata'] = [
-                'title' => $metadata->getTitle()->toArray(),
+                'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],

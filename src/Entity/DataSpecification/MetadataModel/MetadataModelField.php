@@ -62,7 +62,7 @@ class MetadataModelField
     private ?MetadataModelOptionGroup $optionGroup = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode", inversedBy="field")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", nullable=false)
      */
     private ValueNode $node;

@@ -5,7 +5,6 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Common\IriApiResource;
-use App\Api\Resource\DataSpecification\Common\OptionGroupApiResource;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
@@ -39,7 +38,7 @@ class NodeApiResource implements ApiResource
             $data['value'] = [
                 'dataType' => $this->node->getDataType()?->toString(),
                 'value' => $this->node->getValue(),
-                'optionGroup' => $this->node->getOptionGroup() !== null ? (new OptionGroupApiResource($this->node->getOptionGroup()))->toArray() : null,
+                'useAsTitle' => $this->node->usedAsTitle()?->toString(),
             ];
         }
 

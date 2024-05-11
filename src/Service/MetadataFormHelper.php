@@ -8,18 +8,23 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\RenderedMetadataModelForm;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
+use App\Entity\Metadata\Metadata;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\Validator\Constraints as Assert;
+use function array_merge;
+use function json_decode;
 
 class MetadataFormHelper
 {
-    /** @return RenderedMetadataModelForm[] */
-    public static function getFormsForEntity(MetadataModelVersion $version, MetadataEnrichedEntity $entity): array
+    /** @return Collection<RenderedMetadataModelForm> */
+    public static function getFormsForEntity(MetadataModelVersion $version, MetadataEnrichedEntity $entity): Collection
     {
         $forms = $version->getForms()->filter(static function (MetadataModelForm $form) use ($entity) {
             return ClassUtils::getClass($entity) === $form->getResourceType()->getClass();
         });
 
-        $forms = $forms->map(static function (MetadataModelForm $form) use ($entity) {
+        return $forms->map(static function (MetadataModelForm $form) use ($entity) {
             return new RenderedMetadataModelForm(
                 $form,
                 $form->getFields()->filter(static function (MetadataModelField $field) use ($entity) {
@@ -27,15 +32,56 @@ class MetadataFormHelper
                 })->toArray()
             );
         });
+    }
 
-        return $forms->toArray();
+    /** @return MetadataModelField[] */
+    public static function getFieldsForEntity(MetadataModelVersion $version, MetadataEnrichedEntity $entity): array
+    {
+        $forms = self::getFormsForEntity($version, $entity);
+
+        return array_merge(...$forms->map(static function (RenderedMetadataModelForm $form) {
+            return $form->getFields();
+        })->toArray());
+    }
+
+    /** @return array<string, array<int, object>> */
+    public static function getValidatorsForEntity(MetadataModelVersion $version, MetadataEnrichedEntity $entity): array
+    {
+        $fields = self::getFieldsForEntity($version, $entity);
+        $validators = [];
+
+        foreach ($fields as $field) {
+            $validator = [];
+
+            $validationInfo = $field->getFieldType()->getValidator();
+
+            if ($validationInfo === null) {
+                continue;
+            }
+
+            if ($validationInfo['app'] === true) {
+                $validator[] = new $validationInfo['type']();
+            } else {
+                $validator[] = new Assert\Type($validationInfo['type']);
+            }
+
+            if ($field->isRequired()) {
+                $validator[] = new Assert\NotBlank();
+            }
+
+            $validators[$field->getId()] = $validator;
+        }
+
+        return $validators;
     }
 
     public static function getValueForField(
-        MetadataModelVersion $getMetadataModelVersion,
-        MetadataEnrichedEntity $getEntity,
+        Metadata $metadata,
         MetadataModelField $field,
     ): mixed {
-        return $field->getFieldType()->getDefaultValue();
+        $value = $metadata->getValueForNode($field->getNode());
+        $value = $value !== null ? json_decode($value->getValue(), true) : null;
+
+        return $value ?? $field->getFieldType()->getDefaultValue();
     }
 }

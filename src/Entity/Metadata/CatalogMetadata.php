@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Iri;
 use App\Entity\Terminology\OntologyConcept;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function count;
@@ -41,6 +43,8 @@ class CatalogMetadata extends Metadata
     public function __construct(Catalog $catalog)
     {
         $this->catalog = $catalog;
+
+        $this->values = new ArrayCollection();
     }
 
     public function getCatalog(): Catalog
@@ -103,5 +107,10 @@ class CatalogMetadata extends Metadata
     public function getEntity(): ?MetadataEnrichedEntity
     {
         return $this->catalog;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return ResourceType::catalog();
     }
 }

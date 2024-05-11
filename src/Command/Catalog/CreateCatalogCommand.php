@@ -8,8 +8,8 @@ class CreateCatalogCommand
     public function __construct(
         private string $slug,
         private bool $acceptSubmissions,
-        private ?bool $submissionAccessesData = null,
         private string $defaultMetadataModelId,
+        private ?bool $submissionAccessesData = null,
     ) {
     }
 

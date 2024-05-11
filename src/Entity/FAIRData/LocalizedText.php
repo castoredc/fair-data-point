@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
@@ -89,5 +90,23 @@ class LocalizedText
         }
 
         return null;
+    }
+
+    public static function fromArray(?array $items): ?LocalizedText
+    {
+        if ($items === null) {
+            return null;
+        }
+
+        $texts = new ArrayCollection();
+
+        foreach ($items as $item) {
+            $text = new LocalizedTextItem($item['text']);
+            $text->setLanguageCode($item['language']);
+
+            $texts->add($text);
+        }
+
+        return new LocalizedText($texts);
     }
 }

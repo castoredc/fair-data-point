@@ -36,7 +36,7 @@ class LocalizedTextItem
      */
     private ?Language $language = null;
 
-    private string $languageCode;
+    private ?string $languageCode;
 
     public function __construct(string $text)
     {
@@ -83,7 +83,7 @@ class LocalizedTextItem
         $this->language = $language;
     }
 
-    public function getLanguageCode(): string
+    public function getLanguageCode(): ?string
     {
         return $this->languageCode;
     }
@@ -98,7 +98,7 @@ class LocalizedTextItem
     {
         return [
             'text' => $this->text,
-            'language' => $this->language->getCode(),
+            'language' => $this->getLanguageCode() ?? $this->language->getCode(),
         ];
     }
 }

@@ -126,7 +126,12 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
 
         foreach ($latestVersion->getGroups() as $module) {
             /** @var MetadataModelGroup $module */
-            $newModule = new MetadataModelGroup($module->getTitle(), $module->getOrder(), $newVersion);
+            $newModule = new MetadataModelGroup(
+                $module->getTitle(),
+                $module->getOrder(),
+                $module->getResourceType(),
+                $newVersion
+            );
 
             foreach ($module->getElementGroups() as $triple) {
                 assert($triple instanceof Triple);

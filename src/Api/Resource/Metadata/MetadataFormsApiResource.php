@@ -20,7 +20,7 @@ class MetadataFormsApiResource implements ApiResource
         $renderedForms = MetadataFormHelper::getFormsForEntity(
             $this->metadata->getMetadataModelVersion(),
             $this->metadata->getEntity()
-        );
+        )->toArray();
 
         $return = [];
 
@@ -38,8 +38,7 @@ class MetadataFormsApiResource implements ApiResource
                     'optionGroup' => $field->getOptionGroup()?->getId(),
                     'isRequired' => $field->isRequired(),
                     'value' => MetadataFormHelper::getValueForField(
-                        $this->metadata->getMetadataModelVersion(),
-                        $this->metadata->getEntity(),
+                        $this->metadata,
                         $field
                     ),
                 ];

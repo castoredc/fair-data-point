@@ -11,8 +11,8 @@ class UpdateCatalogCommand
         private Catalog $catalog,
         private string $slug,
         private bool $acceptSubmissions,
-        private ?bool $submissionAccessesData = null,
         private string $defaultMetadataModelId,
+        private ?bool $submissionAccessesData = null,
     ) {
     }
 

@@ -57,6 +57,20 @@ class CreateNodeCommandHandler
             } elseif ($command->getValue() === 'plain') {
                 $node->setIsAnnotatedValue(false);
                 $node->setDataType($command->getDataType());
+
+                if ($command->getDataType()->isLangString() && $command->getUseAsTitle() !== null) {
+                    $resource = $command->getUseAsTitle();
+
+                    if ($resource->isCatalog()) {
+                        $metadataModelVersion->setCatalogTitleNode($node);
+                    } elseif ($resource->isDataset()) {
+                        $metadataModelVersion->setDatasetTitleNode($node);
+                    } elseif ($resource->isDistribution()) {
+                        $metadataModelVersion->setDistributionTitleNode($node);
+                    } elseif ($resource->isFdp()) {
+                        $metadataModelVersion->setFdpTitleNode($node);
+                    }
+                }
             } else {
                 throw new InvalidValueType();
             }

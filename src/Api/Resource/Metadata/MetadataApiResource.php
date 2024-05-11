@@ -23,6 +23,7 @@ class MetadataApiResource implements ApiResource
             'modelVersion' => $this->metadata->getMetadataModelVersion()?->getId(),
             'createdAt' => $this->metadata->getCreatedAt()->format(DATE_ATOM),
             'modifiedAt' => $this->metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $this->metadata->getCreatedAt()->format(DATE_ATOM),
+            'title' => $this->metadata->getTitle()?->toArray(),
         ];
     }
 }

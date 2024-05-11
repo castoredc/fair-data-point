@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Entity\Metadata;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
@@ -11,11 +13,14 @@ use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Iri;
 use App\Entity\Version;
+use App\Exception\NotFound;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use function assert;
+use function json_decode;
 
 /**
  * @ORM\Entity
@@ -43,6 +48,13 @@ abstract class Metadata
 
     /** @ORM\Column(type="version") */
     private Version $version;
+
+    /**
+     * @ORM\OneToMany(targetEntity="MetadataValue", mappedBy="metadata")
+     *
+     * @var Collection<MetadataValue>
+     */
+    protected Collection $values;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
@@ -92,7 +104,7 @@ abstract class Metadata
         return (string) $this->id;
     }
 
-    public function getTitle(): ?LocalizedText
+    public function getLegacyTitle(): ?LocalizedText
     {
         return $this->title;
     }
@@ -189,5 +201,48 @@ abstract class Metadata
     public function getEntity(): ?MetadataEnrichedEntity
     {
         return null;
+    }
+
+    public function getTitle(): ?LocalizedText
+    {
+        $modelVersion = $this->metadataModelVersion;
+        $resourceType = $this->getResourceType();
+
+        $value = $this->values->findFirst(static function (int $key, MetadataValue $value) use ($modelVersion, $resourceType) {
+            return $modelVersion->getTitleNode($resourceType) === $value->getNode();
+        });
+        assert($value instanceof MetadataValue || $value === null);
+
+//        dump(json_decode($value->getValue(), true));die();
+
+        return $value !== null ? LocalizedText::fromArray(json_decode($value->getValue(), true)) : null;
+    }
+
+    /** @return Collection<MetadataValue> */
+    public function getValues(): Collection
+    {
+        return $this->values;
+    }
+
+    public function getValueForNode(ValueNode $node): ?MetadataValue
+    {
+        return $this->values->findFirst(static function (int $key, MetadataValue $value) use ($node) {
+            return $value->getNode() === $node;
+        });
+    }
+
+    public function addValue(MetadataValue $value): void
+    {
+        $this->values->add($value);
+    }
+
+    public function removeValue(MetadataValue $value): void
+    {
+        $this->values->removeElement($value);
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        throw new NotFound();
     }
 }

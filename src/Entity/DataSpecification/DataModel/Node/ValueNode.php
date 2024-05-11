@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\DataModel\Node;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 
 /**
  * @ORM\Entity
@@ -60,5 +62,13 @@ class ValueNode extends Node
     public function setIsRepeated(bool $isRepeated): void
     {
         $this->isRepeated = $isRepeated;
+    }
+
+    public function getMetadataModelVersion(): MetadataModelVersion
+    {
+        $version = $this->getVersion();
+        assert($version instanceof MetadataModelVersion);
+
+        return $version;
     }
 }

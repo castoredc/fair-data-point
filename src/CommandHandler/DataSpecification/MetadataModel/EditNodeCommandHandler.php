@@ -30,7 +30,8 @@ class EditNodeCommandHandler
     public function __invoke(EditNodeCommand $command): void
     {
         $node = $command->getNode();
-        $metadataModel = $node->getMetadataModelVersion()->getMetadataModel();
+        $metadataModelVersion = $node->getMetadataModelVersion();
+        $metadataModel = $metadataModelVersion->getMetadataModel();
 
         if (! $this->security->isGranted('edit', $metadataModel)) {
             throw new NoAccessPermission();
@@ -50,6 +51,20 @@ class EditNodeCommandHandler
             } elseif ($command->getValue() === 'plain') {
                 $node->setIsAnnotatedValue(false);
                 $node->setDataType($command->getDataType());
+
+                if ($command->getDataType()->isLangString() && $command->getUseAsTitle() !== null) {
+                    $resource = $command->getUseAsTitle();
+
+                    if ($resource->isCatalog()) {
+                        $metadataModelVersion->setCatalogTitleNode($node);
+                    } elseif ($resource->isDataset()) {
+                        $metadataModelVersion->setDatasetTitleNode($node);
+                    } elseif ($resource->isDistribution()) {
+                        $metadataModelVersion->setDistributionTitleNode($node);
+                    } elseif ($resource->isFdp()) {
+                        $metadataModelVersion->setFdpTitleNode($node);
+                    }
+                }
             } else {
                 throw new InvalidValueType();
             }

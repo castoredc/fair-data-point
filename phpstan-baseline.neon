@@ -111,21 +111,6 @@ parameters:
 			path: src/Command/Distribution/UpdateDistributionCommand.php
 
 		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$themeTaxonomy follows optional parameter \\$logo\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateCatalogMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$publishers follows optional parameter \\$license\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$versionUpdate follows optional parameter \\$license\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateMetadataCommand.php
-
-		-
 			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$conditions follows optional parameter \\$summary\\.$#"
 			count: 1
 			path: src/Command/Metadata/CreateStudyMetadataCommand.php

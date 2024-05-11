@@ -15,6 +15,7 @@ class RenderedMetadataModelForm
         return $this->form;
     }
 
+    /** @return MetadataModelField[] */
     public function getFields(): array
     {
         return $this->fields;

@@ -62,7 +62,7 @@ abstract class FAIRDataController extends AbstractController
         }
 
         return [
-            'title' => $this->getLanguageText($entity->getLatestMetadata()->getTitle(), 'en'),
+            'title' => $this->getLanguageText($entity->getLatestMetadata()->getLegacyTitle(), 'en'),
             'description' => $this->getLanguageText($entity->getLatestMetadata()->getDescription(), 'en'),
         ];
     }

@@ -31,7 +31,7 @@ class FAIRDataPointApiResource implements ApiResource
             $metadata = $this->fairDataPoint->getLatestMetadata();
 
             $fdp['metadata'] = [
-                'title' => $metadata->getTitle()->toArray(),
+                'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],

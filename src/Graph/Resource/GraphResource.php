@@ -37,7 +37,7 @@ abstract class GraphResource
 
     protected function addMetadataToGraph(Metadata $metadata, Graph $graph): Graph
     {
-        foreach ($metadata->getTitle()->getTexts() as $text) {
+        foreach ($metadata->getLegacyTitle()->getTexts() as $text) {
             /** @var LocalizedTextItem $text */
             $graph->addLiteral($this->getUrl(), 'dcterms:title', $text->getText(), $text->getLanguage()->getCode());
             $graph->addLiteral($this->getUrl(), 'rdfs:label', $text->getText(), $text->getLanguage()->getCode());

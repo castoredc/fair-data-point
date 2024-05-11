@@ -9,7 +9,10 @@ use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
 use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
+use App\Entity\Enum\ResourceType;
+use App\Entity\Metadata\Metadata;
 use App\Entity\Version as VersionNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -54,6 +57,37 @@ class MetadataModelVersion extends Version implements ModelVersion
      */
     private Collection $fields;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\Metadata", mappedBy="metadataModelVersion", cascade={"persist"})
+     *
+     * @var Collection<Metadata>
+     */
+    private Collection $assignedMetadata;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
+     * @ORM\JoinColumn(name="catalog_title_node", referencedColumnName="id")
+     */
+    private ?ValueNode $catalogTitleNode = null;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
+     * @ORM\JoinColumn(name="dataset_title_node", referencedColumnName="id")
+     */
+    private ?ValueNode $datasetTitleNode = null;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
+     * @ORM\JoinColumn(name="distribution_title_node", referencedColumnName="id")
+     */
+    private ?ValueNode $distributionTitleNode = null;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
+     * @ORM\JoinColumn(name="fdp_title_node", referencedColumnName="id")
+     */
+    private ?ValueNode $fdpTitleNode = null;
+
     public function __construct(VersionNumber $version)
     {
         parent::__construct($version);
@@ -62,6 +96,7 @@ class MetadataModelVersion extends Version implements ModelVersion
         $this->predicates = new ArrayCollection();
         $this->forms = new ArrayCollection();
         $this->fields = new ArrayCollection();
+        $this->assignedMetadata = new ArrayCollection();
     }
 
     /** @return Node[] */
@@ -183,5 +218,66 @@ class MetadataModelVersion extends Version implements ModelVersion
         $this->forms->removeElement($form);
 
         $this->reorderForms();
+    }
+
+    public function getCatalogTitleNode(): ?ValueNode
+    {
+        return $this->catalogTitleNode;
+    }
+
+    public function setCatalogTitleNode(?ValueNode $catalogTitleNode): void
+    {
+        $this->catalogTitleNode = $catalogTitleNode;
+    }
+
+    public function getDatasetTitleNode(): ?ValueNode
+    {
+        return $this->datasetTitleNode;
+    }
+
+    public function setDatasetTitleNode(?ValueNode $datasetTitleNode): void
+    {
+        $this->datasetTitleNode = $datasetTitleNode;
+    }
+
+    public function getDistributionTitleNode(): ?ValueNode
+    {
+        return $this->distributionTitleNode;
+    }
+
+    public function setDistributionTitleNode(?ValueNode $distributionTitleNode): void
+    {
+        $this->distributionTitleNode = $distributionTitleNode;
+    }
+
+    public function getFdpTitleNode(): ?ValueNode
+    {
+        return $this->fdpTitleNode;
+    }
+
+    public function setFdpTitleNode(?ValueNode $fdpTitleNode): void
+    {
+        $this->fdpTitleNode = $fdpTitleNode;
+    }
+
+    public function getTitleNode(ResourceType $resourceType): ?ValueNode
+    {
+        if ($resourceType->isCatalog()) {
+            return $this->getCatalogTitleNode();
+        }
+
+        if ($resourceType->isDataset()) {
+            return $this->getDatasetTitleNode();
+        }
+
+        if ($resourceType->isDistribution()) {
+            return $this->getDistributionTitleNode();
+        }
+
+        if ($resourceType->isFdp()) {
+            return $this->getFdpTitleNode();
+        }
+
+        return null;
     }
 }

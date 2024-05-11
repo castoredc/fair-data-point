@@ -36,7 +36,7 @@ class DistributionTreeApiResource implements ApiResource
                 'relativeUrl' => $distribution->getRelativeUrl(),
                 'id' => $distribution->getId(),
                 'slug' => $distribution->getSlug(),
-                'title' => $distribution->getLatestMetadata()->getTitle()->toArray(),
+                'title' => $distribution->getLatestMetadata()->getLegacyTitle()->toArray(),
                 'type' => $distribution->getContents()->getType(),
                 'permissions' => [DistributionVoter::ACCESS_DATA],
             ];
@@ -47,7 +47,7 @@ class DistributionTreeApiResource implements ApiResource
                 'relativeUrl' => $dataset->getRelativeUrl(),
                 'id' => $dataset->getId(),
                 'slug' => $dataset->getSlug(),
-                'title' => $dataset->getLatestMetadata()->getTitle()->toArray(),
+                'title' => $dataset->getLatestMetadata()->getLegacyTitle()->toArray(),
                 'distributions' => array_values($resources['distributions'][$dataset->getId()]),
             ];
 
@@ -60,7 +60,7 @@ class DistributionTreeApiResource implements ApiResource
                         'relativeUrl' => $catalog->getRelativeUrl(),
                         'id' => $catalog->getId(),
                         'slug' => $catalog->getSlug(),
-                        'title' => $catalog->getLatestMetadata()->getTitle()->toArray(),
+                        'title' => $catalog->getLatestMetadata()->getLegacyTitle()->toArray(),
                         'datasets' => [],
                     ];
                 }

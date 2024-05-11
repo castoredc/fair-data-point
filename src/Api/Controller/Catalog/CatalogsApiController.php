@@ -114,8 +114,8 @@ class CatalogsApiController extends ApiController
                 new CreateCatalogCommand(
                     $parsed->getSlug(),
                     $parsed->isAcceptSubmissions(),
-                    $parsed->isSubmissionAccessesData(),
-                    $parsed->getDefaultMetadataModel()
+                    $parsed->getDefaultMetadataModel(),
+                    $parsed->isSubmissionAccessesData()
                 )
             );
 

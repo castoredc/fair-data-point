@@ -81,8 +81,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
             return <NoPermission text="You do not have permission to edit this catalog" />;
         }
 
-        // const title = catalog.hasMetadata ? localizedText(catalog.legacy.metadata.title, 'en') : 'Untitled catalog';
-        const title = 'Catalog';
+        const title = catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : 'Untitled catalog';
 
         return (
             <>

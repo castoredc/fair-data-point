@@ -187,7 +187,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         });
 
         apiClient
-            .post('/api/metadata/' + type + (type === 'fdp' ? '' : '/' + object.id), values)
+            .post('/api/metadata/form/' + object.metadata.id, values)
             .then(response => {
                 this.setState({ isLoading: false });
 

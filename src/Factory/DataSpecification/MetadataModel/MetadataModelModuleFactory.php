@@ -5,6 +5,7 @@ namespace App\Factory\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\Enum\ResourceType;
 use App\Factory\DataSpecification\Common\Dependency\DependencyGroupFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -20,6 +21,7 @@ class MetadataModelModuleFactory
         $newModule = new MetadataModelGroup(
             $data['title'],
             $data['order'],
+            ResourceType::fromString($data['resourceType']),
             $version
         );
 
