@@ -53,12 +53,18 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
     }
 
     componentDidMount() {
+        const { object } = this.props;
+        const hasMetadata = !(!object.hasMetadata || object.hasMetadata && (object.metadata.model === null || object.metadata.modelVersion === null));
+
         this.getMetadataModels();
-        this.getForms();
-        this.getOptionGroups();
         this.getLanguages();
         this.getLicenses();
         this.getCountries();
+
+        if (hasMetadata) {
+            this.getForms();
+            this.getOptionGroups();
+        }
     }
 
     getMetadataModels = () => {
@@ -249,8 +255,6 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         const initialValues = getInitialValues(forms);
         const schema = getSchema(forms);
 
-        console.log(schema);
-
         return (
             <>
                 <MetadataVersionModal
@@ -275,8 +279,6 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                           setValues,
                           setFieldValue,
                       }) => {
-                        console.log(errors);
-
                         return (
                             <Form>
                                 <div className="FormContent">

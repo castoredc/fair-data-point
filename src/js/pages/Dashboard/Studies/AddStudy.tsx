@@ -134,7 +134,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
             <SelectPage
                 title="Add a study"
                 description={`Please choose an item from your list of studies that you’d like to include in the ${localizedText(
-                    catalog.legacy.metadata.title,
+                    catalog.metadata.title,
                     'en'
                 )}.`}
                 backButton={{

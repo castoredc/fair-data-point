@@ -111,7 +111,7 @@ export default class AddDataset extends Component<AddDatasetProps, AddDatasetSta
                         show={showModal.confirm}
                     >
                         Are you sure you want to add{' '}
-                        {selectedDataset.hasMetadata ? <strong>{localizedText(selectedDataset.legacy.metadata.title, 'en')}</strong> : 'this dataset'} to
+                        {selectedDataset.hasMetadata ? <strong>{localizedText(selectedDataset.metadata.title, 'en')}</strong> : 'this dataset'} to
                         this catalog?
                     </ConfirmModal>
                 )}

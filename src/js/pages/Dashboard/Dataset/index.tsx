@@ -8,7 +8,6 @@ import { localizedText } from '../../../util';
 import Header from 'components/Layout/Dashboard/Header';
 import Body from 'components/Layout/Dashboard/Body';
 import DatasetForm from 'components/Form/Admin/DatasetForm';
-import DatasetMetadataForm from 'components/Form/Metadata/DatasetMetadataForm';
 import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
 import Distributions from 'pages/Dashboard/Dataset/Distributions';
@@ -20,6 +19,7 @@ import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
+import MetadataForm from 'components/Form/Metadata/MetadataForm';
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     study?: any;
@@ -89,7 +89,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
             return <NoPermission text="You do not have permission to edit this dataset" />;
         }
 
-        const title = dataset.hasMetadata ? localizedText(dataset.legacy.metadata.title, 'en') : 'Untitled dataset';
+        const title = dataset.hasMetadata ? localizedText(dataset.metadata.title, 'en') : 'Untitled dataset';
 
         const mainUrl = match.params.study ? '/dashboard/studies/' + match.params.study : '/dashboard/catalogs/' + match.params.catalog;
 
@@ -160,7 +160,12 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <DatasetMetadataForm dataset={dataset} onSave={this.getDataset} {...props} />
+                                    <MetadataForm
+                                        type="dataset"
+                                        object={dataset}
+                                        onCreate={this.getDataset}
+                                        onSave={this.getDataset}
+                                    />
                                 </PageBody>
                             )}
                         />

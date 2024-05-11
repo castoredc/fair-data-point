@@ -42,8 +42,6 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
 
     const value = field.value ? field.value : [defaultData];
 
-    console.log(field);
-
     return (
         <div className="Input LocalizedTextInput">
             <div className="LocalizedTextInputItems">

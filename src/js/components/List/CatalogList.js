@@ -107,7 +107,7 @@ export default class CatalogList extends Component {
                             return (
                                 <ListItem
                                     key={catalog.id}
-                                    title={localizedText(catalog.legacy.metadata.title, 'en')}
+                                    title={localizedText(catalog.metadata.title, 'en')}
                                     description={localizedText(catalog.legacy.metadata.description, 'en')}
                                     link={catalog.relativeUrl}
                                     state={state}

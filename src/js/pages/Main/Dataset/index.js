@@ -54,7 +54,7 @@ export default class Dataset extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, { dataset });
 
-        const title = dataset ? localizedText(dataset.legacy.metadata.title, 'en') : null;
+        const title = dataset ? localizedText(dataset.metadata.title, 'en') : null;
 
         return (
             <Layout className="Dataset" title={title} isLoading={isLoadingDataset} embedded={embedded}>

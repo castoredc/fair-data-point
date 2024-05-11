@@ -82,7 +82,7 @@ export default class Distribution extends Component {
         const breadcrumbs = getBreadCrumbs(location, { distribution });
 
         const restricted = distribution && (distribution.accessRights === 2 || distribution.accessRights === 3);
-        const title = distribution ? localizedText(distribution.legacy.metadata.title, 'en') : null;
+        const title = distribution ? localizedText(distribution.metadata.title, 'en') : null;
 
         return (
             <Layout className="Distribution" title={title} isLoading={isLoadingDistribution} embedded={embedded}>

@@ -93,7 +93,7 @@ export default class Catalog extends Component {
 
         const breadcrumbs = getBreadCrumbs(location, { fdp, catalog });
 
-        const title = catalog ? localizedText(catalog.legacy.metadata.title, 'en') : null;
+        const title = catalog ? localizedText(catalog.metadata.title, 'en') : null;
 
         return (
             <Layout className="Catalog" title={title} isLoading={isLoadingFDP || isLoadingCatalog} embedded={embedded}>

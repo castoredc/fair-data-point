@@ -112,7 +112,7 @@ export default class Catalogs extends Component<CatalogsProps, CatalogsState> {
                             <ListItem
                                 selectable={false}
                                 link={`/dashboard/catalogs/${catalog.slug}`}
-                                title={catalog.hasMetadata ? localizedText(catalog.legacy.metadata.title, 'en') : '(no title)'}
+                                title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
                                 key={catalog.id}
                             />
                         );

@@ -7,7 +7,6 @@ import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import CatalogMetadataForm from 'components/Form/Metadata/CatalogMetadataForm';
 import CatalogForm from 'components/Form/Admin/CatalogForm';
 import AddStudy from 'pages/Dashboard/Catalogs/Catalog/AddStudy';
 import Studies from 'pages/Dashboard/Catalogs/Catalog/Studies';
@@ -22,6 +21,7 @@ import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import { Edit, Manage, View } from 'components/PermissionEditor/Permissions';
+import MetadataForm from 'components/Form/Metadata/MetadataForm';
 
 interface CatalogProps extends AuthorizedRouteComponentProps {}
 
@@ -152,8 +152,9 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <CatalogMetadataForm
-                                        catalog={catalog}
+                                    <MetadataForm
+                                        type="catalog"
+                                        object={catalog}
                                         onCreate={this.getCatalog}
                                         onSave={this.getCatalog}
                                     />

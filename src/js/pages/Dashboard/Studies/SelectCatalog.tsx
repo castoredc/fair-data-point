@@ -104,7 +104,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
                         return (
                             <ListItem
                                 key={catalog.id}
-                                title={catalog.hasMetadata ? localizedText(catalog.legacy.metadata.title, 'en') : '(no title)'}
+                                title={catalog.hasMetadata ? localizedText(catalog.metadata.title, 'en') : '(no title)'}
                                 link={`/dashboard/studies/add/${catalog.slug}`}
                                 customIcon="catalog"
                             />

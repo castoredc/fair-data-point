@@ -209,7 +209,7 @@ export default class Query extends Component {
         } = this.state;
         const { location, user, embedded } = this.props;
 
-        let title = hasDistribution && !isLoading ? localizedText(distribution.legacy.metadata.title, 'en') : 'Query';
+        let title = hasDistribution && !isLoading ? localizedText(distribution.metadata.title, 'en') : 'Query';
         const executedWithoutErrors = queryExecuted && !error;
 
         return (
