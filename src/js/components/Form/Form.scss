@@ -144,6 +144,11 @@
     &:first-child {
         margin-top: 0;
     }
+
+    .RequiredIndicator {
+        color: $red-400;
+        margin-left: 2px;
+    }
 }
 
 .FormHeading {

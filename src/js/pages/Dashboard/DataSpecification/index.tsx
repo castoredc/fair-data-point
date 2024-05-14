@@ -574,6 +574,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                                     user={user}
                                     types={types}
                                     optionGroups={optionGroups}
+                                    prefixes={prefixes}
                                     {...props}
                                 />
                             )}

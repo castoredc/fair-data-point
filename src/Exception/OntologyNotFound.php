@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-use Exception;
-
-class OntologyNotFound extends Exception
+class OntologyNotFound extends RenderableApiException
 {
     /** @return array<mixed> */
     public function toArray(): array

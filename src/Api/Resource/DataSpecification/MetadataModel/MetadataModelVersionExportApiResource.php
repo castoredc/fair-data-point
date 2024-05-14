@@ -24,6 +24,7 @@ class MetadataModelVersionExportApiResource implements ApiResource
             'prefixes' => (new MetadataModelPrefixesApiResource($this->metadataModelVersion))->toArray(),
             'predicates' => (new PredicatesApiResource($this->metadataModelVersion))->toArray(),
             'optionGroups' => (new OptionGroupsApiResource($this->metadataModelVersion))->toArray(),
+            'forms' => (new MetadataModelFormsApiResource($this->metadataModelVersion))->toArray(),
         ];
     }
 }

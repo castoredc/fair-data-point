@@ -137,6 +137,11 @@ class UpdateMetadataCommandHandler
         $texts = new ArrayCollection();
 
         foreach ($values as $item) {
+            if ($item['text'] === '' && $item['language'] === '') {
+                // Skip empty
+                continue;
+            }
+
             $text = new LocalizedTextItem($item['text']);
             $text->setLanguageCode($item['language']);
             $text->setLanguage($this->getLanguage($field, $item['language']));

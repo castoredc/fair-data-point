@@ -45,6 +45,7 @@ interface NodesProps extends AuthorizedRouteComponentProps {
         }[],
     };
     optionGroups: any;
+    prefixes: any;
 }
 
 interface NodesState {
@@ -127,7 +128,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
 
     render() {
         const { showModal, modalData } = this.state;
-        const { type, dataSpecification, nodes, version, history, match, types, optionGroups } = this.props;
+        const { type, dataSpecification, nodes, version, history, match, types, optionGroups, prefixes } = this.props;
 
         if (nodes === null || types.dataTypes.length === 0) {
             return <LoadingOverlay accessibleLabel="Loading data model" />;
@@ -272,6 +273,7 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                     data={modalData}
                     types={types}
                     optionGroups={optionGroups}
+                    prefixes={prefixes}
                 />
 
                 {modalData && (

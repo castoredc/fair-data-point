@@ -179,6 +179,7 @@ const RenderedFormField: FC<RenderedFormFieldProps> = ({ field, validation, opti
     return <FormItem
         label={field.title}
         details={field.description}
+        isRequired={field.isRequired}
     >
         {fieldComponent}
     </FormItem>;

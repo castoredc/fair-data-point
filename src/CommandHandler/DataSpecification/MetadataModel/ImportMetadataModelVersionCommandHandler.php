@@ -10,6 +10,7 @@ use App\Exception\NoAccessPermission;
 use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
+use App\Factory\DataSpecification\MetadataModel\FormFactory;
 use App\Factory\DataSpecification\MetadataModel\MetadataModelModuleFactory;
 use App\Factory\DataSpecification\MetadataModel\NamespacePrefixFactory;
 use App\Factory\DataSpecification\MetadataModel\NodeFactory;
@@ -33,6 +34,7 @@ class ImportMetadataModelVersionCommandHandler
         private NodeFactory $nodeFactory,
         private PredicateFactory $predicateFactory,
         private OptionGroupFactory $optionGroupFactory,
+        private FormFactory $formFactory,
         private MetadataModelModuleFactory $metadataModelModuleFactory,
         private TripleFactory $tripleFactory,
     ) {
@@ -70,6 +72,7 @@ class ImportMetadataModelVersionCommandHandler
         $prefixes = $json['prefixes'];
         $predicates = $json['predicates'];
         $optionGroups = $json['optionGroups'];
+        $forms = $json['forms'];
 
         if ($metadataModel->hasVersion($version)) {
             throw new InvalidMetadataModelVersion();
@@ -109,6 +112,15 @@ class ImportMetadataModelVersionCommandHandler
             $newOptionGroup = $this->optionGroupFactory->createFromJson($newVersion, $optionGroup);
             $newOptionGroups->set($optionGroup['id'], $newOptionGroup);
             $newVersion->addOptionGroup($newOptionGroup);
+        }
+
+        // Add option groups
+        $newForms = new ArrayCollection();
+
+        foreach ($forms as $form) {
+            $newForm = $this->formFactory->createFromJson($newVersion, $form, $newNodes, $newOptionGroups);
+            $newForms->set($form['id'], $newForm);
+            $newVersion->addForm($newForm);
         }
 
         // Add modules

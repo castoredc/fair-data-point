@@ -9,11 +9,9 @@ use App\Api\Resource\Metadata\MetadataFormsApiResource;
 use App\Command\Metadata\UpdateMetadataCommand;
 use App\Entity\Metadata\Metadata;
 use App\Exception\ApiRequestParseError;
-use App\Exception\InvalidAgentType;
-use App\Exception\InvalidMetadataValue;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
-use App\Exception\OntologyNotFound;
+use App\Exception\RenderableApiException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,21 +54,25 @@ class MetadataFormController extends ApiController
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (NotFound $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (NoAccessPermission $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (InvalidMetadataValue $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (OntologyNotFound $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (InvalidAgentType $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
+            $e = $e->getPrevious();
+
             $this->logger->critical('An error occurred while updating metadata', [
                 'exception' => $e,
                 'MetadataID' => $metadata->getId(),
             ]);
+
+            if ($e instanceof NotFound) {
+                return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            }
+
+            if ($e instanceof NoAccessPermission) {
+                return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
+            }
+
+            if ($e instanceof RenderableApiException) {
+                return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
+            }
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

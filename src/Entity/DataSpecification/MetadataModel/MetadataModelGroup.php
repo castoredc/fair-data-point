@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\MetadataModel;
 
-use App\Entity\DataSpecification\Common\ElementGroup;
 use App\Entity\DataSpecification\Common\Group;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\Enum\ResourceType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function iterator_to_array;
+use function strcmp;
 
 /**
  * @ORM\Entity
@@ -32,10 +34,20 @@ class MetadataModelGroup extends Group
         $this->addElementGroup($triple);
     }
 
-    /** @return Collection<string, ElementGroup> */
+    /** @return Collection<string, Triple> */
     public function getTriples(): Collection
     {
-        return $this->getElementGroups();
+        $triples = $this->getElementGroups();
+
+        $iterator = $triples->getIterator();
+        $iterator->uasort(static function (Triple $a, Triple $b) {
+            return strcmp(
+                $a->getPredicate()->getIri()->getValue(),
+                $b->getPredicate()->getIri()->getValue()
+            );
+        });
+
+        return new ArrayCollection(iterator_to_array($iterator));
     }
 
     public function getResourceType(): ResourceType

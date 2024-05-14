@@ -12,6 +12,7 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
 import { getType, mergeData } from '../util';
 import { apiClient } from '../network';
+import UriInput from 'components/Input/Formik/UriInput';
 
 type AddNodeModalProps = {
     open: boolean;
@@ -41,6 +42,7 @@ type AddNodeModalProps = {
         }[],
     };
     optionGroups: any;
+    prefixes: any;
 };
 
 type AddNodeModalState = {
@@ -116,7 +118,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
     };
 
     render() {
-        const { modelType, data, type, open, onClose, types, optionGroups } = this.props;
+        const { modelType, data, type, open, onClose, types, optionGroups, prefixes } = this.props;
         const { validation, initialValues } = this.state;
 
         const title = data ? `Edit ${type} node` : `Add ${type} node`;
@@ -143,7 +145,7 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                 </FormItem>
                                 {values.type === 'external' && (
                                     <FormItem label="URI">
-                                        <Field component={Input} name="value" serverError={validation} />
+                                        <Field component={UriInput} name="value" serverError={validation} prefixes={prefixes} />
                                     </FormItem>
                                 )}
                                 {values.type === 'internal' && (

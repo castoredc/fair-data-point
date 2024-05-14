@@ -86,14 +86,14 @@ class MetadataFieldType extends Enum
         self::INPUT_LOCALE => [
             [
                 'text' => '',
-                'language' => null,
+                'language' => '',
             ],
         ],
         self::TEXTAREA => '',
         self::TEXTAREA_LOCALE => [
             [
                 'text' => '',
-                'language' => null,
+                'language' => '',
             ],
         ],
         self::ONTOLOGY_CONCEPT_BROWSER => [],

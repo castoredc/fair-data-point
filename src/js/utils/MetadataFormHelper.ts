@@ -1,31 +1,55 @@
 import { RenderedMetadataFormType } from 'types/RenderedMetadataFormType';
 import * as Yup from 'yup';
 
-const ArrayFieldTypes = [
+const LocaleFieldTypes = [
     'inputLocale',
     'textareaLocale',
+];
+
+const ArrayFieldTypes = [
     'ontologyConceptBrowser',
     'checkboxes',
     'agentSelector'
 ];
 
+const LocaleFieldTypeMappings = {
+    required: {
+        inputLocale: Yup.array()
+            .of(
+                Yup.object().shape({
+                    text: Yup.string().required('Please enter text'),
+                    language: Yup.string().nullable().required('Please select a language'),
+                })
+            ).nullable(),
+        textareaLocale: Yup.array()
+            .of(
+                Yup.object().shape({
+                    text: Yup.string().required('Please enter text'),
+                    language: Yup.string().nullable().required('Please select a language'),
+                })
+            ).nullable(),
+    },
+    notRequired: {
+        inputLocale: Yup.array()
+            .of(
+                Yup.object().shape({
+                    text: Yup.string(),
+                    language: Yup.string().nullable(),
+                })
+            ).nullable(),
+        textareaLocale: Yup.array()
+            .of(
+                Yup.object().shape({
+                    text: Yup.string(),
+                    language: Yup.string().nullable(),
+                })
+            ).nullable(),
+    }
+}
+
 const YupFieldTypeMappings = {
     input: Yup.string(),
-    inputLocale: Yup.array()
-        .of(
-            Yup.object().shape({
-                text: Yup.string().required('Please enter text'),
-                language: Yup.string().nullable().required('Please select a language'),
-            })
-        ).nullable(),
     textarea: Yup.string(),
-    textareaLocale: Yup.array()
-        .of(
-            Yup.object().shape({
-                text: Yup.string().required('Please enter text'),
-                language: Yup.string().nullable().required('Please select a language'),
-            })
-        ).nullable(),
     ontologyConceptBrowser: Yup.array()
         .of(
             Yup.object().shape({
@@ -68,11 +92,16 @@ export const getSchema = (forms: RenderedMetadataFormType[]) => {
         fields.map((field) => {
             let fieldSchema = YupFieldTypeMappings[field.fieldType];
 
-            if(field.isRequired) {
-                if(ArrayFieldTypes.includes(field.fieldType)) {
-                    fieldSchema = fieldSchema.min(1, 'Please add at least one item');
+            if(LocaleFieldTypes.includes(field.fieldType)) {
+                if(field.isRequired) {
+                    fieldSchema = LocaleFieldTypeMappings.required[field.fieldType];
+                } else {
+                    fieldSchema = LocaleFieldTypeMappings.notRequired[field.fieldType];
                 }
-
+            }
+            else if(ArrayFieldTypes.includes(field.fieldType) && field.isRequired) {
+                fieldSchema = fieldSchema.min(1, 'Please add at least one item');
+            } else if(field.isRequired) {
                 fieldSchema = fieldSchema.required('This is a required field');
             }
 

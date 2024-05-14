@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-use Exception;
 use function sprintf;
 
-class InvalidMetadataValue extends Exception
+class InvalidMetadataValue extends RenderableApiException
 {
     public function __construct(private string $fieldName)
     {

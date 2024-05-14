@@ -206,10 +206,12 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 onSave();
             })
             .catch(error => {
-                if (error.response && error.response.status === 400) {
+                if (error.response && error.response.status === 400 && error.response.data.fields) {
                     this.setState({
                         validation: error.response.data.fields,
                     });
+                } else if (error.response) {
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
                 } else {
                     toast.error(<ToastItem type="error" title="An error occurred" />);
                 }
@@ -261,10 +263,10 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                     open={showModal}
                     currentVersion={currentVersion}
                     onClose={this.closeModal}
-                    handleSave={versionNumber => ''}
+                    handleSave={this.handleVersionUpdate}
                     metadataModels={metadataModels}
                     type={type}
-                    objectId={object}
+                    objectId={object.id}
                 />
 
                 <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={schema}>
@@ -295,7 +297,10 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                                     })}
                                 </div>
                                 <div className="FormButtons">
-                                    <Stack distribution="trailing">
+                                    <Stack distribution="space-between">
+                                        <Button buttonType="secondary" icon="add" onClick={() => this.showModal()}>
+                                            New metadata version
+                                        </Button>
                                         <Button
                                             buttonType="primary"
                                             type="submit"
