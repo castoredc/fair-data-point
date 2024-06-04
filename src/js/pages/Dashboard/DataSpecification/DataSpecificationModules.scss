@@ -5,10 +5,12 @@
     display: flex;
 
     & > div {
+        flex: 1;
+    }
+
+    & > div:first-child {
         width: 33%;
         flex: 0 0 33%;
-        padding-left: 10px;
-        padding-right: 10px;
     }
 }
 
@@ -21,8 +23,8 @@
             background: $neutral-20;
         }
 
-        .DataSpecificationSubject,
-        .DataSpecificationPredicate,
+        .DataSpecificationSubject > div,
+        .DataSpecificationPredicate > div,
         .DataSpecificationObject {
             padding-left: 10px;
             padding-right: 10px;
@@ -30,14 +32,12 @@
 
         .DataSpecificationSubject {
             width: 33%;
-            flex: 0 0 33%;
             padding-top: 10px;
             padding-bottom: 10px;
         }
 
         .DataSpecificationPredicateObjects {
-            width: 66%;
-            flex: 0 0 66%;
+            flex: 1;
 
             .TriplePredicateObject {
                 display: flex;
@@ -114,4 +114,17 @@
 
 .DataSpecificationModuleAlerts > div {
     margin-bottom: 5px;
+}
+
+
+.DataSpecificationModule {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+
+    .LargeTable {
+        flex: 1;
+        overflow: auto;
+    }
 }

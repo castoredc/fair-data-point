@@ -4,6 +4,7 @@ import './SideTabs.scss';
 import { Icon, Stack, Tooltip } from '@castoredc/matter';
 import ScrollShadow from '../ScrollShadow';
 import type { MatterIcon } from '@castoredc/matter-icons';
+import { useHistory } from 'react-router-dom';
 
 type Tab = {
     type?: 'separator';
@@ -13,6 +14,7 @@ type Tab = {
     content: React.ReactNode;
     icons?: Array<{ title: string; icon: MatterIcon }>;
     tag?: string;
+    id?: string;
 };
 
 type SideTabsProps = {
@@ -21,13 +23,20 @@ type SideTabsProps = {
     hasTabs?: boolean;
     title?: React.ReactNode;
     actions?: React.ReactNode;
+    initialTab?: number;
+    url?: string;
 };
 
-const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false, title, actions }) => {
-    const [activeTab, setActiveTab] = useState(0);
+const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false, title, actions, initialTab, url }) => {
+    const [activeTab, setActiveTab] = useState(initialTab ?? 0);
+    let history = useHistory();
 
     const changeTab = (index: number) => {
         setActiveTab(index);
+
+        if(url) {
+            history.push(`${url}/${tabs[index].id}`);
+        }
     };
 
     return (

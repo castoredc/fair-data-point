@@ -17,11 +17,11 @@ const MetadataMapping = {
     study: ['logo', 'studyType', 'methodType', 'estimatedEnrollment', 'organizations', 'version', 'issued', 'modified'],
 };
 
-const MetadataSideBar = ({ name, type, metadata }) => {
+const LegacyMetadataSideBar = ({ name, type, metadata }) => {
     const [isOpen, setOpen] = useState(false);
 
     const shouldDisplay = item => {
-        return MetadataMapping[type].includes(item) && metadata[item];
+        return metadata && MetadataMapping[type].includes(item) && metadata[item];
     };
 
     return (
@@ -98,4 +98,4 @@ const MetadataSideBar = ({ name, type, metadata }) => {
     );
 };
 
-export default MetadataSideBar;
+export default LegacyMetadataSideBar;

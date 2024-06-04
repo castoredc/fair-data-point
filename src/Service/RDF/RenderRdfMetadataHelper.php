@@ -78,10 +78,6 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
             $uri = $this->uriHelper->getUri($entity);
         } elseif ($node instanceof InternalIriNode) {
             $uri = $this->uriHelper->getUri($entity) . '/' . $node->getSlug();
-
-//            if ($node->isRepeated()) {
-//                $uri .= '/' . $data->getInstance()->getId();
-//            }
         } elseif ($node instanceof ExternalIriNode) {
             $uri = $node->getIri()->getValue();
         }
@@ -118,7 +114,7 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
 
                 if ($entity instanceof Distribution) {
                     if ($placeholderType->isDistributionAccessUrl()) {
-                        $value = $entity->getAccessUrl();
+                        $value = $this->uriHelper->getBaseUri() . $entity->getAccessUrl();
                     }
 
                     if ($placeholderType->isDistributionMediaType()) {

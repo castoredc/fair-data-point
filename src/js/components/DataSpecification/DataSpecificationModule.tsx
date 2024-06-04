@@ -45,9 +45,15 @@ const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
 
             <div className="DataSpecificationTable LargeTable">
                 <div className="DataSpecificationTableHeader TableHeader">
-                    <div>Subject</div>
-                    <div>Predicate</div>
-                    <div>Object</div>
+                    <div>
+                        <div>Subject</div>
+                    </div>
+                    <div>
+                        <div>Predicate</div>
+                    </div>
+                    <div>
+                        <div>Object</div>
+                    </div>
                 </div>
 
                 {groupedTriples.length === 0 ? (
@@ -61,7 +67,6 @@ const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
                                 type={element.type}
                                 title={element.title}
                                 repeated={element.repeated}
-                                description={element.description}
                                 value={element.value}
                                 predicates={element.predicates}
                                 openTripleModal={openTripleModal}

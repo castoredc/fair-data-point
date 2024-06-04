@@ -24,6 +24,7 @@ class MetadataApiResource implements ApiResource
             'createdAt' => $this->metadata->getCreatedAt()->format(DATE_ATOM),
             'modifiedAt' => $this->metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $this->metadata->getCreatedAt()->format(DATE_ATOM),
             'title' => $this->metadata->getTitle()?->toArray(),
+            'description' => $this->metadata->getDescription()?->toArray(),
         ];
     }
 }

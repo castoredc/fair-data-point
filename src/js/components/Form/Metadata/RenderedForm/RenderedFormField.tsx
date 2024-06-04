@@ -74,7 +74,7 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
         case 'textareaLocale':
             return <Field
                 component={LocalizedTextInput}
-                name="title"
+                name={field.id}
                 languages={languages}
                 serverError={validation}
                 multiline={true}

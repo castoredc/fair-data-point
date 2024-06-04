@@ -92,28 +92,35 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
             <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
                 <Formik initialValues={initialValues} validationSchema={TripleSchema} onSubmit={this.handleSubmit}>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
-                        const subjectSelectable = values.subjectType === 'internal' || values.subjectType === 'external';
+                        const subjectSelectable =
+                            (type === 'metadata-model' && values.subjectType === 'record') ||
+                                values.subjectType === 'internal' ||
+                                values.subjectType === 'external';
                         let subjectOptions = subjectSelectable ? this.getOptions(values.subjectType) : [];
+
                         const objectSelectable =
+                            (type === 'metadata-model' && values.objectType === 'record') ||
                             values.objectType === 'internal' ||
                             values.objectType === 'external' ||
                             values.objectType === 'value' ||
-                            values.objectType === 'literal';
+                            values.objectType === 'literal' ||
+                            values.objectType === 'children' ||
+                            values.objectType === 'parents';
                         let objectOptions = objectSelectable ? this.getOptions(values.objectType) : [];
 
-                        if (module && values.objectType === 'value' && module.repeated) {
+                        if (type === 'data-model' && module && values.objectType === 'value' && module.repeated) {
                             objectOptions = objectOptions.filter(option => {
                                 return option.repeated;
                             });
                         }
 
-                        if (module && values.objectType === 'internal' && !module.repeated) {
+                        if (type === 'data-model' && module && values.objectType === 'internal' && !module.repeated) {
                             objectOptions = objectOptions.filter(option => {
                                 return option.repeated === false;
                             });
                         }
 
-                        if (module && values.subjectType === 'internal' && !module.repeated) {
+                        if (type === 'data-model' && module && values.subjectType === 'internal' && !module.repeated) {
                             subjectOptions = subjectOptions.filter(option => {
                                 return option.repeated === false;
                             });
@@ -215,6 +222,8 @@ export const tripleTypes = {
             { value: 'record', label: 'Record' },
             { value: 'literal', label: 'Literal' },
             { value: 'value', label: 'Value' },
+            { value: 'children', label: 'Children' },
+            { value: 'parents', label: 'Parents' },
         ],
     },
     'data-model': {
@@ -257,9 +266,9 @@ const TripleSchema = Yup.object().shape({
         then: Yup.string().required('Please select a node'),
     }),
     predicateValue: Yup.string().required('Please enter a predicate').url('Please enter a valid predicate'),
-    objectType: Yup.string().oneOf(['internal', 'external', 'record', 'literal', 'value'], 'Please select an object type'),
+    objectType: Yup.string().oneOf(['internal', 'external', 'record', 'literal', 'value', 'children', 'parents'], 'Please select an object type'),
     objectValue: Yup.string().when('objectType', {
-        is: objectType => objectType === 'internal' || objectType === 'external' || objectType === 'value' || objectType === 'literal',
+        is: objectType => objectType === 'internal' || objectType === 'external' || objectType === 'value' || objectType === 'literal' || objectType === 'children' || objectType === 'parents',
         then: Yup.string().required('Please select a node'),
     }),
 });

@@ -11,7 +11,7 @@ import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
-import MetadataSideBar from '../../../components/MetadataSideBar';
+import LegacyMetadataSideBar from '../../../components/MetadataSideBar/LegacyMetadataSideBar';
 import { apiClient } from 'src/js/network';
 
 export default class Study extends Component {
@@ -97,7 +97,7 @@ export default class Study extends Component {
                                 <DatasetList study={study} state={breadcrumbs.current ? breadcrumbs.current.state : null} />
                             </div>
                             <div className="SideCol">
-                                <MetadataSideBar type="study" metadata={study.metadata} name={title} />
+                                <LegacyMetadataSideBar type="study" metadata={study.metadata} name={title} />
                             </div>
                         </>
                     )}

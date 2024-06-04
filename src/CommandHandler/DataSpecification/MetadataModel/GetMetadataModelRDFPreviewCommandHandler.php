@@ -148,13 +148,9 @@ class GetMetadataModelRDFPreviewCommandHandler
         $uri = '';
 
         if ($node instanceof RecordNode) {
-            $uri = '/##record_id##';
+            $uri = '/##record[' . $node->getResourceType() . ']##';
         } elseif ($node instanceof InternalIriNode) {
-            $uri = '/##record_id##/' . $node->getSlug();
-
-            if ($node->isRepeated()) {
-                $uri .= '/##instance_id##';
-            }
+            $uri = '/##record##/' . $node->getSlug();
         } elseif ($node instanceof ExternalIriNode) {
             $uri = $node->getIri()->getValue();
         } elseif ($node instanceof ChildrenNode) {

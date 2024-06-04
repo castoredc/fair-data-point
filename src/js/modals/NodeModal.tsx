@@ -79,7 +79,6 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                     ...initialValues,
                     value: initialValues.value.value,
                     dataType: initialValues.value.dataType,
-                    useAsTitle: initialValues.value.useAsTitle,
                 };
             }
         }
@@ -131,9 +130,9 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                         const isAnnotatedValue = (values.type === 'value' && values.value === 'annotated');
 
                         const showDataTypes = values.type === 'literal' || isPlainValue;
-                        const showRepeated = modelType === 'data-model' && (values.type === 'internal' || values.type === 'value');
-
-                        const showTitle = modelType === 'metadata-model' && (values.type === 'value' && values.value === 'plain' && values.dataType === 'langString')
+                        const showRepeated =
+                            modelType === 'data-model' && (values.type === 'internal' || values.type === 'value') ||
+                            modelType === 'metadata-model' && (values.type === 'internal');
 
                         return (
                             <Form>
@@ -175,12 +174,6 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
                                     </FormItem>
                                 )}
 
-                                {showTitle && (
-                                    <FormItem label="Use as title for">
-                                        <Field component={Select} options={resourceTypes} serverError={validation} name="useAsTitle" />
-                                    </FormItem>
-                                )}
-
                                 {values.type === 'literal' && (
                                     <FormItem label="Value">
                                         <Field component={Input} name="value" serverError={validation} />
@@ -217,7 +210,6 @@ const defaultData = {
     description: '',
     value: '',
     dataType: '',
-    useAsTitle: null,
     repeated: false,
 };
 
@@ -239,7 +231,6 @@ const NodeSchema = Yup.object().shape({
         is: (type, value) => type === 'literal' || (type === 'value' && value === 'plain'),
         then: schema => schema.required('Please select a data type'),
     }),
-    useAsTitle: Yup.string().nullable(),
 });
 
 const resourceTypes = [

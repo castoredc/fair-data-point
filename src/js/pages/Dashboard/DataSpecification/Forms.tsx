@@ -178,12 +178,14 @@ export default class Forms extends Component<FormsProps, FormsState> {
     };
 
     render() {
-        const { type, dataSpecification, version, forms, nodes, types, optionGroups } = this.props;
+        const { type, dataSpecification, version, forms, nodes, types, optionGroups, match } = this.props;
         const { showModal, currentForm, formModalData, fieldModalData } = this.state;
 
         if (nodes === null) {
             return null;
         }
+
+        const initialTab = match.params.formId ? forms.findIndex((form) => form.id === match.params.formId) : 0;
 
         const orderOptions = this.getOrderOptions();
 
@@ -242,11 +244,14 @@ export default class Forms extends Component<FormsProps, FormsState> {
                         hasButtons
                         title="Forms"
                         actions={<Button icon="add" iconDescription="Add form" onClick={() => this.openFormModal(null)} />}
+                        initialTab={initialTab}
+                        url={`/dashboard/${type}s/${dataSpecification.id}/${match.params.version}/forms`}
                         tabs={forms.map(element => {
                             let icons = [] as any;
 
                             return {
                                 number: element.order,
+                                id: element.id,
                                 title: element.title,
                                 icons: icons,
                                 badge: element.resourceType,

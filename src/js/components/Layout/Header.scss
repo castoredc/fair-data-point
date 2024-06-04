@@ -4,7 +4,7 @@
 header {
     &.Desktop {
         .Spacing {
-            height: $desktopHeaderHeight;
+            height: $logoHeight + 2 * $desktopHeaderPadding;
             background: $primary-main;
 
             &.Small {

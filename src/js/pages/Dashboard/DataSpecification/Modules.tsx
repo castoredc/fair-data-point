@@ -159,12 +159,14 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
     };
 
     render() {
-        const { type, dataSpecification, version, modules, nodes, prefixes } = this.props;
+        const { type, dataSpecification, version, modules, nodes, prefixes, match } = this.props;
         const { showModal, currentModule, moduleModalData, tripleModalData } = this.state;
 
         if (nodes === null) {
             return null;
         }
+
+        const initialTab = match.params.moduleId ? modules.findIndex((module) => module.id === match.params.moduleId) : 0;
 
         const orderOptions = this.getOrderOptions();
 
@@ -225,6 +227,8 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
                         hasButtons
                         title="Groups"
                         actions={<Button icon="add" iconDescription="Add group" onClick={() => this.openModuleModal(null)} />}
+                        initialTab={initialTab}
+                        url={`/dashboard/${type}s/${dataSpecification.id}/${match.params.version}/modules`}
                         tabs={modules.map(element => {
                             let icons = [] as any;
 
@@ -244,6 +248,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
 
                             return {
                                 number: element.order,
+                                id: element.id,
                                 title: element.title,
                                 badge: element.resourceType ?? null,
                                 icons: icons,

@@ -504,7 +504,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                             }
                         />
                         {type === 'metadata-model' && <Route
-                                path="/dashboard/metadata-models/:model/:version/forms"
+                                path="/dashboard/metadata-models/:model/:version/forms/:formId?"
                                 exact
                                 render={props => (
                                     <Forms
@@ -540,8 +540,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         }
                         <Route
                             path={[
-                                '/dashboard/data-models/:model/:version/modules',
-                                '/dashboard/metadata-models/:model/:version/modules',
+                                '/dashboard/data-models/:model/:version/modules/:moduleId?',
+                                '/dashboard/metadata-models/:model/:version/modules/:moduleId?',
                             ]}
                             exact
                             render={props => (

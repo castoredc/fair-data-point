@@ -10,6 +10,8 @@ class Highlight extends Component {
 
         let highlighted = Prism.highlight(content, turtle, 'turtle');
         highlighted = highlighted.replace(/##record_id##/gm, '<span class="Record"><span>Record ID</span></span>');
+        highlighted = highlighted.replace(/##record\[([^#]*)]##/gm, '<span class="Record"><span>Resource URL</span></span>');
+        highlighted = highlighted.replace(/##record##/gm, '<span class="Record"><span>Resource URL</span></span>');
         highlighted = highlighted.replace(/##instance_id##/gm, '<span class="Instance"><span>Instance ID</span></span>');
         highlighted = highlighted.replace(/##([^#]*)##/gm, '<span class="Variable"><span>$1</span></span>');
 
