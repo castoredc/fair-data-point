@@ -20,13 +20,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function time;
 use function urlencode;
 
 class RDFDistributionController extends FAIRDataController
@@ -118,25 +116,5 @@ class RDFDistributionController extends FAIRDataController
             'distribution' => $distribution,
             'record' => $record,
         ]);
-    }
-
-    private function getTurtleResponse(Distribution $distribution, string $turtle, bool $download): Response
-    {
-        if ($download === true) {
-            $response = new Response($turtle);
-            $disposition = $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $distribution->getSlug() . '_' . time() . '.ttl'
-            );
-            $response->headers->set('Content-Disposition', $disposition);
-
-            return $response;
-        }
-
-        return new Response(
-            $turtle,
-            Response::HTTP_OK,
-            ['content-type' => 'text/turtle']
-        );
     }
 }

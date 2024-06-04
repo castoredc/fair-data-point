@@ -35,21 +35,12 @@ class UpdateTripleCommandHandler
 
         $nodeRepository = $this->em->getRepository(Node::class);
 
-        if ($command->getSubjectType()->isRecord()) {
-            $subject = $nodeRepository->findRecordNodeForModel($metadataModelVersion);
-        } else {
-            $subject = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getSubjectValue());
-        }
+        $subject = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getSubjectValue());
 
         assert($subject instanceof Node);
 
         $predicate = new Predicate($metadataModelVersion, new Iri($command->getPredicateValue()));
-
-        if ($command->getObjectType()->isRecord()) {
-            $object = $nodeRepository->findRecordNodeForModel($metadataModelVersion);
-        } else {
-            $object = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getObjectValue());
-        }
+        $object = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getObjectValue());
 
         assert($object instanceof Node);
 

@@ -7,6 +7,7 @@ use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\Enum\PermissionType;
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Permission\DistributionPermission;
 use App\Entity\Metadata\DistributionMetadata;
@@ -303,5 +304,43 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
     public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
     {
         $this->defaultMetadataModel = $defaultMetadataModel;
+    }
+
+    public function getAccessUrl(): ?string
+    {
+        return $this->contents->getRelativeUrl();
+    }
+
+    public function getMediaType(): ?string
+    {
+        return $this->contents->getMediaType();
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getChildren(ResourceType $resourceType): array
+    {
+        return [];
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getParents(ResourceType $resourceType): array
+    {
+        if ($resourceType->isFdp()) {
+            return $this->dataset->getParents(ResourceType::fdp());
+        }
+
+        if ($resourceType->isCatalog()) {
+            return $this->dataset->getParents(ResourceType::catalog());
+        }
+
+        if ($resourceType->isStudy()) {
+            return $this->dataset->getParents(ResourceType::study());
+        }
+
+        if ($resourceType->isDataset()) {
+            return [$this->dataset];
+        }
+
+        return [];
     }
 }

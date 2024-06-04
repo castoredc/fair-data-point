@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\RDF;
 
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Castor\Data\InstanceData;
@@ -25,8 +25,6 @@ use App\Entity\DataSpecification\DataModel\Node\RecordNode;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Enum\CastorEntityType;
-use App\Entity\Enum\DependencyOperatorType;
-use App\Entity\Enum\XsdDataType;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\Terminology\Annotation;
 use App\Exception\ErrorFetchingCastorData;
@@ -35,16 +33,16 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Model\Castor\ApiClient;
 use App\Model\Castor\CastorEntityCollection;
-use DateTimeImmutable;
+use App\Service\CastorEntityHelper;
+use App\Service\DataTransformationService;
+use App\Service\UriHelper;
 use EasyRdf\Graph;
 use EasyRdf\Literal;
 use function assert;
-use function boolval;
 use function count;
-use function floatval;
 use function in_array;
 
-class RDFRenderHelper
+class RenderRdfDataHelper extends RdfRenderHelper
 {
     private CastorStudy $study;
     private RDFDistribution $contents;
@@ -71,6 +69,43 @@ class RDFRenderHelper
         assert($dbStudy instanceof CastorStudy);
 
         $this->optionGroups = $optionGroups ?? $this->entityHelper->getEntitiesByType($dbStudy, CastorEntityType::fieldOptionGroup());
+    }
+
+    private function renderModule(RecordData $data, Graph $graph, DataModelGroup $module): void
+    {
+        if ($module->isDependent()) {
+            $shouldRender = $this->parseDependencies($module->getDependencies(), $data);
+        } else {
+            $shouldRender = true;
+        }
+
+        if (! $shouldRender) {
+            return;
+        }
+
+        $triples = $module->getElementGroups();
+
+        foreach ($triples as $triple) {
+            assert($triple instanceof Triple);
+
+            $subject = $graph->resource($this->getURI($data, $triple->getSubject()));
+            $predicate = $triple->getPredicate()->getIri()->getValue();
+            $object = $triple->getObject();
+
+            $isLiteral = ($object instanceof LiteralNode || ($object instanceof ValueNode && ! $object->isAnnotatedValue()));
+            $value = $this->getValue($data, $object);
+
+            if ($value === null) {
+                continue;
+            }
+
+            if ($isLiteral) {
+                $literal = new Literal($value, null, 'xsd:' . $object->getDataType()->toString());
+                $graph->addLiteral($subject, $predicate, $literal);
+            } else {
+                $graph->add($subject, $predicate, $graph->resource($value));
+            }
+        }
     }
 
     /**
@@ -118,6 +153,30 @@ class RDFRenderHelper
         return $graph;
     }
 
+    /**
+     * @param Record[] $records
+     *
+     * @return Record[]
+     */
+    public function getSubset(array $records): array
+    {
+        $return = [];
+
+        foreach ($records as $record) {
+            $newRecord = $record->hasData() ? $record : $this->apiClient->getRecordDataCollection($this->study, $record);
+
+            if ($this->contents->getDependencies() === null) {
+                $return[] = $newRecord;
+            } elseif (! $this->parseSubsetDependencies($this->contents->getDependencies(), $newRecord->getData()->getStudy())) {
+                continue;
+            } else {
+                $return[] = $newRecord;
+            }
+        }
+
+        return $return;
+    }
+
     private function getURI(RecordData $data, Node $node): string
     {
         $uri = '';
@@ -136,43 +195,6 @@ class RDFRenderHelper
         }
 
         return $uri;
-    }
-
-    private function renderModule(RecordData $data, Graph $graph, DataModelGroup $module): void
-    {
-        if ($module->isDependent()) {
-            $shouldRender = $this->parseDependencies($module->getDependencies(), $data);
-        } else {
-            $shouldRender = true;
-        }
-
-        if (! $shouldRender) {
-            return;
-        }
-
-        $triples = $module->getElementGroups();
-
-        foreach ($triples as $triple) {
-            assert($triple instanceof Triple);
-
-            $subject = $graph->resource($this->getURI($data, $triple->getSubject()));
-            $predicate = $triple->getPredicate()->getIri()->getValue();
-            $object = $triple->getObject();
-
-            $isLiteral = ($object instanceof LiteralNode || ($object instanceof ValueNode && ! $object->isAnnotatedValue()));
-            $value = $this->getValue($data, $object);
-
-            if ($value === null) {
-                continue;
-            }
-
-            if ($isLiteral) {
-                $literal = new Literal($value, null, 'xsd:' . $object->getDataType()->toString());
-                $graph->addLiteral($subject, $predicate, $literal);
-            } else {
-                $graph->add($subject, $predicate, $graph->resource($value));
-            }
-        }
     }
 
     private function getValue(RecordData $data, Node $node): ?string
@@ -278,112 +300,7 @@ class RDFRenderHelper
         return null;
     }
 
-    private function transformValue(?XsdDataType $dataType, string $value): string
-    {
-        if ($dataType === null) {
-            return $value;
-        }
-
-        if ($dataType->isDateTimeType()) {
-            $date = new DateTimeImmutable($value);
-
-            if ($dataType->isDateTime()) {
-                return $date->format('Y-m-d\TH:i:s');
-            }
-
-            if ($dataType->isDate()) {
-                return $date->format('Y-m-d');
-            }
-
-            if ($dataType->isTime()) {
-                return $date->format('H:i:s');
-            }
-
-            if ($dataType->isGDay()) {
-                return '---' . $date->format('d');
-            }
-
-            if ($dataType->isGMonth()) {
-                return '--' . $date->format('m');
-            }
-
-            if ($dataType->isGYear()) {
-                return $date->format('Y');
-            }
-
-            if ($dataType->isGYearMonth()) {
-                return $date->format('Y-m');
-            }
-
-            if ($dataType->isGMonthDay()) {
-                return '--' . $date->format('m-d');
-            }
-        } elseif ($dataType->isNumberType()) {
-            return $value;
-        } elseif ($dataType->isBooleanType()) {
-            return (string) boolval($value);
-        }
-
-        return $value;
-    }
-
-    private function compareValue(DependencyOperatorType $operator, ?XsdDataType $dataType, ?string $value, string $compareTo): bool
-    {
-        if ($dataType === null) {
-            $dataType = XsdDataType::string();
-        }
-
-        if ($value === null) {
-            return $operator->isNull();
-        }
-
-        if ($dataType->isDateTimeType()) {
-            $value = new DateTimeImmutable($value);
-            $compareTo = new DateTimeImmutable($compareTo);
-        } elseif ($dataType->isNumberType()) {
-            $value = floatval($value);
-            $compareTo = floatval($compareTo);
-        } elseif ($dataType->isBooleanType()) {
-            $value = boolval($value);
-            $compareTo = boolval($compareTo);
-        }
-
-        if ($operator->isNull()) {
-            return false;
-        }
-
-        if ($operator->isNotNull()) {
-            return true;
-        }
-
-        if ($operator->isEqual()) {
-            return $value === $compareTo;
-        }
-
-        if ($operator->isNotEqual()) {
-            return $value !== $compareTo;
-        }
-
-        if ($operator->isSmallerThan()) {
-            return $value < $compareTo;
-        }
-
-        if ($operator->isSmallerThanOrEqualTo()) {
-            return $value <= $compareTo;
-        }
-
-        if ($operator->isGreaterThan()) {
-            return $value > $compareTo;
-        }
-
-        if ($operator->isGreaterThanOrEqualTo()) {
-            return $value >= $compareTo;
-        }
-
-        return false;
-    }
-
-    private function parseDependencies(DataSpecificationDependencyGroup $group, RecordData $data): bool
+    protected function parseDependencies(DataSpecificationDependencyGroup $group, RecordData $data): bool
     {
         $outcomes = [];
         $combinator = $group->getCombinator();
@@ -418,31 +335,7 @@ class RDFRenderHelper
         return false;
     }
 
-    /**
-     * @param Record[] $records
-     *
-     * @return Record[]
-     */
-    public function getSubset(array $records): array
-    {
-        $return = [];
-
-        foreach ($records as $record) {
-            $newRecord = $record->hasData() ? $record : $this->apiClient->getRecordDataCollection($this->study, $record);
-
-            if ($this->contents->getDependencies() === null) {
-                $return[] = $newRecord;
-            } elseif (! $this->parseSubsetDependencies($this->contents->getDependencies(), $newRecord->getData()->getStudy())) {
-                continue;
-            } else {
-                $return[] = $newRecord;
-            }
-        }
-
-        return $return;
-    }
-
-    private function parseSubsetDependencies(DistributionContentsDependencyGroup $group, RecordData $data): bool
+    protected function parseSubsetDependencies(DistributionContentsDependencyGroup $group, RecordData $data): bool
     {
         $outcomes = [];
         $combinator = $group->getCombinator();
@@ -470,7 +363,7 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseInstituteDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
+    protected function parseInstituteDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
     {
         $institute = $data->getRecord()->getInstitute()->getId();
 
@@ -485,7 +378,7 @@ class RDFRenderHelper
         return false;
     }
 
-    private function parseValueNodeDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
+    protected function parseValueNodeDependency(DistributionContentsDependencyRule $rule, RecordData $data): bool
     {
         $node = $rule->getNode();
         $compareValue = $this->transformValue($node->getDataType(), $rule->getValue());

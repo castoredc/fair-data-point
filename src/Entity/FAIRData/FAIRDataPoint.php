@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entity\FAIRData;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
+use App\Entity\Enum\ResourceType;
 use App\Entity\Iri;
 use App\Entity\Metadata\FAIRDataPointMetadata;
 use App\Entity\Version;
@@ -153,5 +154,44 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
     {
         $this->defaultMetadataModel = $defaultMetadataModel;
+    }
+
+    public function getSlug(): string
+    {
+        return 'fdp';
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getChildren(ResourceType $resourceType): array
+    {
+        if ($resourceType->isCatalog()) {
+            return $this->catalogs->toArray();
+        }
+
+        if ($resourceType->isDataset()) {
+            return $this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getChildren(ResourceType::dataset());
+            })->toArray();
+        }
+
+        if ($resourceType->isStudy()) {
+            return $this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getChildren(ResourceType::study());
+            })->toArray();
+        }
+
+        if ($resourceType->isDistribution()) {
+            return $this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getChildren(ResourceType::distribution());
+            })->toArray();
+        }
+
+        return [];
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getParents(ResourceType $resourceType): array
+    {
+        return [];
     }
 }

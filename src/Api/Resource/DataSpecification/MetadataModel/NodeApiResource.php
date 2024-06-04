@@ -6,8 +6,10 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Common\IriApiResource;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 
 class NodeApiResource implements ApiResource
@@ -27,7 +29,13 @@ class NodeApiResource implements ApiResource
             'value' => $this->node->getValue() ?? null,
         ];
 
-        if ($this->node instanceof ExternalIriNode) {
+        if ($this->node instanceof RecordNode) {
+            $data['value'] = [
+                'resourceType' => $this->node->getResourceType()->toString(),
+            ];
+        } elseif ($this->node instanceof InternalIriNode) {
+            $data['repeated'] = $this->node->isRepeated();
+        } elseif ($this->node instanceof ExternalIriNode) {
             $data['value'] = (new IriApiResource($this->node->getMetadataModelVersion(), $this->node->getIri()))->toArray();
         } elseif ($this->node instanceof LiteralNode) {
             $data['value'] = [
@@ -38,7 +46,6 @@ class NodeApiResource implements ApiResource
             $data['value'] = [
                 'dataType' => $this->node->getDataType()?->toString(),
                 'value' => $this->node->getValue(),
-                'useAsTitle' => $this->node->usedAsTitle()?->toString(),
             ];
         }
 

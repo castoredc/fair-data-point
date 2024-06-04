@@ -39,11 +39,7 @@ class CreateTripleCommandHandler
 
         $nodeRepository = $this->em->getRepository(Node::class);
 
-        if ($command->getSubjectType()->isRecord()) {
-            $subject = $nodeRepository->findRecordNodeForModel($metadataModelVersion);
-        } else {
-            $subject = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getSubjectValue());
-        }
+        $subject = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getSubjectValue());
 
         assert($subject instanceof Node);
 

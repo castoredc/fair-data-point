@@ -5,12 +5,12 @@ namespace App\Factory\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
-use App\Entity\Enum\ResourceType;
 use App\Entity\Enum\XsdDataType;
 use App\Entity\Iri;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
@@ -26,7 +26,11 @@ class NodeFactory
         $description = $data['description'];
 
         if ($type->isRecord()) {
-            $newNode = new RecordNode($version);
+            $newNode = new RecordNode($version, $data['value']['resourceType']);
+        } elseif ($type->isInternalIri()) {
+            $newNode = new InternalIriNode($version, $title, $description);
+            $newNode->setSlug($data['value']);
+            $newNode->setIsRepeated($data['repeated']);
         } elseif ($type->isExternalIri()) {
             $newNode = new ExternalIriNode($version, $title, $description);
             $newNode->setIri(new Iri($data['value']['value']));
@@ -42,20 +46,6 @@ class NodeFactory
 
             if (! $isAnnotated) {
                 $newNode->setDataType(XsdDataType::fromString($data['value']['dataType']));
-            }
-
-            if ($newNode->getDataType()->isLangString() && $data['useAsTitle'] !== null) {
-                $resource = ResourceType::fromString($data['useAsTitle']);
-
-                if ($resource->isCatalog()) {
-                    $version->setCatalogTitleNode($newNode);
-                } elseif ($resource->isDataset()) {
-                    $version->setDatasetTitleNode($newNode);
-                } elseif ($resource->isDistribution()) {
-                    $version->setDistributionTitleNode($newNode);
-                } elseif ($resource->isFdp()) {
-                    $version->setFdpTitleNode($newNode);
-                }
             }
         } else {
             throw new InvalidNodeType();

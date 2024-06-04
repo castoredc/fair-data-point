@@ -59,7 +59,17 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(new CreateNodeCommand($dataModelVersion, $nodeType, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType(), $parsed->isRepeated()));
+            $bus->dispatch(
+                new CreateNodeCommand(
+                    $dataModelVersion,
+                    $nodeType,
+                    $parsed->getTitle(),
+                    $parsed->getDescription(),
+                    $parsed->getValue(),
+                    $parsed->getDataType(),
+                    $parsed->isRepeated()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -81,8 +91,13 @@ class NodeApiController extends ApiController
      * @Route("/{type}/{id}", methods={"POST"}, name="api_data_model_node_edit")
      * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
      */
-    public function editNode(DataModelVersion $dataModelVersion, string $type, Node $node, Request $request, MessageBusInterface $bus): Response
-    {
+    public function editNode(
+        DataModelVersion $dataModelVersion,
+        string $type,
+        Node $node,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
 
         if ($node->getDataModelVersion() !== $dataModelVersion) {
@@ -93,7 +108,16 @@ class NodeApiController extends ApiController
             $parsed = $this->parseRequest(NodeApiRequest::class, $request);
             assert($parsed instanceof NodeApiRequest);
 
-            $bus->dispatch(new EditNodeCommand($node, $parsed->getTitle(), $parsed->getDescription(), $parsed->getValue(), $parsed->getDataType(), $parsed->isRepeated()));
+            $bus->dispatch(
+                new EditNodeCommand(
+                    $node,
+                    $parsed->getTitle(),
+                    $parsed->getDescription(),
+                    $parsed->getValue(),
+                    $parsed->getDataType(),
+                    $parsed->isRepeated()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -101,11 +125,14 @@ class NodeApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while editing a data model node', [
-                'exception' => $e,
-                'Node' => $node->getTitle(),
-                'NodeId' => $node->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while editing a data model node',
+                [
+                    'exception' => $e,
+                    'Node' => $node->getTitle(),
+                    'NodeId' => $node->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -134,11 +161,14 @@ class NodeApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
-            $this->logger->critical('An error occurred while editing a data model node', [
-                'exception' => $e,
-                'Node' => $node->getTitle(),
-                'NodeId' => $node->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while editing a data model node',
+                [
+                    'exception' => $e,
+                    'Node' => $node->getTitle(),
+                    'NodeId' => $node->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

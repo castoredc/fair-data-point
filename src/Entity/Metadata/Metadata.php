@@ -124,16 +124,6 @@ abstract class Metadata
         $this->version = $version;
     }
 
-    public function getDescription(): ?LocalizedText
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?LocalizedText $description): void
-    {
-        $this->description = $description;
-    }
-
     public function getLanguage(): ?Language
     {
         return $this->language;
@@ -213,7 +203,18 @@ abstract class Metadata
         });
         assert($value instanceof MetadataValue || $value === null);
 
-//        dump(json_decode($value->getValue(), true));die();
+        return $value !== null ? LocalizedText::fromArray(json_decode($value->getValue(), true)) : null;
+    }
+
+    public function getDescription(): ?LocalizedText
+    {
+        $modelVersion = $this->metadataModelVersion;
+        $resourceType = $this->getResourceType();
+
+        $value = $this->values->findFirst(static function (int $key, MetadataValue $value) use ($modelVersion, $resourceType) {
+            return $modelVersion->getDescriptionNode($resourceType) === $value->getNode();
+        });
+        assert($value instanceof MetadataValue || $value === null);
 
         return $value !== null ? LocalizedText::fromArray(json_decode($value->getValue(), true)) : null;
     }

@@ -9,6 +9,7 @@ use App\Entity\DataSpecification\Common\Model\Node as CommonNode;
 use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\ResourceType;
@@ -17,7 +18,9 @@ use App\Entity\Version as VersionNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function array_merge;
 use function assert;
+use function count;
 use function is_a;
 
 /**
@@ -27,6 +30,9 @@ use function is_a;
  */
 class MetadataModelVersion extends Version implements ModelVersion
 {
+    public const DCTERMS_TITLE = 'http://purl.org/dc/terms/title';
+    public const DCTERMS_DESCRIPTION = 'http://purl.org/dc/terms/description';
+
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="metadataModel", cascade={"persist"})
      * @ORM\OrderBy({"prefix" = "ASC"})
@@ -63,30 +69,6 @@ class MetadataModelVersion extends Version implements ModelVersion
      * @var Collection<Metadata>
      */
     private Collection $assignedMetadata;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
-     * @ORM\JoinColumn(name="catalog_title_node", referencedColumnName="id")
-     */
-    private ?ValueNode $catalogTitleNode = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
-     * @ORM\JoinColumn(name="dataset_title_node", referencedColumnName="id")
-     */
-    private ?ValueNode $datasetTitleNode = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
-     * @ORM\JoinColumn(name="distribution_title_node", referencedColumnName="id")
-     */
-    private ?ValueNode $distributionTitleNode = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode")
-     * @ORM\JoinColumn(name="fdp_title_node", referencedColumnName="id")
-     */
-    private ?ValueNode $fdpTitleNode = null;
 
     public function __construct(VersionNumber $version)
     {
@@ -220,64 +202,41 @@ class MetadataModelVersion extends Version implements ModelVersion
         $this->reorderForms();
     }
 
-    public function getCatalogTitleNode(): ?ValueNode
+    public function getValueNode(ResourceType $resourceType, string $predicate): ?ValueNode
     {
-        return $this->catalogTitleNode;
-    }
+        $groups = $this->getGroupsForResourceType($resourceType);
 
-    public function setCatalogTitleNode(?ValueNode $catalogTitleNode): void
-    {
-        $this->catalogTitleNode = $catalogTitleNode;
-    }
+        /** @var Triple[] $triples */
+        $triples = [];
 
-    public function getDatasetTitleNode(): ?ValueNode
-    {
-        return $this->datasetTitleNode;
-    }
+        foreach ($groups as $group) {
+            $triples = array_merge($triples, $group->getTriples()->filter(static function (Triple $triple) use ($resourceType, $predicate) {
+                $subject = $triple->getSubject();
 
-    public function setDatasetTitleNode(?ValueNode $datasetTitleNode): void
-    {
-        $this->datasetTitleNode = $datasetTitleNode;
-    }
+                return $subject instanceof RecordNode
+                    && $subject->getResourceType()->isEqualTo($resourceType)
+                    && $triple->getPredicate()->getIri()->getValue() === $predicate;
+            })->toArray());
+        }
 
-    public function getDistributionTitleNode(): ?ValueNode
-    {
-        return $this->distributionTitleNode;
-    }
-
-    public function setDistributionTitleNode(?ValueNode $distributionTitleNode): void
-    {
-        $this->distributionTitleNode = $distributionTitleNode;
-    }
-
-    public function getFdpTitleNode(): ?ValueNode
-    {
-        return $this->fdpTitleNode;
-    }
-
-    public function setFdpTitleNode(?ValueNode $fdpTitleNode): void
-    {
-        $this->fdpTitleNode = $fdpTitleNode;
+        return count($triples) > 0 ? $triples[0]->getObject() : null;
     }
 
     public function getTitleNode(ResourceType $resourceType): ?ValueNode
     {
-        if ($resourceType->isCatalog()) {
-            return $this->getCatalogTitleNode();
-        }
+        return $this->getValueNode($resourceType, self::DCTERMS_TITLE);
+    }
 
-        if ($resourceType->isDataset()) {
-            return $this->getDatasetTitleNode();
-        }
+    public function getDescriptionNode(ResourceType $resourceType): ?ValueNode
+    {
+        return $this->getValueNode($resourceType, self::DCTERMS_DESCRIPTION);
+    }
 
-        if ($resourceType->isDistribution()) {
-            return $this->getDistributionTitleNode();
-        }
-
-        if ($resourceType->isFdp()) {
-            return $this->getFdpTitleNode();
-        }
-
-        return null;
+    /** @return MetadataModelGroup[] */
+    public function getGroupsForResourceType(ResourceType $resourceType): array
+    {
+        return $this->getGroups()->filter(static function (MetadataModelGroup $group) use ($resourceType) {
+            return $group->getResourceType()->isEqualTo($resourceType);
+        })->toArray();
     }
 }

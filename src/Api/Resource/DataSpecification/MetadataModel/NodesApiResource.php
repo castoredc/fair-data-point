@@ -24,6 +24,8 @@ class NodesApiResource implements ApiResource
             'literal' => [],
             'record' => [],
             'value' => [],
+            'children' => [],
+            'parents' => [],
         ];
 
         foreach ($this->metadataModel->getElements() as $node) {

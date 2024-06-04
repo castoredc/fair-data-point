@@ -10,9 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="metadata_model_node_record")
+ * @ORM\Table(name="metadata_model_node_parents")
  */
-class RecordNode extends Node
+class ParentsNode extends Node
 {
     /** @ORM\Column(type="ResourceType") */
     private ResourceType $resourceType;
@@ -26,7 +26,7 @@ class RecordNode extends Node
 
     public function getType(): ?NodeType
     {
-        return NodeType::record();
+        return NodeType::parents();
     }
 
     public function getResourceType(): ResourceType

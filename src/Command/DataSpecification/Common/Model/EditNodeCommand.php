@@ -7,8 +7,13 @@ use App\Entity\Enum\XsdDataType;
 
 abstract class EditNodeCommand
 {
-    public function __construct(private string $title, private ?string $description = null, private string $value, private ?XsdDataType $dataType = null)
-    {
+    public function __construct(
+        private string $title,
+        private ?string $description = null,
+        private string $value,
+        private ?XsdDataType $dataType = null,
+        private ?bool $isRepeated,
+    ) {
     }
 
     public function getTitle(): string
@@ -29,5 +34,10 @@ abstract class EditNodeCommand
     public function getDataType(): ?XsdDataType
     {
         return $this->dataType;
+    }
+
+    public function isRepeated(): bool
+    {
+        return $this->isRepeated;
     }
 }

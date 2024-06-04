@@ -71,7 +71,7 @@ class NodeApiController extends ApiController
                     $parsed->getDescription(),
                     $parsed->getValue(),
                     $parsed->getDataType(),
-                    $parsed->getUseAsTitle()
+                    $parsed->isRepeated()
                 )
             );
 
@@ -119,7 +119,7 @@ class NodeApiController extends ApiController
                     $parsed->getDescription(),
                     $parsed->getValue(),
                     $parsed->getDataType(),
-                    $parsed->getUseAsTitle()
+                    $parsed->isRepeated()
                 )
             );
 

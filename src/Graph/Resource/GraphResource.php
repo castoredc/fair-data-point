@@ -8,13 +8,11 @@ use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
-use App\Entity\FAIRData\LocalizedTextItem;
 use App\Entity\Metadata\Metadata;
 use App\Graph\Resource\Agent\Department\DepartmentGraphResource;
 use App\Graph\Resource\Agent\Organization\OrganizationGraphResource;
 use App\Graph\Resource\Agent\Person\PersonGraphResource;
 use EasyRdf\Graph;
-use EasyRdf\Literal;
 
 abstract class GraphResource
 {

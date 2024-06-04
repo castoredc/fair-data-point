@@ -9,22 +9,19 @@ use App\Entity\Enum\XsdDataType;
 
 class EditNodeCommand extends CommonEditNodeCommand
 {
-    private bool $isRepeated;
-
-    public function __construct(private Node $node, string $title, ?string $description, string $value, ?XsdDataType $dataType, ?bool $isRepeated)
-    {
-        parent::__construct($title, $description, $value, $dataType);
-
-        $this->isRepeated = $isRepeated;
+    public function __construct(
+        private Node $node,
+        string $title,
+        ?string $description,
+        string $value,
+        ?XsdDataType $dataType,
+        ?bool $isRepeated,
+    ) {
+        parent::__construct($title, $description, $value, $dataType, $isRepeated);
     }
 
     public function getNode(): Node
     {
         return $this->node;
-    }
-
-    public function isRepeated(): bool
-    {
-        return $this->isRepeated;
     }
 }

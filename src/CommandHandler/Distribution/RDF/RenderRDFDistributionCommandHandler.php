@@ -11,7 +11,7 @@ use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\DataTransformationService;
 use App\Service\EncryptionService;
-use App\Service\RDFRenderHelper;
+use App\Service\RDF\RenderRdfDataHelper;
 use App\Service\UriHelper;
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
@@ -63,7 +63,7 @@ class RenderRDFDistributionCommandHandler
             $this->entityHelper->useUser($user->getCastorUser());
         }
 
-        $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, null, null);
+        $helper = new RenderRdfDataHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, null, null);
 
         $graph = new Graph();
 

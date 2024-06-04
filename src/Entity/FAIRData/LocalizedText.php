@@ -84,7 +84,7 @@ class LocalizedText
     public function getTextByLanguageString(string $language): ?LocalizedTextItem
     {
         foreach ($this->texts as $text) {
-            if ($text->getLanguage()->getCode() === $language) {
+            if ($text->getLanguageCode() === $language) {
                 return $text;
             }
         }

@@ -36,7 +36,7 @@ class LocalizedTextItem
      */
     private ?Language $language = null;
 
-    private ?string $languageCode;
+    private ?string $languageCode = null;
 
     public function __construct(string $text)
     {
@@ -85,7 +85,7 @@ class LocalizedTextItem
 
     public function getLanguageCode(): ?string
     {
-        return $this->languageCode;
+        return $this->language?->getCode() ?? $this->languageCode;
     }
 
     public function setLanguageCode(string $languageCode): void

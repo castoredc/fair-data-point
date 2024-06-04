@@ -240,4 +240,14 @@ abstract class DistributionContents implements PermissionsEnabledEntity
     {
         $this->isPublic = $isPublic;
     }
+
+    public function getRelativeUrl(): string
+    {
+        return '';
+    }
+
+    public function getMediaType(): string
+    {
+        return '';
+    }
 }

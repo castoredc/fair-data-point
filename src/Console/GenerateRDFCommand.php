@@ -17,7 +17,7 @@ use App\Service\DataTransformationService;
 use App\Service\Distribution\MysqlBasedDistributionService;
 use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
-use App\Service\RDFRenderHelper;
+use App\Service\RDF\RenderRdfDataHelper;
 use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf\Graph;
@@ -194,11 +194,11 @@ class GenerateRDFCommand extends Command
             $output->writeln(sprintf("Records found: \t %s record(s)", count($records)));
             $output->writeln('');
 
-            $output->writeln('- Setting up RDFRenderHelper');
+            $output->writeln('- Setting up RenderRdfDataHelper');
             $output->writeln('  - Study: ' . $study->getName() . ' <' . $study->getId() . '>');
             $output->writeln('  - Option groups: ' . count($optionGroups));
 
-            $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, $study, $optionGroups);
+            $helper = new RenderRdfDataHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, $study, $optionGroups);
             $output->writeln('');
 
             $recordsSubset = $helper->getSubset($records);

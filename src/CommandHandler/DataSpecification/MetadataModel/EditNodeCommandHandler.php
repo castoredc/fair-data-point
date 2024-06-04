@@ -5,6 +5,7 @@ namespace App\CommandHandler\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\MetadataModel\EditNodeCommand;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Iri;
@@ -42,6 +43,9 @@ class EditNodeCommandHandler
 
         if ($node instanceof ExternalIriNode) {
             $node->setIri(new Iri($command->getValue()));
+        } elseif ($node instanceof InternalIriNode) {
+            $node->setSlug($command->getValue());
+            $node->setIsRepeated($command->isRepeated());
         } elseif ($node instanceof LiteralNode) {
             $node->setValue($command->getValue());
             $node->setDataType($command->getDataType());
@@ -51,20 +55,6 @@ class EditNodeCommandHandler
             } elseif ($command->getValue() === 'plain') {
                 $node->setIsAnnotatedValue(false);
                 $node->setDataType($command->getDataType());
-
-                if ($command->getDataType()->isLangString() && $command->getUseAsTitle() !== null) {
-                    $resource = $command->getUseAsTitle();
-
-                    if ($resource->isCatalog()) {
-                        $metadataModelVersion->setCatalogTitleNode($node);
-                    } elseif ($resource->isDataset()) {
-                        $metadataModelVersion->setDatasetTitleNode($node);
-                    } elseif ($resource->isDistribution()) {
-                        $metadataModelVersion->setDistributionTitleNode($node);
-                    } elseif ($resource->isFdp()) {
-                        $metadataModelVersion->setFdpTitleNode($node);
-                    }
-                }
             } else {
                 throw new InvalidValueType();
             }

@@ -5,6 +5,7 @@ namespace App\Entity\FAIRData;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\Enum\PermissionType;
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Permission\DatasetPermission;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Entity\Study;
@@ -17,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use function array_unique;
 use function count;
 
 /**
@@ -261,5 +263,35 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
     {
         $this->defaultMetadataModel = $defaultMetadataModel;
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getChildren(ResourceType $resourceType): array
+    {
+        if ($resourceType->isDistribution()) {
+            return $this->distributions->toArray();
+        }
+
+        return [];
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getParents(ResourceType $resourceType): array
+    {
+        if ($resourceType->isFdp()) {
+            return array_unique($this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getParents(ResourceType::fdp());
+            })->toArray());
+        }
+
+        if ($resourceType->isCatalog()) {
+            return $this->catalogs->toArray();
+        }
+
+        if ($resourceType->isStudy()) {
+            return $this->study !== null ? [$this->study] : [];
+        }
+
+        return [];
     }
 }

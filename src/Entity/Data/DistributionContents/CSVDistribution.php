@@ -47,4 +47,9 @@ class CSVDistribution extends DistributionContents
     {
         return 'csv';
     }
+
+    public function getMediaType(): string
+    {
+        return 'test/csv';
+    }
 }

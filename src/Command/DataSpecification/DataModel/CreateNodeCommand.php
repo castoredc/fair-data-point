@@ -14,18 +14,11 @@ class CreateNodeCommand extends CommonCreateNodeCommand
 
     public function __construct(private DataModelVersion $dataModelVersion, NodeType $type, string $title, ?string $description, string $value, ?XsdDataType $dataType, ?bool $isRepeated)
     {
-        parent::__construct($type, $title, $description, $value, $dataType);
-
-        $this->isRepeated = $isRepeated;
+        parent::__construct($type, $title, $description, $value, $dataType, $isRepeated);
     }
 
     public function getDataModelVersion(): DataModelVersion
     {
         return $this->dataModelVersion;
-    }
-
-    public function isRepeated(): bool
-    {
-        return $this->isRepeated;
     }
 }

@@ -39,6 +39,14 @@ class ResourceType extends Enum
         self::STUDY => Study::class,
     ];
 
+    public const LABELS = [
+        self::FDP => 'FAIR Data Point',
+        self::CATALOG => 'Catalog',
+        self::DATASET => 'Dataset',
+        self::DISTRIBUTION => 'Distribution',
+        self::STUDY => 'Study',
+    ];
+
     public const TYPES = [
         self::FDP,
         self::CATALOG,
@@ -51,5 +59,10 @@ class ResourceType extends Enum
     public function getClass(): string
     {
         return self::CLASS_MAPPING[$this->toString()];
+    }
+
+    public function getLabel(): string
+    {
+        return self::LABELS[$this->toString()];
     }
 }

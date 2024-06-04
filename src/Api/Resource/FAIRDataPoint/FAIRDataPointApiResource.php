@@ -5,6 +5,7 @@ namespace App\Api\Resource\FAIRDataPoint;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Entity\FAIRData\FAIRDataPoint;
 use const DATE_ATOM;
 
@@ -21,16 +22,18 @@ class FAIRDataPointApiResource implements ApiResource
             'relativeUrl' => $this->fairDataPoint->getRelativeUrl(),
             'iri' => $this->fairDataPoint->getIri(),
             'hasMetadata' => $this->fairDataPoint->hasMetadata(),
+            'defaultMetadataModel' => $this->fairDataPoint->getDefaultMetadataModel()?->getId(),
+            'metadata' => $this->fairDataPoint->hasMetadata() ? (new MetadataApiResource($this->fairDataPoint->getLatestMetadata()))->toArray() : null,
             'count' => [
                 'catalog' => $this->fairDataPoint->getCatalogs()->count(),
             ],
         ];
 
-        if ($this->fairDataPoint->hasMetadata()) {
+        if ($this->fairDataPoint->hasMetadata() && $this->fairDataPoint->getLatestMetadata()->getMetadataModelVersion() === null) {
             $first = $this->fairDataPoint->getFirstMetadata();
             $metadata = $this->fairDataPoint->getLatestMetadata();
 
-            $fdp['metadata'] = [
+            $fdp['legacy']['metadata'] = [
                 'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),

@@ -13,6 +13,7 @@ use App\Entity\Enum\StudySource;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
+use App\Entity\FAIRData\Distribution;
 use App\Entity\Metadata\StudyMetadata;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -289,5 +290,13 @@ abstract class Study implements AccessibleEntity
     public function isArchived(): bool
     {
         return $this->isArchived;
+    }
+
+    /** @return Distribution[] */
+    public function getDistributions(): array
+    {
+        return $this->datasets->map(static function (Dataset $dataset) {
+            return $dataset->getDistributions();
+        })->toArray();
     }
 }
