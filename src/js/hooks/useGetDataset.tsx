@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
+import { Dataset } from 'types/Resources';
 
 const useGetDataset = (slug: string) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [dataset, setDataset] = useState<any | null>(null);
+    const [dataset, setDataset] = useState<Dataset | null>(null);
 
     useEffect(() => {
         const getDataset = async () => {

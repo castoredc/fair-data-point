@@ -227,6 +227,63 @@ class MetadataFieldType extends Enum
         ],
     ];
 
+    public const DISPLAY_TYPES = [
+        self::INPUT => [
+            MetadataDisplayType::HEADING,
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+            MetadataDisplayType::IMAGE,
+            MetadataDisplayType::LINK,
+        ],
+        self::INPUT_LOCALE => [
+            MetadataDisplayType::HEADING,
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::TEXTAREA => [
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::TEXTAREA_LOCALE => [
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::ONTOLOGY_CONCEPT_BROWSER => [
+            MetadataDisplayType::ONTOLOGY_CONCEPTS,
+        ],
+        self::DATE_PICKER => [
+            MetadataDisplayType::DATE,
+        ],
+        self::TIME_PICKER => [
+            MetadataDisplayType::TIME,
+        ],
+//        self::DATE_AND_TIMEPICKER => '',
+        self::CHECKBOX => [
+            MetadataDisplayType::YES_NO,
+        ],
+        self::CHECKBOXES => [
+            MetadataDisplayType::LIST,
+        ],
+        self::RADIO_BUTTONS => [
+            MetadataDisplayType::LIST,
+        ],
+        self::DROPDOWN => [
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::LANGUAGE_PICKER => [
+            MetadataDisplayType::LANGUAGE,
+        ],
+        self::LICENSE_PICKER => [
+            MetadataDisplayType::LICENSE,
+        ],
+        self::COUNTRY_PICKER => [
+            MetadataDisplayType::COUNTRY,
+        ],
+        self::AGENT_SELECTOR => [
+            MetadataDisplayType::AGENTS,
+        ],
+    ];
+
     public const ANNOTATED_VALUE_TYPES = [
         self::CHECKBOXES,
         self::RADIO_BUTTONS,
@@ -263,5 +320,11 @@ class MetadataFieldType extends Enum
     public function getValidator(): ?array
     {
         return self::VALIDATORS[$this->toString()];
+    }
+
+    /** @return string[]|null */
+    public function getDisplayTypes(): ?array
+    {
+        return self::DISPLAY_TYPES[$this->toString()];
     }
 }

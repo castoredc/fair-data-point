@@ -12,7 +12,7 @@ abstract class EditNodeCommand
         private ?string $description = null,
         private string $value,
         private ?XsdDataType $dataType = null,
-        private ?bool $isRepeated,
+        private ?bool $isRepeated = false,
     ) {
     }
 

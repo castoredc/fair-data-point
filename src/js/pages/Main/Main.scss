@@ -16,6 +16,13 @@
         width: 100%;
     }
 
+    .Separator {
+        border: 1px solid $neutral-30;
+        width: 100%;
+        border-bottom: 0;
+        margin: 30px 0;
+    }
+
     .SideCol {
         .SideColItem {
             margin-top: 24px;

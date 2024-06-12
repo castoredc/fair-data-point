@@ -6,14 +6,14 @@ import { Banner } from '@castoredc/matter';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
-import LegacyMetadataSideBar from '../../../components/MetadataSideBar/LegacyMetadataSideBar';
-import './Distribution.scss';
 import { isGranted } from 'utils/PermissionHelper';
 import { LockIcon } from '@castoredc/matter-icons';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import { localizedText, titleAndDescriptionContext } from 'utils/jsonLdUtils';
 import useGetDistribution from '../../../hooks/useGetDistribution';
 import { AuthorizedRouteComponentProps } from 'components/Route';
+import MetadataSideBar from 'components/MetadataSideBar';
+import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 
 interface DistributionProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -25,7 +25,6 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
 
     const isLoading = isLoadingDistribution || isLoadingJsonLd;
     const breadcrumbs = getBreadCrumbs(location, { distribution });
-    const restricted = distribution && (distribution.accessRights === 2 || distribution.accessRights === 3);
     const title = localizedText(data.title, 'en');
 
     return (
@@ -36,16 +35,17 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                 {distribution && (
                     <>
                         <div className="MainCol">
-                            {data.description && (
-                                <div className="InformationDescription">{localizedText(data.description, 'en', true)}</div>
-                            )}
+                            <MetadataDescription metadata={distribution.metadata} />
                         </div>
 
                         <div className="SideCol">
-                            <LegacyMetadataSideBar type="distribution" metadata={distribution.metadata} name={title} />
+                            <MetadataSideBar
+                                metadata={distribution.metadata}
+                                title={title}
+                            />
                         </div>
 
-                        <hr className="Separator" />
+                        <div className="Separator"></div>
 
                         <div
                             className={classNames(
@@ -65,7 +65,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
                                                 onClick: () =>
                                                     (window.location.href =
                                                         '/connect/castor/' +
-                                                        distribution.study.sourceServer +
+                                                        ((distribution && distribution.study !== null) ? distribution.study.sourceServer : '') +
                                                         '?target_path=' +
                                                         distribution.relativeUrl),
                                             },
@@ -87,32 +87,35 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
 
                             {isGranted('access_data', distribution.permissions) && (
                                 <div className="DistributionAccessButtons">
-                                    {distribution.cached && (
+                                    {'cached' in distribution && distribution.cached && (
                                         <ListItem
                                             link={distribution.relativeUrl + '/query'}
                                             title="Query the data"
                                             description="Use SPARQL queries to extract specific information from this distribution."
-                                            smallIcon={restricted && (isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            icon={(isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            smallIcon={true}
                                             newWindow
                                         />
                                     )}
 
-                                    {distribution.accessUrl && (
+                                    {'accessUrl' in distribution && distribution.accessUrl && (
                                         <ListItem
                                             link={distribution.accessUrl}
                                             title="Access the data"
                                             description="Get access to the distribution."
-                                            smallIcon={restricted && (isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            icon={(isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            smallIcon={true}
                                             newWindow
                                         />
                                     )}
 
-                                    {distribution.downloadUrl && (
+                                    {'downloadUrl' in distribution && distribution.downloadUrl && (
                                         <ListItem
                                             link={distribution.downloadUrl}
                                             title="Download the data"
                                             description="Get a downloadable file for this distribution."
-                                            smallIcon={restricted && (isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            icon={(isGranted('access_data', distribution.permissions) ? 'unlocked' : 'lock')}
+                                            smallIcon={true}
                                             newWindow
                                         />
                                     )}

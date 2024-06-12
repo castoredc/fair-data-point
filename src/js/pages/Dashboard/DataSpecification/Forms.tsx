@@ -13,6 +13,7 @@ import MetadataFormModal from 'modals/MetadataFormModal';
 import DataSpecificationForm from 'components/DataSpecification/DataSpecificationForm';
 import FieldModal from 'modals/FieldModal';
 import { ResourceType } from 'components/MetadataItem/EnumMappings';
+import { Types } from 'types/Types';
 
 interface FormsProps extends AuthorizedRouteComponentProps {
     forms: any;
@@ -21,24 +22,7 @@ interface FormsProps extends AuthorizedRouteComponentProps {
     dataSpecification: any;
     version: any;
     type: string;
-    types: {
-        fieldTypes: {
-            plain: {
-                [key: string]: {
-                    value: string,
-                    label: string
-                }[],
-            },
-            annotated: {
-                value: string,
-                label: string
-            }[]
-        },
-        dataTypes: {
-            value: string,
-            label: string
-        }[],
-    };
+    types: Types,
     optionGroups: any;
 }
 

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
+import { Fdp } from 'types/Resources';
 
 const useGetFdp = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const [fdp, setFdp] = useState<any | null>(null);
+    const [fdp, setFdp] = useState<Fdp | null>(null);
 
     useEffect(() => {
         const getFDP = async () => {

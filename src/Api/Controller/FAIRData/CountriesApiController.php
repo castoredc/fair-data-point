@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace App\Api\Controller\FAIRData;
 
 use App\Api\Controller\ApiController;
+use App\Api\Resource\Country\CountryApiResource;
 use App\Command\Country\GetCountriesCommand;
+use App\Entity\FAIRData\Country;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -23,5 +26,14 @@ class CountriesApiController extends ApiController
         assert($handledStamp instanceof HandledStamp);
 
         return new JsonResponse($handledStamp->getResult()->toArray());
+    }
+
+    /**
+     * @Route("/api/country/{code}", name="api_country")
+     * @ParamConverter("country", options={"mapping": {"code": "code"}})
+     */
+    public function language(Country $country): Response
+    {
+        return new JsonResponse((new CountryApiResource($country))->toArray());
     }
 }

@@ -5,10 +5,12 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Common\IriApiResource;
+use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 
@@ -46,6 +48,14 @@ class NodeApiResource implements ApiResource
             $data['value'] = [
                 'dataType' => $this->node->getDataType()?->toString(),
                 'value' => $this->node->getValue(),
+            ];
+        } elseif ($this->node instanceof ChildrenNode) {
+            $data['value'] = [
+                'resourceType' => $this->node->getResourceType()->toString(),
+            ];
+        } elseif ($this->node instanceof ParentsNode) {
+            $data['value'] = [
+                'resourceType' => $this->node->getResourceType()->toString(),
             ];
         }
 

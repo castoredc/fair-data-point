@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace App\Factory\DataSpecification\MetadataModel;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Enum\NodeType;
+use App\Entity\Enum\ResourceType;
 use App\Entity\Enum\XsdDataType;
 use App\Entity\Iri;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
@@ -26,7 +29,7 @@ class NodeFactory
         $description = $data['description'];
 
         if ($type->isRecord()) {
-            $newNode = new RecordNode($version, $data['value']['resourceType']);
+            $newNode = new RecordNode($version, ResourceType::fromString($data['value']['resourceType']));
         } elseif ($type->isInternalIri()) {
             $newNode = new InternalIriNode($version, $title, $description);
             $newNode->setSlug($data['value']);
@@ -47,6 +50,10 @@ class NodeFactory
             if (! $isAnnotated) {
                 $newNode->setDataType(XsdDataType::fromString($data['value']['dataType']));
             }
+        } elseif ($type->isChildren()) {
+            $newNode = new ChildrenNode($version, ResourceType::fromString($data['value']['resourceType']));
+        } elseif ($type->isParents()) {
+            $newNode = new ParentsNode($version, ResourceType::fromString($data['value']['resourceType']));
         } else {
             throw new InvalidNodeType();
         }

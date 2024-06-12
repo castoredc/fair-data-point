@@ -2,20 +2,6 @@ import { LocalizedTextType } from 'types/LocalizedTextType';
 import { AgentListType } from 'types/AgentListType';
 import { OntologyConceptType } from 'types/OntologyConceptType';
 
-export type CatalogType = {
-    relativeUrl: string;
-    id: string;
-    slug: string;
-    acceptSubmissions: boolean;
-    submissionAccessesData: boolean;
-    hasMetadata: boolean;
-    count: {
-        study: number;
-        dataset: number;
-    };
-    metadata?: CatalogMetadataType;
-};
-
 export type CatalogBrandType = {
     name: LocalizedTextType;
     accessingData: boolean;

@@ -5,8 +5,6 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
-use App\Entity\DataSpecification\MetadataModel\Triple;
-use function assert;
 
 class TriplesApiResource implements ApiResource
 {
@@ -20,7 +18,6 @@ class TriplesApiResource implements ApiResource
         $data = [];
 
         foreach ($this->module->getTriples() as $triple) {
-            assert($triple instanceof Triple);
             $data[] = (new TripleApiResource($triple))->toArray();
         }
 

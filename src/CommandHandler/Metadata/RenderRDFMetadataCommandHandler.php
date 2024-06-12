@@ -5,15 +5,11 @@ namespace App\CommandHandler\Metadata;
 
 use App\Command\Metadata\RenderRDFMetadataCommand;
 use App\Exception\NoAccessPermission;
-use App\Model\Castor\ApiClient;
-use App\Service\DataTransformationService;
-use App\Service\EncryptionService;
 use App\Service\RDF\RenderRdfMetadataHelper;
 use App\Service\UriHelper;
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -21,12 +17,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class RenderRDFMetadataCommandHandler
 {
     public function __construct(
-        private ApiClient $apiClient,
         private Security $security,
         private UriHelper $uriHelper,
-        private EncryptionService $encryptionService,
-        private LoggerInterface $logger,
-        private DataTransformationService $dataTransformationService,
     ) {
     }
 
@@ -45,7 +37,7 @@ class RenderRDFMetadataCommandHandler
 
         $metadata = $entity->getLatestMetadata();
 
-        if($metadata === null) {
+        if ($metadata === null) {
             return $graph;
         }
 

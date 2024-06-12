@@ -85,4 +85,14 @@ class Ontology
 
         return $ontology;
     }
+
+    /** @return array<mixed> */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'url' => $this->url->getValue(),
+            'name' => $this->name,
+        ];
+    }
 }

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Layout from '../../../components/Layout';
 import Header from '../../../components/Layout/Header';
 import MainBody from '../../../components/Layout/MainBody';
@@ -6,12 +6,13 @@ import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import DatasetList from '../../../components/List/DatasetList';
 import StudyList from '../../../components/List/StudyList';
-import LegacyMetadataSideBar from '../../../components/MetadataSideBar/LegacyMetadataSideBar';
 import useGetFdp from '../../../hooks/useGetFdp';
 import useGetCatalog from '../../../hooks/useGetCatalog';
 import { localizedText, titleAndDescriptionContext } from 'utils/jsonLdUtils';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import { AuthorizedRouteComponentProps } from 'components/Route';
+import MetadataSideBar from 'components/MetadataSideBar';
+import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 
 interface CatalogProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -35,12 +36,13 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
                 {catalog && (
                     <>
                         <div className="MainCol">
-                            {data.description && !embedded && (
-                                <div className="InformationDescription">{localizedText(data.description, 'en', true)}</div>
-                            )}
+                            <MetadataDescription metadata={catalog.metadata} />
                         </div>
                         <div className="SideCol">
-                            <LegacyMetadataSideBar type="catalog" metadata={catalog.metadata} name={title} />
+                            <MetadataSideBar
+                                metadata={catalog.metadata}
+                                title={title}
+                            />
                         </div>
 
                         <AssociatedItemsBar items={catalog.count} current={currentItem} onClick={setCurrentItem} />

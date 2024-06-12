@@ -7,9 +7,7 @@ use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Visualization\VisualizationEdgeApiResource;
 use App\Api\Resource\DataSpecification\Visualization\VisualizationNodeApiResource;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
-use App\Entity\DataSpecification\MetadataModel\Triple;
 use function array_values;
-use function assert;
 
 class MetadataModelModuleRDFPreviewApiResource implements ApiResource
 {
@@ -24,8 +22,6 @@ class MetadataModelModuleRDFPreviewApiResource implements ApiResource
         $visualizationNodes = [];
 
         foreach ($this->module->getTriples() as $triple) {
-            assert($triple instanceof Triple);
-
             $visualizationNodes[$triple->getSubject()->getId()] = (new VisualizationNodeApiResource($triple->getSubject()))->toArray();
             $visualizationNodes[$triple->getObject()->getId()] = (new VisualizationNodeApiResource($triple->getObject()))->toArray();
 

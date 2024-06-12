@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
+import { Distribution } from 'types/Resources';
 
 const useGetDistribution = (datasetSlug: string, distributionSlug: string) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [distribution, setDistribution] = useState<any | null>(null);
+    const [distribution, setDistribution] = useState<Distribution | null>(null);
 
     useEffect(() => {
         const getDistribution = async () => {

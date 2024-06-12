@@ -15,7 +15,6 @@ use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
-use App\Entity\DataSpecification\MetadataModel\Triple;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\InvalidValueType;
 use App\Exception\NoAccessPermission;
@@ -67,8 +66,6 @@ class GetMetadataModelRDFPreviewCommandHandler
             $triples = $module->getTriples();
 
             foreach ($triples as $triple) {
-                assert($triple instanceof Triple);
-
                 $subject = $triple->getSubject();
                 $subjectInFullGraph = $fullGraph->resource($this->getURI($subject));
                 $subjectInModuleGraph = $moduleGraph->resource($this->getURI($subject));

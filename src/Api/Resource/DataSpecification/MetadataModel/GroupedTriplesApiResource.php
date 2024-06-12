@@ -5,10 +5,8 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
-use App\Entity\DataSpecification\MetadataModel\Triple;
 use function array_merge;
 use function array_values;
-use function assert;
 
 class GroupedTriplesApiResource implements ApiResource
 {
@@ -22,8 +20,6 @@ class GroupedTriplesApiResource implements ApiResource
         $data = [];
 
         foreach ($this->module->getTriples() as $triple) {
-            assert($triple instanceof Triple);
-
             $subject = $triple->getSubject();
             $predicate = $triple->getPredicate();
             $object = $triple->getObject();

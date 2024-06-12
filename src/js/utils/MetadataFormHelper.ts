@@ -56,7 +56,6 @@ const YupFieldTypeMappings = {
                 code: Yup.string().required('This concept cannot be added'),
                 url: Yup.string().required('This concept cannot be added'),
                 displayName: Yup.string().required('This concept cannot be added'),
-                ontology: Yup.string().required('Please select an ontology'),
             })
         )
         .nullable(),

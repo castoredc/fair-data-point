@@ -11,6 +11,7 @@ use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
+use App\Entity\Enum\MetadataDisplayPosition;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\ResourceType;
 use App\Entity\Metadata\Metadata;
@@ -32,6 +33,13 @@ class MetadataModelVersion extends Version implements ModelVersion
 {
     public const DCTERMS_TITLE = 'http://purl.org/dc/terms/title';
     public const DCTERMS_DESCRIPTION = 'http://purl.org/dc/terms/description';
+
+    private const DEFAULT_ORDER = [
+        MetadataDisplayPosition::TITLE => 1,
+        MetadataDisplayPosition::DESCRIPTION => 1,
+        MetadataDisplayPosition::SIDEBAR => 1,
+        MetadataDisplayPosition::MODAL => 1,
+    ];
 
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="metadataModel", cascade={"persist"})
@@ -64,6 +72,14 @@ class MetadataModelVersion extends Version implements ModelVersion
     private Collection $fields;
 
     /**
+     * @ORM\OneToMany(targetEntity="MetadataModelDisplaySetting", mappedBy="metadataModel", cascade={"persist"})
+     * @ORM\OrderBy({"order" = "ASC"})
+     *
+     * @var Collection<MetadataModelDisplaySetting>
+     */
+    private Collection $displaySettings;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Metadata\Metadata", mappedBy="metadataModelVersion", cascade={"persist"})
      *
      * @var Collection<Metadata>
@@ -79,6 +95,7 @@ class MetadataModelVersion extends Version implements ModelVersion
         $this->forms = new ArrayCollection();
         $this->fields = new ArrayCollection();
         $this->assignedMetadata = new ArrayCollection();
+        $this->displaySettings = new ArrayCollection();
     }
 
     /** @return Node[] */
@@ -238,5 +255,67 @@ class MetadataModelVersion extends Version implements ModelVersion
         return $this->getGroups()->filter(static function (MetadataModelGroup $group) use ($resourceType) {
             return $group->getResourceType()->isEqualTo($resourceType);
         })->toArray();
+    }
+
+    public function addDisplaySetting(MetadataModelDisplaySetting $displaySetting): void
+    {
+        $this->reorderDisplaySetting($displaySetting);
+
+        $this->displaySettings->add($displaySetting);
+    }
+
+    public function reorderDisplaySetting(?MetadataModelDisplaySetting $displaySetting = null): void
+    {
+        $newDisplaySettings = new ArrayCollection();
+
+        $order = [
+            ResourceType::FDP => self::DEFAULT_ORDER,
+            ResourceType::CATALOG => self::DEFAULT_ORDER,
+            ResourceType::DATASET => self::DEFAULT_ORDER,
+            ResourceType::DISTRIBUTION => self::DEFAULT_ORDER,
+            ResourceType::STUDY => self::DEFAULT_ORDER,
+        ];
+
+        foreach ($this->displaySettings as $currentDisplaySetting) {
+            $currentOrder = $order[$currentDisplaySetting->getResourceType()->toString()][$currentDisplaySetting->getDisplayPosition()->toString()];
+
+            if (
+                $displaySetting
+                && $displaySetting->getResourceType()->isEqualTo($currentDisplaySetting->getResourceType())
+                && $displaySetting->getDisplayPosition()->isEqualTo($currentDisplaySetting->getDisplayPosition())
+            ) {
+                $newOrder = $currentOrder >= $displaySetting->getOrder() ? $currentOrder + 1 : $currentOrder;
+            } else {
+                $newOrder = $currentOrder;
+            }
+
+            $currentDisplaySetting->setOrder($newOrder);
+            $newDisplaySettings->add($currentDisplaySetting);
+
+            $order[$currentDisplaySetting->getResourceType()->toString()][$currentDisplaySetting->getDisplayPosition()->toString()]++;
+        }
+
+        $this->displaySettings = $newDisplaySettings;
+    }
+
+    /** @return Collection<MetadataModelDisplaySetting */
+    public function getDisplaySettings(): Collection
+    {
+        return $this->displaySettings;
+    }
+
+    /** @return MetadataModelDisplaySetting[] */
+    public function getDisplaySettingsForResourceType(ResourceType $resourceType): array
+    {
+        return $this->getDisplaySettings()->filter(static function (MetadataModelDisplaySetting $displaySetting) use ($resourceType) {
+            return $displaySetting->getResourceType()->isEqualTo($resourceType);
+        })->toArray();
+    }
+
+    public function removeDisplaySetting(MetadataModelDisplaySetting $displaySetting): void
+    {
+        $this->displaySettings->removeElement($displaySetting);
+
+        $this->reorderDisplaySetting();
     }
 }

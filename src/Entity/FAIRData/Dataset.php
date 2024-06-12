@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function array_unique;
+use function array_values;
 use function count;
 
 /**
@@ -279,9 +280,11 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     public function getParents(ResourceType $resourceType): array
     {
         if ($resourceType->isFdp()) {
-            return array_unique($this->catalogs->map(static function (Catalog $catalog) {
-                return $catalog->getParents(ResourceType::fdp());
-            })->toArray());
+            return array_values(
+                array_unique($this->catalogs->map(static function (Catalog $catalog) {
+                    return $catalog->getParents(ResourceType::fdp());
+                })->toArray())
+            );
         }
 
         if ($resourceType->isCatalog()) {

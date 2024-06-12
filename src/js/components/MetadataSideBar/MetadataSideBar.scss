@@ -2,8 +2,8 @@
 
 .MetadataSideBar,
 .MetadataModal {
-    .Publishers {
-        .Publisher {
+    .Agents {
+        .Agent {
             margin-bottom: 5px;
             padding-bottom: 5px;
             border-bottom: 1px solid $neutral-30;
@@ -40,14 +40,5 @@
     button {
         padding-left: 0.8rem;
         padding-right: 0.8rem;
-    }
-}
-
-.MetadataModal {
-    hr {
-        border-color: $neutral-40;
-        border-style: solid;
-        border-top: 0;
-        margin: 20px 0;
     }
 }

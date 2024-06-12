@@ -25,11 +25,11 @@ use App\Entity\Study;
  */
 class ResourceType extends Enum
 {
-    private const FDP = 'fdp';
-    private const CATALOG = 'catalog';
-    private const DATASET = 'dataset';
-    private const DISTRIBUTION = 'distribution';
-    private const STUDY = 'study';
+    public const FDP = 'fdp';
+    public const CATALOG = 'catalog';
+    public const DATASET = 'dataset';
+    public const DISTRIBUTION = 'distribution';
+    public const STUDY = 'study';
 
     private const CLASS_MAPPING = [
         self::FDP => FAIRDataPoint::class,

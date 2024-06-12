@@ -1,20 +1,17 @@
-import React, { Component, useMemo } from 'react';
+import React from 'react';
 import { localizedText } from '../../../util';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
 import Layout from '../../../components/Layout';
 import Header from '../../../components/Layout/Header';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
-import LegacyMetadataSideBar from '../../../components/MetadataSideBar/LegacyMetadataSideBar';
 import DistributionList from '../../../components/List/DistributionList';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
-import { apiClient } from 'src/js/network';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import useGetCatalog from '../../../hooks/useGetCatalog';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import useGetDataset from '../../../hooks/useGetDataset';
 import { titleAndDescriptionContext } from 'utils/jsonLdUtils';
+import MetadataSideBar from 'components/MetadataSideBar';
+import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 
 interface DatasetProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -36,13 +33,14 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
                 {dataset && (
                     <>
                         <div className="MainCol">
-                            {data.description && !embedded && (
-                                <div className="InformationDescription">{localizedText(data.description, 'en', true)}</div>
-                            )}
+                            <MetadataDescription metadata={dataset.metadata} />
                         </div>
 
                         <div className="SideCol">
-                            <LegacyMetadataSideBar type="dataset" metadata={dataset.metadata} name={title} />
+                            <MetadataSideBar
+                                metadata={dataset.metadata}
+                                title={title}
+                            />
                         </div>
 
                         <AssociatedItemsBar items={dataset.count} current="distribution" />

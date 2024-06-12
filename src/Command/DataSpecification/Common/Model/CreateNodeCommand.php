@@ -8,7 +8,7 @@ use App\Entity\Enum\XsdDataType;
 
 abstract class CreateNodeCommand
 {
-    public function __construct(private NodeType $type, private string $title, private ?string $description = null, private string $value, private ?XsdDataType $dataType = null, private ?bool $isRepeated)
+    public function __construct(private NodeType $type, private string $title, private ?string $description = null, private string $value, private ?XsdDataType $dataType = null, private ?bool $isRepeated = false)
     {
     }
 

@@ -13,6 +13,7 @@ import Select from 'components/Input/Formik/Select';
 import { getType, mergeData } from '../util';
 import { apiClient } from '../network';
 import UriInput from 'components/Input/Formik/UriInput';
+import { Types } from 'types/Types';
 
 type AddNodeModalProps = {
     open: boolean;
@@ -23,24 +24,7 @@ type AddNodeModalProps = {
     versionId: string;
     type: string;
     modelType: string;
-    types: {
-        fieldTypes: {
-            plain: {
-                [key: string]: {
-                    value: string,
-                    label: string
-                }[],
-            },
-            annotated: {
-                value: string,
-                label: string
-            }[]
-        },
-        dataTypes: {
-            value: string,
-            label: string
-        }[],
-    };
+    types: Types,
     optionGroups: any;
     prefixes: any;
 };
@@ -232,12 +216,3 @@ const NodeSchema = Yup.object().shape({
         then: schema => schema.required('Please select a data type'),
     }),
 });
-
-const resourceTypes = [
-    { value: null, label: 'Do not use as title' },
-    { value: 'fdp', label: ResourceType.fdp },
-    { value: 'catalog', label: ResourceType.catalog },
-    { value: 'dataset', label: ResourceType.dataset },
-    { value: 'distribution', label: ResourceType.distribution },
-    { value: 'study', label: ResourceType.study },
-];

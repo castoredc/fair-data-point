@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { toast } from 'react-toastify';
-import ToastItem from 'components/ToastItem';
+import React from 'react';
 import Layout from '../../../components/Layout';
 import Header from '../../../components/Layout/Header';
 import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
-import LegacyMetadataSideBar from '../../../components/MetadataSideBar/LegacyMetadataSideBar';
 import CatalogList from '../../../components/List/CatalogList';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
-import { apiClient } from 'src/js/network';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import { localizedText, titleAndDescriptionContext } from 'utils/jsonLdUtils';
 import useGetFdp from '../../../hooks/useGetFdp';
 import { AuthorizedRouteComponentProps } from 'components/Route';
+import MetadataSideBar from 'components/MetadataSideBar';
+import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 
 interface FAIRDataPointMainProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -36,15 +34,12 @@ const FAIRDataPointMain: React.FC<FAIRDataPointMainProps> = ({ user, embedded, l
                         {data.description && !embedded && (
                             <>
                                 <div className="MainCol">
-                                    <div className="InformationDescription">
-                                        {localizedText(data.description, 'en', true)}
-                                    </div>
+                                    <MetadataDescription metadata={fdp.metadata} />
                                 </div>
                                 <div className="SideCol">
-                                    <LegacyMetadataSideBar
-                                        type="fdp"
+                                    <MetadataSideBar
                                         metadata={fdp.metadata}
-                                        name={title}
+                                        title={title}
                                     />
                                 </div>
                             </>

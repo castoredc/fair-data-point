@@ -21,7 +21,7 @@ class Organizations extends Component {
             });
 
         return (
-            <MetadataItem label={label} className="Organizations" table={table}>
+            <LegacyMetadataItem label={label} className="Organizations" table={table}>
                 {organizations.map((agent, index) => {
                     return <Organization key={index} organization={agent.organization} department={agent.hasDepartment && agent.department} />;
                 })}
@@ -50,7 +50,7 @@ class Organizations extends Component {
                         </Map>
                     </div>
                 )}
-            </MetadataItem>
+            </LegacyMetadataItem>
         );
     }
 }

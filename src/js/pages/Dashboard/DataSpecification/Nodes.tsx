@@ -19,6 +19,7 @@ import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import PageTabs from 'components/PageTabs';
 import { getType, ucfirst } from '../../../util';
+import { Types } from 'types/Types';
 
 interface NodesProps extends AuthorizedRouteComponentProps {
     type: string;
@@ -26,24 +27,7 @@ interface NodesProps extends AuthorizedRouteComponentProps {
     getNodes: () => void;
     dataSpecification: any;
     version: any;
-    types: {
-        fieldTypes: {
-            plain: {
-                [key: string]: {
-                    value: string,
-                    label: string
-                }[],
-            },
-            annotated: {
-                value: string,
-                label: string
-            }[]
-        },
-        dataTypes: {
-            value: string,
-            label: string
-        }[],
-    };
+    types: Types,
     optionGroups: any;
     prefixes: any;
 }

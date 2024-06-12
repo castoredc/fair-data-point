@@ -10,6 +10,7 @@ use App\Exception\NoAccessPermission;
 use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
+use App\Factory\DataSpecification\MetadataModel\DisplaySettingFactory;
 use App\Factory\DataSpecification\MetadataModel\FormFactory;
 use App\Factory\DataSpecification\MetadataModel\MetadataModelModuleFactory;
 use App\Factory\DataSpecification\MetadataModel\NamespacePrefixFactory;
@@ -37,6 +38,7 @@ class ImportMetadataModelVersionCommandHandler
         private FormFactory $formFactory,
         private MetadataModelModuleFactory $metadataModelModuleFactory,
         private TripleFactory $tripleFactory,
+        private DisplaySettingFactory $displaySettingFactory,
     ) {
     }
 
@@ -73,6 +75,7 @@ class ImportMetadataModelVersionCommandHandler
         $predicates = $json['predicates'];
         $optionGroups = $json['optionGroups'];
         $forms = $json['forms'];
+        $groupedDisplaySettings = $json['displaySettings'];
 
         if ($metadataModel->hasVersion($version)) {
             throw new InvalidMetadataModelVersion();
@@ -114,13 +117,27 @@ class ImportMetadataModelVersionCommandHandler
             $newVersion->addOptionGroup($newOptionGroup);
         }
 
-        // Add option groups
+        // Add forms
         $newForms = new ArrayCollection();
 
         foreach ($forms as $form) {
             $newForm = $this->formFactory->createFromJson($newVersion, $form, $newNodes, $newOptionGroups);
             $newForms->set($form['id'], $newForm);
             $newVersion->addForm($newForm);
+        }
+
+        // Add display settings
+        foreach ($groupedDisplaySettings as $resourceType => $position) {
+            foreach ($position as $displaySettings) {
+                foreach ($displaySettings as $displaySetting) {
+                    $newDisplaySetting = $this->displaySettingFactory->createFromJson(
+                        $newVersion,
+                        $displaySetting,
+                        $newNodes
+                    );
+                    $newVersion->addDisplaySetting($newDisplaySetting);
+                }
+            }
         }
 
         // Add modules

@@ -83,3 +83,19 @@ export const DistributionGenerationStatus = {
     error: 'Not generated due to errors',
     partially: 'Generated, with errors',
 };
+
+export const MetadataDisplayType = {
+    heading: 'Heading',
+    description: 'Description',
+    paragraph: 'Paragraph',
+    ontologyConcepts: 'Ontology concepts',
+    date: 'Date',
+    time: 'Time',
+    yesNo: 'Yes/No',
+    list: 'List',
+    language: 'Language',
+    license: 'License',
+    country: 'Country',
+    agents: 'Agents',
+};
+

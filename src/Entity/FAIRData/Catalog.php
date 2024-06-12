@@ -330,7 +330,7 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     {
         return array_unique(array_merge(
             $this->datasets->map(static function (Dataset $dataset) {
-                return $dataset->getDistributions();
+                return $dataset->getDistributions()->toArray();
             })->toArray(),
             $this->studies->map(static function (Study $study) {
                 return $study->getDistributions();

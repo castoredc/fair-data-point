@@ -8,7 +8,7 @@ use function sprintf;
 
 class NodeAlreadyUsed extends Exception
 {
-    public function __construct(private string $fieldName)
+    public function __construct(private ?string $fieldName = null)
     {
         parent::__construct();
     }
@@ -16,6 +16,10 @@ class NodeAlreadyUsed extends Exception
     /** @return array<mixed> */
     public function toArray(): array
     {
-        return ['error' => sprintf('This node is already used by field \'%s\'.', $this->fieldName)];
+        if ($this->fieldName !== null) {
+            return ['error' => sprintf('This node is already used by field \'%s\'.', $this->fieldName)];
+        }
+
+        return ['error' => 'This node is already used'];
     }
 }

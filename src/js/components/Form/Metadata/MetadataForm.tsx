@@ -281,6 +281,8 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                           setValues,
                           setFieldValue,
                       }) => {
+                        console.log(values);
+                        console.log(errors);
                         return (
                             <Form>
                                 <div className="FormContent">

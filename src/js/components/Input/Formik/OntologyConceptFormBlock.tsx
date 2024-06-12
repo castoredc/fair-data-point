@@ -7,10 +7,10 @@ import FormItem from 'components/Form/FormItem';
 import { FieldProps } from 'formik';
 import { apiClient } from 'src/js/network';
 import { isMultipleOption } from 'components/Input/Formik/Select';
+import FieldErrors from 'components/Input/Formik/Errors';
 
 interface OntologyConceptFormBlockProps extends FieldProps {
-    label: string;
-    details?: string;
+    serverError?: any;
 }
 
 type IsMulti = boolean;
@@ -119,8 +119,12 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
     };
 
     render() {
-        const { label, details, field, form } = this.props;
+        const { field, form, serverError } = this.props;
         const { includeIndividuals, selectedOntology, ontologies } = this.state;
+
+        const touched = form.touched[field.name];
+        const errors = form.errors[field.name];
+        const serverErrors = serverError ? serverError[field.name] : undefined;
 
         const value = field.value ? field.value : [defaultData];
 
@@ -129,74 +133,78 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
         });
 
         return (
-            <FormItem label={label} details={details}>
-                <div className="OntologyConceptFormBlock">
-                    <div className="Header Row">
-                        <div className="Ontology">Ontology</div>
-                        <div className="Concept">Concept</div>
-                    </div>
+            <>
+            <div className="OntologyConceptFormBlock">
+                <div className="Header Row">
+                    <div className="Ontology">Ontology</div>
+                    <div className="Concept">Concept</div>
+                </div>
 
-                    <div className="Concepts">
-                        {value.map((concept, index) => {
-                            return (
-                                <div className="Row" key={index}>
-                                    <div className="Ontology">{concept.ontology.name}</div>
-                                    <div className="ConceptCode">{concept.code}</div>
-                                    <div className="Concept">{concept.displayName}</div>
-                                    <div className="Buttons">
-                                        <Button
-                                            buttonType="contentOnly"
-                                            icon="cross"
-                                            className="RemoveButton"
-                                            onClick={() => this.removeConcept(field, form, index)}
-                                            iconDescription="Remove"
-                                        />
-                                    </div>
+                <div className="Concepts">
+                    {value.map((concept, index) => {
+                        const ontology = typeof concept.ontology === 'string' ? ontologies.find((ontology) => ontology.id === concept.ontology) : concept.ontology;
+
+                        return (
+                            <div className="Row" key={index}>
+                                <div className="Ontology">{ontology.name}</div>
+                                <div className="ConceptCode">{concept.code}</div>
+                                <div className="Concept">{concept.displayName}</div>
+                                <div className="Buttons">
+                                    <Button
+                                        buttonType="contentOnly"
+                                        icon="cross"
+                                        className="RemoveButton"
+                                        onClick={() => this.removeConcept(field, form, index)}
+                                        iconDescription="Remove"
+                                    />
                                 </div>
-                            );
-                        })}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="AddNew Row">
+                    <div className="Ontology">
+                        <Dropdown
+                            options={options}
+                            value={selectedOntology}
+                            onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
+                                const returnValue = value && (isMultipleOption(value) ? value[0] : value);
+                                this.handleOntologyChange(returnValue);
+                            }}
+                            width="tiny"
+                            menuPlacement={'auto'}
+                            menuPosition="fixed"
+                        />
                     </div>
+                    <div className="Concept">
+                        <Dropdown
+                            openMenuOnClick={false}
+                            value={null}
+                            loadOptions={this.loadConcepts}
+                            options={[]}
+                            onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
+                                const returnValue = value && (isMultipleOption(value) ? value[0] : value);
+                                this.addConcept(field, form, returnValue);
+                            }}
+                            isDisabled={selectedOntology === null}
+                            menuPosition="fixed"
+                        />
 
-                    <div className="AddNew Row">
-                        <div className="Ontology">
-                            <Dropdown
-                                options={options}
-                                value={selectedOntology}
-                                onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
-                                    const returnValue = value && (isMultipleOption(value) ? value[0] : value);
-                                    this.handleOntologyChange(returnValue);
-                                }}
-                                width="tiny"
-                                menuPlacement={'auto'}
-                                menuPosition="fixed"
-                            />
-                        </div>
-                        <div className="Concept">
-                            <Dropdown
-                                openMenuOnClick={false}
-                                value={null}
-                                loadOptions={this.loadConcepts}
-                                options={[]}
-                                onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
-                                    const returnValue = value && (isMultipleOption(value) ? value[0] : value);
-                                    this.addConcept(field, form, returnValue);
-                                }}
-                                isDisabled={selectedOntology === null}
-                                menuPosition="fixed"
-                            />
-
-                            <Choice
-                                options={[{ value: '1', labelText: 'Include individuals' }]}
-                                name="includeIndividuals"
-                                onChange={this.setIncludeIndividuals}
-                                hideLabel={true}
-                                labelText=""
-                                multiple={true}
-                            />
-                        </div>
+                        <Choice
+                            options={[{ value: '1', labelText: 'Include individuals' }]}
+                            name="includeIndividuals"
+                            onChange={this.setIncludeIndividuals}
+                            hideLabel={true}
+                            labelText=""
+                            multiple={true}
+                        />
                     </div>
                 </div>
-            </FormItem>
+            </div>
+
+            <FieldErrors field={field} serverErrors={serverErrors} />
+            </>
         );
     }
 }

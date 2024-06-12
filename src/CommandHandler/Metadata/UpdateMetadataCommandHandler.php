@@ -15,6 +15,7 @@ use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\LocalizedTextItem;
+use App\Entity\Iri;
 use App\Entity\Metadata\MetadataValue;
 use App\Entity\Terminology\Ontology;
 use App\Entity\Terminology\OntologyConcept;
@@ -71,6 +72,7 @@ class UpdateMetadataCommandHandler
             $metadata->addValue($metadataValue);
         }
 
+        $metadata->onUpdate();
         $this->em->persist($metadata);
 
         $this->em->flush();
@@ -291,7 +293,7 @@ class UpdateMetadataCommandHandler
     }
 
     /**
-     * @param OntologyConcept[] $concepts
+     * @param mixed[] $concepts
      *
      * @return OntologyConcept[]
      */
@@ -302,21 +304,24 @@ class UpdateMetadataCommandHandler
         $ontologyRepository = $this->em->getRepository(Ontology::class);
         $ontologyConceptRepository = $this->em->getRepository(OntologyConcept::class);
 
-        foreach ($concepts as $concept) {
-            $ontology = $ontologyRepository->find($concept->getOntology()->getId());
+        foreach ($concepts as $conceptData) {
+            $ontology = $ontologyRepository->find($conceptData['ontology']['id']);
 
             if ($ontology === null) {
                 throw new OntologyNotFound();
             }
 
-            $concept->setOntology($ontology);
-
-            $dbConcept = $ontologyConceptRepository->findByOntologyAndCode($ontology, $concept->getCode());
+            $dbConcept = $ontologyConceptRepository->findByOntologyAndCode($ontology, $conceptData['code']);
 
             if ($dbConcept !== null) {
-                $return[] = $dbConcept;
+                $return[] = $dbConcept->toArray();
             } else {
-                $return[] = $concept;
+                $return[] = (new OntologyConcept(
+                    new Iri($conceptData['url']),
+                    $conceptData['code'],
+                    $ontology,
+                    $conceptData['displayName'],
+                ))->toArray();
             }
         }
 

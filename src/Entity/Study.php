@@ -296,7 +296,7 @@ abstract class Study implements AccessibleEntity
     public function getDistributions(): array
     {
         return $this->datasets->map(static function (Dataset $dataset) {
-            return $dataset->getDistributions();
+            return $dataset->getDistributions()->toArray();
         })->toArray();
     }
 }

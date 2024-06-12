@@ -51,6 +51,8 @@ final class MetadataModelController extends AbstractController
     }
 
     /**
+     * @Route("/dashboard/metadata-models/{model}/{version}/display", name="dashboard_metadata_model_display")
+     * @Route("/dashboard/metadata-models/{model}/{version}/display/{resourceType}", name="dashboard_metadata_model_display_resource")
      * @Route("/dashboard/metadata-models/{model}/{version}/modules", name="dashboard_metadata_model_modules")
      * @Route("/dashboard/metadata-models/{model}/{version}/modules/{moduleId}", name="dashboard_metadata_model_module")
      * @Route("/dashboard/metadata-models/{model}/{version}/forms", name="dashboard_metadata_model_forms")

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\MetadataModel\Node;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\ResourceType;
@@ -23,6 +24,9 @@ class ValueNode extends Node
 
     /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelField", mappedBy="node") */
     private ?MetadataModelField $field = null;
+
+    /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting", mappedBy="node") */
+    private ?MetadataModelDisplaySetting $displaySetting = null;
 
     public function isAnnotatedValue(): bool
     {
@@ -64,6 +68,11 @@ class ValueNode extends Node
         return $this->field !== null;
     }
 
+    public function hasDisplaySetting(): bool
+    {
+        return $this->displaySetting !== null;
+    }
+
     public function usedAsTitle(): ?ResourceType
     {
         if ($this->getMetadataModelVersion()->getTitleNode(ResourceType::catalog()) === $this) {
@@ -83,5 +92,10 @@ class ValueNode extends Node
         }
 
         return null;
+    }
+
+    public function getDisplaySetting(): ?MetadataModelDisplaySetting
+    {
+        return $this->displaySetting;
     }
 }

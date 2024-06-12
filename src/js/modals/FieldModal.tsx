@@ -12,6 +12,7 @@ import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
 import { getType, mergeData } from '../util';
 import { apiClient } from '../network';
+import { Types } from 'types/Types';
 
 type FieldModalProps = {
     open: boolean;
@@ -20,24 +21,7 @@ type FieldModalProps = {
     onSaved: () => void;
     modelId: string;
     versionId: string;
-    types: {
-        fieldTypes: {
-            plain: {
-                [key: string]: {
-                    value: string,
-                    label: string
-                }[],
-            },
-            annotated: {
-                value: string,
-                label: string
-            }[]
-        },
-        dataTypes: {
-            value: string,
-            label: string
-        }[],
-    };
+    types: Types,
     nodes: any;
     optionGroups: any;
     form: any;

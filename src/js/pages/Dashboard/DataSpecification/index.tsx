@@ -24,6 +24,8 @@ import DataSpecificationDetails from 'pages/Dashboard/DataSpecification/DataSpec
 import { getType, ucfirst } from '../../../util';
 import OptionGroups from 'pages/Dashboard/DataSpecification/OptionGroups';
 import Forms from 'pages/Dashboard/DataSpecification/Forms';
+import Display from 'pages/Dashboard/DataSpecification/Display';
+import { Types } from 'types/Types';
 
 interface DataSpecificationProps extends AuthorizedRouteComponentProps {
     type: string;
@@ -36,27 +38,11 @@ interface DataSpecificationState {
     currentVersion: any;
     modules: any;
     forms: any;
+    displaySettings: any;
     nodes: any;
     prefixes: any;
     optionGroups: any;
-    types: {
-        fieldTypes: {
-            plain: {
-                [key: string]: {
-                    value: string,
-                    label: string
-                }[],
-            },
-            annotated: {
-                value: string,
-                label: string
-            }[]
-        },
-        dataTypes: {
-            value: string,
-            label: string
-        }[],
-    };
+    types: Types,
 }
 
 export default class DataSpecification extends Component<DataSpecificationProps, DataSpecificationState> {
@@ -70,6 +56,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
             currentVersion: null,
             modules: [],
             forms: [],
+            displaySettings: [],
             nodes: null,
             prefixes: [],
             optionGroups: [],
@@ -79,6 +66,10 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                     annotated: [],
                 },
                 dataTypes: [],
+                displayTypes: {
+                    plain: {},
+                    annotated: [],
+                }
             },
         };
     }
@@ -130,6 +121,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         if (type === 'metadata-model') {
                             this.getForms();
                             this.getOptionGroups();
+                            this.getDisplaySettings();
                         }
                         this.getTypes();
                     },
@@ -202,6 +194,33 @@ export default class DataSpecification extends Component<DataSpecificationProps,
             .then(response => {
                 this.setState({
                     forms: response.data,
+                    isLoading: false,
+                });
+            })
+            .catch(error => {
+                if (error.response && typeof error.response.data.error !== 'undefined') {
+                    toast.error(<ToastItem type="error" title={error.response.data.error} />);
+                } else {
+                    toast.error(<ToastItem type="error" title="An error occurred" />);
+                }
+
+                this.setState({
+                    isLoading: false,
+                });
+            });
+    };
+
+    getDisplaySettings = () => {
+        const { dataSpecification, currentVersion } = this.state;
+        const { type } = this.props;
+
+        this.setState({ isLoading: true });
+
+        apiClient
+            .get('/api/' + type + '/' + dataSpecification.id + '/v/' + currentVersion.value + '/display')
+            .then(response => {
+                this.setState({
+                    displaySettings: response.data,
                     isLoading: false,
                 });
             })
@@ -335,6 +354,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
             currentVersion,
             modules,
             forms,
+            displaySettings,
             nodes,
             prefixes,
             optionGroups,
@@ -398,13 +418,11 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         },
                         {
                             to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/modules',
-                            exact: true,
                             title: 'Groups',
                             customIcon: 'modules',
                         },
                         {
-                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes/internal',
-                            exact: true,
+                            to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/nodes',
                             title: 'Nodes',
                             customIcon: 'node',
                         },
@@ -426,8 +444,12 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                             },
                             {
                                 to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/forms',
-                                exact: true,
                                 title: 'Forms',
+                                icon: 'survey',
+                            },
+                            {
+                                to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/display',
+                                title: 'Display',
                                 icon: 'survey',
                             },
                             {
@@ -538,6 +560,24 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                                 )}
                             />
                         }
+                        {type === 'metadata-model' && <Route
+                            path="/dashboard/metadata-models/:model/:version/display/:resourceType?"
+                            exact
+                            render={props => (
+                                <Display
+                                    type={type}
+                                    displaySettings={displaySettings}
+                                    getDisplaySettings={this.getDisplaySettings}
+                                    nodes={nodes}
+                                    dataSpecification={dataSpecification}
+                                    version={currentVersion}
+                                    user={user}
+                                    types={types}
+                                    {...props}
+                                />
+                            )}
+                        />
+                        }
                         <Route
                             path={[
                                 '/dashboard/data-models/:model/:version/modules/:moduleId?',
@@ -560,8 +600,8 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                         />
                         <Route
                             path={[
-                                '/dashboard/data-models/:model/:version/nodes/:nodeType',
-                                '/dashboard/metadata-models/:model/:version/nodes/:nodeType',
+                                '/dashboard/data-models/:model/:version/nodes/:nodeType?',
+                                '/dashboard/metadata-models/:model/:version/nodes/:nodeType?',
                             ]}
                             exact
                             render={props => (
