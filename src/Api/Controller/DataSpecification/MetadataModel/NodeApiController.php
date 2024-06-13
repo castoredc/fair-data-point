@@ -15,6 +15,9 @@ use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\NodeInUseByTriples;
+use App\Exception\DataSpecification\MetadataModel\NodeHasValues;
+use App\Exception\DataSpecification\MetadataModel\NodeInUseByDisplaySetting;
+use App\Exception\DataSpecification\MetadataModel\NodeInUseByField;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -165,7 +168,7 @@ class NodeApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            if ($e instanceof NodeInUseByTriples) {
+            if ($e instanceof NodeInUseByTriples || $e instanceof NodeInUseByField || $e instanceof NodeInUseByDisplaySetting || $e instanceof NodeHasValues) {
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 

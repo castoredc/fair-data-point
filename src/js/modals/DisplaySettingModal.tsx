@@ -74,8 +74,6 @@ export default class DisplaySettingModal extends Component<DisplaySettingModalPr
         const selectedNode = nodes.value.find((node) => node.id === newData.node);
         newData.nodeData = selectedNode ? selectedNode.value : null;
 
-        console.log(newData);
-
         return newData;
     };
 

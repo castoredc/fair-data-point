@@ -18,6 +18,8 @@ import { LanguageType } from 'types/LanguageType';
 import { LicenseType } from 'types/LicenseType';
 import { CountryType } from 'types/CountryType';
 import FormItem from 'components/Form/FormItem';
+import AgentPicker from 'components/Input/Formik/AgentPicker';
+import DateAndTimePicker from 'components/Input/Formik/DateAndTimePicker';
 
 type RenderedFormFieldProps = {
     field: RenderedMetadataFormFieldType;
@@ -98,7 +100,11 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
                 serverError={validation}
             />;
         case 'dateAndTimePicker':
-            return <span>TODO</span>;
+            return <Field
+                component={DateAndTimePicker}
+                name={field.id}
+                serverError={validation}
+            />;
         case 'checkbox':
             return <Field
                 component={SingleChoice}
@@ -160,7 +166,14 @@ const FieldComponent: FC<RenderedFormFieldProps> = ({ field, validation, optionG
                 menuPlacement="auto"
             />;
         case 'agentSelector':
-            return <span>TODO</span>;
+            return <Field
+                component={AgentPicker}
+                name={field.id}
+                countries={countries}
+                serverError={validation}
+                menuPosition="fixed"
+                menuPlacement="auto"
+            />;
         default:
             return null;
     }

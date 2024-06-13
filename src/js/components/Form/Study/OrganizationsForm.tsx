@@ -190,7 +190,7 @@ export default class OrganizationsForm extends Component<OrganizationsFormProps,
 
                 <Stack distribution="trailing" alignment="end">
                     <Button buttonType="secondary" icon="add" onClick={this.handleNewOrganization}>
-                        Add center
+                        Add organization
                     </Button>
                 </Stack>
 

@@ -18,7 +18,7 @@ class CatalogBrandApiResource implements ApiResource
         $metadata = $this->catalog->getLatestMetadata();
 
         return [
-            'name' => $metadata->getLegacyTitle()->toArray(),
+            'name' => $metadata->getTitle()->toArray(),
             'accessingData' => $this->catalog->isSubmissionAccessingData(),
         ];
     }

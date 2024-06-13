@@ -76,7 +76,7 @@ export default class OrganizationModal extends Component<OrganizationModalProps,
         const { open, id, countries, onClose } = this.props;
 
         const edit = !!id;
-        const title = edit ? `Edit center` : 'Add center';
+        const title = edit ? `Edit center` : 'Add organization';
 
         return (
             <Modal open={open} title={title} accessibleName={title} onClose={onClose}>

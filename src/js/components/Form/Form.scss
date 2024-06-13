@@ -176,7 +176,22 @@
     }
 }
 
-.OntologyConceptFormBlock {
+.AgentPicker {
+    .Name {
+        width: 234px;
+        margin-right: 16px;
+    }
+    .Type {
+        width: 100px;
+        margin-right: 16px;
+    }
+    .AdditionalInformation {
+        width: 200px;
+        margin-right: 16px;
+    }
+}
+
+.OntologyConceptFormBlock, .AgentPicker {
     border: 1px solid $neutral-50;
     border-radius: 3px;
     width: 610px;

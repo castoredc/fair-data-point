@@ -8,6 +8,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\Enum\NodeType;
 use App\Entity\Enum\ResourceType;
 use App\Entity\Enum\XsdDataType;
+use App\Entity\Metadata\MetadataValue;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +29,13 @@ class ValueNode extends Node
 
     /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting", mappedBy="node") */
     private ?MetadataModelDisplaySetting $displaySetting = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\MetadataValue", mappedBy="node")
+     *
+     * @var Collection<MetadataValue>
+     */
+    private Collection $values;
 
     public function isAnnotatedValue(): bool
     {
@@ -71,6 +80,11 @@ class ValueNode extends Node
     public function hasDisplaySetting(): bool
     {
         return $this->displaySetting !== null;
+    }
+
+    public function hasValues(): bool
+    {
+        return $this->values->count() > 0;
     }
 
     public function usedAsTitle(): ?ResourceType

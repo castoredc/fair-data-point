@@ -1048,34 +1048,34 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@castoredc/matter-fonts@^30.17.0", "@castoredc/matter-fonts@^30.2.1":
-  version "30.17.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-fonts/30.17.0/4ee595278c9b3ccd62b21010dbbd27b0b3977be8#4ee595278c9b3ccd62b21010dbbd27b0b3977be8"
-  integrity sha512-OXKritsUKo1bxovZrN1DvgWQ0kWQLbdDVhIjtCFd6orvKOpL8T6G5rs5tLVV1snZBgKlKEjNcUrMVhWfeKgd2w==
+"@castoredc/matter-fonts@^30.26.0":
+  version "30.26.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-fonts/30.26.0/72a07fb22c9f0b74b3b923d88a06073a9cbda503#72a07fb22c9f0b74b3b923d88a06073a9cbda503"
+  integrity sha512-gH4G2fZ9xjHxnDuSfBVIm923Z1F+r0C6RPux0xkMJH5Fpja89c3WBrlWI24OiurMBUnVrRXUlUd/ur/CgWjzBw==
 
-"@castoredc/matter-icons@^30.17.0", "@castoredc/matter-icons@^30.2.1":
-  version "30.17.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-icons/30.17.0/99a4cc594e96012ea2be536323f3163bdb8f33d7#99a4cc594e96012ea2be536323f3163bdb8f33d7"
-  integrity sha512-YadfRbQGtZ2j0Yar9FNy7AOJz7VaEuHpkJbIqHQWgu3gOAf10nj7EPZJLlCVG6Uq9EF83/rBntUy0gsMitkObA==
+"@castoredc/matter-icons@^30.26.0":
+  version "30.26.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-icons/30.26.0/416562e660959113ce6a46d83e51595e4fb3a494#416562e660959113ce6a46d83e51595e4fb3a494"
+  integrity sha512-ZmhAi8HtwqhON7c94w8XZkE7/KKU7aMb8V7uxkThTNHyn2+atKvWwKLkPH7oy7LqOK3uUw/AeWiNex/ExpxCEA==
   dependencies:
     "@babel/runtime" "^7.18.9"
-    "@castoredc/matter-utils" "^30.17.0"
+    "@castoredc/matter-utils" "^30.26.0"
     tslib "^2.4.0"
 
-"@castoredc/matter-utils@^30.17.0", "@castoredc/matter-utils@^30.2.1":
-  version "30.17.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter-utils/30.17.0/2d8776cecda61e413a4293d52e45ba9aea8204c3#2d8776cecda61e413a4293d52e45ba9aea8204c3"
-  integrity sha512-cb0WXwB10NEWV3JGXeaKCJ3M0IxMFdTrUd/WBVz4caeGzwaV2XJb4EOgTYO7jFCEuHUVHg2lLMd0YhkgPdyJGA==
+"@castoredc/matter-utils@^30.26.0":
+  version "30.26.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter-utils/30.26.0/b0130b2b52f94ec39fd3b76966f5cef17e51a35d#b0130b2b52f94ec39fd3b76966f5cef17e51a35d"
+  integrity sha512-vdO7QPRk2nKkdlP8deJ7aJy/F1HXpy5MVCk6rWlCoOv1h8U1c1NHgLuNe3Aio2jTdYYKKRfxp2y+LkPS1q4ULg==
 
-"@castoredc/matter@^30.2.1":
-  version "30.17.0"
-  resolved "https://npm.pkg.github.com/download/@castoredc/matter/30.17.0/616774ec3d38199e1a2d7a54afd0c3f16be4c26d#616774ec3d38199e1a2d7a54afd0c3f16be4c26d"
-  integrity sha512-L+OrKBrtLTpNOY7BKw+zMUYmbfacudQkdwqm+Op4YKgWnpsUePAByh5q7Zxst+cz+LvkJ/gkvzhNPTmuRbMjsQ==
+"@castoredc/matter@^30.26.0":
+  version "30.26.0"
+  resolved "https://npm.pkg.github.com/download/@castoredc/matter/30.26.0/2c3c8f9c4d6922f0f39236ffa55b153bbc31a3c7#2c3c8f9c4d6922f0f39236ffa55b153bbc31a3c7"
+  integrity sha512-CdLQz8ETQkMJUW2LODkgNO7BKofWyjjhLkbzfmDPrPsSbr7vdkBcIlr1/8I3xdEo31gieFJscCrxGPCKfZRkwA==
   dependencies:
     "@babel/runtime" "^7.18.9"
-    "@castoredc/matter-fonts" "^30.17.0"
-    "@castoredc/matter-icons" "^30.17.0"
-    "@castoredc/matter-utils" "^30.17.0"
+    "@castoredc/matter-fonts" "^30.26.0"
+    "@castoredc/matter-icons" "^30.26.0"
+    "@castoredc/matter-utils" "^30.26.0"
     imask "7.1.3"
     lodash "^4.17.19"
     react-beautiful-dnd "^13.1.0"

@@ -9,6 +9,8 @@ import OntologyConcept from 'components/MetadataItem/OntologyConcept';
 import { OpenNewWindowIcon } from '@castoredc/matter-icons';
 import Country from 'components/MetadataItem/Country';
 import { OntologyConceptType } from 'types/OntologyConceptType';
+import { Tooltip } from '@castoredc/matter';
+import moment from 'moment';
 
 interface MetadataItemProps {
     title: string,
@@ -33,8 +35,6 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
                 {dataType === 'string' && value}
             </div>;
         case 'description':
-            console.log('---Description');
-            console.log(value);
             return <div>
                 {dataType === 'langString' && localizedText(value, 'en')}
                 {dataType === 'string' && value}
@@ -59,6 +59,14 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
             return <div>{value}</div>;
         case 'time':
             return <div>{value}</div>;
+        case 'dateTime':
+            const { date, time } = {
+                date: value ? value.split(';')[0] : '',
+                time: value ? value.split(';')[1] : '',
+            };
+            return <div>
+                {date && moment(date).format('DD-MM-YYYY')} {time}
+            </div>;
         case 'yesNo':
             return <div>
                 {value}

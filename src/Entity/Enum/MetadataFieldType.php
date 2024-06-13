@@ -16,7 +16,7 @@ use function in_array;
  * @method static static ontologyConceptBrowser()
  * @method static static datePicker()
  * @method static static timePicker()
- * // * @method static static dateAndTimePicker()
+ * @method static static dateAndTimePicker()
  * @method static static checkbox()
  * @method static static checkboxes()
  * @method static static radioButtons()
@@ -32,7 +32,7 @@ use function in_array;
  * @method bool isOntologyConceptBrowser()
  * @method bool isDatePicker()
  * @method bool isTimePicker()
- * // * @method bool isDateAndTimePicker()
+ * @method bool isDateAndTimePicker()
  * @method bool isCheckbox()
  * @method bool isCheckboxes()
  * @method bool isRadioButtons()
@@ -52,7 +52,7 @@ class MetadataFieldType extends Enum
     public const ONTOLOGY_CONCEPT_BROWSER = 'ontologyConceptBrowser';
     public const DATE_PICKER = 'datePicker';
     public const TIME_PICKER = 'timePicker';
-//    public const DATE_AND_TIMEPICKER = 'dateAndTimePicker';
+    public const DATE_AND_TIMEPICKER = 'dateAndTimePicker';
     public const CHECKBOX = 'checkbox';
     public const CHECKBOXES = 'checkboxes';
     public const RADIO_BUTTONS = 'radioButtons';
@@ -70,7 +70,7 @@ class MetadataFieldType extends Enum
         self::ONTOLOGY_CONCEPT_BROWSER => 'Ontology concept browser',
         self::DATE_PICKER => 'Date picker',
         self::TIME_PICKER => 'Time picker',
-//        self::DATE_AND_TIMEPICKER => 'Date and Timepicker',
+        self::DATE_AND_TIMEPICKER => 'Date and Timepicker',
         self::CHECKBOX => 'Checkbox',
         self::CHECKBOXES => 'Checkboxes',
         self::RADIO_BUTTONS => 'Radio buttons',
@@ -99,7 +99,7 @@ class MetadataFieldType extends Enum
         self::ONTOLOGY_CONCEPT_BROWSER => [],
         self::DATE_PICKER => '',
         self::TIME_PICKER => '',
-//        self::DATE_AND_TIMEPICKER => '',
+        self::DATE_AND_TIMEPICKER => '',
         self::CHECKBOX => false,
         self::CHECKBOXES => [],
         self::RADIO_BUTTONS => '',
@@ -136,7 +136,10 @@ class MetadataFieldType extends Enum
             'app' => false,
             'type' => 'string',
         ],
-//        self::DATE_AND_TIMEPICKER => '',
+        self::DATE_AND_TIMEPICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
         self::CHECKBOX => [
             'app' => false,
             'type' => 'bool',
@@ -187,9 +190,9 @@ class MetadataFieldType extends Enum
         XsdDataType::INTEGER => [
             self::INPUT,
         ],
-//        XsdDataType::DATE_TIME => [
-//            self::DATE_AND_TIMEPICKER,
-//        ],
+        XsdDataType::DATE_TIME => [
+            self::DATE_AND_TIMEPICKER,
+        ],
         XsdDataType::DATE => [
             self::DATE_PICKER,
         ],
@@ -257,7 +260,10 @@ class MetadataFieldType extends Enum
         self::TIME_PICKER => [
             MetadataDisplayType::TIME,
         ],
-//        self::DATE_AND_TIMEPICKER => '',
+        self::DATE_AND_TIMEPICKER => [
+            MetadataDisplayType::DATE,
+            MetadataDisplayType::DATE_TIME,
+        ],
         self::CHECKBOX => [
             MetadataDisplayType::YES_NO,
         ],

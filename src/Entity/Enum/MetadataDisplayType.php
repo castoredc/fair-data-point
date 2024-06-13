@@ -43,6 +43,7 @@ class MetadataDisplayType extends Enum
     public const ONTOLOGY_CONCEPTS = 'ontologyConcepts';
     public const DATE = 'date';
     public const TIME = 'time';
+    public const DATE_TIME = 'dateTime';
     public const YES_NO = 'yesNo';
     public const LIST = 'list';
     public const LANGUAGE = 'language';
@@ -59,6 +60,7 @@ class MetadataDisplayType extends Enum
         self::ONTOLOGY_CONCEPTS,
         self::DATE,
         self::TIME,
+        self::DATE_TIME,
         self::YES_NO,
         self::LIST,
         self::LANGUAGE,
@@ -76,6 +78,7 @@ class MetadataDisplayType extends Enum
         self::ONTOLOGY_CONCEPTS => 'Ontology concepts',
         self::DATE => 'Date',
         self::TIME => 'Time',
+        self::DATE_TIME => 'Date and time',
         self::YES_NO => 'Yes/No',
         self::LIST => 'List',
         self::LANGUAGE => 'Language',

@@ -242,7 +242,7 @@ class UpdateMetadataCommandHandler
                 $newAgent->setCountry($this->getCountry($field, $agent->getCountryCode()));
             }
 
-            $return[] = $newAgent;
+            $return[] = $newAgent->toArray();
         }
 
         return $return;

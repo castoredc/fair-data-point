@@ -61,7 +61,7 @@ const YupFieldTypeMappings = {
         .nullable(),
     datePicker: Yup.string(),
     timePicker: Yup.string(),
-    // dateAndTimePicker: 'Date and timepicker',
+    dateAndTimePicker: Yup.string(),
     checkbox: Yup.boolean(),
     checkboxes: Yup.array().of(Yup.string()),
     radioButtons: Yup.string(),
@@ -69,7 +69,13 @@ const YupFieldTypeMappings = {
     languagePicker: Yup.string(),
     licensePicker: Yup.string(),
     countryPicker: Yup.string(),
-    agentSelector: Yup.array().of(Yup.string()),
+    agentSelector: Yup.array()
+        .of(
+            Yup.object().shape({
+                type: Yup.string().required('Please select a type'),
+            })
+        )
+        .nullable(),
 };
 
 export const getFields = (forms: RenderedMetadataFormType[]) => {
