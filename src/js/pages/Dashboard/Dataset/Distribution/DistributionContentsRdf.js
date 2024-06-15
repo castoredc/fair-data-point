@@ -8,6 +8,7 @@ import MappingInterface from 'components/MappingInterface';
 import Split from 'components/Layout/Split';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import PageTabs from 'components/PageTabs';
 
 export default class DistributionContentsRdf extends Component {
     constructor(props) {
