@@ -59,10 +59,6 @@ export interface Study extends PermissionsEnabledEntity {
     count: {
         dataset: number,
     },
-    consent?: {
-        publish: boolean,
-        socialMedia: boolean,
-    },
 };
 
 

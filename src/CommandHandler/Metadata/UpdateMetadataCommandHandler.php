@@ -57,18 +57,26 @@ class UpdateMetadataCommandHandler
             $fields[$field->getId()] = $field;
         }
 
+        $parsedValues = [];
+
+        foreach ($command->getValues() as $fieldId => $value) {
+            $field = $fields[$fieldId];
+            $value = $this->parseValue($field, $value);
+
+            $parsedValues[$fieldId] = $value;
+        }
+
         foreach ($metadata->getValues() as $metadataValue) {
             $this->em->remove($metadataValue);
         }
 
-        foreach ($command->getValues() as $fieldId => $value) {
+        foreach ($parsedValues as $fieldId => $parsedValue) {
             $field = $fields[$fieldId];
             $node = $field->getNode();
-            $value = $this->parseValue($field, $value);
 
-            $metadataValue = new MetadataValue($metadata, $node, $value);
+            $metadataValue = new MetadataValue($metadata, $node, $parsedValue);
+
             $this->em->persist($metadataValue);
-
             $metadata->addValue($metadataValue);
         }
 
@@ -157,7 +165,7 @@ class UpdateMetadataCommandHandler
     /**
      * @param array<mixed> $agents
      *
-     * @return Agent[]
+     * @return array<array>
      *
      * @throws InvalidAgentType
      * @throws InvalidMetadataValue
@@ -224,6 +232,8 @@ class UpdateMetadataCommandHandler
                 $newAgent = $dbAgent;
             } else {
                 $newAgent = $agent;
+
+                $this->em->persist($agent);
             }
 
             if (
@@ -244,6 +254,8 @@ class UpdateMetadataCommandHandler
 
             $return[] = $newAgent->toArray();
         }
+
+        $this->em->flush();
 
         return $return;
     }
@@ -295,7 +307,7 @@ class UpdateMetadataCommandHandler
     /**
      * @param mixed[] $concepts
      *
-     * @return OntologyConcept[]
+     * @return array<array>
      */
     private function parseOntologyConcepts(MetadataModelField $field, array $concepts): array
     {

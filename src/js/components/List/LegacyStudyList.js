@@ -10,7 +10,7 @@ import { Sticky, StickyContainer } from 'react-sticky';
 import StudyFilters from '../Filters/StudyFilters';
 import { apiClient } from 'src/js/network';
 
-export default class StudyList extends Component {
+export default class LegacyStudyList extends Component {
     constructor(props) {
         super(props);
 

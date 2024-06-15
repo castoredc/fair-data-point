@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use function array_merge;
 use function count;
 
 /**
@@ -169,21 +170,21 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
         }
 
         if ($resourceType->isDataset()) {
-            return $this->catalogs->map(static function (Catalog $catalog) {
+            return array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
                 return $catalog->getChildren(ResourceType::dataset());
-            })->toArray();
+            })->toArray());
         }
 
         if ($resourceType->isStudy()) {
-            return $this->catalogs->map(static function (Catalog $catalog) {
+            return array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
                 return $catalog->getChildren(ResourceType::study());
-            })->toArray();
+            })->toArray());
         }
 
         if ($resourceType->isDistribution()) {
-            return $this->catalogs->map(static function (Catalog $catalog) {
+            return array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
                 return $catalog->getChildren(ResourceType::distribution());
-            })->toArray();
+            })->toArray());
         }
 
         return [];

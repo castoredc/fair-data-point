@@ -5,14 +5,16 @@ import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import DatasetList from '../../../components/List/DatasetList';
-import StudyList from '../../../components/List/StudyList';
+import LegacyStudyList from 'components/List/LegacyStudyList';
 import useGetFdp from '../../../hooks/useGetFdp';
 import useGetCatalog from '../../../hooks/useGetCatalog';
-import { localizedText, titleAndDescriptionContext } from 'utils/jsonLdUtils';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
+import DistributionList from 'components/List/DistributionList';
+import StudyList from 'components/List/StudyList';
+import { localizedText } from '../../../util';
 
 interface CatalogProps extends AuthorizedRouteComponentProps {
     embedded: boolean;
@@ -22,11 +24,10 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
     const [currentItem, setCurrentItem] = useState('study');
     const { isLoading: isLoadingFdp, fdp } = useGetFdp();
     const { isLoading: isLoadingCatalog, catalog } = useGetCatalog(match.params.catalog);
-    const { data, isLoading: isLoadingJsonLd } = useJsonLdRepresentation(`${window.location.pathname}?format=jsonld`, titleAndDescriptionContext);
 
-    const isLoading = isLoadingFdp || isLoadingCatalog || isLoadingJsonLd;
+    const isLoading = isLoadingFdp || isLoadingCatalog;
     const breadcrumbs = getBreadCrumbs(location, { fdp, catalog });
-    const title = localizedText(data.title, 'en');
+    const title = catalog ? localizedText(catalog.metadata.title, 'en') : null;
 
     return (
         <Layout className="Catalog" title={title} isLoading={isLoading} embedded={embedded}>
@@ -52,7 +53,6 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
                             catalog={catalog}
                             state={breadcrumbs.current ? breadcrumbs.current.state : null}
                             embedded={embedded}
-                            showMap
                             className="MainCol"
                         />
 

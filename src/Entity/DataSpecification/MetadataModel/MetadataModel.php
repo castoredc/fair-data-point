@@ -8,6 +8,7 @@ use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\FAIRDataPoint;
+use App\Entity\Study;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,6 +48,13 @@ class MetadataModel extends DataSpecification
      */
     private Collection $fdps;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Study", mappedBy="defaultMetadataModel")
+     *
+     * @var Collection<Study>
+     */
+    private Collection $studies;
+
     public function __construct(string $title, ?string $description)
     {
         parent::__construct($title, $description);
@@ -55,5 +63,6 @@ class MetadataModel extends DataSpecification
         $this->distributions = new ArrayCollection();
         $this->datasets = new ArrayCollection();
         $this->fdps = new ArrayCollection();
+        $this->studies = new ArrayCollection();
     }
 }

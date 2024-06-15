@@ -2,42 +2,7 @@
 
 .MetadataSideBar,
 .MetadataModal {
-    .Agents {
-        .Agent {
-            margin-bottom: 5px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid $neutral-30;
-
-            &:last-child {
-                border-bottom: none;
-            }
-
-            a {
-                color: $neutral-700;
-                text-decoration: none;
-            }
-        }
-    }
-
-    .Organization {
-        margin-bottom: 10px;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        .Department {
-            color: $neutral-90;
-        }
-
-        .Location {
-            font-size: 12px;
-        }
-    }
-}
-
-.MetadataSideBar {
-    button {
+    .ViewMetadata {
         padding-left: 0.8rem;
         padding-right: 0.8rem;
     }

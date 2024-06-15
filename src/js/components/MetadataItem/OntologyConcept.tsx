@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import './MetadataItem.scss';
-import useGetLanguage from '../../hooks/useGetLanguage';
 import { OntologyType } from 'types/OntologyType';
 import { Tooltip } from '@castoredc/matter';
 

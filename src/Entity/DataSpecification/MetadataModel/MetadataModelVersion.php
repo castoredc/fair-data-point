@@ -236,7 +236,14 @@ class MetadataModelVersion extends Version implements ModelVersion
             })->toArray());
         }
 
-        return count($triples) > 0 ? $triples[0]->getObject() : null;
+        if (count($triples) === 0) {
+            return null;
+        }
+
+        $node = $triples[0]->getObject();
+        assert($node instanceof ValueNode);
+
+        return $node;
     }
 
     public function getTitleNode(ResourceType $resourceType): ?ValueNode
@@ -280,7 +287,7 @@ class MetadataModelVersion extends Version implements ModelVersion
             $currentOrder = $order[$currentDisplaySetting->getResourceType()->toString()][$currentDisplaySetting->getDisplayPosition()->toString()];
 
             if (
-                $displaySetting
+                $displaySetting !== null
                 && $displaySetting->getResourceType()->isEqualTo($currentDisplaySetting->getResourceType())
                 && $displaySetting->getDisplayPosition()->isEqualTo($currentDisplaySetting->getDisplayPosition())
             ) {
@@ -298,7 +305,7 @@ class MetadataModelVersion extends Version implements ModelVersion
         $this->displaySettings = $newDisplaySettings;
     }
 
-    /** @return Collection<MetadataModelDisplaySetting */
+    /** @return Collection<MetadataModelDisplaySetting> */
     public function getDisplaySettings(): Collection
     {
         return $this->displaySettings;

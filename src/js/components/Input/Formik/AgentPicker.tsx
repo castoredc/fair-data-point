@@ -18,8 +18,11 @@ interface AgentPickerPropsProps extends FieldProps {
 const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>) => {
     const newData = field.value;
 
+    console.log(agent);
+    console.log(newData);
+
     const exists =
-        agent.id !== ''
+        (agent.id !== '' && agent.id === null)
             ? !!newData.find(existingAgent => {
                 if (existingAgent.type !== agent.type) {
                     return false;
@@ -102,7 +105,7 @@ const AgentPicker: FC<AgentPickerPropsProps> = ({ field, form, countries, server
                 })}
             </div>
             <div className="AddButton">
-                <Button icon="add" className="AddButton" buttonType="contentOnly"
+                <Button icon="add" className="AddButton" buttonType="bare"
                         onClick={() => setShowModal(true)}>
                     Add
                 </Button>

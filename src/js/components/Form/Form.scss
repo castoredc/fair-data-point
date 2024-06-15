@@ -75,6 +75,10 @@
     height: 100%;
     flex: 1;
     overflow: auto;
+
+    & > div {
+        margin-bottom: 20px;
+    }
 }
 
 .FormLoader {
@@ -188,6 +192,14 @@
     .AdditionalInformation {
         width: 200px;
         margin-right: 16px;
+    }
+    .AddButton {
+        text-align: right;
+        margin-top: 5px;
+
+        button {
+            padding: 0;
+        }
     }
 }
 

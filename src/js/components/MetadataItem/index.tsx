@@ -1,16 +1,15 @@
-import { Metadata } from 'types/Metadata';
 import React from 'react';
-import { classNames } from '../../util';
+import { localizedText } from '../../util';
 import MetadataItemContainer from 'components/MetadataItem/MetadataItemContainer';
 import Language from 'components/MetadataItem/Language';
 import License from 'components/MetadataItem/License';
-import { localizedText } from '../../util';
 import OntologyConcept from 'components/MetadataItem/OntologyConcept';
 import { OpenNewWindowIcon } from '@castoredc/matter-icons';
 import Country from 'components/MetadataItem/Country';
 import { OntologyConceptType } from 'types/OntologyConceptType';
-import { Tooltip } from '@castoredc/matter';
 import moment from 'moment';
+import { AgentListItemType } from 'types/AgentListType';
+import Agent from 'components/MetadataItem/Agent';
 
 interface MetadataItemProps {
     title: string,
@@ -86,7 +85,15 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
                 return <Country code={value} />;
             </div>;
         case 'agents':
-            return <div></div>;
+            return <div>
+                {value.map((agent: AgentListItemType) => {
+                    return <Agent
+                        type={agent.type}
+                        id={agent.id}
+                        name={agent.name}
+                    />
+                })}
+            </div>;
         case 'image':
             return <div>
                 <img src={value} />
@@ -104,7 +111,7 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
 const MetadataItem: React.FC<MetadataItemProps> = ({ title, type, dataType, value, table, hideLabel }) => {
     hideLabel = ['image'].includes(type) || hideLabel;
 
-    if(value === null) {
+    if(value === null || (Array.isArray(value) && value.length === 0)) {
         return null;
     }
 

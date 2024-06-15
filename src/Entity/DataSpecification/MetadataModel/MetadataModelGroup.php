@@ -6,9 +6,11 @@ namespace App\Entity\DataSpecification\MetadataModel;
 use App\Entity\DataSpecification\Common\Group;
 use App\Entity\DataSpecification\Common\Version;
 use App\Entity\Enum\ResourceType;
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function assert;
 use function iterator_to_array;
 use function strcmp;
 
@@ -40,6 +42,8 @@ class MetadataModelGroup extends Group
         $triples = $this->getElementGroups();
 
         $iterator = $triples->getIterator();
+        assert($iterator instanceof ArrayIterator);
+
         $iterator->uasort(static function (Triple $a, Triple $b) {
             return strcmp(
                 $a->getPredicate()->getIri()->getValue(),

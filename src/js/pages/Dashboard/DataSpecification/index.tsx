@@ -450,7 +450,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                             {
                                 to: mainUrl + '/' + dataSpecification.id + '/' + currentVersion.label + '/display',
                                 title: 'Display',
-                                icon: 'survey',
+                                icon: 'list',
                             },
                             {
                                 type: 'separator',

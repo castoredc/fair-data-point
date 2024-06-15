@@ -41,7 +41,7 @@ export const localizedText = (texts, language = 'en', paragraph = false) => {
         return texts;
     }
 
-    if (texts === null || typeof texts === 'undefined') {
+    if (texts === null || (Array.isArray(texts) && texts.length === 0) || typeof texts === 'undefined') {
         return '';
     }
 

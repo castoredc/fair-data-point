@@ -5,9 +5,6 @@ import { Button, LoadingOverlay } from '@castoredc/matter';
 import { Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../../util';
-import StudyDetailsForm from 'components/Form/Study/StudyDetailsForm';
-import ContactsForm from 'components/Form/Study/ContactsForm';
-import OrganizationsForm from 'components/Form/Study/OrganizationsForm';
 import Header from 'components/Layout/Dashboard/Header';
 import Body from 'components/Layout/Dashboard/Body';
 import Annotations from 'pages/Dashboard/Studies/Study/Annotations';
@@ -19,6 +16,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import MetadataForm from 'components/Form/Metadata/MetadataForm';
 
 interface StudyProps extends AuthorizedRouteComponentProps {}
 
@@ -81,7 +79,7 @@ export default class Study extends Component<StudyProps, StudyState> {
             return <NoPermission text="You do not have permission to edit this study" />;
         }
 
-        const title = study.hasMetadata ? localizedText(study.metadata.briefName, 'en') : study.name;
+        const title = study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name;
 
         return (
             <>
@@ -101,18 +99,10 @@ export default class Study extends Component<StudyProps, StudyState> {
                             icon: 'study',
                         },
                         {
-                            to: '/dashboard/studies/' + study.id + '/team',
+                            to: '/dashboard/studies/' + study.id + '/metadata',
                             exact: true,
-                            title: 'Study team',
-                            customIcon: 'contacts',
-                            disabled: !study.hasMetadata,
-                        },
-                        {
-                            to: '/dashboard/studies/' + study.id + '/centers',
-                            exact: true,
-                            title: 'Participating centers',
-                            customIcon: 'center',
-                            disabled: !study.hasMetadata,
+                            title: 'Metadata',
+                            customIcon: 'metadata',
                         },
                         {
                             type: 'separator',
@@ -150,32 +140,29 @@ export default class Study extends Component<StudyProps, StudyState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <StudyDetailsForm studyId={study.id} onSaved={this.getStudy} />
+                                    <MetadataForm
+                                        type="study"
+                                        object={study}
+                                        onCreate={this.getStudy}
+                                        onSave={this.getStudy}
+                                    />
                                 </PageBody>
                             )}
                         />
-                        {study.hasMetadata && (
-                            <Route
-                                path="/dashboard/studies/:study/team"
-                                exact
-                                render={props => (
-                                    <PageBody>
-                                        <ContactsForm studyId={study.id} />
-                                    </PageBody>
-                                )}
-                            />
-                        )}
-                        {study.hasMetadata && (
-                            <Route
-                                path="/dashboard/studies/:study/centers"
-                                exact
-                                render={props => (
-                                    <PageBody>
-                                        <OrganizationsForm studyId={study.id} />
-                                    </PageBody>
-                                )}
-                            />
-                        )}
+                        <Route
+                            path="/dashboard/studies/:study/metadata"
+                            exact
+                            render={props => (
+                                <PageBody>
+                                    <MetadataForm
+                                        type="study"
+                                        object={study}
+                                        onCreate={this.getStudy}
+                                        onSave={this.getStudy}
+                                    />
+                                </PageBody>
+                            )}
+                        />
                         <Route
                             path="/dashboard/studies/:study/annotations"
                             exact

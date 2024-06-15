@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Validator\Constraints as Assert;
 use function array_merge;
+use function get_parent_class;
 use function json_decode;
 
 class MetadataFormHelper
@@ -21,14 +22,16 @@ class MetadataFormHelper
     public static function getFormsForEntity(MetadataModelVersion $version, MetadataEnrichedEntity $entity): Collection
     {
         $forms = $version->getForms()->filter(static function (MetadataModelForm $form) use ($entity) {
-            return ClassUtils::getClass($entity) === $form->getResourceType()->getClass();
+            return ClassUtils::getClass($entity) === $form->getResourceType()->getClass() ||
+                get_parent_class(ClassUtils::getClass($entity)) === $form->getResourceType()->getClass();
         });
 
         return $forms->map(static function (MetadataModelForm $form) use ($entity) {
             return new RenderedMetadataModelForm(
                 $form,
                 $form->getFields()->filter(static function (MetadataModelField $field) use ($entity) {
-                    return ClassUtils::getClass($entity) === $field->getResourceType()->getClass();
+                    return ClassUtils::getClass($entity) === $field->getResourceType()->getClass() ||
+                        get_parent_class(ClassUtils::getClass($entity)) === $field->getResourceType()->getClass();
                 })->toArray()
             );
         });

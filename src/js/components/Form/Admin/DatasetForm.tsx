@@ -120,9 +120,9 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
                                             <div className="StudyDetails">
                                                 <div className="StudyName">
                                                     <dl>
-                                                        <dt>Brief name</dt>
+                                                        <dt>Title</dt>
                                                         <dd>
-                                                            {dataset.study.hasMetadata ? dataset.study.metadata.briefName : <span className="None">None</span>}
+                                                            {dataset.study.hasMetadata ? dataset.study.metadata.title : <span className="None">None</span>}
                                                         </dd>
                                                         <dt>Study name</dt>
                                                         <dd>{dataset.study.name}</dd>

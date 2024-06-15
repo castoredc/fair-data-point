@@ -9,7 +9,6 @@ import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import useGetDataset from '../../../hooks/useGetDataset';
-import { titleAndDescriptionContext } from 'utils/jsonLdUtils';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
 
@@ -19,9 +18,8 @@ interface DatasetProps extends AuthorizedRouteComponentProps {
 
 const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) => {
     const { isLoading: isLoadingDataset, dataset } = useGetDataset(match.params.dataset);
-    const { data, isLoading: isLoadingJsonLd } = useJsonLdRepresentation(`${window.location.pathname}?format=jsonld`, titleAndDescriptionContext);
 
-    const isLoading = isLoadingDataset || isLoadingJsonLd;
+    const isLoading = isLoadingDataset;
     const breadcrumbs = getBreadCrumbs(location, { dataset });
     const title = dataset ? localizedText(dataset.metadata.title, 'en') : null;
 
@@ -45,7 +43,12 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
 
                         <AssociatedItemsBar items={dataset.count} current="distribution" />
 
-                        <DistributionList dataset={dataset} embedded={embedded} className="MainCol" />
+                        <DistributionList
+                            dataset={dataset}
+                            state={breadcrumbs.current ? breadcrumbs.current.state : null}
+                            embedded={embedded}
+                            className="MainCol"
+                        />
                     </>
                 )}
             </MainBody>

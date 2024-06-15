@@ -11,6 +11,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
 import DashboardTab from 'components/Layout/DashboardTab';
 import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
+import { localizedText } from '../../../util';
 
 interface StudiesProps extends AuthorizedRouteComponentProps {}
 
@@ -130,7 +131,7 @@ export default class Studies extends Component<StudiesProps, StudiesState> {
                                 key={study.id}
                                 selectable={false}
                                 link={`/dashboard/studies/${study.id}`}
-                                title={study.hasMetadata ? study.metadata.briefName : study.name}
+                                title={study.hasMetadata ? localizedText(study.metadata.title, 'en') : study.name}
                             />
                         );
                     })}

@@ -85,7 +85,7 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
         return $uri;
     }
 
-    private function getValue(MetadataEnrichedEntity $entity, Node $node, bool $isLiteral): ?array
+    private function getValue(MetadataEnrichedEntity $entity, Node $node, bool $isLiteral): array
     {
         $metadata = $entity->getLatestMetadata();
         $return = [];
@@ -198,7 +198,7 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
     }
 
     /** @param MetadataEnrichedEntity[] $entities */
-    private function getURIs(array $entities, Node $node)
+    private function getURIs(array $entities, Node $node): array
     {
         $urls = [];
 

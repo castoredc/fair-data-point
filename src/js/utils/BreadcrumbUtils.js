@@ -39,7 +39,7 @@ export const getBreadCrumbs = (location, data) => {
         study
             ? {
                   type: 'study',
-                  title: study.hasMetadata ? study.metadata.briefName : 'Study',
+                  title: study.hasMetadata ? localizedText(study.metadata.title) : 'Study',
                   data: study,
                   path: `/study/${study.slug}`,
                   state: { fdp, catalog, study },

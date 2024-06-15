@@ -111,46 +111,6 @@ parameters:
 			path: src/Command/Distribution/UpdateDistributionCommand.php
 
 		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$conditions follows optional parameter \\$summary\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$briefSummary follows optional parameter \\$scientificName\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$estimatedEnrollment follows optional parameter \\$intervention\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$type follows optional parameter \\$summary\\.$#"
-			count: 1
-			path: src/Command/Metadata/CreateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$conditions follows optional parameter \\$summary\\.$#"
-			count: 1
-			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$briefSummary follows optional parameter \\$scientificName\\.$#"
-			count: 1
-			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$estimatedEnrollment follows optional parameter \\$intervention\\.$#"
-			count: 1
-			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$type follows optional parameter \\$summary\\.$#"
-			count: 1
-			path: src/Command/Metadata/UpdateStudyMetadataCommand.php
-
-		-
 			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$email follows optional parameter \\$middleName\\.$#"
 			count: 1
 			path: src/Command/Security/UpdateUserCommand.php

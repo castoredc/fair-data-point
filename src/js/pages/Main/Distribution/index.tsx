@@ -1,5 +1,5 @@
 import React from 'react';
-import { classNames } from '../../../util';
+import { classNames, localizedText } from '../../../util';
 import ListItem from '../../../components/ListItem';
 import Header from '../../../components/Layout/Header';
 import { Banner } from '@castoredc/matter';
@@ -8,8 +8,6 @@ import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import { isGranted } from 'utils/PermissionHelper';
 import { LockIcon } from '@castoredc/matter-icons';
-import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
-import { localizedText, titleAndDescriptionContext } from 'utils/jsonLdUtils';
 import useGetDistribution from '../../../hooks/useGetDistribution';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import MetadataSideBar from 'components/MetadataSideBar';
@@ -21,11 +19,10 @@ interface DistributionProps extends AuthorizedRouteComponentProps {
 
 const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, match }) => {
     const { isLoading: isLoadingDistribution, distribution } = useGetDistribution(match.params.dataset, match.params.distribution);
-    const { data, isLoading: isLoadingJsonLd } = useJsonLdRepresentation(`${window.location.pathname}?format=jsonld`, titleAndDescriptionContext);
 
-    const isLoading = isLoadingDistribution || isLoadingJsonLd;
+    const isLoading = isLoadingDistribution;
     const breadcrumbs = getBreadCrumbs(location, { distribution });
-    const title = localizedText(data.title, 'en');
+    const title = distribution ? localizedText(distribution.metadata.title, 'en') : null;
 
     return (
         <Layout className="Distribution" title={title} isLoading={isLoading} embedded={embedded}>

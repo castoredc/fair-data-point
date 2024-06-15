@@ -11,7 +11,7 @@ const useGetStudy = (slug: string) => {
     useEffect(() => {
         const getStudy = async () => {
             try {
-                const response = await apiClient.get('/api/study/' + slug);
+                const response = await apiClient.get('/api/study/slug/' + slug);
                 setStudy(response.data);
                 setIsLoading(false);
             } catch (error) {

@@ -40,7 +40,7 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, languages, multiline, serverError }) => {
     const serverErrors = serverError[field.name];
 
-    const value = field.value ? field.value : [defaultData];
+    const value = (field.value && field.value.length > 0) ? field.value : [defaultData];
 
     return (
         <div className="Input LocalizedTextInput">
@@ -96,7 +96,7 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
             </div>
 
             <div className="LocalizedTextInputAddButton">
-                <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>
+                <Button icon="add" className="AddButton" buttonType="bare" onClick={() => handleAdd(field, form)}>
                     Add new
                 </Button>
             </div>

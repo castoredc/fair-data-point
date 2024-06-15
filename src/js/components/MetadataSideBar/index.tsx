@@ -4,6 +4,7 @@ import { Button, Modal, Separator, Tooltip } from '@castoredc/matter';
 import moment from 'moment/moment';
 import MetadataItemContainer from 'components/MetadataItem/MetadataItemContainer';
 import MetadataItem from 'components/MetadataItem';
+import './MetadataSideBar.scss';
 
 interface MetadataSideBarProps {
     metadata: Metadata,
@@ -19,7 +20,7 @@ const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) =>
                 return <MetadataItem title={item.title} type={item.type} dataType={item.dataType} value={item.value} />
             })}
 
-            <Button icon="openNewWindow" buttonType="bare" onClick={() => setOpen(true)}>
+            <Button icon="openNewWindow" buttonType="bare" onClick={() => setOpen(true)} className="ViewMetadata">
                 View metadata
             </Button>
 

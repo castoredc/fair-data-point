@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import './MetadataItem.scss';
-import MetadataItem from './index';
 import { AttributionControl, Map, Marker, TileLayer } from 'react-leaflet';
 import { getCenterFromDegrees } from '../../util';
 import Organization from './Organization';

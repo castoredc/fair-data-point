@@ -328,14 +328,16 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     /** @return Distribution[] */
     public function getDistributions(): array
     {
-        return array_unique(array_merge(
-            $this->datasets->map(static function (Dataset $dataset) {
-                return $dataset->getDistributions()->toArray();
-            })->toArray(),
-            $this->studies->map(static function (Study $study) {
-                return $study->getDistributions();
-            })->toArray()
-        ));
+        return array_unique(
+            array_merge(
+                ...$this->datasets->map(static function (Dataset $dataset) {
+                    return $dataset->getDistributions()->toArray();
+                })->toArray(),
+                ...$this->studies->map(static function (Study $study) {
+                    return $study->getDistributions();
+                })->toArray()
+            )
+        );
     }
 
     /** @return MetadataEnrichedEntity[] */

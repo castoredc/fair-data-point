@@ -9,11 +9,14 @@ use App\Entity\DataSpecification\Common\Mapping\ElementMapping;
 use App\Entity\DataSpecification\Common\Mapping\GroupMapping;
 use App\Entity\DataSpecification\Common\Mapping\Mapping;
 use App\Entity\DataSpecification\Common\Version as DataSpecificationVersion;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
+use App\Entity\Enum\ResourceType;
 use App\Entity\Enum\StudySource;
 use App\Entity\FAIRData\AccessibleEntity;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Metadata\StudyMetadata;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,6 +24,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use function array_merge;
+use function array_unique;
 use function count;
 
 /**
@@ -31,7 +36,7 @@ use function count;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
  */
-abstract class Study implements AccessibleEntity
+abstract class Study implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 
@@ -92,6 +97,12 @@ abstract class Study implements AccessibleEntity
     /** @ORM\Column(type="boolean", options={"default":"0"}) */
     private bool $isArchived = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="studies")
+     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
+     */
+    private ?MetadataModel $defaultMetadataModel = null;
+
     public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)
     {
         $this->source = $source;
@@ -104,14 +115,24 @@ abstract class Study implements AccessibleEntity
         $this->mappings = new ArrayCollection();
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return (string) $this->id;
     }
 
-    public function setId(?string $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
     }
 
     public function getName(): ?string
@@ -122,16 +143,6 @@ abstract class Study implements AccessibleEntity
     public function setName(?string $name): void
     {
         $this->name = $name;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(?string $slug): void
-    {
-        $this->slug = $slug;
     }
 
     /** @return Collection<StudyMetadata> */
@@ -150,9 +161,9 @@ abstract class Study implements AccessibleEntity
         return $this->metadata->isEmpty() ? null : $this->metadata->last();
     }
 
-    public function getLatestMetadataVersion(): Version
+    public function getLatestMetadataVersion(): ?Version
     {
-        return $this->metadata->last()->getVersion();
+        return $this->metadata->isEmpty() ? null : $this->metadata->last()->getVersion();
     }
 
     public function hasMetadata(): bool
@@ -295,8 +306,50 @@ abstract class Study implements AccessibleEntity
     /** @return Distribution[] */
     public function getDistributions(): array
     {
-        return $this->datasets->map(static function (Dataset $dataset) {
-            return $dataset->getDistributions()->toArray();
-        })->toArray();
+        return array_merge(...$this->datasets->map(static function (Dataset $dataset) {
+                return $dataset->getDistributions()->toArray();
+        })->toArray());
+    }
+
+    public function getDefaultMetadataModel(): ?MetadataModel
+    {
+        return $this->defaultMetadataModel;
+    }
+
+    public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
+    {
+        $this->defaultMetadataModel = $defaultMetadataModel;
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getChildren(ResourceType $resourceType): array
+    {
+        if ($resourceType->isDataset()) {
+            return $this->datasets->toArray();
+        }
+
+        if ($resourceType->isDistribution()) {
+            return $this->getDistributions();
+        }
+
+        return [];
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getParents(ResourceType $resourceType): array
+    {
+        if ($resourceType->isFdp()) {
+            return array_unique(
+                array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
+                    return $catalog->getParents(ResourceType::fdp());
+                })->toArray())
+            );
+        }
+
+        if ($resourceType->isCatalog()) {
+            return $this->catalogs->toArray();
+        }
+
+        return [];
     }
 }

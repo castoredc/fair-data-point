@@ -39,6 +39,7 @@ class CreateMetadataModelCommandHandler
         $catalogRecordNode = new RecordNode($version, ResourceType::catalog());
         $datasetRecordNode = new RecordNode($version, ResourceType::dataset());
         $distributionRecordNode = new RecordNode($version, ResourceType::distribution());
+        $studyRecordNode = new RecordNode($version, ResourceType::study());
 
         $fdpChildrenNode = new ChildrenNode($version, ResourceType::fdp());
         $catalogChildrenNode = new ChildrenNode($version, ResourceType::catalog());
@@ -56,6 +57,7 @@ class CreateMetadataModelCommandHandler
         $version->addNode($catalogRecordNode);
         $version->addNode($datasetRecordNode);
         $version->addNode($distributionRecordNode);
+        $version->addNode($studyRecordNode);
 
         $version->addNode($fdpChildrenNode);
         $version->addNode($catalogChildrenNode);

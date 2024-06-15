@@ -112,4 +112,15 @@ class ValueNode extends Node
     {
         return $this->displaySetting;
     }
+
+    /** @return Collection<MetadataValue> */
+    public function getValues(): Collection
+    {
+        return $this->values;
+    }
+
+    public function setValues(Collection $values): void
+    {
+        $this->values = $values;
+    }
 }
