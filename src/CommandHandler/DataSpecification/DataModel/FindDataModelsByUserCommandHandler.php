@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\DataModel;
 
 use App\Command\DataSpecification\DataModel\FindDataModelsByUserCommand;
+use App\Entity\DataSpecification\Common\DataSpecificationPermission;
 use App\Entity\DataSpecification\DataModel\DataModel;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,10 +29,15 @@ class FindDataModelsByUserCommandHandler
         $user = $this->security->getUser();
         assert($user instanceof User);
 
+        /** @var DataSpecificationPermission[] $specificationPermissions */
         $specificationPermissions = $user->getDataSpecifications()->toArray();
         $specifications = [];
 
         foreach ($specificationPermissions as $specificationPermission) {
+            if (! $specificationPermission->getEntity() instanceof DataModel) {
+                continue;
+            }
+
             $specifications[] = $specificationPermission->getEntity();
         }
 
