@@ -5,6 +5,7 @@ namespace App\Api\Resource\DataSpecification\DataModel;
 
 use App\Api\Resource\DataSpecification\Common\DataSpecificationVersionApiResource;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use function array_merge;
 
 class DataModelVersionApiResource extends DataSpecificationVersionApiResource
 {

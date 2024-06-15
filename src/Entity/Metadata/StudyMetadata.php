@@ -42,7 +42,7 @@ class StudyMetadata extends Metadata
     private Version $version;
 
     /** @ORM\Column(type="string", length=255) */
-    private string $briefName;
+    private string $briefName = '';
 
     /** @ORM\Column(type="text", nullable=true) */
     private ?string $scientificName = null;
