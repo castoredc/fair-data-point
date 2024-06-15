@@ -20,6 +20,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use function assert;
+use function dump;
 use function in_array;
 use function time;
 
@@ -138,6 +139,8 @@ abstract class FAIRDataController extends AbstractController
                 'exception' => $e,
                 'Distribution' => $entity->getId(),
             ]);
+
+            dump($e);
 
             return new JsonResponse(['error' => 'An error occurred while loading the RDF.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

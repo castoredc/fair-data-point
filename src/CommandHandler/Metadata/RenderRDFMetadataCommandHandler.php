@@ -7,6 +7,7 @@ use App\Command\Metadata\RenderRDFMetadataCommand;
 use App\Exception\NoAccessPermission;
 use App\Service\RDF\RenderRdfMetadataHelper;
 use App\Service\UriHelper;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
 use Exception;
@@ -17,6 +18,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class RenderRDFMetadataCommandHandler
 {
     public function __construct(
+        private EntityManagerInterface $em,
         private Security $security,
         private UriHelper $uriHelper,
     ) {
@@ -31,7 +33,7 @@ class RenderRDFMetadataCommandHandler
             throw new NoAccessPermission();
         }
 
-        $helper = new RenderRdfMetadataHelper($this->uriHelper, $this->security);
+        $helper = new RenderRdfMetadataHelper($this->em, $this->uriHelper, $this->security);
 
         $graph = new Graph();
 

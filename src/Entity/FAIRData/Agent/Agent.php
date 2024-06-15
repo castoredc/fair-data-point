@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData\Agent;
 
+use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
@@ -12,7 +13,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="agent", indexes={@ORM\Index(name="slug", columns={"slug"})})
  */
-abstract class Agent
+abstract class Agent implements AccessibleEntity
 {
     /**
      * @ORM\Id

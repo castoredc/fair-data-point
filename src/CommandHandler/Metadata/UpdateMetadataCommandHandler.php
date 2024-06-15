@@ -165,7 +165,7 @@ class UpdateMetadataCommandHandler
     /**
      * @param array<mixed> $agents
      *
-     * @return array<array>
+     * @return array<array<mixed>>
      *
      * @throws InvalidAgentType
      * @throws InvalidMetadataValue
@@ -307,7 +307,7 @@ class UpdateMetadataCommandHandler
     /**
      * @param mixed[] $concepts
      *
-     * @return array<array>
+     * @return array<array<mixed>>
      */
     private function parseOntologyConcepts(MetadataModelField $field, array $concepts): array
     {

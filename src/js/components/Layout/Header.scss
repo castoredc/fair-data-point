@@ -21,7 +21,7 @@ header {
 
     &.Mobile {
         .Spacing {
-            height: $mobileHeaderHeight;
+            height: $mobileHeaderHeight + 2 * $mobileHeaderPadding;
             background: $primary-main;
         }
 

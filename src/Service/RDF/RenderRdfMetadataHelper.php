@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\RDF;
 
+use App\Entity\DataSpecification\Common\OptionGroupOption;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
@@ -12,11 +14,24 @@ use App\Entity\DataSpecification\MetadataModel\Node\Node;
 use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
+use App\Entity\FAIRData\Agent\Agent;
+use App\Entity\FAIRData\Agent\Department;
+use App\Entity\FAIRData\Agent\Organization;
+use App\Entity\FAIRData\Agent\Person;
+use App\Entity\FAIRData\Country;
 use App\Entity\FAIRData\Distribution;
+use App\Entity\FAIRData\Language;
+use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
+use App\Entity\Iri;
+use App\Entity\Terminology\Ontology;
+use App\Entity\Terminology\OntologyConcept;
+use App\Exception\InvalidMetadataValue;
 use App\Exception\NotFound;
+use App\Exception\OntologyNotFound;
 use App\Service\UriHelper;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf\Graph;
 use EasyRdf\Literal;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -25,6 +40,7 @@ use function json_decode;
 class RenderRdfMetadataHelper extends RdfRenderHelper
 {
     public function __construct(
+        private EntityManagerInterface $em,
         private UriHelper $uriHelper,
         private Security $security,
     ) {
@@ -85,6 +101,7 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
         return $uri;
     }
 
+    /** @return array<mixed> */
     private function getValue(MetadataEnrichedEntity $entity, Node $node, bool $isLiteral): array
     {
         $metadata = $entity->getLatestMetadata();
@@ -159,33 +176,51 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
 
         if ($node->isAnnotatedValue()) {
             // Validate option
-//            if ($field->getFieldType()->hasOptionGroup()) {
-//                if ($field->getFieldType()->isCheckboxes()) {
-//                    $value = $this->getOptionGroupOptions($field, $value);
-//                } else {
-//                    $value = $this->getOptionGroupOption($field, $value);
-//                }
-//            }
+            if ($field->getFieldType()->hasOptionGroup()) {
+                if ($field->getFieldType()->isCheckboxes()) {
+                    $return[] = $this->getOptionGroupOptions($field, $value);
+                } else {
+                    $value[] = $this->getOptionGroupOption($field, $value);
+                }
+            }
 
-//            if ($field->getFieldType()->isCountryPicker()) {
-//                $value = $this->getCountry($field, $value)->getCode();
-//            }
-//
-//            if ($field->getFieldType()->isLicensePicker()) {
-//                $value = $this->getLicense($field, $value)->getSlug();
-//            }
-//
-//            if ($field->getFieldType()->isLanguagePicker()) {
-//                $value = $this->getLanguage($field, $value)->getCode();
-//            }
-//
-//            if ($field->getFieldType()->isOntologyConceptBrowser()) {
-//                $value = $this->parseOntologyConcepts($field, $value);
-//            }
-//
-//            if ($field->getFieldType()->isAgentSelector()) {
-//                $value = $this->parseAgents($field, $value);
-//            }
+            if ($field->getFieldType()->isCountryPicker()) {
+                $country = $this->em->getRepository(Country::class)->find($value);
+
+                if ($country === null) {
+                    return [];
+                }
+
+                $return[] = $this->uriHelper->getUri($country);
+            }
+
+            if ($field->getFieldType()->isLicensePicker()) {
+                $license = $this->em->getRepository(License::class)->find($value);
+
+                if ($license === null) {
+                    return [];
+                }
+
+                $return[] = $this->uriHelper->getUri($license);
+            }
+
+            if ($field->getFieldType()->isLanguagePicker()) {
+                $language = $this->em->getRepository(Language::class)->find($value);
+
+                if ($language === null) {
+                    return [];
+                }
+
+                $return[] = $this->uriHelper->getUri($language);
+            }
+
+            if ($field->getFieldType()->isOntologyConceptBrowser()) {
+                $return = $this->parseOntologyConcepts($value);
+            }
+
+            if ($field->getFieldType()->isAgentSelector()) {
+                $return = $this->parseAgents($value);
+            }
         } elseif ($node->getDataType()->isLangString()) {
             $value = LocalizedText::fromArray($value);
 
@@ -197,7 +232,11 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
         return $return;
     }
 
-    /** @param MetadataEnrichedEntity[] $entities */
+    /**
+     * @param MetadataEnrichedEntity[] $entities
+     *
+     * @return string[]
+     */
     private function getURIs(array $entities, Node $node): array
     {
         $urls = [];
@@ -209,5 +248,116 @@ class RenderRdfMetadataHelper extends RdfRenderHelper
         }
 
         return $urls;
+    }
+
+    private function getOptionGroupOption(MetadataModelField $field, string $value): OptionGroupOption
+    {
+        $optionGroup = $field->getOptionGroup();
+
+        $option = $optionGroup->getOption($value);
+
+        if ($option === null) {
+            throw new InvalidMetadataValue($field->getTitle());
+        }
+
+        return $option;
+    }
+
+    /**
+     * @param array<string> $values
+     *
+     * @return OptionGroupOption[]
+     *
+     * @throws InvalidMetadataValue
+     */
+    private function getOptionGroupOptions(MetadataModelField $field, array $values): array
+    {
+        $optionGroup = $field->getOptionGroup();
+        $options = [];
+
+        foreach ($values as $value) {
+            $option = $optionGroup->getOption($value);
+
+            if ($option === null) {
+                throw new InvalidMetadataValue($field->getTitle());
+            }
+
+            $options[] = $option;
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param mixed[] $concepts
+     *
+     * @return string[]
+     */
+    private function parseOntologyConcepts(array $concepts): array
+    {
+        $return = [];
+
+        $ontologyRepository = $this->em->getRepository(Ontology::class);
+        $ontologyConceptRepository = $this->em->getRepository(OntologyConcept::class);
+
+        foreach ($concepts as $conceptData) {
+            $ontology = $ontologyRepository->find($conceptData['ontology']['id']);
+
+            if ($ontology === null) {
+                throw new OntologyNotFound();
+            }
+
+            $dbConcept = $ontologyConceptRepository->findByOntologyAndCode($ontology, $conceptData['code']);
+
+            if ($dbConcept !== null) {
+                $return[] = $dbConcept->getUrl()->getValue();
+            } else {
+                $return[] = (new OntologyConcept(
+                    new Iri($conceptData['url']),
+                    $conceptData['code'],
+                    $ontology,
+                    $conceptData['displayName'],
+                ))->getUrl()->getValue();
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param mixed[] $agents
+     *
+     * @return string[]
+     */
+    private function parseAgents(array $agents): array
+    {
+        $return = [];
+
+        foreach ($agents as $item) {
+            $agent = null;
+
+            if ($item['type'] === Organization::TYPE) {
+                $organization = Organization::fromData($item['organization']);
+                $agent = $organization;
+            } elseif ($item['type'] === Department::TYPE) {
+                $organization = Organization::fromData($item['organization']);
+                $department = Department::fromData($item['department'], $organization);
+                $agent = $department;
+            } elseif ($item['type'] === Person::TYPE) {
+                $agent = Person::fromData($item['person']);
+            }
+
+            if (! $agent->hasId()) {
+                continue;
+            }
+
+            $repository = $this->em->getRepository(Agent::class);
+
+            $dbAgent = $repository->find($agent->getId());
+
+            $return[] = $this->uriHelper->getUri($dbAgent);
+        }
+
+        return $return;
     }
 }

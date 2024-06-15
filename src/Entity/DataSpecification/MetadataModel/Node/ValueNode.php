@@ -119,6 +119,7 @@ class ValueNode extends Node
         return $this->values;
     }
 
+    /** @param Collection<MetadataValue> $values */
     public function setValues(Collection $values): void
     {
         $this->values = $values;

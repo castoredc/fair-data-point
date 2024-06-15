@@ -80,6 +80,7 @@ class Department extends Agent
 
         $data[self::TYPE] = [
             'id' => $this->id,
+            'name' => $this->getName(),
             'additionalInformation' => $this->additionalInformation,
         ];
 
