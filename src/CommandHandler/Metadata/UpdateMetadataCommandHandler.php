@@ -340,7 +340,7 @@ class UpdateMetadataCommandHandler
         return $return;
     }
 
-    private function getOptionGroupOption(MetadataModelField $field, string $value): OptionGroupOption
+    private function getOptionGroupOption(MetadataModelField $field, string $value): string
     {
         $optionGroup = $field->getOptionGroup();
 
@@ -350,13 +350,13 @@ class UpdateMetadataCommandHandler
             throw new InvalidMetadataValue($field->getTitle());
         }
 
-        return $option;
+        return $option->getValue();
     }
 
     /**
      * @param array<string> $values
      *
-     * @return OptionGroupOption[]
+     * @return string[]
      *
      * @throws InvalidMetadataValue
      */
@@ -372,7 +372,7 @@ class UpdateMetadataCommandHandler
                 throw new InvalidMetadataValue($field->getTitle());
             }
 
-            $options[] = $option;
+            $options[] = $option->getValue();
         }
 
         return $options;
