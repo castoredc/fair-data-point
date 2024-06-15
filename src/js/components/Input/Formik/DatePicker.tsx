@@ -3,6 +3,7 @@ import React, { ChangeEvent, FC } from 'react';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
 import { DatePicker as CastorDatePicker } from '@castoredc/matter';
+import { format } from 'date-fns';
 
 interface DatePickerProps extends FieldProps {
     readOnly?: boolean;
@@ -17,16 +18,17 @@ const DatePicker: FC<DatePickerProps> = ({ field, form, meta, readOnly, onChange
     const errors = form.errors[field.name];
     const serverErrors = serverError ? serverError[field.name] : undefined;
 
-    const value = field.value !== '' && field.value !== null ? field.value : undefined;
+    const value = field.value !== null ? field.value : '';
 
     return (
         <>
             <CastorDatePicker
                 name={field.name}
-                selected={value}
+                selected={value !== '' ? new Date(value) : null}
                 dateFormat="dd-MM-yyyy"
                 onChange={(date, event) => {
-                    field.onChange({ target: { name: field.name, value: date } });
+                    const formattedDate = format(date, 'yyyy-MM-dd')
+                    field.onChange({ target: { name: field.name, value: formattedDate } });
                 }}
                 onBlur={field.onBlur}
                 invalid={touched && !!errors}
