@@ -19,21 +19,12 @@ use function assert;
 #[AsMessageHandler]
 class RunQueryAgainstDistributionSparqlEndpointCommandHandler
 {
-    protected MysqlBasedDistributionService $mysqlBasedDistributionService;
-    protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-    private EncryptionService $encryptionService;
-    private Security $security;
-
     public function __construct(
-        MysqlBasedDistributionService $mysqlBasedDistributionService,
-        TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
-        EncryptionService $encryptionService,
-        Security $security
+        protected MysqlBasedDistributionService $mysqlBasedDistributionService,
+        protected TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
+        private EncryptionService $encryptionService,
+        private Security $security,
     ) {
-        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
-        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
-        $this->encryptionService = $encryptionService;
-        $this->security = $security;
     }
 
     /** @throws Exception */

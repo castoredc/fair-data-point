@@ -30,12 +30,21 @@
         display: flex;
         flex-flow: column;
         height: 100%;
-        overflow: auto;
+
+        //* {
+        //    box-sizing: border-box;
+        //}
 
         .TableHeader {
             padding: 10px 0;
             background-color: $pale-grey;
             border-bottom: 0.2rem solid $neutral-50 !important;
+            scrollbar-gutter: stable;
+            overflow: hidden;
+
+            div div {
+                padding: 0 10px;
+            }
         }
 
         .TableBody {

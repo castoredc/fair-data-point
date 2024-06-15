@@ -28,15 +28,8 @@ class EdcApiTokenGuardAuthenticator extends AbstractAuthenticator implements Aut
     private const CREDENTIALS_API_TOKEN = 'api_token';
     private const CREDENTIALS_EDC_SERVER = 'edc_server';
 
-    protected ApiClient $apiClient;
-    private EntityManagerInterface $entityManager;
-    private LoggerInterface $logger;
-
-    public function __construct(ApiClient $apiClient, EntityManagerInterface $entityManager, LoggerInterface $logger)
+    public function __construct(protected ApiClient $apiClient, private EntityManagerInterface $entityManager, private LoggerInterface $logger)
     {
-        $this->apiClient = $apiClient;
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     public function supports(Request $request): bool
@@ -102,17 +95,17 @@ class EdcApiTokenGuardAuthenticator extends AbstractAuthenticator implements Aut
                 'You have to have a completed user profile on the FAIR Data Point before you can use the ' .
                 'API. Please login manually at least once.'
             );
-        } else {
-            // Castor User Found, update user
-            $dbUser->setNameFirst($castorUser->getNameFirst());
-            $dbUser->setNameMiddle($castorUser->getNameMiddle());
-            $dbUser->setNameLast($castorUser->getNameLast());
-
-            $dbUser->setToken($castorUser->getToken());
-            $dbUser->setServer($castorUser->getServer());
-
-            $user = $dbUser->getUser();
         }
+
+        // Castor User Found, update user
+        $dbUser->setNameFirst($castorUser->getNameFirst());
+        $dbUser->setNameMiddle($castorUser->getNameMiddle());
+        $dbUser->setNameLast($castorUser->getNameLast());
+
+        $dbUser->setToken($castorUser->getToken());
+        $dbUser->setServer($castorUser->getServer());
+
+        $user = $dbUser->getUser();
 
         $this->apiClient->setUser($user->getCastorUser());
 

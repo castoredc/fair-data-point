@@ -10,23 +10,8 @@ use Exception;
 
 class FieldResult
 {
-    private Field $field;
-
-    private string $value;
-
-    private ?string $label = null;
-
-    private ?DateTime $updatedOn = null;
-
-    private Record $record;
-
-    public function __construct(Field $field, string $value, ?string $label, ?DateTime $updatedOn, Record $record)
+    public function __construct(private Field $field, private string $value, private ?string $label = null, private ?DateTime $updatedOn = null, private Record $record)
     {
-        $this->field = $field;
-        $this->value = $value;
-        $this->label = $label;
-        $this->updatedOn = $updatedOn;
-        $this->record = $record;
     }
 
     public function getField(): Field

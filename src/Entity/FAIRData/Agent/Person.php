@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_filter;
+use function array_key_exists;
+use function array_merge;
 use function implode;
 use function strtolower;
 use function uniqid;
@@ -66,6 +68,7 @@ class Person extends Agent
 
         $slugify = new Slugify();
         $fullName = $this->getFullName();
+
         parent::__construct($slugify->slugify($fullName . ' ' . uniqid()), $fullName);
 
         $this->affiliations = new ArrayCollection();
@@ -76,6 +79,7 @@ class Person extends Agent
         $names = array_filter([$this->firstName, $this->middleName, $this->lastName]);
 
         $fullName = implode(' ', $names);
+
         parent::setName($fullName);
 
         return $fullName;
@@ -205,10 +209,28 @@ class Person extends Agent
             NameOrigin::peer()
         );
 
-        if ($data['id'] !== null) {
+        if (array_key_exists('id', $data)) {
             $person->setId($data['id']);
         }
 
         return $person;
+    }
+
+    /** @return array<mixed> */
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'type' => self::TYPE,
+            self::TYPE => [
+                'id' => $this->id,
+                'firstName' => $this->firstName,
+                'middleName' => $this->middleName,
+                'lastName' => $this->lastName,
+                'fullName' => $this->getFullName(),
+                'nameOrigin' => $this->nameOrigin->toString(),
+                'email' => $this->email,
+                'orcid' => $this->orcid?->getValue(),
+            ],
+        ]);
     }
 }

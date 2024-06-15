@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
 
 class DeleteDataDictionaryGroupCommand
 {
-    private DataDictionaryGroup $group;
-
-    public function __construct(DataDictionaryGroup $group)
+    public function __construct(private DataDictionaryGroup $group)
     {
-        $this->group = $group;
     }
 
     public function getGroup(): DataDictionaryGroup

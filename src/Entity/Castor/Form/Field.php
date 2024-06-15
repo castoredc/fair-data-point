@@ -122,12 +122,10 @@ class Field extends CastorEntity
 
     private ?FieldOptionGroup $optionGroup = null;
 
-    private ?string $optionGroupId = null;
-
     /** @var array<MetadataPoint> */
     private array $metadata;
 
-    public function __construct(string $id, CastorStudy $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, ?string $optionGroupId)
+    public function __construct(string $id, CastorStudy $study, ?string $type, string $label, ?float $number, ?string $variableName, ?bool $required, ?bool $hidden, ?string $info, ?string $units, ?string $parentId, private ?string $optionGroupId = null)
     {
         parent::__construct($id, $label, $study, null);
 
@@ -140,7 +138,6 @@ class Field extends CastorEntity
         $this->info = $info;
         $this->units = $units;
         $this->parentId = $parentId;
-        $this->optionGroupId = $optionGroupId;
 
         if ($variableName === null) {
             return;

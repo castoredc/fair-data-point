@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 
 class DeleteMetadataModelOptionGroupCommand
 {
-    private MetadataModelOptionGroup $optionGroup;
-
-    public function __construct(MetadataModelOptionGroup $optionGroup)
+    public function __construct(private MetadataModelOptionGroup $optionGroup)
     {
-        $this->optionGroup = $optionGroup;
     }
 
     public function getOptionGroup(): MetadataModelOptionGroup

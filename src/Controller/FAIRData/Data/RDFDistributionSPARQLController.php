@@ -30,12 +30,9 @@ use function assert;
 
 class RDFDistributionSPARQLController extends ApiController
 {
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em, EventDispatcherInterface $eventDispatcher)
+    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em, private EventDispatcherInterface $eventDispatcher)
     {
         parent::__construct($apiClient, $validator, $logger, $em);
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

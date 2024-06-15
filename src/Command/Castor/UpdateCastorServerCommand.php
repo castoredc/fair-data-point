@@ -5,30 +5,15 @@ namespace App\Command\Castor;
 
 final class UpdateCastorServerCommand
 {
-    private ?int $id;
-    private string $name;
-    private string $url;
-    private string $flag;
-    private bool $default;
-    private string $clientId;
-    private string $clientSecret;
-
     public function __construct(
-        ?int $id,
-        string $name,
-        string $url,
-        string $flag,
-        bool $default,
-        string $clientId,
-        string $clientSecret
+        private ?int $id,
+        private string $name,
+        private string $url,
+        private string $flag,
+        private bool $default,
+        private string $clientId,
+        private string $clientSecret,
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->url = $url;
-        $this->flag = $flag;
-        $this->default = $default;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
     }
 
     public function getId(): ?int

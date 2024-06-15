@@ -75,6 +75,10 @@
     height: 100%;
     flex: 1;
     overflow: auto;
+
+    & > div {
+        margin-bottom: 20px;
+    }
 }
 
 .FormLoader {
@@ -144,6 +148,11 @@
     &:first-child {
         margin-top: 0;
     }
+
+    .RequiredIndicator {
+        color: $red-400;
+        margin-left: 2px;
+    }
 }
 
 .FormHeading {
@@ -171,7 +180,30 @@
     }
 }
 
-.OntologyConceptFormBlock {
+.AgentPicker {
+    .Name {
+        width: 234px;
+        margin-right: 16px;
+    }
+    .Type {
+        width: 100px;
+        margin-right: 16px;
+    }
+    .AdditionalInformation {
+        width: 200px;
+        margin-right: 16px;
+    }
+    .AddButton {
+        text-align: right;
+        margin-top: 5px;
+
+        button {
+            padding: 0;
+        }
+    }
+}
+
+.OntologyConceptFormBlock, .AgentPicker {
     border: 1px solid $neutral-50;
     border-radius: 3px;
     width: 610px;

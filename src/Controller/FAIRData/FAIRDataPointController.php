@@ -5,7 +5,6 @@ namespace App\Controller\FAIRData;
 
 use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
-use App\Graph\Resource\FAIRDataPoint\FAIRDataPointGraphResource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -26,14 +25,10 @@ class FAIRDataPointController extends FAIRDataController
         $fdp = $handledStamp->getResult();
         assert($fdp instanceof FAIRDataPoint);
 
-        if ($this->acceptsHttp($request)) {
-            return $this->render('react.html.twig', $this->getSeoTexts($fdp));
-        }
-
-        return new Response(
-            (new FAIRDataPointGraphResource($fdp, $this->basePurl))->toGraph()->serialise('turtle'),
-            Response::HTTP_OK,
-            ['content-type' => 'text/turtle']
+        return $this->renderResource(
+            $request,
+            $fdp,
+            $bus
         );
     }
 }

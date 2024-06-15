@@ -5,13 +5,8 @@ namespace App\Command\Agent;
 
 class FindOrganizationsCommand
 {
-    private string $country;
-    private string $search;
-
-    public function __construct(string $country, string $search)
+    public function __construct(private string $country, private string $search)
     {
-        $this->country = $country;
-        $this->search = $search;
     }
 
     public function getCountry(): string

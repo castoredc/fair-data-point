@@ -35,13 +35,15 @@ class CatalogsApiController extends ApiController
             $parsed = $this->parseRequest(CatalogMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof CatalogMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new GetPaginatedCatalogsCommand(
-                null,
-                $parsed->getSearch(),
-                $parsed->getPerPage(),
-                $parsed->getPage(),
-                $parsed->getAcceptSubmissions()
-            ));
+            $envelope = $bus->dispatch(
+                new GetPaginatedCatalogsCommand(
+                    null,
+                    $parsed->getSearch(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage(),
+                    $parsed->getAcceptSubmissions()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -71,9 +73,11 @@ class CatalogsApiController extends ApiController
         assert($user instanceof User);
 
         try {
-            $envelope = $bus->dispatch(new FindCatalogsByUserCommand(
-                $user
-            ));
+            $envelope = $bus->dispatch(
+                new FindCatalogsByUserCommand(
+                    $user
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -107,7 +111,12 @@ class CatalogsApiController extends ApiController
             assert($parsed instanceof CatalogApiRequest);
 
             $envelope = $bus->dispatch(
-                new CreateCatalogCommand($parsed->getSlug(), $parsed->isAcceptSubmissions(), $parsed->isSubmissionAccessesData())
+                new CreateCatalogCommand(
+                    $parsed->getSlug(),
+                    $parsed->isAcceptSubmissions(),
+                    $parsed->getDefaultMetadataModel(),
+                    $parsed->isSubmissionAccessesData()
+                )
             );
 
             $handledStamp = $envelope->last(HandledStamp::class);

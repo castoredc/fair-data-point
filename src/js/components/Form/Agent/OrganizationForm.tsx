@@ -54,7 +54,7 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
                             <div className={classNames(values.country === null && 'WaitingOnInput')}>
                                 <Field component={OrganizationSelect} country={values.country} name="organization" serverError={validation} />
                                 <Button buttonType="primary" type="submit" disabled={isSubmitting}>
-                                    Add center
+                                    Add organization
                                 </Button>
                             </div>
                         </Form>

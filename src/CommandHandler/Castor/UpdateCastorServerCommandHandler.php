@@ -14,13 +14,8 @@ use function count;
 #[AsMessageHandler]
 final class UpdateCastorServerCommandHandler
 {
-    private EntityManagerInterface $em;
-    private EncryptionService $encryptionService;
-
-    public function __construct(EntityManagerInterface $em, EncryptionService $encryptionService)
+    public function __construct(private EntityManagerInterface $em, private EncryptionService $encryptionService)
     {
-        $this->em = $em;
-        $this->encryptionService = $encryptionService;
     }
 
     /** @throws CouldNotTransformEncryptedStringToJson */

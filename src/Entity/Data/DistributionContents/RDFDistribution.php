@@ -75,4 +75,9 @@ class RDFDistribution extends DistributionContents implements AccessibleEntity
     {
         $this->databaseType = $databaseType;
     }
+
+    public function getMediaType(): string
+    {
+        return 'test/turtle';
+    }
 }

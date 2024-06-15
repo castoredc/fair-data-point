@@ -17,6 +17,12 @@ class CatalogApiRequest extends SingleApiRequest
     private string $slug;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     */
+    private string $defaultMetadataModel;
+
+    /**
      * @Assert\NotNull
      * @Assert\Type("bool")
      */
@@ -28,6 +34,7 @@ class CatalogApiRequest extends SingleApiRequest
     protected function parse(): void
     {
         $this->slug = $this->getFromData('slug');
+        $this->defaultMetadataModel = $this->getFromData('defaultMetadataModel');
         $this->acceptSubmissions = $this->getFromData('acceptSubmissions');
         $this->submissionAccessesData = $this->getFromData('submissionAccessesData');
     }
@@ -35,6 +42,11 @@ class CatalogApiRequest extends SingleApiRequest
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function getDefaultMetadataModel(): string
+    {
+        return $this->defaultMetadataModel;
     }
 
     public function isAcceptSubmissions(): bool

@@ -7,23 +7,8 @@ use App\Entity\FAIRData\Agent\Agent;
 
 class GetPaginatedCatalogsCommand
 {
-    private ?Agent $agent;
-
-    private ?string $search = null;
-
-    private int $perPage;
-
-    private int $page;
-
-    private ?bool $acceptSubmissions;
-
-    public function __construct(?Agent $agent, ?string $search, int $perPage, int $page, ?bool $acceptSubmissions)
+    public function __construct(private ?Agent $agent, private ?string $search = null, private int $perPage, private int $page, private ?bool $acceptSubmissions)
     {
-        $this->agent = $agent;
-        $this->search = $search;
-        $this->perPage = $perPage;
-        $this->page = $page;
-        $this->acceptSubmissions = $acceptSubmissions;
     }
 
     public function getAgent(): ?Agent

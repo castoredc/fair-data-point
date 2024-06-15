@@ -10,16 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 /** @ORM\Entity */
 class Report extends StructureElement
 {
-    private ?string $description = null;
-
-    private ?string $type = null;
-
-    public function __construct(string $id, CastorStudy $study, ?string $name, ?string $description, ?string $type)
+    public function __construct(string $id, CastorStudy $study, ?string $name, private ?string $description = null, private ?string $type = null)
     {
         parent::__construct($id, $study, StructureType::report(), $name);
-
-        $this->description = $description;
-        $this->type = $type;
     }
 
     public function getDescription(): ?string

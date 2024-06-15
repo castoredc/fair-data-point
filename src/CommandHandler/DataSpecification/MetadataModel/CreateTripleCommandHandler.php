@@ -19,13 +19,8 @@ use function assert;
 #[AsMessageHandler]
 class CreateTripleCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(private EntityManagerInterface $em, private Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     /** @throws InvalidNodeType */
@@ -44,11 +39,7 @@ class CreateTripleCommandHandler
 
         $nodeRepository = $this->em->getRepository(Node::class);
 
-        if ($command->getSubjectType()->isRecord()) {
-            $subject = $nodeRepository->findRecordNodeForModel($metadataModelVersion);
-        } else {
-            $subject = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getSubjectValue());
-        }
+        $subject = $nodeRepository->findByModelAndId($metadataModelVersion, $command->getSubjectValue());
 
         assert($subject instanceof Node);
 

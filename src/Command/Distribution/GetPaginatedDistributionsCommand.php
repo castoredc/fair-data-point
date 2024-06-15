@@ -9,26 +9,8 @@ use App\Entity\FAIRData\Dataset;
 
 class GetPaginatedDistributionsCommand
 {
-    private ?Catalog $catalog;
-
-    private ?Dataset $dataset;
-
-    private ?Agent $agent;
-
-    private ?string $search = null;
-
-    private int $perPage;
-
-    private int $page;
-
-    public function __construct(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?string $search, int $perPage, int $page)
+    public function __construct(private ?Catalog $catalog, private ?Dataset $dataset, private ?Agent $agent, private ?string $search = null, private int $perPage, private int $page)
     {
-        $this->catalog = $catalog;
-        $this->dataset = $dataset;
-        $this->agent = $agent;
-        $this->search = $search;
-        $this->perPage = $perPage;
-        $this->page = $page;
     }
 
     public function getCatalog(): ?Catalog

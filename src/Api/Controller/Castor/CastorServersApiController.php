@@ -27,17 +27,14 @@ use function assert;
 
 final class CastorServersApiController extends ApiController
 {
-    private EncryptionService $encryptionService;
-
     public function __construct(
         ApiClient $apiClient,
         ValidatorInterface $validator,
         LoggerInterface $logger,
         EntityManagerInterface $em,
-        EncryptionService $encryptionService
+        private EncryptionService $encryptionService,
     ) {
         parent::__construct($apiClient, $validator, $logger, $em);
-        $this->encryptionService = $encryptionService;
     }
 
     /** @Route("/api/castor/servers", methods={"GET"}, name="api_servers") */
@@ -91,7 +88,7 @@ final class CastorServersApiController extends ApiController
             $bus->dispatch(new DeleteCastorServerCommand($id));
 
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
-        } catch (CastorServerNotFound $e) {
+        } catch (CastorServerNotFound) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         } catch (HandlerFailedException $e) {
             if ($e->getPrevious() instanceof CastorServerNotFound) {

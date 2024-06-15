@@ -8,11 +8,8 @@ use App\Entity\Terminology\OntologyConcept;
 
 class OntologyConceptApiResource implements ApiResource
 {
-    private OntologyConcept $concept;
-
-    public function __construct(OntologyConcept $concept)
+    public function __construct(private OntologyConcept $concept)
     {
-        $this->concept = $concept;
     }
 
     /** @return array<mixed> */

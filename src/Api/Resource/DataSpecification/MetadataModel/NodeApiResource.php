@@ -5,19 +5,19 @@ namespace App\Api\Resource\DataSpecification\MetadataModel;
 
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Common\IriApiResource;
-use App\Api\Resource\DataSpecification\Common\OptionGroupApiResource;
+use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
+use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 
 class NodeApiResource implements ApiResource
 {
-    private Node $node;
-
-    public function __construct(Node $node)
+    public function __construct(private Node $node)
     {
-        $this->node = $node;
     }
 
     /** @return array<mixed> */
@@ -31,7 +31,13 @@ class NodeApiResource implements ApiResource
             'value' => $this->node->getValue() ?? null,
         ];
 
-        if ($this->node instanceof ExternalIriNode) {
+        if ($this->node instanceof RecordNode) {
+            $data['value'] = [
+                'resourceType' => $this->node->getResourceType()->toString(),
+            ];
+        } elseif ($this->node instanceof InternalIriNode) {
+            $data['repeated'] = $this->node->isRepeated();
+        } elseif ($this->node instanceof ExternalIriNode) {
             $data['value'] = (new IriApiResource($this->node->getMetadataModelVersion(), $this->node->getIri()))->toArray();
         } elseif ($this->node instanceof LiteralNode) {
             $data['value'] = [
@@ -40,10 +46,16 @@ class NodeApiResource implements ApiResource
             ];
         } elseif ($this->node instanceof ValueNode) {
             $data['value'] = [
-                'dataType' => $this->node->getDataType()->toString(),
+                'dataType' => $this->node->getDataType()?->toString(),
                 'value' => $this->node->getValue(),
-                'fieldType' => $this->node->getFieldType()?->toString(),
-                'optionGroup' => $this->node->getOptionGroup() !== null ? (new OptionGroupApiResource($this->node->getOptionGroup()))->toArray() : null,
+            ];
+        } elseif ($this->node instanceof ChildrenNode) {
+            $data['value'] = [
+                'resourceType' => $this->node->getResourceType()->toString(),
+            ];
+        } elseif ($this->node instanceof ParentsNode) {
+            $data['value'] = [
+                'resourceType' => $this->node->getResourceType()->toString(),
             ];
         }
 

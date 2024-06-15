@@ -32,6 +32,7 @@ class DatasetPermission extends Permission
     public function __construct(User $user, PermissionType $type, Dataset $dataset)
     {
         parent::__construct($user, $type);
+
         $this->dataset = $dataset;
     }
 

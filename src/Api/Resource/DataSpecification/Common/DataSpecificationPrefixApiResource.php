@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\Common\Model\NamespacePrefix;
 
 class DataSpecificationPrefixApiResource implements ApiResource
 {
-    private NamespacePrefix $prefix;
-
-    public function __construct(NamespacePrefix $prefix)
+    public function __construct(private NamespacePrefix $prefix)
     {
-        $this->prefix = $prefix;
     }
 
     /** @return array<mixed> */

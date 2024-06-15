@@ -19,15 +19,8 @@ use function assert;
 #[AsMessageHandler]
 class CreateAffiliationCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private ApiClient $gridApiClient;
-
-    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $gridApiClient)
+    public function __construct(private EntityManagerInterface $em, private Security $security, private ApiClient $gridApiClient)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->gridApiClient = $gridApiClient;
     }
 
     public function __invoke(CreateAffiliationCommand $command): void
@@ -49,7 +42,7 @@ class CreateAffiliationCommandHandler
         } elseif ($command->getOrganizationSource()->isGrid()) {
             try {
                 $gridInstitute = $this->gridApiClient->getInstituteById($command->getOrganizationId());
-            } catch (NotFound $e) {
+            } catch (NotFound) {
                 throw new NotFound();
             }
 

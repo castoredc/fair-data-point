@@ -27,7 +27,7 @@ abstract class MetadataEnrichedEntityRepository extends EntityRepository
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             return 0;
         }
     }

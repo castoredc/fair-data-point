@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 
 class MetadataModelsApiResource implements ApiResource
 {
-    /** @var MetadataModel[] */
-    private array $metadataModels;
-
     /** @param MetadataModel[] $metadataModels */
-    public function __construct(array $metadataModels)
+    public function __construct(private array $metadataModels)
     {
-        $this->metadataModels = $metadataModels;
     }
 
     /** @return array<mixed> */

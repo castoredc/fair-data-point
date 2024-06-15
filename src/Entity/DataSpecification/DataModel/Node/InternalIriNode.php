@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="data_model_node_internal")
  */
 class InternalIriNode extends Node

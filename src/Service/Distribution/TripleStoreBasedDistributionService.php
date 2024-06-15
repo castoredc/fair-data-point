@@ -16,25 +16,10 @@ use Throwable;
 
 class TripleStoreBasedDistributionService implements DistributionService
 {
-    private string $host;
-
-    private string $protocol;
-
-    private string $user;
-
-    private string $pass;
-
-    private int $port;
-
     private DatabaseApiClient $client;
 
-    public function __construct(string $host = '', string $protocol = '', string $user = '', string $pass = '', int $port = 8081)
+    public function __construct(private string $host = '', private string $protocol = '', private string $user = '', private string $pass = '', private int $port = 8081)
     {
-        $this->host = $host;
-        $this->protocol = $protocol;
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->port = $port;
     }
 
     private function createCreatorClient(): AdminApiClient
@@ -127,7 +112,7 @@ class TripleStoreBasedDistributionService implements DistributionService
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,
         ?string $namedGraphUrl = null,
-        ?array $nameSpaces = null
+        ?array $nameSpaces = null,
     ): mixed {
         $this->createReadOnlyDatabaseApiClient($databaseInformation, $encryptionService);
 

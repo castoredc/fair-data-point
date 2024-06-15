@@ -28,6 +28,8 @@ class MetadataModelModuleApiResource extends DataSpecificationModuleApiResource
             $return['triples'] = (new TriplesApiResource($module))->toArray();
         }
 
+        $return['resourceType'] = $module->getResourceType()->toString();
+
         return $return;
     }
 }

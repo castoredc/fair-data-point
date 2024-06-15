@@ -4,8 +4,8 @@ const DataGridHelper = {
             currentPage: 0,
             start: 1,
             perPage: perPage,
-            totalResults: null,
-            totalPages: null,
+            totalResults: 0,
+            totalPages: 1,
         };
     },
 

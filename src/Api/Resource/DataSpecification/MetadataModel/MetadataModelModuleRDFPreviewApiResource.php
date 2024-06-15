@@ -7,20 +7,12 @@ use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\Visualization\VisualizationEdgeApiResource;
 use App\Api\Resource\DataSpecification\Visualization\VisualizationNodeApiResource;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
-use App\Entity\DataSpecification\MetadataModel\Triple;
 use function array_values;
-use function assert;
 
 class MetadataModelModuleRDFPreviewApiResource implements ApiResource
 {
-    private MetadataModelGroup $module;
-
-    private string $rdfPreview;
-
-    public function __construct(MetadataModelGroup $module, string $rdfPreview)
+    public function __construct(private MetadataModelGroup $module, private string $rdfPreview)
     {
-        $this->module = $module;
-        $this->rdfPreview = $rdfPreview;
     }
 
     /** @return array<mixed> */
@@ -30,8 +22,6 @@ class MetadataModelModuleRDFPreviewApiResource implements ApiResource
         $visualizationNodes = [];
 
         foreach ($this->module->getTriples() as $triple) {
-            assert($triple instanceof Triple);
-
             $visualizationNodes[$triple->getSubject()->getId()] = (new VisualizationNodeApiResource($triple->getSubject()))->toArray();
             $visualizationNodes[$triple->getObject()->getId()] = (new VisualizationNodeApiResource($triple->getObject()))->toArray();
 

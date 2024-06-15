@@ -7,11 +7,8 @@ use App\Entity\Terminology\Annotation;
 
 class DeleteAnnotationCommand
 {
-    private Annotation $annotation;
-
-    public function __construct(Annotation $annotation)
+    public function __construct(private Annotation $annotation)
     {
-        $this->annotation = $annotation;
     }
 
     public function getAnnotation(): Annotation

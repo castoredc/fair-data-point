@@ -7,17 +7,12 @@ use App\Entity\FAIRData\Dataset;
 
 class UpdateDatasetCommand
 {
-    private Dataset $dataset;
-
-    private string $slug;
-
-    private bool $published;
-
-    public function __construct(Dataset $dataset, string $slug, bool $published)
-    {
-        $this->dataset = $dataset;
-        $this->slug = $slug;
-        $this->published = $published;
+    public function __construct(
+        private Dataset $dataset,
+        private string $slug,
+        private bool $published,
+        private string $defaultMetadataModelId,
+    ) {
     }
 
     public function getDataset(): Dataset
@@ -33,5 +28,10 @@ class UpdateDatasetCommand
     public function getPublished(): bool
     {
         return $this->published;
+    }
+
+    public function getDefaultMetadataModelId(): string
+    {
+        return $this->defaultMetadataModelId;
     }
 }

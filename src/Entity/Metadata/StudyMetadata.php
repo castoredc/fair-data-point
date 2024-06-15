@@ -5,11 +5,13 @@ namespace App\Entity\Metadata;
 
 use App\Entity\Enum\MethodType;
 use App\Entity\Enum\RecruitmentStatus;
+use App\Entity\Enum\ResourceType;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
 use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Iri;
 use App\Entity\Metadata\StudyMetadata\ParticipatingCenter;
 use App\Entity\Metadata\StudyMetadata\StudyTeamMember;
@@ -17,13 +19,10 @@ use App\Entity\Study;
 use App\Entity\Terminology\CodedText;
 use App\Entity\Terminology\OntologyConcept;
 use App\Entity\Version;
-use App\Traits\CreatedAndUpdated;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
-use Ramsey\Uuid\UuidInterface;
 use function array_merge;
 
 /**
@@ -31,18 +30,8 @@ use function array_merge;
  * @ORM\Table(name="metadata_study")
  * @ORM\HasLifecycleCallbacks
  */
-class StudyMetadata
+class StudyMetadata extends Metadata
 {
-    use CreatedAndUpdated;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
-    private UuidInterface|string $id;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"})
      * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
@@ -151,16 +140,6 @@ class StudyMetadata
         $this->study = $study;
     }
 
-    public function getVersion(): Version
-    {
-        return $this->version;
-    }
-
-    public function setVersion(Version $version): void
-    {
-        $this->version = $version;
-    }
-
     public function getBriefName(): string
     {
         return $this->briefName;
@@ -201,7 +180,7 @@ class StudyMetadata
         $this->summary = $summary;
     }
 
-    public function getType(): StudyType
+    public function getType(): ?StudyType
     {
         return $this->type;
     }
@@ -287,22 +266,6 @@ class StudyMetadata
         return $this->studyTeamMembers;
     }
 
-    /** @return Person[] */
-    public function getContacts(): array
-    {
-        $contacts = [];
-
-        foreach ($this->studyTeamMembers as $studyTeamMember) {
-            if (! $studyTeamMember->isContact()) {
-                continue;
-            }
-
-            $contacts[] = $studyTeamMember->getPerson();
-        }
-
-        return $contacts;
-    }
-
     /** @param Collection<StudyTeamMember> $studyTeamMembers */
     public function setStudyTeam(Collection $studyTeamMembers): void
     {
@@ -377,11 +340,6 @@ class StudyMetadata
         }
     }
 
-    public function getId(): string
-    {
-        return (string) $this->id;
-    }
-
     public function getLogo(): ?Iri
     {
         return $this->logo;
@@ -412,7 +370,7 @@ class StudyMetadata
         $this->consentSocialMedia = $consentSocialMedia;
     }
 
-    public function getMethodType(): MethodType
+    public function getMethodType(): ?MethodType
     {
         return $this->methodType;
     }
@@ -452,5 +410,25 @@ class StudyMetadata
     public function setKeywords(?LocalizedText $keywords): void
     {
         $this->keyword = $keywords;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return $this->study;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return ResourceType::study();
+    }
+
+    public function getLegacyVersion(): Version
+    {
+        return $this->version;
+    }
+
+    public function setLegacyVersion(Version $version): void
+    {
+        $this->version = $version;
     }
 }

@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 
 class DataDictionaryVersionExportApiResource implements ApiResource
 {
-    private DataDictionaryVersion $dataDictionaryVersion;
-
-    public function __construct(DataDictionaryVersion $dataDictionaryVersion)
+    public function __construct(private DataDictionaryVersion $dataDictionaryVersion)
     {
-        $this->dataDictionaryVersion = $dataDictionaryVersion;
     }
 
     /** @return array<mixed> */

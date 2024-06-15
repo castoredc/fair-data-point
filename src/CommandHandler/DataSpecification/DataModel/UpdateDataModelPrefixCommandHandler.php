@@ -13,13 +13,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class UpdateDataModelPrefixCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(private EntityManagerInterface $em, private Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     public function __invoke(UpdateDataModelPrefixCommand $command): void

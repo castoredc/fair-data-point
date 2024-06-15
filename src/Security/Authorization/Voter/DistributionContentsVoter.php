@@ -16,11 +16,8 @@ class DistributionContentsVoter extends Voter
     public const ACCESS_DATA = 'access_data';
     public const MANAGE = 'manage';
 
-    private Security $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     /** @inheritDoc */

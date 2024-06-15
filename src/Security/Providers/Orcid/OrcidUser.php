@@ -31,13 +31,11 @@ class OrcidUser implements ProviderUser
     private string $orcid;
     /** @ORM\Column(type="string", length=255) */
     private string $name;
-    private ?string $token = null;
 
-    public function __construct(string $orcid, string $name, ?string $token)
+    public function __construct(string $orcid, string $name, private ?string $token = null)
     {
         $this->orcid = $orcid;
         $this->name = $name;
-        $this->token = $token;
     }
 
     public function getOrcid(): string

@@ -5,17 +5,8 @@ namespace App\Command\Terminology;
 
 class FindOntologyConceptsCommand
 {
-    private string $ontologyId;
-
-    private string $query;
-
-    private bool $includeIndividuals;
-
-    public function __construct(string $ontologyId, string $query, bool $includeIndividuals)
+    public function __construct(private string $ontologyId, private string $query, private bool $includeIndividuals)
     {
-        $this->ontologyId = $ontologyId;
-        $this->query = $query;
-        $this->includeIndividuals = $includeIndividuals;
     }
 
     public function getOntologyId(): string

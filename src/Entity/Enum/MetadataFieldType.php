@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Enum;
 
+use App\Validator\Constraints\AgentArray;
+use App\Validator\Constraints\LocalizedText;
+use function in_array;
+
 /**
  * @method static static input()
  * @method static static inputLocale()
@@ -17,6 +21,10 @@ namespace App\Entity\Enum;
  * @method static static checkboxes()
  * @method static static radioButtons()
  * @method static static dropdown()
+ * @method static static languagePicker()
+ * @method static static licensePicker()
+ * @method static static countryPicker()
+ * @method static static agentSelector()
  * @method bool isInput()
  * @method bool isInputLocale()
  * @method bool isTextarea()
@@ -29,6 +37,10 @@ namespace App\Entity\Enum;
  * @method bool isCheckboxes()
  * @method bool isRadioButtons()
  * @method bool isDropdown()
+ * @method bool isLanguagePicker()
+ * @method bool isLicensePicker()
+ * @method bool isCountryPicker()
+ * @method bool isAgentSelector()
  * @inheritDoc
  */
 class MetadataFieldType extends Enum
@@ -45,6 +57,10 @@ class MetadataFieldType extends Enum
     public const CHECKBOXES = 'checkboxes';
     public const RADIO_BUTTONS = 'radioButtons';
     public const DROPDOWN = 'dropdown';
+    public const LANGUAGE_PICKER = 'languagePicker';
+    public const LICENSE_PICKER = 'licensePicker';
+    public const COUNTRY_PICKER = 'countryPicker';
+    public const AGENT_SELECTOR = 'agentSelector';
 
     public const LABELS = [
         self::INPUT => 'Input',
@@ -59,6 +75,103 @@ class MetadataFieldType extends Enum
         self::CHECKBOXES => 'Checkboxes',
         self::RADIO_BUTTONS => 'Radio buttons',
         self::DROPDOWN => 'Dropdown',
+        self::LANGUAGE_PICKER => 'Language picker',
+        self::LICENSE_PICKER => 'License picker',
+        self::COUNTRY_PICKER => 'Country picker',
+        self::AGENT_SELECTOR => 'Agent selector',
+    ];
+
+    public const DEFAULT_VALUES = [
+        self::INPUT => '',
+        self::INPUT_LOCALE => [
+            [
+                'text' => '',
+                'language' => '',
+            ],
+        ],
+        self::TEXTAREA => '',
+        self::TEXTAREA_LOCALE => [
+            [
+                'text' => '',
+                'language' => '',
+            ],
+        ],
+        self::ONTOLOGY_CONCEPT_BROWSER => [],
+        self::DATE_PICKER => '',
+        self::TIME_PICKER => '',
+        self::DATE_AND_TIMEPICKER => '',
+        self::CHECKBOX => false,
+        self::CHECKBOXES => [],
+        self::RADIO_BUTTONS => '',
+        self::DROPDOWN => '',
+        self::LANGUAGE_PICKER => '',
+        self::LICENSE_PICKER => '',
+        self::COUNTRY_PICKER => '',
+        self::AGENT_SELECTOR => [],
+    ];
+
+    public const VALIDATORS = [
+        self::INPUT => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::INPUT_LOCALE => [
+            'app' => true,
+            'type' => LocalizedText::class,
+        ],
+        self::TEXTAREA => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::TEXTAREA_LOCALE => [
+            'app' => true,
+            'type' => LocalizedText::class,
+        ],
+        self::ONTOLOGY_CONCEPT_BROWSER => null,
+        self::DATE_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::TIME_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::DATE_AND_TIMEPICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::CHECKBOX => [
+            'app' => false,
+            'type' => 'bool',
+        ],
+        self::CHECKBOXES => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::RADIO_BUTTONS => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::DROPDOWN => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::LANGUAGE_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::LICENSE_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::COUNTRY_PICKER => [
+            'app' => false,
+            'type' => 'string',
+        ],
+        self::AGENT_SELECTOR => [
+            'app' => true,
+            'type' => AgentArray::class,
+        ],
     ];
 
     public const TYPE_ANNOTATED = 'annotated';
@@ -112,10 +225,83 @@ class MetadataFieldType extends Enum
         XsdDataType::BOOLEAN => [
             self::CHECKBOX,
         ],
+        XsdDataType::URL => [
+            self::INPUT,
+        ],
+    ];
+
+    public const DISPLAY_TYPES = [
+        self::INPUT => [
+            MetadataDisplayType::HEADING,
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+            MetadataDisplayType::IMAGE,
+            MetadataDisplayType::LINK,
+        ],
+        self::INPUT_LOCALE => [
+            MetadataDisplayType::HEADING,
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::TEXTAREA => [
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::TEXTAREA_LOCALE => [
+            MetadataDisplayType::DESCRIPTION,
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::ONTOLOGY_CONCEPT_BROWSER => [
+            MetadataDisplayType::ONTOLOGY_CONCEPTS,
+        ],
+        self::DATE_PICKER => [
+            MetadataDisplayType::DATE,
+        ],
+        self::TIME_PICKER => [
+            MetadataDisplayType::TIME,
+        ],
+        self::DATE_AND_TIMEPICKER => [
+            MetadataDisplayType::DATE,
+            MetadataDisplayType::DATE_TIME,
+        ],
+        self::CHECKBOX => [
+            MetadataDisplayType::YES_NO,
+        ],
+        self::CHECKBOXES => [
+            MetadataDisplayType::LIST,
+        ],
+        self::RADIO_BUTTONS => [
+            MetadataDisplayType::LIST,
+        ],
+        self::DROPDOWN => [
+            MetadataDisplayType::PARAGRAPH,
+        ],
+        self::LANGUAGE_PICKER => [
+            MetadataDisplayType::LANGUAGE,
+        ],
+        self::LICENSE_PICKER => [
+            MetadataDisplayType::LICENSE,
+        ],
+        self::COUNTRY_PICKER => [
+            MetadataDisplayType::COUNTRY,
+        ],
+        self::AGENT_SELECTOR => [
+            MetadataDisplayType::AGENTS,
+        ],
     ];
 
     public const ANNOTATED_VALUE_TYPES = [
+        self::CHECKBOXES,
+        self::RADIO_BUTTONS,
+        self::DROPDOWN,
+        self::AGENT_SELECTOR,
         self::ONTOLOGY_CONCEPT_BROWSER,
+        self::LANGUAGE_PICKER,
+        self::LICENSE_PICKER,
+        self::COUNTRY_PICKER,
+    ];
+
+    public const HAS_OPTION_GROUP = [
         self::CHECKBOXES,
         self::RADIO_BUTTONS,
         self::DROPDOWN,
@@ -125,4 +311,26 @@ class MetadataFieldType extends Enum
         self::TYPE_PLAIN => self::PLAIN_VALUE_TYPES,
         self::TYPE_ANNOTATED => self::ANNOTATED_VALUE_TYPES,
     ];
+
+    public function hasOptionGroup(): bool
+    {
+        return in_array($this->toString(), self::HAS_OPTION_GROUP, true);
+    }
+
+    public function getDefaultValue(): mixed
+    {
+        return self::DEFAULT_VALUES[$this->toString()];
+    }
+
+    /** @return array{app: bool, type: string}|null */
+    public function getValidator(): ?array
+    {
+        return self::VALIDATORS[$this->toString()];
+    }
+
+    /** @return string[]|null */
+    public function getDisplayTypes(): ?array
+    {
+        return self::DISPLAY_TYPES[$this->toString()];
+    }
 }

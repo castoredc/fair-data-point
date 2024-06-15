@@ -7,11 +7,8 @@ use App\Entity\FAIRData\Agent\Agent;
 
 class GetAgentAssociatedMetadataCountCommand
 {
-    private Agent $agent;
-
-    public function __construct(Agent $agent)
+    public function __construct(private Agent $agent)
     {
-        $this->agent = $agent;
     }
 
     public function getAgent(): Agent

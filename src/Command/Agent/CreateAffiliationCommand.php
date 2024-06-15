@@ -9,29 +9,8 @@ use App\Entity\FAIRData\Agent\Person;
 
 class CreateAffiliationCommand
 {
-    private Person $person;
-    private ?OrganizationSource $organizationSource;
-    private ?string $organizationId = null;
-    private ?string $organizationName = null;
-    private ?string $organizationCity = null;
-    private string $organizationCountry;
-    private ?DepartmentSource $departmentSource;
-    private ?string $departmentId = null;
-    private ?string $departmentName = null;
-    private string $position;
-
-    public function __construct(Person $person, ?OrganizationSource $organizationSource, ?string $organizationId, ?string $organizationName, ?string $organizationCity, string $organizationCountry, ?DepartmentSource $departmentSource, ?string $departmentId, ?string $departmentName, string $position)
+    public function __construct(private Person $person, private ?OrganizationSource $organizationSource, private ?string $organizationId = null, private ?string $organizationName = null, private ?string $organizationCity = null, private string $organizationCountry, private ?DepartmentSource $departmentSource, private ?string $departmentId = null, private ?string $departmentName = null, private string $position)
     {
-        $this->person = $person;
-        $this->organizationSource = $organizationSource;
-        $this->organizationId = $organizationId;
-        $this->organizationName = $organizationName;
-        $this->organizationCity = $organizationCity;
-        $this->organizationCountry = $organizationCountry;
-        $this->departmentSource = $departmentSource;
-        $this->departmentId = $departmentId;
-        $this->departmentName = $departmentName;
-        $this->position = $position;
     }
 
     public function getPerson(): Person

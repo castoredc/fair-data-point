@@ -9,11 +9,8 @@ use const DATE_ATOM;
 
 class DistributionGenerationRecordLogApiResource implements ApiResource
 {
-    private DistributionGenerationRecordLog $recordLog;
-
-    public function __construct(DistributionGenerationRecordLog $recordLog)
+    public function __construct(private DistributionGenerationRecordLog $recordLog)
     {
-        $this->recordLog = $recordLog;
     }
 
     /** @return array<mixed> */

@@ -5,17 +5,8 @@ namespace App\Entity\Terminology;
 
 class CodedTextConcept
 {
-    private OntologyConcept $ontologyConcept;
-
-    private int $positionFrom;
-
-    private int $positionTo;
-
-    public function __construct(OntologyConcept $ontologyConcept, int $positionFrom, int $positionTo)
+    public function __construct(private OntologyConcept $ontologyConcept, private int $positionFrom, private int $positionTo)
     {
-        $this->ontologyConcept = $ontologyConcept;
-        $this->positionFrom = $positionFrom;
-        $this->positionTo = $positionTo;
     }
 
     public function getOntologyConcept(): OntologyConcept

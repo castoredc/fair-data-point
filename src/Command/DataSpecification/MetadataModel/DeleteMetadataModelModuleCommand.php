@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 
 class DeleteMetadataModelModuleCommand
 {
-    private MetadataModelGroup $module;
-
-    public function __construct(MetadataModelGroup $module)
+    public function __construct(private MetadataModelGroup $module)
     {
-        $this->module = $module;
     }
 
     public function getModule(): MetadataModelGroup

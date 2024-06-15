@@ -5,17 +5,8 @@ namespace App\Entity\Castor\Structure;
 
 class MetadataPoint
 {
-    private string $id;
-
-    private string $value;
-
-    private ?string $description = null;
-
-    public function __construct(string $id, string $value, ?string $description)
+    public function __construct(private string $id, private string $value, private ?string $description = null)
     {
-        $this->id = $id;
-        $this->value = $value;
-        $this->description = $description;
     }
 
     public function getId(): string

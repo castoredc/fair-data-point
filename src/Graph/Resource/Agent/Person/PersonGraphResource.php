@@ -11,12 +11,8 @@ class PersonGraphResource extends AgentGraphResource
 {
     private const ORCID_URL = 'https://orcid.org/';
 
-    private Person $person;
-
-    public function __construct(Person $person, string $baseUrl)
+    public function __construct(private Person $person, string $baseUrl)
     {
-        $this->person = $person;
-
         parent::__construct($person, $baseUrl);
     }
 

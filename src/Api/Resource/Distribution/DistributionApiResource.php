@@ -7,6 +7,7 @@ use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\DataSpecification\DataDictionary\DataDictionaryVersionApiResource;
 use App\Api\Resource\DataSpecification\DataModel\DataModelVersionApiResource;
+use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Entity\Data\DistributionContents\CSVDistribution;
 use App\Entity\Data\DistributionContents\RDFDistribution;
@@ -16,14 +17,8 @@ use const DATE_ATOM;
 
 class DistributionApiResource implements ApiResource
 {
-    private Distribution $distribution;
-
-    private UriHelper $uriHelper;
-
-    public function __construct(Distribution $distribution, UriHelper $uriHelper)
+    public function __construct(private Distribution $distribution, private UriHelper $uriHelper)
     {
-        $this->distribution = $distribution;
-        $this->uriHelper = $uriHelper;
     }
 
     /** @return array<mixed> */
@@ -33,29 +28,31 @@ class DistributionApiResource implements ApiResource
             'relativeUrl' => $this->distribution->getRelativeUrl(),
             'id' => $this->distribution->getId(),
             'slug' => $this->distribution->getSlug(),
+            'defaultMetadataModel' => $this->distribution->getDefaultMetadataModel()?->getId(),
             'hasMetadata' => $this->distribution->hasMetadata(),
+            'metadata' => $this->distribution->hasMetadata() ? (new MetadataApiResource($this->distribution->getLatestMetadata()))->toArray() : null,
             'hasContents' => $this->distribution->hasContents(),
-            'license' => $this->distribution->getLicense() !== null ? $this->distribution->getLicense()->getSlug() : null,
+            'license' => $this->distribution->getLicense()?->getSlug(),
             'study' => $this->distribution->getDataset()->getStudy() !== null ? (new StudyApiResource($this->distribution->getDataset()->getStudy()))->toArray() : null,
             'hasApiUser' => $this->distribution->getApiUser() !== null,
             'published' => $this->distribution->isPublished(),
         ];
 
-        if ($this->distribution->hasMetadata()) {
+        if ($this->distribution->hasMetadata() && $this->distribution->getLatestMetadata()->getMetadataModelVersion() === null) {
             $first = $this->distribution->getFirstMetadata();
             $metadata = $this->distribution->getLatestMetadata();
 
-            $distribution['metadata'] = [
-                'title' => $metadata->getTitle()->toArray(),
+            $distribution['legacy']['metadata'] = [
+                'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],
                 'description' => $metadata->getDescription()->toArray(),
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
-                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
+                'language' => $metadata->getLanguage()?->getCode(),
+                'license' => $metadata->getLicense()?->getSlug(),
                 'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

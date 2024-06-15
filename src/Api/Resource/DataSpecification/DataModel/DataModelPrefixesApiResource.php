@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class DataModelPrefixesApiResource implements ApiResource
 {
-    private DataModelVersion $dataModel;
-
-    public function __construct(DataModelVersion $dataModel)
+    public function __construct(private DataModelVersion $dataModel)
     {
-        $this->dataModel = $dataModel;
     }
 
     /** @return array<mixed> */

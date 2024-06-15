@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { localizedText } from '../../../util';
 import { LoadingOverlay } from '@castoredc/matter';
 import DocumentTitle from 'components/DocumentTitle';
-import FAIRDataPointMetadataForm from 'components/Form/Metadata/FAIRDataPointMetadataForm';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
 import DashboardTab from 'components/Layout/DashboardTab';
 import DashboardTabHeader from 'components/Layout/DashboardTab/DashboardTabHeader';
+import MetadataForm from 'components/Form/Metadata/MetadataForm';
 
 interface FAIRDataPointProps extends AuthorizedRouteComponentProps {}
 
@@ -69,7 +69,12 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
 
                 <DashboardTabHeader type="Section" title={title} />
 
-                {fdp && <FAIRDataPointMetadataForm fdp={fdp} onSave={this.getFairDataPoint} />}
+                {fdp && <MetadataForm
+                    type="fdp"
+                    object={fdp}
+                    onSave={this.getFairDataPoint}
+                    onCreate={this.getFairDataPoint}
+                />}
             </DashboardTab>
         );
     }

@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class DataModelVersionExportApiResource implements ApiResource
 {
-    private DataModelVersion $dataModelVersion;
-
-    public function __construct(DataModelVersion $dataModelVersion)
+    public function __construct(private DataModelVersion $dataModelVersion)
     {
-        $this->dataModelVersion = $dataModelVersion;
     }
 
     /** @return array<mixed> */

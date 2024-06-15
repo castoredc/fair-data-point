@@ -71,4 +71,19 @@ class Department extends Agent
 
         return $department;
     }
+
+    /** @return array<mixed> */
+    public function toArray(): array
+    {
+        $data = $this->organization->toArray();
+        $data['type'] = self::TYPE;
+
+        $data[self::TYPE] = [
+            'id' => $this->id,
+            'name' => $this->getName(),
+            'additionalInformation' => $this->additionalInformation,
+        ];
+
+        return $data;
+    }
 }

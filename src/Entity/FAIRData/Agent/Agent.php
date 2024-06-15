@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData\Agent;
 
+use App\Entity\FAIRData\AccessibleEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
@@ -12,7 +13,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="agent", indexes={@ORM\Index(name="slug", columns={"slug"})})
  */
-abstract class Agent
+abstract class Agent implements AccessibleEntity
 {
     /**
      * @ORM\Id
@@ -20,7 +21,7 @@ abstract class Agent
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
-    private UuidInterface|string|null $id = null;
+    protected UuidInterface|string|null $id = null;
 
     /** @ORM\Column(type="string", unique=true) */
     private string $slug;
@@ -72,5 +73,14 @@ abstract class Agent
     public function getRelativeUrl(): string
     {
         return '/fdp/agent/' . $this->getSlug();
+    }
+
+    /** @return array<mixed> */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
     }
 }

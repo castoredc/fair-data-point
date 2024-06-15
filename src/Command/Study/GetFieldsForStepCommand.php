@@ -7,14 +7,8 @@ use App\Entity\Castor\CastorStudy;
 
 class GetFieldsForStepCommand
 {
-    private CastorStudy $study;
-
-    private string $stepId;
-
-    public function __construct(CastorStudy $study, string $stepId)
+    public function __construct(private CastorStudy $study, private string $stepId)
     {
-        $this->study = $study;
-        $this->stepId = $stepId;
     }
 
     public function getStudy(): CastorStudy

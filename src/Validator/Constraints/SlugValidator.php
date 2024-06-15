@@ -25,11 +25,8 @@ class SlugValidator extends ConstraintValidator
         'study',
     ];
 
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     public function validate(mixed $value, Constraint $constraint): void

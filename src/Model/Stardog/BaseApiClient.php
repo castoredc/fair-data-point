@@ -21,19 +21,10 @@ abstract class BaseApiClient
     protected const METHOD_GET = 'GET';
 
     private Client $client;
-    private string $host;
-    private string $user;
-    private string $pass;
-    private int $port;
 
-    public function __construct(string $host, string $user, string $pass, int $port)
+    public function __construct(private string $host, private string $user, private string $pass, private int $port)
     {
         $this->client = new Client();
-
-        $this->host = $host;
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->port = $port;
     }
 
     /**

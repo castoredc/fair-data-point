@@ -52,6 +52,7 @@ final class DataModelController extends AbstractController
 
     /**
      * @Route("/dashboard/data-models/{model}/{version}/modules", name="dashboard_model_modules")
+     * @Route("/dashboard/data-models/{model}/{version}/modules/{moduleId}", name="dashboard_model_module")
      * @Route("/dashboard/data-models/{model}/{version}/prefixes", name="dashboard_model_prefixes")
      * @Route("/dashboard/data-models/{model}/{version}/preview", name="dashboard_model_preview")
      * @Route("/dashboard/data-models/{model}/{version}/import-export", name="dashboard_model_importexport")

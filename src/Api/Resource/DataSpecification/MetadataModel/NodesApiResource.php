@@ -11,14 +11,8 @@ use function assert;
 
 class NodesApiResource implements ApiResource
 {
-    private MetadataModelVersion $metadataModel;
-
-    private ?NodeType $type;
-
-    public function __construct(MetadataModelVersion $metadataModel, ?NodeType $type = null)
+    public function __construct(private MetadataModelVersion $metadataModel, private ?NodeType $type = null)
     {
-        $this->metadataModel = $metadataModel;
-        $this->type = $type;
     }
 
     /** @return array<mixed> */
@@ -26,9 +20,12 @@ class NodesApiResource implements ApiResource
     {
         $data = [
             'external' => [],
+            'internal' => [],
             'literal' => [],
             'record' => [],
             'value' => [],
+            'children' => [],
+            'parents' => [],
         ];
 
         foreach ($this->metadataModel->getElements() as $node) {

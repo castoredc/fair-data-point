@@ -7,11 +7,8 @@ use App\Entity\Enum\VersionType;
 
 abstract class CreateModelVersionCommand
 {
-    private VersionType $versionType;
-
-    public function __construct(VersionType $versionType)
+    public function __construct(private VersionType $versionType)
     {
-        $this->versionType = $versionType;
     }
 
     public function getVersionType(): VersionType

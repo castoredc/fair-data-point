@@ -16,13 +16,8 @@ use function usort;
 #[AsMessageHandler]
 class FindStudiesByUserCommandHandler
 {
-    private EntityManagerInterface $em;
-    private ApiClient $apiClient;
-
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient)
+    public function __construct(private EntityManagerInterface $em, private ApiClient $apiClient)
     {
-        $this->em = $em;
-        $this->apiClient = $apiClient;
     }
 
     /**

@@ -9,23 +9,8 @@ use App\Entity\Study;
 
 class AddAnnotationCommand
 {
-    private Study $study;
-
-    private CastorEntity $entity;
-
-    private string $ontologyId;
-
-    private string $conceptCode;
-
-    private OntologyConceptType $conceptType;
-
-    public function __construct(Study $study, CastorEntity $entity, string $ontologyId, string $conceptCode, OntologyConceptType $conceptType)
+    public function __construct(private Study $study, private CastorEntity $entity, private string $ontologyId, private string $conceptCode, private OntologyConceptType $conceptType)
     {
-        $this->study = $study;
-        $this->entity = $entity;
-        $this->ontologyId = $ontologyId;
-        $this->conceptCode = $conceptCode;
-        $this->conceptType = $conceptType;
     }
 
     public function getStudy(): Study

@@ -9,13 +9,10 @@ use App\Entity\FAIRData\Distribution;
 
 class UpdateCSVDistributionCommand extends UpdateDistributionCommand
 {
-    private string $dataDictionaryId;
-
-    private string $dataDictionaryVersionId;
-
     public function __construct(
         Distribution $distribution,
         string $slug,
+        string $defaultMetadataModelId,
         string $license,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
@@ -23,13 +20,21 @@ class UpdateCSVDistributionCommand extends UpdateDistributionCommand
         bool $published,
         bool $cached,
         bool $public,
-        string $dataDictionaryId,
-        string $dataDictionaryVersionId
+        private string $dataDictionaryId,
+        private string $dataDictionaryVersionId,
     ) {
-        parent::__construct($distribution, $slug, $license, $apiUser, $clientId, $clientSecret, $published, $cached, $public);
-
-        $this->dataDictionaryId = $dataDictionaryId;
-        $this->dataDictionaryVersionId = $dataDictionaryVersionId;
+        parent::__construct(
+            $distribution,
+            $slug,
+            $defaultMetadataModelId,
+            $license,
+            $apiUser,
+            $clientId,
+            $clientSecret,
+            $published,
+            $cached,
+            $public
+        );
     }
 
     public function getDataDictionaryId(): string

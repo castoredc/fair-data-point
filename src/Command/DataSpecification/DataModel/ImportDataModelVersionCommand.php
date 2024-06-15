@@ -10,13 +10,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImportDataModelVersionCommand extends ImportVersionCommand
 {
-    private DataModel $dataModel;
-
-    public function __construct(DataModel $dataModel, UploadedFile $file, Version $version)
+    public function __construct(private DataModel $dataModel, UploadedFile $file, Version $version)
     {
         parent::__construct($file, $version);
-
-        $this->dataModel = $dataModel;
     }
 
     public function getDataModel(): DataModel

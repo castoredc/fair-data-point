@@ -5,11 +5,8 @@ namespace App\Command\Tools;
 
 class MetadataXmlParseCommand
 {
-    private string $xmlBody;
-
-    public function __construct(string $xmlBody)
+    public function __construct(private string $xmlBody)
     {
-        $this->xmlBody = $xmlBody;
     }
 
     public function getXmlBody(): string

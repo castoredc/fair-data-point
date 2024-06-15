@@ -30,16 +30,9 @@ class SparqlClient
     private const RESULT_TYPES = ['application/sparql-results+json' => 1.0];
 
     private GuzzleHttpClient $client;
-    private string $queryUri;
-    private ?SensitiveDataString $user = null;
-    private ?SensitiveDataString $pass = null;
 
-    public function __construct(string $queryUri, ?SensitiveDataString $user, ?SensitiveDataString $pass)
+    public function __construct(private string $queryUri, private ?SensitiveDataString $user = null, private ?SensitiveDataString $pass = null)
     {
-        $this->queryUri = $queryUri;
-        $this->user = $user;
-        $this->pass = $pass;
-
         $this->client = new GuzzleHttpClient(['base_url' => $queryUri]);
     }
 

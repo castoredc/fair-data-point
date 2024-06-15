@@ -7,11 +7,8 @@ use App\Entity\Castor\CastorStudy;
 
 class GetInstitutesForStudyCommand
 {
-    private CastorStudy $study;
-
-    public function __construct(CastorStudy $study)
+    public function __construct(private CastorStudy $study)
     {
-        $this->study = $study;
     }
 
     public function getStudy(): CastorStudy

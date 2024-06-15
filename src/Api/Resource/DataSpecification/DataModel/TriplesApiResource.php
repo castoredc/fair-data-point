@@ -10,11 +10,8 @@ use function assert;
 
 class TriplesApiResource implements ApiResource
 {
-    private DataModelGroup $module;
-
-    public function __construct(DataModelGroup $module)
+    public function __construct(private DataModelGroup $module)
     {
-        $this->module = $module;
     }
 
     /** @return array<mixed> */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Controller;
 
 use App\Api\Request\ApiRequest;
+use App\Api\Request\DynamicApiRequest;
 use App\Api\Resource\ApiResource;
 use App\Api\Resource\RoleBasedApiResource;
 use App\Api\Resource\Security\PermissionsApiResource;
@@ -25,20 +26,8 @@ use function json_decode;
 
 abstract class ApiController extends AbstractController
 {
-    protected ApiClient $apiClient;
-
-    protected ValidatorInterface $validator;
-
-    protected LoggerInterface $logger;
-
-    protected EntityManagerInterface $em;
-
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em)
+    public function __construct(protected ApiClient $apiClient, protected ValidatorInterface $validator, protected LoggerInterface $logger, protected EntityManagerInterface $em)
     {
-        $this->apiClient = $apiClient;
-        $this->validator = $validator;
-        $this->logger = $logger;
-        $this->em = $em;
     }
 
     /** @throws ApiRequestParseError */
@@ -88,6 +77,23 @@ abstract class ApiController extends AbstractController
         return $return;
     }
 
+    /** @throws ApiRequestParseError */
+    protected function parseDynamicRequest(string $requestObject, Request $request, object $context): ApiRequest
+    {
+        $request = new $requestObject($request);
+        assert($request instanceof DynamicApiRequest);
+
+        $request->setContext($context);
+
+        $errors = $this->validator->validate($request->getValues(), $request->getConstraints());
+
+        if ($errors->count() > 0) {
+            throw new ApiRequestParseError($errors);
+        }
+
+        return $request;
+    }
+
     /** @param string[]|null $attributes */
     protected function getResponse(ApiResource $resource, ?object $object, ?array $attributes): JsonResponse
     {
@@ -103,7 +109,7 @@ abstract class ApiController extends AbstractController
         string $apiResourceType,
         PaginatedResultCollection $collection,
         ?array $attributes = null,
-        ?UriHelper $uriHelper = null
+        ?UriHelper $uriHelper = null,
     ): JsonResponse {
         $results = [];
 

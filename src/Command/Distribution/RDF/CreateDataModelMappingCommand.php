@@ -8,14 +8,8 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 abstract class CreateDataModelMappingCommand
 {
-    protected RDFDistribution $distribution;
-
-    protected DataModelVersion $dataModelVersion;
-
-    public function __construct(RDFDistribution $distribution, DataModelVersion $dataModelVersion)
+    public function __construct(protected RDFDistribution $distribution, protected DataModelVersion $dataModelVersion)
     {
-        $this->distribution = $distribution;
-        $this->dataModelVersion = $dataModelVersion;
     }
 
     public function getDistribution(): RDFDistribution

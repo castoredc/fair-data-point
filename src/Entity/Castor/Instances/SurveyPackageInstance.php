@@ -16,6 +16,7 @@ class SurveyPackageInstance extends Instance
     public function __construct(string $id, Record $record, DateTime $createdOn)
     {
         parent::__construct($id, $record, $createdOn);
+
         $this->surveyInstances = new ArrayCollection();
     }
 

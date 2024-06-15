@@ -9,24 +9,18 @@ use App\Entity\FAIRData\Dataset;
 
 class CreateCSVDistributionCommand extends CreateDistributionCommand
 {
-    private string $dataDictionaryId;
-
-    private string $dataDictionaryVersionId;
-
     public function __construct(
         string $slug,
+        string $defaultMetadataModelId,
         string $license,
         Dataset $dataset,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
-        string $dataDictionaryId,
-        string $dataDictionaryVersionId
+        private string $dataDictionaryId,
+        private string $dataDictionaryVersionId,
     ) {
-        parent::__construct($slug, $license, $dataset, $apiUser, $clientId, $clientSecret);
-
-        $this->dataDictionaryId = $dataDictionaryId;
-        $this->dataDictionaryVersionId = $dataDictionaryVersionId;
+        parent::__construct($slug, $defaultMetadataModelId, $license, $dataset, $apiUser, $clientId, $clientSecret);
     }
 
     public function getDataDictionaryId(): string

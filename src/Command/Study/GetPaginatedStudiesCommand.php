@@ -10,45 +10,14 @@ use App\Entity\FAIRData\Catalog;
 
 class GetPaginatedStudiesCommand
 {
-    private ?Catalog $catalog = null;
-
-    private ?Agent $agent = null;
-
-    private ?string $search = null;
-
-    /** @var StudyType[]|null */
-    private ?array $studyType = null;
-
-    /** @var MethodType[]|null */
-    private ?array $methodType = null;
-
-    /** @var string[]|null */
-    private ?array $country = null;
-
-    private int $perPage;
-
-    private int $page;
-
-    /** @var string[]|null */
-    private ?array $hideCatalogs = null;
-
     /**
      * @param StudyType[]|null  $studyType
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      * @param string[]|null     $hideCatalogs
      */
-    public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $studyType, ?array $methodType, ?array $country, ?array $hideCatalogs, int $perPage, int $page)
+    public function __construct(private ?Catalog $catalog = null, private ?Agent $agent = null, private ?string $search = null, private ?array $studyType = null, private ?array $methodType = null, private ?array $country = null, private ?array $hideCatalogs = null, private int $perPage, private int $page)
     {
-        $this->catalog = $catalog;
-        $this->agent = $agent;
-        $this->search = $search;
-        $this->studyType = $studyType;
-        $this->methodType = $methodType;
-        $this->country = $country;
-        $this->hideCatalogs = $hideCatalogs;
-        $this->perPage = $perPage;
-        $this->page = $page;
     }
 
     public function getCatalog(): ?Catalog

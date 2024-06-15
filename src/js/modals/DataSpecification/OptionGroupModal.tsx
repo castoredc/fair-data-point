@@ -76,10 +76,6 @@ export default class OptionGroupModal extends Component<OptionGroupModalProps, O
         const { show, handleClose } = this.props;
         const { initialValues, validation } = this.state;
 
-        console.log(initialValues);
-
-        const required = 'This field is required';
-
         const title = initialValues.id ? 'Edit option group' : 'Add option group';
 
         return (

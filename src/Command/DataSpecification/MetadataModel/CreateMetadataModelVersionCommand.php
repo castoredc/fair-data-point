@@ -9,13 +9,9 @@ use App\Entity\Enum\VersionType;
 
 class CreateMetadataModelVersionCommand extends CreateModelVersionCommand
 {
-    private MetadataModel $metadataModel;
-
-    public function __construct(MetadataModel $metadataModel, VersionType $versionType)
+    public function __construct(private MetadataModel $metadataModel, VersionType $versionType)
     {
         parent::__construct($versionType);
-
-        $this->metadataModel = $metadataModel;
     }
 
     public function getMetadataModel(): MetadataModel

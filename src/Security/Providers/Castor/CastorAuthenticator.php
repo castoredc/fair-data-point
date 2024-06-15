@@ -156,7 +156,7 @@ class CastorAuthenticator extends Authenticator
 
             assert($dataset instanceof Dataset || $dataset === null);
 
-            $study = $dataset !== null ? $dataset->getStudy() : null;
+            $study = $dataset?->getStudy();
 
             if ($study !== null) {
                 assert($study instanceof CastorStudy);

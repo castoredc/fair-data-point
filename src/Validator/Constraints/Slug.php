@@ -12,20 +12,16 @@ class Slug extends Constraint
     public string $message = 'This slug is already in use, please use a different slug';
     public string $forbiddenSlug = 'This slug cannot be used, please use a different slug';
 
-    /** @var class-string<object> */
-    public $type;
-
     /**
      * @param class-string<object> $type
      * @param string[]             $groups  An array of validation groups
      * @param mixed                $payload Domain-specific data attached to a constraint
      */
     public function __construct(
-        $type,
+        public $type,
         ?array $groups = null,
-        mixed $payload = null
+        mixed $payload = null,
     ) {
-        $this->type = $type;
         parent::__construct([], $groups, $payload);
     }
 

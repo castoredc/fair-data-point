@@ -9,6 +9,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function array_merge;
 use function uniqid;
 
 /**
@@ -47,9 +48,7 @@ class Organization extends Agent
     /** @ORM\Column(type="decimal", precision=11, scale=8, nullable=true) */
     private ?string $coordinatesLongitude = null;
 
-    private ?string $countryCode = null;
-
-    public function __construct(?string $slug, string $name, ?Iri $homepage, ?string $countryCode, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
+    public function __construct(?string $slug, string $name, ?Iri $homepage, private ?string $countryCode = null, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
     {
         $slugify = new Slugify();
 
@@ -60,7 +59,6 @@ class Organization extends Agent
         parent::__construct($slug, $name);
 
         $this->homepage = $homepage;
-        $this->countryCode = $countryCode;
         $this->city = $city;
         $this->coordinatesLatitude = $coordinatesLatitude;
         $this->coordinatesLongitude = $coordinatesLongitude;
@@ -176,5 +174,25 @@ class Organization extends Agent
         }
 
         return $organization;
+    }
+
+    /** @return array<mixed> */
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'type' => self::TYPE,
+            self::TYPE => [
+                'id' => $this->id,
+                'name' => $this->getName(),
+                'country' => $this->country->getCode(),
+                'city' => $this->city,
+                'homepage' => $this->homepage?->getValue(),
+                'coordinates' => $this->hasCoordinates() ? [
+                    'lat' => $this->coordinatesLatitude,
+                    'long' => $this->coordinatesLongitude,
+                ] : null,
+                'source' => 'database',
+            ],
+        ]);
     }
 }

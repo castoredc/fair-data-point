@@ -15,13 +15,9 @@ use function array_merge;
 
 class AgentsApiResource implements ApiResource
 {
-    /** @var Agent[] */
-    private array $agents;
-
     /** @param Agent[] $agents */
-    public function __construct(array $agents)
+    public function __construct(private array $agents)
     {
-        $this->agents = $agents;
     }
 
     /** @return array<mixed> */

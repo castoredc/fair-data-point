@@ -9,27 +9,9 @@ use Exception;
 
 class ReportInstance extends Instance
 {
-    private string $name;
-
-    private string $reportName;
-
-    private string $reportId;
-
-    private string $status;
-
-    private string $parentId;
-
-    private string $parentType;
-
-    public function __construct(string $id, string $name, string $reportName, string $reportId, string $status, string $parentId, string $parentType, Record $record, DateTime $createdOn)
+    public function __construct(string $id, private string $name, private string $reportName, private string $reportId, private string $status, private string $parentId, private string $parentType, Record $record, DateTime $createdOn)
     {
         parent::__construct($id, $record, $createdOn);
-        $this->name = $name;
-        $this->reportName = $reportName;
-        $this->reportId = $reportId;
-        $this->status = $status;
-        $this->parentId = $parentId;
-        $this->parentType = $parentType;
     }
 
     public function getName(): string

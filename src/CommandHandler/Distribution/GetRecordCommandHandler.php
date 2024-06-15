@@ -21,15 +21,8 @@ use function assert;
 #[AsMessageHandler]
 class GetRecordCommandHandler
 {
-    private ApiClient $apiClient;
-    private Security $security;
-    private EncryptionService $encryptionService;
-
-    public function __construct(ApiClient $apiClient, Security $security, EncryptionService $encryptionService)
+    public function __construct(private ApiClient $apiClient, private Security $security, private EncryptionService $encryptionService)
     {
-        $this->apiClient = $apiClient;
-        $this->security = $security;
-        $this->encryptionService = $encryptionService;
     }
 
     /**

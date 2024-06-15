@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\Common\Model\ModelVersion;
 
 class OptionGroupsApiResource implements ApiResource
 {
-    private ModelVersion $dataSpecification;
-
-    public function __construct(ModelVersion $dataSpecification)
+    public function __construct(private ModelVersion $dataSpecification)
     {
-        $this->dataSpecification = $dataSpecification;
     }
 
     /** @return array<mixed> */

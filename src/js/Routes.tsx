@@ -22,7 +22,7 @@ const Routes: FC<RoutesProps> = ({ user, embedded }) => {
             /* FAIR Data Point */
             <Route path="/fdp" render={props => <Main {...props} embedded={embedded} user={user} />} />
             <Route path="/study" render={props => <Main {...props} embedded={embedded} user={user} />} />
-            <Route path="/tools" render={props => <Main {...props} user={user} />} />
+            <Route path="/tools" render={props => <Main {...props} embedded={embedded} user={user} />} />
             /* Dashboard */
             <PrivateRoute path="/dashboard" user={user} render={props => <Dashboard {...props} user={user} />} />
             <Route path="/wizard" render={props => <Wizard {...props} user={user} />} />

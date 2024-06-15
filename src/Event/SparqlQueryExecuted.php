@@ -9,17 +9,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 class SparqlQueryExecuted extends Event
 {
     public const NAME = 'sparql.query.executed';
-    private UserInterface $user;
-    private string $query;
-    private int $resultCount;
-    private string $distributionId;
 
-    public function __construct(string $distributionId, UserInterface $user, string $query, int $resultCount)
+    public function __construct(private string $distributionId, private UserInterface $user, private string $query, private int $resultCount)
     {
-        $this->distributionId = $distributionId;
-        $this->user = $user;
-        $this->query = $query;
-        $this->resultCount = $resultCount;
     }
 
     public function getDistributionId(): string

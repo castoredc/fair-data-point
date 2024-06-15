@@ -8,13 +8,9 @@ use App\Entity\Castor\CastorEntity;
 
 class CastorEntitiesApiResource implements ApiResource
 {
-    /** @var CastorEntity[] */
-    private array $entities;
-
     /** @param CastorEntity[] $entities */
-    public function __construct(array $entities)
+    public function __construct(private array $entities)
     {
-        $this->entities = $entities;
     }
 
     /** @return array<mixed> */

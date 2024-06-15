@@ -8,13 +8,8 @@ use EasyRdf\Graph;
 
 abstract class AgentGraphResource
 {
-    protected Agent $agent;
-    protected string $baseUrl;
-
-    public function __construct(Agent $agent, string $baseUrl)
+    public function __construct(protected Agent $agent, protected string $baseUrl)
     {
-        $this->agent = $agent;
-        $this->baseUrl = $baseUrl;
     }
 
     public function toGraph(): Graph

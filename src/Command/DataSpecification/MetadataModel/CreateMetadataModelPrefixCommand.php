@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 
 class CreateMetadataModelPrefixCommand extends CreateModelPrefixCommand
 {
-    private MetadataModelVersion $metadataModelVersion;
-
-    public function __construct(MetadataModelVersion $metadataModelVersion, string $prefix, string $uri)
+    public function __construct(private MetadataModelVersion $metadataModelVersion, string $prefix, string $uri)
     {
         parent::__construct($prefix, $uri);
-
-        $this->metadataModelVersion = $metadataModelVersion;
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

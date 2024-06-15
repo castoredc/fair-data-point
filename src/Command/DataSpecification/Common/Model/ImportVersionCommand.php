@@ -8,13 +8,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class ImportVersionCommand
 {
-    private UploadedFile $file;
-    private Version $version;
-
-    public function __construct(UploadedFile $file, Version $version)
+    public function __construct(private UploadedFile $file, private Version $version)
     {
-        $this->file = $file;
-        $this->version = $version;
     }
 
     public function getFile(): UploadedFile

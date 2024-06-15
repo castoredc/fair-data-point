@@ -10,11 +10,8 @@ use App\Entity\Metadata\StudyMetadata\ParticipatingCenter;
 
 class ParticipatingCenterApiResource implements ApiResource
 {
-    private ParticipatingCenter $participatingCenter;
-
-    public function __construct(ParticipatingCenter $participatingCenter)
+    public function __construct(private ParticipatingCenter $participatingCenter)
     {
-        $this->participatingCenter = $participatingCenter;
     }
 
     /** @return array<mixed> */

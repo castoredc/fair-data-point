@@ -9,13 +9,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ApiRequestParseError extends Exception
 {
-    private ConstraintViolationListInterface $violations;
-
-    public function __construct(ConstraintViolationListInterface $violations)
+    public function __construct(private ConstraintViolationListInterface $violations)
     {
         parent::__construct();
-
-        $this->violations = $violations;
     }
 
     /** @return array<mixed> */

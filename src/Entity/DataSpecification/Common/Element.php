@@ -24,9 +24,12 @@ use Ramsey\Uuid\UuidInterface;
  *     "dictionary_variable" = "App\Entity\DataSpecification\DataDictionary\Variable",
  *     "metadata_model_node" = "App\Entity\DataSpecification\MetadataModel\Node\Node",
  *     "metadata_model_externalIri" = "App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode",
+ *     "metadata_model_internalIri" = "App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode",
  *     "metadata_model_literal" = "App\Entity\DataSpecification\MetadataModel\Node\LiteralNode",
  *     "metadata_model_record" = "App\Entity\DataSpecification\MetadataModel\Node\RecordNode",
- *     "metadata_model_value" = "App\Entity\DataSpecification\MetadataModel\Node\ValueNode"
+ *     "metadata_model_value" = "App\Entity\DataSpecification\MetadataModel\Node\ValueNode",
+ *     "metadata_model_children" = "App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode",
+ *     "metadata_model_parents" = "App\Entity\DataSpecification\MetadataModel\Node\ParentsNode"
  * })
  */
 abstract class Element

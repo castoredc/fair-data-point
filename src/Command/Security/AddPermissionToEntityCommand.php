@@ -8,17 +8,8 @@ use App\Security\PermissionsEnabledEntity;
 
 class AddPermissionToEntityCommand
 {
-    private PermissionsEnabledEntity $entity;
-
-    private string $email;
-
-    private PermissionType $type;
-
-    public function __construct(PermissionsEnabledEntity $entity, string $email, PermissionType $type)
+    public function __construct(private PermissionsEnabledEntity $entity, private string $email, private PermissionType $type)
     {
-        $this->entity = $entity;
-        $this->email = $email;
-        $this->type = $type;
     }
 
     public function getEntity(): PermissionsEnabledEntity

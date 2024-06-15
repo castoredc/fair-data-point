@@ -21,16 +21,9 @@ use function assert;
 
 class CastorEntityHelper
 {
-    private EntityManagerInterface $em;
-    private ApiClient $apiClient;
-    private EncryptionService $encryptionService;
-
     /** @throws UserNotACastorUser */
-    public function __construct(EntityManagerInterface $em, ApiClient $apiClient, EncryptionService $encryptionService)
+    public function __construct(private EntityManagerInterface $em, private ApiClient $apiClient, private EncryptionService $encryptionService)
     {
-        $this->em = $em;
-        $this->apiClient = $apiClient;
-        $this->encryptionService = $encryptionService;
     }
 
     public function useApiUser(ApiUser $user): void

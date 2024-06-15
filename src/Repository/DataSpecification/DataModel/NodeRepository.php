@@ -32,7 +32,7 @@ class NodeRepository extends EntityRepository
                     ->where('node.version = :version')
                     ->andWhere('node INSTANCE OF :type')
                     ->setParameter('version', $version)
-                    ->setParameter('type', $this->getEntityManager()->getClassMetadata($type->getClassName()))
+                    ->setParameter('type', $this->getEntityManager()->getClassMetadata($type->getClassNameForDataModel()))
                     ->orderBy('node.title', 'ASC')
                     ->getQuery()
                     ->getResult();

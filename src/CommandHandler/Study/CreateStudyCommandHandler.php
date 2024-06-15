@@ -27,15 +27,8 @@ use function uniqid;
 #[AsMessageHandler]
 final class CreateStudyCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-    private ApiClient $apiClient;
-
-    public function __construct(EntityManagerInterface $em, Security $security, ApiClient $apiClient)
+    public function __construct(private EntityManagerInterface $em, private Security $security, private ApiClient $apiClient)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->apiClient = $apiClient;
     }
 
     /**

@@ -29,10 +29,10 @@
     "destroy-docker": "docker-compose down"
   },
   "dependencies": {
-    "@castoredc/matter": "^30.2.1",
-    "@castoredc/matter-fonts": "^30.2.1",
-    "@castoredc/matter-icons": "^30.2.1",
-    "@castoredc/matter-utils": "^30.2.1",
+    "@castoredc/matter": "^30.26.0",
+    "@castoredc/matter-fonts": "^30.26.0",
+    "@castoredc/matter-icons": "^30.26.0",
+    "@castoredc/matter-utils": "^30.26.0",
     "@triply/yasgui": "^4.2.28",
     "@types/jest": "^26.0.23",
     "@types/react": "^16.14",
@@ -45,6 +45,7 @@
     "history": "^4.10.1",
     "jquery": "^3.4.1",
     "js-yaml": "3.14.0",
+    "jsonld": "^8.3.2",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.5.0",
     "lodash": "^4.17.21",

@@ -8,11 +8,8 @@ use EasyRdf\Graph;
 
 class CountryGraphResource extends GraphResource
 {
-    private Country $country;
-
-    public function __construct(Country $country, string $baseUrl)
+    public function __construct(private Country $country, string $baseUrl)
     {
-        $this->country = $country;
         parent::__construct($country, $baseUrl);
     }
 

@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\MetadataModel\Node\Node;
 
 class RemoveNodeCommand
 {
-    private Node $node;
-
-    public function __construct(Node $node)
+    public function __construct(private Node $node)
     {
-        $this->node = $node;
     }
 
     public function getNode(): Node

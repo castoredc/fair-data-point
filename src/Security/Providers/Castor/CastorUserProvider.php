@@ -30,7 +30,6 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     protected string $server;
 
     private ?ApiClient $apiClient = null;
-    private EncryptionService $encryptionService;
 
     /**
      * @param array<mixed> $options
@@ -39,15 +38,14 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
     public function __construct(
         EntityManagerInterface $em,
         ApiClient $apiClient,
-        EncryptionService $encryptionService,
+        private EncryptionService $encryptionService,
         array $options = [],
-        array $collaborators = []
+        array $collaborators = [],
     ) {
         parent::__construct($em, $options, $collaborators);
 
         $this->em = $em;
         $this->apiClient = $apiClient;
-        $this->encryptionService = $encryptionService;
     }
 
     public function getBaseAuthorizationUrl(): string
@@ -87,7 +85,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         string $server,
         int $serverId,
         mixed $grant,
-        array $options = []
+        array $options = [],
     ): AccessTokenInterface {
         $this->server = $server;
 
@@ -144,7 +142,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         try {
             $clientId = trim($castorServer->getDecryptedClientId($this->encryptionService)->exposeAsString());
             $clientSecret = trim($castorServer->getDecryptedClientSecret($this->encryptionService)->exposeAsString());
-        } catch (CouldNotDecrypt $e) {
+        } catch (CouldNotDecrypt) {
             // Don't do anything, fallback to the default credentials supplied in the env file.
             return;
         }

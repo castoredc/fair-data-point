@@ -5,6 +5,7 @@ namespace App\Api\Resource\Catalog;
 
 use App\Api\Resource\Agent\AgentsApiResource;
 use App\Api\Resource\ApiResource;
+use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\Terminology\OntologyConceptsApiResource;
 use App\Entity\FAIRData\Catalog;
 use function count;
@@ -12,11 +13,8 @@ use const DATE_ATOM;
 
 class CatalogApiResource implements ApiResource
 {
-    private Catalog $catalog;
-
-    public function __construct(Catalog $catalog)
+    public function __construct(private Catalog $catalog)
     {
-        $this->catalog = $catalog;
     }
 
     /** @return array<mixed> */
@@ -26,33 +24,35 @@ class CatalogApiResource implements ApiResource
             'relativeUrl' => $this->catalog->getRelativeUrl(),
             'id' => $this->catalog->getId(),
             'slug' => $this->catalog->getSlug(),
+            'defaultMetadataModel' => $this->catalog->getDefaultMetadataModel()?->getId(),
             'acceptSubmissions' => $this->catalog->isAcceptingSubmissions(),
             'submissionAccessesData' => $this->catalog->isSubmissionAccessingData(),
             'hasMetadata' => $this->catalog->hasMetadata(),
+            'metadata' => $this->catalog->hasMetadata() ? (new MetadataApiResource($this->catalog->getLatestMetadata()))->toArray() : null,
             'count' => [
                 'study' => count($this->catalog->getStudies(false)),
                 'dataset' => count($this->catalog->getDatasets(false)),
             ],
         ];
 
-        if ($this->catalog->hasMetadata()) {
+        if ($this->catalog->hasMetadata() && $this->catalog->getLatestMetadata()->getMetadataModelVersion() === null) {
             $first = $this->catalog->getFirstMetadata();
             $metadata = $this->catalog->getLatestMetadata();
 
-            $catalog['metadata'] = [
-                'title' => $metadata->getTitle()->toArray(),
+            $catalog['legacy']['metadata'] = [
+                'title' => $metadata->getLegacyTitle()->toArray(),
                 'version' => [
                     'metadata' => $metadata->getVersion()->getValue(),
                 ],
                 'description' => $metadata->getDescription()->toArray(),
                 'publishers' => (new AgentsApiResource($metadata->getPublishers()->toArray()))->toArray(),
-                'language' => $metadata->getLanguage() !== null ? $metadata->getLanguage()->getCode() : null,
-                'license' => $metadata->getLicense() !== null ? $metadata->getLicense()->getSlug() : null,
-                'homepage' => $metadata->getHomepage() !== null ? $metadata->getHomepage()->getValue() : null,
-                'logo' => $metadata->getLogo() !== null ? $metadata->getLogo()->getValue() : null,
+                'language' => $metadata->getLanguage()?->getCode(),
+                'license' => $metadata->getLicense()?->getSlug(),
+                'homepage' => $metadata->getHomepage()?->getValue(),
+                'logo' => $metadata->getLogo()?->getValue(),
                 'themeTaxonomy' => (new OntologyConceptsApiResource($metadata->getThemeTaxonomies()->toArray()))->toArray(),
                 'issued' => $first->getCreatedAt()->format(DATE_ATOM),
-                'modified' => $metadata->getUpdatedAt() !== null ? $metadata->getUpdatedAt()->format(DATE_ATOM) : $metadata->getCreatedAt()->format(DATE_ATOM),
+                'modified' => $metadata->getUpdatedAt()?->format(DATE_ATOM) ?? $metadata->getCreatedAt()->format(DATE_ATOM),
             ];
         }
 

@@ -11,7 +11,7 @@ use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\DataTransformationService;
 use App\Service\EncryptionService;
-use App\Service\RDFRenderHelper;
+use App\Service\RDF\RenderRdfDataHelper;
 use App\Service\UriHelper;
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
@@ -25,30 +25,15 @@ use function assert;
 #[AsMessageHandler]
 class RenderRDFDistributionCommandHandler
 {
-    private ApiClient $apiClient;
-    private Security $security;
-    private CastorEntityHelper $entityHelper;
-    private UriHelper $uriHelper;
-    private EncryptionService $encryptionService;
-    private LoggerInterface $logger;
-    private DataTransformationService $dataTransformationService;
-
     public function __construct(
-        ApiClient $apiClient,
-        Security $security,
-        CastorEntityHelper $entityHelper,
-        UriHelper $uriHelper,
-        EncryptionService $encryptionService,
-        LoggerInterface $logger,
-        DataTransformationService $dataTransformationService
+        private ApiClient $apiClient,
+        private Security $security,
+        private CastorEntityHelper $entityHelper,
+        private UriHelper $uriHelper,
+        private EncryptionService $encryptionService,
+        private LoggerInterface $logger,
+        private DataTransformationService $dataTransformationService,
     ) {
-        $this->apiClient = $apiClient;
-        $this->security = $security;
-        $this->entityHelper = $entityHelper;
-        $this->uriHelper = $uriHelper;
-        $this->encryptionService = $encryptionService;
-        $this->logger = $logger;
-        $this->dataTransformationService = $dataTransformationService;
     }
 
     /** @throws Exception */
@@ -78,7 +63,7 @@ class RenderRDFDistributionCommandHandler
             $this->entityHelper->useUser($user->getCastorUser());
         }
 
-        $helper = new RDFRenderHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, null, null);
+        $helper = new RenderRdfDataHelper($distribution, $this->apiClient, $this->entityHelper, $this->uriHelper, $this->dataTransformationService, null, null);
 
         $graph = new Graph();
 

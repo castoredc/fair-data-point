@@ -5,6 +5,7 @@ namespace App\CommandHandler\Distribution;
 
 use App\Command\Distribution\UpdateDistributionCommand;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
 use App\Exception\LanguageNotFound;
@@ -19,15 +20,8 @@ use function assert;
 #[AsMessageHandler]
 abstract class UpdateDistributionCommandHandler
 {
-    protected EntityManagerInterface $em;
-    protected Security $security;
-    protected EncryptionService $encryptionService;
-
-    public function __construct(EntityManagerInterface $em, Security $security, EncryptionService $encryptionService)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected EncryptionService $encryptionService)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->encryptionService = $encryptionService;
     }
 
     /** @throws LanguageNotFound */
@@ -41,6 +35,9 @@ abstract class UpdateDistributionCommandHandler
         if (! $this->security->isGranted('edit', $distribution)) {
             throw new NoAccessPermission();
         }
+
+        $defaultMetadataModel = $this->em->getRepository(MetadataModel::class)->find($command->getDefaultMetadataModelId());
+        assert($defaultMetadataModel instanceof MetadataModel);
 
         if ($command->getApiUser() !== null && $command->getClientId() !== null && $command->getClientSecret() !== null) {
             $apiUser = new ApiUser($command->getApiUser(), $study->getServer());
@@ -59,6 +56,7 @@ abstract class UpdateDistributionCommandHandler
         $distribution->setSlug($slug);
         $distribution->setLicense($license);
         $distribution->setIsPublished($command->isPublished());
+        $distribution->setDefaultMetadataModel($defaultMetadataModel);
 
         $contents = $distribution->getContents();
         $contents->setIsCached($command->isCached());

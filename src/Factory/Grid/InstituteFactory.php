@@ -8,11 +8,8 @@ use App\Entity\Iri;
 
 class InstituteFactory
 {
-    private AddressFactory $addressFactory;
-
-    public function __construct(AddressFactory $addressFactory)
+    public function __construct(private AddressFactory $addressFactory)
     {
-        $this->addressFactory = $addressFactory;
     }
 
     /** @param array<mixed> $data */

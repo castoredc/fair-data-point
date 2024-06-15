@@ -7,28 +7,13 @@ use App\Entity\Enum\NodeType;
 
 abstract class CreateTripleCommand
 {
-    private NodeType $objectType;
-
-    private ?string $objectValue = null;
-
-    private ?string $predicateValue = null;
-
-    private NodeType $subjectType;
-
-    private ?string $subjectValue = null;
-
     public function __construct(
-        NodeType $objectType,
-        ?string $objectValue,
-        ?string $predicateValue,
-        NodeType $subjectType,
-        ?string $subjectValue
+        private NodeType $objectType,
+        private ?string $objectValue = null,
+        private ?string $predicateValue = null,
+        private NodeType $subjectType,
+        private ?string $subjectValue = null,
     ) {
-        $this->objectType = $objectType;
-        $this->objectValue = $objectValue;
-        $this->predicateValue = $predicateValue;
-        $this->subjectType = $subjectType;
-        $this->subjectValue = $subjectValue;
     }
 
     public function getObjectType(): NodeType

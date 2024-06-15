@@ -7,29 +7,8 @@ use App\Entity\Study;
 
 class AddStudyContactCommand
 {
-    private Study $study;
-
-    private ?string $id = null;
-
-    private string $firstName;
-
-    private ?string $middleName = null;
-
-    private string $lastName;
-
-    private string $email;
-
-    private ?string $orcid = null;
-
-    public function __construct(Study $study, ?string $id, string $firstName, ?string $middleName, string $lastName, string $email, ?string $orcid)
+    public function __construct(private Study $study, private ?string $id = null, private string $firstName, private ?string $middleName = null, private string $lastName, private string $email, private ?string $orcid = null)
     {
-        $this->study = $study;
-        $this->id = $id;
-        $this->firstName = $firstName;
-        $this->middleName = $middleName;
-        $this->lastName = $lastName;
-        $this->email = $email;
-        $this->orcid = $orcid;
     }
 
     public function getStudy(): Study

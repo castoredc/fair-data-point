@@ -7,11 +7,8 @@ use App\Entity\FAIRData\Distribution;
 
 class GetRecordsCommand
 {
-    private Distribution $distribution;
-
-    public function __construct(Distribution $distribution)
+    public function __construct(private Distribution $distribution)
     {
-        $this->distribution = $distribution;
     }
 
     public function getDistribution(): Distribution

@@ -7,14 +7,8 @@ use App\Entity\Study;
 
 class RemoveStudyCenterCommand
 {
-    private Study $study;
-
-    private string $id;
-
-    public function __construct(Study $study, string $id)
+    public function __construct(private Study $study, private string $id)
     {
-        $this->study = $study;
-        $this->id = $id;
     }
 
     public function getStudy(): Study

@@ -9,15 +9,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImportDataDictionaryCommand
 {
-    private DataDictionary $dataDictionary;
-    private UploadedFile $file;
-    private Version $version;
-
-    public function __construct(DataDictionary $dataDictionary, UploadedFile $file, Version $version)
+    public function __construct(private DataDictionary $dataDictionary, private UploadedFile $file, private Version $version)
     {
-        $this->dataDictionary = $dataDictionary;
-        $this->file = $file;
-        $this->version = $version;
     }
 
     public function getDataDictionary(): DataDictionary

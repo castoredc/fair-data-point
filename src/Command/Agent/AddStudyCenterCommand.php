@@ -7,14 +7,8 @@ use App\Entity\Study;
 
 class AddStudyCenterCommand
 {
-    private Study $study;
-
-    private string $organizationId;
-
-    public function __construct(Study $study, string $organizationId)
+    public function __construct(private Study $study, private string $organizationId)
     {
-        $this->study = $study;
-        $this->organizationId = $organizationId;
     }
 
     public function getStudy(): Study

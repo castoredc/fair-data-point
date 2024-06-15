@@ -7,12 +7,14 @@ use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelModuleRDFPrevi
 use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelRDFPreviewApiResource;
 use App\Command\DataSpecification\MetadataModel\GetMetadataModelRDFPreviewCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
+use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
-use App\Entity\DataSpecification\MetadataModel\Triple;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\InvalidValueType;
 use App\Exception\NoAccessPermission;
@@ -22,15 +24,13 @@ use EasyRdf\RdfNamespace;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
+use function sprintf;
 
 #[AsMessageHandler]
 class GetMetadataModelRDFPreviewCommandHandler
 {
-    private Security $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     /**
@@ -66,8 +66,6 @@ class GetMetadataModelRDFPreviewCommandHandler
             $triples = $module->getTriples();
 
             foreach ($triples as $triple) {
-                assert($triple instanceof Triple);
-
                 $subject = $triple->getSubject();
                 $subjectInFullGraph = $fullGraph->resource($this->getURI($subject));
                 $subjectInModuleGraph = $moduleGraph->resource($this->getURI($subject));
@@ -103,32 +101,28 @@ class GetMetadataModelRDFPreviewCommandHandler
             if ($node->isPlaceholder()) {
                 $placeholderType = $node->getPlaceholderType();
 
-                if ($placeholderType->isRecordId()) {
-                    return '##Record ID##';
+                if ($placeholderType->isCreatedAt()) {
+                    return '##Created At##';
                 }
 
-                if ($placeholderType->isInstituteId()) {
-                    return '##Institute ID##';
+                if ($placeholderType->isUpdatedAt()) {
+                    return '##Updated at##';
                 }
 
-                if ($placeholderType->isInstituteName()) {
-                    return '##Institute Name##';
+                if ($placeholderType->isResourceUrl()) {
+                    return '##Resource URL##';
                 }
 
-                if ($placeholderType->isInstituteAbbreviation()) {
-                    return '##Institute Abbreviation##';
+                if ($placeholderType->isMetadataVersion()) {
+                    return '##Metadata Version##';
                 }
 
-                if ($placeholderType->isInstituteCode()) {
-                    return '##Institute Code##';
+                if ($placeholderType->isDistributionAccessUrl()) {
+                    return '##Distribution Access URL##';
                 }
 
-                if ($placeholderType->isInstituteCountryCode()) {
-                    return '##Institute Country Code##';
-                }
-
-                if ($placeholderType->isInstituteCountryName()) {
-                    return '##Institute Country Name##';
+                if ($placeholderType->isDistributionMediaType()) {
+                    return '##Distribution Media Type##';
                 }
             }
 
@@ -151,9 +145,15 @@ class GetMetadataModelRDFPreviewCommandHandler
         $uri = '';
 
         if ($node instanceof RecordNode) {
-            $uri = '/##record_id##';
+            $uri = '/##record[' . $node->getResourceType() . ']##';
+        } elseif ($node instanceof InternalIriNode) {
+            $uri = '/##record##/' . $node->getSlug();
         } elseif ($node instanceof ExternalIriNode) {
             $uri = $node->getIri()->getValue();
+        } elseif ($node instanceof ChildrenNode) {
+            $uri = sprintf('##Children (%s)##', $node->getResourceType()->getLabel());
+        } elseif ($node instanceof ParentsNode) {
+            $uri = sprintf('##Parents (%s)##', $node->getResourceType()->getLabel());
         }
 
         return $uri;

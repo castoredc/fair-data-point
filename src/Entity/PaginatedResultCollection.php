@@ -11,22 +11,9 @@ use function count;
 
 class PaginatedResultCollection implements Countable, IteratorAggregate
 {
-    /** @var mixed[] */
-    private array $results;
-
-    private int $currentPage;
-
-    private int $perPage;
-
-    private int $totalResults;
-
     /** @param mixed[] $results */
-    public function __construct(array $results, int $currentPage, int $perPage, int $totalResults)
+    public function __construct(private array $results, private int $currentPage, private int $perPage, private int $totalResults)
     {
-        $this->results = $results;
-        $this->currentPage = $currentPage;
-        $this->perPage = $perPage;
-        $this->totalResults = $totalResults;
     }
 
     /** @return mixed[] */

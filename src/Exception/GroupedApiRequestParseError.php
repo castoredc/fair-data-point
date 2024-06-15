@@ -9,15 +9,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class GroupedApiRequestParseError extends Exception
 {
-    /** @var ConstraintViolationListInterface[] */
-    private array $violations = [];
-
     /** @param array<ConstraintViolationListInterface> $violations */
-    public function __construct(array $violations)
+    public function __construct(private array $violations = [])
     {
         parent::__construct();
-
-        $this->violations = $violations;
     }
 
     /** @return array<mixed> */

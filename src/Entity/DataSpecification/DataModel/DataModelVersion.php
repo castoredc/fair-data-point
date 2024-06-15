@@ -26,6 +26,7 @@ class DataModelVersion extends Version implements ModelVersion
 {
     /**
      * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"})
+     * @ORM\OrderBy({"prefix" = "ASC"})
      *
      * @var Collection<NamespacePrefix>
      */
@@ -52,7 +53,7 @@ class DataModelVersion extends Version implements ModelVersion
         $return = [];
 
         foreach ($this->elements as $node) {
-            if (! is_a($node, $nodeType->getClassName())) {
+            if (! is_a($node, $nodeType->getClassNameForDataModel())) {
                 continue;
             }
 

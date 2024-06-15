@@ -26,25 +26,18 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 
     private ApiClient $apiClient;
 
-    private ?Security $security = null;
-
-    private string $rootPath;
-
     public function __construct(
         string $webhookUrl = '',
-        string $rootPath = '',
-        ?Security $security = null
+        private string $rootPath = '',
+        private ?Security $security = null,
     ) {
         parent::__construct(Level::Critical, true);
 
         $this->apiClient = new ApiClient($webhookUrl);
-        $this->rootPath = $rootPath;
 
         if ($security === null) {
             return;
         }
-
-        $this->security = $security;
     }
 
     protected function write(LogRecord $record): void
@@ -128,7 +121,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 
         $currentUser = '_Not logged in_';
 
-        if ($this->security !== null && $this->security->getUser() !== null) {
+        if ($this->security?->getUser() !== null) {
             $user = $this->security->getUser();
             assert($user instanceof User);
             $currentUser = $user->getId();

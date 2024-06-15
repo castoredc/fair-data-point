@@ -14,12 +14,9 @@ class ApiClient
 {
     private Client $client;
 
-    private string $webhookUrl;
-
-    public function __construct(string $webhookUrl = '')
+    public function __construct(private string $webhookUrl = '')
     {
         $this->client = new Client();
-        $this->webhookUrl = $webhookUrl;
     }
 
     /** @param array<mixed> $message */
@@ -27,7 +24,7 @@ class ApiClient
     {
         try {
             $this->client->request('POST', $this->webhookUrl, ['json' => $message]);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
         }
     }
 
@@ -37,11 +34,11 @@ class ApiClient
 
         $type = $metadata->getType()->toString();
         $method = $metadata->getMethodType()->toString();
-        $condition = $metadata->getCondition() !== null ? $metadata->getCondition()->getText() : 'N/A';
-        $intervention = $metadata->getIntervention() !== null ? $metadata->getIntervention()->getText() : 'N/A';
+        $condition = $metadata->getCondition()?->getText() ?? 'N/A';
+        $intervention = $metadata->getIntervention()?->getText() ?? 'N/A';
         $estimatedEnrollment = $metadata->getEstimatedEnrollment() ?? 'N/A';
-        $estimatedStudyStartDate = $metadata->getEstimatedStudyStartDate() !== null ? $metadata->getEstimatedStudyStartDate()->format('Y-m-d') : 'N/A';
-        $estimatedStudyCompletionDate = $metadata->getEstimatedStudyCompletionDate() !== null ? $metadata->getEstimatedStudyCompletionDate()->format('Y-m-d') : 'N/A';
+        $estimatedStudyStartDate = $metadata->getEstimatedStudyStartDate()?->format('Y-m-d') ?? 'N/A';
+        $estimatedStudyCompletionDate = $metadata->getEstimatedStudyCompletionDate()?->format('Y-m-d') ?? 'N/A';
 
         $organizationArray = [];
         $countryArray = [];

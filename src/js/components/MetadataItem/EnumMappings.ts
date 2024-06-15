@@ -36,6 +36,7 @@ export const DataType = {
     gMonthDay: 'Month and day (date/time)',
     string: 'String',
     boolean: 'Boolean',
+    url: 'URL',
 };
 
 export const MetadataFieldType = {
@@ -46,11 +47,15 @@ export const MetadataFieldType = {
     ontologyConceptBrowser: 'Ontology concept browser',
     datePicker: 'Datepicker',
     timePicker: 'Timepicker',
-    dateAndTimePicker: 'Date and timepicker',
+    // dateAndTimePicker: 'Date and timepicker',
     checkbox: 'Checkbox',
     checkboxes: 'Checkboxes',
     radioButtons: 'Radio buttons',
     dropdown: 'Dropdown',
+    languagePicker: 'Language picker',
+    licensePicker: 'License picker',
+    countryPicker: 'Country picker',
+    agentSelector: 'Agent selector'
 };
 
 export const ResourceType = {
@@ -78,3 +83,19 @@ export const DistributionGenerationStatus = {
     error: 'Not generated due to errors',
     partially: 'Generated, with errors',
 };
+
+export const MetadataDisplayType = {
+    heading: 'Heading',
+    description: 'Description',
+    paragraph: 'Paragraph',
+    ontologyConcepts: 'Ontology concepts',
+    date: 'Date',
+    time: 'Time',
+    yesNo: 'Yes/No',
+    list: 'List',
+    language: 'Language',
+    license: 'License',
+    country: 'Country',
+    agents: 'Agents',
+};
+

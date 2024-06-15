@@ -12,19 +12,13 @@ class FieldOption extends CastorEntity
 {
     private ?string $name = null;
 
-    private ?string $value = null;
-
-    private ?int $groupOrder = null;
-
     private FieldOptionGroup $optionGroup;
 
-    public function __construct(string $id, CastorStudy $study, string $name, ?string $value, ?int $groupOrder)
+    public function __construct(string $id, CastorStudy $study, string $name, private ?string $value = null, private ?int $groupOrder = null)
     {
         parent::__construct($id, $name, $study, null);
 
         $this->name = $name;
-        $this->value = $value;
-        $this->groupOrder = $groupOrder;
     }
 
     public function getName(): ?string

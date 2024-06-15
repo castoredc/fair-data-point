@@ -19,13 +19,8 @@ use function assert;
 #[AsMessageHandler]
 class GetFieldsForStepCommandHandler
 {
-    private ApiClient $apiClient;
-    private Security $security;
-
-    public function __construct(ApiClient $apiClient, Security $security)
+    public function __construct(private ApiClient $apiClient, private Security $security)
     {
-        $this->apiClient = $apiClient;
-        $this->security = $security;
     }
 
     /**

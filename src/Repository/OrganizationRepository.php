@@ -10,7 +10,7 @@ class OrganizationRepository extends EntityRepository
 {
     public function findOrganizations(
         ?Country $country,
-        string $search
+        string $search,
     ): mixed {
         $qb = $this->createQueryBuilder('organization')
             ->select('organization');

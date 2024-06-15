@@ -20,19 +20,8 @@ use function assert;
 #[AsMessageHandler]
 class GetRDFFromStoreCommandHandler
 {
-    private MysqlBasedDistributionService $mysqlBasedDistributionService;
-    private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService;
-    private UriHelper $uriHelper;
-    private EncryptionService $encryptionService;
-    private Security $security;
-
-    public function __construct(MysqlBasedDistributionService $mysqlBasedDistributionService, TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, UriHelper $uriHelper, EncryptionService $encryptionService, Security $security)
+    public function __construct(private MysqlBasedDistributionService $mysqlBasedDistributionService, private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService, private UriHelper $uriHelper, private EncryptionService $encryptionService, private Security $security)
     {
-        $this->mysqlBasedDistributionService = $mysqlBasedDistributionService;
-        $this->tripleStoreBasedDistributionService = $tripleStoreBasedDistributionService;
-        $this->uriHelper = $uriHelper;
-        $this->encryptionService = $encryptionService;
-        $this->security = $security;
     }
 
     /** @throws Exception */

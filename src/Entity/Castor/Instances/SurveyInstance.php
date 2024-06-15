@@ -8,13 +8,9 @@ use DateTime;
 
 class SurveyInstance extends Instance
 {
-    private SurveyPackageInstance $surveyPackageInstance;
-
-    public function __construct(string $id, Record $record, DateTime $createdOn, SurveyPackageInstance $surveyPackageInstance)
+    public function __construct(string $id, Record $record, DateTime $createdOn, private SurveyPackageInstance $surveyPackageInstance)
     {
         parent::__construct($id, $record, $createdOn);
-
-        $this->surveyPackageInstance = $surveyPackageInstance;
     }
 
     public function getSurveyPackageInstance(): SurveyPackageInstance

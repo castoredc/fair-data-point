@@ -13,15 +13,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 abstract class DataSpecificationVersionCommandHandler
 {
-    protected EntityManagerInterface $em;
-    protected Security $security;
-    protected VersionNumberHelper $versionNumberHelper;
-
-    public function __construct(EntityManagerInterface $em, Security $security, VersionNumberHelper $versionNumberHelper)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security, protected VersionNumberHelper $versionNumberHelper)
     {
-        $this->em = $em;
-        $this->security = $security;
-        $this->versionNumberHelper = $versionNumberHelper;
     }
 
     /** @throws InvalidEntityType */

@@ -7,11 +7,8 @@ use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 
 class DeleteDataModelPrefixCommand
 {
-    private NamespacePrefix $dataModelPrefix;
-
-    public function __construct(NamespacePrefix $dataModelPrefix)
+    public function __construct(private NamespacePrefix $dataModelPrefix)
     {
-        $this->dataModelPrefix = $dataModelPrefix;
     }
 
     public function getDataModelPrefix(): NamespacePrefix

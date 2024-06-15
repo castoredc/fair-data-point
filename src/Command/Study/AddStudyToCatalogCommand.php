@@ -8,14 +8,8 @@ use App\Entity\Study;
 
 class AddStudyToCatalogCommand
 {
-    private Study $study;
-
-    private Catalog $catalog;
-
-    public function __construct(Study $study, Catalog $catalog)
+    public function __construct(private Study $study, private Catalog $catalog)
     {
-        $this->study = $study;
-        $this->catalog = $catalog;
     }
 
     public function getStudy(): Study

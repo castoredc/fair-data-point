@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\Enum\PermissionType;
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Permission\CatalogPermission;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Study;
@@ -17,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function array_merge;
+use function array_unique;
 use function count;
 
 /**
@@ -87,9 +90,16 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
      */
     private Collection $permissions;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="catalogs")
+     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
+     */
+    private ?MetadataModel $defaultMetadataModel = null;
+
     public function __construct(string $slug)
     {
         $this->slug = $slug;
+
         $this->datasets = new ArrayCollection();
         $this->studies = new ArrayCollection();
         $this->metadata = new ArrayCollection();
@@ -303,5 +313,58 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     public function isArchived(): bool
     {
         return $this->isArchived;
+    }
+
+    public function getDefaultMetadataModel(): ?MetadataModel
+    {
+        return $this->defaultMetadataModel;
+    }
+
+    public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
+    {
+        $this->defaultMetadataModel = $defaultMetadataModel;
+    }
+
+    /** @return Distribution[] */
+    public function getDistributions(): array
+    {
+        return array_unique(
+            array_merge(
+                ...$this->datasets->map(static function (Dataset $dataset) {
+                    return $dataset->getDistributions()->toArray();
+                })->toArray(),
+                ...$this->studies->map(static function (Study $study) {
+                    return $study->getDistributions();
+                })->toArray()
+            )
+        );
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getChildren(ResourceType $resourceType): array
+    {
+        if ($resourceType->isDataset()) {
+            return $this->getDatasets(true);
+        }
+
+        if ($resourceType->isStudy()) {
+            return $this->studies->toArray();
+        }
+
+        if ($resourceType->isDistribution()) {
+            return $this->getDistributions();
+        }
+
+        return [];
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getParents(ResourceType $resourceType): array
+    {
+        if ($resourceType->isFdp()) {
+            return [$this->fairDataPoint];
+        }
+
+        return [];
     }
 }

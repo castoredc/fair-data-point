@@ -17,11 +17,8 @@ class StudyVoter extends Voter
     public const EDIT = 'edit';
     public const EDIT_SOURCE_SYSTEM = 'edit_source_system';
 
-    private Security $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
     /** @inheritDoc */

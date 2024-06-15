@@ -35,17 +35,17 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
         super(props);
 
         this.state = {
-            initialValues: props.data ? props.data : defaultData,
+            initialValues: props.data ? props.data : defaultData[props.type],
             validation: {},
         };
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { show, data } = this.props;
+        const { show, data, type } = this.props;
 
         if (show !== prevProps.show || data !== prevProps.data) {
             this.setState({
-                initialValues: data ? data : defaultData,
+                initialValues: data ? data : defaultData[type],
             });
         }
     }
@@ -82,7 +82,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
     };
 
     render() {
-        const { show, handleClose, module, prefixes } = this.props;
+        const { show, handleClose, module, prefixes, type } = this.props;
         const { initialValues, validation } = this.state;
 
         const edit = !!initialValues.id;
@@ -92,28 +92,35 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
             <Modal open={show} onClose={handleClose} title={title} accessibleName={title}>
                 <Formik initialValues={initialValues} validationSchema={TripleSchema} onSubmit={this.handleSubmit}>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues }) => {
-                        const subjectSelectable = values.subjectType === 'internal' || values.subjectType === 'external';
+                        const subjectSelectable =
+                            (type === 'metadata-model' && values.subjectType === 'record') ||
+                                values.subjectType === 'internal' ||
+                                values.subjectType === 'external';
                         let subjectOptions = subjectSelectable ? this.getOptions(values.subjectType) : [];
+
                         const objectSelectable =
+                            (type === 'metadata-model' && values.objectType === 'record') ||
                             values.objectType === 'internal' ||
                             values.objectType === 'external' ||
                             values.objectType === 'value' ||
-                            values.objectType === 'literal';
+                            values.objectType === 'literal' ||
+                            values.objectType === 'children' ||
+                            values.objectType === 'parents';
                         let objectOptions = objectSelectable ? this.getOptions(values.objectType) : [];
 
-                        if (module && values.objectType === 'value' && module.repeated) {
+                        if (type === 'data-model' && module && values.objectType === 'value' && module.repeated) {
                             objectOptions = objectOptions.filter(option => {
                                 return option.repeated;
                             });
                         }
 
-                        if (module && values.objectType === 'internal' && !module.repeated) {
+                        if (type === 'data-model' && module && values.objectType === 'internal' && !module.repeated) {
                             objectOptions = objectOptions.filter(option => {
                                 return option.repeated === false;
                             });
                         }
 
-                        if (module && values.subjectType === 'internal' && !module.repeated) {
+                        if (type === 'data-model' && module && values.subjectType === 'internal' && !module.repeated) {
                             subjectOptions = subjectOptions.filter(option => {
                                 return option.repeated === false;
                             });
@@ -126,7 +133,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                         <FormItem label="Type">
                                             <Field
                                                 component={Select}
-                                                options={tripleTypes.subject}
+                                                options={tripleTypes[type].subject}
                                                 serverError={validation}
                                                 name="subjectType"
                                                 width="tiny"
@@ -167,7 +174,7 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
                                         <FormItem label="Type">
                                             <Field
                                                 component={Select}
-                                                options={tripleTypes.object}
+                                                options={tripleTypes[type].object}
                                                 serverError={validation}
                                                 name="objectType"
                                                 width="tiny"
@@ -203,26 +210,53 @@ export default class TripleModal extends Component<TripleModalProps, TripleModal
 }
 
 export const tripleTypes = {
-    subject: [
-        { value: 'internal', label: 'Internal' },
-        { value: 'external', label: 'External' },
-        { value: 'record', label: 'Record' },
-    ],
-    object: [
-        { value: 'internal', label: 'Internal' },
-        { value: 'external', label: 'External' },
-        { value: 'record', label: 'Record' },
-        { value: 'literal', label: 'Literal' },
-        { value: 'value', label: 'Value' },
-    ],
+    'metadata-model': {
+        subject: [
+            { value: 'internal', label: 'Internal' },
+            { value: 'external', label: 'External' },
+            { value: 'record', label: 'Record' },
+        ],
+        object: [
+            { value: 'internal', label: 'Internal' },
+            { value: 'external', label: 'External' },
+            { value: 'record', label: 'Record' },
+            { value: 'literal', label: 'Literal' },
+            { value: 'value', label: 'Value' },
+            { value: 'children', label: 'Children' },
+            { value: 'parents', label: 'Parents' },
+        ],
+    },
+    'data-model': {
+        subject: [
+            { value: 'internal', label: 'Internal' },
+            { value: 'external', label: 'External' },
+            { value: 'record', label: 'Record' },
+        ],
+        object: [
+            { value: 'internal', label: 'Internal' },
+            { value: 'external', label: 'External' },
+            { value: 'record', label: 'Record' },
+            { value: 'literal', label: 'Literal' },
+            { value: 'value', label: 'Value' },
+        ],
+    },
 };
 
 const defaultData = {
-    subjectType: 'internal',
-    subjectValue: '',
-    predicateValue: '',
-    objectType: 'internal',
-    objectValue: '',
+    'metadata-model': {
+        subjectType: 'internal',
+        subjectValue: '',
+        predicateValue: '',
+        objectType: 'internal',
+        objectValue: '',
+    },
+    'data-model': {
+        subjectType: 'internal',
+        subjectValue: '',
+        predicateValue: '',
+        objectType: 'internal',
+        objectValue: '',
+    }
 };
 
 const TripleSchema = Yup.object().shape({
@@ -232,9 +266,9 @@ const TripleSchema = Yup.object().shape({
         then: Yup.string().required('Please select a node'),
     }),
     predicateValue: Yup.string().required('Please enter a predicate').url('Please enter a valid predicate'),
-    objectType: Yup.string().oneOf(['internal', 'external', 'record', 'literal', 'value'], 'Please select an object type'),
+    objectType: Yup.string().oneOf(['internal', 'external', 'record', 'literal', 'value', 'children', 'parents'], 'Please select an object type'),
     objectValue: Yup.string().when('objectType', {
-        is: objectType => objectType === 'internal' || objectType === 'external' || objectType === 'value' || objectType === 'literal',
+        is: objectType => objectType === 'internal' || objectType === 'external' || objectType === 'value' || objectType === 'literal' || objectType === 'children' || objectType === 'parents',
         then: Yup.string().required('Please select a node'),
     }),
 });

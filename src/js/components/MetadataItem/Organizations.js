@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import './MetadataItem.scss';
-import MetadataItem from './index';
 import { AttributionControl, Map, Marker, TileLayer } from 'react-leaflet';
 import { getCenterFromDegrees } from '../../util';
 import Organization from './Organization';
@@ -21,7 +20,7 @@ class Organizations extends Component {
             });
 
         return (
-            <MetadataItem label={label} className="Organizations" table={table}>
+            <LegacyMetadataItem label={label} className="Organizations" table={table}>
                 {organizations.map((agent, index) => {
                     return <Organization key={index} organization={agent.organization} department={agent.hasDepartment && agent.department} />;
                 })}
@@ -50,7 +49,7 @@ class Organizations extends Component {
                         </Map>
                     </div>
                 )}
-            </MetadataItem>
+            </LegacyMetadataItem>
         );
     }
 }

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../Form.scss';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Button, Stack } from '@castoredc/matter';
+import { Button, LoadingOverlay, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
 import { mergeData } from '../../../util';
 import * as H from 'history';
@@ -12,6 +12,7 @@ import Input from 'components/Input/Formik/Input';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import * as Yup from 'yup';
 import { apiClient } from 'src/js/network';
+import Select from 'components/Input/Formik/Select';
 
 interface CatalogFormProps {
     catalog?: any;
@@ -22,6 +23,8 @@ interface CatalogFormState {
     initialValues: any;
     update: boolean;
     validation?: any;
+    metadataModels: any;
+    hasLoadedMetadataModels: boolean;
 }
 
 export default class CatalogForm extends Component<CatalogFormProps, CatalogFormState> {
@@ -32,8 +35,38 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
             initialValues: props.catalog ? mergeData(defaultData, props.catalog) : defaultData,
             validation: {},
             update: !!props.catalog,
+            metadataModels: [],
+            hasLoadedMetadataModels: false,
         };
     }
+
+    componentDidMount() {
+        this.getMetadataModels();
+    }
+
+    getMetadataModels = () => {
+        apiClient
+            .get('/api/metadata-model/my')
+            .then(response => {
+                this.setState({
+                    metadataModels: response.data.map(metadataModel => {
+                        const versions = metadataModel.versions.map(version => {
+                            return { value: version.id, label: version.version };
+                        });
+
+                        return {
+                            label: metadataModel.title,
+                            value: metadataModel.id,
+                            versions: versions,
+                        };
+                    }),
+                    hasLoadedMetadataModels: true,
+                });
+            })
+            .catch(() => {
+                toast.error(<ToastItem type="error" title="An error occurred" />);
+            });
+    };
 
     handleSubmit = (values, { setSubmitting }) => {
         const { catalog, history } = this.props;
@@ -66,8 +99,12 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
     };
 
     render() {
-        const { initialValues, validation } = this.state;
+        const { initialValues, validation, hasLoadedMetadataModels, metadataModels } = this.state;
         const { catalog } = this.props;
+
+        if (!hasLoadedMetadataModels) {
+            return <LoadingOverlay accessibleLabel="Loading catalog" />;
+        }
 
         return (
             <Formik initialValues={initialValues} onSubmit={this.handleSubmit} validationSchema={CatalogSchema}>
@@ -79,6 +116,17 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                                     <Field component={Input} name="slug" serverError={validation} />
                                 </FormItem>
 
+                                <FormItem label="Default metadata model">
+                                    <Field
+                                        component={Select}
+                                        options={metadataModels}
+                                        name="defaultMetadataModel"
+                                        menuPosition="fixed"
+                                        menuPlacement="auto"
+                                        details="Please select which semantic metadata model you want to use as default"
+                                    />
+                                </FormItem>
+
                                 <FormItem>
                                     <Field
                                         component={SingleChoice}
@@ -87,16 +135,6 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
                                         details="When selected, others will be able to add their study to this catalog"
                                     />
                                 </FormItem>
-
-                                {/*{values.acceptSubmissions && (*/}
-                                {/*    <FormItem>*/}
-                                {/*        <Field*/}
-                                {/*            component={SingleChoice}*/}
-                                {/*            labelText="Data will be accessed during submission"*/}
-                                {/*            name="submissionAccessesData"*/}
-                                {/*        />*/}
-                                {/*    </FormItem>*/}
-                                {/*)}*/}
                             </div>
 
                             {catalog ? (
@@ -124,12 +162,14 @@ export default class CatalogForm extends Component<CatalogFormProps, CatalogForm
 
 export const defaultData = {
     slug: '',
+    defaultMetadataModel: '',
     acceptSubmissions: false,
     submissionAccessesData: false,
 };
 
 const CatalogSchema = Yup.object().shape({
     slug: Yup.string().required('Please enter a slug'),
+    defaultMetadataModel: Yup.string().required('Please select a metadata model'),
     acceptSubmissions: Yup.boolean().required('Please enter if this catalog accepts submissions'),
     submissionAccessesData: Yup.boolean().when('acceptSubmissions', {
         is: true,

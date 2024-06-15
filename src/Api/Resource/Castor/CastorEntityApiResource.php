@@ -8,11 +8,8 @@ use App\Entity\Castor\CastorEntity;
 
 class CastorEntityApiResource implements ApiResource
 {
-    private CastorEntity $entity;
-
-    public function __construct(CastorEntity $entity)
+    public function __construct(private CastorEntity $entity)
     {
-        $this->entity = $entity;
     }
 
     /** @return array<mixed> */
@@ -22,7 +19,7 @@ class CastorEntityApiResource implements ApiResource
             'id' => $this->entity->getId(),
             'label' => $this->entity->getLabel(),
             'slug' => $this->entity->getSlug(),
-            'structureType' => $this->entity->getStructureType() !== null ? $this->entity->getStructureType()->toString() : null,
+            'structureType' => $this->entity->getStructureType()?->toString(),
         ];
     }
 }

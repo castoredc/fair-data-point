@@ -8,30 +8,16 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class CreateDataModelNodeMappingCommand extends CreateDataModelMappingCommand
 {
-    private string $node;
-
-    /** @var string[] */
-    private array $elements;
-
-    private bool $transform;
-
-    private ?string $transformSyntax;
-
     /** @param string[] $elements */
     public function __construct(
         RDFDistribution $distribution,
-        string $node,
-        array $elements,
-        bool $transform,
-        ?string $transformSyntax,
-        DataModelVersion $dataModelVersion
+        private string $node,
+        private array $elements,
+        private bool $transform,
+        private ?string $transformSyntax,
+        DataModelVersion $dataModelVersion,
     ) {
         parent::__construct($distribution, $dataModelVersion);
-
-        $this->node = $node;
-        $this->elements = $elements;
-        $this->transform = $transform;
-        $this->transformSyntax = $transformSyntax;
     }
 
     public function getNode(): string

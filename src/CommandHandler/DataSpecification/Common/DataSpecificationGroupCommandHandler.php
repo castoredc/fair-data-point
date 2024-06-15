@@ -14,14 +14,8 @@ use function class_exists;
 
 abstract class DataSpecificationGroupCommandHandler
 {
-    protected EntityManagerInterface $em;
-
-    protected Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(protected EntityManagerInterface $em, protected Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     protected function parseDependencies(DependencyGroup $group, string $className): void

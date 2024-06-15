@@ -8,16 +8,10 @@ use App\Entity\FAIRData\Distribution;
 
 class UpdateDistributionSubsetCommand
 {
-    private Distribution $distribution;
-
-    private ?DependencyGroup $dependencies;
-
     public function __construct(
-        Distribution $distribution,
-        ?DependencyGroup $dependencies
+        private Distribution $distribution,
+        private ?DependencyGroup $dependencies,
     ) {
-        $this->distribution = $distribution;
-        $this->dependencies = $dependencies;
     }
 
     public function getDistribution(): Distribution

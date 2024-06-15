@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="metadata_model_node_external")
  */
 class ExternalIriNode extends Node

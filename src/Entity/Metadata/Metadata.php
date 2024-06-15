@@ -3,17 +3,24 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Language;
 use App\Entity\FAIRData\License;
 use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Iri;
 use App\Entity\Version;
+use App\Exception\NotFound;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use function assert;
+use function json_decode;
 
 /**
  * @ORM\Entity
@@ -41,6 +48,13 @@ abstract class Metadata
 
     /** @ORM\Column(type="version") */
     private Version $version;
+
+    /**
+     * @ORM\OneToMany(targetEntity="MetadataValue", mappedBy="metadata")
+     *
+     * @var Collection<MetadataValue>
+     */
+    protected Collection $values;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
@@ -79,14 +93,25 @@ abstract class Metadata
     /** @ORM\Column(type="iri", nullable=true) */
     private ?Iri $landingPage = null;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelVersion", inversedBy="assignedMetadata")
+     * @ORM\JoinColumn(name="metadata_model_version_id", referencedColumnName="id")
+     */
+    private ?MetadataModelVersion $metadataModelVersion;
+
     public function getId(): string
     {
         return (string) $this->id;
     }
 
-    public function getTitle(): ?LocalizedText
+    public function getLegacyTitle(): ?LocalizedText
     {
         return $this->title;
+    }
+
+    public function getLegacyDescription(): ?LocalizedText
+    {
+        return $this->description;
     }
 
     public function setTitle(?LocalizedText $title): void
@@ -102,16 +127,6 @@ abstract class Metadata
     public function setVersion(Version $version): void
     {
         $this->version = $version;
-    }
-
-    public function getDescription(): ?LocalizedText
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?LocalizedText $description): void
-    {
-        $this->description = $description;
     }
 
     public function getLanguage(): ?Language
@@ -166,5 +181,84 @@ abstract class Metadata
     public function setLandingPage(?Iri $landingPage): void
     {
         $this->landingPage = $landingPage;
+    }
+
+    public function getMetadataModelVersion(): ?MetadataModelVersion
+    {
+        return $this->metadataModelVersion;
+    }
+
+    public function setMetadataModelVersion(?MetadataModelVersion $metadataModelVersion): void
+    {
+        $this->metadataModelVersion = $metadataModelVersion;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return null;
+    }
+
+    public function getTitle(): ?LocalizedText
+    {
+        $modelVersion = $this->metadataModelVersion;
+
+        if ($modelVersion === null) {
+            return null;
+        }
+
+        $resourceType = $this->getResourceType();
+
+        $value = $this->values->findFirst(static function (int $key, MetadataValue $value) use ($modelVersion, $resourceType) {
+            return $modelVersion->getTitleNode($resourceType) === $value->getNode();
+        });
+        assert($value instanceof MetadataValue || $value === null);
+
+        return $value !== null ? LocalizedText::fromArray(json_decode($value->getValue(), true)) : null;
+    }
+
+    public function getDescription(): ?LocalizedText
+    {
+        $modelVersion = $this->metadataModelVersion;
+
+        if ($modelVersion === null) {
+            return null;
+        }
+
+        $resourceType = $this->getResourceType();
+
+        $value = $this->values->findFirst(static function (int $key, MetadataValue $value) use ($modelVersion, $resourceType) {
+            return $modelVersion->getDescriptionNode($resourceType) === $value->getNode();
+        });
+        assert($value instanceof MetadataValue || $value === null);
+
+        return $value !== null ? LocalizedText::fromArray(json_decode($value->getValue(), true)) : null;
+    }
+
+    /** @return Collection<MetadataValue> */
+    public function getValues(): Collection
+    {
+        return $this->values;
+    }
+
+    public function getValueForNode(ValueNode $node): ?MetadataValue
+    {
+        return $this->values->findFirst(static function (int $key, MetadataValue $value) use ($node) {
+            return $value->getNode() === $node;
+        });
+    }
+
+    public function addValue(MetadataValue $value): void
+    {
+        $this->values->add($value);
+    }
+
+    public function removeValue(MetadataValue $value): void
+    {
+        $this->values->removeElement($value);
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        throw new NotFound();
     }
 }

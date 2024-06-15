@@ -1,39 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, FC, useState } from 'react';
 import { Choice, Modal } from '@castoredc/matter';
 import PersonForm from 'components/Form/Agent/PersonForm';
 import OrganizationForm from 'components/Form/Agent/OrganizationForm';
+import { CountryType } from 'types/CountryType';
 
 type PublisherModalProps = {
     open: boolean;
     onClose: () => void;
     handleSave: (publisher) => void;
-    countries: any;
+    countries: CountryType[];
 };
 
-type PublisherModalState = {
-    type: string;
-};
+const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, countries }) => {
+    const [type, setType] = useState('person');
 
-export default class PublisherModal extends Component<PublisherModalProps, PublisherModalState> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            type: 'person',
-        };
-    }
-
-    handleTypeChange = event => {
-        this.setState({
-            type: event.target.value,
-        });
-    };
-
-    handleSubmit = (values, { setSubmitting }) => {
-        const { handleSave } = this.props;
-        const { type } = this.state;
-
-        if(type === 'organization') {
+    const handleSubmit = (values, { setSubmitting }) => {
+        if (type === 'organization') {
             handleSave({
                 type: type,
                 organization: {
@@ -41,7 +23,6 @@ export default class PublisherModal extends Component<PublisherModalProps, Publi
                     country: values.country,
                 },
             });
-
         } else {
             handleSave({
                 type: type,
@@ -52,37 +33,43 @@ export default class PublisherModal extends Component<PublisherModalProps, Publi
         setSubmitting(false);
     };
 
-    render() {
-        const { open, onClose, countries } = this.props;
-        const { type } = this.state;
+    const form = () => {
+        switch (type) {
+            case 'person':
+                return <PersonForm handleSubmit={handleSubmit} />;
+            case 'organization':
+                return <OrganizationForm countries={countries} handleSubmit={handleSubmit} />;
+        }
+    };
 
-        const title = 'Add publisher';
+    const title = 'Add publisher';
 
-        return (
-            <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
-                <Choice
-                    labelText="Type"
-                    options={[
-                        {
-                            labelText: 'Person',
-                            value: 'person',
-                            checked: type === 'person',
-                        },
-                        {
-                            labelText: 'Organization',
-                            value: 'organization',
-                            checked: type === 'organization',
-                        },
-                    ]}
-                    name="type"
-                    collapse={true}
-                    onChange={this.handleTypeChange}
-                />
+    return (
+        <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
+            <Choice
+                labelText="Type"
+                options={[
+                    {
+                        labelText: 'Person',
+                        value: 'person',
+                        checked: type === 'person',
+                    },
+                    {
+                        labelText: 'Organization',
+                        value: 'organization',
+                        checked: type === 'organization',
+                    },
+                ]}
+                name="type"
+                collapse={true}
+                onChange={(e) => setType('value' in e.target ? e.target.value as string : '')}
+            />
 
-                {type === 'person' && <PersonForm handleSubmit={this.handleSubmit} />}
+            {type === 'person' && <PersonForm handleSubmit={handleSubmit} />}
 
-                {type === 'organization' && <OrganizationForm countries={countries} handleSubmit={this.handleSubmit} />}
-            </Modal>
-        );
-    }
+            {type === 'organization' && <OrganizationForm countries={countries} handleSubmit={handleSubmit} />}
+        </Modal>
+    );
 }
+
+export default PublisherModal;

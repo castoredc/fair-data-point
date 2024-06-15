@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Metadata;
 
+use App\Entity\Enum\ResourceType;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\LocalizedText;
+use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Terminology\OntologyConcept;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function count;
@@ -40,6 +43,8 @@ class DatasetMetadata extends Metadata
     public function __construct(Dataset $dataset)
     {
         $this->dataset = $dataset;
+
+        $this->values = new ArrayCollection();
     }
 
     public function getDataset(): Dataset
@@ -87,5 +92,15 @@ class DatasetMetadata extends Metadata
     public function setKeyword(?LocalizedText $keyword): void
     {
         $this->keyword = $keyword;
+    }
+
+    public function getEntity(): ?MetadataEnrichedEntity
+    {
+        return $this->dataset;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return ResourceType::dataset();
     }
 }

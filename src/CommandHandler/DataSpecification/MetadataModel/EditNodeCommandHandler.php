@@ -5,6 +5,7 @@ namespace App\CommandHandler\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\MetadataModel\EditNodeCommand;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
+use App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\Iri;
@@ -18,13 +19,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class EditNodeCommandHandler
 {
-    private EntityManagerInterface $em;
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(private EntityManagerInterface $em, private Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     /**
@@ -35,7 +31,8 @@ class EditNodeCommandHandler
     public function __invoke(EditNodeCommand $command): void
     {
         $node = $command->getNode();
-        $metadataModel = $node->getMetadataModelVersion()->getMetadataModel();
+        $metadataModelVersion = $node->getMetadataModelVersion();
+        $metadataModel = $metadataModelVersion->getMetadataModel();
 
         if (! $this->security->isGranted('edit', $metadataModel)) {
             throw new NoAccessPermission();
@@ -46,6 +43,9 @@ class EditNodeCommandHandler
 
         if ($node instanceof ExternalIriNode) {
             $node->setIri(new Iri($command->getValue()));
+        } elseif ($node instanceof InternalIriNode) {
+            $node->setSlug($command->getValue());
+            $node->setIsRepeated($command->isRepeated());
         } elseif ($node instanceof LiteralNode) {
             $node->setValue($command->getValue());
             $node->setDataType($command->getDataType());
@@ -58,8 +58,6 @@ class EditNodeCommandHandler
             } else {
                 throw new InvalidValueType();
             }
-
-            $node->setFieldType($command->getFieldType());
         } else {
             throw new InvalidNodeType();
         }

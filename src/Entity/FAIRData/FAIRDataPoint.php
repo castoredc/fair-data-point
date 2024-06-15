@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
+use App\Entity\Enum\ResourceType;
 use App\Entity\Iri;
 use App\Entity\Metadata\FAIRDataPointMetadata;
 use App\Entity\Version;
@@ -11,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
+use function array_merge;
 use function count;
 
 /**
@@ -50,6 +53,12 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
 
     /** @ORM\Column(type="boolean", options={"default":"0"}) */
     private bool $isArchived = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="fdps")
+     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
+     */
+    private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct()
     {
@@ -136,5 +145,54 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     public function isArchived(): bool
     {
         return $this->isArchived;
+    }
+
+    public function getDefaultMetadataModel(): ?MetadataModel
+    {
+        return $this->defaultMetadataModel;
+    }
+
+    public function setDefaultMetadataModel(?MetadataModel $defaultMetadataModel): void
+    {
+        $this->defaultMetadataModel = $defaultMetadataModel;
+    }
+
+    public function getSlug(): string
+    {
+        return 'fdp';
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getChildren(ResourceType $resourceType): array
+    {
+        if ($resourceType->isCatalog()) {
+            return $this->catalogs->toArray();
+        }
+
+        if ($resourceType->isDataset()) {
+            return array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getChildren(ResourceType::dataset());
+            })->toArray());
+        }
+
+        if ($resourceType->isStudy()) {
+            return array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getChildren(ResourceType::study());
+            })->toArray());
+        }
+
+        if ($resourceType->isDistribution()) {
+            return array_merge(...$this->catalogs->map(static function (Catalog $catalog) {
+                return $catalog->getChildren(ResourceType::distribution());
+            })->toArray());
+        }
+
+        return [];
+    }
+
+    /** @return MetadataEnrichedEntity[] */
+    public function getParents(ResourceType $resourceType): array
+    {
+        return [];
     }
 }

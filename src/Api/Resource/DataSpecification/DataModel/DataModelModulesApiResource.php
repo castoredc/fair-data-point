@@ -10,14 +10,8 @@ use function assert;
 
 class DataModelModulesApiResource implements ApiResource
 {
-    private DataModelVersion $dataModel;
-
-    private bool $groupTriples;
-
-    public function __construct(DataModelVersion $dataModel, bool $groupTriples = true)
+    public function __construct(private DataModelVersion $dataModel, private bool $groupTriples = true)
     {
-        $this->dataModel = $dataModel;
-        $this->groupTriples = $groupTriples;
     }
 
     /** @return array<mixed> */

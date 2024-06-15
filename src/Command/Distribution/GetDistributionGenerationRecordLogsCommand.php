@@ -7,17 +7,8 @@ use App\Entity\Data\Log\DistributionGenerationLog;
 
 class GetDistributionGenerationRecordLogsCommand
 {
-    private DistributionGenerationLog $log;
-
-    private int $perPage;
-
-    private int $page;
-
-    public function __construct(DistributionGenerationLog $log, int $perPage, int $page)
+    public function __construct(private DistributionGenerationLog $log, private int $perPage, private int $page)
     {
-        $this->log = $log;
-        $this->perPage = $perPage;
-        $this->page = $page;
     }
 
     public function getLog(): DistributionGenerationLog

@@ -8,13 +8,9 @@ use App\Entity\FAIRData\Agent\Organization;
 
 class OrganizationsApiResource implements ApiResource
 {
-    /** @var Organization[] */
-    private array $organizations;
-
     /** @param Organization[] $organizations */
-    public function __construct(array $organizations)
+    public function __construct(private array $organizations)
     {
-        $this->organizations = $organizations;
     }
 
     /** @return array<mixed> */

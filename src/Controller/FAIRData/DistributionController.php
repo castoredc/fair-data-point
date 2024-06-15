@@ -5,10 +5,10 @@ namespace App\Controller\FAIRData;
 
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
-use App\Graph\Resource\Distribution\DistributionGraphResource;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DistributionController extends FAIRDataController
@@ -18,7 +18,7 @@ class DistributionController extends FAIRDataController
      * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
      * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
      */
-    public function distribution(Dataset $dataset, Distribution $distribution, Request $request): Response
+    public function distribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 
@@ -26,14 +26,10 @@ class DistributionController extends FAIRDataController
             throw $this->createNotFoundException();
         }
 
-        if ($this->acceptsHttp($request)) {
-            return $this->render('react.html.twig', $this->getSeoTexts($distribution));
-        }
-
-        return new Response(
-            (new DistributionGraphResource($distribution, $this->basePurl))->toGraph()->serialise('turtle'),
-            Response::HTTP_OK,
-            ['content-type' => 'text/turtle']
+        return $this->renderResource(
+            $request,
+            $distribution,
+            $bus
         );
     }
 }

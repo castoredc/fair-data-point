@@ -8,14 +8,8 @@ use App\Entity\Enum\VersionType;
 
 class CreateDataDictionaryVersionCommand
 {
-    private DataDictionary $dataDictionary;
-
-    private VersionType $versionType;
-
-    public function __construct(DataDictionary $dataDictionary, VersionType $versionType)
+    public function __construct(private DataDictionary $dataDictionary, private VersionType $versionType)
     {
-        $this->dataDictionary = $dataDictionary;
-        $this->versionType = $versionType;
     }
 
     public function getDataDictionary(): DataDictionary

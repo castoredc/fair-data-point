@@ -8,14 +8,8 @@ use App\Security\User;
 
 class RemovePermissionToEntityCommand
 {
-    private PermissionsEnabledEntity $entity;
-
-    private User $user;
-
-    public function __construct(PermissionsEnabledEntity $entity, User $user)
+    public function __construct(private PermissionsEnabledEntity $entity, private User $user)
     {
-        $this->entity = $entity;
-        $this->user = $user;
     }
 
     public function getEntity(): PermissionsEnabledEntity

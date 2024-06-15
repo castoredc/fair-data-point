@@ -11,11 +11,8 @@ class UriHelper
 {
     public const ISO_URL = 'http://id.loc.gov/vocabulary/iso639-1/';
 
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     public function getBaseUri(): string

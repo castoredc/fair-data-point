@@ -10,12 +10,10 @@ use App\Service\UserDetailsHelper;
 
 class UserApiResource implements ApiResource
 {
-    private User $user;
     private UserDetailsHelper $helper;
 
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
-        $this->user = $user;
         $this->helper = new UserDetailsHelper($user);
     }
 

@@ -101,7 +101,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
                 });
 
                 getDataSpecification(() => {
-                    history.push(`/dashboard/data-models/${response.data.dataSpecification}/${response.data.version}/modules`);
+                    history.push(`/dashboard/${type}s/${response.data.dataSpecification}/${response.data.version}/modules`);
                 });
             })
             .catch(error => {

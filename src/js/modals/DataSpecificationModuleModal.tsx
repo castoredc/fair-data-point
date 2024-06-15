@@ -160,6 +160,10 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                     <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
+                                <FormItem label="Type">
+                                    <Field component={Select} options={resourceTypes} name="resourceType" serverError={validation} menuPosition="fixed" />
+                                </FormItem>
+
                                 {type === 'data-model' && <>
                                     <FormItem>
                                         <Field
@@ -245,15 +249,9 @@ const defaultDataModelData = {
     repeated: false,
 };
 
-const defaultMetadataModelData = {};
-
-const dataTypes = [
-    { value: 'catalog', label: ResourceType['catalog'] },
-    { value: 'dataset', label: ResourceType['dataset'] },
-    { value: 'distribution', label: ResourceType['distribution'] },
-    { value: 'study', label: ResourceType['study'] },
-    { value: 'fdp', label: ResourceType['fdp'] },
-];
+const defaultMetadataModelData = {
+    resourceType: '',
+};
 
 const DataModelModuleSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
@@ -265,4 +263,13 @@ const DataModelModuleSchema = Yup.object().shape({
 const MetadataModelModuleSchema = Yup.object().shape({
     title: Yup.string().required('Please enter a title'),
     order: Yup.string().required('Please select a position'),
+    resourceType: Yup.string().required('Please select a type'),
 });
+
+const resourceTypes = [
+    { value: 'fdp', label: ResourceType.fdp },
+    { value: 'catalog', label: ResourceType.catalog },
+    { value: 'dataset', label: ResourceType.dataset },
+    { value: 'distribution', label: ResourceType.distribution },
+    { value: 'study', label: ResourceType.study },
+];

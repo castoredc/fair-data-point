@@ -16,7 +16,7 @@ class DistributionGenerationRecordLogRepository extends EntityRepository
         DistributionGenerationLog $log,
         ?int $perPage,
         ?int $page,
-        bool $admin
+        bool $admin,
     ): mixed {
         $qb = $this->createQueryBuilder('recordLog')->select('recordLog');
         $qb = $this->getLogQuery($qb, $log, $admin);
@@ -38,9 +38,9 @@ class DistributionGenerationRecordLogRepository extends EntityRepository
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             return 0;
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException) {
             return 0;
         }
     }
@@ -48,7 +48,7 @@ class DistributionGenerationRecordLogRepository extends EntityRepository
     private function getLogQuery(
         QueryBuilder $qb,
         DistributionGenerationLog $log,
-        bool $admin
+        bool $admin,
     ): QueryBuilder {
         $qb->innerJoin('recordLog.log', 'log', Join::WITH, 'log.id = :log_id')
            ->setParameter('log_id', $log->getId());

@@ -8,11 +8,8 @@ use App\Entity\FAIRData\Country;
 
 class CountryApiResource implements ApiResource
 {
-    private Country $country;
-
-    public function __construct(Country $country)
+    public function __construct(private Country $country)
     {
-        $this->country = $country;
     }
 
     /** @return array<mixed> */

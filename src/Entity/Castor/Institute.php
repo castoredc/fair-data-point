@@ -35,8 +35,6 @@ class Institute
     /** @ORM\Column(name="code", type="string", length=3, nullable=true) */
     private ?string $code = null;
 
-    private int $countryId;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Country",cascade={"persist"})
      * @ORM\JoinColumn(name="country", referencedColumnName="code")
@@ -50,24 +48,20 @@ class Institute
      */
     private Collection $records;
 
-    private bool $deleted = false;
-
     public function __construct(
         CastorStudy $study,
         string $id,
         string $name,
         string $abbreviation,
         ?string $code,
-        int $countryId,
-        bool $deleted
+        private int $countryId,
+        private bool $deleted = false,
     ) {
         $this->id = $id;
         $this->study = $study;
         $this->name = $name;
         $this->abbreviation = $abbreviation;
         $this->code = $code;
-        $this->countryId = $countryId;
-        $this->deleted = $deleted;
     }
 
     public function getId(): string

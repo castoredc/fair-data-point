@@ -5,14 +5,8 @@ namespace App\Command\DataSpecification\Common\Model;
 
 abstract class UpdateModelModuleCommand
 {
-    private string $title;
-
-    private int $order;
-
-    public function __construct(string $title, int $order)
+    public function __construct(private string $title, private int $order)
     {
-        $this->title = $title;
-        $this->order = $order;
     }
 
     public function getTitle(): string

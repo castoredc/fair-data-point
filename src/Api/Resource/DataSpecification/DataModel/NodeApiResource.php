@@ -13,11 +13,8 @@ use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 
 class NodeApiResource implements ApiResource
 {
-    private Node $node;
-
-    public function __construct(Node $node)
+    public function __construct(private Node $node)
     {
-        $this->node = $node;
     }
 
     /** @return array<mixed> */
@@ -29,7 +26,7 @@ class NodeApiResource implements ApiResource
             $value = (new IriApiResource($this->node->getDataModelVersion(), $this->node->getIri()))->toArray();
         } elseif ($this->node instanceof LiteralNode || $this->node instanceof ValueNode) {
             $value = [
-                'dataType' => $this->node->getDataType() !== null ? $this->node->getDataType()->toString() : null,
+                'dataType' => $this->node->getDataType()?->toString(),
                 'value' => $this->node->getValue(),
             ];
         }

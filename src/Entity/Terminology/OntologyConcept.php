@@ -90,6 +90,17 @@ class OntologyConcept
         $this->displayName = $displayName;
     }
 
+    /** @return array<mixed> */
+    public function toArray(): array
+    {
+        return [
+            'url' => $this->url->getValue(),
+            'code' => $this->code,
+            'ontology' => $this->ontology->toArray(),
+            'displayName' => $this->displayName,
+        ];
+    }
+
     /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {

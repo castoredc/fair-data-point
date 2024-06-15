@@ -5,20 +5,22 @@ namespace App\Command\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\Common\Model\UpdateModelModuleCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
+use App\Entity\Enum\ResourceType;
 
 class UpdateMetadataModelModuleCommand extends UpdateModelModuleCommand
 {
-    private MetadataModelGroup $module;
-
-    public function __construct(MetadataModelGroup $module, string $title, int $order)
+    public function __construct(private MetadataModelGroup $module, string $title, int $order, private ResourceType $resourceType)
     {
         parent::__construct($title, $order);
-
-        $this->module = $module;
     }
 
     public function getModule(): MetadataModelGroup
     {
         return $this->module;
+    }
+
+    public function getResourceType(): ResourceType
+    {
+        return $this->resourceType;
     }
 }

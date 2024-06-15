@@ -9,22 +9,9 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class CreateDataModelModuleCommand extends CreateModelModuleCommand
 {
-    private DataModelVersion $dataModelVersion;
-
-    private bool $isRepeated;
-
-    private bool $isDependent;
-
-    private ?DependencyGroup $dependencies = null;
-
-    public function __construct(DataModelVersion $dataModelVersion, string $title, int $order, bool $isRepeated, bool $isDependent, ?DependencyGroup $dependencies)
+    public function __construct(private DataModelVersion $dataModelVersion, string $title, int $order, private bool $isRepeated, private bool $isDependent, private ?DependencyGroup $dependencies = null)
     {
         parent::__construct($title, $order);
-
-        $this->dataModelVersion = $dataModelVersion;
-        $this->isRepeated = $isRepeated;
-        $this->isDependent = $isDependent;
-        $this->dependencies = $dependencies;
     }
 
     public function getDataModelVersion(): DataModelVersion

@@ -13,22 +13,12 @@ class FieldOptionGroup extends CastorEntity
 {
     private ?string $name = null;
 
-    private ?string $description = null;
-
-    private bool $layout;
-
-    /** @var FieldOption[]|null */
-    private ?array $options = null;
-
     /** @param FieldOption[]|null $options */
-    public function __construct(string $id, CastorStudy $study, string $name, ?string $description, bool $layout, ?array $options)
+    public function __construct(string $id, CastorStudy $study, string $name, private ?string $description = null, private bool $layout, private ?array $options = null)
     {
         parent::__construct($id, $name, $study, null);
 
         $this->name = $name;
-        $this->description = $description;
-        $this->layout = $layout;
-        $this->options = $options;
     }
 
     public function getName(): ?string
@@ -102,7 +92,7 @@ class FieldOptionGroup extends CastorEntity
         return true;
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritDoc} */
     public function getChildren(): ?array
     {
         return $this->options;

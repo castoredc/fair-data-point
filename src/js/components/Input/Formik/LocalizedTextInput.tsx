@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 
 import { Button, DefaultOptionType, Dropdown, TextInput } from '@castoredc/matter';
 import { FieldInputProps, FieldProps, FormikHelpers } from 'formik';
@@ -40,7 +40,7 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, languages, multiline, serverError }) => {
     const serverErrors = serverError[field.name];
 
-    const value = field.value ? field.value : [defaultData];
+    const value = (field.value && field.value.length > 0) ? field.value : [defaultData];
 
     return (
         <div className="Input LocalizedTextInput">
@@ -49,8 +49,8 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                     const first = index === 0;
 
                     return (
-                        <>
-                            <div key={`${field.name}-${index}`} className="LocalizedTextInputItem">
+                        <Fragment key={`${field.name}-${index}`} >
+                            <div className="LocalizedTextInputItem">
                                 <div className="LocalizedTextInputText">
                                     <TextInput
                                         name="text"
@@ -90,13 +90,13 @@ const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, language
                                 </div>
                             </div>
                             <FieldErrors field={field} serverErrors={serverErrors} index={index} />
-                        </>
+                        </Fragment>
                     );
                 })}
             </div>
 
             <div className="LocalizedTextInputAddButton">
-                <Button icon="add" className="AddButton" buttonType="contentOnly" onClick={() => handleAdd(field, form)}>
+                <Button icon="add" className="AddButton" buttonType="bare" onClick={() => handleAdd(field, form)}>
                     Add new
                 </Button>
             </div>

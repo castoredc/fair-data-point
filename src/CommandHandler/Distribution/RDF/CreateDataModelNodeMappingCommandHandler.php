@@ -33,6 +33,7 @@ class CreateDataModelNodeMappingCommandHandler extends CreateDataModelMappingCom
     public function __invoke(CreateDataModelNodeMappingCommand $command): Mapping
     {
         parent::setup($command);
+
         $dataModelVersion = $command->getDataModelVersion();
 
         $node = $this->em->getRepository(ValueNode::class)->find($command->getNode());

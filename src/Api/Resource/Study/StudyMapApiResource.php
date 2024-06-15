@@ -9,14 +9,8 @@ use App\Entity\Study;
 
 class StudyMapApiResource implements ApiResource
 {
-    private Study $study;
-
-    private Organization $organization;
-
-    public function __construct(Study $study, Organization $organization)
+    public function __construct(private Study $study, private Organization $organization)
     {
-        $this->study = $study;
-        $this->organization = $organization;
     }
 
     /** @return array<mixed> */

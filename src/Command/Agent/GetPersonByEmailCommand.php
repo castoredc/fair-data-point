@@ -5,11 +5,8 @@ namespace App\Command\Agent;
 
 class GetPersonByEmailCommand
 {
-    private string $email;
-
-    public function __construct(string $email)
+    public function __construct(private string $email)
     {
-        $this->email = $email;
     }
 
     public function getEmail(): string

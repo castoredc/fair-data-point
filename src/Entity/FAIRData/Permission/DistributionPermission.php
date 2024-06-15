@@ -32,6 +32,7 @@ class DistributionPermission extends Permission
     public function __construct(User $user, PermissionType $type, Distribution $distribution)
     {
         parent::__construct($user, $type);
+
         $this->distribution = $distribution;
     }
 

@@ -12,11 +12,8 @@ use App\Entity\FAIRData\Distribution;
 
 class DistributionContentApiResource implements ApiResource
 {
-    private Distribution $distribution;
-
-    public function __construct(Distribution $distribution)
+    public function __construct(private Distribution $distribution)
     {
-        $this->distribution = $distribution;
     }
 
     /** @return array<mixed> */

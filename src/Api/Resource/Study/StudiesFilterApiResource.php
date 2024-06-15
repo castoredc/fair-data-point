@@ -9,13 +9,9 @@ use App\Entity\Study;
 
 class StudiesFilterApiResource implements ApiResource
 {
-    /** @var Study[] */
-    private array $studies;
-
     /** @param Study[] $studies */
-    public function __construct(array $studies)
+    public function __construct(private array $studies)
     {
-        $this->studies = $studies;
     }
 
     /** @return array<mixed> */

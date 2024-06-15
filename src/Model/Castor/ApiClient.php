@@ -56,18 +56,9 @@ class ApiClient
 
     private int $pageSize = 1000;
 
-    private RecordFactory $recordFactory;
-
-    private InstituteFactory $instituteFactory;
-
-    private CastorUserFactory $castorUserFactory;
-
-    public function __construct(RecordFactory $recordFactory, InstituteFactory $instituteFactory, CastorUserFactory $castorUserFactory)
+    public function __construct(private RecordFactory $recordFactory, private InstituteFactory $instituteFactory, private CastorUserFactory $castorUserFactory)
     {
         $this->client = new Client();
-        $this->recordFactory = $recordFactory;
-        $this->instituteFactory = $instituteFactory;
-        $this->castorUserFactory = $castorUserFactory;
     }
 
     public function setServer(string $server): void
@@ -604,7 +595,7 @@ class ApiClient
                 $reportInstance = ReportInstance::fromData($rawReportInstance, $record);
                 $reportInstances->set($reportInstance->getId(), $reportInstance);
             }
-        } catch (NotFound $e) {
+        } catch (NotFound) {
             return new ArrayCollection();
         }
 

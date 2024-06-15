@@ -10,34 +10,13 @@ use App\Entity\FAIRData\Catalog;
 
 class FilterStudiesCommand
 {
-    private ?Catalog $catalog = null;
-
-    private ?Agent $agent = null;
-
-    private ?string $search = null;
-
-    /** @var StudyType[]|null */
-    private ?array $studyType = null;
-
-    /** @var MethodType[]|null */
-    private ?array $methodType = null;
-
-    /** @var string[]|null */
-    private ?array $country = null;
-
     /**
      * @param StudyType[]|null  $studyType
      * @param MethodType[]|null $methodType
      * @param string[]|null     $country
      */
-    public function __construct(?Catalog $catalog, ?Agent $agent, ?string $search, ?array $studyType, ?array $methodType, ?array $country)
+    public function __construct(private ?Catalog $catalog = null, private ?Agent $agent = null, private ?string $search = null, private ?array $studyType = null, private ?array $methodType = null, private ?array $country = null)
     {
-        $this->catalog = $catalog;
-        $this->agent = $agent;
-        $this->search = $search;
-        $this->studyType = $studyType;
-        $this->methodType = $methodType;
-        $this->country = $country;
     }
 
     public function getCatalog(): ?Catalog

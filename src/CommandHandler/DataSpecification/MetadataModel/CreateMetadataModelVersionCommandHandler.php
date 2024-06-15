@@ -10,9 +10,11 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroupOption;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
+use App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode;
 use App\Entity\DataSpecification\MetadataModel\Node\LiteralNode;
 use App\Entity\DataSpecification\MetadataModel\Node\Node;
+use App\Entity\DataSpecification\MetadataModel\Node\ParentsNode;
 use App\Entity\DataSpecification\MetadataModel\Node\RecordNode;
 use App\Entity\DataSpecification\MetadataModel\Node\ValueNode;
 use App\Entity\DataSpecification\MetadataModel\Predicate;
@@ -86,7 +88,7 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
 
         foreach ($latestVersion->getElements() as $node) {
             if ($node instanceof RecordNode) {
-                $newNode = new RecordNode($newVersion);
+                $newNode = new RecordNode($newVersion, $node->getResourceType());
             } elseif ($node instanceof ExternalIriNode) {
                 $newNode = new ExternalIriNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIri($node->getIri());
@@ -97,12 +99,14 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
             } elseif ($node instanceof ValueNode) {
                 $newNode = new ValueNode($newVersion, $node->getTitle(), $node->getDescription());
                 $newNode->setIsAnnotatedValue($node->isAnnotatedValue());
-                $newNode->setFieldType($node->getFieldType());
-                $newNode->setOptionGroup($node->getOptionGroup());
 
                 if (! $node->isAnnotatedValue()) {
                     $newNode->setDataType($node->getDataType());
                 }
+            } elseif ($node instanceof ChildrenNode) {
+                $newNode = new ChildrenNode($newVersion, $node->getResourceType());
+            } elseif ($node instanceof ParentsNode) {
+                $newNode = new ParentsNode($newVersion, $node->getResourceType());
             } else {
                 throw new InvalidNodeType();
             }
@@ -128,7 +132,12 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
 
         foreach ($latestVersion->getGroups() as $module) {
             /** @var MetadataModelGroup $module */
-            $newModule = new MetadataModelGroup($module->getTitle(), $module->getOrder(), $newVersion);
+            $newModule = new MetadataModelGroup(
+                $module->getTitle(),
+                $module->getOrder(),
+                $module->getResourceType(),
+                $newVersion
+            );
 
             foreach ($module->getElementGroups() as $triple) {
                 assert($triple instanceof Triple);

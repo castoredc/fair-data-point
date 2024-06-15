@@ -8,17 +8,11 @@ use EasyRdf\Sparql\Result;
 
 class SparqlResponse
 {
-    private string $response;
-    private string $contentType;
-    private string $queryUri;
     private ?Result $result = null;
     private ?Graph $graph = null;
 
-    public function __construct(string $response, string $contentType, string $queryUri)
+    public function __construct(private string $response, private string $contentType, private string $queryUri)
     {
-        $this->response = $response;
-        $this->contentType = $contentType;
-        $this->queryUri = $queryUri;
     }
 
     public function getResponse(): string
@@ -63,6 +57,6 @@ class SparqlResponse
 
     public function getResultCount(): int
     {
-        return $this->result !== null ? $this->result->numRows() : 0;
+        return $this->result?->numRows() ?? 0;
     }
 }

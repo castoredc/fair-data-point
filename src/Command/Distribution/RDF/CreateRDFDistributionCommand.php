@@ -9,24 +9,18 @@ use App\Entity\FAIRData\Dataset;
 
 class CreateRDFDistributionCommand extends CreateDistributionCommand
 {
-    private string $dataModelId;
-
-    private string $dataModelVersionId;
-
     public function __construct(
         string $slug,
+        string $defaultMetadataModelId,
         string $license,
         Dataset $dataset,
         ?string $apiUser,
         ?SensitiveDataString $clientId,
         ?SensitiveDataString $clientSecret,
-        string $dataModelId,
-        string $dataModelVersionId
+        private string $dataModelId,
+        private string $dataModelVersionId,
     ) {
-        parent::__construct($slug, $license, $dataset, $apiUser, $clientId, $clientSecret);
-
-        $this->dataModelId = $dataModelId;
-        $this->dataModelVersionId = $dataModelVersionId;
+        parent::__construct($slug, $defaultMetadataModelId, $license, $dataset, $apiUser, $clientId, $clientSecret);
     }
 
     public function getDataModelId(): string

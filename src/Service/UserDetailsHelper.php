@@ -11,11 +11,8 @@ use function trim;
 
 class UserDetailsHelper
 {
-    private User $user;
-
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
-        $this->user = $user;
     }
 
     /** @return array<string, bool> */

@@ -9,14 +9,8 @@ use function sprintf;
 
 abstract class DataSpecificationModuleApiResource implements ApiResource
 {
-    protected Group $module;
-
-    protected bool $groupTriples;
-
-    public function __construct(Group $module, bool $groupTriples = true)
+    public function __construct(protected Group $module, protected bool $groupTriples = true)
     {
-        $this->module = $module;
-        $this->groupTriples = $groupTriples;
     }
 
     /** @return array<mixed> */

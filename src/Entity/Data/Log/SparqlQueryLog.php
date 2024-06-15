@@ -77,7 +77,7 @@ class SparqlQueryLog
         string $userEmail,
         string $sparqlQuery,
         int $resultCount = 0,
-        ?string $error = null
+        ?string $error = null,
     ) {
         $this->distributionId = $distributionId;
         $this->queriedOn = new DateTimeImmutable();
@@ -93,7 +93,7 @@ class SparqlQueryLog
         string $userId,
         string $userEmail,
         string $sparqlQuery,
-        int $resultCount
+        int $resultCount,
     ): SparqlQueryLog {
         return new self($distributionId, $userId, $userEmail, $sparqlQuery, $resultCount, null);
     }
@@ -103,7 +103,7 @@ class SparqlQueryLog
         string $userId,
         string $userEmail,
         string $sparqlQuery,
-        string $error
+        string $error,
     ): SparqlQueryLog {
         return new self($distributionId, $userId, $userEmail, $sparqlQuery, 0, $error);
     }

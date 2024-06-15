@@ -8,13 +8,9 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class CreateDataModelPrefixCommand extends CreateModelPrefixCommand
 {
-    private DataModelVersion $dataModelVersion;
-
-    public function __construct(DataModelVersion $dataModelVersion, string $prefix, string $uri)
+    public function __construct(private DataModelVersion $dataModelVersion, string $prefix, string $uri)
     {
         parent::__construct($prefix, $uri);
-
-        $this->dataModelVersion = $dataModelVersion;
     }
 
     public function getDataModelVersion(): DataModelVersion

@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace App\Entity\DataSpecification\MetadataModel\Node;
 
-use App\Entity\DataSpecification\Common\OptionGroup;
-use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
-use App\Entity\Enum\MetadataFieldType;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\Enum\NodeType;
+use App\Entity\Enum\ResourceType;
 use App\Entity\Enum\XsdDataType;
+use App\Entity\Metadata\MetadataValue;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use function assert;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
  * @ORM\Table(name="metadata_model_node_value")
  */
 class ValueNode extends Node
@@ -24,14 +24,18 @@ class ValueNode extends Node
     /** @ORM\Column(type="XsdDataType") */
     private XsdDataType $dataType;
 
-    /** @ORM\Column(type="MetadataFieldType", nullable=true) */
-    private ?MetadataFieldType $fieldType = null;
+    /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelField", mappedBy="node") */
+    private ?MetadataModelField $field = null;
+
+    /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting", mappedBy="node") */
+    private ?MetadataModelDisplaySetting $displaySetting = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup")
-     * @ORM\JoinColumn(name="option_group_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\MetadataValue", mappedBy="node")
+     *
+     * @var Collection<MetadataValue>
      */
-    private OptionGroup|MetadataModelOptionGroup|null $optionGroup = null;
+    private Collection $values;
 
     public function isAnnotatedValue(): bool
     {
@@ -63,29 +67,61 @@ class ValueNode extends Node
         $this->dataType = $dataType;
     }
 
-    public function getFieldType(): ?MetadataFieldType
+    public function getField(): ?MetadataModelField
     {
-        return $this->fieldType;
+        return $this->field;
     }
 
-    public function setFieldType(?MetadataFieldType $fieldType): void
+    public function hasField(): bool
     {
-        $this->fieldType = $fieldType;
+        return $this->field !== null;
     }
 
-    public function getOptionGroup(): ?MetadataModelOptionGroup
+    public function hasDisplaySetting(): bool
     {
-        if ($this->optionGroup instanceof MetadataModelOptionGroup) {
-            return $this->optionGroup;
+        return $this->displaySetting !== null;
+    }
+
+    public function hasValues(): bool
+    {
+        return $this->values->count() > 0;
+    }
+
+    public function usedAsTitle(): ?ResourceType
+    {
+        if ($this->getMetadataModelVersion()->getTitleNode(ResourceType::catalog()) === $this) {
+            return ResourceType::catalog();
+        }
+
+        if ($this->getMetadataModelVersion()->getTitleNode(ResourceType::dataset()) === $this) {
+            return ResourceType::dataset();
+        }
+
+        if ($this->getMetadataModelVersion()->getTitleNode(ResourceType::distribution()) === $this) {
+            return ResourceType::distribution();
+        }
+
+        if ($this->getMetadataModelVersion()->getTitleNode(ResourceType::fdp()) === $this) {
+            return ResourceType::fdp();
         }
 
         return null;
     }
 
-    public function setOptionGroup(?OptionGroup $optionGroup): void
+    public function getDisplaySetting(): ?MetadataModelDisplaySetting
     {
-        assert($optionGroup instanceof MetadataModelOptionGroup);
+        return $this->displaySetting;
+    }
 
-        $this->optionGroup = $optionGroup;
+    /** @return Collection<MetadataValue> */
+    public function getValues(): Collection
+    {
+        return $this->values;
+    }
+
+    /** @param Collection<MetadataValue> $values */
+    public function setValues(Collection $values): void
+    {
+        $this->values = $values;
     }
 }

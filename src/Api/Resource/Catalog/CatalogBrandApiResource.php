@@ -8,11 +8,8 @@ use App\Entity\FAIRData\Catalog;
 
 class CatalogBrandApiResource implements ApiResource
 {
-    private Catalog $catalog;
-
-    public function __construct(Catalog $catalog)
+    public function __construct(private Catalog $catalog)
     {
-        $this->catalog = $catalog;
     }
 
     /** @return array<mixed> */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Api\Request\DataSpecification\MetadataModel;
 
 use App\Api\Request\SingleApiRequest;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class OptionGroupApiRequest extends SingleApiRequest

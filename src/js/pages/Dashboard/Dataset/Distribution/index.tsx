@@ -9,7 +9,6 @@ import Header from 'components/Layout/Dashboard/Header';
 import Body from 'components/Layout/Dashboard/Body';
 import SideBar from 'components/SideBar';
 import NotFound from 'pages/ErrorPages/NotFound';
-import DistributionMetadata from 'pages/Dashboard/Dataset/Distribution/DistributionMetadata';
 import DistributionSubset from 'pages/Dashboard/Dataset/Distribution/DistributionSubset';
 import DistributionLog from 'pages/Dashboard/Dataset/Distribution/DistributionLog';
 import DistributionLogs from 'pages/Dashboard/Dataset/Distribution/DistributionLogs';
@@ -21,6 +20,8 @@ import { isGranted } from 'utils/PermissionHelper';
 import Permissions from 'pages/Dashboard/Dataset/Distribution/Permissions';
 import NoPermission from 'pages/ErrorPages/NoPermission';
 import { apiClient } from 'src/js/network';
+import MetadataForm from 'components/Form/Metadata/MetadataForm';
+import PageBody from 'components/Layout/Dashboard/PageBody';
 
 interface DistributionProps extends AuthorizedRouteComponentProps {
     dataset: any;
@@ -227,7 +228,14 @@ export default class Distribution extends Component<DistributionProps, Distribut
                             ]}
                             exact
                             render={props => (
-                                <DistributionMetadata {...props} dataset={dataset} distribution={distribution} onSave={this.getDistribution} />
+                                <PageBody>
+                                    <MetadataForm
+                                        type="distribution"
+                                        object={distribution}
+                                        onCreate={this.getDistribution}
+                                        onSave={this.getDistribution}
+                                    />
+                                </PageBody>
                             )}
                         />
 

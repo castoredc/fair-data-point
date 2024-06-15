@@ -13,11 +13,8 @@ use function assert;
 
 final class SparqlQueryLoggingSubscriber implements EventSubscriberInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /** @return array<class-string, string> */

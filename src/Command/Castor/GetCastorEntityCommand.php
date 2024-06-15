@@ -8,20 +8,8 @@ use App\Entity\Enum\CastorEntityType;
 
 class GetCastorEntityCommand
 {
-    private CastorStudy $study;
-
-    private CastorEntityType $type;
-
-    private string $id;
-
-    private ?string $parentId = null;
-
-    public function __construct(CastorStudy $study, CastorEntityType $type, string $id, ?string $parentId)
+    public function __construct(private CastorStudy $study, private CastorEntityType $type, private string $id, private ?string $parentId = null)
     {
-        $this->study = $study;
-        $this->type = $type;
-        $this->id = $id;
-        $this->parentId = $parentId;
     }
 
     public function getStudy(): CastorStudy

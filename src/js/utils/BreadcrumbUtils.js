@@ -1,3 +1,5 @@
+import { localizedText } from '../util';
+
 export const getBreadCrumbs = (location, data) => {
     const fdp = 'fdp' in data ? data.fdp : location.state && 'fdp' in location.state ? location.state.fdp : null;
     const catalog = 'catalog' in data ? data.catalog : location.state && 'catalog' in location.state ? location.state.catalog : null;
@@ -28,7 +30,7 @@ export const getBreadCrumbs = (location, data) => {
         catalog
             ? {
                   type: 'catalog',
-                  title: catalog.hasMetadata ? catalog.metadata.title : 'Catalog',
+                  title: catalog.hasMetadata ? localizedText(catalog.metadata.title) : 'Catalog',
                   data: catalog,
                   path: catalog.relativeUrl,
                   state: { fdp, catalog },
@@ -37,7 +39,7 @@ export const getBreadCrumbs = (location, data) => {
         study
             ? {
                   type: 'study',
-                  title: study.hasMetadata ? study.metadata.briefName : 'Study',
+                  title: study.hasMetadata ? localizedText(study.metadata.title) : 'Study',
                   data: study,
                   path: `/study/${study.slug}`,
                   state: { fdp, catalog, study },
@@ -46,7 +48,7 @@ export const getBreadCrumbs = (location, data) => {
         dataset
             ? {
                   type: 'dataset',
-                  title: dataset.hasMetadata ? dataset.metadata.title : 'Dataset',
+                  title: dataset.hasMetadata ? localizedText(dataset.metadata.title) : 'Dataset',
                   data: dataset,
                   path: dataset.relativeUrl,
                   state: { fdp, catalog, study, dataset },
@@ -55,7 +57,7 @@ export const getBreadCrumbs = (location, data) => {
         distribution
             ? {
                   type: 'distribution',
-                  title: distribution.hasMetadata ? distribution.metadata.title : 'Distribution',
+                  title: distribution.hasMetadata ? localizedText(distribution.metadata.title) : 'Distribution',
                   data: distribution,
                   path: distribution.relativeUrl,
                   state: { fdp, catalog, study, dataset, distribution },

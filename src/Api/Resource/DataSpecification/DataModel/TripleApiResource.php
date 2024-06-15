@@ -8,11 +8,8 @@ use App\Entity\DataSpecification\DataModel\Triple;
 
 class TripleApiResource implements ApiResource
 {
-    private Triple $triple;
-
-    public function __construct(Triple $triple)
+    public function __construct(private Triple $triple)
     {
-        $this->triple = $triple;
     }
 
     /** @return array<mixed> */

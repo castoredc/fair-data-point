@@ -20,11 +20,9 @@ class PingHomeCommand extends Command
     protected static $defaultName = 'app:ping-home';
 
     private Client $client;
-    private MessageBusInterface $bus;
 
-    public function __construct(MessageBusInterface $bus)
+    public function __construct(private MessageBusInterface $bus)
     {
-        $this->bus = $bus;
         $this->client = new Client();
 
         parent::__construct();
