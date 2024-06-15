@@ -54,7 +54,7 @@ const Main: FC<MainProps> = ({ user, embedded }) => {
             <Route
                 path="/fdp/dataset/:dataset/distribution/:distribution/query"
                 exact
-                render={props => <Query embedded={embedded} user={user} />}
+                render={props => <Query {...props} embedded={embedded} user={user} />}
             />
         </Switch>
     );

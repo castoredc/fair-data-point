@@ -14,6 +14,7 @@ class DataModelVersionApiResource extends DataSpecificationVersionApiResource
         parent::__construct($dataModelVersion);
     }
 
+    /** @return array<mixed> */
     public function toArray(): array
     {
         return array_merge(
