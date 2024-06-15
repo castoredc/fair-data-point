@@ -8,8 +8,18 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 
 class DataModelVersionApiResource extends DataSpecificationVersionApiResource
 {
-    public function __construct(DataModelVersion $dataModelVersion)
+    public function __construct(private DataModelVersion $dataModelVersion)
     {
         parent::__construct($dataModelVersion);
+    }
+
+    public function toArray(): array
+    {
+        return array_merge(
+            parent::toArray(),
+            [
+                'dataModel' => $this->dataModelVersion->getDataModel()->getId(),
+            ]
+        );
     }
 }
