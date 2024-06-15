@@ -20,7 +20,6 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function dump;
 
 /**
  * @Route("/api/metadata/form/{metadata}")
@@ -74,8 +73,6 @@ class MetadataFormController extends ApiController
             if ($e instanceof RenderableApiException) {
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
-
-            dump($e);
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

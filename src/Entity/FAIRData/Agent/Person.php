@@ -209,7 +209,7 @@ class Person extends Agent
             NameOrigin::peer()
         );
 
-        if (array_key_exists('id', $data)) {
+        if (array_key_exists('id', $data) && $data['id'] !== null) {
             $person->setId($data['id']);
         }
 
