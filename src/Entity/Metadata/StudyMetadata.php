@@ -180,7 +180,7 @@ class StudyMetadata extends Metadata
         $this->summary = $summary;
     }
 
-    public function getType(): StudyType
+    public function getType(): ?StudyType
     {
         return $this->type;
     }
@@ -370,7 +370,7 @@ class StudyMetadata extends Metadata
         $this->consentSocialMedia = $consentSocialMedia;
     }
 
-    public function getMethodType(): MethodType
+    public function getMethodType(): ?MethodType
     {
         return $this->methodType;
     }

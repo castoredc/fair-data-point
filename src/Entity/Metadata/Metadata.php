@@ -109,6 +109,11 @@ abstract class Metadata
         return $this->title;
     }
 
+    public function getLegacyDescription(): ?LocalizedText
+    {
+        return $this->description;
+    }
+
     public function setTitle(?LocalizedText $title): void
     {
         $this->title = $title;
@@ -196,6 +201,11 @@ abstract class Metadata
     public function getTitle(): ?LocalizedText
     {
         $modelVersion = $this->metadataModelVersion;
+
+        if ($modelVersion === null) {
+            return null;
+        }
+
         $resourceType = $this->getResourceType();
 
         $value = $this->values->findFirst(static function (int $key, MetadataValue $value) use ($modelVersion, $resourceType) {
@@ -209,6 +219,11 @@ abstract class Metadata
     public function getDescription(): ?LocalizedText
     {
         $modelVersion = $this->metadataModelVersion;
+
+        if ($modelVersion === null) {
+            return null;
+        }
+
         $resourceType = $this->getResourceType();
 
         $value = $this->values->findFirst(static function (int $key, MetadataValue $value) use ($modelVersion, $resourceType) {

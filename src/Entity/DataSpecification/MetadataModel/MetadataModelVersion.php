@@ -116,6 +116,22 @@ class MetadataModelVersion extends Version implements ModelVersion
         return $return;
     }
 
+    /** @return array<string, ValueNode> */
+    public function getValueNodes(): array
+    {
+        $return = [];
+
+        foreach ($this->elements as $node) {
+            if (! $node instanceof ValueNode) {
+                continue;
+            }
+
+            $return[$node->getTitle()] = $node;
+        }
+
+        return $return;
+    }
+
     /** @return Collection<Predicate> */
     public function getPredicates(): Collection
     {

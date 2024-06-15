@@ -24,6 +24,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function file_get_contents;
 use function json_decode;
+use const PHP_SAPI;
 
 #[AsMessageHandler]
 class ImportMetadataModelVersionCommandHandler
@@ -46,14 +47,14 @@ class ImportMetadataModelVersionCommandHandler
     {
         $metadataModel = $command->getMetadataModel();
 
-        if (! $this->security->isGranted('edit', $metadataModel)) {
+        if (! $this->security->isGranted('edit', $metadataModel) && PHP_SAPI !== 'cli') {
             throw new NoAccessPermission();
         }
 
         $version = $command->getVersion();
         $file = $command->getFile();
 
-        if (! $file->isValid()) {
+        if (! $file->isValid() && PHP_SAPI !== 'cli') {
             throw new InvalidFile($file->getErrorMessage());
         }
 
