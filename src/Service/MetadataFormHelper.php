@@ -14,6 +14,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Validator\Constraints as Assert;
 use function array_merge;
 use function get_parent_class;
+use function is_int;
 use function json_decode;
 
 class MetadataFormHelper
@@ -84,7 +85,8 @@ class MetadataFormHelper
     ): mixed {
         $value = $metadata->getValueForNode($field->getNode());
         $value = $value !== null ? json_decode($value->getValue(), true) : null;
+        $value ??= $field->getFieldType()->getDefaultValue();
 
-        return $value ?? $field->getFieldType()->getDefaultValue();
+        return is_int($value) ? (string) $value : $value;
     }
 }

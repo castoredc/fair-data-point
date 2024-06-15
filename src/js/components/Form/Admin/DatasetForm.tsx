@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button, Icon, LoadingOverlay, Stack } from '@castoredc/matter';
 import FormItem from './../FormItem';
-import { mergeData } from '../../../util';
+import { localizedText, mergeData } from '../../../util';
 import * as H from 'history';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
@@ -122,7 +122,7 @@ export default class DatasetForm extends Component<DatasetFormProps, DatasetForm
                                                     <dl>
                                                         <dt>Title</dt>
                                                         <dd>
-                                                            {dataset.study.hasMetadata ? dataset.study.metadata.title : <span className="None">None</span>}
+                                                            {dataset.study.hasMetadata ? localizedText(dataset.study.metadata.title, 'en') : <span className="None">None</span>}
                                                         </dd>
                                                         <dt>Study name</dt>
                                                         <dd>{dataset.study.name}</dd>

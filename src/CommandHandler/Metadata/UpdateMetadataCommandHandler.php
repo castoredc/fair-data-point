@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\CommandHandler\Metadata;
 
 use App\Command\Metadata\UpdateMetadataCommand;
-use App\Entity\DataSpecification\Common\OptionGroupOption;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelField;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Department;
