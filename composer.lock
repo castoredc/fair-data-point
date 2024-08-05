@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c1a5bbf8eb8d99d3862da3775ccfb49",
+    "content-hash": "0ed016714423f7d74a645faf99d5b1cf",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -9793,16 +9793,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.67",
+            "version": "1.11.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493"
+                "reference": "e370bcddadaede0c1716338b262346f40d296f82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/16ddbe776f10da6a95ebd25de7c1dbed397dc493",
-                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e370bcddadaede0c1716338b262346f40d296f82",
+                "reference": "e370bcddadaede0c1716338b262346f40d296f82",
                 "shasum": ""
             },
             "require": {
@@ -9847,7 +9847,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-16T07:22:02+00:00"
+            "time": "2024-08-01T16:25:18+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
