@@ -6,11 +6,19 @@ namespace App\Command\Distribution;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
+use App\Security\User;
 
 class GetPaginatedDistributionsCommand
 {
-    public function __construct(private ?Catalog $catalog, private ?Dataset $dataset, private ?Agent $agent, private ?string $search = null, private int $perPage, private int $page)
-    {
+    public function __construct(
+        private ?Catalog $catalog,
+        private ?Dataset $dataset,
+        private ?Agent $agent,
+        private ?User $user,
+        private ?string $search = null,
+        private int $perPage,
+        private int $page,
+    ) {
     }
 
     public function getCatalog(): ?Catalog
@@ -41,5 +49,10 @@ class GetPaginatedDistributionsCommand
     public function getPage(): int
     {
         return $this->page;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 }

@@ -60,6 +60,10 @@ class CatalogVoter extends Voter
 
         if ($permission !== null) {
             if ($permission->getType()->isView()) {
+                if ($catalog->isAcceptingSubmissions()) {
+                    return $attribute === self::VIEW || $attribute === self::ADD;
+                }
+
                 return $attribute === self::VIEW;
             }
 
@@ -70,10 +74,6 @@ class CatalogVoter extends Voter
             if ($permission->getType()->isManage()) {
                 return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::ADD || $attribute === self::MANAGE;
             }
-        }
-
-        if ($catalog->isAcceptingSubmissions()) {
-            return $attribute === self::ADD;
         }
 
         return false;

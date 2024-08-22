@@ -17,6 +17,7 @@ use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
+use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -137,7 +138,7 @@ class CatalogStudiesApiController extends ApiController
     /** @Route("/import", methods={"POST"}, name="api_import_study_to_catalog") */
     public function importStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('add', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);

@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
-use App\Entity\FAIRData\Permission\DistributionContentsPermission;
+use App\Entity\FAIRData\Permission\DistributionPermission;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Security\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use function assert;
 
@@ -22,12 +22,12 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
     protected const TYPE = 'distribution';
 
     /** @return Distribution[] */
-    public function findDistributions(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?int $perPage, ?int $page): array
+    public function findDistributions(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?int $perPage, ?int $page, ?User $user): array
     {
         $qb = $this->createQueryBuilder('distribution')
             ->select('distribution');
 
-        $qb = $this->getDistributionQuery($qb, $catalog, $dataset, $agent);
+        $qb = $this->getDistributionQuery($qb, $catalog, $dataset, $agent, $user);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -39,12 +39,12 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countDistributions(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent): int
+    public function countDistributions(?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?User $user): int
     {
         $qb = $this->createQueryBuilder('distribution')
-            ->select('count(distribution.id)');
+            ->select('count(DISTINCT distribution.id)');
 
-        $qb = $this->getDistributionQuery($qb, $catalog, $dataset, $agent);
+        $qb = $this->getDistributionQuery($qb, $catalog, $dataset, $agent, $user);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -55,9 +55,22 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
         }
     }
 
-    private function getDistributionQuery(QueryBuilder $qb, ?Catalog $catalog, ?Dataset $dataset, ?Agent $agent): QueryBuilder
+    private function getDistributionQuery(QueryBuilder $qb, ?Catalog $catalog, ?Dataset $dataset, ?Agent $agent, ?User $user): QueryBuilder
     {
         $qb = $this->getQuery($qb);
+
+        if ($user !== null && ! $user->isAdmin()) {
+            $qb->leftJoin(DistributionPermission::class, 'permission', Join::WITH, 'permission.distribution = distribution.id');
+
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('permission.user', ':user_id'),
+                $qb->expr()->eq('distribution.isPublished', '1')
+            ));
+
+            $qb->setParameter('user_id', $user->getId());
+        } elseif ($user === null) {
+            $qb->andWhere('distribution.isPublished = 1');
+        }
 
         if ($dataset !== null) {
             $qb->andWhere('distribution.dataset = :dataset_id');
@@ -74,40 +87,12 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
     }
 
     /** @return Distribution[] */
-    public function findPublicDistributions(): array
-    {
-        $qb = $this->createQueryBuilder('distribution')
-            ->select('distribution');
-
-        $qb = $this->getDistributionQuery($qb, null, null, null);
-
-        $qb->innerJoin(DistributionContents::class, 'contents');
-
-        $qb->andWhere(
-            $qb->expr()->eq('contents.isPublic', '1'),
-        );
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /** @return Distribution[] */
     public function findByUser(User $user): array
     {
         $qb = $this->createQueryBuilder('distribution')
             ->select('distribution');
 
-        $qb = $this->getDistributionQuery($qb, null, null, null);
-
-        $qb->innerJoin(DistributionContents::class, 'contents');
-        $qb->innerJoin(DistributionContentsPermission::class, 'permission');
-
-        $qb->andWhere(
-            $qb->expr()->andX(
-                $qb->expr()->eq('permission.user', ':user_id'),
-            ),
-        );
-
-        $qb->setParameter('user_id', $user->getId());
+        $qb = $this->getDistributionQuery($qb, null, null, null, $user);
 
         return $qb->getQuery()->getResult();
     }

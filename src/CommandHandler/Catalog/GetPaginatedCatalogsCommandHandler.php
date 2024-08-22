@@ -21,10 +21,22 @@ class GetPaginatedCatalogsCommandHandler
         $catalogRepository = $this->em->getRepository(Catalog::class);
 
         return new PaginatedResultCollection(
-            $catalogRepository->findCatalogs($command->getAgent(), $command->getAcceptSubmissions(), $command->getPerPage(), $command->getPage()),
+            $catalogRepository->findCatalogs(
+                $command->getAgent(),
+                $command->getAcceptSubmissions(),
+                $command->getPerPage(),
+                $command->getPage(),
+                $command->getSearch(),
+                $command->getUser()
+            ),
             $command->getPage(),
             $command->getPerPage(),
-            $catalogRepository->countCatalogs($command->getAgent(), $command->getAcceptSubmissions())
+            $catalogRepository->countCatalogs(
+                $command->getAgent(),
+                $command->getAcceptSubmissions(),
+                $command->getSearch(),
+                $command->getUser()
+            )
         );
     }
 }

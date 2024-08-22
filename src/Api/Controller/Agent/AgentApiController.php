@@ -29,6 +29,7 @@ use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\Authorization\Voter\DistributionVoter;
 use App\Security\Authorization\Voter\StudyVoter;
+use App\Security\User;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -148,6 +149,9 @@ class AgentApiController extends ApiController
     /** @Route("/dataset", methods={"GET"}, name="api_agent_datasets") */
     public function agentDatasets(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
+        $user = $this->getUser();
+        assert($user instanceof User || $user === null);
+
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
@@ -155,6 +159,7 @@ class AgentApiController extends ApiController
             $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
                 null,
                 $agent,
+                $user,
                 $parsed->getSearch(),
                 $parsed->getHideParents(),
                 $parsed->getPerPage(),
@@ -192,10 +197,11 @@ class AgentApiController extends ApiController
             assert($parsed instanceof MetadataFilterApiRequest);
 
             $envelope = $bus->dispatch(new GetPaginatedCatalogsCommand(
-                $agent,
-                $parsed->getSearch(),
                 $parsed->getPerPage(),
                 $parsed->getPage(),
+                $parsed->getSearch(),
+                $agent,
+                null,
                 null
             ));
 
@@ -225,6 +231,9 @@ class AgentApiController extends ApiController
     /** @Route("/distribution", methods={"GET"}, name="api_agent_distribution") */
     public function agentDistributions(Agent $agent, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
+        $user = $this->getUser();
+        assert($user instanceof User || $user === null);
+
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
@@ -233,6 +242,7 @@ class AgentApiController extends ApiController
                 null,
                 null,
                 $agent,
+                $user,
                 $parsed->getSearch(),
                 $parsed->getPerPage(),
                 $parsed->getPage()

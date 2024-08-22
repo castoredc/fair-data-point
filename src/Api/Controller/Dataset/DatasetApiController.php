@@ -14,6 +14,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\Authorization\Voter\DistributionVoter;
+use App\Security\User;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,6 +82,8 @@ class DatasetApiController extends ApiController
     public function distributions(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
+        $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
@@ -91,6 +94,7 @@ class DatasetApiController extends ApiController
                     null,
                     $dataset,
                     null,
+                    $user,
                     $parsed->getSearch(),
                     $parsed->getPerPage(),
                     $parsed->getPage()

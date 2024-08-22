@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Api\Resource\Study;
 
+use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Metadata\MetadataApiResource;
 use App\Api\Resource\RoleBasedApiResource;
 use App\Entity\Castor\CastorStudy;
+use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 
 class StudyApiResource extends RoleBasedApiResource
@@ -24,6 +26,10 @@ class StudyApiResource extends RoleBasedApiResource
             $sourceServer = $this->study->getServer()?->getId();
         }
 
+        $catalogs = $this->study->getCatalogs()->map(static function (Catalog $catalog) {
+            return (new CatalogApiResource($catalog))->toArray();
+        })->toArray();
+
         return [
             'relativeUrl' => $this->study->getRelativeUrl(),
             'id' => $this->study->getId(),
@@ -39,6 +45,7 @@ class StudyApiResource extends RoleBasedApiResource
             'count' => [
                 'dataset' => $this->study->getDatasets()->count(),
             ],
+            'catalogs' => $catalogs,
         ];
     }
 }

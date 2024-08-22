@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import debounce from 'lodash/debounce';
-import { Button, Choice, DefaultOptionType, Dropdown, ReactSelectTypes } from '@castoredc/matter';
+import { Button, Choice, DefaultOptionType, Dropdown, Icon, ReactSelectTypes } from '@castoredc/matter';
 import FormItem from 'components/Form/FormItem';
 import { FieldProps } from 'formik';
 import { apiClient } from 'src/js/network';
-import { isMultipleOption } from 'components/Input/Formik/Select';
+import { AsyncDropdownIndicator, isMultipleOption } from 'components/Input/Formik/Select';
 import FieldErrors from 'components/Input/Formik/Errors';
 
 interface OntologyConceptFormBlockProps extends FieldProps {
@@ -189,6 +189,8 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
                             }}
                             isDisabled={selectedOntology === null}
                             menuPosition="fixed"
+                            components={{ DropdownIndicator: AsyncDropdownIndicator }}
+                            placeholder=""
                         />
 
                         <Choice

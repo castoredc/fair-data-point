@@ -4,13 +4,15 @@ declare(strict_types=1);
 namespace App\CommandHandler\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\MetadataModel\FindMetadataModelsByUserCommand;
-use App\Entity\DataSpecification\Common\DataSpecificationPermission;
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use function array_merge;
+use function array_unique;
 use function assert;
+use const SORT_REGULAR;
 
 #[AsMessageHandler]
 class FindMetadataModelsByUserCommandHandler
@@ -22,25 +24,14 @@ class FindMetadataModelsByUserCommandHandler
     /** @return MetadataModel[] */
     public function __invoke(FindMetadataModelsByUserCommand $command): array
     {
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return $this->em->getRepository(MetadataModel::class)->findAll();
-        }
+        $metadataRepository = $this->em->getRepository(MetadataModel::class);
 
         $user = $this->security->getUser();
         assert($user instanceof User);
 
-        /** @var DataSpecificationPermission[] $specificationPermissions */
-        $specificationPermissions = $user->getDataSpecifications()->toArray();
-        $specifications = [];
-
-        foreach ($specificationPermissions as $specificationPermission) {
-            if (! $specificationPermission->getEntity() instanceof MetadataModel) {
-                continue;
-            }
-
-            $specifications[] = $specificationPermission->getEntity();
-        }
-
-        return $specifications;
+        return array_unique(array_merge(
+            $metadataRepository->findByUser($user),
+            $metadataRepository->findInUseByEntitiesUserHasPermissionsTo($user)
+        ), SORT_REGULAR);
     }
 }

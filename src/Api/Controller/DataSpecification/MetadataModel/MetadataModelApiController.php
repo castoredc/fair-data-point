@@ -8,7 +8,6 @@ use App\Api\Request\DataSpecification\Common\DataSpecificationVersionApiRequest;
 use App\Api\Request\DataSpecification\Common\DataSpecificationVersionTypeApiRequest;
 use App\Api\Request\DataSpecification\MetadataModel\MetadataModelApiRequest;
 use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelApiResource;
-use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelsApiResource;
 use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelVersionApiResource;
 use App\Api\Resource\DataSpecification\MetadataModel\MetadataModelVersionExportApiResource;
 use App\Command\DataSpecification\MetadataModel\CreateMetadataModelCommand;
@@ -19,6 +18,7 @@ use App\Command\DataSpecification\MetadataModel\ImportMetadataModelVersionComman
 use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\MetadataModel\InvalidMetadataModelVersion;
 use App\Exception\SessionTimedOut;
@@ -40,6 +40,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
+use function count;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
@@ -84,7 +85,18 @@ class MetadataModelApiController extends ApiController
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
 
-            return new JsonResponse((new MetadataModelsApiResource($handledStamp->getResult()))->toArray());
+            $models = $handledStamp->getResult();
+
+            return $this->getPaginatedResponse(
+                MetadataModelApiResource::class,
+                new PaginatedResultCollection(
+                    $models,
+                    1,
+                    count($models),
+                    count($models)
+                ),
+                [DataSpecificationVoter::USE, DataSpecificationVoter::VIEW, DataSpecificationVoter::ADD, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
+            );
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
@@ -104,12 +116,12 @@ class MetadataModelApiController extends ApiController
      */
     public function dataModel(MetadataModel $metadataModel): Response
     {
-        $this->denyAccessUnlessGranted('view', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModel);
 
         return $this->getResponse(
             new MetadataModelApiResource($metadataModel),
             $metadataModel,
-            [DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
+            [DataSpecificationVoter::USE, DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
         );
     }
 

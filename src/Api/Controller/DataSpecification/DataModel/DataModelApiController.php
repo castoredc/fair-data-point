@@ -109,7 +109,7 @@ class DataModelApiController extends ApiController
         return $this->getResponse(
             new DataModelApiResource($dataModel),
             $dataModel,
-            [DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
+            [DataSpecificationVoter::USE, DataSpecificationVoter::VIEW, DataSpecificationVoter::EDIT, DataSpecificationVoter::MANAGE]
         );
     }
 

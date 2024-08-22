@@ -36,7 +36,7 @@ export default class MetadataModels extends Component<MetadataModelsProps, Metad
             .get('/api/metadata-model/my')
             .then(response => {
                 this.setState({
-                    metadataModels: response.data,
+                    metadataModels: response.data.results.filter(model => model.permissions.includes('edit')),
                     isLoading: false,
                 });
             })

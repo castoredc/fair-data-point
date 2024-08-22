@@ -17,6 +17,7 @@ use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\DatasetVoter;
+use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,6 +89,8 @@ class SingleCatalogApiController extends ApiController
     public function datasets(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
+        $user = $this->getUser();
+        assert($user instanceof User || $user === null);
 
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
@@ -97,6 +100,7 @@ class SingleCatalogApiController extends ApiController
                 new GetPaginatedDatasetsCommand(
                     $catalog,
                     null,
+                    $user,
                     $parsed->getSearch(),
                     $parsed->getHideParents(),
                     $parsed->getPerPage(),

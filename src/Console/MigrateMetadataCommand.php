@@ -59,6 +59,8 @@ class MigrateMetadataCommand extends Command
         );
 
         $metadataModel = $this->em->getRepository(MetadataModel::class)->find(CreateMetadataModelCommand::METADATA_MODEL_ID);
+        assert($metadataModel instanceof MetadataModel);
+
         $metadataModelVersion = $metadataModel->getLatestVersion();
 
         assert($metadataModelVersion instanceof MetadataModelVersion);

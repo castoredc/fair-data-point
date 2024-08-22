@@ -7,6 +7,7 @@ import ToastItem from 'components/ToastItem';
 import StudyForm from 'components/Form/Admin/StudyForm';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
+import { localizedText } from '../../../../util';
 
 interface AddStudyProps {
     catalog: string;
@@ -120,7 +121,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         }}
                         show={showModal.confirm}
                     >
-                        Are you sure you want to add <strong>{selectedStudy.name}</strong> to this catalog?
+                        Are you sure you want to add <strong>{selectedStudy.hasMetadata ? localizedText(selectedStudy.metadata.title, 'en') : selectedStudy.name}</strong> to this catalog?
                     </ConfirmModal>
                 )}
 
@@ -138,7 +139,11 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     </Stack>
                 </div>
 
-                <StudiesDataTable onClick={this.handleStudyClick} hideCatalog={catalog} lastHandledStudy={addedStudy} />
+                <StudiesDataTable
+                    onClick={this.handleStudyClick}
+                    hideCatalog={catalog}
+                    lastHandledStudy={addedStudy}
+                />
             </PageBody>
         );
     }
