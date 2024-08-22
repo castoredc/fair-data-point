@@ -44,6 +44,7 @@ final class StudiesController extends AbstractController
 
     /**
      * @Route("/dashboard/studies/{studyId}", name="dashboard_study")
+     * @Route("/dashboard/studies/{studyId}/metadata", name="dashboard_study_metadata")
      * @Route("/dashboard/studies/{studyId}/annotations", name="dashboard_study_annotations")
      * @Route("/dashboard/studies/{studyId}/datasets", name="dashboard_study_datasets")
      * @ParamConverter("study", options={"mapping": {"studyId": "id"}})

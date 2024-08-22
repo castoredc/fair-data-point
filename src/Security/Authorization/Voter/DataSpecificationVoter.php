@@ -44,7 +44,7 @@ class DataSpecificationVoter extends Voter
         $dataSpecification = $subject;
         assert($dataSpecification instanceof DataSpecification);
 
-        if ($attribute === self::VIEW && $dataSpecification->isPublic()) {
+        if (($attribute === self::VIEW || $attribute === self::USE) && $dataSpecification->isPublic()) {
             return true;
         }
 
