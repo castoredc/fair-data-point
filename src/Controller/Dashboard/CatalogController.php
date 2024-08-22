@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Dashboard;
 
 use App\Entity\FAIRData\Catalog;
+use App\Security\Authorization\Voter\CatalogVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ final class CatalogController extends AbstractController
      */
     public function catalog(Catalog $catalog): Response
     {
-        $this->denyAccessUnlessGranted('edit', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
         return $this->render('react.html.twig', ['title' => 'FDP Admin']);
     }

@@ -7,6 +7,7 @@ use App\Command\Metadata\CreateStudyMetadataCommand;
 use App\Entity\Metadata\StudyMetadata;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\StudyVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -20,7 +21,7 @@ class CreateStudyMetadataCommandHandler extends CreateMetadataCommandHandler
     {
         $study = $command->getStudy();
 
-        if (! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
             throw new NoAccessPermission();
         }
 

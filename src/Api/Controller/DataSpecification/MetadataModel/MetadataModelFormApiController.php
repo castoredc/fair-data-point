@@ -12,6 +12,7 @@ use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelFormCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class MetadataModelFormApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_model_form_add") */
     public function addForm(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(MetadataModelFormApiRequest::class, $request);
@@ -73,7 +74,7 @@ class MetadataModelFormApiController extends ApiController
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -117,7 +118,7 @@ class MetadataModelFormApiController extends ApiController
         MetadataModelForm $form,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

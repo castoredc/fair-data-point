@@ -7,6 +7,7 @@ use App\Command\Metadata\CreateCatalogMetadataCommand;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\CatalogVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -20,7 +21,7 @@ class CreateCatalogMetadataCommandHandler extends CreateMetadataCommandHandler
     {
         $catalog = $command->getCatalog();
 
-        if (! $this->security->isGranted('edit', $catalog)) {
+        if (! $this->security->isGranted(CatalogVoter::EDIT, $catalog)) {
             throw new NoAccessPermission();
         }
 

@@ -12,6 +12,7 @@ use App\Command\DataSpecification\DataModel\UpdateDataModelModuleCommand;
 use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class DataModelModuleApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_data_model_module_add") */
     public function addModule(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         try {
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
@@ -62,7 +63,7 @@ class DataModelModuleApiController extends ApiController
      */
     public function updateModule(DataModelVersion $dataModelVersion, DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -93,7 +94,7 @@ class DataModelModuleApiController extends ApiController
      */
     public function deleteModule(DataModelVersion $dataModelVersion, DataModelGroup $module, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

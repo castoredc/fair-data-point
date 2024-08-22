@@ -19,6 +19,7 @@ use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Enum\VersionType;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
@@ -30,7 +31,7 @@ class CreateDataModelVersionCommandHandler extends DataSpecificationVersionComma
     {
         $dataModel = $command->getDataModel();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

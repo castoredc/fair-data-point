@@ -7,6 +7,7 @@ use App\Command\Agent\AddStudyCenterCommand;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\StudyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -21,7 +22,7 @@ class AddStudyCenterCommandHandler
 
     public function __invoke(AddStudyCenterCommand $command): void
     {
-        if (! $this->security->isGranted('edit', $command->getStudy())) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
         }
 

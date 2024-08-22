@@ -6,6 +6,7 @@ namespace App\CommandHandler\DataSpecification\DataModel;
 use App\Command\DataSpecification\DataModel\UpdateDataModelPrefixCommand;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +23,7 @@ class UpdateDataModelPrefixCommandHandler
         $prefix = $command->getDataModelPrefix();
         $dataModel = $prefix->getDataModelVersion()->getDataModel();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

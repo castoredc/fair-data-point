@@ -6,6 +6,7 @@ namespace App\CommandHandler\Dataset;
 use App\Command\Dataset\UpdateDatasetCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +23,7 @@ class UpdateDatasetCommandHandler
     {
         $dataset = $command->getDataset();
 
-        if (! $this->security->isGranted('edit', $dataset)) {
+        if (! $this->security->isGranted(DatasetVoter::EDIT, $dataset)) {
             throw new NoAccessPermission();
         }
 

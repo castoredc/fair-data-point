@@ -13,6 +13,8 @@ use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
+use App\Security\Authorization\Voter\CatalogVoter;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +34,7 @@ class CatalogDatasetsApiController extends ApiController
     /** @Route("/add", methods={"POST"}, name="api_add_dataset_to_catalog") */
     public function addDatasetToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('add', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
             $parsed = $this->parseRequest(AddDatasetToCatalogApiRequest::class, $request);
@@ -46,7 +48,7 @@ class CatalogDatasetsApiController extends ApiController
             $dataset = $handledStamp->getResult();
             assert($dataset instanceof Dataset);
 
-            $this->denyAccessUnlessGranted('edit', $dataset);
+            $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
             $bus->dispatch(new AddDatasetToCatalogCommand($dataset, $catalog));
 

@@ -12,6 +12,7 @@ use App\Entity\DataSpecification\DataModel\Triple;
 use App\Entity\Iri;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -34,7 +35,7 @@ class CreateTripleCommandHandler
 
         $dataModel = $dataModelVersion->getDataSpecification();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

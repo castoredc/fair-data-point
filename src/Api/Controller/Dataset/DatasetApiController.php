@@ -47,7 +47,7 @@ class DatasetApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_dataset_update") */
     public function updateDataset(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(DatasetApiRequest::class, $request, $dataset);

@@ -7,6 +7,7 @@ use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -20,7 +21,7 @@ class CreateDatasetMetadataCommandHandler extends CreateMetadataCommandHandler
     {
         $dataset = $command->getDataset();
 
-        if (! $this->security->isGranted('edit', $dataset)) {
+        if (! $this->security->isGranted(DatasetVoter::EDIT, $dataset)) {
             throw new NoAccessPermission();
         }
 

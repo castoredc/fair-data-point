@@ -9,6 +9,7 @@ use App\Command\Dataset\CreateDatasetForStudyCommand;
 use App\Command\Dataset\GetDatasetsByStudyCommand;
 use App\Entity\Study;
 use App\Security\Authorization\Voter\DatasetVoter;
+use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,7 @@ class StudyDatasetApiController extends ApiController
     /** @Route("/dataset", methods={"POST"}, name="api_study_create_dataset") */
     public function createDataset(Study $study, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
             $envelope = $bus->dispatch(new CreateDatasetForStudyCommand($study));

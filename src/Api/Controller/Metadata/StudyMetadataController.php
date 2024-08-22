@@ -8,6 +8,7 @@ use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateStudyMetadataCommand;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class StudyMetadataController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_study_add") */
     public function addStudyMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
             $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);

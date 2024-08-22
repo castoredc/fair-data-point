@@ -8,6 +8,7 @@ use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateDatasetMetadataCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class DatasetMetadataController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_dataset_add") */
     public function addDatasetMetadata(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);

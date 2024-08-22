@@ -49,7 +49,7 @@ class SingleCatalogApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_catalog_update") */
     public function updateCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
         try {
             $parsed = $this->parseRequest(CatalogApiRequest::class, $request, $catalog);

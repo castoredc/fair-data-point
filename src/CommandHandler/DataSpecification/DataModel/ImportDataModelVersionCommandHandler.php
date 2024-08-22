@@ -15,6 +15,7 @@ use App\Factory\DataSpecification\DataModel\NamespacePrefixFactory;
 use App\Factory\DataSpecification\DataModel\NodeFactory;
 use App\Factory\DataSpecification\DataModel\PredicateFactory;
 use App\Factory\DataSpecification\DataModel\TripleFactory;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -40,7 +41,7 @@ class ImportDataModelVersionCommandHandler
     {
         $dataModel = $command->getDataModel();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

@@ -6,6 +6,7 @@ namespace App\CommandHandler\Distribution;
 use App\Command\Distribution\UpdateDistributionSubsetCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DistributionVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -26,7 +27,7 @@ class UpdateDistributionSubsetCommandHandler
         $study = $dataset->getStudy();
         assert($study instanceof CastorStudy);
 
-        if (! $this->security->isGranted('edit', $distribution)) {
+        if (! $this->security->isGranted(DistributionVoter::EDIT, $distribution)) {
             throw new NoAccessPermission();
         }
 

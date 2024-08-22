@@ -7,6 +7,7 @@ use App\Command\Distribution\GetDistributionGenerationLogsCommand;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\PaginatedResultCollection;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DistributionVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +23,7 @@ class GetDistributionGenerationLogsCommandHandler
     {
         $distribution = $command->getDistribution();
 
-        if (! $this->security->isGranted('edit', $distribution)) {
+        if (! $this->security->isGranted(DistributionVoter::EDIT, $distribution)) {
             throw new NoAccessPermission();
         }
 

@@ -131,7 +131,7 @@ class MetadataModelApiController extends ApiController
      */
     public function updateMetadataModel(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         try {
             $parsed = $this->parseRequest(MetadataModelApiRequest::class, $request);
@@ -166,7 +166,7 @@ class MetadataModelApiController extends ApiController
      */
     public function createMetadataModelVersion(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         try {
             $parsed = $this->parseRequest(DataSpecificationVersionTypeApiRequest::class, $request);
@@ -196,7 +196,7 @@ class MetadataModelApiController extends ApiController
      */
     public function importMetadataModelVersion(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         $file = $request->files->get('file');
         assert($file instanceof UploadedFile || $file === null);
@@ -241,7 +241,7 @@ class MetadataModelApiController extends ApiController
      */
     public function exportMetadataModelVersion(MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         $response = new JsonResponse((new MetadataModelVersionExportApiResource($metadataModelVersion))->toArray());
 

@@ -11,6 +11,7 @@ use App\Entity\FAIRData\License;
 use App\Exception\LanguageNotFound;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
+use App\Security\Authorization\Voter\DistributionVoter;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -32,7 +33,7 @@ abstract class UpdateDistributionCommandHandler
         $study = $dataset->getStudy();
         assert($study instanceof CastorStudy);
 
-        if (! $this->security->isGranted('edit', $distribution)) {
+        if (! $this->security->isGranted(DistributionVoter::EDIT, $distribution)) {
             throw new NoAccessPermission();
         }
 

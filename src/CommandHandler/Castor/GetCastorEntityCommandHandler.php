@@ -8,6 +8,7 @@ use App\Entity\Castor\CastorEntity;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\UserNotACastorUser;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +30,7 @@ class GetCastorEntityCommandHandler
      */
     public function __invoke(GetCastorEntityCommand $command): CastorEntity
     {
-        if (! $this->security->isGranted('edit', $command->getStudy())) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
         }
 

@@ -17,6 +17,7 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\InvalidEntityType;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
+use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class AnnotationApiController extends ApiController
     /** @Route("/add", name="api_study_annotations_add") */
     public function addAnnotation(Study $study, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
             $parsed = $this->parseRequest(AnnotationApiRequest::class, $request);
@@ -88,7 +89,7 @@ class AnnotationApiController extends ApiController
      */
     public function deleteAnnotation(Annotation $annotation, Study $study, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         if ($annotation->getEntity()->getStudy() !== $study) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

@@ -6,6 +6,7 @@ namespace App\CommandHandler\Metadata;
 use App\Command\Metadata\UpdateConsentCommand;
 use App\Exception\NoAccessPermission;
 use App\Model\Slack\ApiClient as SlackApiClient;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Service\UriHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -22,7 +23,7 @@ class UpdateConsentCommandHandler
     {
         $study = $command->getStudy();
 
-        if (! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
             throw new NoAccessPermission();
         }
 

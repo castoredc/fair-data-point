@@ -7,6 +7,7 @@ use App\Command\Study\UpdateStudyCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Entity\Study;
 use App\Exception\NoAccessPermissionToStudy;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\CastorServer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -25,7 +26,7 @@ class UpdateStudyCommandHandler
     {
         $study = $command->getStudy();
 
-        if (! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
             throw new NoAccessPermissionToStudy();
         }
 

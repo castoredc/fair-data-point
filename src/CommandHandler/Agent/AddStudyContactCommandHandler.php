@@ -10,6 +10,7 @@ use App\Entity\Iri;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\PersonAlreadyExists;
+use App\Security\Authorization\Voter\StudyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -23,7 +24,7 @@ class AddStudyContactCommandHandler
 
     public function __invoke(AddStudyContactCommand $command): void
     {
-        if (! $this->security->isGranted('edit', $command->getStudy())) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
         }
 

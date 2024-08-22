@@ -15,6 +15,7 @@ use App\Exception\Upload\EmptyFile;
 use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
 use App\Exception\Upload\NoFileSpecified;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,7 +44,7 @@ class DataDictionaryApiController extends ApiController
     /** @Route("/import", methods={"POST"}, name="api_dictionary_import") */
     public function importDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataDictionary);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
 
         $file = $request->files->get('file');
         assert($file instanceof UploadedFile || $file === null);

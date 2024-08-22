@@ -11,6 +11,7 @@ use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\License;
 use App\Exception\NoAccessPermission;
 use App\Security\ApiUser;
+use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\User;
 use App\Service\Distribution\MysqlBasedDistributionService;
 use App\Service\Distribution\TripleStoreBasedDistributionService;
@@ -35,7 +36,7 @@ abstract class CreateDistributionCommandHandler
         assert($user instanceof User);
         assert($study instanceof CastorStudy);
 
-        if (! $this->security->isGranted('edit', $dataset)) {
+        if (! $this->security->isGranted(DatasetVoter::EDIT, $dataset)) {
             throw new NoAccessPermission();
         }
 

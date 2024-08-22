@@ -22,6 +22,7 @@ use App\Entity\DataSpecification\MetadataModel\Triple;
 use App\Entity\Enum\VersionType;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use function assert;
@@ -33,7 +34,7 @@ class CreateMetadataModelVersionCommandHandler extends DataSpecificationVersionC
     {
         $metadataModel = $command->getMetadataModel();
 
-        if (! $this->security->isGranted('edit', $metadataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $metadataModel)) {
             throw new NoAccessPermission();
         }
 

@@ -6,6 +6,7 @@ namespace App\CommandHandler\Study;
 use App\Command\Study\AddStudyToCatalogCommand;
 use App\Exception\CatalogNotExceptingSubmissions;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\StudyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -23,7 +24,7 @@ class AddStudyToCatalogCommandHandler
             throw new CatalogNotExceptingSubmissions();
         }
 
-        if (! $this->security->isGranted('edit', $command->getStudy())) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $command->getStudy())) {
             throw new NoAccessPermission();
         }
 

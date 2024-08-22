@@ -12,6 +12,7 @@ use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelDisplaySettin
 use App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_model_displaySetting_add") */
     public function addDisplaySetting(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(MetadataModelDisplaySettingApiRequest::class, $request);
@@ -76,7 +77,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $displaySetting->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $displaySetting->getMetadataModelVersion()->getDataSpecification());
 
         if ($displaySetting->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -122,7 +123,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
         MetadataModelDisplaySetting $displaySetting,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $displaySetting->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $displaySetting->getMetadataModelVersion()->getDataSpecification());
 
         if ($displaySetting->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

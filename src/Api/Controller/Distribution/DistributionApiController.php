@@ -25,6 +25,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Exception\LanguageNotFound;
+use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\Authorization\Voter\DistributionVoter;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -68,7 +69,7 @@ class DistributionApiController extends ApiController
      */
     public function distributionContents(Dataset $dataset, Distribution $distribution): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
@@ -83,7 +84,7 @@ class DistributionApiController extends ApiController
      */
     public function distributionGenerationLogs(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
         $contents = $distribution->getContents();
 
         if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached()) {
@@ -130,7 +131,7 @@ class DistributionApiController extends ApiController
      */
     public function distributionGenerationLog(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
             throw $this->createNotFoundException();
@@ -146,7 +147,7 @@ class DistributionApiController extends ApiController
      */
     public function distributionGenerationLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
             throw $this->createNotFoundException();
@@ -189,7 +190,7 @@ class DistributionApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_distribution_add") */
     public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request);
@@ -257,7 +258,7 @@ class DistributionApiController extends ApiController
      */
     public function updateDistribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(DistributionApiRequest::class, $request, $distribution);
@@ -325,7 +326,7 @@ class DistributionApiController extends ApiController
      */
     public function subsetDistribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
             $parsed = $this->parseRequest(DistributionSubsetApiRequest::class, $request);

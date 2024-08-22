@@ -5,6 +5,7 @@ namespace App\Controller\Dashboard;
 
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,7 @@ final class MetadataModelController extends AbstractController
      */
     public function adminModel(MetadataModel $metadataModel): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         return $this->render(
             'react.html.twig',
@@ -66,7 +67,7 @@ final class MetadataModelController extends AbstractController
      */
     public function adminModelVersion(MetadataModel $metadataModel, MetadataModelVersion $metadataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         return $this->render(
             'react.html.twig',
@@ -81,7 +82,7 @@ final class MetadataModelController extends AbstractController
      */
     public function adminModelVersionNodes(MetadataModel $metadataModel, MetadataModelVersion $metadataModelVersion, string $nodeType): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         return $this->render(
             'react.html.twig',

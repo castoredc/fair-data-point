@@ -119,7 +119,7 @@ class DataModelApiController extends ApiController
      */
     public function updateDataModel(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         try {
             $parsed = $this->parseRequest(DataModelApiRequest::class, $request);
@@ -154,7 +154,7 @@ class DataModelApiController extends ApiController
      */
     public function createDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         try {
             $parsed = $this->parseRequest(DataSpecificationVersionTypeApiRequest::class, $request);
@@ -184,7 +184,7 @@ class DataModelApiController extends ApiController
      */
     public function importDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         $file = $request->files->get('file');
         assert($file instanceof UploadedFile || $file === null);
@@ -229,7 +229,7 @@ class DataModelApiController extends ApiController
      */
     public function exportDataModelVersion(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         $response = new JsonResponse((new DataModelVersionExportApiResource($dataModelVersion))->toArray());
 

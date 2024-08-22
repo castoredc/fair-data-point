@@ -12,6 +12,7 @@ use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelModuleCommand
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class MetadataModelModuleApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_model_module_add") */
     public function addModule(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(MetadataModelModuleApiRequest::class, $request);
@@ -73,7 +74,7 @@ class MetadataModelModuleApiController extends ApiController
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -117,7 +118,7 @@ class MetadataModelModuleApiController extends ApiController
         MetadataModelGroup $module,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

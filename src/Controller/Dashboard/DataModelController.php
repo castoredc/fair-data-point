@@ -5,6 +5,7 @@ namespace App\Controller\Dashboard;
 
 use App\Entity\DataSpecification\DataModel\DataModel;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,7 @@ final class DataModelController extends AbstractController
      */
     public function adminModel(DataModel $dataModel): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         return $this->render(
             'react.html.twig',
@@ -61,7 +62,7 @@ final class DataModelController extends AbstractController
      */
     public function adminModelVersion(DataModel $dataModel, DataModelVersion $dataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         return $this->render(
             'react.html.twig',
@@ -76,7 +77,7 @@ final class DataModelController extends AbstractController
      */
     public function adminModelVersionNodes(DataModel $dataModel, DataModelVersion $dataModelVersion, string $nodeType): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModel);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         return $this->render(
             'react.html.twig',

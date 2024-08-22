@@ -8,6 +8,7 @@ use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateDistributionMetadataCommand;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DistributionVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class DistributionMetadataController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_distribution_add") */
     public function addDistributionMetadata(Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         try {
             $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);

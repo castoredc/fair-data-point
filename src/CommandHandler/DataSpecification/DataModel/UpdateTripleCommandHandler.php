@@ -9,6 +9,7 @@ use App\Entity\DataSpecification\DataModel\Node\Node;
 use App\Entity\DataSpecification\DataModel\Predicate;
 use App\Entity\Iri;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -29,7 +30,7 @@ class UpdateTripleCommandHandler
 
         $dataModel = $dataModelVersion->getDataModel();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

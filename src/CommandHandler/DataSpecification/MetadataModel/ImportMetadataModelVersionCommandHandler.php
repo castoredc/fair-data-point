@@ -18,6 +18,7 @@ use App\Factory\DataSpecification\MetadataModel\NodeFactory;
 use App\Factory\DataSpecification\MetadataModel\OptionGroupFactory;
 use App\Factory\DataSpecification\MetadataModel\PredicateFactory;
 use App\Factory\DataSpecification\MetadataModel\TripleFactory;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -47,7 +48,7 @@ class ImportMetadataModelVersionCommandHandler
     {
         $metadataModel = $command->getMetadataModel();
 
-        if (! $this->security->isGranted('edit', $metadataModel) && PHP_SAPI !== 'cli') {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $metadataModel) && PHP_SAPI !== 'cli') {
             throw new NoAccessPermission();
         }
 

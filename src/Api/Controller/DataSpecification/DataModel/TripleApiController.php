@@ -12,6 +12,7 @@ use App\Command\DataSpecification\DataModel\UpdateTripleCommand;
 use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\DataSpecification\DataModel\Triple;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class TripleApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_data_model_triple_add") */
     public function addTriple(DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         try {
             $parsed = $this->parseRequest(TripleApiRequest::class, $request);
@@ -62,7 +63,7 @@ class TripleApiController extends ApiController
      */
     public function updateTriple(DataModelGroup $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($triple->getDataModelVersion() !== $module->getVersion()) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -93,7 +94,7 @@ class TripleApiController extends ApiController
      */
     public function deleteTriple(DataModelGroup $module, Triple $triple, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $module->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($triple->getDataModelVersion() !== $module->getVersion()) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

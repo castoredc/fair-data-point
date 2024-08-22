@@ -8,6 +8,7 @@ use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Country;
 use App\Exception\CountryNotFound;
 use App\Exception\NoAccessPermissionToStudy;
+use App\Security\Authorization\Voter\StudyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +23,7 @@ class CreateStudyCenterCommandHandler
 
     public function __invoke(CreateStudyCenterCommand $command): void
     {
-        if (! $this->security->isGranted('edit', $command->getStudy())) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
         }
 
