@@ -7,20 +7,20 @@ use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudySource;
 use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent\Agent;
-use App\Entity\FAIRData\Agent\Department;
-use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\Metadata\StudyMetadata;
 use App\Entity\Study;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use function assert;
 
-class StudyRepository extends EntityRepository
+class StudyRepository extends MetadataEnrichedEntityRepository
 {
+    protected const METADATA_CLASS = StudyMetadata::class;
+    protected const TYPE = 'study';
+
     /**
      * @param StudyType[]|null  $studyType
      * @param string[]|null     $hideCatalogs
@@ -109,15 +109,12 @@ class StudyRepository extends EntityRepository
         ?array $country,
         bool $admin,
     ): QueryBuilder {
+        $qb = $this->getQuery($qb);
+
         if ($catalog !== null) {
             $qb->innerJoin('study.catalogs', 'catalog', Join::WITH, 'catalog.id = :catalog_id')
                 ->setParameter('catalog_id', $catalog->getId());
         }
-
-        $qb->leftJoin(StudyMetadata::class, 'metadata', Join::WITH, 'metadata.study = study.id')
-           ->leftJoin(StudyMetadata::class, 'metadata2', Join::WITH, 'metadata2.study = study.id AND metadata.createdAt < metadata2.createdAt')
-           ->where('metadata2.id IS NULL')
-            ->andWhere('study.isArchived = 0');
 
         if ($hideCatalogs !== null) {
             $qb->andWhere(':catalog_ids NOT MEMBER OF study.catalogs')
@@ -128,50 +125,20 @@ class StudyRepository extends EntityRepository
             $qb->andWhere('study.isPublished = 1');
         }
 
-        if ($search !== null) {
-            $qb->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->like('metadata.briefName', ':search'),
-                    $qb->expr()->like('metadata.briefSummary', ':search'),
-                    $qb->expr()->like('metadata.summary', ':search')
-                )
-            );
-            $qb->setParameter('search', '%' . $search . '%');
+//        if ($search !== null) {
+//            $qb->andWhere(
+//                $qb->expr()->orX(
+//                    $qb->expr()->like('metadata.briefName', ':search'),
+//                    $qb->expr()->like('metadata.briefSummary', ':search'),
+//                    $qb->expr()->like('metadata.summary', ':search')
+//                )
+//            );
+//            $qb->setParameter('search', '%' . $search . '%');
+//        }
+
+        if ($agent !== null) {
+            $qb = $this->getAgentQuery($qb, $agent);
         }
-
-        if ($studyType !== null) {
-            $qb->andWhere('metadata.type IN (:studyType)');
-            $qb->setParameter('studyType', $studyType);
-        }
-
-        if ($methodType !== null) {
-            $qb->andWhere('metadata.methodType IN (:methodType)');
-            $qb->setParameter('methodType', $methodType);
-        }
-
-        if ($agent !== null || $country !== null) {
-            $qb->innerJoin('metadata.participatingCenters', 'agent')
-                ->leftJoin(Department::class, 'department', Join::WITH, 'agent.id = department.id')
-                ->leftJoin(Organization::class, 'organization', Join::WITH, 'department.organization = organization.id');
-
-            if ($agent !== null) {
-                $qb->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->eq('department.id', ':agent_id'),
-                        $qb->expr()->eq('organization.id', ':agent_id'),
-                        $qb->expr()->eq('agent.id', ':agent_id'),
-                    )
-                );
-                $qb->setParameter('agent_id', $agent->getId());
-            }
-
-            if ($country !== null) {
-                $qb->andWhere('organization.country IN (:country)');
-                $qb->setParameter('country', $country);
-            }
-        }
-
-        $qb->orderBy('metadata.briefName', 'ASC');
 
         return $qb;
     }

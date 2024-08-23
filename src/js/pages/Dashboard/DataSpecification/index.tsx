@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { LoadingOverlay } from '@castoredc/matter';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import Header from 'components/Layout/Dashboard/Header';
 import Body from 'components/Layout/Dashboard/Body';
@@ -559,6 +559,9 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                                     />
                                 )}
                             />
+                        }
+                        {type === 'metadata-model' &&
+                            <Redirect exact from="/dashboard/metadata-models/:model/:version/display" to="/dashboard/metadata-models/:model/:version/display/fdp" />
                         }
                         {type === 'metadata-model' && <Route
                             path="/dashboard/metadata-models/:model/:version/display/:resourceType?"

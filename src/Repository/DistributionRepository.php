@@ -81,8 +81,6 @@ class DistributionRepository extends MetadataEnrichedEntityRepository
             $qb = $this->getAgentQuery($qb, $agent);
         }
 
-        $qb->orderBy('metadata.title', 'ASC');
-
         return $qb;
     }
 

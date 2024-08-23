@@ -18,9 +18,6 @@ interface AgentPickerPropsProps extends FieldProps {
 const handleAdd = (agent, field: FieldInputProps<any>, form: FormikProps<any> & FormikHelpers<any>) => {
     const newData = field.value;
 
-    console.log(agent);
-    console.log(newData);
-
     const exists =
         (agent.id !== '' && agent.id === null)
             ? !!newData.find(existingAgent => {

@@ -207,9 +207,6 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
         }));
 
         const rowState = studies.reduce((acc, item, index) => {
-            console.log(item.catalogs);
-            console.log(hideCatalog);
-
             acc[index] = {
                 disabled: item.catalogs.some((studyCatalog: any) => studyCatalog.slug === hideCatalog),
             };
