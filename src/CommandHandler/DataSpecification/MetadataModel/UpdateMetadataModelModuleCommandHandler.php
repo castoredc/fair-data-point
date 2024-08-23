@@ -6,6 +6,7 @@ namespace App\CommandHandler\DataSpecification\MetadataModel;
 use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelModuleCommand;
 use App\CommandHandler\DataSpecification\Common\DataSpecificationGroupCommandHandler;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -17,7 +18,7 @@ class UpdateMetadataModelModuleCommandHandler extends DataSpecificationGroupComm
         $metadataModelVersion = $module->getVersion();
         $metadataModel = $metadataModelVersion->getDataSpecification();
 
-        if (! $this->security->isGranted('edit', $metadataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $metadataModel)) {
             throw new NoAccessPermission();
         }
 

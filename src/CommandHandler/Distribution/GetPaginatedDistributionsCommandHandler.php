@@ -20,8 +20,20 @@ class GetPaginatedDistributionsCommandHandler
     {
         $distributionRepository = $this->em->getRepository(Distribution::class);
 
-        $count = $distributionRepository->countDistributions($command->getCatalog(), $command->getDataset(), $command->getAgent());
-        $datasets = $distributionRepository->findDistributions($command->getCatalog(), $command->getDataset(), $command->getAgent(), $command->getPerPage(), $command->getPage());
+        $count = $distributionRepository->countDistributions(
+            $command->getCatalog(),
+            $command->getDataset(),
+            $command->getAgent(),
+            $command->getUser()
+        );
+        $datasets = $distributionRepository->findDistributions(
+            $command->getCatalog(),
+            $command->getDataset(),
+            $command->getAgent(),
+            $command->getPerPage(),
+            $command->getPage(),
+            $command->getUser()
+        );
 
         return new PaginatedResultCollection(
             $datasets,

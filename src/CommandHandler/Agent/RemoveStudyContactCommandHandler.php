@@ -7,6 +7,7 @@ use App\Command\Agent\RemoveStudyContactCommand;
 use App\Entity\FAIRData\Agent\Person;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\StudyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -20,7 +21,7 @@ class RemoveStudyContactCommandHandler
 
     public function __invoke(RemoveStudyContactCommand $command): void
     {
-        if (! $this->security->isGranted('edit', $command->getStudy())) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $command->getStudy())) {
             throw new NoAccessPermissionToStudy();
         }
 

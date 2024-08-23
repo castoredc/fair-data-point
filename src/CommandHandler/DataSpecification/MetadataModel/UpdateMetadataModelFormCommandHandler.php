@@ -5,6 +5,7 @@ namespace App\CommandHandler\DataSpecification\MetadataModel;
 
 use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelFormCommand;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +23,7 @@ class UpdateMetadataModelFormCommandHandler
         $metadataModelVersion = $form->getMetadataModelVersion();
         $metadataModel = $metadataModelVersion->getDataSpecification();
 
-        if (! $this->security->isGranted('edit', $metadataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $metadataModel)) {
             throw new NoAccessPermission();
         }
 

@@ -7,8 +7,6 @@ use App\Command\Distribution\FindDistributionsByUserCommand;
 use App\Entity\FAIRData\Distribution;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use function array_merge;
-use function array_unique;
 
 #[AsMessageHandler]
 class FindDistributionsByUserCommandHandler
@@ -22,9 +20,6 @@ class FindDistributionsByUserCommandHandler
     {
         $distributionRepository = $this->em->getRepository(Distribution::class);
 
-        return array_unique(array_merge(
-            $distributionRepository->findByUser($command->getUser()),
-            $distributionRepository->findPublicDistributions()
-        ));
+        return $distributionRepository->findByUser($command->getUser());
     }
 }

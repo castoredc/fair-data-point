@@ -24,6 +24,7 @@ use App\Exception\InvalidDistributionType;
 use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\DistributionVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class RdfDistributionApiController extends ApiController
     /** @Route("", methods={"GET"}, name="api_distribution_contents_rdf") */
     public function distributionRdfContents(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();
@@ -73,7 +74,7 @@ class RdfDistributionApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add") */
     public function addMapping(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution)) {
             throw $this->createNotFoundException();

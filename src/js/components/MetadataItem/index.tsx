@@ -30,18 +30,15 @@ const MetadataItemValue: React.FC<MetadataItemValueProps> = ({ type, dataType, v
     switch (type) {
         case 'heading':
             return <div>
-                {dataType === 'langString' && localizedText(value, 'en')}
-                {dataType === 'string' && value}
+                {dataType === 'langString' ? localizedText(value, 'en') : value}
             </div>;
         case 'description':
             return <div>
-                {dataType === 'langString' && localizedText(value, 'en')}
-                {dataType === 'string' && value}
+                {dataType === 'langString' ? localizedText(value, 'en') : value}
             </div>;
         case 'paragraph':
             return <div>
-                {dataType === 'langString' && localizedText(value, 'en')}
-                {dataType === 'string' && value}
+                {dataType === 'langString' ? localizedText(value, 'en') : value}
             </div>;
         case 'ontologyConcepts':
             return <div>

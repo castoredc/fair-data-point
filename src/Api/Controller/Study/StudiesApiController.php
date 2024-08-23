@@ -21,6 +21,7 @@ use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
+use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -110,7 +111,7 @@ class StudiesApiController extends ApiController
                 $catalog = $handledStamp->getResult();
                 assert($catalog instanceof Catalog);
 
-                $this->denyAccessUnlessGranted('add', $catalog);
+                $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
             }
 
             $envelope = $bus->dispatch(

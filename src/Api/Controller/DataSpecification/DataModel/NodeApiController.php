@@ -15,6 +15,7 @@ use App\Entity\Enum\NodeType;
 use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\NodeInUseByTriples;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,7 @@ class NodeApiController extends ApiController
     /** @Route("/{type}", methods={"POST"}, name="api_data_model_node_add") */
     public function addNode(DataModelVersion $dataModelVersion, string $type, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         $nodeType = NodeType::fromString($type);
 
@@ -98,7 +99,7 @@ class NodeApiController extends ApiController
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         if ($node->getDataModelVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -144,7 +145,7 @@ class NodeApiController extends ApiController
      */
     public function removeNode(DataModelVersion $dataModelVersion, string $type, Node $node, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         if ($node->getDataModelVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

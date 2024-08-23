@@ -8,10 +8,8 @@ use App\Api\Request\Catalog\CatalogApiRequest;
 use App\Api\Request\Metadata\CatalogMetadataFilterApiRequest;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Command\Catalog\CreateCatalogCommand;
-use App\Command\Catalog\FindCatalogsByUserCommand;
 use App\Command\Catalog\GetPaginatedCatalogsCommand;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\PaginatedResultCollection;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\User;
@@ -23,7 +21,6 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
-use function count;
 
 /** @Route("/api/catalog") */
 class CatalogsApiController extends ApiController
@@ -37,10 +34,11 @@ class CatalogsApiController extends ApiController
 
             $envelope = $bus->dispatch(
                 new GetPaginatedCatalogsCommand(
-                    null,
-                    $parsed->getSearch(),
                     $parsed->getPerPage(),
                     $parsed->getPage(),
+                    $parsed->getSearch(),
+                    null,
+                    null,
                     $parsed->getAcceptSubmissions()
                 )
             );
@@ -65,7 +63,7 @@ class CatalogsApiController extends ApiController
     }
 
     /** @Route("/my", methods={"GET"}, name="api_my_catalogs") */
-    public function myCatalogs(MessageBusInterface $bus): Response
+    public function myCatalogs(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -73,9 +71,17 @@ class CatalogsApiController extends ApiController
         assert($user instanceof User);
 
         try {
+            $parsed = $this->parseRequest(CatalogMetadataFilterApiRequest::class, $request);
+            assert($parsed instanceof CatalogMetadataFilterApiRequest);
+
             $envelope = $bus->dispatch(
-                new FindCatalogsByUserCommand(
-                    $user
+                new GetPaginatedCatalogsCommand(
+                    $parsed->getPerPage(),
+                    $parsed->getPage(),
+                    $parsed->getSearch(),
+                    null,
+                    $user,
+                    $parsed->getAcceptSubmissions()
                 )
             );
 
@@ -86,12 +92,7 @@ class CatalogsApiController extends ApiController
 
             return $this->getPaginatedResponse(
                 CatalogApiResource::class,
-                new PaginatedResultCollection(
-                    $handledStamp->getResult(),
-                    1,
-                    count($handledStamp->getResult()),
-                    count($handledStamp->getResult())
-                ),
+                $results,
                 [CatalogVoter::VIEW, CatalogVoter::ADD, CatalogVoter::EDIT, CatalogVoter::MANAGE]
             );
         } catch (HandlerFailedException $e) {

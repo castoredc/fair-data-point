@@ -72,7 +72,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             .get('/api/metadata-model/my')
             .then(response => {
                 this.setState({
-                    metadataModels: response.data.map(metadataModel => {
+                    metadataModels: response.data.results.map(metadataModel => {
                         const versions = metadataModel.versions.map(version => {
                             return { value: version.id, label: version.version };
                         });

@@ -8,6 +8,7 @@ use App\Api\Request\Metadata\CreateMetadataVersionApiRequest;
 use App\Command\Metadata\CreateCatalogMetadataCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\CatalogVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class CatalogMetadataController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_catalog_add") */
     public function addCatalogMetadata(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
         try {
             $parsed = $this->parseRequest(CreateMetadataVersionApiRequest::class, $request);

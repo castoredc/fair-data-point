@@ -12,6 +12,7 @@ use App\Command\DataSpecification\DataDictionary\UpdateDataDictionaryGroupComman
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class DataDictionaryGroupApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_dictionary_group_add") */
     public function addGroup(DataDictionaryVersion $dataDictionaryVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataDictionaryVersion->getDataDictionary());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionaryVersion->getDataDictionary());
 
         try {
             $parsed = $this->parseRequest(DataDictionaryGroupApiRequest::class, $request);
@@ -62,7 +63,7 @@ class DataDictionaryGroupApiController extends ApiController
      */
     public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $group->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $group->getVersion()->getDataSpecification());
 
         if ($group->getVersion() !== $dataDictionaryVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -93,7 +94,7 @@ class DataDictionaryGroupApiController extends ApiController
      */
     public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $group->getVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $group->getVersion()->getDataSpecification());
 
         if ($group->getVersion() !== $dataDictionaryVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

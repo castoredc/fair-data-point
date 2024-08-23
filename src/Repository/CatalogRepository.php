@@ -5,8 +5,9 @@ namespace App\Repository;
 
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
-use App\Entity\FAIRData\LocalizedTextItem;
+use App\Entity\FAIRData\Permission\CatalogPermission;
 use App\Entity\Metadata\CatalogMetadata;
+use App\Security\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -19,12 +20,12 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
     protected const TYPE = 'catalog';
 
     /** @return Catalog[] */
-    public function findCatalogs(?Agent $agent, ?bool $acceptSubmissions, ?int $perPage, ?int $page): array
+    public function findCatalogs(?Agent $agent, ?bool $acceptSubmissions, ?int $perPage, ?int $page, ?string $search, ?User $user): array
     {
         $qb = $this->createQueryBuilder('catalog')
             ->select('catalog');
 
-        $qb = $this->getCatalogQuery($qb, $agent, $acceptSubmissions);
+        $qb = $this->getCatalogQuery($qb, $agent, $acceptSubmissions, $search, $user);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -36,12 +37,12 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countCatalogs(?Agent $agent, ?bool $acceptSubmissions): int
+    public function countCatalogs(?Agent $agent, ?bool $acceptSubmissions, ?string $search, ?User $user): int
     {
         $qb = $this->createQueryBuilder('catalog')
-            ->select('count(catalog.id)');
+            ->select('count(DISTINCT catalog.id)');
 
-        $qb = $this->getCatalogQuery($qb, $agent, $acceptSubmissions);
+        $qb = $this->getCatalogQuery($qb, $agent, $acceptSubmissions, $search, $user);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -52,27 +53,31 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
         }
     }
 
-    private function getCatalogQuery(QueryBuilder $qb, ?Agent $agent, ?bool $acceptSubmissions): QueryBuilder
+    private function getCatalogQuery(QueryBuilder $qb, ?Agent $agent, ?bool $acceptSubmissions, ?string $search, ?User $user): QueryBuilder
     {
         $qb = $this->getQuery($qb);
+
+        if ($user !== null && ! $user->isAdmin()) {
+            $qb = $qb->join(
+                CatalogPermission::class,
+                'permission',
+                Join::WITH,
+                $qb->expr()->andX(
+                    'permission.catalog = catalog.id',
+                    'permission.user = :user',
+                )
+            );
+            $qb->setParameter('user', $user->getId());
+        }
 
         if ($agent !== null) {
             $qb = $this->getAgentQuery($qb, $agent);
         }
 
         if ($acceptSubmissions !== null) {
-            $qb = $qb->where('catalog.acceptSubmissions = :acceptSubmissions');
+            $qb = $qb->andWhere('catalog.acceptSubmissions = :acceptSubmissions');
             $qb->setParameter('acceptSubmissions', $acceptSubmissions);
         }
-
-        $qb->leftJoin(
-            LocalizedTextItem::class,
-            'title',
-            Join::WITH,
-            'title.parent = metadata.title AND title.language = \'en\''
-        );
-
-        $qb->orderBy('title.text', 'ASC');
 
         return $qb;
     }
@@ -83,5 +88,16 @@ class CatalogRepository extends MetadataEnrichedEntityRepository
         assert($slug instanceof Catalog || $slug === null);
 
         return $slug;
+    }
+
+    /** @return Catalog[] */
+    public function findByUser(User $user): array
+    {
+        $qb = $this->createQueryBuilder('catalog')
+            ->select('catalog');
+
+        $qb = $this->getCatalogQuery($qb, null, null, null, $user);
+
+        return $qb->getQuery()->getResult();
     }
 }

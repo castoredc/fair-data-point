@@ -43,7 +43,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
         };
 
         apiClient
-            .get('/api/catalog', { params: filters })
+            .get('/api/catalog/my', { params: filters })
             .then(response => {
                 this.setState({
                     catalogs: response.data.results,

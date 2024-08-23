@@ -7,6 +7,7 @@ use App\Command\DataSpecification\DataModel\UpdateDataModelModuleCommand;
 use App\CommandHandler\DataSpecification\Common\DataSpecificationGroupCommandHandler;
 use App\Entity\DataSpecification\DataModel\Node\ValueNode;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -18,7 +19,7 @@ class UpdateDataModelModuleCommandHandler extends DataSpecificationGroupCommandH
         $dataModelVersion = $module->getVersion();
         $dataModel = $dataModelVersion->getDataSpecification();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

@@ -38,7 +38,7 @@ const handleRemove = (field: FieldInputProps<any>, form: FormikProps<any> & Form
 };
 
 const LocalizedTextInput: FC<LocalizedTextInputProps> = ({ field, form, languages, multiline, serverError }) => {
-    const serverErrors = serverError[field.name];
+    const serverErrors = serverError ? serverError[field.name] : undefined;
 
     const value = (field.value && field.value.length > 0) ? field.value : [defaultData];
 

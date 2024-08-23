@@ -9,6 +9,7 @@ use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DatasetVoter;
+use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,9 @@ class DatasetsApiController extends ApiController
     /** @Route("", methods={"GET"}, name="api_datasets") */
     public function datasets(Request $request, MessageBusInterface $bus): Response
     {
+        $user = $this->getUser();
+        assert($user instanceof User || $user === null);
+
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
@@ -32,6 +36,7 @@ class DatasetsApiController extends ApiController
                 new GetPaginatedDatasetsCommand(
                     null,
                     null,
+                    $user,
                     $parsed->getSearch(),
                     $parsed->getHideParents(),
                     $parsed->getPerPage(),

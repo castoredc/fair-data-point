@@ -17,6 +17,7 @@ use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
+use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -83,8 +84,8 @@ class CatalogStudiesApiController extends ApiController
     /** @Route("/filters", name="api_catalog_studies_filters") */
     public function studyFilters(Catalog $catalog): Response
     {
-        $this->denyAccessUnlessGranted('view', $catalog);
-        $studies = $catalog->getStudies($this->isGranted('edit', $catalog));
+        $this->denyAccessUnlessGranted(CatalogVoter::VIEW, $catalog);
+        $studies = $catalog->getStudies($this->isGranted(CatalogVoter::EDIT, $catalog));
 
         return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
     }
@@ -92,7 +93,7 @@ class CatalogStudiesApiController extends ApiController
     /** @Route("/add", methods={"POST"}, name="api_add_study_to_catalog") */
     public function addStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('add', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);
@@ -106,7 +107,7 @@ class CatalogStudiesApiController extends ApiController
             $study = $handledStamp->getResult();
             assert($study instanceof Study);
 
-            $this->denyAccessUnlessGranted('edit', $study);
+            $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
             $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
 
@@ -137,7 +138,7 @@ class CatalogStudiesApiController extends ApiController
     /** @Route("/import", methods={"POST"}, name="api_import_study_to_catalog") */
     public function importStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('add', $catalog);
+        $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
             $parsed = $this->parseRequest(AddStudyToCatalogApiRequest::class, $request);
@@ -151,7 +152,7 @@ class CatalogStudiesApiController extends ApiController
             $study = $handledStamp->getResult();
             assert($study instanceof Study);
 
-            $this->denyAccessUnlessGranted('edit', $study);
+            $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
             $bus->dispatch(new AddStudyToCatalogCommand($study, $catalog));
 

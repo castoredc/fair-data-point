@@ -3,10 +3,15 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
+use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
+use App\Entity\DataSpecification\MetadataModel\Predicate;
+use App\Entity\DataSpecification\MetadataModel\Triple;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Department;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\Metadata\Metadata;
+use App\Entity\Metadata\MetadataValue;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -40,16 +45,58 @@ abstract class MetadataEnrichedEntityRepository extends EntityRepository
             Join::WITH,
             sprintf('metadata.%s = %s.id', $this::TYPE, $this::TYPE)
         )
-        ->leftJoin(
-            $this::METADATA_CLASS,
-            'metadata2',
-            Join::WITH,
-            sprintf('metadata2.%s = %s.id AND metadata.createdAt < metadata2.createdAt', $this::TYPE, $this::TYPE)
-        )
+            ->leftJoin(
+                $this::METADATA_CLASS,
+                'metadata2',
+                Join::WITH,
+                sprintf('metadata2.%s = %s.id AND metadata.createdAt < metadata2.createdAt', $this::TYPE, $this::TYPE)
+            )
+            ->leftJoin(
+                MetadataModelVersion::class,
+                'metadataModelVersion',
+                Join::WITH,
+                'metadata.metadataModelVersion = metadataModelVersion.id'
+            )
+            ->leftJoin(
+                Predicate::class,
+                'predicate',
+                Join::WITH,
+                'predicate.metadataModel = metadataModelVersion.id'
+            )
+            ->leftJoin(
+                Triple::class,
+                'triple',
+                Join::WITH,
+                'triple.predicate = predicate.id'
+            )
+            ->leftJoin(
+                MetadataModelGroup::class,
+                'modelGroup',
+                Join::WITH,
+                $qb->expr()->andX(
+                    'triple.group = modelGroup.id',
+                    sprintf('modelGroup.resourceType = \'%s\'', $this::TYPE)
+                ),
+            )
+            ->leftJoin(
+                MetadataValue::class,
+                'metadataValue',
+                Join::WITH,
+                'triple.object = metadataValue.node AND metadataValue.metadata = metadata.id'
+            )
         ->where('metadata2.id IS NULL')
-        ->andWhere(sprintf('%s.isArchived = 0', $this::TYPE));
-
-        $qb->orderBy('metadata.title', 'ASC');
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->andX(
+                    sprintf('predicate.iri = \'%s\'', MetadataModelVersion::DCTERMS_TITLE),
+                    'metadataValue IS NOT NULL'
+                ),
+                $qb->expr()->andX(
+                    'predicate.iri IS NULL',
+                    'metadataValue IS NULL'
+                ),
+            ))
+        ->andWhere(sprintf('%s.isArchived = 0', $this::TYPE))
+        ->orderBy('metadataValue.value');
 
         return $qb;
     }

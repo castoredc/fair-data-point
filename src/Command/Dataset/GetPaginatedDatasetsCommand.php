@@ -5,12 +5,20 @@ namespace App\Command\Dataset;
 
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
+use App\Security\User;
 
 class GetPaginatedDatasetsCommand
 {
     /** @param string[]|null $hideCatalogs */
-    public function __construct(private ?Catalog $catalog, private ?Agent $agent, private ?string $search = null, private ?array $hideCatalogs = null, private int $perPage, private int $page)
-    {
+    public function __construct(
+        private ?Catalog $catalog,
+        private ?Agent $agent,
+        private ?User $user,
+        private ?string $search = null,
+        private ?array $hideCatalogs = null,
+        private int $perPage,
+        private int $page,
+    ) {
     }
 
     public function getCatalog(): ?Catalog
@@ -42,5 +50,10 @@ class GetPaginatedDatasetsCommand
     public function getHideCatalogs(): ?array
     {
         return $this->hideCatalogs;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 }

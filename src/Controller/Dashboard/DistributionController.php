@@ -6,6 +6,7 @@ namespace App\Controller\Dashboard;
 use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
+use App\Security\Authorization\Voter\DistributionVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,7 @@ final class DistributionController extends AbstractController
      */
     public function distribution(Dataset $dataset, Distribution $distribution): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         return $this->render(
             'react.html.twig',
@@ -52,7 +53,7 @@ final class DistributionController extends AbstractController
      */
     public function adminDistributionLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
     {
-        $this->denyAccessUnlessGranted('edit', $distribution);
+        $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
             throw $this->createNotFoundException();

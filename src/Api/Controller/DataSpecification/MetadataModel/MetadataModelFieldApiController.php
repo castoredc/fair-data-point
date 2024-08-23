@@ -13,6 +13,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\MetadataModel\NodeAlreadyUsed;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class MetadataModelFieldApiController extends ApiController
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(MetadataModelFieldApiRequest::class, $request);
@@ -83,7 +84,7 @@ class MetadataModelFieldApiController extends ApiController
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($field->getForm() !== $form || $form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -139,7 +140,7 @@ class MetadataModelFieldApiController extends ApiController
         MetadataModelField $field,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
 
         if ($field->getForm() !== $form || $form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

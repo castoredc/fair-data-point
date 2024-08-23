@@ -14,6 +14,7 @@ use App\Exception\SessionTimedOut;
 use App\Exception\StudyAlreadyExists;
 use App\Exception\UserNotACastorUser;
 use App\Model\Castor\ApiClient;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\CastorServer;
 use App\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,7 +53,7 @@ class ImportStudyCommandHandler
         if ($studyRepository->studyExists(StudySource::castor(), $command->getId())) {
             $study = $studyRepository->findStudyBySourceAndId(StudySource::castor(), $command->getId());
 
-            if (! $this->security->isGranted('edit', $study)) {
+            if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
                 throw new NoAccessPermissionToStudy();
             }
 

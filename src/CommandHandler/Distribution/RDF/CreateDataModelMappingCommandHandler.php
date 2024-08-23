@@ -7,6 +7,7 @@ use App\Command\Distribution\RDF\CreateDataModelMappingCommand;
 use App\Entity\Castor\CastorStudy;
 use App\Exception\NoAccessPermission;
 use App\Exception\UserNotACastorUser;
+use App\Security\Authorization\Voter\DistributionVoter;
 use App\Security\User;
 use App\Service\CastorEntityHelper;
 use App\Service\DataTransformationService;
@@ -29,7 +30,7 @@ abstract class CreateDataModelMappingCommandHandler
         $distribution = $command->getDistribution()->getDistribution();
         $study = $distribution->getStudy();
 
-        if (! $this->security->isGranted('edit', $distribution)) {
+        if (! $this->security->isGranted(DistributionVoter::EDIT, $distribution)) {
             throw new NoAccessPermission();
         }
 

@@ -5,6 +5,7 @@ namespace App\CommandHandler\Terminology;
 
 use App\Command\Terminology\DeleteAnnotationCommand;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\StudyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -20,7 +21,7 @@ class DeleteAnnotationCommandHandler
     {
         $study = $command->getAnnotation()->getEntity()->getStudy();
 
-        if (! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
             throw new NoAccessPermission();
         }
 

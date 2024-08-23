@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Button, LoadingOverlay } from '@castoredc/matter';
-import { Route, Switch } from 'react-router-dom';
+import { Banner, Button, LoadingOverlay } from '@castoredc/matter';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import { localizedText } from '../../../../util';
 import Header from 'components/Layout/Dashboard/Header';
@@ -93,12 +93,6 @@ export default class Study extends Component<StudyProps, StudyState> {
                     location={location}
                     items={[
                         {
-                            to: '/dashboard/studies/' + study.id,
-                            exact: true,
-                            title: 'Study information',
-                            icon: 'study',
-                        },
-                        {
                             to: '/dashboard/studies/' + study.id + '/metadata',
                             exact: true,
                             title: 'Metadata',
@@ -135,20 +129,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                     </Header>
 
                     <Switch>
-                        <Route
-                            path="/dashboard/studies/:study"
-                            exact
-                            render={props => (
-                                <PageBody>
-                                    <MetadataForm
-                                        type="study"
-                                        object={study}
-                                        onCreate={this.getStudy}
-                                        onSave={this.getStudy}
-                                    />
-                                </PageBody>
-                            )}
-                        />
+                        <Redirect exact from="/dashboard/studies/:study" to="/dashboard/studies/:study/metadata" />
                         <Route
                             path="/dashboard/studies/:study/metadata"
                             exact
@@ -168,19 +149,19 @@ export default class Study extends Component<StudyProps, StudyState> {
                             exact
                             render={
                                 props => (
-                                    // isGranted("edit_source_system", study.permissions) ? (
-                                    <PageBody>
-                                        <Annotations studyId={study.id} />
-                                    </PageBody>
+                                    isGranted("edit_source_system", study.permissions) ? (
+                                        <PageBody>
+                                            <Annotations studyId={study.id} />
+                                        </PageBody>
+                                    ) : (
+                                      <PageBody>
+                                        <Banner
+                                          type="error"
+                                          title="You do not have permission to access this study in Castor"
+                                        />
+                                      </PageBody>
+                                    )
                                 )
-                                // ) : (
-                                //   <PageBody>
-                                //     <Banner
-                                //       type="error"
-                                //       title="You do not have permission to access this study in Castor"
-                                //     />
-                                //   </PageBody>
-                                // )
                             }
                         />
                         <Route

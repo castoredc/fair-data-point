@@ -7,6 +7,7 @@ use App\Command\DataSpecification\MetadataModel\CreateMetadataModelModuleCommand
 use App\CommandHandler\DataSpecification\Common\DataSpecificationGroupCommandHandler;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -17,7 +18,7 @@ class CreateMetadataModelModuleCommandHandler extends DataSpecificationGroupComm
         $metadataModelVersion = $command->getMetadataModelVersion();
         $metadataModel = $metadataModelVersion->getMetadataModel();
 
-        if (! $this->security->isGranted('edit', $metadataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $metadataModel)) {
             throw new NoAccessPermission();
         }
 

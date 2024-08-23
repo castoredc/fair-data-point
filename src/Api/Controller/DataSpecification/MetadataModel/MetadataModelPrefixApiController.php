@@ -12,6 +12,7 @@ use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelPrefixCommand
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class MetadataModelPrefixApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_model_prefix_add") */
     public function addPrefix(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
@@ -62,7 +63,7 @@ class MetadataModelPrefixApiController extends ApiController
      */
     public function updatePrefix(MetadataModelVersion $metadataModelVersion, NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($prefix->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -93,7 +94,7 @@ class MetadataModelPrefixApiController extends ApiController
      */
     public function deletePrefix(MetadataModelVersion $metadataModelVersion, NamespacePrefix $prefix, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($prefix->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

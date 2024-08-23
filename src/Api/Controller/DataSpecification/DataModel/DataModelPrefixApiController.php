@@ -12,6 +12,7 @@ use App\Command\DataSpecification\DataModel\UpdateDataModelPrefixCommand;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\DataSpecification\DataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class DataModelPrefixApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_data_model_prefix_add") */
     public function addPrefix(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         try {
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
@@ -62,7 +63,7 @@ class DataModelPrefixApiController extends ApiController
      */
     public function updatePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         if ($prefix->getDataModelVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -93,7 +94,7 @@ class DataModelPrefixApiController extends ApiController
      */
     public function deletePrefix(DataModelVersion $dataModelVersion, NamespacePrefix $prefix, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataModelVersion->getDataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         if ($prefix->getDataModelVersion() !== $dataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

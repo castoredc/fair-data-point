@@ -7,6 +7,7 @@ use App\Command\Dataset\CreateDatasetForStudyCommand;
 use App\Entity\Enum\PermissionType;
 use App\Entity\FAIRData\Dataset;
 use App\Exception\NoAccessPermissionToStudy;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +29,7 @@ class CreateDatasetForStudyCommandHandler
         $user = $this->security->getUser();
         assert($user instanceof User);
 
-        if (! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
             throw new NoAccessPermissionToStudy();
         }
 

@@ -7,13 +7,12 @@ use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\PaginatedResultCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class GetPaginatedDatasetsCommandHandler
 {
-    public function __construct(private EntityManagerInterface $em, private Security $security)
+    public function __construct(private EntityManagerInterface $em)
     {
     }
 
@@ -21,10 +20,21 @@ class GetPaginatedDatasetsCommandHandler
     {
         $datasetRepository = $this->em->getRepository(Dataset::class);
 
-        $isAdmin = $this->security->isGranted('ROLE_ADMIN');
+        $count = $datasetRepository->countDatasets(
+            $command->getCatalog(),
+            $command->getAgent(),
+            $command->getHideCatalogs(),
+            $command->getUser()
+        );
 
-        $count = $datasetRepository->countDatasets($command->getCatalog(), $command->getAgent(), $command->getHideCatalogs(), $isAdmin);
-        $datasets = $datasetRepository->findDatasets($command->getCatalog(), $command->getAgent(), $command->getHideCatalogs(), $command->getPerPage(), $command->getPage(), $isAdmin);
+        $datasets = $datasetRepository->findDatasets(
+            $command->getCatalog(),
+            $command->getAgent(),
+            $command->getHideCatalogs(),
+            $command->getPerPage(),
+            $command->getPage(),
+            $command->getUser()
+        );
 
         return new PaginatedResultCollection(
             $datasets,

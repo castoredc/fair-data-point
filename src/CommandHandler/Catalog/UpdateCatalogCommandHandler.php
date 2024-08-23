@@ -6,6 +6,7 @@ namespace App\CommandHandler\Catalog;
 use App\Command\Catalog\UpdateCatalogCommand;
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\CatalogVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +23,7 @@ class UpdateCatalogCommandHandler
     {
         $catalog = $command->getCatalog();
 
-        if (! $this->security->isGranted('edit', $catalog)) {
+        if (! $this->security->isGranted(CatalogVoter::EDIT, $catalog)) {
             throw new NoAccessPermission();
         }
 

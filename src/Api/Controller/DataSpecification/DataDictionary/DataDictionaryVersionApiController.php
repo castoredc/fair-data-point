@@ -11,6 +11,7 @@ use App\Command\DataSpecification\DataDictionary\CreateDataDictionaryVersionComm
 use App\Entity\DataSpecification\DataDictionary\DataDictionary;
 use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Cocur\Slugify\Slugify;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,7 +43,7 @@ class DataDictionaryVersionApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_dictionary_version_create") */
     public function createDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataDictionary);
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
 
         try {
             $parsed = $this->parseRequest(DataDictionaryVersionTypeApiRequest::class, $request);
@@ -69,7 +70,7 @@ class DataDictionaryVersionApiController extends ApiController
     /** @Route("/export", methods={"GET"}, name="api_dictionary_version_export") */
     public function exportDataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataDictionaryVersion->getDataDictionary());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionaryVersion->getDataDictionary());
 
         $response = new JsonResponse((new DataDictionaryVersionExportApiResource($dataDictionaryVersion))->toArray());
 

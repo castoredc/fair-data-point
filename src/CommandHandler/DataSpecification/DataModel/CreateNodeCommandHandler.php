@@ -12,6 +12,7 @@ use App\Entity\Iri;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\InvalidValueType;
 use App\Exception\NoAccessPermission;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -33,7 +34,7 @@ class CreateNodeCommandHandler
         $dataModelVersion = $command->getDataModelVersion();
         $dataModel = $dataModelVersion->getDataModel();
 
-        if (! $this->security->isGranted('edit', $dataModel)) {
+        if (! $this->security->isGranted(DataSpecificationVoter::EDIT, $dataModel)) {
             throw new NoAccessPermission();
         }
 

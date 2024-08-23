@@ -7,6 +7,7 @@ use App\Command\Metadata\CreateDistributionMetadataCommand;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
+use App\Security\Authorization\Voter\DistributionVoter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -20,7 +21,7 @@ class CreateDistributionMetadataCommandHandler extends CreateMetadataCommandHand
     {
         $distribution = $command->getDistribution();
 
-        if (! $this->security->isGranted('edit', $distribution)) {
+        if (! $this->security->isGranted(DistributionVoter::EDIT, $distribution)) {
             throw new NoAccessPermission();
         }
 

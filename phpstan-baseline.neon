@@ -31,21 +31,6 @@ parameters:
 			path: src/Command/Agent/CreateAffiliationCommand.php
 
 		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$acceptSubmissions follows optional parameter \\$search\\.$#"
-			count: 1
-			path: src/Command/Catalog/GetPaginatedCatalogsCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.0\\: Required parameter \\$page follows optional parameter \\$search\\.$#"
-			count: 1
-			path: src/Command/Catalog/GetPaginatedCatalogsCommand.php
-
-		-
-			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$perPage follows optional parameter \\$search\\.$#"
-			count: 1
-			path: src/Command/Catalog/GetPaginatedCatalogsCommand.php
-
-		-
 			message: "#^Deprecated in PHP 8\\.1\\: Required parameter \\$value follows optional parameter \\$description\\.$#"
 			count: 1
 			path: src/Command/DataSpecification/Common/Model/CreateNodeCommand.php

@@ -21,6 +21,11 @@ class ReportData extends InstanceDataCollection
 
         foreach ($data as $rawInstanceResults) {
             $instance = $instances->get($rawInstanceResults['report_instance_id']);
+
+            if ($instance === null) {
+                continue;
+            }
+
             $field = $study->getFields()->get($rawInstanceResults['field_id']);
             $fieldResult = FieldResult::fromData($rawInstanceResults, $field, $record);
 

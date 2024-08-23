@@ -17,6 +17,7 @@ use App\Exception\ErrorFetchingCastorData;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
+use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +37,7 @@ class CastorStudyStructureApiController extends ApiController
     /** @Route("/structure", name="api_study_structure") */
     public function studyStructure(CastorStudy $study, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
             $envelope = $bus->dispatch(new GetStudyStructureCommand($study));
@@ -80,7 +81,7 @@ class CastorStudyStructureApiController extends ApiController
     /** @Route("/structure/step/{step}/fields", name="api_study_structure_step") */
     public function studyStructureStep(CastorStudy $study, string $step, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
             $envelope = $bus->dispatch(new GetFieldsForStepCommand($study, $step));
@@ -125,7 +126,7 @@ class CastorStudyStructureApiController extends ApiController
     /** @Route("/optiongroups", name="api_study_optiongroups") */
     public function optionGroups(CastorStudy $study, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
@@ -172,7 +173,7 @@ class CastorStudyStructureApiController extends ApiController
     /** @Route("/institutes", name="api_study_institutes") */
     public function institutes(CastorStudy $study, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $study);
+        $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         $user = $this->getUser();
         assert($user instanceof User || $user === null);

@@ -12,6 +12,7 @@ use App\Exception\AnnotationAlreadyExists;
 use App\Exception\NoAccessPermission;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
+use App\Security\Authorization\Voter\StudyVoter;
 use Castor\BioPortal\Api\ApiWrapper;
 use Castor\BioPortal\Api\Helper\SearchTermOptions;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,7 +31,7 @@ class AddAnnotationCommandHandler
     {
         $study = $command->getStudy();
 
-        if (! $this->security->isGranted('edit', $study)) {
+        if (! $this->security->isGranted(StudyVoter::EDIT, $study)) {
             throw new NoAccessPermission();
         }
 

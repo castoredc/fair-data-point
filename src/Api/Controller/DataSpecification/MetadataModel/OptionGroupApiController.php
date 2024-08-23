@@ -12,6 +12,7 @@ use App\Command\DataSpecification\MetadataModel\UpdateMetadataModelOptionGroupCo
 use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
+use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ class OptionGroupApiController extends ApiController
     /** @Route("", methods={"GET"}, name="api_metadata_model_option_groups") */
     public function getOptionGroups(MetadataModelVersion $metadataModelVersion): Response
     {
-        $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new OptionGroupsApiResource($metadataModelVersion))->toArray());
     }
@@ -38,7 +39,7 @@ class OptionGroupApiController extends ApiController
     /** @Route("", methods={"POST"}, name="api_metadata_model_option_group_add") */
     public function addOptionGroup(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(OptionGroupApiRequest::class, $request);
@@ -67,7 +68,7 @@ class OptionGroupApiController extends ApiController
      */
     public function updateOptionGroup(MetadataModelVersion $metadataModelVersion, MetadataModelOptionGroup $optionGroup, Request $request, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($optionGroup->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -103,7 +104,7 @@ class OptionGroupApiController extends ApiController
      */
     public function deletePrefix(MetadataModelVersion $metadataModelVersion, MetadataModelOptionGroup $optionGroup, MessageBusInterface $bus): Response
     {
-        $this->denyAccessUnlessGranted('edit', $metadataModelVersion->getMetadataModel());
+        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($optionGroup->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

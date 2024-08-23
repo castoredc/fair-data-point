@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\DataSpecification\MetadataModel\MetadataModelRepository")
  * @ORM\Table(name="metadata_model")
  * @ORM\HasLifecycleCallbacks
  */

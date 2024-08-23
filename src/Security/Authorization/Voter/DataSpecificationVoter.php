@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Security\Authorization\Voter;
 
 use App\Entity\DataSpecification\Common\DataSpecification;
+use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Security\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -13,19 +15,22 @@ use function in_array;
 
 class DataSpecificationVoter extends Voter
 {
+    public const USE = 'use';
     public const VIEW = 'view';
     public const ADD = 'add';
     public const EDIT = 'edit';
     public const MANAGE = 'manage';
 
-    public function __construct(private Security $security)
-    {
+    public function __construct(
+        private Security $security,
+        private EntityManagerInterface $em,
+    ) {
     }
 
     /** @inheritDoc */
     protected function supports(string $attribute, $subject): bool
     {
-        if (! in_array($attribute, [self::VIEW, self::ADD, self::EDIT, self::MANAGE], true)) {
+        if (! in_array($attribute, [self::USE, self::VIEW, self::ADD, self::EDIT, self::MANAGE], true)) {
             return false;
         }
 
@@ -39,7 +44,7 @@ class DataSpecificationVoter extends Voter
         $dataSpecification = $subject;
         assert($dataSpecification instanceof DataSpecification);
 
-        if ($attribute === self::VIEW && $dataSpecification->isPublic()) {
+        if (($attribute === self::VIEW || $attribute === self::USE) && $dataSpecification->isPublic()) {
             return true;
         }
 
@@ -51,6 +56,14 @@ class DataSpecificationVoter extends Voter
             return true;
         }
 
+        if ($dataSpecification instanceof MetadataModel) {
+            $inherited = $this->em->getRepository(MetadataModel::class)->isInUseByEntitiesUserHasPermissionsTo($dataSpecification, $user);
+
+            if ($inherited && $attribute === self::USE) {
+                return true;
+            }
+        }
+
         $permission = $dataSpecification->getPermissionsForUser($user);
 
         if ($permission === null) {
@@ -58,15 +71,15 @@ class DataSpecificationVoter extends Voter
         }
 
         if ($permission->getType()->isView()) {
-            return $attribute === self::VIEW;
+            return $attribute === self::VIEW || $attribute === self::USE;
         }
 
         if ($permission->getType()->isEdit()) {
-            return $attribute === self::VIEW || $attribute === self::EDIT;
+            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::USE;
         }
 
         if ($permission->getType()->isManage()) {
-            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::MANAGE;
+            return $attribute === self::VIEW || $attribute === self::EDIT || $attribute === self::MANAGE || $attribute === self::USE;
         }
 
         return false;

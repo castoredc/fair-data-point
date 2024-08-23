@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Dashboard;
 
 use App\Entity\FAIRData\Dataset;
+use App\Security\Authorization\Voter\DatasetVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,7 @@ final class DatasetController extends AbstractController
      */
     public function dataset(Dataset $dataset): Response
     {
-        $this->denyAccessUnlessGranted('edit', $dataset);
+        $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         return $this->render(
             'react.html.twig',
