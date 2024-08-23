@@ -88,6 +88,7 @@ abstract class MetadataEnrichedEntityRepository extends EntityRepository
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
                     sprintf('predicate.iri = \'%s\'', MetadataModelVersion::DCTERMS_TITLE),
+                    'modelGroup.id IS NOT NULL',
                     'metadataValue IS NOT NULL'
                 ),
                 $qb->expr()->andX(
