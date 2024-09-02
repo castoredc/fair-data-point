@@ -42,7 +42,7 @@
     "require-dev": {
         "castor/coding-standard": "^9.0",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan": "^1.12",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-doctrine": "^1.3",
         "phpstan/phpstan-phpunit": "^1.1",
