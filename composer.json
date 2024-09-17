@@ -31,7 +31,7 @@
         "symfony/flex": "^2.4.3",
         "symfony/framework-bundle": "^6.4",
         "symfony/intl": "^6.4",
-        "symfony/messenger": "^6.4",
+        "symfony/messenger": "^7.1",
         "symfony/monolog-bundle": "^3.10",
         "symfony/security-bundle": "^6.4",
         "symfony/twig-bundle": "^7.1",
