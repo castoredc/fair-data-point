@@ -1,4 +1,4 @@
-FROM nginx:1.17-alpine as dev
+FROM nginx:1.17-alpine@sha256:763e7f0188e378fef0c761854552c70bbd817555dc4de029681a2e972e25e30e as dev
 
 WORKDIR /home/castor/fdp
 
