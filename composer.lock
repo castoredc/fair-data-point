@@ -4493,16 +4493,16 @@
         },
         {
             "name": "sweetrdf/easyrdf",
-            "version": "1.14.0",
+            "version": "1.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sweetrdf/easyrdf.git",
-                "reference": "586268272a6b41beb3379ee06fc40ecf221ecaaf"
+                "reference": "b5eeeb31795fedd773acd867a461aeba75f8a347"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sweetrdf/easyrdf/zipball/586268272a6b41beb3379ee06fc40ecf221ecaaf",
-                "reference": "586268272a6b41beb3379ee06fc40ecf221ecaaf",
+                "url": "https://api.github.com/repos/sweetrdf/easyrdf/zipball/b5eeeb31795fedd773acd867a461aeba75f8a347",
+                "reference": "b5eeeb31795fedd773acd867a461aeba75f8a347",
                 "shasum": ""
             },
             "require": {
@@ -4575,10 +4575,10 @@
                 "Turtle"
             ],
             "support": {
-                "source": "https://github.com/sweetrdf/easyrdf/tree/1.14.0",
+                "source": "https://github.com/sweetrdf/easyrdf/tree/1.14.1",
                 "issues": "https://github.com/sweetrdf/easyrdf/issues"
             },
-            "time": "2024-04-09T13:40:45+00:00"
+            "time": "2024-05-27T10:24:12+00:00"
         },
         {
             "name": "sweetrdf/rdf-helpers",
