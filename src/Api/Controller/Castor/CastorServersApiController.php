@@ -92,7 +92,10 @@ final class CastorServersApiController extends ApiController
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         } catch (HandlerFailedException $e) {
             if ($e->getPrevious() instanceof CastorServerNotFound) {
-                $this->logger->warning('The CastorServer with id ' . $id . ' could not be found.', ['exception' => $e->getPrevious()]);
+                $this->logger->warning(
+                    'The CastorServer with id ' . $id . ' could not be found.',
+                    ['exception' => $e->getPrevious()]
+                );
 
                 return new JsonResponse([], Response::HTTP_NOT_FOUND);
             }

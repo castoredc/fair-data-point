@@ -31,7 +31,7 @@ use App\Security\Authorization\Voter\DistributionVoter;
 use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
 use App\Service\UriHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,12 +42,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/agent/details/{agent}')]
-#[ParamConverter('agent', options: ['mapping' => ['agent' => 'slug']])]
 class AgentApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_agent_details')]
-    public function agentDetails(Agent $agent, MessageBusInterface $bus): Response
-    {
+    public function agentDetails(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        MessageBusInterface $bus,
+    ): Response {
         try {
             $envelope = $bus->dispatch(new GetAgentAssociatedMetadataCountCommand($agent));
 
@@ -68,19 +70,26 @@ class AgentApiController extends ApiController
 
             return new JsonResponse($resource->toArray());
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the details of an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the details of an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/study', methods: ['GET'], name: 'api_agent_studies')]
-    public function agentStudies(Agent $agent, Request $request, MessageBusInterface $bus): Response
-    {
+    public function agentStudies(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         try {
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
@@ -112,19 +121,25 @@ class AgentApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the studies for an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the studies for an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/study/filters', methods: ['GET'], name: 'api_agent_study_filters')]
-    public function agentStudiesFilters(Agent $agent, MessageBusInterface $bus): Response
-    {
+    public function agentStudiesFilters(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        MessageBusInterface $bus,
+    ): Response {
         try {
             $envelope = $bus->dispatch(new GetStudiesForAgentCommand($agent));
             $handledStamp = $envelope->last(HandledStamp::class);
@@ -134,19 +149,26 @@ class AgentApiController extends ApiController
 
             return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the study filters for an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the study filters for an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/dataset', methods: ['GET'], name: 'api_agent_datasets')]
-    public function agentDatasets(Agent $agent, Request $request, MessageBusInterface $bus): Response
-    {
+    public function agentDatasets(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
 
@@ -154,15 +176,17 @@ class AgentApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new GetPaginatedDatasetsCommand(
-                null,
-                $agent,
-                $user,
-                $parsed->getSearch(),
-                $parsed->getHideParents(),
-                $parsed->getPerPage(),
-                $parsed->getPage()
-            ));
+            $envelope = $bus->dispatch(
+                new GetPaginatedDatasetsCommand(
+                    null,
+                    $agent,
+                    $user,
+                    $parsed->getSearch(),
+                    $parsed->getHideParents(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -177,31 +201,40 @@ class AgentApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the datasets for an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the datasets for an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/catalog', methods: ['GET'], name: 'api_agent_catalogs')]
-    public function agentCatalogs(Agent $agent, Request $request, MessageBusInterface $bus): Response
-    {
+    public function agentCatalogs(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         try {
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new GetPaginatedCatalogsCommand(
-                $parsed->getPerPage(),
-                $parsed->getPage(),
-                $parsed->getSearch(),
-                $agent,
-                null,
-                null
-            ));
+            $envelope = $bus->dispatch(
+                new GetPaginatedCatalogsCommand(
+                    $parsed->getPerPage(),
+                    $parsed->getPage(),
+                    $parsed->getSearch(),
+                    $agent,
+                    null,
+                    null
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -216,19 +249,27 @@ class AgentApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the catalogs for an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the catalogs for an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/distribution', methods: ['GET'], name: 'api_agent_distribution')]
-    public function agentDistributions(Agent $agent, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
-    {
+    public function agentDistributions(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        Request $request,
+        MessageBusInterface $bus,
+        UriHelper $uriHelper,
+    ): Response {
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
 
@@ -236,15 +277,17 @@ class AgentApiController extends ApiController
             $parsed = $this->parseRequest(MetadataFilterApiRequest::class, $request);
             assert($parsed instanceof MetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new GetPaginatedDistributionsCommand(
-                null,
-                null,
-                $agent,
-                $user,
-                $parsed->getSearch(),
-                $parsed->getPerPage(),
-                $parsed->getPage()
-            ));
+            $envelope = $bus->dispatch(
+                new GetPaginatedDistributionsCommand(
+                    null,
+                    null,
+                    $agent,
+                    $user,
+                    $parsed->getSearch(),
+                    $parsed->getPerPage(),
+                    $parsed->getPage()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -260,24 +303,40 @@ class AgentApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the distributions for an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the distributions for an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/map', methods: ['GET'], name: 'api_agent_map')]
-    public function agentMap(Agent $agent, Request $request, MessageBusInterface $bus): Response
-    {
+    public function agentMap(
+        #[MapEntity(mapping: ['agent' => 'slug'])]
+        Agent $agent,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         try {
             $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
             assert($parsed instanceof StudyMetadataFilterApiRequest);
 
-            $envelope = $bus->dispatch(new FilterStudiesCommand(null, $agent, $parsed->getSearch(), $parsed->getStudyType(), $parsed->getMethodType(), $parsed->getCountry()));
+            $envelope = $bus->dispatch(
+                new FilterStudiesCommand(
+                    null,
+                    $agent,
+                    $parsed->getSearch(),
+                    $parsed->getStudyType(),
+                    $parsed->getMethodType(),
+                    $parsed->getCountry()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -286,11 +345,14 @@ class AgentApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the map information for an agent', [
-                'exception' => $e,
-                'Agent' => $agent->getSlug(),
-                'AgentID' => $agent->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the map information for an agent',
+                [
+                    'exception' => $e,
+                    'Agent' => $agent->getSlug(),
+                    'AgentID' => $agent->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

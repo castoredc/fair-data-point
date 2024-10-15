@@ -22,9 +22,10 @@ final class DatasetController extends AbstractController
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/permissions', name: 'dashboard_catalog_dataset_permissions')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions', name: 'dashboard_catalog_dataset_distributions')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add', name: 'dashboard_catalog_dataset_distributions_add')]
-    public function dataset(#[MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset,): Response
-    {
+    public function dataset(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+    ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         return $this->render(

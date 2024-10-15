@@ -44,9 +44,12 @@ class UserOnboardingWizardController extends AbstractController
         $currentRoute = $request->get('_route');
 
         if ($firstWizard->getRoute() !== $currentRoute) {
-            return $this->redirectToRoute($firstWizard->getRoute(), [
-                'origin' => urlencode($request->get('origin')),
-            ]);
+            return $this->redirectToRoute(
+                $firstWizard->getRoute(),
+                [
+                    'origin' => urlencode($request->get('origin')),
+                ]
+            );
         }
 
         return $this->render('react.html.twig');

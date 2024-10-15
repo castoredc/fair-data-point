@@ -18,7 +18,6 @@ use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,12 +29,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/catalog/{catalog}')]
-#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'slug']])]
 class SingleCatalogApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_catalog')]
-    public function catalog(Catalog $catalog): Response
-    {
+    public function catalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         return $this->getResponse(
@@ -46,8 +46,12 @@ class SingleCatalogApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_catalog_update')]
-    public function updateCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
-    {
+    public function updateCatalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
         try {
@@ -82,9 +86,12 @@ class SingleCatalogApiController extends ApiController
     }
 
     #[Route(path: '/dataset', name: 'api_catalog_datasets')]
-    public function datasets(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function datasets(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
@@ -132,9 +139,12 @@ class SingleCatalogApiController extends ApiController
     }
 
     #[Route(path: '/map', name: 'api_catalog_datasets_map')]
-    public function studiesMap(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function studiesMap(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {

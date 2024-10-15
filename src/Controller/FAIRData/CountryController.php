@@ -12,9 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class CountryController extends FAIRDataController
 {
     #[Route(path: '/fdp/country/{country}', name: 'agent_person')]
-    public function country(#[MapEntity(mapping: ['country' => 'code'])]
-    Country $country,): Response
-    {
+    public function country(
+        #[MapEntity(mapping: ['country' => 'code'])]
+        Country $country,
+    ): Response {
         return new Response(
             (new CountryGraphResource($country, $this->basePurl))->toGraph()->serialise('turtle'),
             Response::HTTP_OK,

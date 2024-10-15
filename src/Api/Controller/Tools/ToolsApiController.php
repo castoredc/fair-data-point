@@ -31,9 +31,12 @@ class ToolsApiController extends ApiController
         }
 
         if (! $file->isValid()) {
-            return new JsonResponse([
-                'error' => $file->getErrorMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(
+                [
+                    'error' => $file->getErrorMessage(),
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $xml = file_get_contents($file->getPathname());

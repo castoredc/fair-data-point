@@ -56,20 +56,24 @@ class OrganizationApiController extends ApiController
     }
 
     #[Route(path: '/{organization}', methods: ['GET'], name: 'api_agent_organization')]
-    public function organization(#[MapEntity(mapping: ['organization' => 'id'])]
-    Organization $organization,): Response
-    {
+    public function organization(
+        #[MapEntity(mapping: ['organization' => 'id'])]
+        Organization $organization,
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         return new JsonResponse((new OrganizationApiResource($organization))->toArray());
     }
 
     #[Route(path: '/{organization}/department', methods: ['GET'], name: 'api_agent_organization_department')]
-    public function departments(#[MapEntity(mapping: ['organization' => 'id'])]
-    Organization $organization,): Response
-    {
+    public function departments(
+        #[MapEntity(mapping: ['organization' => 'id'])]
+        Organization $organization,
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        return new JsonResponse((new DepartmentsApiResource($organization->getDepartments()->toArray(), false))->toArray());
+        return new JsonResponse(
+            (new DepartmentsApiResource($organization->getDepartments()->toArray(), false))->toArray()
+        );
     }
 }

@@ -27,9 +27,10 @@ final class StudiesController extends AbstractController
     }
 
     #[Route(path: '/dashboard/studies/add/{catalog}', name: 'dashboard_study_add_catalog')]
-    public function addStudy(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog,): Response
-    {
+    public function addStudy(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         return $this->render(
@@ -42,9 +43,10 @@ final class StudiesController extends AbstractController
     #[Route(path: '/dashboard/studies/{studyId}/metadata', name: 'dashboard_study_metadata')]
     #[Route(path: '/dashboard/studies/{studyId}/annotations', name: 'dashboard_study_annotations')]
     #[Route(path: '/dashboard/studies/{studyId}/datasets', name: 'dashboard_study_datasets')]
-    public function studyMetadata(#[MapEntity(mapping: ['studyId' => 'id'])]
-    Study $study,): Response
-    {
+    public function studyMetadata(
+        #[MapEntity(mapping: ['studyId' => 'id'])]
+        Study $study,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         return $this->render(

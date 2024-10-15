@@ -13,7 +13,6 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelForm;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,20 +23,25 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/metadata-model/{model}/v/{version}/form')]
-#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class MetadataModelFormApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_forms')]
-    public function getForms(MetadataModelVersion $metadataModelVersion): Response
-    {
+    public function getForms(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new MetadataModelFormsApiResource($metadataModelVersion))->toArray());
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_form_add')]
-    public function addForm(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addForm(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
@@ -65,13 +69,17 @@ class MetadataModelFormApiController extends ApiController
 
     #[Route(path: '/{form}', methods: ['POST'], name: 'api_metadata_model_form_update')]
     public function updateForm(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(
+            DataSpecificationVoter::EDIT,
+            $form->getMetadataModelVersion()->getDataSpecification()
+        );
 
         if ($form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -108,12 +116,16 @@ class MetadataModelFormApiController extends ApiController
 
     #[Route(path: '/{form}', methods: ['DELETE'], name: 'api_metadata_model_form_delete')]
     public function deleteForm(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(
+            DataSpecificationVoter::EDIT,
+            $form->getMetadataModelVersion()->getDataSpecification()
+        );
 
         if ($form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

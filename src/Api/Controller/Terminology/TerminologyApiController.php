@@ -39,7 +39,13 @@ class TerminologyApiController extends ApiController
         try {
             $parsed = $this->parseRequest(OntologyConceptApiRequest::class, $request);
             assert($parsed instanceof OntologyConceptApiRequest);
-            $envelope = $bus->dispatch(new FindOntologyConceptsCommand($parsed->getOntology(), $parsed->getSearch(), $parsed->includeIndividuals()));
+            $envelope = $bus->dispatch(
+                new FindOntologyConceptsCommand(
+                    $parsed->getOntology(),
+                    $parsed->getSearch(),
+                    $parsed->includeIndividuals()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);

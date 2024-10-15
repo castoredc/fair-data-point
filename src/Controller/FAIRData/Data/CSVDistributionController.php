@@ -28,15 +28,23 @@ use function time;
 class CSVDistributionController extends FAIRDataController
 {
     #[Route(path: '/fdp/{catalog}/{dataset}/{distribution}/distribution/csv', name: 'distribution_csv')]
-    public function csvDistribution(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, #[MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, MessageBusInterface $bus,): Response
-    {
+    public function csvDistribution(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $contents instanceof CSVDistribution) {
+        if (
+            ! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution(
+                $distribution
+            ) || ! $contents instanceof CSVDistribution
+        ) {
             throw $this->createNotFoundException();
         }
 
@@ -50,7 +58,9 @@ class CSVDistributionController extends FAIRDataController
             /** @var Record[] $records */
             $records = $handledStamp->getResult();
 
-            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(
+                HandledStamp::class
+            );
             assert($handledStamp instanceof HandledStamp);
             $csv = $handledStamp->getResult();
 

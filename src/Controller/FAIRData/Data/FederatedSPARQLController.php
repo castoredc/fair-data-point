@@ -26,28 +26,37 @@ class FederatedSPARQLController extends ApiController
             $parsed = $this->parseRequest(FederatedSparqlQueryRequest::class, $request);
             assert($parsed instanceof FederatedSparqlQueryRequest);
 
-            $handledStamp = $bus->dispatch(new RunFederatedQueryAgainstDistributionSparqlEndpointsCommand(
-                $parsed->getDistributionIds(),
-                $parsed->getSparqlQuery()
-            ))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(
+                new RunFederatedQueryAgainstDistributionSparqlEndpointsCommand(
+                    $parsed->getDistributionIds(),
+                    $parsed->getSparqlQuery()
+                )
+            )->last(HandledStamp::class);
 
             assert($handledStamp instanceof HandledStamp);
 
             $results = $handledStamp->getResult();
             assert($results instanceof FederatedSparqlResponse);
 
-            return new Response($results->getResponse(), Response::HTTP_OK, [
-                'Content-Type' => $results->getContentType(),
-            ]);
+            return new Response(
+                $results->getResponse(),
+                Response::HTTP_OK,
+                [
+                    'Content-Type' => $results->getContentType(),
+                ]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while executing a federated query.', [
-                'exception' => $e,
-                'errorMessage' => $e->getMessage(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while executing a federated query.',
+                [
+                    'exception' => $e,
+                    'errorMessage' => $e->getMessage(),
+                ]
+            );
 
             return new Response('An error occurred while executing your query.', Response::HTTP_BAD_REQUEST);
         }

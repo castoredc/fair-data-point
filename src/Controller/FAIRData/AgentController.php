@@ -14,9 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class AgentController extends FAIRDataController
 {
     #[Route(path: '/fdp/person/{person}', name: 'agent_person')]
-    public function person(#[MapEntity(mapping: ['person' => 'slug'])]
-    Person $person,): Response
-    {
+    public function person(
+        #[MapEntity(mapping: ['person' => 'slug'])]
+        Person $person,
+    ): Response {
 //        if ($this->acceptsHttp($request)) {
 //            return $this->render('react.html.twig', $this->getAgentSeoTexts($person));
 //        }
@@ -29,9 +30,10 @@ class AgentController extends FAIRDataController
     }
 
     #[Route(path: '/fdp/organization/{organization}', name: 'agent_organization')]
-    public function organization(#[MapEntity(mapping: ['organization' => 'slug'])]
-    Organization $organization,): Response
-    {
+    public function organization(
+        #[MapEntity(mapping: ['organization' => 'slug'])]
+        Organization $organization,
+    ): Response {
 //        if ($this->acceptsHttp($request)) {
 //            return $this->render('react.html.twig', $this->getAgentSeoTexts($organization));
 //        }

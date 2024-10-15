@@ -27,9 +27,10 @@ class LoginController extends AbstractController
     }
 
     #[Route(path: '/login/{catalog}', name: 'login_catalog')]
-    public function catalogLogin(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog,): Response
-    {
+    public function catalogLogin(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+    ): Response {
         if (! $catalog->isAcceptingSubmissions()) {
             throw new NotFoundHttpException();
         }

@@ -13,7 +13,6 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,27 +23,34 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/metadata-model/{model}/v/{version}/prefix')]
-#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class MetadataModelPrefixApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_prefixes')]
-    public function getPrefixes(MetadataModelVersion $metadataModelVersion): Response
-    {
+    public function getPrefixes(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new MetadataModelPrefixesApiResource($metadataModelVersion))->toArray());
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_prefix_add')]
-    public function addPrefix(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addPrefix(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(DataSpecificationPrefixApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationPrefixApiRequest);
 
-            $bus->dispatch(new CreateMetadataModelPrefixCommand($metadataModelVersion, $parsed->getPrefix(), $parsed->getUri()));
+            $bus->dispatch(
+                new CreateMetadataModelPrefixCommand($metadataModelVersion, $parsed->getPrefix(), $parsed->getUri())
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -57,9 +63,14 @@ class MetadataModelPrefixApiController extends ApiController
     }
 
     #[Route(path: '/{prefix}', methods: ['POST'], name: 'api_metadata_model_prefix_update')]
-    public function updatePrefix(MetadataModelVersion $metadataModelVersion, #[MapEntity(mapping: ['prefix' => 'id'])]
-    NamespacePrefix $prefix, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function updatePrefix(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['prefix' => 'id'])]
+        NamespacePrefix $prefix,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($prefix->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -76,19 +87,26 @@ class MetadataModelPrefixApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a data model prefix', [
-                'exception' => $e,
-                'PrefixID' => $prefix->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a data model prefix',
+                [
+                    'exception' => $e,
+                    'PrefixID' => $prefix->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/{prefix}', methods: ['DELETE'], name: 'api_metadata_model_prefix_delete')]
-    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[MapEntity(mapping: ['prefix' => 'id'])]
-    NamespacePrefix $prefix, MessageBusInterface $bus,): Response
-    {
+    public function deletePrefix(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['prefix' => 'id'])]
+        NamespacePrefix $prefix,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($prefix->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -100,10 +118,13 @@ class MetadataModelPrefixApiController extends ApiController
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while deleting a data model prefix', [
-                'exception' => $e,
-                'PrefixID' => $prefix->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while deleting a data model prefix',
+                [
+                    'exception' => $e,
+                    'PrefixID' => $prefix->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

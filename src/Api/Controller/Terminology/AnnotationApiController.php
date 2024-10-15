@@ -18,7 +18,6 @@ use App\Exception\InvalidEntityType;
 use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Security\Authorization\Voter\StudyVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,12 +29,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/study/{study}/annotations')]
-#[ParamConverter('study', options: ['mapping' => ['study' => 'id']])]
 class AnnotationApiController extends ApiController
 {
     #[Route(path: '/add', name: 'api_study_annotations_add')]
-    public function addAnnotation(Study $study, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addAnnotation(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        Study $study,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
@@ -44,7 +46,14 @@ class AnnotationApiController extends ApiController
 
             assert($study instanceof CastorStudy);
 
-            $envelope = $bus->dispatch(new GetCastorEntityCommand($study, $parsed->getEntityType(), $parsed->getEntityId(), $parsed->getEntityParent()));
+            $envelope = $bus->dispatch(
+                new GetCastorEntityCommand(
+                    $study,
+                    $parsed->getEntityType(),
+                    $parsed->getEntityId(),
+                    $parsed->getEntityParent()
+                )
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -52,7 +61,15 @@ class AnnotationApiController extends ApiController
             $entity = $handledStamp->getResult();
             assert($entity instanceof CastorEntity);
 
-            $bus->dispatch(new AddAnnotationCommand($study, $entity, $parsed->getOntology(), $parsed->getConcept(), $parsed->getConceptType()));
+            $bus->dispatch(
+                new AddAnnotationCommand(
+                    $study,
+                    $entity,
+                    $parsed->getOntology(),
+                    $parsed->getConcept(),
+                    $parsed->getConceptType()
+                )
+            );
 
             return new JsonResponse([], Response::HTTP_OK);
         } catch (ApiRequestParseError $e) {
@@ -72,20 +89,27 @@ class AnnotationApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
-            $this->logger->critical('An error occurred while adding an annotation', [
-                'exception' => $e,
-                'Study' => $study->getSlug(),
-                'StudyID' => $study->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding an annotation',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/{annotation}', methods: ['DELETE'], name: 'api_study_annotations_delete')]
-    public function deleteAnnotation(#[MapEntity(mapping: ['annotation' => 'id'])]
-    Annotation $annotation, Study $study, MessageBusInterface $bus,): Response
-    {
+    public function deleteAnnotation(
+        #[MapEntity(mapping: ['annotation' => 'id'])]
+        Annotation $annotation,
+        #[MapEntity(mapping: ['study' => 'id'])]
+        Study $study,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         if ($annotation->getEntity()->getStudy() !== $study) {
@@ -99,11 +123,14 @@ class AnnotationApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while removing an annotation', [
-                'exception' => $e,
-                'Study' => $study->getSlug(),
-                'StudyID' => $study->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while removing an annotation',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

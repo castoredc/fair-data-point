@@ -15,16 +15,23 @@ class CatalogController extends FAIRDataController
     #[Route(path: '/fdp/{catalog}', name: 'redirect_old_catalog')]
     public function catalogRedirect(string $catalog, Request $request): Response
     {
-        return $this->redirectToRoute('catalog', [
-            'catalog' => $catalog,
-            'embed' => $request->get('embed'),
-        ], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute(
+            'catalog',
+            [
+                'catalog' => $catalog,
+                'embed' => $request->get('embed'),
+            ],
+            Response::HTTP_MOVED_PERMANENTLY
+        );
     }
 
     #[Route(path: '/fdp/catalog/{catalog}', name: 'catalog')]
-    public function catalog(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function catalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         return $this->renderResource(

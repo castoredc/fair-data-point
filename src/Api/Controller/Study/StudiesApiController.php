@@ -115,7 +115,13 @@ class StudiesApiController extends ApiController
             }
 
             $envelope = $bus->dispatch(
-                new CreateStudyCommand($parsed->getSource(), $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), true)
+                new CreateStudyCommand(
+                    $parsed->getSource(),
+                    $parsed->getSourceId(),
+                    $parsed->getSourceServer(),
+                    $parsed->getName(),
+                    true
+                )
             );
 
             $handledStamp = $envelope->last(HandledStamp::class);

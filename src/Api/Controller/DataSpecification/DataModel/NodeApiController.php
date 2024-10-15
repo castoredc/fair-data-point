@@ -16,7 +16,6 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\NodeInUseByTriples;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,20 +26,24 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/data-model/{model}/v/{version}/node')]
-#[ParamConverter('dataModelVersion', options: ['mapping' => ['model' => 'data_model', 'version' => 'id']])]
 class NodeApiController extends ApiController
 {
     #[Route(path: '', name: 'api_data_model_node')]
-    public function nodes(DataModelVersion $dataModelVersion): Response
-    {
+    public function nodes(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
         return new JsonResponse((new NodesApiResource($dataModelVersion))->toArray());
     }
 
     #[Route(path: '/{type}', methods: ['GET'], name: 'api_data_model_node_type')]
-    public function nodesByType(DataModelVersion $dataModelVersion, string $type): Response
-    {
+    public function nodesByType(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        string $type,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
         $nodeType = NodeType::fromString($type);
@@ -49,8 +52,13 @@ class NodeApiController extends ApiController
     }
 
     #[Route(path: '/{type}', methods: ['POST'], name: 'api_data_model_node_add')]
-    public function addNode(DataModelVersion $dataModelVersion, string $type, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addNode(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        string $type,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         $nodeType = NodeType::fromString($type);
@@ -89,6 +97,7 @@ class NodeApiController extends ApiController
 
     #[Route(path: '/{type}/{id}', methods: ['POST'], name: 'api_data_model_node_edit')]
     public function editNode(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         string $type,
         #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
@@ -137,9 +146,14 @@ class NodeApiController extends ApiController
     }
 
     #[Route(path: '/{type}/{id}', methods: ['DELETE'], name: 'api_data_model_node_remove')]
-    public function removeNode(DataModelVersion $dataModelVersion, string $type, #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
-    Node $node, MessageBusInterface $bus,): Response
-    {
+    public function removeNode(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        string $type,
+        #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
+        Node $node,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         if ($node->getDataModelVersion() !== $dataModelVersion) {

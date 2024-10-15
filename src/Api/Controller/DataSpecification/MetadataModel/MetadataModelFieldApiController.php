@@ -14,7 +14,6 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\MetadataModel\NodeAlreadyUsed;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,13 +24,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/metadata-model/{model}/v/{version}/form/{form}/field')]
-#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
-#[ParamConverter('form', options: ['mapping' => ['form' => 'id']])]
 class MetadataModelFieldApiController extends ApiController
 {
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_field_add')]
     public function addField(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         Request $request,
         MessageBusInterface $bus,
@@ -74,14 +73,19 @@ class MetadataModelFieldApiController extends ApiController
 
     #[Route(path: '/{field}', methods: ['POST'], name: 'api_metadata_model_field_update')]
     public function updateField(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         #[MapEntity(mapping: ['field' => 'id'])]
         MetadataModelField $field,
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(
+            DataSpecificationVoter::EDIT,
+            $form->getMetadataModelVersion()->getDataSpecification()
+        );
 
         if ($field->getForm() !== $form || $form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -129,13 +133,18 @@ class MetadataModelFieldApiController extends ApiController
 
     #[Route(path: '/{field}', methods: ['DELETE'], name: 'api_metadata_model_field_delete')]
     public function deleteField(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         #[MapEntity(mapping: ['field' => 'id'])]
         MetadataModelField $field,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $form->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(
+            DataSpecificationVoter::EDIT,
+            $form->getMetadataModelVersion()->getDataSpecification()
+        );
 
         if ($field->getForm() !== $form || $form->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

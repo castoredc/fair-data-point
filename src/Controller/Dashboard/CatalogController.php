@@ -31,9 +31,10 @@ final class CatalogController extends AbstractController
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/add', name: 'dashboard_catalog_dataset_add')]
     #[Route(path: '/dashboard/catalogs/{catalog}/studies', name: 'dashboard_catalog_studies')]
     #[Route(path: '/dashboard/catalogs/{catalog}/studies/add', name: 'dashboard_catalog_study_add')]
-    public function catalog(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog,): Response
-    {
+    public function catalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 
         return $this->render('react.html.twig', ['title' => 'FDP Admin']);

@@ -13,9 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class StudyController extends FAIRDataController
 {
     #[Route(path: '/study/{study}', name: 'study')]
-    public function study(#[MapEntity(mapping: ['study' => 'slug'])]
-    Study $study, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function study(
+        #[MapEntity(mapping: ['study' => 'slug'])]
+        Study $study,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
         return $this->renderResource(

@@ -13,9 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class DatasetController extends FAIRDataController
 {
     #[Route(path: '/fdp/dataset/{dataset}', name: 'dataset')]
-    public function dataset(#[MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function dataset(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
 
         return $this->renderResource(

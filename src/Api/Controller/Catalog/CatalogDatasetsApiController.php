@@ -15,7 +15,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\DatasetVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,12 +26,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/catalog/{catalog}/dataset')]
-#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'slug']])]
 class CatalogDatasetsApiController extends ApiController
 {
     #[Route(path: '/add', methods: ['POST'], name: 'api_add_dataset_to_catalog')]
-    public function addDatasetToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addDatasetToCatalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
@@ -64,11 +67,14 @@ class CatalogDatasetsApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
-            $this->logger->critical('An error occurred while adding a dataset to a catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding a dataset to a catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

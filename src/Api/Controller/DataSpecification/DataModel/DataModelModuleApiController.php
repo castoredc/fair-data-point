@@ -13,7 +13,6 @@ use App\Entity\DataSpecification\DataModel\DataModelGroup;
 use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,27 +23,41 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/data-model/{model}/v/{version}/module')]
-#[ParamConverter('dataModelVersion', options: ['mapping' => ['model' => 'data_model', 'version' => 'id']])]
 class DataModelModuleApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_data_model_modules')]
-    public function getModules(DataModelVersion $dataModelVersion): Response
-    {
+    public function getModules(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
         return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray());
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_data_model_module_add')]
-    public function addModule(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addModule(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         try {
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
             assert($parsed instanceof DataModelModuleApiRequest);
 
-            $bus->dispatch(new CreateDataModelModuleCommand($dataModelVersion, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
+            $bus->dispatch(
+                new CreateDataModelModuleCommand(
+                    $dataModelVersion,
+                    $parsed->getTitle(),
+                    $parsed->getOrder(),
+                    $parsed->isRepeated(),
+                    $parsed->isDependent(),
+                    $parsed->getDependencies()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -57,9 +70,14 @@ class DataModelModuleApiController extends ApiController
     }
 
     #[Route(path: '/{module}', methods: ['POST'], name: 'api_data_model_module_update')]
-    public function updateModule(DataModelVersion $dataModelVersion, #[MapEntity(mapping: ['module' => 'id'])]
-    DataModelGroup $module, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function updateModule(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        #[MapEntity(mapping: ['module' => 'id'])]
+        DataModelGroup $module,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $dataModelVersion) {
@@ -70,25 +88,41 @@ class DataModelModuleApiController extends ApiController
             $parsed = $this->parseRequest(DataModelModuleApiRequest::class, $request);
             assert($parsed instanceof DataModelModuleApiRequest);
 
-            $bus->dispatch(new UpdateDataModelModuleCommand($module, $parsed->getTitle(), $parsed->getOrder(), $parsed->isRepeated(), $parsed->isDependent(), $parsed->getDependencies()));
+            $bus->dispatch(
+                new UpdateDataModelModuleCommand(
+                    $module,
+                    $parsed->getTitle(),
+                    $parsed->getOrder(),
+                    $parsed->isRepeated(),
+                    $parsed->isDependent(),
+                    $parsed->getDependencies()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a data model module', [
-                'exception' => $e,
-                'ModuleID' => $module->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a data model module',
+                [
+                    'exception' => $e,
+                    'ModuleID' => $module->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_data_model_module_delete')]
-    public function deleteModule(DataModelVersion $dataModelVersion, #[MapEntity(mapping: ['module' => 'id'])]
-    DataModelGroup $module, MessageBusInterface $bus,): Response
-    {
+    public function deleteModule(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        #[MapEntity(mapping: ['module' => 'id'])]
+        DataModelGroup $module,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
         if ($module->getVersion() !== $dataModelVersion) {
@@ -100,10 +134,13 @@ class DataModelModuleApiController extends ApiController
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while deleting a data model module', [
-                'exception' => $e,
-                'ModuleID' => $module->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while deleting a data model module',
+                [
+                    'exception' => $e,
+                    'ModuleID' => $module->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

@@ -19,7 +19,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyNotFound;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\StudyVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,12 +30,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/catalog/{catalog}/study')]
-#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'slug']])]
 class CatalogStudiesApiController extends ApiController
 {
     #[Route(path: '', name: 'api_catalog_studies')]
-    public function studies(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
-    {
+    public function studies(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         try {
@@ -69,19 +72,24 @@ class CatalogStudiesApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while getting the studies for a catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the studies for a catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/filters', name: 'api_catalog_studies_filters')]
-    public function studyFilters(Catalog $catalog): Response
-    {
+    public function studyFilters(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::VIEW, $catalog);
         $studies = $catalog->getStudies($this->isGranted(CatalogVoter::EDIT, $catalog));
 
@@ -89,8 +97,12 @@ class CatalogStudiesApiController extends ApiController
     }
 
     #[Route(path: '/add', methods: ['POST'], name: 'api_add_study_to_catalog')]
-    public function addStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
-    {
+    public function addStudyToCatalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
@@ -123,19 +135,26 @@ class CatalogStudiesApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
-            $this->logger->critical('An error occurred while adding a study to a catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding a study to a catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/import', methods: ['POST'], name: 'api_import_study_to_catalog')]
-    public function importStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
-    {
+    public function importStudyToCatalog(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
         try {
@@ -168,11 +187,14 @@ class CatalogStudiesApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
             }
 
-            $this->logger->critical('An error occurred while importing a study to a catalog', [
-                'exception' => $e,
-                'Catalog' => $catalog->getSlug(),
-                'CatalogID' => $catalog->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while importing a study to a catalog',
+                [
+                    'exception' => $e,
+                    'Catalog' => $catalog->getSlug(),
+                    'CatalogID' => $catalog->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

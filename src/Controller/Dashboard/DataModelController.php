@@ -38,9 +38,10 @@ final class DataModelController extends AbstractController
     #[Route(path: '/dashboard/data-models/{model}', name: 'dashboard_model')]
     #[Route(path: '/dashboard/data-models/{model}/versions', name: 'dashboard_model_versions')]
     #[Route(path: '/dashboard/data-models/{model}/permissions', name: 'dashboard_model_permissions')]
-    public function adminModel(#[MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel,): Response
-    {
+    public function adminModel(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         return $this->render(
@@ -54,10 +55,12 @@ final class DataModelController extends AbstractController
     #[Route(path: '/dashboard/data-models/{model}/{version}/prefixes', name: 'dashboard_model_prefixes')]
     #[Route(path: '/dashboard/data-models/{model}/{version}/preview', name: 'dashboard_model_preview')]
     #[Route(path: '/dashboard/data-models/{model}/{version}/import-export', name: 'dashboard_model_importexport')]
-    public function adminModelVersion(#[MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel, #[MapEntity(mapping: ['model' => 'dataModel', 'version' => 'version'])]
-    DataModelVersion $dataModelVersion,): Response
-    {
+    public function adminModelVersion(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+        #[MapEntity(mapping: ['model' => 'dataModel', 'version' => 'version'])]
+        DataModelVersion $dataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         return $this->render(
@@ -67,10 +70,13 @@ final class DataModelController extends AbstractController
     }
 
     #[Route(path: '/dashboard/data-models/{model}/{version}/nodes/{nodeType}', name: 'dashboard_model_nodes')]
-    public function adminModelVersionNodes(#[MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel, #[MapEntity(mapping: ['model' => 'dataModel', 'version' => 'version'])]
-    DataModelVersion $dataModelVersion, string $nodeType,): Response
-    {
+    public function adminModelVersionNodes(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+        #[MapEntity(mapping: ['model' => 'dataModel', 'version' => 'version'])]
+        DataModelVersion $dataModelVersion,
+        string $nodeType,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         return $this->render(

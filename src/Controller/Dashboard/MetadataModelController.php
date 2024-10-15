@@ -38,9 +38,10 @@ final class MetadataModelController extends AbstractController
     #[Route(path: '/dashboard/metadata-models/{model}', name: 'dashboard_metadata_model')]
     #[Route(path: '/dashboard/metadata-models/{model}/versions', name: 'dashboard_metadata_model_versions')]
     #[Route(path: '/dashboard/metadata-models/{model}/permissions', name: 'dashboard_metadata_model_permissions')]
-    public function adminModel(#[MapEntity(mapping: ['model' => 'id'])]
-    MetadataModel $metadataModel,): Response
-    {
+    public function adminModel(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         return $this->render(
@@ -59,10 +60,12 @@ final class MetadataModelController extends AbstractController
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/prefixes', name: 'dashboard_metadata_model_prefixes')]
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/preview', name: 'dashboard_metadata_model_preview')]
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/import-export', name: 'dashboard_metadata_model_importexport')]
-    public function adminModelVersion(#[MapEntity(mapping: ['model' => 'id'])]
-    MetadataModel $metadataModel, #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
-    MetadataModelVersion $metadataModelVersion,): Response
-    {
+    public function adminModelVersion(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+        #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         return $this->render(
@@ -72,10 +75,13 @@ final class MetadataModelController extends AbstractController
     }
 
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/nodes/{nodeType}', name: 'dashboard_metadata_model_nodes')]
-    public function adminModelVersionNodes(#[MapEntity(mapping: ['model' => 'id'])]
-    MetadataModel $metadataModel, #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
-    MetadataModelVersion $metadataModelVersion, string $nodeType,): Response
-    {
+    public function adminModelVersionNodes(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+        #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+        MetadataModelVersion $metadataModelVersion,
+        string $nodeType,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         return $this->render(

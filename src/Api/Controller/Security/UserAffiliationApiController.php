@@ -39,18 +39,20 @@ class UserAffiliationApiController extends ApiController
             $user->getPerson()->clearAffiliations();
 
             foreach ($parsed as $item) {
-                $bus->dispatch(new CreateAffiliationCommand(
-                    $user->getPerson(),
-                    $item->getOrganizationSource(),
-                    $item->getOrganizationId(),
-                    $item->getOrganizationName(),
-                    $item->getOrganizationCity(),
-                    $item->getOrganizationCountry(),
-                    $item->getDepartmentSource(),
-                    $item->getDepartmentId(),
-                    $item->getDepartmentName(),
-                    $item->getPosition()
-                ));
+                $bus->dispatch(
+                    new CreateAffiliationCommand(
+                        $user->getPerson(),
+                        $item->getOrganizationSource(),
+                        $item->getOrganizationId(),
+                        $item->getOrganizationName(),
+                        $item->getOrganizationCity(),
+                        $item->getOrganizationCountry(),
+                        $item->getDepartmentSource(),
+                        $item->getDepartmentId(),
+                        $item->getDepartmentName(),
+                        $item->getPosition()
+                    )
+                );
             }
 
             return new JsonResponse([]);

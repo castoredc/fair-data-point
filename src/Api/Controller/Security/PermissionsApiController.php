@@ -36,12 +36,15 @@ class PermissionsApiController extends ApiController
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
 
-        return $this->getPaginatedResponse(PermissionApiResource::class, new PaginatedResultCollection(
-            $object->getPermissions()->toArray(),
-            1,
-            $object->getPermissions()->count(),
-            $object->getPermissions()->count(),
-        ));
+        return $this->getPaginatedResponse(
+            PermissionApiResource::class,
+            new PaginatedResultCollection(
+                $object->getPermissions()->toArray(),
+                1,
+                $object->getPermissions()->count(),
+                $object->getPermissions()->count(),
+            )
+        );
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_permissions_add')]
@@ -54,7 +57,9 @@ class PermissionsApiController extends ApiController
             $parsed = $this->parseRequest(PermissionApiRequest::class, $request);
             assert($parsed instanceof PermissionApiRequest);
 
-            $envelope = $bus->dispatch(new AddPermissionToEntityCommand($object, $parsed->getEmail(), $parsed->getType()));
+            $envelope = $bus->dispatch(
+                new AddPermissionToEntityCommand($object, $parsed->getEmail(), $parsed->getType())
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -73,20 +78,28 @@ class PermissionsApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
-            $this->logger->critical('An error occurred while adding permissions for a user', [
-                'exception' => $e,
-                'type' => $type,
-                'dataModel' => $object->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding permissions for a user',
+                [
+                    'exception' => $e,
+                    'type' => $type,
+                    'dataModel' => $object->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/{user}', methods: ['POST'], name: 'api_model_permissions_edit')]
-    public function editPermissions(string $type, string $objectId, #[MapEntity(mapping: ['user' => 'id'])]
-    User $user, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function editPermissions(
+        string $type,
+        string $objectId,
+        #[MapEntity(mapping: ['user' => 'id'])]
+        User $user,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
 
@@ -109,19 +122,26 @@ class PermissionsApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
-            $this->logger->critical('An error occurred while changing permissions for a user', [
-                'exception' => $e,
-                'dataModel' => $object->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while changing permissions for a user',
+                [
+                    'exception' => $e,
+                    'dataModel' => $object->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route(path: '/{user}', methods: ['DELETE'], name: 'api_model_permissions_remove')]
-    public function removePermissions(string $type, string $objectId, #[MapEntity(mapping: ['user' => 'id'])]
-    User $user, MessageBusInterface $bus,): Response
-    {
+    public function removePermissions(
+        string $type,
+        string $objectId,
+        #[MapEntity(mapping: ['user' => 'id'])]
+        User $user,
+        MessageBusInterface $bus,
+    ): Response {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
 
@@ -132,10 +152,13 @@ class PermissionsApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while removing permissions for a user', [
-                'exception' => $e,
-                'dataModel' => $object->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while removing permissions for a user',
+                [
+                    'exception' => $e,
+                    'dataModel' => $object->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

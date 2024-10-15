@@ -23,9 +23,10 @@ use function assert;
 class StudyApiController extends ApiController
 {
     #[Route(path: '/slug/{study}', methods: ['GET'], name: 'api_study_byslug')]
-    public function studyBySlug(#[MapEntity(mapping: ['study' => 'slug'])]
-    Study $study,): Response
-    {
+    public function studyBySlug(
+        #[MapEntity(mapping: ['study' => 'slug'])]
+        Study $study,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
         return $this->getResponse(
@@ -36,9 +37,10 @@ class StudyApiController extends ApiController
     }
 
     #[Route(path: '/{study}', methods: ['GET'], name: 'api_study')]
-    public function study(#[MapEntity(mapping: ['study' => 'id'])]
-    Study $study,): Response
-    {
+    public function study(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        Study $study,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
         return $this->getResponse(
@@ -49,26 +51,41 @@ class StudyApiController extends ApiController
     }
 
     #[Route(path: '/{study}', methods: ['POST'], name: 'api_update_study')]
-    public function updateStudy(#[MapEntity(mapping: ['study' => 'id'])]
-    Study $study, Request $request, MessageBusInterface $bus,): Response
-    {
+    public function updateStudy(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        Study $study,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $study);
 
         try {
             $parsed = $this->parseRequest(StudyApiRequest::class, $request);
             assert($parsed instanceof StudyApiRequest);
 
-            $bus->dispatch(new UpdateStudyCommand($study, $parsed->getSourceId(), $parsed->getSourceServer(), $parsed->getName(), $parsed->getSlug(), $parsed->getPublished()));
+            $bus->dispatch(
+                new UpdateStudyCommand(
+                    $study,
+                    $parsed->getSourceId(),
+                    $parsed->getSourceServer(),
+                    $parsed->getName(),
+                    $parsed->getSlug(),
+                    $parsed->getPublished()
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating a study', [
-                'exception' => $e,
-                'Study' => $study->getSlug(),
-                'StudyID' => $study->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a study',
+                [
+                    'exception' => $e,
+                    'Study' => $study->getSlug(),
+                    'StudyID' => $study->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

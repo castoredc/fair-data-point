@@ -17,9 +17,12 @@ class CastorOAuthController extends AbstractController
      * Link to this controller to start the "connect" process
      */
     #[Route(path: '/connect/castor/{server}', name: 'connect_castor_start')]
-    public function connect(#[MapEntity(mapping: ['server' => 'id'])]
-    CastorServer $server, Request $request, ClientRegistry $clientRegistry,): Response
-    {
+    public function connect(
+        #[MapEntity(mapping: ['server' => 'id'])]
+        CastorServer $server,
+        Request $request,
+        ClientRegistry $clientRegistry,
+    ): Response {
         $request->getSession()->set('previous', $request->get('target_path'));
         $request->getSession()->set('castor.server', $server->getUrl()->getValue());
         $request->getSession()->set('castor.server_id', $server->getId());

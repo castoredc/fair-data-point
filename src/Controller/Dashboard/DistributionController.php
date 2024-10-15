@@ -26,10 +26,12 @@ final class DistributionController extends AbstractController
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents', name: 'dashboard_catalog_distribution_content')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log', name: 'dashboard_catalog_distribution_log')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset', name: 'dashboard_catalog_distribution_subset')]
-    public function distribution(#[MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution,): Response
-    {
+    public function distribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         return $this->render(
@@ -40,11 +42,14 @@ final class DistributionController extends AbstractController
 
     #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}', name: 'dashboard_study_distribution_log_records')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log/{log}', name: 'dashboard_catalog_distribution_log_records')]
-    public function adminDistributionLogRecords(#[MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, #[MapEntity(mapping: ['log' => 'id'])]
-    DistributionGenerationLog $log,): Response
-    {
+    public function adminDistributionLogRecords(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        #[MapEntity(mapping: ['log' => 'id'])]
+        DistributionGenerationLog $log,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {

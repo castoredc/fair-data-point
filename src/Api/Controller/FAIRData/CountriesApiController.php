@@ -29,9 +29,10 @@ class CountriesApiController extends ApiController
     }
 
     #[Route(path: '/api/country/{code}', name: 'api_country')]
-    public function language(#[MapEntity(mapping: ['code' => 'code'])]
-    Country $country,): Response
-    {
+    public function language(
+        #[MapEntity(mapping: ['code' => 'code'])]
+        Country $country,
+    ): Response {
         return new JsonResponse((new CountryApiResource($country))->toArray());
     }
 }

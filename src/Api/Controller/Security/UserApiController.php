@@ -54,7 +54,12 @@ class UserApiController extends ApiController
             $parsed = $this->parseRequest(UserApiRequest::class, $request);
             assert($parsed instanceof UserApiRequest);
             $bus->dispatch(
-                new UpdateUserCommand($parsed->getFirstName(), $parsed->getMiddleName(), $parsed->getLastName(), $parsed->getEmail())
+                new UpdateUserCommand(
+                    $parsed->getFirstName(),
+                    $parsed->getMiddleName(),
+                    $parsed->getLastName(),
+                    $parsed->getEmail()
+                )
             );
 
             return new JsonResponse([]);

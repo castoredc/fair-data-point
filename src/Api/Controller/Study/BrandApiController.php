@@ -15,9 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class BrandApiController extends ApiController
 {
     #[Route(path: '/api/brand/{catalog}', name: 'api_catalog_brand')]
-    public function brand(#[MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, MessageBusInterface $bus,): Response
-    {
+    public function brand(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $catalog);
 
         return new JsonResponse((new CatalogBrandApiResource($catalog))->toArray());

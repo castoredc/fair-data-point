@@ -29,9 +29,10 @@ class LicensesApiController extends ApiController
     }
 
     #[Route(path: '/api/license/{slug}', name: 'api_license')]
-    public function license(#[MapEntity(mapping: ['slug' => 'slug'])]
-    License $license,): Response
-    {
+    public function license(
+        #[MapEntity(mapping: ['slug' => 'slug'])]
+        License $license,
+    ): Response {
         return new JsonResponse((new LicenseApiResource($license))->toArray());
     }
 }

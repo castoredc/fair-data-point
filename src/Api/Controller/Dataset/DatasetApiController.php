@@ -16,7 +16,7 @@ use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\Authorization\Voter\DistributionVoter;
 use App\Security\User;
 use App\Service\UriHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,12 +27,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
 #[Route(path: '/api/dataset/{dataset}')]
-#[ParamConverter('dataset', options: ['mapping' => ['dataset' => 'slug']])]
 class DatasetApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_dataset')]
-    public function dataset(Dataset $dataset): Response
-    {
+    public function dataset(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
 
         return $this->getResponse(
@@ -43,8 +44,12 @@ class DatasetApiController extends ApiController
     }
 
     #[Route(path: '', methods: ['POST'], name: 'api_dataset_update')]
-    public function updateDataset(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
-    {
+    public function updateDataset(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
@@ -77,8 +82,13 @@ class DatasetApiController extends ApiController
     }
 
     #[Route(path: '/distribution', methods: ['GET'], name: 'api_dataset_distributions')]
-    public function distributions(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
-    {
+    public function distributions(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        Request $request,
+        MessageBusInterface $bus,
+        UriHelper $uriHelper,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
         $user = $this->getUser();
         assert($user instanceof User || $user === null);
