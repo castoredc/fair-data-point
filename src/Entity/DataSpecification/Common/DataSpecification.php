@@ -38,16 +38,11 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    /**
-     * @var Collection<DistributionContents>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Data\DistributionContents\DistributionContents::class, mappedBy: 'dataSpecification')]
+    /** @var Collection<DistributionContents> */
+    #[ORM\OneToMany(targetEntity: DistributionContents::class, mappedBy: 'dataSpecification')]
     private Collection $distributionContents;
 
-    /**
-     *
-     * @var Collection<Version>
-     */
+    /** @var Collection<Version> */
     #[ORM\OneToMany(targetEntity: \Version::class, mappedBy: 'dataSpecification', cascade: ['persist'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $versions;
@@ -55,9 +50,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $isPublic = false;
 
-    /**
-     * @var Collection<DataSpecificationPermission>
-     */
+    /** @var Collection<DataSpecificationPermission> */
     #[ORM\OneToMany(targetEntity: \DataSpecificationPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'dataSpecification')]
     private Collection $permissions;
 

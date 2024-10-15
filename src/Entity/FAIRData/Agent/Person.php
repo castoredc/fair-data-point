@@ -41,15 +41,13 @@ class Person extends Agent
     private ?Iri $orcid = null;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'person')]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'person')]
     private ?User $user = null;
 
     #[ORM\Column(type: 'NameOriginType')]
     private NameOrigin $nameOrigin;
 
-    /**
-     * @var Collection<Affiliation>
-     */
+    /** @var Collection<Affiliation> */
     #[ORM\OneToMany(targetEntity: \Affiliation::class, mappedBy: 'person', cascade: ['persist'])]
     private Collection $affiliations;
 

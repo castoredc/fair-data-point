@@ -31,7 +31,7 @@ use function array_merge;
 class StudyMetadata extends Metadata
 {
     #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Study::class, inversedBy: 'metadata', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Study::class, inversedBy: 'metadata', cascade: ['persist'])]
     private Study $study;
 
     #[ORM\Column(type: 'version')]
@@ -56,11 +56,11 @@ class StudyMetadata extends Metadata
     private MethodType $methodType;
 
     #[ORM\JoinColumn(name: 'studied_condition', referencedColumnName: 'id', nullable: true)]
-    #[ORM\OneToOne(targetEntity: \App\Entity\Terminology\CodedText::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: CodedText::class, cascade: ['persist'])]
     private ?CodedText $condition = null;
 
     #[ORM\JoinColumn(name: 'intervention', referencedColumnName: 'id', nullable: true)]
-    #[ORM\OneToOne(targetEntity: \App\Entity\Terminology\CodedText::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: CodedText::class, cascade: ['persist'])]
     private ?CodedText $intervention = null;
 
     #[ORM\Column(type: 'RecruitmentStatusType', name: 'recruitment_status', nullable: true)]
@@ -84,28 +84,21 @@ class StudyMetadata extends Metadata
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?DateTimeImmutable $studyCompletionDate = null;
 
-    /**
-     * @var Collection<StudyTeamMember>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\StudyMetadata\StudyTeamMember::class, mappedBy: 'metadata', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    /** @var Collection<StudyTeamMember> */
+    #[ORM\OneToMany(targetEntity: StudyTeamMember::class, mappedBy: 'metadata', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $studyTeamMembers;
 
-    /**
-     * @var Collection<ParticipatingCenter>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\StudyMetadata\ParticipatingCenter::class, mappedBy: 'metadata', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    /** @var Collection<ParticipatingCenter> */
+    #[ORM\OneToMany(targetEntity: ParticipatingCenter::class, mappedBy: 'metadata', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $participatingCenters;
 
-    /**
-     *
-     * @var Collection<OntologyConcept>
-     */
+    /** @var Collection<OntologyConcept> */
     #[ORM\JoinTable(name: 'metadata_study_conditions')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\Terminology\OntologyConcept::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private Collection $conditions;
 
     #[ORM\JoinColumn(name: 'keyword', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\LocalizedText::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $keyword = null;
 
     #[ORM\Column(type: 'iri', nullable: true)]

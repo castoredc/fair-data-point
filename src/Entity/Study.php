@@ -18,6 +18,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Metadata\StudyMetadata;
+use App\Repository\StudyRepository;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,7 +31,7 @@ use function count;
 
 #[ORM\Table(name: 'study')]
 #[ORM\Index(name: 'slug', columns: ['slug'])]
-#[ORM\Entity(repositoryClass: \App\Repository\StudyRepository::class)]
+#[ORM\Entity(repositoryClass: StudyRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
@@ -57,41 +58,33 @@ abstract class Study implements AccessibleEntity, MetadataEnrichedEntity
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $slug;
 
-    /**
-     * @var Collection<StudyMetadata>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\StudyMetadata::class, mappedBy: 'study', cascade: ['persist'], fetch: 'EAGER')]
+    /** @var Collection<StudyMetadata> */
+    #[ORM\OneToMany(targetEntity: StudyMetadata::class, mappedBy: 'study', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $metadata;
 
-    /**
-     * @var Collection<Dataset>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Dataset::class, mappedBy: 'study', fetch: 'EAGER')]
+    /** @var Collection<Dataset> */
+    #[ORM\OneToMany(targetEntity: Dataset::class, mappedBy: 'study', fetch: 'EAGER')]
     private Collection $datasets;
 
     #[ORM\Column(type: 'boolean')]
     private bool $enteredManually = false;
 
-    /**
-     * @var Collection<Catalog>
-     */
-    #[ORM\ManyToMany(targetEntity: \App\Entity\FAIRData\Catalog::class, mappedBy: 'studies', cascade: ['persist'])]
+    /** @var Collection<Catalog> */
+    #[ORM\ManyToMany(targetEntity: Catalog::class, mappedBy: 'studies', cascade: ['persist'])]
     private Collection $catalogs;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isPublished = false;
 
-    /**
-     * @var Collection<Mapping>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\DataSpecification\Common\Mapping\Mapping::class, mappedBy: 'study', cascade: ['persist', 'remove'])]
+    /** @var Collection<Mapping> */
+    #[ORM\OneToMany(targetEntity: Mapping::class, mappedBy: 'study', cascade: ['persist', 'remove'])]
     private Collection $mappings;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
     #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModel::class, inversedBy: 'studies')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'studies')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)

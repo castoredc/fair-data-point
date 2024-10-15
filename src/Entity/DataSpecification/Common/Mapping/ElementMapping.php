@@ -16,13 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 class ElementMapping extends Mapping
 {
     #[ORM\JoinColumn(name: 'element', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\Common\Element::class)]
+    #[ORM\ManyToOne(targetEntity: Element::class)]
     private ?Element $element = null;
 
-    /**
-     * @var Collection<CastorEntity>
-     */
-    #[ORM\ManyToMany(targetEntity: \App\Entity\Castor\CastorEntity::class)]
+    /** @var Collection<CastorEntity> */
+    #[ORM\ManyToMany(targetEntity: CastorEntity::class)]
     private Collection $entities;
 
     #[ORM\Column(type: 'text', nullable: true)]

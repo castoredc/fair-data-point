@@ -15,12 +15,12 @@ class DistributionPermission extends Permission
 {
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'distributions')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'distributions')]
     protected User $user;
 
     #[ORM\JoinColumn(name: 'distribution_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Distribution::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: Distribution::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private Distribution $distribution;
 
     public function __construct(User $user, PermissionType $type, Distribution $distribution)

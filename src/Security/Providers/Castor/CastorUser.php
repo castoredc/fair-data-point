@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Security\Providers\Castor;
 
+use App\Repository\CastorUserRepository;
 use App\Security\Providers\ProviderUser;
 use App\Security\User;
 use App\Traits\CreatedAt;
@@ -12,7 +13,7 @@ use function in_array;
 use function strtolower;
 
 #[ORM\Table(name: 'castor_user')]
-#[ORM\Entity(repositoryClass: \App\Repository\CastorUserRepository::class)]
+#[ORM\Entity(repositoryClass: CastorUserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class CastorUser implements ProviderUser
 {
@@ -20,7 +21,7 @@ class CastorUser implements ProviderUser
     use UpdatedAt;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'castorUser')]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'castorUser')]
     private ?User $user = null;
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 190)]

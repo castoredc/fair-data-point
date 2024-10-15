@@ -37,10 +37,7 @@ class MetadataModelForm
     #[ORM\Column(type: 'ResourceType')]
     private ResourceType $resourceType;
 
-    /**
-     *
-     * @var Collection<MetadataModelField>
-     */
+    /** @var Collection<MetadataModelField> */
     #[ORM\OneToMany(targetEntity: \MetadataModelField::class, mappedBy: 'form', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $fields;

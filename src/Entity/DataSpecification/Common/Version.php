@@ -35,32 +35,21 @@ abstract class Version
     #[ORM\Column(type: 'version')]
     private VersionNumber $version;
 
-    /**
-     * @var Collection<DistributionContents>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Data\DistributionContents\DistributionContents::class, mappedBy: 'currentDataSpecificationVersion')]
+    /** @var Collection<DistributionContents> */
+    #[ORM\OneToMany(targetEntity: DistributionContents::class, mappedBy: 'currentDataSpecificationVersion')]
     private Collection $distributionContents;
 
-    /**
-     *
-     * @var Collection<Group>
-     */
+    /** @var Collection<Group> */
     #[ORM\OneToMany(targetEntity: \Group::class, mappedBy: 'version', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC', 'id' => 'ASC'])]
     private Collection $groups;
 
-    /**
-     *
-     * @var Collection<Element>
-     */
+    /** @var Collection<Element> */
     #[ORM\OneToMany(targetEntity: \Element::class, mappedBy: 'version', cascade: ['persist'])]
     #[ORM\OrderBy(['title' => 'ASC'])]
     protected Collection $elements;
 
-    /**
-     *
-     * @var Collection<OptionGroup>
-     */
+    /** @var Collection<OptionGroup> */
     #[ORM\OneToMany(targetEntity: \OptionGroup::class, mappedBy: 'version', cascade: ['persist'])]
     #[ORM\OrderBy(['title' => 'ASC'])]
     protected Collection $optionGroups;

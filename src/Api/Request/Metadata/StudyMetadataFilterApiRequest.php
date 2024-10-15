@@ -16,15 +16,11 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
     #[Assert\Type('string')]
     private ?string $search = null;
 
-    /**
-     * @var string[]|null
-     */
+    /** @var string[]|null */
     #[Assert\Type('array')]
     private ?array $studyType = null;
 
-    /**
-     * @var string[]|null
-     */
+    /** @var string[]|null */
     #[Assert\Type('array')]
     private ?array $methodType = null;
 
@@ -40,9 +36,7 @@ class StudyMetadataFilterApiRequest extends SingleApiRequest
     #[Assert\Type('integer')]
     private int $page;
 
-    /**
-     * @var string[]|null
-     */
+    /** @var string[]|null */
     #[Assert\Type('array')]
     private ?array $hideCatalogs = null;
 

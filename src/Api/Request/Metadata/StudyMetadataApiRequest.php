@@ -55,9 +55,7 @@ class StudyMetadataApiRequest extends SingleApiRequest
     #[Assert\Type('string')]
     private ?string $methodType = null;
 
-    /**
-     * @var mixed[]
-     */
+    /** @var mixed[] */
     #[Assert\Type('array')]
     private array $conditions;
 

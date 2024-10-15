@@ -5,13 +5,14 @@ namespace App\Entity\Data\Log;
 
 use App\Entity\Castor\Record;
 use App\Entity\Enum\DistributionGenerationStatus;
+use App\Repository\DistributionGenerationRecordLogRepository;
 use App\Traits\CreatedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Table(name: 'log_generation_distribution_record')]
-#[ORM\Entity(repositoryClass: \App\Repository\DistributionGenerationRecordLogRepository::class)]
+#[ORM\Entity(repositoryClass: DistributionGenerationRecordLogRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class DistributionGenerationRecordLog
 {
@@ -25,7 +26,7 @@ class DistributionGenerationRecordLog
 
     #[ORM\JoinColumn(name: 'record', referencedColumnName: 'record_id', nullable: false)]
     #[ORM\JoinColumn(name: 'study', referencedColumnName: 'study_id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Castor\Record::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Record::class, cascade: ['persist'])]
     private Record $record;
 
     #[ORM\JoinColumn(name: 'log', referencedColumnName: 'id', nullable: false)]
@@ -35,9 +36,7 @@ class DistributionGenerationRecordLog
     #[ORM\Column(type: 'DistributionGenerationStatusType')]
     private DistributionGenerationStatus $status;
 
-    /**
-     * @var mixed[]|null
-     */
+    /** @var mixed[]|null */
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $errors = [];
 

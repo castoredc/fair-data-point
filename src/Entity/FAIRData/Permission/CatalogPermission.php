@@ -15,12 +15,12 @@ class CatalogPermission extends Permission
 {
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'catalogs')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'catalogs')]
     protected User $user;
 
     #[ORM\JoinColumn(name: 'catalog_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Catalog::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: Catalog::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private Catalog $catalog;
 
     public function __construct(User $user, PermissionType $type, Catalog $catalog)

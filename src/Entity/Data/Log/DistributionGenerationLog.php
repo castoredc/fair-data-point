@@ -5,6 +5,7 @@ namespace App\Entity\Data\Log;
 
 use App\Entity\Data\DistributionContents\DistributionContents;
 use App\Entity\Enum\DistributionGenerationStatus;
+use App\Repository\DistributionGenerationLogRepository;
 use App\Traits\CreatedAt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,7 +14,7 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Table(name: 'log_generation_distribution')]
-#[ORM\Entity(repositoryClass: \App\Repository\DistributionGenerationLogRepository::class)]
+#[ORM\Entity(repositoryClass: DistributionGenerationLogRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class DistributionGenerationLog
 {
@@ -26,21 +27,17 @@ class DistributionGenerationLog
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Data\DistributionContents\DistributionContents::class, inversedBy: 'logs', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: DistributionContents::class, inversedBy: 'logs', cascade: ['persist'])]
     private DistributionContents $distribution;
 
-    /**
-     * @var Collection<DistributionGenerationRecordLog>
-     */
+    /** @var Collection<DistributionGenerationRecordLog> */
     #[ORM\OneToMany(targetEntity: \DistributionGenerationRecordLog::class, mappedBy: 'log', cascade: ['persist'])]
     private Collection $records;
 
     #[ORM\Column(type: 'DistributionGenerationStatusType')]
     private DistributionGenerationStatus $status;
 
-    /**
-     * @var mixed[]|null
-     */
+    /** @var mixed[]|null */
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $errors = [];
 

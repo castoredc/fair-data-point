@@ -22,17 +22,12 @@ use function is_a;
 #[ORM\HasLifecycleCallbacks]
 class DataModelVersion extends Version implements ModelVersion
 {
-    /**
-     *
-     * @var Collection<NamespacePrefix>
-     */
+    /** @var Collection<NamespacePrefix> */
     #[ORM\OneToMany(targetEntity: \NamespacePrefix::class, mappedBy: 'dataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['prefix' => 'ASC'])]
     private Collection $prefixes;
 
-    /**
-     * @var Collection<Predicate>
-     */
+    /** @var Collection<Predicate> */
     #[ORM\OneToMany(targetEntity: \Predicate::class, mappedBy: 'dataModel', cascade: ['persist'])]
     private Collection $predicates;
 

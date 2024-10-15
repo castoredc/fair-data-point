@@ -19,7 +19,7 @@ class Annotation
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'entity', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Castor\CastorEntity::class, inversedBy: 'annotations', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: CastorEntity::class, inversedBy: 'annotations', cascade: ['persist'])]
     private CastorEntity $entity;
 
     #[ORM\JoinColumn(name: 'concept', referencedColumnName: 'id', nullable: false)]

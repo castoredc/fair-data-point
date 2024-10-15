@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace App\Entity\Castor;
 
 use App\Entity\FAIRData\Country;
+use App\Repository\CastorInstituteRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Record;
 
 #[ORM\Table(name: 'castor_institute')]
-#[ORM\Entity(repositoryClass: \App\Repository\CastorInstituteRepository::class)]
+#[ORM\Entity(repositoryClass: CastorInstituteRepository::class)]
 class Institute
 {
     #[ORM\Id]
@@ -17,7 +19,7 @@ class Institute
 
     #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Castor\CastorStudy::class)]
+    #[ORM\ManyToOne(targetEntity: CastorStudy::class)]
     private CastorStudy $study;
 
     #[ORM\Column(name: 'institute_name', type: 'string', length: 1000, nullable: false)]
@@ -30,13 +32,11 @@ class Institute
     private ?string $code = null;
 
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'code')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Country::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Country::class, cascade: ['persist'])]
     private ?Country $country = null;
 
-    /**
-     * @var Collection<Record>
-     */
-    #[ORM\OneToMany(targetEntity: \Record::class, mappedBy: 'institute')]
+    /** @var Collection<Record> */
+    #[ORM\OneToMany(targetEntity: Record::class, mappedBy: 'institute')]
     private Collection $records;
 
     public function __construct(

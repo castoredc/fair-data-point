@@ -28,9 +28,7 @@ class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequen
     #[Assert\Type('string')]
     private ?string $transformSyntax;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     #[Assert\NotBlank(groups: ['node'])]
     private ?array $elements;
 

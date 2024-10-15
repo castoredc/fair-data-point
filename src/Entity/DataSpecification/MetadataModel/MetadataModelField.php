@@ -48,11 +48,11 @@ class MetadataModelField
     private MetadataFieldType $fieldType;
 
     #[ORM\JoinColumn(name: 'option_group_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup::class)]
+    #[ORM\ManyToOne(targetEntity: MetadataModelOptionGroup::class)]
     private ?MetadataModelOptionGroup $optionGroup = null;
 
     #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\Node\ValueNode::class, inversedBy: 'field')]
+    #[ORM\OneToOne(targetEntity: ValueNode::class, inversedBy: 'field')]
     private ValueNode $node;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]

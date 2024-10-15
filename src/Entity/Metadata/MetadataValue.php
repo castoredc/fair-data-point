@@ -27,7 +27,7 @@ class MetadataValue
     private Metadata $metadata;
 
     #[ORM\JoinColumn(name: 'value_node_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\Node\ValueNode::class, inversedBy: 'values', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: ValueNode::class, inversedBy: 'values', cascade: ['persist'])]
     private ValueNode $node;
 
     #[ORM\Column(type: 'text')]

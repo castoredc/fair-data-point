@@ -45,7 +45,7 @@ class MetadataModelDisplaySetting
     private MetadataDisplayPosition $displayPosition;
 
     #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\Node\ValueNode::class, inversedBy: 'displaySetting')]
+    #[ORM\OneToOne(targetEntity: ValueNode::class, inversedBy: 'displaySetting')]
     private ValueNode $node;
 
     public function __construct(

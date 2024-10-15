@@ -10,6 +10,7 @@ use App\Entity\FAIRData\Permission\DatasetPermission;
 use App\Entity\Metadata\DatasetMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Repository\DatasetRepository;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
 use App\Traits\CreatedAndUpdated;
@@ -24,7 +25,7 @@ use function count;
 
 #[ORM\Table(name: 'dataset')]
 #[ORM\Index(name: 'slug', columns: ['slug'])]
-#[ORM\Entity(repositoryClass: \App\Repository\DatasetRepository::class)]
+#[ORM\Entity(repositoryClass: DatasetRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
@@ -41,46 +42,36 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     #[ORM\Column(type: 'string', unique: true)]
     private string $slug;
 
-    /**
-     * @var Collection<string, Catalog>
-     */
+    /** @var Collection<string, Catalog> */
     #[ORM\ManyToMany(targetEntity: \Catalog::class, mappedBy: 'datasets', cascade: ['persist'])]
     private Collection $catalogs;
 
-    /**
-     *
-     * @var Collection<Distribution>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Distribution::class, mappedBy: 'dataset', cascade: ['persist'])]
+    /** @var Collection<Distribution> */
+    #[ORM\OneToMany(targetEntity: Distribution::class, mappedBy: 'dataset', cascade: ['persist'])]
     #[ORM\OrderBy(['slug' => 'ASC'])]
     private Collection $distributions;
 
     #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Study::class, inversedBy: 'datasets')]
+    #[ORM\ManyToOne(targetEntity: Study::class, inversedBy: 'datasets')]
     private ?Study $study = null;
 
-    /**
-     *
-     * @var Collection<DatasetMetadata>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\DatasetMetadata::class, mappedBy: 'dataset')]
+    /** @var Collection<DatasetMetadata> */
+    #[ORM\OneToMany(targetEntity: DatasetMetadata::class, mappedBy: 'dataset')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isPublished = false;
 
-    /**
-     * @var Collection<DatasetPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\DatasetPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'dataset')]
+    /** @var Collection<DatasetPermission> */
+    #[ORM\OneToMany(targetEntity: DatasetPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'dataset')]
     private Collection $permissions;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
     #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModel::class, inversedBy: 'datasets')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'datasets')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(string $slug)

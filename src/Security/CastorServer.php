@@ -9,6 +9,7 @@ use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Iri;
 use App\Exception\CouldNotDecrypt;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
+use App\Repository\CastorServerRepository;
 use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -16,7 +17,7 @@ use function filter_var;
 use function json_encode;
 use const FILTER_VALIDATE_URL;
 
-#[ORM\Entity(repositoryClass: \App\Repository\CastorServerRepository::class)]
+#[ORM\Entity(repositoryClass: CastorServerRepository::class)]
 class CastorServer
 {
     /**

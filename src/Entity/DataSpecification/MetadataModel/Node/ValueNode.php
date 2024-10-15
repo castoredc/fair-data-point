@@ -22,16 +22,14 @@ class ValueNode extends Node
     #[ORM\Column(type: 'XsdDataType')]
     private XsdDataType $dataType;
 
-    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModelField::class, mappedBy: 'node')]
+    #[ORM\OneToOne(targetEntity: MetadataModelField::class, mappedBy: 'node')]
     private ?MetadataModelField $field = null;
 
-    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting::class, mappedBy: 'node')]
+    #[ORM\OneToOne(targetEntity: MetadataModelDisplaySetting::class, mappedBy: 'node')]
     private ?MetadataModelDisplaySetting $displaySetting = null;
 
-    /**
-     * @var Collection<MetadataValue>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\MetadataValue::class, mappedBy: 'node')]
+    /** @var Collection<MetadataValue> */
+    #[ORM\OneToMany(targetEntity: MetadataValue::class, mappedBy: 'node')]
     private Collection $values;
 
     public function isAnnotatedValue(): bool

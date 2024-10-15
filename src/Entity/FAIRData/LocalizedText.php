@@ -19,9 +19,7 @@ class LocalizedText
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @var Collection<LocalizedTextItem>
-     */
+    /** @var Collection<LocalizedTextItem> */
     #[ORM\OneToMany(targetEntity: \LocalizedTextItem::class, mappedBy: 'parent', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $texts;
 

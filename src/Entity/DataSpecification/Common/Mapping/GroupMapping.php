@@ -14,11 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupMapping extends Mapping
 {
     #[ORM\JoinColumn(name: 'groupId', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\Common\Group::class)]
+    #[ORM\ManyToOne(targetEntity: Group::class)]
     private ?Group $group = null;
 
     #[ORM\JoinColumn(name: 'entity', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Castor\CastorEntity::class)]
+    #[ORM\ManyToOne(targetEntity: CastorEntity::class)]
     private CastorEntity $entity;
 
     public function __construct(Study $study, Group $group, CastorEntity $entity, Version $version)

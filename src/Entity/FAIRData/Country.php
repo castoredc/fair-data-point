@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Repository\CountryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'country')]
 #[ORM\Index(name: 'castorCountryId', columns: ['castor_country_id'])]
-#[ORM\Entity(repositoryClass: \App\Repository\CountryRepository::class)]
+#[ORM\Entity(repositoryClass: CountryRepository::class)]
 class Country implements AccessibleEntity
 {
     /**

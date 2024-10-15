@@ -37,51 +37,43 @@ abstract class Metadata
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'title', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\LocalizedText::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $title = null;
 
     #[ORM\Column(type: 'version')]
     private Version $version;
 
-    /**
-     * @var Collection<MetadataValue>
-     */
+    /** @var Collection<MetadataValue> */
     #[ORM\OneToMany(targetEntity: \MetadataValue::class, mappedBy: 'metadata')]
     protected Collection $values;
 
     #[ORM\JoinColumn(name: 'description', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\LocalizedText::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $description = null;
 
     #[ORM\JoinColumn(name: 'language', referencedColumnName: 'code')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Language::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Language::class, cascade: ['persist'])]
     private ?Language $language = null;
 
     #[ORM\JoinColumn(name: 'license', referencedColumnName: 'slug', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\License::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: License::class, cascade: ['persist'])]
     private ?License $license = null;
 
-    /**
-     *
-     * @var Collection<Agent>
-     */
+    /** @var Collection<Agent> */
     #[ORM\JoinTable(name: 'metadata_publishers')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\FAIRData\Agent\Agent::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Agent::class, cascade: ['persist'])]
     private Collection $publishers;
 
-    /**
-     *
-     * @var Collection<Agent>
-     */
+    /** @var Collection<Agent> */
     #[ORM\JoinTable(name: 'dataset_contacts')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\FAIRData\Agent\Agent::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Agent::class, cascade: ['persist'])]
     private Collection $contacts;
 
     #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $landingPage = null;
 
     #[ORM\JoinColumn(name: 'metadata_model_version_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModelVersion::class, inversedBy: 'assignedMetadata')]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'assignedMetadata')]
     private ?MetadataModelVersion $metadataModelVersion;
 
     public function getId(): string

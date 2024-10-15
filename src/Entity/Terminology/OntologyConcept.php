@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace App\Entity\Terminology;
 
 use App\Entity\Iri;
+use App\Repository\OntologyConceptRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Table(name: 'ontology_concept')]
 #[ORM\Index(name: 'ontology_code', columns: ['ontology', 'code'])]
-#[ORM\Entity(repositoryClass: \App\Repository\OntologyConceptRepository::class)]
+#[ORM\Entity(repositoryClass: OntologyConceptRepository::class)]
 class OntologyConcept
 {
     #[ORM\Id]

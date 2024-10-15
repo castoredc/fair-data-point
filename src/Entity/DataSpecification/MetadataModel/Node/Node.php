@@ -9,6 +9,7 @@ use App\Entity\DataSpecification\Common\Version;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Entity\DataSpecification\MetadataModel\Triple;
 use App\Entity\Enum\NodeType;
+use App\Repository\DataSpecification\MetadataModel\NodeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,20 +20,16 @@ use function count;
 use const SORT_REGULAR;
 
 #[ORM\Table(name: 'metadata_model_node')]
-#[ORM\Entity(repositoryClass: \App\Repository\DataSpecification\MetadataModel\NodeRepository::class)]
+#[ORM\Entity(repositoryClass: NodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 abstract class Node extends Element implements CommonNode
 {
-    /**
-     * @var Collection<Triple>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\DataSpecification\MetadataModel\Triple::class, mappedBy: 'subject')]
+    /** @var Collection<Triple> */
+    #[ORM\OneToMany(targetEntity: Triple::class, mappedBy: 'subject')]
     private Collection $subjectTriples;
 
-    /**
-     * @var Collection<Triple>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\DataSpecification\MetadataModel\Triple::class, mappedBy: 'object')]
+    /** @var Collection<Triple> */
+    #[ORM\OneToMany(targetEntity: Triple::class, mappedBy: 'object')]
     private Collection $objectTriples;
 
     public function __construct(Version $version, string $title, ?string $description)

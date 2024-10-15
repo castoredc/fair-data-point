@@ -24,11 +24,11 @@ class StudyTeamMember
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'metadata', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Metadata\StudyMetadata::class, inversedBy: 'studyTeamMembers', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: StudyMetadata::class, inversedBy: 'studyTeamMembers', cascade: ['persist', 'remove'])]
     private StudyMetadata $metadata;
 
     #[ORM\JoinColumn(name: 'person', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Agent\Person::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Person::class, cascade: ['persist'])]
     private Person $person;
 
     #[ORM\Column(type: 'boolean')]

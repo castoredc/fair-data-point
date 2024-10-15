@@ -10,6 +10,7 @@ use App\Entity\FAIRData\Permission\CatalogPermission;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Repository\CatalogRepository;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
 use App\Traits\CreatedAndUpdated;
@@ -24,7 +25,7 @@ use function count;
 
 #[ORM\Table(name: 'catalog')]
 #[ORM\Index(name: 'slug', columns: ['slug'])]
-#[ORM\Entity(repositoryClass: \App\Repository\CatalogRepository::class)]
+#[ORM\Entity(repositoryClass: CatalogRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
@@ -45,20 +46,14 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     #[ORM\ManyToOne(targetEntity: \FAIRDataPoint::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private ?FAIRDataPoint $fairDataPoint = null;
 
-    /**
-     *
-     * @var Collection<Dataset>
-     */
+    /** @var Collection<Dataset> */
     #[ORM\JoinTable(name: 'catalogs_datasets')]
     #[ORM\ManyToMany(targetEntity: \Dataset::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private Collection $datasets;
 
-    /**
-     *
-     * @var Collection<Study>
-     */
+    /** @var Collection<Study> */
     #[ORM\JoinTable(name: 'catalogs_studies')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\Study::class, inversedBy: 'catalogs', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Study::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private Collection $studies;
 
     #[ORM\Column(type: 'boolean')]
@@ -70,22 +65,17 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
-    /**
-     *
-     * @var Collection<CatalogMetadata>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\CatalogMetadata::class, mappedBy: 'catalog')]
+    /** @var Collection<CatalogMetadata> */
+    #[ORM\OneToMany(targetEntity: CatalogMetadata::class, mappedBy: 'catalog')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
-    /**
-     * @var Collection<CatalogPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\CatalogPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'catalog')]
+    /** @var Collection<CatalogPermission> */
+    #[ORM\OneToMany(targetEntity: CatalogPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'catalog')]
     private Collection $permissions;
 
     #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModel::class, inversedBy: 'catalogs')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'catalogs')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(string $slug)

@@ -32,7 +32,7 @@ class ApiUser
     private string $clientSecret;
 
     #[ORM\JoinColumn(name: 'server', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Security\CastorServer::class)]
+    #[ORM\ManyToOne(targetEntity: CastorServer::class)]
     private ?CastorServer $server = null;
 
     public function __construct(string $emailAddress, ?CastorServer $server)

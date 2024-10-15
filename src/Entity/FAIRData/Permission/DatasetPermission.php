@@ -15,12 +15,12 @@ class DatasetPermission extends Permission
 {
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'datasets')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'datasets')]
     protected User $user;
 
     #[ORM\JoinColumn(name: 'dataset_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Dataset::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: Dataset::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private Dataset $dataset;
 
     public function __construct(User $user, PermissionType $type, Dataset $dataset)

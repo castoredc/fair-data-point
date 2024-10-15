@@ -19,19 +19,16 @@ use function count;
 class DatasetMetadata extends Metadata
 {
     #[ORM\JoinColumn(name: 'dataset', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Dataset::class, inversedBy: 'metadata')]
+    #[ORM\ManyToOne(targetEntity: Dataset::class, inversedBy: 'metadata')]
     private Dataset $dataset;
 
-    /**
-     *
-     * @var Collection<OntologyConcept>
-     */
+    /** @var Collection<OntologyConcept> */
     #[ORM\JoinTable(name: 'metadata_dataset_themes')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\Terminology\OntologyConcept::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private Collection $themes;
 
     #[ORM\JoinColumn(name: 'keyword', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\LocalizedText::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $keyword = null;
 
     public function __construct(Dataset $dataset)

@@ -39,37 +39,29 @@ class User implements UserInterface
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
     #[ORM\JoinColumn(name: 'person_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\Agent\Person::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
+    #[ORM\OneToOne(targetEntity: Person::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
     private ?Person $person = null;
     #[ORM\JoinColumn(name: 'castor_user_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Security\Providers\Castor\CastorUser::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
+    #[ORM\OneToOne(targetEntity: CastorUser::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
     private ?CastorUser $castorUser = null;
     #[ORM\JoinColumn(name: 'orcid_user_id', referencedColumnName: 'orcid')]
-    #[ORM\OneToOne(targetEntity: \App\Security\Providers\Orcid\OrcidUser::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
+    #[ORM\OneToOne(targetEntity: OrcidUser::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
     private ?OrcidUser $orcid = null;
 
-    /**
-     * @var Collection<DataSpecificationPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\DataSpecification\Common\DataSpecificationPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    /** @var Collection<DataSpecificationPermission> */
+    #[ORM\OneToMany(targetEntity: DataSpecificationPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $dataSpecifications;
 
-    /**
-     * @var Collection<CatalogPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\CatalogPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    /** @var Collection<CatalogPermission> */
+    #[ORM\OneToMany(targetEntity: CatalogPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $catalogs;
 
-    /**
-     * @var Collection<DatasetPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\DatasetPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    /** @var Collection<DatasetPermission> */
+    #[ORM\OneToMany(targetEntity: DatasetPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $datasets;
 
-    /**
-     * @var Collection<DistributionPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\DistributionPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    /** @var Collection<DistributionPermission> */
+    #[ORM\OneToMany(targetEntity: DistributionPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $distributions;
 
     public const DOMAINS = [

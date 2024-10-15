@@ -19,9 +19,7 @@ class MetadataFilterApiRequest extends SingleApiRequest
     #[Assert\Type('integer')]
     private int $page;
 
-    /**
-     * @var string[]|null
-     */
+    /** @var string[]|null */
     #[Assert\Type('array')]
     private ?array $hideParents = null;
 

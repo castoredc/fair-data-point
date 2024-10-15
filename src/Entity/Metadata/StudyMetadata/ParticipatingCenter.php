@@ -27,19 +27,16 @@ class ParticipatingCenter
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'metadata', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Metadata\StudyMetadata::class, inversedBy: 'participatingCenters', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: StudyMetadata::class, inversedBy: 'participatingCenters', cascade: ['persist', 'remove'])]
     private StudyMetadata $metadata;
 
     #[ORM\JoinColumn(name: 'organization', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Agent\Organization::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, cascade: ['persist'])]
     private Organization $organization;
 
-    /**
-     *
-     * @var Collection<Department>
-     */
+    /** @var Collection<Department> */
     #[ORM\JoinTable(name: 'metadata_study_centers_departments')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\FAIRData\Agent\Department::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Department::class, cascade: ['persist'])]
     private Collection $departments;
 
     public function __construct(StudyMetadata $metadata, Organization $organization)

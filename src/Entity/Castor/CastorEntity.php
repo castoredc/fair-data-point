@@ -7,12 +7,13 @@ use App\Entity\Enum\StructureType;
 use App\Entity\Terminology\Annotation;
 use App\Entity\Terminology\Ontology;
 use App\Entity\Terminology\OntologyConcept;
+use App\Repository\CastorEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'castor_entity')]
-#[ORM\Entity(repositoryClass: \App\Repository\CastorEntityRepository::class)]
+#[ORM\Entity(repositoryClass: CastorEntityRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap(['step' => 'App\Entity\Castor\Structure\Step\Step', 'field' => 'App\Entity\Castor\Form\Field', 'field_option' => 'App\Entity\Castor\Form\FieldOption', 'field_option_group' => 'App\Entity\Castor\Form\FieldOptionGroup', 'structure_element' => 'App\Entity\Castor\Structure\StructureElement', 'report' => 'App\Entity\Castor\Structure\Report', 'survey' => 'App\Entity\Castor\Structure\Survey'])]
@@ -23,7 +24,7 @@ abstract class CastorEntity
     protected string $id;
 
     #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Castor\CastorStudy::class)]
+    #[ORM\ManyToOne(targetEntity: CastorStudy::class)]
     protected ?CastorStudy $study = null;
 
     #[ORM\Column(type: 'StructureType', name: 'structure_type', nullable: true)]
@@ -35,10 +36,8 @@ abstract class CastorEntity
     #[ORM\Column(type: 'string')]
     protected string $slug;
 
-    /**
-     * @var Collection<string, Annotation>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Terminology\Annotation::class, mappedBy: 'entity', cascade: ['persist'])]
+    /** @var Collection<string, Annotation> */
+    #[ORM\OneToMany(targetEntity: Annotation::class, mappedBy: 'entity', cascade: ['persist'])]
     protected Collection $annotations;
 
     #[ORM\JoinColumn(name: 'parent', referencedColumnName: 'id')]

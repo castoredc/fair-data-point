@@ -18,7 +18,7 @@ class CastorStudy extends Study
     private ?ArrayCollection $fields = null;
 
     #[ORM\JoinColumn(name: 'server', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Security\CastorServer::class)]
+    #[ORM\ManyToOne(targetEntity: CastorServer::class)]
     private ?CastorServer $server = null;
 
     /** @return ArrayCollection<string, Field>|null */

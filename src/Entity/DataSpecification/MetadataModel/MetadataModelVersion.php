@@ -19,6 +19,7 @@ use App\Entity\Version as VersionNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use MetadataModelField;
 use function array_merge;
 use function assert;
 use function count;
@@ -39,46 +40,31 @@ class MetadataModelVersion extends Version implements ModelVersion
         MetadataDisplayPosition::MODAL => 1,
     ];
 
-    /**
-     *
-     * @var Collection<NamespacePrefix>
-     */
+    /** @var Collection<NamespacePrefix> */
     #[ORM\OneToMany(targetEntity: \NamespacePrefix::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['prefix' => 'ASC'])]
     private Collection $prefixes;
 
-    /**
-     * @var Collection<Predicate>
-     */
+    /** @var Collection<Predicate> */
     #[ORM\OneToMany(targetEntity: \Predicate::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     private Collection $predicates;
 
-    /**
-     *
-     * @var Collection<MetadataModelForm>
-     */
+    /** @var Collection<MetadataModelForm> */
     #[ORM\OneToMany(targetEntity: \MetadataModelForm::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $forms;
 
-    /**
-     * @var Collection<MetadataModelField>
-     */
-    #[ORM\OneToMany(targetEntity: \MetadataModelField::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    /** @var Collection<MetadataModelField> */
+    #[ORM\OneToMany(targetEntity: MetadataModelField::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     private Collection $fields;
 
-    /**
-     *
-     * @var Collection<MetadataModelDisplaySetting>
-     */
+    /** @var Collection<MetadataModelDisplaySetting> */
     #[ORM\OneToMany(targetEntity: \MetadataModelDisplaySetting::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $displaySettings;
 
-    /**
-     * @var Collection<Metadata>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\Metadata::class, mappedBy: 'metadataModelVersion', cascade: ['persist'])]
+    /** @var Collection<Metadata> */
+    #[ORM\OneToMany(targetEntity: Metadata::class, mappedBy: 'metadataModelVersion', cascade: ['persist'])]
     private Collection $assignedMetadata;
 
     public function __construct(VersionNumber $version)

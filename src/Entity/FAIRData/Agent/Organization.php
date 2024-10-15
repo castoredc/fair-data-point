@@ -5,7 +5,9 @@ namespace App\Entity\FAIRData\Agent;
 
 use App\Entity\FAIRData\Country;
 use App\Entity\Iri;
+use App\Repository\OrganizationRepository;
 use Cocur\Slugify\Slugify;
+use Department;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +16,7 @@ use function uniqid;
 
 #[ORM\Table(name: 'organization')]
 #[ORM\Index(name: 'grid_id', columns: ['grid_id'])]
-#[ORM\Entity(repositoryClass: \App\Repository\OrganizationRepository::class)]
+#[ORM\Entity(repositoryClass: OrganizationRepository::class)]
 class Organization extends Agent
 {
     public const TYPE = 'organization';
@@ -26,16 +28,14 @@ class Organization extends Agent
     private ?string $gridId = null;
 
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'code')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Country::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Country::class, cascade: ['persist'])]
     private ?Country $country = null;
 
     #[ORM\Column(type: 'string')]
     private string $city;
 
-    /**
-     * @var Collection<Department>
-     */
-    #[ORM\OneToMany(targetEntity: \Department::class, mappedBy: 'organization', cascade: ['persist'])]
+    /** @var Collection<Department> */
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'organization', cascade: ['persist'])]
     private Collection $departments;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 8, nullable: true)]

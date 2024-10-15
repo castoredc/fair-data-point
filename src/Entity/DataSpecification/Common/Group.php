@@ -43,20 +43,16 @@ abstract class Group
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isDependent = false;
 
-    /**
-     * @var Collection<Element>
-     */
+    /** @var Collection<Element> */
     #[ORM\OneToMany(targetEntity: \Element::class, mappedBy: 'group', cascade: ['persist'])]
     private Collection $elements;
 
-    /**
-     * @var Collection<ElementGroup>
-     */
+    /** @var Collection<ElementGroup> */
     #[ORM\OneToMany(targetEntity: \ElementGroup::class, mappedBy: 'group', cascade: ['persist'])]
     private Collection $elementGroups;
 
     #[ORM\JoinColumn(name: 'dependencies', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\Common\Dependency\DependencyGroup::class, cascade: ['persist'], fetch: 'EAGER')]
+    #[ORM\OneToOne(targetEntity: DependencyGroup::class, cascade: ['persist'], fetch: 'EAGER')]
     protected ?DependencyGroup $dependencies = null;
 
     public function __construct(string $title, int $order, bool $isRepeated, bool $isDependent, Version $version)

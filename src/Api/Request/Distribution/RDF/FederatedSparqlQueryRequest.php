@@ -22,9 +22,7 @@ class FederatedSparqlQueryRequest extends ApiRequest
     #[Assert\Type('string')]
     private string $sparqlQuery;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     #[Assert\Type('array')]
     private array $distributionIds;
 

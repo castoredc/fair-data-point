@@ -19,7 +19,7 @@ class DependencyRule extends Dependency
     private ?string $nodeId;
 
     #[ORM\JoinColumn(name: 'node', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\DataModel\Node\ValueNode::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: ValueNode::class, cascade: ['persist'])]
     private ?ValueNode $node;
 
     #[ORM\Column(type: 'DependencyOperatorType')]

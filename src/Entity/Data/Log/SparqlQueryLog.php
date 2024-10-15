@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Data\Log;
 
+use App\Repository\SparqlQueryLogRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Logs executed (and failed) SPARQL queries that any users make against an RDF distribution.
  */
 #[ORM\Table(name: 'log_sparql_query')]
-#[ORM\Entity(repositoryClass: \App\Repository\SparqlQueryLogRepository::class)]
+#[ORM\Entity(repositoryClass: SparqlQueryLogRepository::class)]
 class SparqlQueryLog
 {
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]

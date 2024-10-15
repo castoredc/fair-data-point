@@ -18,7 +18,7 @@ class OrcidUser implements ProviderUser
     use UpdatedAt;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'orcid')]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'orcid')]
     private ?User $user = null;
     #[ORM\Id]
     #[ORM\Column(type: 'string')]

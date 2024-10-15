@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class DistributionMetadata extends Metadata
 {
     #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Distribution::class, inversedBy: 'metadata')]
+    #[ORM\ManyToOne(targetEntity: Distribution::class, inversedBy: 'metadata')]
     private Distribution $distribution;
 
     public function __construct(Distribution $distribution)

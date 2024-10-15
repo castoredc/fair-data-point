@@ -13,6 +13,7 @@ use App\Entity\FAIRData\Permission\DistributionPermission;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Repository\DistributionRepository;
 use App\Security\ApiUser;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
@@ -26,7 +27,7 @@ use function count;
 
 #[ORM\Table(name: 'distribution')]
 #[ORM\Index(name: 'slug', columns: ['slug'])]
-#[ORM\Entity(repositoryClass: \App\Repository\DistributionRepository::class)]
+#[ORM\Entity(repositoryClass: DistributionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Distribution implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
@@ -43,43 +44,35 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
     #[ORM\Column(type: 'string', unique: true)]
     private string $slug;
     #[ORM\JoinColumn(name: 'dataset_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Dataset::class, inversedBy: 'distributions', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Dataset::class, inversedBy: 'distributions', cascade: ['persist'])]
     private ?Dataset $dataset = null;
 
-    #[ORM\OneToOne(targetEntity: \App\Entity\Data\DistributionContents\DistributionContents::class, mappedBy: 'distribution')]
+    #[ORM\OneToOne(targetEntity: DistributionContents::class, mappedBy: 'distribution')]
     private ?DistributionContents $contents = null;
 
-    #[ORM\OneToOne(targetEntity: \App\Entity\Connection\DistributionDatabaseInformation::class, mappedBy: 'distribution')]
+    #[ORM\OneToOne(targetEntity: DistributionDatabaseInformation::class, mappedBy: 'distribution')]
     private ?DistributionDatabaseInformation $databaseInformation = null;
 
     #[ORM\JoinColumn(name: 'license', referencedColumnName: 'slug', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\License::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: License::class, cascade: ['persist'])]
     private ?License $license = null;
 
-    /**
-     *
-     * @var Collection<DistributionMetadata>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\DistributionMetadata::class, mappedBy: 'distribution')]
+    /** @var Collection<DistributionMetadata> */
+    #[ORM\OneToMany(targetEntity: DistributionMetadata::class, mappedBy: 'distribution')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
     #[ORM\JoinColumn(name: 'user_api', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Security\ApiUser::class)]
+    #[ORM\ManyToOne(targetEntity: ApiUser::class)]
     private ?ApiUser $apiUser = null;
 
-    /**
-     *
-     * @var Collection<Agent>
-     */
+    /** @var Collection<Agent> */
     #[ORM\JoinTable(name: 'distribution_contactpoint')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\FAIRData\Agent\Agent::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Agent::class, cascade: ['persist'])]
     private Collection $contactPoints;
 
-    /**
-     * @var Collection<DistributionPermission>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\DistributionPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'distribution')]
+    /** @var Collection<DistributionPermission> */
+    #[ORM\OneToMany(targetEntity: DistributionPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'distribution')]
     private Collection $permissions;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
@@ -89,7 +82,7 @@ class Distribution implements AccessibleEntity, MetadataEnrichedEntity, Permissi
     private bool $isArchived = false;
 
     #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModel::class, inversedBy: 'distributions')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'distributions')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(string $slug, Dataset $dataset)

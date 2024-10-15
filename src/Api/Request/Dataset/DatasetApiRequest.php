@@ -10,9 +10,7 @@ use function boolval;
 
 class DatasetApiRequest extends SingleApiRequest
 {
-    /**
-     * @AppAssert\Slug(type="App\Entity\FAIRData\Dataset")
-     */
+    /** @AppAssert\Slug(type="App\Entity\FAIRData\Dataset") */
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     private string $slug;

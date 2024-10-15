@@ -25,7 +25,7 @@ class DistributionDatabaseInformation
 
     #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\Distribution::class, inversedBy: 'databaseInformation')]
+    #[ORM\OneToOne(targetEntity: Distribution::class, inversedBy: 'databaseInformation')]
     private Distribution $distribution;
 
     #[ORM\Column(type: 'string', name: 'database_name')]

@@ -33,17 +33,12 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $purl;
 
-    /**
-     *
-     * @var Collection<FAIRDataPointMetadata>
-     */
-    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\FAIRDataPointMetadata::class, mappedBy: 'fdp')]
+    /** @var Collection<FAIRDataPointMetadata> */
+    #[ORM\OneToMany(targetEntity: FAIRDataPointMetadata::class, mappedBy: 'fdp')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
-    /**
-     * @var Collection<string, Catalog>
-     */
+    /** @var Collection<string, Catalog> */
     #[ORM\OneToMany(targetEntity: \Catalog::class, mappedBy: 'fairDataPoint', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $catalogs;
 
@@ -51,7 +46,7 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     private bool $isArchived = false;
 
     #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModel::class, inversedBy: 'fdps')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'fdps')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct()

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FAIRDataPointMetadata extends Metadata
 {
     #[ORM\JoinColumn(name: 'fdp', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\FAIRDataPoint::class, inversedBy: 'metadata')]
+    #[ORM\ManyToOne(targetEntity: FAIRDataPoint::class, inversedBy: 'metadata')]
     private FAIRDataPoint $fdp;
 
     public function __construct(FAIRDataPoint $fdp)

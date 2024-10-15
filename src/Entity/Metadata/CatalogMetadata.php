@@ -19,7 +19,7 @@ use function count;
 class CatalogMetadata extends Metadata
 {
     #[ORM\JoinColumn(name: 'catalog', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Catalog::class, inversedBy: 'metadata')]
+    #[ORM\ManyToOne(targetEntity: Catalog::class, inversedBy: 'metadata')]
     private Catalog $catalog;
 
     #[ORM\Column(type: 'iri', nullable: true)]
@@ -28,12 +28,9 @@ class CatalogMetadata extends Metadata
     #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $logo = null;
 
-    /**
-     *
-     * @var Collection<OntologyConcept>
-     */
+    /** @var Collection<OntologyConcept> */
     #[ORM\JoinTable(name: 'metadata_catalog_themetaxonomies')]
-    #[ORM\ManyToMany(targetEntity: \App\Entity\Terminology\OntologyConcept::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private Collection $themeTaxonomies;
 
     public function __construct(Catalog $catalog)

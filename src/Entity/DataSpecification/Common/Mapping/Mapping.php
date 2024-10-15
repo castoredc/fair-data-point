@@ -27,11 +27,11 @@ abstract class Mapping
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'study', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Study::class, inversedBy: 'mappings', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Study::class, inversedBy: 'mappings', cascade: ['persist'])]
     private Study $study;
 
     #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\Common\Version::class)]
+    #[ORM\ManyToOne(targetEntity: Version::class)]
     private Version $version;
 
     public function __construct(Study $study, Version $version)

@@ -18,9 +18,7 @@ class DataModelModuleApiRequest extends DataSpecificationModuleApiRequest
     #[Assert\Type('bool')]
     private bool $dependent;
 
-    /**
-     * @var mixed[]|null
-     */
+    /** @var mixed[]|null */
     #[Assert\NotBlank(groups: ['dependent'])]
     private ?array $dependencies = null;
 

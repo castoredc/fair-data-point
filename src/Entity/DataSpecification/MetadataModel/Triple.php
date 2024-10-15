@@ -18,7 +18,7 @@ use function assert;
 class Triple extends ElementGroup implements CommonTriple
 {
     #[ORM\JoinColumn(name: 'subject', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\Node\Node::class, inversedBy: 'subjectTriples', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Node::class, inversedBy: 'subjectTriples', cascade: ['persist'])]
     private Node $subject;
 
     #[ORM\JoinColumn(name: 'predicate', referencedColumnName: 'id', nullable: false)]
@@ -26,7 +26,7 @@ class Triple extends ElementGroup implements CommonTriple
     private Predicate $predicate;
 
     #[ORM\JoinColumn(name: 'object', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\Node\Node::class, inversedBy: 'objectTriples', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Node::class, inversedBy: 'objectTriples', cascade: ['persist'])]
     private Node $object;
 
     public function __construct(MetadataModelGroup $module, Node $subject, Predicate $predicate, Node $object)
