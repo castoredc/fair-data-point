@@ -8,25 +8,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="agent", indexes={@ORM\Index(name="slug", columns={"slug"})})
- */
+#[ORM\Table(name: 'agent')]
+#[ORM\Index(name: 'slug', columns: ['slug'])]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
 abstract class Agent implements AccessibleEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     protected UuidInterface|string|null $id = null;
 
-    /** @ORM\Column(type="string", unique=true) */
+    #[ORM\Column(type: 'string', unique: true)]
     private string $slug;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $name;
 
     public function __construct(string $slug, string $name)

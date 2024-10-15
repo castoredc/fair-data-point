@@ -6,17 +6,13 @@ namespace App\Entity\DataSpecification\DataModel;
 use App\Entity\DataSpecification\Common\Model\NamespacePrefix as CommonNamespacePrefix;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_prefix")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model_prefix')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class NamespacePrefix extends CommonNamespacePrefix
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="prefixes",cascade={"persist"})
-     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'data_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \DataModelVersion::class, inversedBy: 'prefixes', cascade: ['persist'])]
     private DataModelVersion $dataModel;
 
     public function getDataModelVersion(): DataModelVersion

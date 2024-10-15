@@ -9,36 +9,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_value")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_value')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataValue
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Metadata", inversedBy="values", cascade={"persist"})
-     * @ORM\JoinColumn(name="metadata_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Metadata::class, inversedBy: 'values', cascade: ['persist'])]
     private Metadata $metadata;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode", inversedBy="values", cascade={"persist"})
-     * @ORM\JoinColumn(name="value_node_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'value_node_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\Node\ValueNode::class, inversedBy: 'values', cascade: ['persist'])]
     private ValueNode $node;
 
-    /** @ORM\Column(type="text") */
+    #[ORM\Column(type: 'text')]
     private string $value;
 
     public function __construct(Metadata $metadata, ValueNode $node, string $value)

@@ -12,44 +12,36 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationLogRepository")
- * @ORM\Table(name="log_generation_distribution")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'log_generation_distribution')]
+#[ORM\Entity(repositoryClass: \App\Repository\DistributionGenerationLogRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class DistributionGenerationLog
 {
     use CreatedAt;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", inversedBy="logs", cascade={"persist"})
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Data\DistributionContents\DistributionContents::class, inversedBy: 'logs', cascade: ['persist'])]
     private DistributionContents $distribution;
 
     /**
-     * @ORM\OneToMany(targetEntity="DistributionGenerationRecordLog", mappedBy="log", cascade={"persist"})
-     *
      * @var Collection<DistributionGenerationRecordLog>
      */
+    #[ORM\OneToMany(targetEntity: \DistributionGenerationRecordLog::class, mappedBy: 'log', cascade: ['persist'])]
     private Collection $records;
 
-    /** @ORM\Column(type="DistributionGenerationStatusType") */
+    #[ORM\Column(type: 'DistributionGenerationStatusType')]
     private DistributionGenerationStatus $status;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     *
      * @var mixed[]|null
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $errors = [];
 
     public function __construct(DistributionContents $distribution)

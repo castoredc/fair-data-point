@@ -7,36 +7,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Affiliation
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Person", cascade={"persist"}, inversedBy="affiliations")
-     * @ORM\JoinColumn(name="person", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'person', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Person::class, cascade: ['persist'], inversedBy: 'affiliations')]
     private Person $person;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Organization",cascade={"persist"})
-     * @ORM\JoinColumn(name="organization", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'organization', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Organization::class, cascade: ['persist'])]
     private Organization $organization;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Department",cascade={"persist"})
-     * @ORM\JoinColumn(name="department", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'department', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Department::class, cascade: ['persist'])]
     private Department $department;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $position;
 
     public function __construct(Person $person, Organization $organization, Department $department, string $position)

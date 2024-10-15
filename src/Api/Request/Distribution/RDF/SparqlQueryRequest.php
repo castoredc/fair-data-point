@@ -17,10 +17,8 @@ class SparqlQueryRequest extends ApiRequest
         parent::__construct($data, $request->query);
     }
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $sparqlQuery;
 
     protected function parse(): void

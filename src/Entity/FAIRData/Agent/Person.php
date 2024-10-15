@@ -17,43 +17,40 @@ use function implode;
 use function strtolower;
 use function uniqid;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Person extends Agent
 {
     public const TYPE = 'person';
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $firstName;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $middleName = null;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $lastName;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $email = null;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $phoneNumber = null;
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $orcid = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="person")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'person')]
     private ?User $user = null;
 
-    /** @ORM\Column(type="NameOriginType") */
+    #[ORM\Column(type: 'NameOriginType')]
     private NameOrigin $nameOrigin;
 
     /**
-     * @ORM\OneToMany(targetEntity="Affiliation", mappedBy="person", cascade={"persist"})
-     *
      * @var Collection<Affiliation>
      */
+    #[ORM\OneToMany(targetEntity: \Affiliation::class, mappedBy: 'person', cascade: ['persist'])]
     private Collection $affiliations;
 
     public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)

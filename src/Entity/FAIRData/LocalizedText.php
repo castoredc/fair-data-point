@@ -9,25 +9,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="text_localized")
- */
+#[ORM\Table(name: 'text_localized')]
+#[ORM\Entity]
 class LocalizedText
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="LocalizedTextItem", mappedBy="parent", cascade={"persist"}, fetch = "EAGER")
-     *
      * @var Collection<LocalizedTextItem>
      */
+    #[ORM\OneToMany(targetEntity: \LocalizedTextItem::class, mappedBy: 'parent', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $texts;
 
     /** @param Collection<LocalizedTextItem> $texts */

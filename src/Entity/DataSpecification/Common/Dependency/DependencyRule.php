@@ -7,25 +7,21 @@ use App\Entity\DataSpecification\Common\Element;
 use App\Entity\Enum\DependencyOperatorType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_specification_dependency_rule")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_specification_dependency_rule')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DependencyRule extends Dependency
 {
     private string $elementId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Element", cascade={"persist"})
-     * @ORM\JoinColumn(name="element", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'element', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\Common\Element::class, cascade: ['persist'])]
     private Element $element;
 
-    /** @ORM\Column(type="DependencyOperatorType") */
+    #[ORM\Column(type: 'DependencyOperatorType')]
     private DependencyOperatorType $operator;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $value;
 
     public function __construct(DependencyOperatorType $operator, string $value)

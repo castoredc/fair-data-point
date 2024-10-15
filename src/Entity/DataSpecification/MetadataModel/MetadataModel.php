@@ -13,46 +13,39 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DataSpecification\MetadataModel\MetadataModelRepository")
- * @ORM\Table(name="metadata_model")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model')]
+#[ORM\Entity(repositoryClass: \App\Repository\DataSpecification\MetadataModel\MetadataModelRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModel extends DataSpecification
 {
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Catalog", mappedBy="defaultMetadataModel")
-     *
      * @var Collection<Catalog>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Catalog::class, mappedBy: 'defaultMetadataModel')]
     private Collection $catalogs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Distribution", mappedBy="defaultMetadataModel")
-     *
      * @var Collection<Distribution>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Distribution::class, mappedBy: 'defaultMetadataModel')]
     private Collection $distributions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="defaultMetadataModel")
-     *
      * @var Collection<Dataset>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Dataset::class, mappedBy: 'defaultMetadataModel')]
     private Collection $datasets;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\FAIRDataPoint", mappedBy="defaultMetadataModel")
-     *
      * @var Collection<FAIRDataPoint>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\FAIRDataPoint::class, mappedBy: 'defaultMetadataModel')]
     private Collection $fdps;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Study", mappedBy="defaultMetadataModel")
-     *
      * @var Collection<Study>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\Study::class, mappedBy: 'defaultMetadataModel')]
     private Collection $studies;
 
     public function __construct(string $title, ?string $description)

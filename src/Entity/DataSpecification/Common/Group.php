@@ -11,66 +11,52 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_specification_group")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\DataSpecification\DataModel\DataModelGroup",
- *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelGroup",
- *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup",
- * })
- */
+#[ORM\Table(name: 'data_specification_group')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['model' => 'App\Entity\DataSpecification\DataModel\DataModelGroup', 'metadata_model' => 'App\Entity\DataSpecification\MetadataModel\MetadataModelGroup', 'dictionary' => 'App\Entity\DataSpecification\DataDictionary\DataDictionaryGroup'])]
 abstract class Group
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Version", inversedBy="groups", cascade={"persist"})
-     * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Version::class, inversedBy: 'groups', cascade: ['persist'])]
     private Version $version;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    #[ORM\Column(name: 'orderNumber', type: 'integer', nullable: true)]
     private ?int $order;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isRepeated = false;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isDependent = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="group", cascade={"persist"})
-     *
      * @var Collection<Element>
      */
+    #[ORM\OneToMany(targetEntity: \Element::class, mappedBy: 'group', cascade: ['persist'])]
     private Collection $elements;
 
     /**
-     * @ORM\OneToMany(targetEntity="ElementGroup", mappedBy="group", cascade={"persist"})
-     *
      * @var Collection<ElementGroup>
      */
+    #[ORM\OneToMany(targetEntity: \ElementGroup::class, mappedBy: 'group', cascade: ['persist'])]
     private Collection $elementGroups;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\Common\Dependency\DependencyGroup", cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'dependencies', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\Common\Dependency\DependencyGroup::class, cascade: ['persist'], fetch: 'EAGER')]
     protected ?DependencyGroup $dependencies = null;
 
     public function __construct(string $title, int $order, bool $isRepeated, bool $isDependent, Version $version)

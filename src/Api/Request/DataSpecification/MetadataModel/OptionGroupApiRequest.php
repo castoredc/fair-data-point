@@ -9,13 +9,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class OptionGroupApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $title;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $description = null;
 
     /**

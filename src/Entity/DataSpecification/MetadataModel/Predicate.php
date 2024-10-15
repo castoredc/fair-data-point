@@ -8,17 +8,13 @@ use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_predicate")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_predicate')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Predicate extends CommonPredicate
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="MetadataModelVersion", inversedBy="predicates", cascade={"persist"})
-     * @ORM\JoinColumn(name="metadata_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \MetadataModelVersion::class, inversedBy: 'predicates', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
     public function __construct(MetadataModelVersion $metadataModelVersion, Iri $iri)

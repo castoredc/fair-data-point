@@ -8,31 +8,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class StudyContactApiRequest extends SingleApiRequest
 {
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $id = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $firstName;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $middleName = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $lastName;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Email()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $orcid = null;
 
     protected function parse(): void

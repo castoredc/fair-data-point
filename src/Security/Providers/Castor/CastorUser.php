@@ -11,33 +11,27 @@ use Doctrine\ORM\Mapping as ORM;
 use function in_array;
 use function strtolower;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CastorUserRepository")
- * @ORM\Table(name="castor_user")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'castor_user')]
+#[ORM\Entity(repositoryClass: \App\Repository\CastorUserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CastorUser implements ProviderUser
 {
     use CreatedAt;
     use UpdatedAt;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="castorUser")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'castorUser')]
     private ?User $user = null;
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=190)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 190)]
     private string $id;
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $nameFirst;
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $nameMiddle = null;
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $nameLast;
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $emailAddress;
     private ?string $token = null;
     private ?string $server = null;

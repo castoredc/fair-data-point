@@ -8,7 +8,7 @@ use App\Entity\Castor\Structure\Step\SurveyStep;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Survey extends StructureElement
 {
     /** @param SurveyStep[] $surveySteps */

@@ -12,10 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 use function json_encode;
 use function str_replace;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="distribution_databases")
- */
+#[ORM\Table(name: 'distribution_databases')]
+#[ORM\Entity]
 class DistributionDatabaseInformation
 {
     public const DBNAME_PREPEND = 'fdp_dist_';
@@ -25,26 +23,24 @@ class DistributionDatabaseInformation
     public const ROLE_PREPEND = 'fdp_r_';
     public const READ_ONLY_ROLE_PREPEND = 'fdp_r-ro_';
 
-    /**
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="databaseInformation")
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\Distribution::class, inversedBy: 'databaseInformation')]
     private Distribution $distribution;
 
-    /** @ORM\Column(type="string", name="database_name") */
+    #[ORM\Column(type: 'string', name: 'database_name')]
     private string $database;
 
-    /** @ORM\Column(type="string", name="user", type="text", length=65535, nullable=false) */
+    #[ORM\Column(type: 'text', name: 'user', length: 65535, nullable: false)]
     private string $username;
 
-    /** @ORM\Column(type="string", name="password", type="text", length=65535, nullable=false) */
+    #[ORM\Column(type: 'text', name: 'password', length: 65535, nullable: false)]
     private string $password;
 
-    /** @ORM\Column(type="string", name="readonly_user", type="text", length=65535, nullable=false) */
+    #[ORM\Column(type: 'text', name: 'readonly_user', length: 65535, nullable: false)]
     private string $readOnlyUsername;
 
-    /** @ORM\Column(type="string", name="readonly_password", type="text", length=65535, nullable=false) */
+    #[ORM\Column(type: 'text', name: 'readonly_password', length: 65535, nullable: false)]
     private string $readOnlyPassword;
 
     public function __construct(Distribution $distribution)

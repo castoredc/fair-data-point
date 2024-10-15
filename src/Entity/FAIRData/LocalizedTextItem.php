@@ -7,33 +7,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="text_localized_item")
- */
+#[ORM\Table(name: 'text_localized_item')]
+#[ORM\Entity]
 class LocalizedTextItem
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="LocalizedText", inversedBy="texts",cascade={"persist"})
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'parent', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \LocalizedText::class, inversedBy: 'texts', cascade: ['persist'])]
     private ?LocalizedText $parent = null;
 
-    /** @ORM\Column(type="text") */
+    #[ORM\Column(type: 'text')]
     private string $text;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Language",cascade={"persist"})
-     * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     */
+    #[ORM\JoinColumn(name: 'language', referencedColumnName: 'code')]
+    #[ORM\ManyToOne(targetEntity: \Language::class, cascade: ['persist'])]
     private ?Language $language = null;
 
     private ?string $languageCode = null;

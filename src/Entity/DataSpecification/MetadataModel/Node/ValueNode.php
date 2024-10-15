@@ -12,29 +12,26 @@ use App\Entity\Metadata\MetadataValue;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_node_value")
- */
+#[ORM\Table(name: 'metadata_model_node_value')]
+#[ORM\Entity]
 class ValueNode extends Node
 {
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $isAnnotatedValue = false;
 
-    /** @ORM\Column(type="XsdDataType") */
+    #[ORM\Column(type: 'XsdDataType')]
     private XsdDataType $dataType;
 
-    /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelField", mappedBy="node") */
+    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModelField::class, mappedBy: 'node')]
     private ?MetadataModelField $field = null;
 
-    /** @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting", mappedBy="node") */
+    #[ORM\OneToOne(targetEntity: \App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting::class, mappedBy: 'node')]
     private ?MetadataModelDisplaySetting $displaySetting = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\MetadataValue", mappedBy="node")
-     *
      * @var Collection<MetadataValue>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\MetadataValue::class, mappedBy: 'node')]
     private Collection $values;
 
     public function isAnnotatedValue(): bool

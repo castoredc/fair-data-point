@@ -10,7 +10,7 @@ use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 use function ksort;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 abstract class Step extends CastorEntity
 {
     /**

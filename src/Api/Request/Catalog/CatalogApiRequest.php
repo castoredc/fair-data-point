@@ -10,25 +10,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CatalogApiRequest extends SingleApiRequest
 {
     /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
      * @AppAssert\Slug(type="App\Entity\FAIRData\Catalog")
      */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $slug;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $defaultMetadataModel;
 
-    /**
-     * @Assert\NotNull
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $acceptSubmissions;
 
-    /** @Assert\Type("bool") */
+    #[Assert\Type('bool')]
     private ?bool $submissionAccessesData = null;
 
     protected function parse(): void

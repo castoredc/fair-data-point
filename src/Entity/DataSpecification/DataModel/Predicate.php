@@ -8,17 +8,13 @@ use App\Entity\DataSpecification\Common\Model\Predicate as CommonPredicate;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_predicate")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model_predicate')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Predicate extends CommonPredicate
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="DataModelVersion", inversedBy="predicates", cascade={"persist"})
-     * @ORM\JoinColumn(name="data_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'data_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \DataModelVersion::class, inversedBy: 'predicates', cascade: ['persist'])]
     private DataModelVersion $dataModel;
 
     public function __construct(DataModelVersion $dataModel, Iri $iri)

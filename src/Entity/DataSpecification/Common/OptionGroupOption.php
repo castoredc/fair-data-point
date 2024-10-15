@@ -7,41 +7,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_dictionary_option_option")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorMap({
- *       "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroupOption",
- *   })
- */
+#[ORM\Table(name: 'data_dictionary_option_option')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorMap(['metadata_model' => 'App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroupOption'])]
 abstract class OptionGroupOption
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    /** @ORM\Column(type="text") */
+    #[ORM\Column(type: 'text')]
     private string $value;
 
-    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    #[ORM\Column(name: 'orderNumber', type: 'integer', nullable: true)]
     protected ?int $order;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="options", cascade={"persist"})
-     * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'option_group', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \OptionGroup::class, inversedBy: 'options', cascade: ['persist'])]
     private OptionGroup $optionGroup;
 
     public function __construct(string $title, ?string $description, string $value, ?int $order)

@@ -9,27 +9,21 @@ use App\Traits\CreatedAt;
 use App\Traits\UpdatedAt;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="orcid_user")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'orcid_user')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class OrcidUser implements ProviderUser
 {
     use CreatedAt;
     use UpdatedAt;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="orcid")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'orcid')]
     private ?User $user = null;
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string')]
     private string $orcid;
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
     public function __construct(string $orcid, string $name, private ?string $token = null)

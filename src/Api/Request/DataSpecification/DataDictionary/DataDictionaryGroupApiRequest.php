@@ -11,34 +11,26 @@ use function count;
 
 class DataDictionaryGroupApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $title;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("int")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('int')]
     private int $order;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $repeated;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $dependent;
 
     /**
      * @var mixed[]|null
-     * @Assert\NotBlank(groups = {"dependent"})
      */
+    #[Assert\NotBlank(groups: ['dependent'])]
     private ?array $dependencies = null;
 
     protected function parse(): void

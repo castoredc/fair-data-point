@@ -10,19 +10,15 @@ use App\Security\CastorServer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="study_castor")
- */
+#[ORM\Table(name: 'study_castor')]
+#[ORM\Entity]
 class CastorStudy extends Study
 {
     /** @var ArrayCollection<string, Field>|null */
     private ?ArrayCollection $fields = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorServer")
-     * @ORM\JoinColumn(name="server", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'server', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Security\CastorServer::class)]
     private ?CastorServer $server = null;
 
     /** @return ArrayCollection<string, Field>|null */

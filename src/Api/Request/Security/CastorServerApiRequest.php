@@ -11,36 +11,26 @@ final class CastorServerApiRequest extends SingleApiRequest
 {
     private ?int $id;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $name;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Url()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Url]
     private string $url;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $flag;
 
     private bool $default = false;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $clientId;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $clientSecret;
 
     public function toCommand(): UpdateCastorServerCommand

@@ -10,22 +10,18 @@ use function count;
 
 class DataModelModuleApiRequest extends DataSpecificationModuleApiRequest
 {
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $repeated;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $dependent;
 
     /**
      * @var mixed[]|null
-     * @Assert\NotBlank(groups = {"dependent"})
      */
+    #[Assert\NotBlank(groups: ['dependent'])]
     private ?array $dependencies = null;
 
     protected function parse(): void

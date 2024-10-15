@@ -8,7 +8,7 @@ use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\Mapping as ORM;
 use function boolval;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class FieldOptionGroup extends CastorEntity
 {
     private ?string $name = null;

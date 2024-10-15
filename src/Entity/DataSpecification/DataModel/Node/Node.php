@@ -18,25 +18,21 @@ use function assert;
 use function count;
 use const SORT_REGULAR;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DataSpecification\DataModel\NodeRepository")
- * @ORM\Table(name="data_model_node")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model_node')]
+#[ORM\Entity(repositoryClass: \App\Repository\DataSpecification\DataModel\NodeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 abstract class Node extends Element implements CommonNode
 {
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\DataModel\Triple", mappedBy="subject")
-     *
      * @var Collection<Triple>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\DataSpecification\DataModel\Triple::class, mappedBy: 'subject')]
     private Collection $subjectTriples;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\DataModel\Triple", mappedBy="object")
-     *
      * @var Collection<Triple>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\DataSpecification\DataModel\Triple::class, mappedBy: 'object')]
     private Collection $objectTriples;
 
     public function __construct(Version $version, string $title, ?string $description)

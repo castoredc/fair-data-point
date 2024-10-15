@@ -6,11 +6,9 @@ namespace App\Entity\DataSpecification\DataModel;
 use App\Entity\DataSpecification\Common\DataSpecification;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DataModel extends DataSpecification
 {
 }

@@ -16,59 +16,49 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_specification")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\DataSpecification\DataModel\DataModel",
- *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionary",
- *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModel",
- * })
- */
+#[ORM\Table(name: 'data_specification')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['model' => 'App\Entity\DataSpecification\DataModel\DataModel', 'dictionary' => 'App\Entity\DataSpecification\DataDictionary\DataDictionary', 'metadata_model' => 'App\Entity\DataSpecification\MetadataModel\MetadataModel'])]
 abstract class DataSpecification implements PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", mappedBy="dataSpecification")
-     *
      * @var Collection<DistributionContents>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\Data\DistributionContents\DistributionContents::class, mappedBy: 'dataSpecification')]
     private Collection $distributionContents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Version", mappedBy="dataSpecification", cascade={"persist"})
-     * @ORM\OrderBy({"createdAt" = "ASC"})
      *
      * @var Collection<Version>
      */
+    #[ORM\OneToMany(targetEntity: \Version::class, mappedBy: 'dataSpecification', cascade: ['persist'])]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $versions;
 
-    /** @ORM\Column(type="boolean", options={"default" : 0}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $isPublic = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="DataSpecificationPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="dataSpecification")
-     *
      * @var Collection<DataSpecificationPermission>
      */
+    #[ORM\OneToMany(targetEntity: \DataSpecificationPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'dataSpecification')]
     private Collection $permissions;
 
     public function __construct(string $title, ?string $description)

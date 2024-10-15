@@ -9,19 +9,17 @@ use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_node_value")
- */
+#[ORM\Table(name: 'data_model_node_value')]
+#[ORM\Entity]
 class ValueNode extends Node
 {
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $isAnnotatedValue = false;
 
-    /** @ORM\Column(type="XsdDataType") */
+    #[ORM\Column(type: 'XsdDataType')]
     private XsdDataType $dataType;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isRepeated = false;
 
     public function isAnnotatedValue(): bool

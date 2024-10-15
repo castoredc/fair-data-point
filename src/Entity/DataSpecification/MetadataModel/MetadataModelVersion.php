@@ -24,11 +24,9 @@ use function assert;
 use function count;
 use function is_a;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_version")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_version')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelVersion extends Version implements ModelVersion
 {
     public const DCTERMS_TITLE = 'http://purl.org/dc/terms/title';
@@ -42,48 +40,45 @@ class MetadataModelVersion extends Version implements ModelVersion
     ];
 
     /**
-     * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="metadataModel", cascade={"persist"})
-     * @ORM\OrderBy({"prefix" = "ASC"})
      *
      * @var Collection<NamespacePrefix>
      */
+    #[ORM\OneToMany(targetEntity: \NamespacePrefix::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OrderBy(['prefix' => 'ASC'])]
     private Collection $prefixes;
 
     /**
-     * @ORM\OneToMany(targetEntity="Predicate", mappedBy="metadataModel", cascade={"persist"})
-     *
      * @var Collection<Predicate>
      */
+    #[ORM\OneToMany(targetEntity: \Predicate::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     private Collection $predicates;
 
     /**
-     * @ORM\OneToMany(targetEntity="MetadataModelForm", mappedBy="metadataModel", cascade={"persist"})
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Collection<MetadataModelForm>
      */
+    #[ORM\OneToMany(targetEntity: \MetadataModelForm::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $forms;
 
     /**
-     * @ORM\OneToMany(targetEntity="MetadataModelField", mappedBy="metadataModel", cascade={"persist"})
-     *
      * @var Collection<MetadataModelField>
      */
+    #[ORM\OneToMany(targetEntity: \MetadataModelField::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     private Collection $fields;
 
     /**
-     * @ORM\OneToMany(targetEntity="MetadataModelDisplaySetting", mappedBy="metadataModel", cascade={"persist"})
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Collection<MetadataModelDisplaySetting>
      */
+    #[ORM\OneToMany(targetEntity: \MetadataModelDisplaySetting::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $displaySettings;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\Metadata", mappedBy="metadataModelVersion", cascade={"persist"})
-     *
      * @var Collection<Metadata>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\Metadata\Metadata::class, mappedBy: 'metadataModelVersion', cascade: ['persist'])]
     private Collection $assignedMetadata;
 
     public function __construct(VersionNumber $version)

@@ -9,25 +9,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class TripleApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $objectType;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $objectValue = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $predicateValue = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $subjectType;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $subjectValue = null;
 
     protected function parse(): void

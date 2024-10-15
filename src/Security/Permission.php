@@ -6,10 +6,10 @@ namespace App\Security;
 use App\Entity\Enum\PermissionType;
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\MappedSuperclass */
+#[ORM\MappedSuperclass]
 abstract class Permission
 {
-    /** @ORM\Column(type="PermissionType") */
+    #[ORM\Column(type: 'PermissionType')]
     protected PermissionType $type;
 
     public function __construct(protected User $user, PermissionType $type)

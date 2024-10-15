@@ -9,24 +9,18 @@ use App\Security\Permission;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="permission_dataset")
- */
+#[ORM\Table(name: 'permission_dataset')]
+#[ORM\Entity]
 class DatasetPermission extends Permission
 {
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="datasets")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \App\Security\User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'datasets')]
     protected User $user;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", cascade={"persist"}, fetch = "EAGER", inversedBy="permissions")
-     * @ORM\JoinColumn(name="dataset_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'dataset_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Dataset::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private Dataset $dataset;
 
     public function __construct(User $user, PermissionType $type, Dataset $dataset)

@@ -7,7 +7,7 @@ use App\Entity\Castor\CastorStudy;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Report extends StructureElement
 {
     public function __construct(string $id, CastorStudy $study, ?string $name, private ?string $description = null, private ?string $type = null)

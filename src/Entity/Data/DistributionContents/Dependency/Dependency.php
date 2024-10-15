@@ -8,28 +8,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="distribution_dependency")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'distribution_dependency')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
 class Dependency
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="DependencyGroup", inversedBy="rules", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \DependencyGroup::class, inversedBy: 'rules', cascade: ['persist', 'remove'])]
     private ?DependencyGroup $group = null;
 
     public function getId(): string

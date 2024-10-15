@@ -12,33 +12,27 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function json_encode;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_api")
- */
+#[ORM\Table(name: 'user_api')]
+#[ORM\Entity]
 class ApiUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $emailAddress;
 
-    /** @ORM\Column(type="string", type="text", length=65535, nullable=false) */
+    #[ORM\Column(type: 'text', length: 65535, nullable: false)]
     private string $clientId;
 
-    /** @ORM\Column(type="string", type="text", length=65535, nullable=false) */
+    #[ORM\Column(type: 'text', length: 65535, nullable: false)]
     private string $clientSecret;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\CastorServer")
-     * @ORM\JoinColumn(name="server", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'server', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Security\CastorServer::class)]
     private ?CastorServer $server = null;
 
     public function __construct(string $emailAddress, ?CastorServer $server)

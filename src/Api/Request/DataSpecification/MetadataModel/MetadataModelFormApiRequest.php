@@ -9,22 +9,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class MetadataModelFormApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $title;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("int")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('int')]
     private int $order;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $resourceType;
 
     protected function parse(): void

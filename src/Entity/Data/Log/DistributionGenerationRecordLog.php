@@ -10,46 +10,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DistributionGenerationRecordLogRepository")
- * @ORM\Table(name="log_generation_distribution_record")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'log_generation_distribution_record')]
+#[ORM\Entity(repositoryClass: \App\Repository\DistributionGenerationRecordLogRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class DistributionGenerationRecordLog
 {
     use CreatedAt;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\Record", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="record", referencedColumnName="record_id", nullable=false),
-     *     @ORM\JoinColumn(name="study", referencedColumnName="study_id", nullable=false)
-     * })
-     */
+    #[ORM\JoinColumn(name: 'record', referencedColumnName: 'record_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'study', referencedColumnName: 'study_id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Castor\Record::class, cascade: ['persist'])]
     private Record $record;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="DistributionGenerationLog", inversedBy="records", cascade={"persist"})
-     * @ORM\JoinColumn(name="log", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'log', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \DistributionGenerationLog::class, inversedBy: 'records', cascade: ['persist'])]
     private DistributionGenerationLog $log;
 
-    /** @ORM\Column(type="DistributionGenerationStatusType") */
+    #[ORM\Column(type: 'DistributionGenerationStatusType')]
     private DistributionGenerationStatus $status;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
-     *
      * @var mixed[]|null
      */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $errors = [];
 
     public function __construct(Record $record)

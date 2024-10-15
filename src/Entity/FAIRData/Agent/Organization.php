@@ -12,40 +12,36 @@ use Doctrine\ORM\Mapping as ORM;
 use function array_merge;
 use function uniqid;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\OrganizationRepository")
- * @ORM\Table(name="organization", indexes={@ORM\Index(name="grid_id", columns={"grid_id"})})
- */
+#[ORM\Table(name: 'organization')]
+#[ORM\Index(name: 'grid_id', columns: ['grid_id'])]
+#[ORM\Entity(repositoryClass: \App\Repository\OrganizationRepository::class)]
 class Organization extends Agent
 {
     public const TYPE = 'organization';
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $homepage = null;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $gridId = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Country",cascade={"persist"})
-     * @ORM\JoinColumn(name="country", referencedColumnName="code")
-     */
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'code')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\FAIRData\Country::class, cascade: ['persist'])]
     private ?Country $country = null;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $city;
 
     /**
-     * @ORM\OneToMany(targetEntity="Department", mappedBy="organization",cascade={"persist"})
-     *
      * @var Collection<Department>
      */
+    #[ORM\OneToMany(targetEntity: \Department::class, mappedBy: 'organization', cascade: ['persist'])]
     private Collection $departments;
 
-    /** @ORM\Column(type="decimal", precision=10, scale=8, nullable=true) */
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 8, nullable: true)]
     private ?string $coordinatesLatitude = null;
 
-    /** @ORM\Column(type="decimal", precision=11, scale=8, nullable=true) */
+    #[ORM\Column(type: 'decimal', precision: 11, scale: 8, nullable: true)]
     private ?string $coordinatesLongitude = null;
 
     public function __construct(?string $slug, string $name, ?Iri $homepage, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude, private ?string $countryCode = null)

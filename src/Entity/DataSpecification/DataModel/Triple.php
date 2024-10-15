@@ -12,29 +12,21 @@ use App\Entity\DataSpecification\DataModel\Node\Node;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_triple")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model_triple')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Triple extends ElementGroup implements CommonTriple
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\Node", inversedBy="subjectTriples", cascade={"persist"})
-     * @ORM\JoinColumn(name="subject", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'subject', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\DataModel\Node\Node::class, inversedBy: 'subjectTriples', cascade: ['persist'])]
     private Node $subject;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Predicate", cascade={"persist"})
-     * @ORM\JoinColumn(name="predicate", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'predicate', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Predicate::class, cascade: ['persist'])]
     private Predicate $predicate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\Node", inversedBy="objectTriples", cascade={"persist"})
-     * @ORM\JoinColumn(name="object", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'object', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\DataModel\Node\Node::class, inversedBy: 'objectTriples', cascade: ['persist'])]
     private Node $object;
 
     public function __construct(DataModelGroup $module, Node $subject, Predicate $predicate, Node $object)

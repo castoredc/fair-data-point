@@ -26,73 +26,57 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="distribution_contents")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "csv" = "CSVDistribution",
- *     "rdf" = "RDFDistribution",
- * })
- */
+#[ORM\Table(name: 'distribution_contents')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['csv' => 'CSVDistribution', 'rdf' => 'RDFDistribution'])]
 abstract class DistributionContents implements PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Distribution", inversedBy="contents")
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: \App\Entity\FAIRData\Distribution::class, inversedBy: 'contents')]
     private Distribution $distribution;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $isPublic = false;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $isCached = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\Log\DistributionGenerationLog", mappedBy="distribution", cascade={"persist"})
-     * @ORM\OrderBy({"createdAt" = "DESC"})
-     * @ORM\JoinColumn(name="distribution", referencedColumnName="id")
      *
      * @var Collection<DistributionGenerationLog>
      */
+    #[ORM\JoinColumn(name: 'distribution', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: \App\Entity\Data\Log\DistributionGenerationLog::class, mappedBy: 'distribution', cascade: ['persist'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     protected Collection $logs;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents\Dependency\DependencyGroup", cascade={"persist"}, fetch = "EAGER")
-     * @ORM\JoinColumn(name="dependencies", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'dependencies', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \App\Entity\Data\DistributionContents\Dependency\DependencyGroup::class, cascade: ['persist'], fetch: 'EAGER')]
     private ?DependencyGroup $dependencies = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\DataSpecification", inversedBy="distributionContents")
-     * @ORM\JoinColumn(name="data_specification", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'data_specification', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\Common\DataSpecification::class, inversedBy: 'distributionContents')]
     protected DataSpecification $dataSpecification;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Version", inversedBy="distributionContents")
-     * @ORM\JoinColumn(name="data_specification_version", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'data_specification_version', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\DataSpecification\Common\Version::class, inversedBy: 'distributionContents')]
     protected Version $currentDataSpecificationVersion;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DistributionContentsPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="distributionContents")
-     *
      * @var Collection<DistributionContentsPermission>
      */
+    #[ORM\OneToMany(targetEntity: \App\Entity\FAIRData\Permission\DistributionContentsPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'distributionContents')]
     private Collection $permissions;
 
     public function __construct(Distribution $distribution)

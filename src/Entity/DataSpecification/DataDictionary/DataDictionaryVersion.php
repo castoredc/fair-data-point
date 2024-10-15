@@ -7,11 +7,9 @@ use App\Entity\DataSpecification\Common\Version;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_dictionary_version")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_dictionary_version')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DataDictionaryVersion extends Version
 {
     public function getDataDictionary(): DataDictionary

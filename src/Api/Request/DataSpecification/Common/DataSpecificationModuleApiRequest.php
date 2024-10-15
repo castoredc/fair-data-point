@@ -9,16 +9,12 @@ use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 abstract class DataSpecificationModuleApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $title;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("int")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('int')]
     private int $order;
 
     protected function parse(): void

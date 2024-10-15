@@ -10,53 +10,44 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_dictionary_option_group")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *      "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup",
- *  })
- */
+#[ORM\Table(name: 'data_dictionary_option_group')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['metadata_model' => 'App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup'])]
 abstract class OptionGroup
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Version", inversedBy="optionGroups", cascade={"persist"})
-     * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Version::class, inversedBy: 'optionGroups', cascade: ['persist'])]
     private Version $version;
 
     /**
-     * @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="optionGroup", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Collection<OptionGroupOption>
      */
+    #[ORM\OneToMany(targetEntity: \OptionGroupOption::class, mappedBy: 'optionGroup', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $options;
 
     /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="optionGroup")
-     *
      * @var Collection<Element>
      */
+    #[ORM\OneToMany(targetEntity: \Element::class, mappedBy: 'optionGroup')]
     private Collection $elements;
 
     public function __construct(Version $version, string $title, ?string $description)

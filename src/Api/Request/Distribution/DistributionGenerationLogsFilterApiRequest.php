@@ -10,10 +10,10 @@ class DistributionGenerationLogsFilterApiRequest extends SingleApiRequest
 {
     public const DEFAULT_PER_PAGE = 25;
 
-    /** @Assert\Type("integer") */
+    #[Assert\Type('integer')]
     private int $perPage;
 
-    /** @Assert\Type("integer") */
+    #[Assert\Type('integer')]
     private int $page;
 
     protected function parse(): void

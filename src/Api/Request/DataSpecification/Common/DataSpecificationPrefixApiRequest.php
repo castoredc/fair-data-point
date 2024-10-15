@@ -8,16 +8,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class DataSpecificationPrefixApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $prefix;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $uri;
 
     protected function parse(): void
