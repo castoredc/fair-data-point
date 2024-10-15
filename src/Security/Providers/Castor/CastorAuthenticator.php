@@ -119,7 +119,7 @@ class CastorAuthenticator extends Authenticator
     }
 
     /** @inheritDoc */
-    public function start(Request $request, ?AuthenticationException $authException = null)
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $url = '/login';
 
