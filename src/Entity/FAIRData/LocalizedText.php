@@ -92,6 +92,7 @@ class LocalizedText
         return null;
     }
 
+    /** @param array<array{text: string, language: string}>|null $items */
     public static function fromArray(?array $items): ?LocalizedText
     {
         if ($items === null) {

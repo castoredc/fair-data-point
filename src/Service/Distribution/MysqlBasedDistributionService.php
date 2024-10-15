@@ -169,6 +169,7 @@ class MysqlBasedDistributionService implements DistributionService
         return $parsed;
     }
 
+    /** @param array<mixed>|null $nameSpaces */
     public function getDataFromStore(
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,

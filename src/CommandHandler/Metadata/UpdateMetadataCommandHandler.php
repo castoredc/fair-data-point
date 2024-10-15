@@ -137,6 +137,7 @@ class UpdateMetadataCommandHandler
         return $value !== false ? $value : '';
     }
 
+    /** @param array<array{text: string, language: string}>|null $values */
     private function parseLocalizedText(MetadataModelField $field, ?array $values): ?LocalizedText
     {
         if ($values === null) {

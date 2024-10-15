@@ -29,4 +29,3 @@ parameters:
 	  analyseAndScan:
 	    - %currentWorkingDirectory%/src/Migrations/*
 	checkGenericClassInNonGenericObjectType: false
-	checkMissingIterableValueType: false

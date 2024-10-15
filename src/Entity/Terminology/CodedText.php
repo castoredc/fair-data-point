@@ -25,7 +25,7 @@ class CodedText
     /** @ORM\Column(type="string") */
     private string $text;
 
-    /** @var OntologyConcept[]|ArrayCollection */
+    /** @var OntologyConcept[]|ArrayCollection<OntologyConcept> */
     private array|ArrayCollection $concepts;
 
     public function __construct(string $text)
@@ -49,7 +49,7 @@ class CodedText
         $this->text = $text;
     }
 
-    /** @return OntologyConcept[]|ArrayCollection */
+    /** @return OntologyConcept[]|ArrayCollection<OntologyConcept> */
     public function getConcepts(): array|ArrayCollection
     {
         return $this->concepts;

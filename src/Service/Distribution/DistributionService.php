@@ -15,6 +15,7 @@ interface DistributionService
 
     public function createUsers(DistributionDatabaseInformation $databaseInformation, EncryptionService $encryptionService): void;
 
+    /** @param array<mixed>|null $nameSpaces */
     public function getDataFromStore(
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,

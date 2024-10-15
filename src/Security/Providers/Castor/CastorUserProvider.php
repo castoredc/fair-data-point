@@ -1,4 +1,5 @@
 <?php
+/** @phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint */
 declare(strict_types=1);
 
 namespace App\Security\Providers\Castor;
@@ -111,7 +112,7 @@ class CastorUserProvider extends UserProvider implements UserProviderInterface
         return [];
     }
 
-    /** @inheritDoc */
+    /** @param array<mixed>|string $data */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.
