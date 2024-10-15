@@ -66,11 +66,11 @@ class StudyApiController extends ApiController
             $bus->dispatch(
                 new UpdateStudyCommand(
                     $study,
+                    $parsed->getSlug(),
+                    $parsed->getPublished(),
                     $parsed->getSourceId(),
                     $parsed->getSourceServer(),
-                    $parsed->getName(),
-                    $parsed->getSlug(),
-                    $parsed->getPublished()
+                    $parsed->getName()
                 )
             );
 

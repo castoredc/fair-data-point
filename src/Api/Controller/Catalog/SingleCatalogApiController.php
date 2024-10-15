@@ -105,10 +105,10 @@ class SingleCatalogApiController extends ApiController
                     $catalog,
                     null,
                     $user,
-                    $parsed->getSearch(),
-                    $parsed->getHideParents(),
                     $parsed->getPerPage(),
-                    $parsed->getPage()
+                    $parsed->getPage(),
+                    $parsed->getSearch(),
+                    $parsed->getHideParents()
                 )
             );
 

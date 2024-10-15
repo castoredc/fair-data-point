@@ -43,14 +43,14 @@ class UserAffiliationApiController extends ApiController
                     new CreateAffiliationCommand(
                         $user->getPerson(),
                         $item->getOrganizationSource(),
+                        $item->getOrganizationCountry(),
+                        $item->getDepartmentSource(),
+                        $item->getPosition(),
                         $item->getOrganizationId(),
                         $item->getOrganizationName(),
                         $item->getOrganizationCity(),
-                        $item->getOrganizationCountry(),
-                        $item->getDepartmentSource(),
                         $item->getDepartmentId(),
-                        $item->getDepartmentName(),
-                        $item->getPosition()
+                        $item->getDepartmentName()
                     )
                 );
             }

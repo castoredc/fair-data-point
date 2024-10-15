@@ -12,12 +12,12 @@ class UpdateTripleCommand extends CommonUpdateTripleCommand
     public function __construct(
         private Triple $triple,
         NodeType $objectType,
+        NodeType $subjectType,
         ?string $objectValue,
         ?string $predicateValue,
-        NodeType $subjectType,
         ?string $subjectValue,
     ) {
-        parent::__construct($objectType, $objectValue, $predicateValue, $subjectType, $subjectValue);
+        parent::__construct($objectType, $subjectType, $objectValue, $predicateValue, $subjectValue);
     }
 
     public function getTriple(): Triple

@@ -52,8 +52,8 @@ class OptionGroupApiController extends ApiController
                 new CreateMetadataModelOptionGroupCommand(
                     $metadataModelVersion,
                     $parsed->getTitle(),
+                    $parsed->getOptions(),
                     $parsed->getDescription(),
-                    $parsed->getOptions()
                 )
             );
 
@@ -90,8 +90,8 @@ class OptionGroupApiController extends ApiController
                 new UpdateMetadataModelOptionGroupCommand(
                     $optionGroup,
                     $parsed->getTitle(),
+                    $parsed->getOptions(),
                     $parsed->getDescription(),
-                    $parsed->getOptions()
                 )
             );
 

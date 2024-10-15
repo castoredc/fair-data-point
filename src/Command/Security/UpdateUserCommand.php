@@ -5,7 +5,7 @@ namespace App\Command\Security;
 
 class UpdateUserCommand
 {
-    public function __construct(private string $firstName, private ?string $middleName = null, private string $lastName, private string $email)
+    public function __construct(private string $firstName, private string $lastName, private string $email, private ?string $middleName = null)
     {
     }
 

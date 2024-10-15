@@ -48,7 +48,7 @@ class Organization extends Agent
     /** @ORM\Column(type="decimal", precision=11, scale=8, nullable=true) */
     private ?string $coordinatesLongitude = null;
 
-    public function __construct(?string $slug, string $name, ?Iri $homepage, private ?string $countryCode = null, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude)
+    public function __construct(?string $slug, string $name, ?Iri $homepage, string $city, ?string $coordinatesLatitude, ?string $coordinatesLongitude, private ?string $countryCode = null)
     {
         $slugify = new Slugify();
 
@@ -163,10 +163,10 @@ class Organization extends Agent
             $data['slug'] ?? null,
             $data['name'],
             $data['homepage'] ?? null,
-            $data['country'] ?? null,
             $data['city'],
             isset($data['coordinatesLatitude']) && $data['coordinatesLatitude'] !== '' ? $data['coordinatesLatitude'] : null,
-            isset($data['coordinatesLongitude']) && $data['coordinatesLongitude'] !== '' ? $data['coordinatesLongitude'] : null
+            isset($data['coordinatesLongitude']) && $data['coordinatesLongitude'] !== '' ? $data['coordinatesLongitude'] : null,
+            $data['country'] ?? null
         );
 
         if ($data['id'] !== null) {

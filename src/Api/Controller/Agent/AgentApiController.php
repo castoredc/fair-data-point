@@ -96,15 +96,15 @@ class AgentApiController extends ApiController
 
             $envelope = $bus->dispatch(
                 new GetPaginatedStudiesCommand(
+                    $parsed->getPerPage(),
+                    $parsed->getPage(),
                     null,
                     $agent,
                     $parsed->getSearch(),
                     $parsed->getStudyType(),
                     $parsed->getMethodType(),
                     $parsed->getCountry(),
-                    null,
-                    $parsed->getPerPage(),
-                    $parsed->getPage()
+                    null
                 )
             );
 
@@ -181,10 +181,10 @@ class AgentApiController extends ApiController
                     null,
                     $agent,
                     $user,
-                    $parsed->getSearch(),
-                    $parsed->getHideParents(),
                     $parsed->getPerPage(),
-                    $parsed->getPage()
+                    $parsed->getPage(),
+                    $parsed->getSearch(),
+                    $parsed->getHideParents()
                 )
             );
 
@@ -283,9 +283,9 @@ class AgentApiController extends ApiController
                     null,
                     $agent,
                     $user,
-                    $parsed->getSearch(),
                     $parsed->getPerPage(),
-                    $parsed->getPage()
+                    $parsed->getPage(),
+                    $parsed->getSearch()
                 )
             );
 

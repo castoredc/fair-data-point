@@ -52,9 +52,9 @@ class TripleApiController extends ApiController
                 new CreateTripleCommand(
                     $module,
                     $parsed->getObjectType(),
+                    $parsed->getSubjectType(),
                     $parsed->getObjectValue(),
                     $parsed->getPredicateValue(),
-                    $parsed->getSubjectType(),
                     $parsed->getSubjectValue()
                 )
             );
@@ -92,9 +92,9 @@ class TripleApiController extends ApiController
                 new UpdateTripleCommand(
                     $triple,
                     $parsed->getObjectType(),
+                    $parsed->getSubjectType(),
                     $parsed->getObjectValue(),
                     $parsed->getPredicateValue(),
-                    $parsed->getSubjectType(),
                     $parsed->getSubjectValue()
                 )
             );

@@ -15,9 +15,9 @@ class GetPaginatedDistributionsCommand
         private ?Dataset $dataset,
         private ?Agent $agent,
         private ?User $user,
-        private ?string $search = null,
         private int $perPage,
         private int $page,
+        private ?string $search = null,
     ) {
     }
 

@@ -9,9 +9,9 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 class CreateMetadataModelOptionGroupCommand extends CreateOptionGroupCommand
 {
     /** @param array<array{title: string, description: string|null, value: string, order: int|null}> $options */
-    public function __construct(private MetadataModelVersion $metadataModelVersion, string $title, ?string $description, array $options)
+    public function __construct(private MetadataModelVersion $metadataModelVersion, string $title, array $options, ?string $description)
     {
-        parent::__construct($title, $description, $options);
+        parent::__construct($title, $options, $description);
     }
 
     public function getMetadataModelVersion(): MetadataModelVersion

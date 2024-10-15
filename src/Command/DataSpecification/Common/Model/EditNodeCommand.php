@@ -9,8 +9,8 @@ abstract class EditNodeCommand
 {
     public function __construct(
         private string $title,
-        private ?string $description = null,
         private string $value,
+        private ?string $description = null,
         private ?XsdDataType $dataType = null,
         private ?bool $isRepeated = false,
     ) {

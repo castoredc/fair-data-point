@@ -45,15 +45,15 @@ class StudiesApiController extends ApiController
 
             $envelope = $bus->dispatch(
                 new GetPaginatedStudiesCommand(
+                    $parsed->getPerPage(),
+                    $parsed->getPage(),
                     null,
                     null,
                     $parsed->getSearch(),
                     $parsed->getStudyType(),
                     $parsed->getMethodType(),
                     $parsed->getCountry(),
-                    $parsed->getHideCatalogs(),
-                    $parsed->getPerPage(),
-                    $parsed->getPage()
+                    $parsed->getHideCatalogs()
                 )
             );
 
@@ -117,10 +117,10 @@ class StudiesApiController extends ApiController
             $envelope = $bus->dispatch(
                 new CreateStudyCommand(
                     $parsed->getSource(),
+                    true,
                     $parsed->getSourceId(),
                     $parsed->getSourceServer(),
-                    $parsed->getName(),
-                    true
+                    $parsed->getName()
                 )
             );
 

@@ -12,12 +12,12 @@ class CreateTripleCommand extends CommonCreateTripleCommand
     public function __construct(
         private DataModelGroup $module,
         NodeType $objectType,
+        NodeType $subjectType,
         ?string $objectValue,
         ?string $predicateValue,
-        NodeType $subjectType,
         ?string $subjectValue,
     ) {
-        parent::__construct($objectType, $objectValue, $predicateValue, $subjectType, $subjectValue);
+        parent::__construct($objectType, $subjectType, $objectValue, $predicateValue, $subjectValue);
     }
 
     public function getModule(): DataModelGroup

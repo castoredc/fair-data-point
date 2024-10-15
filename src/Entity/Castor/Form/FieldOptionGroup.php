@@ -14,7 +14,7 @@ class FieldOptionGroup extends CastorEntity
     private ?string $name = null;
 
     /** @param FieldOption[]|null $options */
-    public function __construct(string $id, CastorStudy $study, string $name, private ?string $description = null, private bool $layout, private ?array $options = null)
+    public function __construct(string $id, CastorStudy $study, string $name, private bool $layout, private ?string $description = null, private ?array $options = null)
     {
         parent::__construct($id, $name, $study, null);
 
@@ -135,8 +135,8 @@ class FieldOptionGroup extends CastorEntity
             $data['id'],
             $study,
             $data['name'],
-            $data['description'] ?? null,
             $data['layout'] !== null ? boolval($data['layout']) : false,
+            $data['description'] ?? null,
             $options
         );
 

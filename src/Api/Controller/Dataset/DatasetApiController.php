@@ -103,9 +103,9 @@ class DatasetApiController extends ApiController
                     $dataset,
                     null,
                     $user,
-                    $parsed->getSearch(),
                     $parsed->getPerPage(),
-                    $parsed->getPage()
+                    $parsed->getPage(),
+                    $parsed->getSearch()
                 )
             );
 

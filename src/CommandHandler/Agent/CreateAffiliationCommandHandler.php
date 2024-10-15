@@ -55,10 +55,10 @@ class CreateAffiliationCommandHandler
                 null,
                 $gridInstitute->getName(),
                 $gridInstitute->hasLinks() ? $gridInstitute->getLinks()[0] : null,
-                $mainAddress->getCountryCode(),
                 $mainAddress->getCity(),
                 (string) $mainAddress->getLat(),
-                (string) $mainAddress->getLng()
+                (string) $mainAddress->getLng(),
+                $mainAddress->getCountryCode()
             );
 
             $organization->setCountry($country);
@@ -70,10 +70,10 @@ class CreateAffiliationCommandHandler
                 null,
                 $command->getOrganizationName(),
                 null,
-                $command->getOrganizationCountry(),
                 $command->getOrganizationCity(),
                 null,
-                null
+                null,
+                $command->getOrganizationCountry()
             );
 
             $organization->setCountry($country);

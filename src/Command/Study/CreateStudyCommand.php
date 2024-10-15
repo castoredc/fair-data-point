@@ -9,10 +9,10 @@ final class CreateStudyCommand
 {
     public function __construct(
         private StudySource $source,
+        private bool $manuallyEntered,
         private ?string $sourceId = null,
         private ?int $sourceServer = null,
         private ?string $name = null,
-        private bool $manuallyEntered,
     ) {
     }
 

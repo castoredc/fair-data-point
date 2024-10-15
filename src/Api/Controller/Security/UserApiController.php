@@ -56,9 +56,9 @@ class UserApiController extends ApiController
             $bus->dispatch(
                 new UpdateUserCommand(
                     $parsed->getFirstName(),
-                    $parsed->getMiddleName(),
                     $parsed->getLastName(),
-                    $parsed->getEmail()
+                    $parsed->getEmail(),
+                    $parsed->getMiddleName()
                 )
             );
 

@@ -28,12 +28,12 @@ class UpdateRDFDistributionCommand extends UpdateDistributionCommand
             $slug,
             $defaultMetadataModelId,
             $license,
-            $apiUser,
-            $clientId,
-            $clientSecret,
             $published,
             $cached,
-            $public
+            $public,
+            $apiUser,
+            $clientId,
+            $clientSecret
         );
     }
 
