@@ -8,11 +8,11 @@ use App\Entity\Castor\Structure\Step\SurveyStep;
 use App\Entity\Enum\StructureType;
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Survey extends StructureElement
 {
     /** @param SurveyStep[] $surveySteps */
-    public function __construct(string $id, CastorStudy $study, ?string $name, private ?string $description = null, array $surveySteps)
+    public function __construct(string $id, CastorStudy $study, ?string $name, array $surveySteps, private ?string $description = null)
     {
         parent::__construct($id, $study, StructureType::survey(), $name);
 
@@ -43,8 +43,8 @@ class Survey extends StructureElement
             $data['id'],
             $study,
             $data['name'] ?? null,
-            $data['description'] ?? null,
-            $steps
+            $steps,
+            $data['description'] ?? null
         );
     }
 }

@@ -9,21 +9,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_key_exists;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_specification_dependency_group")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_specification_dependency_group')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DependencyGroup extends Dependency
 {
-    /** @ORM\Column(type="DependencyCombinatorType") */
+    #[ORM\Column(type: 'DependencyCombinatorType')]
     private DependencyCombinatorType $combinator;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Dependency", mappedBy="group", cascade={"persist", "remove"})
-     *
-     * @var Collection<Dependency>
-     */
+    /** @var Collection<Dependency> */
+    #[ORM\OneToMany(targetEntity: Dependency::class, mappedBy: 'group', cascade: ['persist', 'remove'])]
     private Collection $rules;
 
     public function __construct(DependencyCombinatorType $combinator)

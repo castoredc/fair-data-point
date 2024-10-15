@@ -9,20 +9,18 @@ use App\Entity\DataSpecification\Common\Version;
 use App\Entity\Enum\DataDictionaryDataType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_dictionary_variable")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_dictionary_variable')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Variable extends Element
 {
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $name;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $format = null;
 
-    /** @ORM\Column(type="DataDictionaryDataType") */
+    #[ORM\Column(type: 'DataDictionaryDataType')]
     private DataDictionaryDataType $dataType;
 
     public function __construct(Version $version, string $title, ?string $description, string $name, Group $group, DataDictionaryDataType $dataType, int $order)

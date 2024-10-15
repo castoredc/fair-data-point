@@ -9,7 +9,7 @@ use const FILTER_VALIDATE_BOOLEAN;
 
 class CatalogMetadataFilterApiRequest extends MetadataFilterApiRequest
 {
-    /** @Assert\Type("bool") */
+    #[Assert\Type('bool')]
     private ?bool $acceptSubmissions;
 
     protected function parse(): void

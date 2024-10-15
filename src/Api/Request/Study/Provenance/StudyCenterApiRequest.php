@@ -10,31 +10,23 @@ use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 class StudyCenterApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $source;
 
-    /**
-     * @Assert\NotBlank(groups = {"database"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['database'])]
+    #[Assert\Type('string')]
     private ?string $id;
 
-    /** @Assert\Country() */
+    #[Assert\Country]
     private string $country;
 
-    /**
-     * @Assert\NotBlank(groups = {"manual"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['manual'])]
+    #[Assert\Type('string')]
     private ?string $name;
 
-    /**
-     * @Assert\NotBlank(groups = {"manual"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['manual'])]
+    #[Assert\Type('string')]
     private ?string $city;
 
     protected function parse(): void

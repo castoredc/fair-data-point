@@ -18,16 +18,12 @@ class FederatedSparqlQueryRequest extends ApiRequest
         parent::__construct($data, $request->query);
     }
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $sparqlQuery;
 
-    /**
-     * @var string[]
-     * @Assert\Type("array")
-     */
+    /** @var string[] */
+    #[Assert\Type('array')]
     private array $distributionIds;
 
     protected function parse(): void

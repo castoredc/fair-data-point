@@ -11,58 +11,40 @@ use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 class UserAffiliationApiRequest extends GroupedApiRequest implements GroupSequenceProviderInterface
 {
-    /**
-     * @Assert\Type("string")
-     * @Assert\NotBlank(groups = {"OrganizationDb"})
-     */
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(groups: ['OrganizationDb'])]
     private ?string $organizationId = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $organizationSource;
 
-    /**
-     * @Assert\Type("string")
-     * @Assert\NotBlank(groups = {"OrganizationManual"})
-     */
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(groups: ['OrganizationManual'])]
     private ?string $organizationName = null;
 
-    /**
-     * @Assert\Type("string")
-     * @Assert\NotBlank(groups = {"OrganizationManual"})
-     */
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(groups: ['OrganizationManual'])]
     private ?string $organizationCity = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Country()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Country]
     private string $organizationCountry;
 
-    /**
-     * @Assert\Type("string")
-     * @Assert\NotBlank(groups = {"DepartmentDb"})
-     */
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(groups: ['DepartmentDb'])]
     private ?string $departmentId = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $departmentSource;
 
-    /**
-     * @Assert\Type("string")
-     * @Assert\NotBlank(groups = {"DepartmentManual"})
-     */
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(groups: ['DepartmentManual'])]
     private ?string $departmentName = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $position;
 
     protected function parse(): void

@@ -8,13 +8,11 @@ use App\Entity\Enum\NodeType;
 use App\Entity\Enum\ResourceType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_node_record")
- */
+#[ORM\Table(name: 'metadata_model_node_record')]
+#[ORM\Entity]
 class RecordNode extends Node
 {
-    /** @ORM\Column(type="ResourceType") */
+    #[ORM\Column(type: 'ResourceType')]
     private ResourceType $resourceType;
 
     public function __construct(MetadataModelVersion $metadataModelVersion, ResourceType $resourceType)

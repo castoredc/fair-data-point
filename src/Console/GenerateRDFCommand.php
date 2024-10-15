@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -33,11 +34,9 @@ use function count;
 use function sprintf;
 use const DATE_ATOM;
 
+#[AsCommand(name: 'app:generate-rdf')]
 class GenerateRDFCommand extends Command
 {
-    /** @phpcs:ignore */
-    protected static $defaultName = 'app:generate-rdf';
-
     public function __construct(
         private ApiClient $apiClient,
         private EntityManagerInterface $em,
@@ -65,8 +64,7 @@ class GenerateRDFCommand extends Command
             );
     }
 
-    /** @inheritDoc */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln(

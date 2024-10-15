@@ -10,23 +10,17 @@ use function boolval;
 
 class DatasetApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @AppAssert\Slug(type="App\Entity\FAIRData\Dataset")
-     */
+    /** @AppAssert\Slug(type="App\Entity\FAIRData\Dataset") */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $slug;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $defaultMetadataModel;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $published;
 
     protected function parse(): void

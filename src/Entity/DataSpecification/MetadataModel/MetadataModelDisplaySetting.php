@@ -12,48 +12,40 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_display_setting")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_display_setting')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelDisplaySetting
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MetadataModelVersion", inversedBy="displaySettings", cascade={"persist"})
-     * @ORM\JoinColumn(name="metadata_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'displaySettings', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    #[ORM\Column(name: 'orderNumber', type: 'integer', nullable: true)]
     private ?int $order;
 
-    /** @ORM\Column(type="ResourceType") */
+    #[ORM\Column(type: 'ResourceType')]
     private ResourceType $resourceType;
 
-    /** @ORM\Column(type="MetadataDisplayType") */
+    #[ORM\Column(type: 'MetadataDisplayType')]
     private MetadataDisplayType $displayType;
 
-    /** @ORM\Column(type="MetadataDisplayPosition") */
+    #[ORM\Column(type: 'MetadataDisplayPosition')]
     private MetadataDisplayPosition $displayPosition;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode", inversedBy="displaySetting")
-     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: ValueNode::class, inversedBy: 'displaySetting')]
     private ValueNode $node;
 
     public function __construct(

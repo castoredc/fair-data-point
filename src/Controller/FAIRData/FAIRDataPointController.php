@@ -14,7 +14,7 @@ use function assert;
 
 class FAIRDataPointController extends FAIRDataController
 {
-    /** @Route("/fdp", name="fdp") */
+    #[Route(path: '/fdp', name: 'fdp')]
     public function index(Request $request, MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetFAIRDataPointCommand());

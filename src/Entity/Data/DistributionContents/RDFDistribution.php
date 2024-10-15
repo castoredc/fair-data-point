@@ -11,13 +11,11 @@ use App\Entity\FAIRData\Distribution;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="distribution_rdf")
- */
+#[ORM\Table(name: 'distribution_rdf')]
+#[ORM\Entity]
 class RDFDistribution extends DistributionContents implements AccessibleEntity
 {
-    /** @ORM\Column(type="RDFDistributionDatabaseType") */
+    #[ORM\Column(type: 'RDFDistributionDatabaseType')]
     private RDFDistributionDatabaseType $databaseType;
 
     public function __construct(Distribution $distribution)

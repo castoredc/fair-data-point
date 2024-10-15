@@ -13,31 +13,22 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function count;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_dataset")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_dataset')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DatasetMetadata extends Metadata
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="metadata")
-     * @ORM\JoinColumn(name="dataset", referencedColumnName="id", nullable=FALSE)
-     */
+    #[ORM\JoinColumn(name: 'dataset', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Dataset::class, inversedBy: 'metadata')]
     private Dataset $dataset;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
-     * @ORM\JoinTable(name="metadata_dataset_themes")
-     *
-     * @var Collection<OntologyConcept>
-     */
+    /** @var Collection<OntologyConcept> */
+    #[ORM\JoinTable(name: 'metadata_dataset_themes')]
+    #[ORM\ManyToMany(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private Collection $themes;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'keyword', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $keyword = null;
 
     public function __construct(Dataset $dataset)

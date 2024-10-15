@@ -13,41 +13,30 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_study_centers")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_study_centers')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class ParticipatingCenter
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Metadata\StudyMetadata", inversedBy="participatingCenters", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="metadata", referencedColumnName="id", nullable=FALSE)
-     */
+    #[ORM\JoinColumn(name: 'metadata', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: StudyMetadata::class, inversedBy: 'participatingCenters', cascade: ['persist', 'remove'])]
     private StudyMetadata $metadata;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Agent\Organization", cascade={"persist"})
-     * @ORM\JoinColumn(name="organization", referencedColumnName="id", nullable=FALSE)
-     */
+    #[ORM\JoinColumn(name: 'organization', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Organization::class, cascade: ['persist'])]
     private Organization $organization;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Department", cascade={"persist"})
-     * @ORM\JoinTable(name="metadata_study_centers_departments")
-     *
-     * @var Collection<Department>
-     */
+    /** @var Collection<Department> */
+    #[ORM\JoinTable(name: 'metadata_study_centers_departments')]
+    #[ORM\ManyToMany(targetEntity: Department::class, cascade: ['persist'])]
     private Collection $departments;
 
     public function __construct(StudyMetadata $metadata, Organization $organization)

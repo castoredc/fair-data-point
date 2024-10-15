@@ -9,6 +9,7 @@ use App\Entity\Encryption\SensitiveDataString;
 use App\Entity\Iri;
 use App\Exception\CouldNotDecrypt;
 use App\Exception\CouldNotTransformEncryptedStringToJson;
+use App\Repository\CastorServerRepository;
 use App\Service\EncryptionService;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -16,34 +17,33 @@ use function filter_var;
 use function json_encode;
 use const FILTER_VALIDATE_URL;
 
-/** @ORM\Entity(repositoryClass="App\Repository\CastorServerRepository") */
+#[ORM\Entity(repositoryClass: CastorServerRepository::class)]
 class CastorServer
 {
     /**
-    /**
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+        /**
+    */
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    /** @ORM\Column(type="iri") */
+    #[ORM\Column(type: 'iri')]
     private Iri $url;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $flag;
 
-    /** @ORM\Column(name="`default`", type="boolean") */
+    #[ORM\Column(name: '`default`', type: 'boolean')]
     private bool $default;
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $clientId;
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $clientSecret;
 
     /** @throws InvalidArgumentException */

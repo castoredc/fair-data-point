@@ -8,16 +8,14 @@ use App\Entity\Enum\NodeType;
 use App\Entity\Enum\XsdDataType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_node_literal")
- */
+#[ORM\Table(name: 'metadata_model_node_literal')]
+#[ORM\Entity]
 class LiteralNode extends Node
 {
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $value;
 
-    /** @ORM\Column(type="XsdDataType") */
+    #[ORM\Column(type: 'XsdDataType')]
     private XsdDataType $dataType;
 
     public function getValue(): ?string

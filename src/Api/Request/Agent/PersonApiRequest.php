@@ -8,10 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PersonApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Email()
-     */
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
     protected function parse(): void

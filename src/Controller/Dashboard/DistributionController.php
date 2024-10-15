@@ -7,33 +7,31 @@ use App\Entity\Data\Log\DistributionGenerationLog;
 use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Security\Authorization\Voter\DistributionVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class DistributionController extends AbstractController
 {
-    /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}", name="dashboard_study_dataset_distribution")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/metadata", name="dashboard_study_distribution_metadata")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/permissions", name="dashboard_study_distribution_permissions")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents", name="dashboard_study_distribution_content")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log", name="dashboard_study_distribution_log")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/subset", name="dashboard_study_distribution_subset")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}", name="dashboard_catalog_dataset_distribution")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/metadata", name="dashboard_catalog_distribution_metadata")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/permissions", name="dashboard_catalog_distribution_permissions")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents", name="dashboard_catalog_distribution_content")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log", name="dashboard_catalog_distribution_log")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset", name="dashboard_catalog_distribution_subset")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function distribution(Dataset $dataset, Distribution $distribution): Response
-    {
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}', name: 'dashboard_study_dataset_distribution')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/metadata', name: 'dashboard_study_distribution_metadata')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/permissions', name: 'dashboard_study_distribution_permissions')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/contents', name: 'dashboard_study_distribution_content')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log', name: 'dashboard_study_distribution_log')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/subset', name: 'dashboard_study_distribution_subset')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}', name: 'dashboard_catalog_dataset_distribution')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/metadata', name: 'dashboard_catalog_distribution_metadata')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/permissions', name: 'dashboard_catalog_distribution_permissions')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/contents', name: 'dashboard_catalog_distribution_content')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log', name: 'dashboard_catalog_distribution_log')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/subset', name: 'dashboard_catalog_distribution_subset')]
+    public function distribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         return $this->render(
@@ -42,17 +40,16 @@ final class DistributionController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="dashboard_study_distribution_log_records")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log/{log}", name="dashboard_catalog_distribution_log_records")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     * @ParamConverter("log", options={"mapping": {"log": "id"}})
-     */
-    public function adminDistributionLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
-    {
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/{distribution}/log/{log}', name: 'dashboard_study_distribution_log_records')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/{distribution}/log/{log}', name: 'dashboard_catalog_distribution_log_records')]
+    public function adminDistributionLogRecords(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        #[MapEntity(mapping: ['log' => 'id'])]
+        DistributionGenerationLog $log,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {

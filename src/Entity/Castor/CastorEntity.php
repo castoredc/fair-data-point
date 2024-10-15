@@ -7,59 +7,41 @@ use App\Entity\Enum\StructureType;
 use App\Entity\Terminology\Annotation;
 use App\Entity\Terminology\Ontology;
 use App\Entity\Terminology\OntologyConcept;
+use App\Repository\CastorEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CastorEntityRepository")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\Table(name="castor_entity")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "step" = "App\Entity\Castor\Structure\Step\Step",
- *     "field" = "App\Entity\Castor\Form\Field",
- *     "field_option" = "App\Entity\Castor\Form\FieldOption",
- *     "field_option_group" = "App\Entity\Castor\Form\FieldOptionGroup",
- *     "structure_element" = "App\Entity\Castor\Structure\StructureElement",
- *     "report" = "App\Entity\Castor\Structure\Report",
- *     "survey" = "App\Entity\Castor\Structure\Survey",
- * })
- */
+#[ORM\Table(name: 'castor_entity')]
+#[ORM\Entity(repositoryClass: CastorEntityRepository::class)]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['step' => 'App\Entity\Castor\Structure\Step\Step', 'field' => 'App\Entity\Castor\Form\Field', 'field_option' => 'App\Entity\Castor\Form\FieldOption', 'field_option_group' => 'App\Entity\Castor\Form\FieldOptionGroup', 'structure_element' => 'App\Entity\Castor\Structure\StructureElement', 'report' => 'App\Entity\Castor\Structure\Report', 'survey' => 'App\Entity\Castor\Structure\Survey'])]
 abstract class CastorEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=190)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 190)]
     protected string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorStudy")
-     * @ORM\JoinColumn(name="study_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: CastorStudy::class)]
     protected ?CastorStudy $study = null;
 
-    /** @ORM\Column(type="StructureType", name="structure_type", nullable=true) */
+    #[ORM\Column(type: 'StructureType', name: 'structure_type', nullable: true)]
     protected ?StructureType $structureType = null;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     protected string $label;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     protected string $slug;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Terminology\Annotation", mappedBy="entity", cascade={"persist"})
-     *
-     * @var Collection<string, Annotation>
-     */
+    /** @var Collection<string, Annotation> */
+    #[ORM\OneToMany(targetEntity: Annotation::class, mappedBy: 'entity', cascade: ['persist'])]
     protected Collection $annotations;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CastorEntity",cascade={"persist"})
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'parent', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: self::class, cascade: ['persist'])]
     private ?CastorEntity $parent = null;
 
     public function __construct(string $id, string $label, CastorStudy $study, ?StructureType $structureType)

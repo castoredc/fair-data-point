@@ -18,10 +18,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/user") */
+#[Route(path: '/api/user')]
 class UserApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_user") */
+    #[Route(path: '', methods: ['GET'], name: 'api_user')]
     public function user(): Response
     {
         $user = $this->getUser();
@@ -34,7 +34,7 @@ class UserApiController extends ApiController
         return new JsonResponse((new UserApiResource($user))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_user_update") */
+    #[Route(path: '', methods: ['POST'], name: 'api_user_update')]
     public function updateUser(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -54,7 +54,12 @@ class UserApiController extends ApiController
             $parsed = $this->parseRequest(UserApiRequest::class, $request);
             assert($parsed instanceof UserApiRequest);
             $bus->dispatch(
-                new UpdateUserCommand($parsed->getFirstName(), $parsed->getMiddleName(), $parsed->getLastName(), $parsed->getEmail())
+                new UpdateUserCommand(
+                    $parsed->getFirstName(),
+                    $parsed->getLastName(),
+                    $parsed->getEmail(),
+                    $parsed->getMiddleName()
+                )
             );
 
             return new JsonResponse([]);

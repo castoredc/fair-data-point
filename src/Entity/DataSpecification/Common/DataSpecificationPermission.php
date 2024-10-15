@@ -8,24 +8,18 @@ use App\Security\Permission;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="permission_data_specification")
- */
+#[ORM\Table(name: 'permission_data_specification')]
+#[ORM\Entity]
 class DataSpecificationPermission extends Permission
 {
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="dataSpecifications")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'dataSpecifications')]
     protected User $user;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="DataSpecification", cascade={"persist"}, fetch = "EAGER", inversedBy="permissions")
-     * @ORM\JoinColumn(name="data_specification_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'data_specification_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: DataSpecification::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private DataSpecification $dataSpecification;
 
     public function __construct(User $user, PermissionType $type, DataSpecification $dataSpecification)

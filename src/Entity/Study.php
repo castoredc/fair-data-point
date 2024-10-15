@@ -18,6 +18,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Entity\FAIRData\MetadataEnrichedEntity;
 use App\Entity\Metadata\StudyMetadata;
+use App\Repository\StudyRepository;
 use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,79 +29,62 @@ use function array_merge;
 use function array_unique;
 use function count;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\StudyRepository")
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="study", indexes={@ORM\Index(name="slug", columns={"slug"})})
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"castor" = "App\Entity\Castor\CastorStudy"})
- */
+#[ORM\Table(name: 'study')]
+#[ORM\Index(name: 'slug', columns: ['slug'])]
+#[ORM\Entity(repositoryClass: StudyRepository::class)]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['castor' => 'App\Entity\Castor\CastorStudy'])]
 abstract class Study implements AccessibleEntity, MetadataEnrichedEntity
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string|null $id = null;
 
-    /** @ORM\Column(type="string", length=255, nullable=TRUE) */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $sourceId = null;
 
-    /** @ORM\Column(type="StudySource", nullable=TRUE) */
+    #[ORM\Column(type: 'StudySource', nullable: true)]
     private ?StudySource $source = null;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    /** @ORM\Column(type="string", length=255, unique=true) */
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $slug;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata", mappedBy="study", cascade={"persist"}, fetch = "EAGER")
-     *
-     * @var Collection<StudyMetadata>
-     */
+    /** @var Collection<StudyMetadata> */
+    #[ORM\OneToMany(targetEntity: StudyMetadata::class, mappedBy: 'study', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $metadata;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Dataset", mappedBy="study", fetch = "EAGER")
-     *
-     * @var Collection<Dataset>
-     */
+    /** @var Collection<Dataset> */
+    #[ORM\OneToMany(targetEntity: Dataset::class, mappedBy: 'study', fetch: 'EAGER')]
     private Collection $datasets;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $enteredManually = false;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Catalog", mappedBy="studies", cascade={"persist"})
-     *
-     * @var Collection<Catalog>
-     */
+    /** @var Collection<Catalog> */
+    #[ORM\ManyToMany(targetEntity: Catalog::class, mappedBy: 'studies', cascade: ['persist'])]
     private Collection $catalogs;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $isPublished = false;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\Common\Mapping\Mapping", mappedBy="study", cascade={"persist", "remove"})
-     *
-     * @var Collection<Mapping>
-     */
+    /** @var Collection<Mapping> */
+    #[ORM\OneToMany(targetEntity: Mapping::class, mappedBy: 'study', cascade: ['persist', 'remove'])]
     private Collection $mappings;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="studies")
-     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'studies')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(StudySource $source, ?string $sourceId, ?string $name, ?string $slug)

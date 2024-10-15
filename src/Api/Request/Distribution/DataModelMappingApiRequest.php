@@ -10,49 +10,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function boolval;
 
-/** @Assert\GroupSequenceProvider() */
+#[Assert\GroupSequenceProvider]
 class DataModelMappingApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $type;
 
-    /**
-     * @Assert\NotBlank(groups = {"node"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['node'])]
+    #[Assert\Type('string')]
     private ?string $node;
 
-    /** @Assert\Type("bool", groups = {"node"}) */
+    #[Assert\Type('bool', groups: ['node'])]
     private bool $transform;
 
-    /**
-     * @Assert\NotBlank(groups = {"transform"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['transform'])]
+    #[Assert\Type('string')]
     private ?string $transformSyntax;
 
-    /**
-     * @Assert\NotBlank(groups = {"node"})
-     * @var string[]
-     */
+    /** @var string[] */
+    #[Assert\NotBlank(groups: ['node'])]
     private ?array $elements;
 
-    /** @Assert\NotBlank(groups = {"module"}) */
+    #[Assert\NotBlank(groups: ['module'])]
     private ?string $structureType;
 
-    /**
-     * @Assert\NotBlank(groups = {"module"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['module'])]
+    #[Assert\Type('string')]
     private ?string $module;
 
-    /**
-     * @Assert\NotBlank(groups = {"module"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['module'])]
+    #[Assert\Type('string')]
     private ?string $element;
 
     protected function parse(): void

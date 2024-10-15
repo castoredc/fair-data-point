@@ -108,6 +108,7 @@ class TripleStoreBasedDistributionService implements DistributionService
         }
     }
 
+    /** @param array<mixed>|null $nameSpaces */
     public function getDataFromStore(
         DistributionDatabaseInformation $databaseInformation,
         EncryptionService $encryptionService,

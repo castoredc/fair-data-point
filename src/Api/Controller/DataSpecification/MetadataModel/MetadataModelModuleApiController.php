@@ -13,7 +13,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,23 +22,26 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/module")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/module')]
 class MetadataModelModuleApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_modules") */
-    public function getModules(MetadataModelVersion $metadataModelVersion): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_modules')]
+    public function getModules(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new MetadataModelModulesApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_module_add") */
-    public function addModule(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_module_add')]
+    public function addModule(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
@@ -64,12 +67,11 @@ class MetadataModelModuleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{module}", methods={"POST"}, name="api_metadata_model_module_update")
-     * @ParamConverter("module", options={"mapping": {"module": "id"}})
-     */
+    #[Route(path: '/{module}', methods: ['POST'], name: 'api_metadata_model_module_update')]
     public function updateModule(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
         Request $request,
         MessageBusInterface $bus,
@@ -109,12 +111,11 @@ class MetadataModelModuleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{module}", methods={"DELETE"}, name="api_metadata_model_module_delete")
-     * @ParamConverter("module", options={"mapping": {"module": "id"}})
-     */
+    #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_metadata_model_module_delete')]
     public function deleteModule(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
         MessageBusInterface $bus,
     ): Response {

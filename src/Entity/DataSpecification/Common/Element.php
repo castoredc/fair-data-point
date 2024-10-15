@@ -8,67 +8,41 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_specification_element")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "node" = "App\Entity\DataSpecification\DataModel\Node\Node",
- *     "model_externalIri" = "App\Entity\DataSpecification\DataModel\Node\ExternalIriNode",
- *     "model_internalIri" = "App\Entity\DataSpecification\DataModel\Node\InternalIriNode",
- *     "model_literal" = "App\Entity\DataSpecification\DataModel\Node\LiteralNode",
- *     "model_record" = "App\Entity\DataSpecification\DataModel\Node\RecordNode",
- *     "model_value" = "App\Entity\DataSpecification\DataModel\Node\ValueNode",
- *     "dictionary_variable" = "App\Entity\DataSpecification\DataDictionary\Variable",
- *     "metadata_model_node" = "App\Entity\DataSpecification\MetadataModel\Node\Node",
- *     "metadata_model_externalIri" = "App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode",
- *     "metadata_model_internalIri" = "App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode",
- *     "metadata_model_literal" = "App\Entity\DataSpecification\MetadataModel\Node\LiteralNode",
- *     "metadata_model_record" = "App\Entity\DataSpecification\MetadataModel\Node\RecordNode",
- *     "metadata_model_value" = "App\Entity\DataSpecification\MetadataModel\Node\ValueNode",
- *     "metadata_model_children" = "App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode",
- *     "metadata_model_parents" = "App\Entity\DataSpecification\MetadataModel\Node\ParentsNode"
- * })
- */
+#[ORM\Table(name: 'data_specification_element')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['node' => 'App\Entity\DataSpecification\DataModel\Node\Node', 'model_externalIri' => 'App\Entity\DataSpecification\DataModel\Node\ExternalIriNode', 'model_internalIri' => 'App\Entity\DataSpecification\DataModel\Node\InternalIriNode', 'model_literal' => 'App\Entity\DataSpecification\DataModel\Node\LiteralNode', 'model_record' => 'App\Entity\DataSpecification\DataModel\Node\RecordNode', 'model_value' => 'App\Entity\DataSpecification\DataModel\Node\ValueNode', 'dictionary_variable' => 'App\Entity\DataSpecification\DataDictionary\Variable', 'metadata_model_node' => 'App\Entity\DataSpecification\MetadataModel\Node\Node', 'metadata_model_externalIri' => 'App\Entity\DataSpecification\MetadataModel\Node\ExternalIriNode', 'metadata_model_internalIri' => 'App\Entity\DataSpecification\MetadataModel\Node\InternalIriNode', 'metadata_model_literal' => 'App\Entity\DataSpecification\MetadataModel\Node\LiteralNode', 'metadata_model_record' => 'App\Entity\DataSpecification\MetadataModel\Node\RecordNode', 'metadata_model_value' => 'App\Entity\DataSpecification\MetadataModel\Node\ValueNode', 'metadata_model_children' => 'App\Entity\DataSpecification\MetadataModel\Node\ChildrenNode', 'metadata_model_parents' => 'App\Entity\DataSpecification\MetadataModel\Node\ParentsNode'])]
 abstract class Element
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="elements", cascade={"persist"})
-     * @ORM\JoinColumn(name="groupId", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'groupId', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: 'elements', cascade: ['persist'])]
     protected ?Group $group = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Version", inversedBy="elements", cascade={"persist"})
-     * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Version::class, inversedBy: 'elements', cascade: ['persist'])]
     private Version $version;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $description = null;
 
-    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    #[ORM\Column(name: 'orderNumber', type: 'integer', nullable: true)]
     protected ?int $order;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OptionGroup", inversedBy="elements")
-     * @ORM\JoinColumn(name="option_group", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'option_group', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: OptionGroup::class, inversedBy: 'elements')]
     private ?OptionGroup $optionGroup = null;
 
     public function __construct(Version $version, string $title, ?string $description)

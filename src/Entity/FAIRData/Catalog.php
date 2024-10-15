@@ -10,6 +10,7 @@ use App\Entity\FAIRData\Permission\CatalogPermission;
 use App\Entity\Metadata\CatalogMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Repository\CatalogRepository;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
 use App\Traits\CreatedAndUpdated;
@@ -22,78 +23,59 @@ use function array_merge;
 use function array_unique;
 use function count;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CatalogRepository")
- * @ORM\Table(name="catalog", indexes={@ORM\Index(name="slug", columns={"slug"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'catalog')]
+#[ORM\Index(name: 'slug', columns: ['slug'])]
+#[ORM\Entity(repositoryClass: CatalogRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
     public const URL_PATH = '/fdp/catalog/';
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="string", unique=true) */
+    #[ORM\Column(type: 'string', unique: true)]
     private string $slug;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="FAIRDataPoint", inversedBy="catalogs",cascade={"persist"})
-     * @ORM\JoinColumn(name="fdp", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'fdp', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: FAIRDataPoint::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private ?FAIRDataPoint $fairDataPoint = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Dataset", inversedBy="catalogs",cascade={"persist"})
-     * @ORM\JoinTable(name="catalogs_datasets")
-     *
-     * @var Collection<Dataset>
-     */
+    /** @var Collection<Dataset> */
+    #[ORM\JoinTable(name: 'catalogs_datasets')]
+    #[ORM\ManyToMany(targetEntity: Dataset::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private Collection $datasets;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Study", inversedBy="catalogs", cascade={"persist"})
-     * @ORM\JoinTable(name="catalogs_studies")
-     *
-     * @var Collection<Study>
-     */
+    /** @var Collection<Study> */
+    #[ORM\JoinTable(name: 'catalogs_studies')]
+    #[ORM\ManyToMany(targetEntity: Study::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private Collection $studies;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $acceptSubmissions = false;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $submissionAccessesData = false;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\CatalogMetadata", mappedBy="catalog")
-     * @ORM\OrderBy({"createdAt" = "ASC"})
-     *
-     * @var Collection<CatalogMetadata>
-     */
+    /** @var Collection<CatalogMetadata> */
+    #[ORM\OneToMany(targetEntity: CatalogMetadata::class, mappedBy: 'catalog')]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\CatalogPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="catalog")
-     *
-     * @var Collection<CatalogPermission>
-     */
+    /** @var Collection<CatalogPermission> */
+    #[ORM\OneToMany(targetEntity: CatalogPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'catalog')]
     private Collection $permissions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="catalogs")
-     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'catalogs')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(string $slug)

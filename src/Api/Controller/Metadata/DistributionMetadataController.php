@@ -9,7 +9,7 @@ use App\Command\Metadata\CreateDistributionMetadataCommand;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DistributionVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,15 +18,16 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/distribution/{distribution}")
- * @ParamConverter("distribution", options={"mapping": {"distribution": "id"}})
- */
+#[Route(path: '/api/metadata/distribution/{distribution}')]
 class DistributionMetadataController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_distribution_add") */
-    public function addDistributionMetadata(Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_distribution_add')]
+    public function addDistributionMetadata(
+        #[MapEntity(mapping: ['distribution' => 'id'])]
+        Distribution $distribution,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         try {
@@ -46,11 +47,14 @@ class DistributionMetadataController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while adding metadata for a distribution', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding metadata for a distribution',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

@@ -12,7 +12,7 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Exception\RenderableApiException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,23 +21,27 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/form/{metadata}")
- * @ParamConverter("metadata", options={"mapping": {"metadata": "id"}})
- */
+#[Route(path: '/api/metadata/form/{metadata}')]
 class MetadataFormController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_metadata_form_get") */
-    public function getMetadataForm(Metadata $metadata, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_metadata_form_get')]
+    public function getMetadataForm(
+        #[MapEntity(mapping: ['metadata' => 'id'])]
+        Metadata $metadata,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $metadata->getEntity());
 
         return new JsonResponse((new MetadataFormsApiResource($metadata))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_metadata_form_update") */
-    public function handleMetadataUpdate(Metadata $metadata, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_metadata_form_update')]
+    public function handleMetadataUpdate(
+        #[MapEntity(mapping: ['metadata' => 'id'])]
+        Metadata $metadata,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $metadata->getEntity());
 
         try {
@@ -57,10 +61,13 @@ class MetadataFormController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while updating metadata', [
-                'exception' => $e,
-                'MetadataID' => $metadata->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating metadata',
+                [
+                    'exception' => $e,
+                    'MetadataID' => $metadata->getId(),
+                ]
+            );
 
             if ($e instanceof NotFound) {
                 return new JsonResponse([], Response::HTTP_NOT_FOUND);

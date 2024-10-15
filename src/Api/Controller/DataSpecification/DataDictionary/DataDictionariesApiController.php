@@ -19,10 +19,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/dictionary") */
+#[Route(path: '/api/dictionary')]
 class DataDictionariesApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dictionaries") */
+    #[Route(path: '', methods: ['GET'], name: 'api_dictionaries')]
     public function dataDictionaries(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -35,7 +35,7 @@ class DataDictionariesApiController extends ApiController
         return new JsonResponse((new DataDictionariesApiResource($handledStamp->getResult()))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_dictionaries_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_dictionaries_add')]
     public function addDataDictionary(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

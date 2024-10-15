@@ -20,6 +20,8 @@ parameters:
 		-
 			message: '#is unused#'
 			path: %currentWorkingDirectory%/src/Entity/Enum/*
+		-
+			identifier: missingType.generics
 	symfony:
 		container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
 		console_application_loader: tests/console-application.php
@@ -28,5 +30,3 @@ parameters:
 	excludePaths:
 	  analyseAndScan:
 	    - %currentWorkingDirectory%/src/Migrations/*
-	checkGenericClassInNonGenericObjectType: false
-	checkMissingIterableValueType: false

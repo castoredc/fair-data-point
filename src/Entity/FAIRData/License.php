@@ -6,19 +6,17 @@ namespace App\Entity\FAIRData;
 use App\Entity\Iri;
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class License
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=190)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 190)]
     private string $slug;
 
-    /** @ORM\Column(type="iri") */
+    #[ORM\Column(type: 'iri')]
     private Iri $url;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $name;
 
     public function __construct(string $slug, Iri $url, string $name)

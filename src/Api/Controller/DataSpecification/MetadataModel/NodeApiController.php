@@ -19,7 +19,7 @@ use App\Exception\DataSpecification\MetadataModel\NodeHasValues;
 use App\Exception\DataSpecification\MetadataModel\NodeInUseByDisplaySetting;
 use App\Exception\DataSpecification\MetadataModel\NodeInUseByField;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,23 +28,25 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/node")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/node')]
 class NodeApiController extends ApiController
 {
-    /** @Route("", name="api_metadata_model_node") */
-    public function nodes(MetadataModelVersion $metadataModelVersion): Response
-    {
+    #[Route(path: '', name: 'api_metadata_model_node')]
+    public function nodes(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new NodesApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("/{type}", methods={"GET"}, name="api_metadata_model_node_type") */
-    public function nodesByType(MetadataModelVersion $metadataModelVersion, string $type): Response
-    {
+    #[Route(path: '/{type}', methods: ['GET'], name: 'api_metadata_model_node_type')]
+    public function nodesByType(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        string $type,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         $nodeType = NodeType::fromString($type);
@@ -52,8 +54,9 @@ class NodeApiController extends ApiController
         return new JsonResponse((new NodesApiResource($metadataModelVersion, $nodeType))->toArray());
     }
 
-    /** @Route("/{type}", methods={"POST"}, name="api_metadata_model_node_add") */
+    #[Route(path: '/{type}', methods: ['POST'], name: 'api_metadata_model_node_add')]
     public function addNode(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         string $type,
         Request $request,
@@ -95,13 +98,12 @@ class NodeApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{type}/{id}", methods={"POST"}, name="api_metadata_model_node_edit")
-     * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
-     */
+    #[Route(path: '/{type}/{id}', methods: ['POST'], name: 'api_metadata_model_node_edit')]
     public function editNode(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         string $type,
+        #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
         Node $node,
         Request $request,
         MessageBusInterface $bus,
@@ -146,13 +148,12 @@ class NodeApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{type}/{id}", methods={"DELETE"}, name="api_metadata_model_node_remove")
-     * @ParamConverter("node", options={"mapping": {"id": "id", "version": "version"}})
-     */
+    #[Route(path: '/{type}/{id}', methods: ['DELETE'], name: 'api_metadata_model_node_remove')]
     public function removeNode(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         string $type,
+        #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
         Node $node,
         MessageBusInterface $bus,
     ): Response {

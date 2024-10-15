@@ -14,10 +14,10 @@ class GetPaginatedDatasetsCommand
         private ?Catalog $catalog,
         private ?Agent $agent,
         private ?User $user,
-        private ?string $search = null,
-        private ?array $hideCatalogs = null,
         private int $perPage,
         private int $page,
+        private ?string $search = null,
+        private ?array $hideCatalogs = null,
     ) {
     }
 

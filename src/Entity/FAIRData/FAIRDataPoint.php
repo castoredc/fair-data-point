@@ -16,48 +16,37 @@ use Ramsey\Uuid\UuidInterface;
 use function array_merge;
 use function count;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="fdp", indexes={@ORM\Index(name="iri", columns={"iri"})})
- */
+#[ORM\Table(name: 'fdp')]
+#[ORM\Index(name: 'iri', columns: ['iri'])]
+#[ORM\Entity]
 class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="iri") */
+    #[ORM\Column(type: 'iri')]
     private Iri $iri;
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $purl;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\FAIRDataPointMetadata", mappedBy="fdp")
-     * @ORM\OrderBy({"createdAt" = "ASC"})
-     *
-     * @var Collection<FAIRDataPointMetadata>
-     */
+    /** @var Collection<FAIRDataPointMetadata> */
+    #[ORM\OneToMany(targetEntity: FAIRDataPointMetadata::class, mappedBy: 'fdp')]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Catalog", mappedBy="fairDataPoint",cascade={"persist"}, fetch = "EAGER")
-     *
-     * @var Collection<string, Catalog>
-     */
+    /** @var Collection<string, Catalog> */
+    #[ORM\OneToMany(targetEntity: Catalog::class, mappedBy: 'fairDataPoint', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $catalogs;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="fdps")
-     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'fdps')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct()

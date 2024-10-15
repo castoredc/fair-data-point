@@ -7,7 +7,7 @@ use App\Entity\Castor\CastorEntity;
 use App\Entity\Castor\CastorStudy;
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class FieldOption extends CastorEntity
 {
     private ?string $name = null;

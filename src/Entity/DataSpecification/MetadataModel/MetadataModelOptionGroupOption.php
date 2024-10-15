@@ -6,11 +6,9 @@ namespace App\Entity\DataSpecification\MetadataModel;
 use App\Entity\DataSpecification\Common\OptionGroupOption;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_option_group_option")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_option_group_option')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelOptionGroupOption extends OptionGroupOption
 {
     /** @param array<mixed> $data */

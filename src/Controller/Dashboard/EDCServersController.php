@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class EDCServersController extends AbstractController
 {
-    /** @Route("/dashboard/edc-servers", name="dashboard_edcservers") */
+    #[Route(path: '/dashboard/edc-servers', name: 'dashboard_edcservers')]
     public function edcServers(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

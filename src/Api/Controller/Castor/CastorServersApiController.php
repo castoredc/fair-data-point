@@ -37,7 +37,7 @@ final class CastorServersApiController extends ApiController
         parent::__construct($apiClient, $validator, $logger, $em);
     }
 
-    /** @Route("/api/castor/servers", methods={"GET"}, name="api_servers") */
+    #[Route(path: '/api/castor/servers', methods: ['GET'], name: 'api_servers')]
     public function servers(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetCastorServersCommand());
@@ -54,7 +54,7 @@ final class CastorServersApiController extends ApiController
         );
     }
 
-    /** @Route("/api/castor/servers", methods={"POST", "PUT"}, name="api_add_server") */
+    #[Route(path: '/api/castor/servers', methods: ['POST', 'PUT'], name: 'api_add_server')]
     public function addServer(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -79,7 +79,7 @@ final class CastorServersApiController extends ApiController
         }
     }
 
-    /** @Route("/api/castor/servers/{id}", methods={"DELETE"}, name="delete_add_server") */
+    #[Route(path: '/api/castor/servers/{id}', methods: ['DELETE'], name: 'delete_add_server')]
     public function deleteServer(int $id, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -92,7 +92,10 @@ final class CastorServersApiController extends ApiController
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         } catch (HandlerFailedException $e) {
             if ($e->getPrevious() instanceof CastorServerNotFound) {
-                $this->logger->warning('The CastorServer with id ' . $id . ' could not be found.', ['exception' => $e->getPrevious()]);
+                $this->logger->warning(
+                    'The CastorServer with id ' . $id . ' could not be found.',
+                    ['exception' => $e->getPrevious()]
+                );
 
                 return new JsonResponse([], Response::HTTP_NOT_FOUND);
             }

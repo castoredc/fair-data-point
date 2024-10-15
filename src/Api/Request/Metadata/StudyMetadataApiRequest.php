@@ -17,52 +17,46 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class StudyMetadataApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $briefName;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $scientificName = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private string $briefSummary;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $type;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $condition = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $intervention = null;
 
-    /** @Assert\Type("integer") */
+    #[Assert\Type('integer')]
     private ?int $estimatedEnrollment;
 
-    /** @Assert\Date() */
+    #[Assert\Date]
     private ?string $estimatedStudyStartDate = null;
 
-    /** @Assert\Date() */
+    #[Assert\Date]
     private ?string $estimatedStudyCompletionDate = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $summary = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $recruitmentStatus = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $methodType = null;
 
-    /**
-     * @var mixed[]
-     * @Assert\Type("array")
-     */
+    /** @var mixed[] */
+    #[Assert\Type('array')]
     private array $conditions;
 
     /**

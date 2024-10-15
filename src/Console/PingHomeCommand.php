@@ -7,6 +7,7 @@ namespace App\Console;
 use App\Command\FAIRDataPoint\GetFAIRDataPointCommand;
 use App\Entity\FAIRData\FAIRDataPoint;
 use GuzzleHttp\Client;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,11 +15,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use function assert;
 
+#[AsCommand(name: 'app:ping-home')]
 class PingHomeCommand extends Command
 {
-    /** @phpcs:ignore */
-    protected static $defaultName = 'app:ping-home';
-
     private Client $client;
 
     public function __construct(private MessageBusInterface $bus)
@@ -33,8 +32,7 @@ class PingHomeCommand extends Command
         $this->setDescription('Sends request to home.fairdatapoint.org to keep metadata up to date');
     }
 
-    /** @inheritDoc */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln(
             [

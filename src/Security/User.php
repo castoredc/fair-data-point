@@ -25,65 +25,43 @@ use function strrchr;
 use function strtolower;
 use function substr;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'user')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface
 {
     use CreatedAt;
     use UpdatedAt;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\Agent\Person", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
-     * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'person_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: Person::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
     private ?Person $person = null;
-    /**
-     * @ORM\OneToOne(targetEntity="App\Security\Providers\Castor\CastorUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
-     * @ORM\JoinColumn(name="castor_user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'castor_user_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: CastorUser::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
     private ?CastorUser $castorUser = null;
-    /**
-     * @ORM\OneToOne(targetEntity="App\Security\Providers\Orcid\OrcidUser", cascade={"persist"}, fetch = "EAGER", mappedBy="user")
-     * @ORM\JoinColumn(name="orcid_user_id", referencedColumnName="orcid")
-     */
+    #[ORM\JoinColumn(name: 'orcid_user_id', referencedColumnName: 'orcid')]
+    #[ORM\OneToOne(targetEntity: OrcidUser::class, cascade: ['persist'], fetch: 'EAGER', mappedBy: 'user')]
     private ?OrcidUser $orcid = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DataSpecification\Common\DataSpecificationPermission", mappedBy="user", cascade={"persist", "remove"})
-     *
-     * @var Collection<DataSpecificationPermission>
-     */
+    /** @var Collection<DataSpecificationPermission> */
+    #[ORM\OneToMany(targetEntity: DataSpecificationPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $dataSpecifications;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\CatalogPermission", mappedBy="user", cascade={"persist", "remove"})
-     *
-     * @var Collection<CatalogPermission>
-     */
+    /** @var Collection<CatalogPermission> */
+    #[ORM\OneToMany(targetEntity: CatalogPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $catalogs;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DatasetPermission", mappedBy="user", cascade={"persist", "remove"})
-     *
-     * @var Collection<DatasetPermission>
-     */
+    /** @var Collection<DatasetPermission> */
+    #[ORM\OneToMany(targetEntity: DatasetPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $datasets;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DistributionPermission", mappedBy="user", cascade={"persist", "remove"})
-     *
-     * @var Collection<DistributionPermission>
-     */
+    /** @var Collection<DistributionPermission> */
+    #[ORM\OneToMany(targetEntity: DistributionPermission::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Collection $distributions;
 
     public const DOMAINS = [

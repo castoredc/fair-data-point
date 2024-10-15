@@ -22,6 +22,7 @@ use App\Entity\Study;
 use App\Entity\Terminology\OntologyConcept;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,11 +30,9 @@ use function array_merge;
 use function assert;
 use function json_encode;
 
+#[AsCommand(name: 'app:metadata:migrate')]
 class MigrateMetadataCommand extends Command
 {
-    /** @phpcs:ignore */
-    protected static $defaultName = 'app:metadata:migrate';
-
     public function __construct(
         private EntityManagerInterface $em,
     ) {
@@ -46,8 +45,7 @@ class MigrateMetadataCommand extends Command
             ->setDescription('Insert new Castor metadata schema');
     }
 
-    /** @inheritDoc */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln(

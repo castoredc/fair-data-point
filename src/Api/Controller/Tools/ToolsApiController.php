@@ -20,7 +20,7 @@ use function file_get_contents;
 
 class ToolsApiController extends ApiController
 {
-    /** @Route("/api/tools/metadata-xml-parse", name="api_tools_metadata_xml_to_csv") */
+    #[Route(path: '/api/tools/metadata-xml-parse', name: 'api_tools_metadata_xml_to_csv')]
     public function metadataXmlParse(Request $request, MessageBusInterface $bus): Response
     {
         $file = $request->files->get('xml');
@@ -31,9 +31,12 @@ class ToolsApiController extends ApiController
         }
 
         if (! $file->isValid()) {
-            return new JsonResponse([
-                'error' => $file->getErrorMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(
+                [
+                    'error' => $file->getErrorMessage(),
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $xml = file_get_contents($file->getPathname());

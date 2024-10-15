@@ -5,18 +5,16 @@ namespace App\Entity\FAIRData;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Language
 {
     public const ISO_URL = 'http://id.loc.gov/vocabulary/iso639-1/';
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=190)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 190)]
     private string $code;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $name;
 
     public function getCode(): string

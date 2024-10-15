@@ -25,7 +25,7 @@ use App\Exception\InvalidEntityType;
 use App\Exception\NoAccessPermission;
 use App\Exception\NotFound;
 use App\Security\Authorization\Voter\DistributionVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,17 +35,20 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}")
- * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
- * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
- * @ParamConverter("dataModelVersion", options={"mapping": {"version": "id"}})
- */
+#[Route(path: '/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}')]
 class RdfDistributionApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_distribution_contents_rdf") */
-    public function distributionRdfContents(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_distribution_contents_rdf')]
+    public function distributionRdfContents(
+        string $type,
+        #[MapEntity(mapping: ['version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution)) {
@@ -71,9 +74,18 @@ class RdfDistributionApiController extends ApiController
         return $this->getPaginatedResponse(DataModelMappingApiResource::class, $results);
     }
 
-    /** @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add") */
-    public function addMapping(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_distribution_contents_rdf_add')]
+    public function addMapping(
+        string $type,
+        #[MapEntity(mapping: ['version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution)) {
@@ -105,7 +117,13 @@ class RdfDistributionApiController extends ApiController
                 );
             } elseif ($type->isModule()) {
                 $envelope = $bus->dispatch(
-                    new CreateDataModelModuleMappingCommand($contents, $parsed->getModule(), $parsed->getElement(), $parsed->getStructureType(), $dataModelVersion)
+                    new CreateDataModelModuleMappingCommand(
+                        $contents,
+                        $parsed->getModule(),
+                        $parsed->getElement(),
+                        $parsed->getStructureType(),
+                        $dataModelVersion
+                    )
                 );
             } else {
                 throw new InvalidEntityType();
@@ -143,11 +161,14 @@ class RdfDistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
-            $this->logger->critical('An error occurred while adding a mapping to an RDF distribution', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding a mapping to an RDF distribution',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

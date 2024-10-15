@@ -10,11 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class MainController extends AbstractController
 {
-    /**
-     * @return RedirectResponse
-     *
-     * @Route("/dashboard", name="redirect_dashboard")
-     */
+    /** @return RedirectResponse */
+    #[Route(path: '/dashboard', name: 'redirect_dashboard')]
     public function redirectToStudies(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

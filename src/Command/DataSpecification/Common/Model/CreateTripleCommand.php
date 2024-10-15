@@ -9,9 +9,9 @@ abstract class CreateTripleCommand
 {
     public function __construct(
         private NodeType $objectType,
+        private NodeType $subjectType,
         private ?string $objectValue = null,
         private ?string $predicateValue = null,
-        private NodeType $subjectType,
         private ?string $subjectValue = null,
     ) {
     }

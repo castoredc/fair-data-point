@@ -9,11 +9,11 @@ final class UpdateStudyCommand
 {
     public function __construct(
         private Study $study,
+        private string $slug,
+        private bool $published,
         private ?string $sourceId = null,
         private ?int $sourceServer = null,
         private ?string $name = null,
-        private string $slug,
-        private bool $published,
     ) {
     }
 

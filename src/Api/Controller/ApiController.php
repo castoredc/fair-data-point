@@ -26,8 +26,12 @@ use function json_decode;
 
 abstract class ApiController extends AbstractController
 {
-    public function __construct(protected ApiClient $apiClient, protected ValidatorInterface $validator, protected LoggerInterface $logger, protected EntityManagerInterface $em)
-    {
+    public function __construct(
+        protected ApiClient $apiClient,
+        protected ValidatorInterface $validator,
+        protected LoggerInterface $logger,
+        protected EntityManagerInterface $em,
+    ) {
     }
 
     /** @throws ApiRequestParseError */
@@ -135,14 +139,16 @@ abstract class ApiController extends AbstractController
             $results[] = $apiResource;
         }
 
-        return new JsonResponse([
-            'results' => $results,
-            'currentPage' => $collection->getCurrentPage(),
-            'start' => $collection->getStart(),
-            'perPage' => $collection->getPerPage(),
-            'totalResults' => $collection->getTotalResults(),
-            'totalPages' => $collection->getTotalPages(),
-        ]);
+        return new JsonResponse(
+            [
+                'results' => $results,
+                'currentPage' => $collection->getCurrentPage(),
+                'start' => $collection->getStart(),
+                'perPage' => $collection->getPerPage(),
+                'totalResults' => $collection->getTotalResults(),
+                'totalPages' => $collection->getTotalPages(),
+            ]
+        );
     }
 
     /**

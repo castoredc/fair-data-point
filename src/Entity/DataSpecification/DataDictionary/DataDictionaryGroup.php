@@ -6,11 +6,9 @@ namespace App\Entity\DataSpecification\DataDictionary;
 use App\Entity\DataSpecification\Common\Group;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_dictionary_group")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_dictionary_group')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DataDictionaryGroup extends Group
 {
 }

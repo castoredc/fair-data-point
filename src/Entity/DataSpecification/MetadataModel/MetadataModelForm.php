@@ -11,44 +11,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_form")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_form')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelForm
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MetadataModelVersion", inversedBy="forms", cascade={"persist"})
-     * @ORM\JoinColumn(name="metadata_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'forms', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    #[ORM\Column(name: 'orderNumber', type: 'integer', nullable: true)]
     private ?int $order;
 
-    /** @ORM\Column(type="ResourceType") */
+    #[ORM\Column(type: 'ResourceType')]
     private ResourceType $resourceType;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MetadataModelField", mappedBy="form", cascade={"persist"})
-     * @ORM\OrderBy({"order" = "ASC"})
-     *
-     * @var Collection<MetadataModelField>
-     */
+    /** @var Collection<MetadataModelField> */
+    #[ORM\OneToMany(targetEntity: MetadataModelField::class, mappedBy: 'form', cascade: ['persist'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $fields;
 
     public function __construct(string $title, int $order, ResourceType $resourceType, MetadataModelVersion $version)

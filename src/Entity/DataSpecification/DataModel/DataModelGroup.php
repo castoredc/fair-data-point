@@ -8,11 +8,9 @@ use App\Entity\DataSpecification\Common\Group;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_module")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model_module')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DataModelGroup extends Group
 {
     public function addTriple(Triple $triple): void

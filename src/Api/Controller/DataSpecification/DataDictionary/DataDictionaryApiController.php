@@ -16,7 +16,7 @@ use App\Exception\Upload\InvalidFile;
 use App\Exception\Upload\InvalidJSON;
 use App\Exception\Upload\NoFileSpecified;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,23 +27,26 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dictionary/{dataDictionary}")
- * @ParamConverter("dataDictionary", options={"mapping": {"dataDictionary": "id"}})
- */
+#[Route(path: '/api/dictionary/{dataDictionary}')]
 class DataDictionaryApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dictionary") */
-    public function dataDictionary(DataDictionary $dataDictionary): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_dictionary')]
+    public function dataDictionary(
+        #[MapEntity(mapping: ['dataDictionary' => 'id'])]
+        DataDictionary $dataDictionary,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataDictionary);
 
         return new JsonResponse((new DataDictionaryApiResource($dataDictionary))->toArray());
     }
 
-    /** @Route("/import", methods={"POST"}, name="api_dictionary_import") */
-    public function importDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/import', methods: ['POST'], name: 'api_dictionary_import')]
+    public function importDataDictionaryVersion(
+        #[MapEntity(mapping: ['dataDictionary' => 'id'])]
+        DataDictionary $dataDictionary,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
 
         $file = $request->files->get('file');
@@ -74,10 +77,13 @@ class DataDictionaryApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
-            $this->logger->critical('An error occurred while importing a data dictionary', [
-                'exception' => $e,
-                'dataDictionary' => $dataDictionary->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while importing a data dictionary',
+                [
+                    'exception' => $e,
+                    'dataDictionary' => $dataDictionary->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

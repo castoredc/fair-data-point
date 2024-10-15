@@ -29,7 +29,7 @@ use App\Exception\Upload\NoFileSpecified;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,10 +44,10 @@ use function count;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/** @Route("/api/metadata-model") */
+#[Route(path: '/api/metadata-model')]
 class MetadataModelApiController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_model_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_add')]
     public function addMetadataModel(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -71,7 +71,7 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /** @Route("/my", methods={"GET"}, name="api_my_metadata_models") */
+    #[Route(path: '/my', methods: ['GET'], name: 'api_my_metadata_models')]
     public function myMetadataModels(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -110,12 +110,11 @@ class MetadataModelApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @Route("/{model}", methods={"GET"}, name="api_metadata_model")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function dataModel(MetadataModel $metadataModel): Response
-    {
+    #[Route(path: '/{model}', methods: ['GET'], name: 'api_metadata_model')]
+    public function dataModel(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModel);
 
         return $this->getResponse(
@@ -125,19 +124,22 @@ class MetadataModelApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/{model}", methods={"POST"}, name="api_metadata_model_update")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function updateMetadataModel(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}', methods: ['POST'], name: 'api_metadata_model_update')]
+    public function updateMetadataModel(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         try {
             $parsed = $this->parseRequest(MetadataModelApiRequest::class, $request);
             assert($parsed instanceof MetadataModelApiRequest);
 
-            $bus->dispatch(new UpdateMetadataModelCommand($metadataModel, $parsed->getTitle(), $parsed->getDescription()));
+            $bus->dispatch(
+                new UpdateMetadataModelCommand($metadataModel, $parsed->getTitle(), $parsed->getDescription())
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -149,30 +151,32 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{model}/v/{version}", methods={"GET"}, name="api_metadata_model_version")
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
-     */
-    public function dataModelVersion(MetadataModelVersion $metadataModelVersion): Response
-    {
+    #[Route(path: '/{model}/v/{version}', methods: ['GET'], name: 'api_metadata_model_version')]
+    public function dataModelVersion(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new MetadataModelVersionApiResource($metadataModelVersion))->toArray());
     }
 
-    /**
-     * @Route("/{model}/v", methods={"POST"}, name="api_metadata_model_version_create")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function createMetadataModelVersion(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/v', methods: ['POST'], name: 'api_metadata_model_version_create')]
+    public function createMetadataModelVersion(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         try {
             $parsed = $this->parseRequest(DataSpecificationVersionTypeApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationVersionTypeApiRequest);
 
-            $envelope = $bus->dispatch(new CreateMetadataModelVersionCommand($metadataModel, $parsed->getVersionType()));
+            $envelope = $bus->dispatch(
+                new CreateMetadataModelVersionCommand($metadataModel, $parsed->getVersionType())
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -181,21 +185,25 @@ class MetadataModelApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while creating a data model version', [
-                'exception' => $e,
-                'dataModel' => $metadataModel->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while creating a data model version',
+                [
+                    'exception' => $e,
+                    'dataModel' => $metadataModel->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{model}/import", methods={"POST"}, name="api_metadata_model_import")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function importMetadataModelVersion(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/import', methods: ['POST'], name: 'api_metadata_model_import')]
+    public function importMetadataModelVersion(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        MetadataModel $metadataModel,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
         $file = $request->files->get('file');
@@ -209,7 +217,9 @@ class MetadataModelApiController extends ApiController
             $parsed = $this->parseRequest(DataSpecificationVersionApiRequest::class, $request);
             assert($parsed instanceof DataSpecificationVersionApiRequest);
 
-            $envelope = $bus->dispatch(new ImportMetadataModelVersionCommand($metadataModel, $file, $parsed->getVersion()));
+            $envelope = $bus->dispatch(
+                new ImportMetadataModelVersionCommand($metadataModel, $file, $parsed->getVersion())
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -226,27 +236,34 @@ class MetadataModelApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
-            $this->logger->critical('An error occurred while importing a data model', [
-                'exception' => $e,
-                'dataModel' => $metadataModel->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while importing a data model',
+                [
+                    'exception' => $e,
+                    'dataModel' => $metadataModel->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_metadata_model_version_export")
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
-     */
-    public function exportMetadataModelVersion(MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/v/{version}/export', methods: ['GET'], name: 'api_metadata_model_version_export')]
+    public function exportMetadataModelVersion(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         $response = new JsonResponse((new MetadataModelVersionExportApiResource($metadataModelVersion))->toArray());
 
         $slugify = new Slugify();
-        $name = sprintf('%s - %s.json', $slugify->slugify($metadataModelVersion->getMetadataModel()->getTitle()), $metadataModelVersion->getVersion()->getValue());
+        $name = sprintf(
+            '%s - %s.json',
+            $slugify->slugify($metadataModelVersion->getMetadataModel()->getTitle()),
+            $metadataModelVersion->getVersion()->getValue()
+        );
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $name);
 
         $response->setEncodingOptions(JSON_PRETTY_PRINT);
@@ -255,12 +272,12 @@ class MetadataModelApiController extends ApiController
         return $response;
     }
 
-    /**
-     * @Route("/{model}/v/{version}/rdf", methods={"GET"}, name="api_metadata_model_rdf_preview")
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
-     */
-    public function dataModelRDFPreview(MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/v/{version}/rdf', methods: ['GET'], name: 'api_metadata_model_rdf_preview')]
+    public function dataModelRDFPreview(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         $envelope = $bus->dispatch(new GetMetadataModelRDFPreviewCommand($metadataModelVersion));

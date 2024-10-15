@@ -11,63 +11,51 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_field")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_field')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelField
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MetadataModelVersion", inversedBy="fields", cascade={"persist"})
-     * @ORM\JoinColumn(name="metadata_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'fields', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $title;
 
-    /** @ORM\Column(type="string", nullable="true") */
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $description = null;
 
-    /** @ORM\Column(name="orderNumber", type="integer", nullable=true) */
+    #[ORM\Column(name: 'orderNumber', type: 'integer', nullable: true)]
     private ?int $order;
 
-    /** @ORM\Column(type="ResourceType") */
+    #[ORM\Column(type: 'ResourceType')]
     private ResourceType $resourceType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="MetadataModelForm", inversedBy="fields", cascade={"persist"})
-     * @ORM\JoinColumn(name="form_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: MetadataModelForm::class, inversedBy: 'fields', cascade: ['persist'])]
     private MetadataModelForm $form;
 
-    /** @ORM\Column(type="MetadataFieldType") */
+    #[ORM\Column(type: 'MetadataFieldType')]
     private MetadataFieldType $fieldType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup")
-     * @ORM\JoinColumn(name="option_group_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'option_group_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: MetadataModelOptionGroup::class)]
     private ?MetadataModelOptionGroup $optionGroup = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\Node\ValueNode", inversedBy="field")
-     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'node_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: ValueNode::class, inversedBy: 'field')]
     private ValueNode $node;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isRequired = false;
 
     public function __construct(string $title, ?string $description, int $order, ValueNode $node, MetadataFieldType $fieldType, ?MetadataModelOptionGroup $optionGroup, ResourceType $resourceType, bool $isRequired, MetadataModelForm $form)

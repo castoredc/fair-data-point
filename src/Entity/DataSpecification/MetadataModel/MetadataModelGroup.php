@@ -14,14 +14,12 @@ use function assert;
 use function iterator_to_array;
 use function strcmp;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_module")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_module')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelGroup extends Group
 {
-    /** @ORM\Column(type="ResourceType") */
+    #[ORM\Column(type: 'ResourceType')]
     private ResourceType $resourceType;
 
     public function __construct(string $title, int $order, ResourceType $resourceType, Version $version)

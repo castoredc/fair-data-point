@@ -10,11 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-    /**
-     * @return RedirectResponse
-     *
-     * @Route("/", name="redirect_homepage")
-     */
+    /** @return RedirectResponse */
+    #[Route(path: '/', name: 'redirect_homepage')]
     public function redirectToIndex(): Response
     {
         return $this->redirectToRoute('fdp');

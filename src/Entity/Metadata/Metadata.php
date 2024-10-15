@@ -22,81 +22,58 @@ use Ramsey\Uuid\UuidInterface;
 use function assert;
 use function json_decode;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="metadata")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
 abstract class Metadata
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="title", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'title', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $title = null;
 
-    /** @ORM\Column(type="version") */
+    #[ORM\Column(type: 'version')]
     private Version $version;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MetadataValue", mappedBy="metadata")
-     *
-     * @var Collection<MetadataValue>
-     */
+    /** @var Collection<MetadataValue> */
+    #[ORM\OneToMany(targetEntity: MetadataValue::class, mappedBy: 'metadata')]
     protected Collection $values;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="description", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'description', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $description = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Language",cascade={"persist"})
-     * @ORM\JoinColumn(name="language", referencedColumnName="code")
-     */
+    #[ORM\JoinColumn(name: 'language', referencedColumnName: 'code')]
+    #[ORM\ManyToOne(targetEntity: Language::class, cascade: ['persist'])]
     private ?Language $language = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'license', referencedColumnName: 'slug', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: License::class, cascade: ['persist'])]
     private ?License $license = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
-     * @ORM\JoinTable(name="metadata_publishers")
-     *
-     * @var Collection<Agent>
-     */
+    /** @var Collection<Agent> */
+    #[ORM\JoinTable(name: 'metadata_publishers')]
+    #[ORM\ManyToMany(targetEntity: Agent::class, cascade: ['persist'])]
     private Collection $publishers;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
-     * @ORM\JoinTable(name="dataset_contacts")
-     *
-     * @var Collection<Agent>
-     */
+    /** @var Collection<Agent> */
+    #[ORM\JoinTable(name: 'dataset_contacts')]
+    #[ORM\ManyToMany(targetEntity: Agent::class, cascade: ['persist'])]
     private Collection $contacts;
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $landingPage = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModelVersion", inversedBy="assignedMetadata")
-     * @ORM\JoinColumn(name="metadata_model_version_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'metadata_model_version_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'assignedMetadata')]
     private ?MetadataModelVersion $metadataModelVersion;
 
     public function getId(): string

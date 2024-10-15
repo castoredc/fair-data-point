@@ -5,7 +5,6 @@ use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Fresh\DoctrineEnumBundle\FreshDoctrineEnumBundle;
 use KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Sentry\SentryBundle\SentryBundle;
 use Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -16,7 +15,6 @@ use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 
 return [
     FrameworkBundle::class => ['all' => true],
-    SensioFrameworkExtraBundle::class => ['all' => true],
     TwigBundle::class => ['all' => true],
     WebpackEncoreBundle::class => ['all' => true],
     DoctrineBundle::class => ['all' => true],

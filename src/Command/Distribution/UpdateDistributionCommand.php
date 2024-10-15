@@ -13,12 +13,12 @@ abstract class UpdateDistributionCommand
         private string $slug,
         private string $defaultMetadataModelId,
         private string $license,
-        private ?string $apiUser = null,
-        private ?SensitiveDataString $clientId = null,
-        private ?SensitiveDataString $clientSecret = null,
         private bool $published,
         private bool $cached,
         private bool $public,
+        private ?string $apiUser = null,
+        private ?SensitiveDataString $clientId = null,
+        private ?SensitiveDataString $clientSecret = null,
     ) {
     }
 

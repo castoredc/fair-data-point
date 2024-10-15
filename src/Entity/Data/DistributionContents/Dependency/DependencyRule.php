@@ -8,28 +8,24 @@ use App\Entity\Enum\DependencyOperatorType;
 use App\Entity\Enum\DistributionContentsDependencyType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="distribution_dependency_rule")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'distribution_dependency_rule')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DependencyRule extends Dependency
 {
-    /** @ORM\Column(type="DistributionContentsDependencyType") */
+    #[ORM\Column(type: 'DistributionContentsDependencyType')]
     private DistributionContentsDependencyType $type;
 
     private ?string $nodeId;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\DataModel\Node\ValueNode", cascade={"persist"})
-     * @ORM\JoinColumn(name="node", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'node', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: ValueNode::class, cascade: ['persist'])]
     private ?ValueNode $node;
 
-    /** @ORM\Column(type="DependencyOperatorType") */
+    #[ORM\Column(type: 'DependencyOperatorType')]
     private DependencyOperatorType $operator;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $value;
 
     public function __construct(DistributionContentsDependencyType $type, DependencyOperatorType $operator, string $value)

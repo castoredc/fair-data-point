@@ -3,52 +3,49 @@ declare(strict_types=1);
 
 namespace App\Entity\FAIRData;
 
+use App\Repository\CountryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CountryRepository")
- * @ORM\Table(name="country", indexes={@ORM\Index(name="castorCountryId", columns={"castor_country_id"})})
- */
+#[ORM\Table(name: 'country')]
+#[ORM\Index(name: 'castorCountryId', columns: ['castor_country_id'])]
+#[ORM\Entity(repositoryClass: CountryRepository::class)]
 class Country implements AccessibleEntity
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=190)
      *
      * @var string
      *
      * Two-letter country abbreviation
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 190)]
     private string $code;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      *
      * Unique identifier of the Country in Castor
      */
+    #[ORM\Column(type: 'string')]
     private string $castorCountryId;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      *
      * Three-letter country abbreviation
      */
+    #[ORM\Column(type: 'string')]
     private string $abbreviation;
 
     /**
-     * @ORM\Column(type="string")
-     *
      * @var string
      *
      * Top level domain name for country
      */
+    #[ORM\Column(type: 'string')]
     private string $tld;
 
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $name;
 
     public function getCode(): string

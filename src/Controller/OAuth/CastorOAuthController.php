@@ -5,7 +5,7 @@ namespace App\Controller\OAuth;
 
 use App\Security\CastorServer;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +15,14 @@ class CastorOAuthController extends AbstractController
 {
     /**
      * Link to this controller to start the "connect" process
-     *
-     * @Route("/connect/castor/{server}", name="connect_castor_start")
-     * @ParamConverter("server", options={"mapping": {"server": "id"}})
      */
-    public function connect(CastorServer $server, Request $request, ClientRegistry $clientRegistry): Response
-    {
+    #[Route(path: '/connect/castor/{server}', name: 'connect_castor_start')]
+    public function connect(
+        #[MapEntity(mapping: ['server' => 'id'])]
+        CastorServer $server,
+        Request $request,
+        ClientRegistry $clientRegistry,
+    ): Response {
         $request->getSession()->set('previous', $request->get('target_path'));
         $request->getSession()->set('castor.server', $server->getUrl()->getValue());
         $request->getSession()->set('castor.server_id', $server->getId());
@@ -43,9 +45,8 @@ class CastorOAuthController extends AbstractController
      *
      * From https://github.com/knpuniversity/oauth2-client-bundle#step-3-use-the-client-service:
      * If you want to *authenticate* the user, then leave this method blank and create a Guard authenticator
-     *
-     * @Route("/login/check-castor", name="connect_castor_check")
      */
+    #[Route(path: '/login/check-castor', name: 'connect_castor_check')]
     public function connectCheck(ClientRegistry $clientRegistry): void
     {
     }

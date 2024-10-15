@@ -17,26 +17,18 @@ use Doctrine\ORM\Mapping as ORM;
 use function assert;
 use function is_a;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_version")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'data_model_version')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class DataModelVersion extends Version implements ModelVersion
 {
-    /**
-     * @ORM\OneToMany(targetEntity="NamespacePrefix", mappedBy="dataModel", cascade={"persist"})
-     * @ORM\OrderBy({"prefix" = "ASC"})
-     *
-     * @var Collection<NamespacePrefix>
-     */
+    /** @var Collection<NamespacePrefix> */
+    #[ORM\OneToMany(targetEntity: NamespacePrefix::class, mappedBy: 'dataModel', cascade: ['persist'])]
+    #[ORM\OrderBy(['prefix' => 'ASC'])]
     private Collection $prefixes;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Predicate", mappedBy="dataModel", cascade={"persist"})
-     *
-     * @var Collection<Predicate>
-     */
+    /** @var Collection<Predicate> */
+    #[ORM\OneToMany(targetEntity: Predicate::class, mappedBy: 'dataModel', cascade: ['persist'])]
     private Collection $predicates;
 
     public function __construct(VersionNumber $version)

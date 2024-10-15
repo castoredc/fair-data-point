@@ -13,7 +13,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelDisplaySetting;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,23 +22,26 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/display")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/display')]
 class MetadataModelDisplaySettingApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_displaySetting") */
-    public function getDisplaySettings(MetadataModelVersion $metadataModelVersion): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_displaySetting')]
+    public function getDisplaySettings(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new MetadataModelDisplaySettingsApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_displaySetting_add") */
-    public function addDisplaySetting(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_displaySetting_add')]
+    public function addDisplaySetting(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
@@ -67,17 +70,19 @@ class MetadataModelDisplaySettingApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{displaySetting}", methods={"POST"}, name="api_metadata_model_displaySetting_update")
-     * @ParamConverter("displaySetting", options={"mapping": {"displaySetting": "id"}})
-     */
+    #[Route(path: '/{displaySetting}', methods: ['POST'], name: 'api_metadata_model_displaySetting_update')]
     public function updateDisplaySetting(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         Request $request,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $displaySetting->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(
+            DataSpecificationVoter::EDIT,
+            $displaySetting->getMetadataModelVersion()->getDataSpecification()
+        );
 
         if ($displaySetting->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -114,16 +119,18 @@ class MetadataModelDisplaySettingApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{displaySetting}", methods={"DELETE"}, name="api_metadata_model_displaySetting_delete")
-     * @ParamConverter("displaySetting", options={"mapping": {"displaySetting": "id"}})
-     */
+    #[Route(path: '/{displaySetting}', methods: ['DELETE'], name: 'api_metadata_model_displaySetting_delete')]
     public function deleteDisplaySetting(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         MessageBusInterface $bus,
     ): Response {
-        $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $displaySetting->getMetadataModelVersion()->getDataSpecification());
+        $this->denyAccessUnlessGranted(
+            DataSpecificationVoter::EDIT,
+            $displaySetting->getMetadataModelVersion()->getDataSpecification()
+        );
 
         if ($displaySetting->getMetadataModelVersion() !== $metadataModelVersion) {
             return new JsonResponse([], Response::HTTP_NOT_FOUND);

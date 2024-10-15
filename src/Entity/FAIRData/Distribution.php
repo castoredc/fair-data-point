@@ -13,6 +13,7 @@ use App\Entity\FAIRData\Permission\DistributionPermission;
 use App\Entity\Metadata\DistributionMetadata;
 use App\Entity\Study;
 use App\Entity\Version;
+use App\Repository\DistributionRepository;
 use App\Security\ApiUser;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
@@ -24,84 +25,64 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 use function count;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DistributionRepository")
- * @ORM\Table(name="distribution", indexes={@ORM\Index(name="slug", columns={"slug"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'distribution')]
+#[ORM\Index(name: 'slug', columns: ['slug'])]
+#[ORM\Entity(repositoryClass: DistributionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Distribution implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEnabledEntity
 {
     use CreatedAndUpdated;
 
     public const URL_PATH = '/fdp/distribution/';
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /** @ORM\Column(type="string", unique=true) */
+    #[ORM\Column(type: 'string', unique: true)]
     private string $slug;
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Dataset", inversedBy="distributions", cascade={"persist"})
-     * @ORM\JoinColumn(name="dataset_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'dataset_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Dataset::class, inversedBy: 'distributions', cascade: ['persist'])]
     private ?Dataset $dataset = null;
 
-    /** @ORM\OneToOne(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", mappedBy="distribution") */
+    #[ORM\OneToOne(targetEntity: DistributionContents::class, mappedBy: 'distribution')]
     private ?DistributionContents $contents = null;
 
-    /** @ORM\OneToOne(targetEntity="App\Entity\Connection\DistributionDatabaseInformation", mappedBy="distribution") */
+    #[ORM\OneToOne(targetEntity: DistributionDatabaseInformation::class, mappedBy: 'distribution')]
     private ?DistributionDatabaseInformation $databaseInformation = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\License",cascade={"persist"})
-     * @ORM\JoinColumn(name="license", referencedColumnName="slug", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'license', referencedColumnName: 'slug', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: License::class, cascade: ['persist'])]
     private ?License $license = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\DistributionMetadata", mappedBy="distribution")
-     * @ORM\OrderBy({"createdAt" = "ASC"})
-     *
-     * @var Collection<DistributionMetadata>
-     */
+    /** @var Collection<DistributionMetadata> */
+    #[ORM\OneToMany(targetEntity: DistributionMetadata::class, mappedBy: 'distribution')]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $metadata;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Security\ApiUser")
-     * @ORM\JoinColumn(name="user_api", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_api', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: ApiUser::class)]
     private ?ApiUser $apiUser = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\FAIRData\Agent\Agent", cascade={"persist"})
-     * @ORM\JoinTable(name="distribution_contactpoint")
-     *
-     * @var Collection<Agent>
-     */
+    /** @var Collection<Agent> */
+    #[ORM\JoinTable(name: 'distribution_contactpoint')]
+    #[ORM\ManyToMany(targetEntity: Agent::class, cascade: ['persist'])]
     private Collection $contactPoints;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FAIRData\Permission\DistributionPermission", cascade={"persist", "remove"}, orphanRemoval=true, mappedBy="distribution")
-     *
-     * @var Collection<DistributionPermission>
-     */
+    /** @var Collection<DistributionPermission> */
+    #[ORM\OneToMany(targetEntity: DistributionPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'distribution')]
     private Collection $permissions;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isPublished = false;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isArchived = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\MetadataModel\MetadataModel", inversedBy="distributions")
-     * @ORM\JoinColumn(name="default_metadata_model_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'default_metadata_model_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: MetadataModel::class, inversedBy: 'distributions')]
     private ?MetadataModel $defaultMetadataModel = null;
 
     public function __construct(string $slug, Dataset $dataset)

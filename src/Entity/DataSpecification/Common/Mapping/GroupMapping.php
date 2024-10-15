@@ -9,22 +9,16 @@ use App\Entity\DataSpecification\Common\Version;
 use App\Entity\Study;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_specification_mappings_group")
- */
+#[ORM\Table(name: 'data_specification_mappings_group')]
+#[ORM\Entity]
 class GroupMapping extends Mapping
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Group")
-     * @ORM\JoinColumn(name="groupId", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'groupId', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Group::class)]
     private ?Group $group = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Castor\CastorEntity")
-     * @ORM\JoinColumn(name="entity", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'entity', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: CastorEntity::class)]
     private CastorEntity $entity;
 
     public function __construct(Study $study, Group $group, CastorEntity $entity, Version $version)

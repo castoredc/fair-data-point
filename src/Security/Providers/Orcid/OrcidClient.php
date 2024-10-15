@@ -69,7 +69,11 @@ class OrcidClient extends OAuth2Client
         return $this->getCurrentRequest()->getSession();
     }
 
-    /** @inheritDoc */
+    /**
+     * @param array<mixed> $options
+     *
+     * @inheritDoc
+     * */
     public function getAccessToken(array $options = [])
     {
         $expectedState = $this->getSession()->get(self::OAUTH2_SESSION_STATE_KEY);

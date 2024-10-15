@@ -7,11 +7,9 @@ use App\Entity\DataSpecification\Common\OptionGroup;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_option_group")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_option_group')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MetadataModelOptionGroup extends OptionGroup
 {
     public function getMetadataModelVersion(): MetadataModelVersion

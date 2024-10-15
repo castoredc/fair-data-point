@@ -9,16 +9,12 @@ use function boolval;
 
 class ConsentApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("boolean")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('boolean')]
     private bool $publish;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("boolean")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('boolean')]
     private bool $socialMedia;
 
     protected function parse(): void

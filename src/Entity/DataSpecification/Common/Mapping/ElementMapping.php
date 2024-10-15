@@ -11,29 +11,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_specification_mappings_element")
- */
+#[ORM\Table(name: 'data_specification_mappings_element')]
+#[ORM\Entity]
 class ElementMapping extends Mapping
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Element")
-     * @ORM\JoinColumn(name="element", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'element', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Element::class)]
     private ?Element $element = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Castor\CastorEntity")
-     *
-     * @var Collection<CastorEntity>
-     */
+    /** @var Collection<CastorEntity> */
+    #[ORM\ManyToMany(targetEntity: CastorEntity::class)]
     private Collection $entities;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $syntax = null;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $transformData = false;
 
     public function __construct(Study $study, ?Element $element, Version $version)

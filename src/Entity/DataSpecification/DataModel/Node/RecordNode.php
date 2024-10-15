@@ -7,10 +7,8 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Entity\Enum\NodeType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_model_node_record")
- */
+#[ORM\Table(name: 'data_model_node_record')]
+#[ORM\Entity]
 class RecordNode extends Node
 {
     public function __construct(DataModelVersion $dataModel)

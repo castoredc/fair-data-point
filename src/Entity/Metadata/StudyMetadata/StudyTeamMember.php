@@ -10,36 +10,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_study_team")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_study_team')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class StudyTeamMember
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Metadata\StudyMetadata", inversedBy="studyTeamMembers", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="metadata", referencedColumnName="id", nullable=FALSE)
-     */
+    #[ORM\JoinColumn(name: 'metadata', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: StudyMetadata::class, inversedBy: 'studyTeamMembers', cascade: ['persist', 'remove'])]
     private StudyMetadata $metadata;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Agent\Person", cascade={"persist"})
-     * @ORM\JoinColumn(name="person", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'person', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Person::class, cascade: ['persist'])]
     private Person $person;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: 'boolean')]
     private bool $isContact = false;
 
     public function __construct(StudyMetadata $metadata, Person $person, bool $isContact)

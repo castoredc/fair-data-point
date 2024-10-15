@@ -17,10 +17,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/user") */
+#[Route(path: '/api/user')]
 class UserAffiliationApiController extends ApiController
 {
-    /** @Route("/affiliations", methods={"POST"}, name="api_user_affiliations_update") */
+    #[Route(path: '/affiliations', methods: ['POST'], name: 'api_user_affiliations_update')]
     public function updateAffiliations(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -39,18 +39,20 @@ class UserAffiliationApiController extends ApiController
             $user->getPerson()->clearAffiliations();
 
             foreach ($parsed as $item) {
-                $bus->dispatch(new CreateAffiliationCommand(
-                    $user->getPerson(),
-                    $item->getOrganizationSource(),
-                    $item->getOrganizationId(),
-                    $item->getOrganizationName(),
-                    $item->getOrganizationCity(),
-                    $item->getOrganizationCountry(),
-                    $item->getDepartmentSource(),
-                    $item->getDepartmentId(),
-                    $item->getDepartmentName(),
-                    $item->getPosition()
-                ));
+                $bus->dispatch(
+                    new CreateAffiliationCommand(
+                        $user->getPerson(),
+                        $item->getOrganizationSource(),
+                        $item->getOrganizationCountry(),
+                        $item->getDepartmentSource(),
+                        $item->getPosition(),
+                        $item->getOrganizationId(),
+                        $item->getOrganizationName(),
+                        $item->getOrganizationCity(),
+                        $item->getDepartmentId(),
+                        $item->getDepartmentName()
+                    )
+                );
             }
 
             return new JsonResponse([]);

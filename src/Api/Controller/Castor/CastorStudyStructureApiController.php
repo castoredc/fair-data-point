@@ -19,7 +19,7 @@ use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use App\Security\Authorization\Voter\StudyVoter;
 use App\Security\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -28,15 +28,15 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/castor/study/{study}")
- * @ParamConverter("study", options={"mapping": {"study": "id"}})
- */
+#[Route(path: '/api/castor/study/{study}')]
 class CastorStudyStructureApiController extends ApiController
 {
-    /** @Route("/structure", name="api_study_structure") */
-    public function studyStructure(CastorStudy $study, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/structure', name: 'api_study_structure')]
+    public function studyStructure(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        CastorStudy $study,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
@@ -78,9 +78,13 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /** @Route("/structure/step/{step}/fields", name="api_study_structure_step") */
-    public function studyStructureStep(CastorStudy $study, string $step, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/structure/step/{step}/fields', name: 'api_study_structure_step')]
+    public function studyStructureStep(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        CastorStudy $study,
+        string $step,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         try {
@@ -123,9 +127,12 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /** @Route("/optiongroups", name="api_study_optiongroups") */
-    public function optionGroups(CastorStudy $study, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/optiongroups', name: 'api_study_optiongroups')]
+    public function optionGroups(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        CastorStudy $study,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         $user = $this->getUser();
@@ -170,9 +177,12 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /** @Route("/institutes", name="api_study_institutes") */
-    public function institutes(CastorStudy $study, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/institutes', name: 'api_study_institutes')]
+    public function institutes(
+        #[MapEntity(mapping: ['study' => 'id'])]
+        CastorStudy $study,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 
         $user = $this->getUser();

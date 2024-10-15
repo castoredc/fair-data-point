@@ -9,13 +9,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PermissionApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $email;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private string $type;
 
     protected function parse(): void

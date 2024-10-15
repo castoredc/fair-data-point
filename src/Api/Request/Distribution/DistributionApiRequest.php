@@ -11,89 +11,65 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use function boolval;
 
-/** @Assert\GroupSequenceProvider() */
+#[Assert\GroupSequenceProvider]
 class DistributionApiRequest extends SingleApiRequest implements GroupSequenceProviderInterface
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Choice({ "rdf", "csv" })
-     */
+    #[Assert\NotBlank]
+    #[Assert\Choice(['rdf', 'csv'])]
     private string $type;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @AppAssert\Slug(type="App\Entity\FAIRData\Distribution")
-     */
+    /** @AppAssert\Slug(type="App\Entity\FAIRData\Distribution") */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $slug;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $defaultMetadataModel;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $license;
 
-    /**
-     * @Assert\NotNull(groups = {"csv"})
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull(groups: ['csv'])]
+    #[Assert\Type('bool')]
     private ?bool $includeAllData = null;
 
-    /**
-     * @Assert\NotBlank(groups = {"rdf"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['rdf'])]
+    #[Assert\Type('string')]
     private ?string $dataModel = null;
 
-    /**
-     * @Assert\NotBlank(groups = {"rdf"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['rdf'])]
+    #[Assert\Type('string')]
     private ?string $dataModelVersion = null;
 
-    /**
-     * @Assert\NotBlank(groups = {"csv"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['csv'])]
+    #[Assert\Type('string')]
     private ?string $dataDictionary = null;
 
-    /**
-     * @Assert\NotBlank(groups = {"csv"})
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank(groups: ['csv'])]
+    #[Assert\Type('string')]
     private ?string $dataDictionaryVersion = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $apiUser = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $clientId = null;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $clientSecret = null;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $published;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $cached;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $public;
 
     protected function parse(): void

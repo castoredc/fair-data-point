@@ -9,24 +9,18 @@ use App\Security\Permission;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="permission_catalog")
- */
+#[ORM\Table(name: 'permission_catalog')]
+#[ORM\Entity]
 class CatalogPermission extends Permission
 {
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="catalogs")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'catalogs')]
     protected User $user;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Catalog", cascade={"persist"}, fetch = "EAGER", inversedBy="permissions")
-     * @ORM\JoinColumn(name="catalog_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'catalog_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Catalog::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private Catalog $catalog;
 
     public function __construct(User $user, PermissionType $type, Catalog $catalog)

@@ -5,7 +5,7 @@ namespace App\Entity\Grid;
 
 class Address
 {
-    public function __construct(private int $number, private ?float $lat = null, private ?float $lng = null, private bool $primary, private string $city, private string $countryCode)
+    public function __construct(private int $number, private bool $primary, private string $city, private string $countryCode, private ?float $lat = null, private ?float $lng = null)
     {
     }
 

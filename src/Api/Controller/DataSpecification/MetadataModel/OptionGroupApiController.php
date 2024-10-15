@@ -13,7 +13,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelOptionGroup;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,35 +22,40 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/option-group")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/option-group')]
 class OptionGroupApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_option_groups") */
-    public function getOptionGroups(MetadataModelVersion $metadataModelVersion): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_option_groups')]
+    public function getOptionGroups(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new OptionGroupsApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_option_group_add") */
-    public function addOptionGroup(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_option_group_add')]
+    public function addOptionGroup(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         try {
             $parsed = $this->parseRequest(OptionGroupApiRequest::class, $request);
             assert($parsed instanceof OptionGroupApiRequest);
 
-            $bus->dispatch(new CreateMetadataModelOptionGroupCommand(
-                $metadataModelVersion,
-                $parsed->getTitle(),
-                $parsed->getDescription(),
-                $parsed->getOptions()
-            ));
+            $bus->dispatch(
+                new CreateMetadataModelOptionGroupCommand(
+                    $metadataModelVersion,
+                    $parsed->getTitle(),
+                    $parsed->getOptions(),
+                    $parsed->getDescription(),
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
@@ -62,12 +67,15 @@ class OptionGroupApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{optionGroup}", methods={"POST"}, name="api_metadata_model_option_group_update")
-     * @ParamConverter("optionGroup", options={"mapping": {"optionGroup": "id"}})
-     */
-    public function updateOptionGroup(MetadataModelVersion $metadataModelVersion, MetadataModelOptionGroup $optionGroup, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{optionGroup}', methods: ['POST'], name: 'api_metadata_model_option_group_update')]
+    public function updateOptionGroup(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['optionGroup' => 'id'])]
+        MetadataModelOptionGroup $optionGroup,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($optionGroup->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -78,32 +86,39 @@ class OptionGroupApiController extends ApiController
             $parsed = $this->parseRequest(OptionGroupApiRequest::class, $request);
             assert($parsed instanceof OptionGroupApiRequest);
 
-            $bus->dispatch(new UpdateMetadataModelOptionGroupCommand(
-                $optionGroup,
-                $parsed->getTitle(),
-                $parsed->getDescription(),
-                $parsed->getOptions()
-            ));
+            $bus->dispatch(
+                new UpdateMetadataModelOptionGroupCommand(
+                    $optionGroup,
+                    $parsed->getTitle(),
+                    $parsed->getOptions(),
+                    $parsed->getDescription(),
+                )
+            );
 
             return new JsonResponse([]);
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while updating an option group', [
-                'exception' => $e,
-                'OptionGroupID' => $optionGroup->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating an option group',
+                [
+                    'exception' => $e,
+                    'OptionGroupID' => $optionGroup->getId(),
+                ]
+            );
 
             return new JsonResponse([$e->getCode(), $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{optionGroup}", methods={"DELETE"}, name="api_metadata_model_option_group_delete")
-     * @ParamConverter("optionGroup", options={"mapping": {"optionGroup": "id"}})
-     */
-    public function deletePrefix(MetadataModelVersion $metadataModelVersion, MetadataModelOptionGroup $optionGroup, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{optionGroup}', methods: ['DELETE'], name: 'api_metadata_model_option_group_delete')]
+    public function deletePrefix(
+        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        MetadataModelVersion $metadataModelVersion,
+        #[MapEntity(mapping: ['optionGroup' => 'id'])]
+        MetadataModelOptionGroup $optionGroup,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
         if ($optionGroup->getMetadataModelVersion() !== $metadataModelVersion) {
@@ -115,10 +130,13 @@ class OptionGroupApiController extends ApiController
 
             return new JsonResponse([]);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while deleting an option group', [
-                'exception' => $e,
-                'OptionGroupID' => $optionGroup->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while deleting an option group',
+                [
+                    'exception' => $e,
+                    'OptionGroupID' => $optionGroup->getId(),
+                ]
+            );
 
             return new JsonResponse([$e->getCode(), $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

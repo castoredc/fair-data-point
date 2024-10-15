@@ -8,10 +8,8 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use Doctrine\ORM\Mapping as ORM;
 use function assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="distribution_csv")
- */
+#[ORM\Table(name: 'distribution_csv')]
+#[ORM\Entity]
 class CSVDistribution extends DistributionContents
 {
     public function getDataDictionary(): DataDictionary

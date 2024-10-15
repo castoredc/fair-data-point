@@ -10,36 +10,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="data_specification_mappings")
- * @ORM\HasLifecycleCallbacks
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"element" = "ElementMapping", "group" = "GroupMapping"})
- */
+#[ORM\Table(name: 'data_specification_mappings')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['element' => 'ElementMapping', 'group' => 'GroupMapping'])]
 abstract class Mapping
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="mappings",cascade={"persist"})
-     * @ORM\JoinColumn(name="study", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'study', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Study::class, inversedBy: 'mappings', cascade: ['persist'])]
     private Study $study;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\DataSpecification\Common\Version")
-     * @ORM\JoinColumn(name="version", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Version::class)]
     private Version $version;
 
     public function __construct(Study $study, Version $version)

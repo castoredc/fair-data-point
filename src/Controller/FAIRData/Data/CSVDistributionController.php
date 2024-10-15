@@ -14,7 +14,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -27,18 +27,24 @@ use function time;
 
 class CSVDistributionController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}/distribution/csv", name="distribution_csv")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function csvDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/fdp/{catalog}/{dataset}/{distribution}/distribution/csv', name: 'distribution_csv')]
+    public function csvDistribution(
+        #[MapEntity(mapping: ['catalog' => 'slug'])]
+        Catalog $catalog,
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution($distribution) || ! $contents instanceof CSVDistribution) {
+        if (
+            ! $dataset->hasCatalog($catalog) || ! $dataset->hasDistribution(
+                $distribution
+            ) || ! $contents instanceof CSVDistribution
+        ) {
             throw $this->createNotFoundException();
         }
 
@@ -52,7 +58,9 @@ class CSVDistributionController extends FAIRDataController
             /** @var Record[] $records */
             $records = $handledStamp->getResult();
 
-            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(new RenderCSVDistributionCommand($records, $contents, $catalog))->last(
+                HandledStamp::class
+            );
             assert($handledStamp instanceof HandledStamp);
             $csv = $handledStamp->getResult();
 

@@ -9,24 +9,18 @@ use App\Security\Permission;
 use App\Security\User;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="permission_distribution_contents")
- */
+#[ORM\Table(name: 'permission_distribution_contents')]
+#[ORM\Entity]
 class DistributionContentsPermission extends Permission
 {
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Security\User", cascade={"persist"}, fetch = "EAGER", inversedBy="distributions")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'distributions')]
     protected User $user;
 
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", cascade={"persist"}, fetch = "EAGER", inversedBy="permissions")
-     * @ORM\JoinColumn(name="distribution_contents_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'distribution_contents_id', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: DistributionContents::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private DistributionContents $distributionContents;
 
     public function __construct(User $user, PermissionType $type, DistributionContents $distributionContents)

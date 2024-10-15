@@ -15,10 +15,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/metadata/fdp") */
+#[Route(path: '/api/metadata/fdp')]
 class FAIRDataPointMetadataController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_fdp_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_fdp_add')]
     public function addCatalogMetadata(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -39,7 +39,10 @@ class FAIRDataPointMetadataController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while adding metadata for the FAIR Data Point', ['exception' => $e]);
+            $this->logger->critical(
+                'An error occurred while adding metadata for the FAIR Data Point',
+                ['exception' => $e]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

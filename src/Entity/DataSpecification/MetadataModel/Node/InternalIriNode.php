@@ -6,16 +6,14 @@ namespace App\Entity\DataSpecification\MetadataModel\Node;
 use App\Entity\Enum\NodeType;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_node_internal")
- */
+#[ORM\Table(name: 'metadata_model_node_internal')]
+#[ORM\Entity]
 class InternalIriNode extends Node
 {
-    /** @ORM\Column(type="string") */
+    #[ORM\Column(type: 'string')]
     private string $slug;
 
-    /** @ORM\Column(type="boolean", options={"default":"0"}) */
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $isRepeated = false;
 
     public function getSlug(): string

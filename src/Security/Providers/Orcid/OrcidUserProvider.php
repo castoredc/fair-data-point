@@ -1,4 +1,5 @@
 <?php
+/** @phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint */
 declare(strict_types=1);
 
 namespace App\Security\Providers\Orcid;
@@ -64,7 +65,7 @@ class OrcidUserProvider extends UserProvider implements UserProviderInterface
         return ['/authenticate'];
     }
 
-    /** @inheritDoc */
+    /** @param array<mixed>|string $data */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         // TODO: Implement checkResponse() method.

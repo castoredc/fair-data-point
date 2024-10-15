@@ -6,17 +6,13 @@ namespace App\Entity\DataSpecification\MetadataModel;
 use App\Entity\DataSpecification\Common\Model\NamespacePrefix as CommonNamespacePrefix;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_model_prefix")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_model_prefix')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class NamespacePrefix extends CommonNamespacePrefix
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="MetadataModelVersion", inversedBy="prefixes",cascade={"persist"})
-     * @ORM\JoinColumn(name="metadata_model", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'prefixes', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
     public function getMetadataModelVersion(): MetadataModelVersion

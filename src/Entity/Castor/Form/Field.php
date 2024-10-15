@@ -13,7 +13,7 @@ use RecursiveIteratorIterator;
 use function boolval;
 use function in_array;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Field extends CastorEntity
 {
     public const EXPORTABLE = [

@@ -17,7 +17,7 @@ use App\Model\Castor\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,22 +30,32 @@ use function assert;
 
 class RDFDistributionSPARQLController extends ApiController
 {
-    public function __construct(ApiClient $apiClient, ValidatorInterface $validator, LoggerInterface $logger, EntityManagerInterface $em, private EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        ApiClient $apiClient,
+        ValidatorInterface $validator,
+        LoggerInterface $logger,
+        EntityManagerInterface $em,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
         parent::__construct($apiClient, $validator, $logger, $em);
     }
 
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/sparql", name="distribution_sparql")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfDistributionSparql(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/sparql', name: 'distribution_sparql')]
+    public function rdfDistributionSparql(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached()) {
+        if (
+            ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached(
+            )
+        ) {
             throw $this->createNotFoundException();
         }
 
@@ -53,10 +63,12 @@ class RDFDistributionSPARQLController extends ApiController
             $parsed = $this->parseRequest(SparqlQueryRequest::class, $request);
             assert($parsed instanceof SparqlQueryRequest);
 
-            $handledStamp = $bus->dispatch(new RunQueryAgainstDistributionSparqlEndpointCommand(
-                $contents,
-                $parsed->getSparqlQuery()
-            ))->last(HandledStamp::class);
+            $handledStamp = $bus->dispatch(
+                new RunQueryAgainstDistributionSparqlEndpointCommand(
+                    $contents,
+                    $parsed->getSparqlQuery()
+                )
+            )->last(HandledStamp::class);
 
             assert($handledStamp instanceof HandledStamp);
 
@@ -72,20 +84,27 @@ class RDFDistributionSPARQLController extends ApiController
                 )
             );
 
-            return new Response($results->getResponse(), Response::HTTP_OK, [
-                'Content-Type' => $results->getContentType(),
-            ]);
+            return new Response(
+                $results->getResponse(),
+                Response::HTTP_OK,
+                [
+                    'Content-Type' => $results->getContentType(),
+                ]
+            );
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while executing a query.', [
-                'exception' => $e,
-                'errorMessage' => $e->getMessage(),
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while executing a query.',
+                [
+                    'exception' => $e,
+                    'errorMessage' => $e->getMessage(),
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
             $this->eventDispatcher->dispatch(
                 new SparqlQueryFailed(
@@ -100,17 +119,21 @@ class RDFDistributionSPARQLController extends ApiController
         }
     }
 
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/query", name="distribution_query")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfDistributionQuery(Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/query', name: 'distribution_query')]
+    public function rdfDistributionQuery(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached()) {
+        if (
+            ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached(
+            )
+        ) {
             throw $this->createNotFoundException();
         }
 

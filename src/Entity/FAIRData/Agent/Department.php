@@ -7,18 +7,16 @@ use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use function uniqid;
 
-/** @ORM\Entity */
+#[ORM\Entity]
 class Department extends Agent
 {
     public const TYPE = 'department';
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Organization",cascade={"persist"}, inversedBy="departments")
-     * @ORM\JoinColumn(name="organization", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'organization', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Organization::class, cascade: ['persist'], inversedBy: 'departments')]
     private ?Organization $organization = null;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $additionalInformation = null;
 
     public function __construct(?string $slug, string $name, Organization $organization, ?string $additionalInformation)

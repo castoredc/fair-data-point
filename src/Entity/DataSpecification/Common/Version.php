@@ -12,68 +12,46 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity
- * @ORM\InheritanceType("JOINED")
- * @ORM\Table(name="data_specification_version")
- * @ORM\HasLifecycleCallbacks
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({
- *     "model" = "App\Entity\DataSpecification\DataModel\DataModelVersion",
- *     "metadata_model" = "App\Entity\DataSpecification\MetadataModel\MetadataModelVersion",
- *     "dictionary" = "App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion",
- * })
- */
+#[ORM\Table(name: 'data_specification_version')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['model' => 'App\Entity\DataSpecification\DataModel\DataModelVersion', 'metadata_model' => 'App\Entity\DataSpecification\MetadataModel\MetadataModelVersion', 'dictionary' => 'App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion'])]
 abstract class Version
 {
     use CreatedAndUpdated;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface|string $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="DataSpecification", inversedBy="versions",cascade={"persist"})
-     * @ORM\JoinColumn(name="data_specification", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'data_specification', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: DataSpecification::class, inversedBy: 'versions', cascade: ['persist'])]
     protected DataSpecification $dataSpecification;
 
-    /** @ORM\Column(type="version") */
+    #[ORM\Column(type: 'version')]
     private VersionNumber $version;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Data\DistributionContents\DistributionContents", mappedBy="currentDataSpecificationVersion")
-     *
-     * @var Collection<DistributionContents>
-     */
+    /** @var Collection<DistributionContents> */
+    #[ORM\OneToMany(targetEntity: DistributionContents::class, mappedBy: 'currentDataSpecificationVersion')]
     private Collection $distributionContents;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Group", mappedBy="version", cascade={"persist"})
-     * @ORM\OrderBy({"order" = "ASC", "id" = "ASC"})
-     *
-     * @var Collection<Group>
-     */
+    /** @var Collection<Group> */
+    #[ORM\OneToMany(targetEntity: Group::class, mappedBy: 'version', cascade: ['persist'])]
+    #[ORM\OrderBy(['order' => 'ASC', 'id' => 'ASC'])]
     private Collection $groups;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="version", cascade={"persist"})
-     * @ORM\OrderBy({"title" = "ASC"})
-     *
-     * @var Collection<Element>
-     */
+    /** @var Collection<Element> */
+    #[ORM\OneToMany(targetEntity: Element::class, mappedBy: 'version', cascade: ['persist'])]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     protected Collection $elements;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OptionGroup", mappedBy="version", cascade={"persist"})
-     * @ORM\OrderBy({"title" = "ASC"})
-     *
-     * @var Collection<OptionGroup>
-     */
+    /** @var Collection<OptionGroup> */
+    #[ORM\OneToMany(targetEntity: OptionGroup::class, mappedBy: 'version', cascade: ['persist'])]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     protected Collection $optionGroups;
 
     public function __construct(VersionNumber $version)

@@ -16,7 +16,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use EasyRdf\Graph;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,14 +29,17 @@ use function urlencode;
 
 class RDFDistributionController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf", name="distribution_rdf")
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}", name="distribution_rdf_record")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfDistribution(Dataset $dataset, Distribution $distribution, ?string $record, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf', name: 'distribution_rdf')]
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}', name: 'distribution_rdf_record')]
+    public function rdfDistribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        ?string $record,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('access_data', $distribution);
 
         $contents = $distribution->getContents();
@@ -48,13 +51,17 @@ class RDFDistributionController extends FAIRDataController
 
         try {
             if ($contents->isCached()) {
-                $handledStamp = $bus->dispatch(new GetRDFFromStoreCommand($contents, $record))->last(HandledStamp::class);
+                $handledStamp = $bus->dispatch(new GetRDFFromStoreCommand($contents, $record))->last(
+                    HandledStamp::class
+                );
                 assert($handledStamp instanceof HandledStamp);
 
                 $turtle = $handledStamp->getResult();
             } else {
                 if ($record !== null) {
-                    $handledStamp = $bus->dispatch(new GetRecordCommand($distribution, $record))->last(HandledStamp::class);
+                    $handledStamp = $bus->dispatch(new GetRecordCommand($distribution, $record))->last(
+                        HandledStamp::class
+                    );
                     assert($handledStamp instanceof HandledStamp);
                     $records = [$handledStamp->getResult()];
                 } else {
@@ -63,7 +70,9 @@ class RDFDistributionController extends FAIRDataController
                     $records = $handledStamp->getResult();
                 }
 
-                $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents))->last(HandledStamp::class);
+                $handledStamp = $bus->dispatch(new RenderRDFDistributionCommand($records, $contents))->last(
+                    HandledStamp::class
+                );
                 assert($handledStamp instanceof HandledStamp);
 
                 $graph = $handledStamp->getResult();
@@ -96,25 +105,34 @@ class RDFDistributionController extends FAIRDataController
                 return new JsonResponse($e->toArray(), Response::HTTP_NOT_FOUND);
             }
 
-            $this->logger->critical('An error occurred while loading the RDF for a distribution', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while loading the RDF for a distribution',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
-            return new JsonResponse(['error' => 'An error occurred while loading the RDF for a distribution.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                ['error' => 'An error occurred while loading the RDF for a distribution.'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         return $this->getTurtleResponse($distribution, $turtle, $request->query->getBoolean('download'));
     }
 
-    /** @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}/{element}", name="distribution_rdf_record_element") */
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}/{element}', name: 'distribution_rdf_record_element')]
     public function rdfDistributionElement(string $dataset, string $distribution, string $record, string $element): Response
     {
-        return $this->redirectToRoute('distribution_rdf_record', [
-            'dataset' => $dataset,
-            'distribution' => $distribution,
-            'record' => $record,
-        ]);
+        return $this->redirectToRoute(
+            'distribution_rdf_record',
+            [
+                'dataset' => $dataset,
+                'distribution' => $distribution,
+                'record' => $record,
+            ]
+        );
     }
 }

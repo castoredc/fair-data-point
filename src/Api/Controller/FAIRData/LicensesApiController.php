@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Resource\License\LicenseApiResource;
 use App\Command\License\GetLicensesCommand;
 use App\Entity\FAIRData\License;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -17,7 +17,7 @@ use function assert;
 
 class LicensesApiController extends ApiController
 {
-    /** @Route("/api/licenses", name="api_licenses") */
+    #[Route(path: '/api/licenses', name: 'api_licenses')]
     public function countries(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetLicensesCommand());
@@ -28,12 +28,11 @@ class LicensesApiController extends ApiController
         return new JsonResponse($handledStamp->getResult()->toArray());
     }
 
-    /**
-     * @Route("/api/license/{slug}", name="api_license")
-     * @ParamConverter("license", options={"mapping": {"slug": "slug"}})
-     */
-    public function license(License $license): Response
-    {
+    #[Route(path: '/api/license/{slug}', name: 'api_license')]
+    public function license(
+        #[MapEntity(mapping: ['slug' => 'slug'])]
+        License $license,
+    ): Response {
         return new JsonResponse((new LicenseApiResource($license))->toArray());
     }
 }

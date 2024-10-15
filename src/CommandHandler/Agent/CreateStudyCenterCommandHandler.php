@@ -38,10 +38,10 @@ class CreateStudyCenterCommandHandler
             null,
             $command->getName(),
             null,
-            $country->getCode(),
             $command->getCity(),
             null,
             null,
+            $country->getCode(),
         );
 
         $organization->setCountry($country);

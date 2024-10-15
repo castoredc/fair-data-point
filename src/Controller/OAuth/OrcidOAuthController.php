@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Controller\OAuth;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,10 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OrcidOAuthController extends AbstractController
 {
-    /**
-     * @Route("/oauth/connect/orcid", name="oauth_orcid_start")
-     * @ParamConverter("server", options={"mapping": {"server": "id"}})
-     */
+    #[Route(path: '/oauth/connect/orcid', name: 'oauth_orcid_start')]
     public function connect(Request $request, ClientRegistry $clientRegistry): Response
     {
         $request->getSession()->set('previous', $request->get('target_path'));
@@ -25,7 +21,7 @@ class OrcidOAuthController extends AbstractController
             ->redirect([], []);
     }
 
-    /** @Route("/oauth/check/orcid", name="oauth_orcid_check") */
+    #[Route(path: '/oauth/check/orcid', name: 'oauth_orcid_check')]
     public function connectCheck(ClientRegistry $clientRegistry): void
     {
     }

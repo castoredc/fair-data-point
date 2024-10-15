@@ -9,7 +9,7 @@ use App\Entity\FAIRData\Agent\Person;
 
 class CreateAffiliationCommand
 {
-    public function __construct(private Person $person, private ?OrganizationSource $organizationSource, private ?string $organizationId = null, private ?string $organizationName = null, private ?string $organizationCity = null, private string $organizationCountry, private ?DepartmentSource $departmentSource, private ?string $departmentId = null, private ?string $departmentName = null, private string $position)
+    public function __construct(private Person $person, private ?OrganizationSource $organizationSource, private string $organizationCountry, private ?DepartmentSource $departmentSource, private string $position, private ?string $organizationId = null, private ?string $organizationName = null, private ?string $organizationCity = null, private ?string $departmentId = null, private ?string $departmentName = null)
     {
     }
 

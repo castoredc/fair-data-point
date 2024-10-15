@@ -8,6 +8,7 @@ use App\Entity\Connection\DistributionDatabaseInformation;
 use App\Service\Distribution\TripleStoreBasedDistributionService;
 use App\Service\EncryptionService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,11 +17,9 @@ use function random_bytes;
 use function sprintf;
 use function str_replace;
 
+#[AsCommand(name: 'app:migrate-triplestores')]
 class MigrateToTripleStoresCommand extends Command
 {
-    /** @phpcs:ignore */
-    protected static $defaultName = 'app:migrate-triplestores';
-
     public function __construct(
         private EntityManagerInterface $em,
         private TripleStoreBasedDistributionService $tripleStoreBasedDistributionService,
@@ -35,8 +34,7 @@ class MigrateToTripleStoresCommand extends Command
             ->setDescription('Migrates databases to new triple store in Stardog');
     }
 
-    /** @inheritDoc */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln(

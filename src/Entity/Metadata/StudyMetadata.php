@@ -25,102 +25,83 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function array_merge;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_study")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_study')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class StudyMetadata extends Metadata
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Study", inversedBy="metadata", cascade={"persist"})
-     * @ORM\JoinColumn(name="study_id", referencedColumnName="id", nullable=FALSE)
-     */
+    #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Study::class, inversedBy: 'metadata', cascade: ['persist'])]
     private Study $study;
 
-    /** @ORM\Column(type="version") */
+    #[ORM\Column(type: 'version')]
     private Version $version;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $briefName = '';
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $scientificName = null;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $briefSummary = null;
 
-    /** @ORM\Column(type="text", nullable=true) */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $summary = null;
 
-    /** @ORM\Column(type="StudyType", name="study_type") */
+    #[ORM\Column(type: 'StudyType', name: 'study_type')]
     private StudyType $type;
 
-    /** @ORM\Column(type="MethodType", name="method_type") */
+    #[ORM\Column(type: 'MethodType', name: 'method_type')]
     private MethodType $methodType;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText", cascade={"persist"})
-     * @ORM\JoinColumn(name="studied_condition", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'studied_condition', referencedColumnName: 'id', nullable: true)]
+    #[ORM\OneToOne(targetEntity: CodedText::class, cascade: ['persist'])]
     private ?CodedText $condition = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Terminology\CodedText", cascade={"persist"})
-     * @ORM\JoinColumn(name="intervention", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\JoinColumn(name: 'intervention', referencedColumnName: 'id', nullable: true)]
+    #[ORM\OneToOne(targetEntity: CodedText::class, cascade: ['persist'])]
     private ?CodedText $intervention = null;
 
-    /** @ORM\Column(type="RecruitmentStatusType", name="recruitment_status", nullable=true) */
+    #[ORM\Column(type: 'RecruitmentStatusType', name: 'recruitment_status', nullable: true)]
     private ?RecruitmentStatus $recruitmentStatus = null;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $estimatedEnrollment = null;
 
-    /** @ORM\Column(type="boolean", nullable=true) */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $consentPublish = null;
 
-    /** @ORM\Column(type="boolean", nullable=true) */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $consentSocialMedia = null;
 
-    /** @ORM\Column(type="date_immutable", nullable=true) */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?DateTimeImmutable $estimatedStudyStartDate = null;
 
-    /** @ORM\Column(type="date_immutable", nullable=true) */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?DateTimeImmutable $estimatedStudyCompletionDate = null;
 
-    /** @ORM\Column(type="date_immutable", nullable=true) */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?DateTimeImmutable $studyCompletionDate = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata\StudyTeamMember", mappedBy="metadata", cascade={"persist", "remove"}, fetch = "EAGER")
-     *
-     * @var Collection<StudyTeamMember>
-     */
+    /** @var Collection<StudyTeamMember> */
+    #[ORM\OneToMany(targetEntity: StudyTeamMember::class, mappedBy: 'metadata', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $studyTeamMembers;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Metadata\StudyMetadata\ParticipatingCenter", mappedBy="metadata", cascade={"persist", "remove"}, fetch = "EAGER")
-     *
-     * @var Collection<ParticipatingCenter>
-     */
+    /** @var Collection<ParticipatingCenter> */
+    #[ORM\OneToMany(targetEntity: ParticipatingCenter::class, mappedBy: 'metadata', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $participatingCenters;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
-     * @ORM\JoinTable(name="metadata_study_conditions")
-     *
-     * @var Collection<OntologyConcept>
-     */
+    /** @var Collection<OntologyConcept> */
+    #[ORM\JoinTable(name: 'metadata_study_conditions')]
+    #[ORM\ManyToMany(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private Collection $conditions;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FAIRData\LocalizedText",cascade={"persist"})
-     * @ORM\JoinColumn(name="keyword", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'keyword', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: LocalizedText::class, cascade: ['persist'])]
     private ?LocalizedText $keyword = null;
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $logo = null;
 
     public function __construct(Study $study)

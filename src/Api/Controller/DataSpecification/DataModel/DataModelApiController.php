@@ -29,7 +29,7 @@ use App\Exception\Upload\NoFileSpecified;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,10 +43,10 @@ use function assert;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/** @Route("/api/data-model") */
+#[Route(path: '/api/data-model')]
 class DataModelApiController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_data_model_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_data_model_add')]
     public function addDataModel(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -70,7 +70,7 @@ class DataModelApiController extends ApiController
         }
     }
 
-    /** @Route("/my", methods={"GET"}, name="api_my_data_models") */
+    #[Route(path: '/my', methods: ['GET'], name: 'api_my_data_models')]
     public function myDataModels(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -98,12 +98,11 @@ class DataModelApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @Route("/{model}", methods={"GET"}, name="api_data_model")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     */
-    public function dataModel(DataModel $dataModel): Response
-    {
+    #[Route(path: '/{model}', methods: ['GET'], name: 'api_data_model')]
+    public function dataModel(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
         return $this->getResponse(
@@ -113,12 +112,13 @@ class DataModelApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/{model}", methods={"POST"}, name="api_data_model_update")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     */
-    public function updateDataModel(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}', methods: ['POST'], name: 'api_data_model_update')]
+    public function updateDataModel(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         try {
@@ -137,23 +137,23 @@ class DataModelApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{model}/v/{version}", methods={"GET"}, name="api_data_model_version")
-     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
-     */
-    public function dataModelVersion(DataModelVersion $dataModelVersion): Response
-    {
+    #[Route(path: '/{model}/v/{version}', methods: ['GET'], name: 'api_data_model_version')]
+    public function dataModelVersion(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
         return new JsonResponse((new DataModelVersionApiResource($dataModelVersion))->toArray());
     }
 
-    /**
-     * @Route("/{model}/v", methods={"POST"}, name="api_data_model_version_create")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     */
-    public function createDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/v', methods: ['POST'], name: 'api_data_model_version_create')]
+    public function createDataModelVersion(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         try {
@@ -169,21 +169,25 @@ class DataModelApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while creating a data model version', [
-                'exception' => $e,
-                'dataModel' => $dataModel->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while creating a data model version',
+                [
+                    'exception' => $e,
+                    'dataModel' => $dataModel->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{model}/import", methods={"POST"}, name="api_data_model_import")
-     * @ParamConverter("dataModel", options={"mapping": {"model": "id"}})
-     */
-    public function importDataModelVersion(DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/import', methods: ['POST'], name: 'api_data_model_import')]
+    public function importDataModelVersion(
+        #[MapEntity(mapping: ['model' => 'id'])]
+        DataModel $dataModel,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
         $file = $request->files->get('file');
@@ -214,27 +218,34 @@ class DataModelApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
             }
 
-            $this->logger->critical('An error occurred while importing a data model', [
-                'exception' => $e,
-                'dataModel' => $dataModel->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while importing a data model',
+                [
+                    'exception' => $e,
+                    'dataModel' => $dataModel->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_data_model_version_export")
-     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
-     */
-    public function exportDataModelVersion(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/v/{version}/export', methods: ['GET'], name: 'api_data_model_version_export')]
+    public function exportDataModelVersion(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
         $response = new JsonResponse((new DataModelVersionExportApiResource($dataModelVersion))->toArray());
 
         $slugify = new Slugify();
-        $name = sprintf('%s - %s.json', $slugify->slugify($dataModelVersion->getDataModel()->getTitle()), $dataModelVersion->getVersion()->getValue());
+        $name = sprintf(
+            '%s - %s.json',
+            $slugify->slugify($dataModelVersion->getDataModel()->getTitle()),
+            $dataModelVersion->getVersion()->getValue()
+        );
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $name);
 
         $response->setEncodingOptions(JSON_PRETTY_PRINT);
@@ -243,12 +254,12 @@ class DataModelApiController extends ApiController
         return $response;
     }
 
-    /**
-     * @Route("/{model}/v/{version}/rdf", methods={"GET"}, name="api_data_model_rdf_preview")
-     * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
-     */
-    public function dataModelRDFPreview(DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{model}/v/{version}/rdf', methods: ['GET'], name: 'api_data_model_rdf_preview')]
+    public function dataModelRDFPreview(
+        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        DataModelVersion $dataModelVersion,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
         $envelope = $bus->dispatch(new GetDataModelRDFPreviewCommand($dataModelVersion));

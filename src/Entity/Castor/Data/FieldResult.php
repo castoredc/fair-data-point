@@ -10,7 +10,7 @@ use Exception;
 
 class FieldResult
 {
-    public function __construct(private Field $field, private string $value, private ?string $label = null, private ?DateTime $updatedOn = null, private Record $record)
+    public function __construct(private Field $field, private string $value, private Record $record, private ?string $label = null, private ?DateTime $updatedOn = null)
     {
     }
 
@@ -85,9 +85,9 @@ class FieldResult
         return new FieldResult(
             $field,
             $data['field_value'],
+            $record,
             null,
-            $data['updated_on'] !== null ? new DateTime($data['updated_on']) : null,
-            $record
+            $data['updated_on'] !== null ? new DateTime($data['updated_on']) : null
         );
     }
 }

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class EditPermissionApiRequest extends SingleApiRequest
 {
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private string $type;
 
     protected function parse(): void

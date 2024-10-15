@@ -10,40 +10,30 @@ use function boolval;
 
 class MetadataModelFieldApiRequest extends SingleApiRequest
 {
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $title;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("int")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('int')]
     private int $order;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $description = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $node;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private string $fieldType;
 
-    /** @Assert\Type("string") */
+    #[Assert\Type('string')]
     private ?string $optionGroup = null;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type("bool")
-     */
+    #[Assert\NotNull]
+    #[Assert\Type('bool')]
     private bool $isRequired;
 
     protected function parse(): void

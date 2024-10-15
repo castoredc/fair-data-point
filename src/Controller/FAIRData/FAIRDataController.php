@@ -64,11 +64,13 @@ abstract class FAIRDataController extends AbstractController
     protected function getSeoTexts(MetadataEnrichedEntity $entity): array
     {
         return [
-            'title' => $entity->hasMetadata() && $entity->getLatestMetadata()->getTitle() !== null ? $this->getLanguageText(
+            'title' => $entity->hasMetadata() && $entity->getLatestMetadata()->getTitle(
+            ) !== null ? $this->getLanguageText(
                 $entity->getLatestMetadata()->getTitle(),
                 'en'
             ) : '',
-            'description' => $entity->hasMetadata() && $entity->getLatestMetadata()->getDescription() !== null ? $this->getLanguageText(
+            'description' => $entity->hasMetadata() && $entity->getLatestMetadata()->getDescription(
+            ) !== null ? $this->getLanguageText(
                 $entity->getLatestMetadata()->getDescription(),
                 'en'
             ) : '',
@@ -134,12 +136,18 @@ abstract class FAIRDataController extends AbstractController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while loading the RDF', [
-                'exception' => $e,
-                'Distribution' => $entity->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while loading the RDF',
+                [
+                    'exception' => $e,
+                    'Distribution' => $entity->getId(),
+                ]
+            );
 
-            return new JsonResponse(['error' => 'An error occurred while loading the RDF.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                ['error' => 'An error occurred while loading the RDF.'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         assert($graph instanceof Graph);
@@ -184,12 +192,18 @@ abstract class FAIRDataController extends AbstractController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while loading the RDF', [
-                'exception' => $e,
-                'Distribution' => $entity->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while loading the RDF',
+                [
+                    'exception' => $e,
+                    'Distribution' => $entity->getId(),
+                ]
+            );
 
-            return new JsonResponse(['error' => 'An error occurred while loading the RDF.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                ['error' => 'An error occurred while loading the RDF.'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         return $this->getTurtleResponse($entity, $turtle, $shouldDownload);

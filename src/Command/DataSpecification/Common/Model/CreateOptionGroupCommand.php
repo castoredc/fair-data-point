@@ -6,7 +6,7 @@ namespace App\Command\DataSpecification\Common\Model;
 abstract class CreateOptionGroupCommand
 {
     /** @param array<array{title: string, description: string|null, value: string, order: int|null}> $options */
-    public function __construct(private string $title, private ?string $description = null, private array $options)
+    public function __construct(private string $title, private array $options, private ?string $description = null)
     {
     }
 

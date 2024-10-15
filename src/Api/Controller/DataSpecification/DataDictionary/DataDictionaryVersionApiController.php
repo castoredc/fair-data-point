@@ -13,7 +13,7 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Cocur\Slugify\Slugify;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,30 +26,34 @@ use function assert;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/**
- * @Route("/api/dictionary/{dataDictionary}/v/{version}")
- * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "data_dictionary", "version": "id"}})
- */
+#[Route(path: '/api/dictionary/{dataDictionary}/v/{version}')]
 class DataDictionaryVersionApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dictionary_version") */
-    public function dataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion): Response
-    {
+    #[Route(path: '', methods: ['GET'], name: 'api_dictionary_version')]
+    public function dataDictionaryVersion(
+        #[MapEntity(mapping: ['dataDictionary' => 'data_dictionary', 'version' => 'id'])]
+        DataDictionaryVersion $dataDictionaryVersion,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataDictionaryVersion->getDataDictionary());
 
         return new JsonResponse((new DataDictionaryVersionApiResource($dataDictionaryVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_dictionary_version_create") */
-    public function createDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_dictionary_version_create')]
+    public function createDataDictionaryVersion(
+        DataDictionary $dataDictionary,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
 
         try {
             $parsed = $this->parseRequest(DataDictionaryVersionTypeApiRequest::class, $request);
             assert($parsed instanceof DataDictionaryVersionTypeApiRequest);
 
-            $envelope = $bus->dispatch(new CreateDataDictionaryVersionCommand($dataDictionary, $parsed->getVersionType()));
+            $envelope = $bus->dispatch(
+                new CreateDataDictionaryVersionCommand($dataDictionary, $parsed->getVersionType())
+            );
 
             $handledStamp = $envelope->last(HandledStamp::class);
             assert($handledStamp instanceof HandledStamp);
@@ -58,24 +62,34 @@ class DataDictionaryVersionApiController extends ApiController
         } catch (ApiRequestParseError $e) {
             return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
         } catch (HandlerFailedException $e) {
-            $this->logger->critical('An error occurred while creating a data dictionary version', [
-                'exception' => $e,
-                'dataDictionary' => $dataDictionary->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while creating a data dictionary version',
+                [
+                    'exception' => $e,
+                    'dataDictionary' => $dataDictionary->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /** @Route("/export", methods={"GET"}, name="api_dictionary_version_export") */
-    public function exportDataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/export', methods: ['GET'], name: 'api_dictionary_version_export')]
+    public function exportDataDictionaryVersion(
+        #[MapEntity(mapping: ['dataDictionary' => 'data_dictionary', 'version' => 'id'])]
+        DataDictionaryVersion $dataDictionaryVersion,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionaryVersion->getDataDictionary());
 
         $response = new JsonResponse((new DataDictionaryVersionExportApiResource($dataDictionaryVersion))->toArray());
 
         $slugify = new Slugify();
-        $name = sprintf('%s - %s.json', $slugify->slugify($dataDictionaryVersion->getDataDictionary()->getTitle()), $dataDictionaryVersion->getVersion()->getValue());
+        $name = sprintf(
+            '%s - %s.json',
+            $slugify->slugify($dataDictionaryVersion->getDataDictionary()->getTitle()),
+            $dataDictionaryVersion->getVersion()->getValue()
+        );
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $name);
 
         $response->setEncodingOptions(JSON_PRETTY_PRINT);

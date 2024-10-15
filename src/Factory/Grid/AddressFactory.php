@@ -12,11 +12,11 @@ class AddressFactory
     {
         return new Address(
             $data['number'],
-            $data['coordinates']['lat'],
-            $data['coordinates']['lng'],
             $data['primary'],
             $data['city'],
-            $data['country']['code']
+            $data['country']['code'],
+            $data['coordinates']['lat'],
+            $data['coordinates']['lng']
         );
     }
 }

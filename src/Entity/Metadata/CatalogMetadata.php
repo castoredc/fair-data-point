@@ -13,31 +13,24 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use function count;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="metadata_catalog")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'metadata_catalog')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class CatalogMetadata extends Metadata
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\FAIRData\Catalog", inversedBy="metadata")
-     * @ORM\JoinColumn(name="catalog", referencedColumnName="id", nullable=FALSE)
-     */
+    #[ORM\JoinColumn(name: 'catalog', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Catalog::class, inversedBy: 'metadata')]
     private Catalog $catalog;
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $homepage = null;
 
-    /** @ORM\Column(type="iri", nullable=true) */
+    #[ORM\Column(type: 'iri', nullable: true)]
     private ?Iri $logo = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Terminology\OntologyConcept",cascade={"persist"})
-     * @ORM\JoinTable(name="metadata_catalog_themetaxonomies")
-     *
-     * @var Collection<OntologyConcept>
-     */
+    /** @var Collection<OntologyConcept> */
+    #[ORM\JoinTable(name: 'metadata_catalog_themetaxonomies')]
+    #[ORM\ManyToMany(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private Collection $themeTaxonomies;
 
     public function __construct(Catalog $catalog)

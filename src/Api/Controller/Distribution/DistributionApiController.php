@@ -28,7 +28,7 @@ use App\Exception\LanguageNotFound;
 use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\Authorization\Voter\DistributionVoter;
 use App\Service\UriHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,18 +38,17 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dataset/{dataset}/distribution")
- * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
- */
+#[Route(path: '/api/dataset/{dataset}/distribution')]
 class DistributionApiController extends ApiController
 {
-    /**
-     * @Route("/{distribution}", methods={"GET"}, name="api_distribution")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function distribution(Dataset $dataset, Distribution $distribution, UriHelper $uriHelper): Response
-    {
+    #[Route(path: '/{distribution}', methods: ['GET'], name: 'api_distribution')]
+    public function distribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        UriHelper $uriHelper,
+    ): Response {
         $this->denyAccessUnlessGranted('view', $dataset);
 
         if (! $dataset->hasDistribution($distribution)) {
@@ -63,12 +62,13 @@ class DistributionApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/{distribution}/contents", methods={"GET"}, name="api_distribution_contents")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function distributionContents(Dataset $dataset, Distribution $distribution): Response
-    {
+    #[Route(path: '/{distribution}/contents', methods: ['GET'], name: 'api_distribution_contents')]
+    public function distributionContents(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution)) {
@@ -78,16 +78,22 @@ class DistributionApiController extends ApiController
         return new JsonResponse((new DistributionContentApiResource($distribution))->toArray());
     }
 
-    /**
-     * @Route("/{distribution}/log", methods={"GET"}, name="api_distribution_logs")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function distributionGenerationLogs(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{distribution}/log', methods: ['GET'], name: 'api_distribution_logs')]
+    public function distributionGenerationLogs(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
         $contents = $distribution->getContents();
 
-        if (! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached()) {
+        if (
+            ! $dataset->hasDistribution($distribution) || ! $contents instanceof RDFDistribution || ! $contents->isCached(
+            )
+        ) {
             throw $this->createNotFoundException();
         }
 
@@ -114,23 +120,28 @@ class DistributionApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while getting the distribution generation logs', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the distribution generation logs',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{distribution}/log/{log}", methods={"GET"}, name="api_distribution_log")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     * @ParamConverter("log", options={"mapping": {"log": "id"}})
-     */
-    public function distributionGenerationLog(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log): Response
-    {
+    #[Route(path: '/{distribution}/log/{log}', methods: ['GET'], name: 'api_distribution_log')]
+    public function distributionGenerationLog(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        #[MapEntity(mapping: ['log' => 'id'])]
+        DistributionGenerationLog $log,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
@@ -140,13 +151,17 @@ class DistributionApiController extends ApiController
         return new JsonResponse((new DistributionGenerationLogApiResource($log))->toArray());
     }
 
-    /**
-     * @Route("/{distribution}/log/{log}/records", methods={"GET"}, name="api_distribution_log_records")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     * @ParamConverter("log", options={"mapping": {"log": "id"}})
-     */
-    public function distributionGenerationLogRecords(Dataset $dataset, Distribution $distribution, DistributionGenerationLog $log, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{distribution}/log/{log}/records', methods: ['GET'], name: 'api_distribution_log_records')]
+    public function distributionGenerationLogRecords(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        #[MapEntity(mapping: ['log' => 'id'])]
+        DistributionGenerationLog $log,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
         if (! $dataset->hasDistribution($distribution) || $log->getDistribution()->getDistribution() !== $distribution) {
@@ -176,20 +191,28 @@ class DistributionApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while getting the distribution generation record logs', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-                'LogID' => $log->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while getting the distribution generation record logs',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                    'LogID' => $log->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /** @Route("", methods={"POST"}, name="api_distribution_add") */
-    public function addDistribution(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
-    {
+    #[Route(path: '', methods: ['POST'], name: 'api_distribution_add')]
+    public function addDistribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        Request $request,
+        MessageBusInterface $bus,
+        UriHelper $uriHelper,
+    ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
@@ -243,21 +266,27 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
-            $this->logger->critical('An error occurred while adding a distribution', [
-                'exception' => $e,
-                'details' => $e->getMessage(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while adding a distribution',
+                [
+                    'exception' => $e,
+                    'details' => $e->getMessage(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{distribution}", methods={"POST"}, name="api_distribution_update")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function updateDistribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{distribution}', methods: ['POST'], name: 'api_distribution_update')]
+    public function updateDistribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
@@ -310,22 +339,28 @@ class DistributionApiController extends ApiController
                 return new JsonResponse($e->toArray(), Response::HTTP_CONFLICT);
             }
 
-            $this->logger->critical('An error occurred while updating a distribution', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating a distribution',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Route("/{distribution}/subset", methods={"POST"}, name="api_distribution_subset")
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function subsetDistribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
-    {
+    #[Route(path: '/{distribution}/subset', methods: ['POST'], name: 'api_distribution_subset')]
+    public function subsetDistribution(
+        #[MapEntity(mapping: ['dataset' => 'slug'])]
+        Dataset $dataset,
+        #[MapEntity(mapping: ['distribution' => 'slug'])]
+        Distribution $distribution,
+        Request $request,
+        MessageBusInterface $bus,
+    ): Response {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
         try {
@@ -344,11 +379,14 @@ class DistributionApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $e = $e->getPrevious();
 
-            $this->logger->critical('An error occurred while updating the subset of a distribution', [
-                'exception' => $e,
-                'Distribution' => $distribution->getSlug(),
-                'DistributionID' => $distribution->getId(),
-            ]);
+            $this->logger->critical(
+                'An error occurred while updating the subset of a distribution',
+                [
+                    'exception' => $e,
+                    'Distribution' => $distribution->getSlug(),
+                    'DistributionID' => $distribution->getId(),
+                ]
+            );
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
