@@ -19,10 +19,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/terminology") */
+#[Route(path: '/api/terminology')]
 class TerminologyApiController extends ApiController
 {
-    /** @Route("/ontologies", name="api_terminology_ontologies") */
+    #[Route(path: '/ontologies', name: 'api_terminology_ontologies')]
     public function ontologies(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetOntologiesCommand());
@@ -33,7 +33,7 @@ class TerminologyApiController extends ApiController
         return new JsonResponse((new OntologiesApiResource($handledStamp->getResult()))->toArray());
     }
 
-    /** @Route("/concepts", name="api_terminology_concepts") */
+    #[Route(path: '/concepts', name: 'api_terminology_concepts')]
     public function concepts(Request $request, MessageBusInterface $bus): Response
     {
         try {

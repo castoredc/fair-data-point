@@ -17,7 +17,7 @@ use function assert;
 
 class CountriesApiController extends ApiController
 {
-    /** @Route("/api/countries", name="api_countries") */
+    #[Route(path: '/api/countries', name: 'api_countries')]
     public function countries(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetCountriesCommand());
@@ -28,11 +28,9 @@ class CountriesApiController extends ApiController
         return new JsonResponse($handledStamp->getResult()->toArray());
     }
 
-    /**
-     * @Route("/api/country/{code}", name="api_country")
-     * @ParamConverter("country", options={"mapping": {"code": "code"}})
-     */
-    public function language(Country $country): Response
+    #[Route(path: '/api/country/{code}', name: 'api_country')]
+    public function language(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['code' => 'code'])]
+    Country $country): Response
     {
         return new JsonResponse((new CountryApiResource($country))->toArray());
     }

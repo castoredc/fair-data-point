@@ -44,10 +44,10 @@ use function count;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/** @Route("/api/metadata-model") */
+#[Route(path: '/api/metadata-model')]
 class MetadataModelApiController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_model_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_add')]
     public function addMetadataModel(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -71,7 +71,7 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /** @Route("/my", methods={"GET"}, name="api_my_metadata_models") */
+    #[Route(path: '/my', methods: ['GET'], name: 'api_my_metadata_models')]
     public function myMetadataModels(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -110,11 +110,9 @@ class MetadataModelApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @Route("/{model}", methods={"GET"}, name="api_metadata_model")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function dataModel(MetadataModel $metadataModel): Response
+    #[Route(path: '/{model}', methods: ['GET'], name: 'api_metadata_model')]
+    public function dataModel(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModel);
 
@@ -125,11 +123,9 @@ class MetadataModelApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/{model}", methods={"POST"}, name="api_metadata_model_update")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function updateMetadataModel(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{model}', methods: ['POST'], name: 'api_metadata_model_update')]
+    public function updateMetadataModel(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -149,22 +145,18 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{model}/v/{version}", methods={"GET"}, name="api_metadata_model_version")
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
-     */
-    public function dataModelVersion(MetadataModelVersion $metadataModelVersion): Response
+    #[Route(path: '/{model}/v/{version}', methods: ['GET'], name: 'api_metadata_model_version')]
+    public function dataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+    MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 
         return new JsonResponse((new MetadataModelVersionApiResource($metadataModelVersion))->toArray());
     }
 
-    /**
-     * @Route("/{model}/v", methods={"POST"}, name="api_metadata_model_version_create")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function createMetadataModelVersion(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{model}/v', methods: ['POST'], name: 'api_metadata_model_version_create')]
+    public function createMetadataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -190,11 +182,9 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{model}/import", methods={"POST"}, name="api_metadata_model_import")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function importMetadataModelVersion(MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{model}/import', methods: ['POST'], name: 'api_metadata_model_import')]
+    public function importMetadataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -235,11 +225,9 @@ class MetadataModelApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{model}/v/{version}/export", methods={"GET"}, name="api_metadata_model_version_export")
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
-     */
-    public function exportMetadataModelVersion(MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
+    #[Route(path: '/{model}/v/{version}/export', methods: ['GET'], name: 'api_metadata_model_version_export')]
+    public function exportMetadataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+    MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -255,11 +243,9 @@ class MetadataModelApiController extends ApiController
         return $response;
     }
 
-    /**
-     * @Route("/{model}/v/{version}/rdf", methods={"GET"}, name="api_metadata_model_rdf_preview")
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
-     */
-    public function dataModelRDFPreview(MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
+    #[Route(path: '/{model}/v/{version}/rdf', methods: ['GET'], name: 'api_metadata_model_rdf_preview')]
+    public function dataModelRDFPreview(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+    MetadataModelVersion $metadataModelVersion, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
 

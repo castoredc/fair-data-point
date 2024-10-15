@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dictionary/{dataDictionary}/v/{version}/group")
- * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "data_dictionary", "version": "id"}})
- */
+#[Route(path: '/api/dictionary/{dataDictionary}/v/{version}/group')]
+#[ParamConverter('dataDictionaryVersion', options: ['mapping' => ['dataDictionary' => 'data_dictionary', 'version' => 'id']])]
 class DataDictionaryGroupApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dictionary_groups") */
+    #[Route(path: '', methods: ['GET'], name: 'api_dictionary_groups')]
     public function getGroups(DataDictionaryVersion $dataDictionaryVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataDictionaryVersion->getDataDictionary());
@@ -36,7 +34,7 @@ class DataDictionaryGroupApiController extends ApiController
         return new JsonResponse((new DataDictionaryGroupsApiResource($dataDictionaryVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_dictionary_group_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_dictionary_group_add')]
     public function addGroup(DataDictionaryVersion $dataDictionaryVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionaryVersion->getDataDictionary());
@@ -57,11 +55,9 @@ class DataDictionaryGroupApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{group}", methods={"POST"}, name="api_dictionary_group_update")
-     * @ParamConverter("group", options={"mapping": {"group": "id"}})
-     */
-    public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{group}', methods: ['POST'], name: 'api_dictionary_group_update')]
+    public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['group' => 'id'])]
+    DataDictionaryGroup $group, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $group->getVersion()->getDataSpecification());
 
@@ -88,11 +84,9 @@ class DataDictionaryGroupApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{group}", methods={"DELETE"}, name="api_dictionary_group_delete")
-     * @ParamConverter("group", options={"mapping": {"group": "id"}})
-     */
-    public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, DataDictionaryGroup $group, MessageBusInterface $bus): Response
+    #[Route(path: '/{group}', methods: ['DELETE'], name: 'api_dictionary_group_delete')]
+    public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['group' => 'id'])]
+    DataDictionaryGroup $group, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $group->getVersion()->getDataSpecification());
 

@@ -12,9 +12,8 @@ class IndexController extends AbstractController
 {
     /**
      * @return RedirectResponse
-     *
-     * @Route("/", name="redirect_homepage")
      */
+    #[Route(path: '/', name: 'redirect_homepage')]
     public function redirectToIndex(): Response
     {
         return $this->redirectToRoute('fdp');

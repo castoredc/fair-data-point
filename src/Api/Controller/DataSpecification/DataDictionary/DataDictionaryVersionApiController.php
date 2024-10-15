@@ -26,13 +26,11 @@ use function assert;
 use function sprintf;
 use const JSON_PRETTY_PRINT;
 
-/**
- * @Route("/api/dictionary/{dataDictionary}/v/{version}")
- * @ParamConverter("dataDictionaryVersion", options={"mapping": {"dataDictionary": "data_dictionary", "version": "id"}})
- */
+#[Route(path: '/api/dictionary/{dataDictionary}/v/{version}')]
+#[ParamConverter('dataDictionaryVersion', options: ['mapping' => ['dataDictionary' => 'data_dictionary', 'version' => 'id']])]
 class DataDictionaryVersionApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dictionary_version") */
+    #[Route(path: '', methods: ['GET'], name: 'api_dictionary_version')]
     public function dataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataDictionaryVersion->getDataDictionary());
@@ -40,7 +38,7 @@ class DataDictionaryVersionApiController extends ApiController
         return new JsonResponse((new DataDictionaryVersionApiResource($dataDictionaryVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_dictionary_version_create") */
+    #[Route(path: '', methods: ['POST'], name: 'api_dictionary_version_create')]
     public function createDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);
@@ -67,7 +65,7 @@ class DataDictionaryVersionApiController extends ApiController
         }
     }
 
-    /** @Route("/export", methods={"GET"}, name="api_dictionary_version_export") */
+    #[Route(path: '/export', methods: ['GET'], name: 'api_dictionary_version_export')]
     public function exportDataDictionaryVersion(DataDictionaryVersion $dataDictionaryVersion, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionaryVersion->getDataDictionary());

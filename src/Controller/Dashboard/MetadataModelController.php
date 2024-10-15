@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class MetadataModelController extends AbstractController
 {
-    /** @Route("/dashboard/metadata-models", name="dashboard_metadata_models") */
+    #[Route(path: '/dashboard/metadata-models', name: 'dashboard_metadata_models')]
     public function metadataModels(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -24,7 +24,7 @@ final class MetadataModelController extends AbstractController
         );
     }
 
-    /** @Route("/dashboard/metadata-models/add", name="dashboard_metadata_model_add") */
+    #[Route(path: '/dashboard/metadata-models/add', name: 'dashboard_metadata_model_add')]
     public function addMetadataModel(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -35,13 +35,11 @@ final class MetadataModelController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/metadata-models/{model}", name="dashboard_metadata_model")
-     * @Route("/dashboard/metadata-models/{model}/versions", name="dashboard_metadata_model_versions")
-     * @Route("/dashboard/metadata-models/{model}/permissions", name="dashboard_metadata_model_permissions")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     */
-    public function adminModel(MetadataModel $metadataModel): Response
+    #[Route(path: '/dashboard/metadata-models/{model}', name: 'dashboard_metadata_model')]
+    #[Route(path: '/dashboard/metadata-models/{model}/versions', name: 'dashboard_metadata_model_versions')]
+    #[Route(path: '/dashboard/metadata-models/{model}/permissions', name: 'dashboard_metadata_model_permissions')]
+    public function adminModel(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -51,21 +49,19 @@ final class MetadataModelController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/metadata-models/{model}/{version}/display", name="dashboard_metadata_model_display")
-     * @Route("/dashboard/metadata-models/{model}/{version}/display/{resourceType}", name="dashboard_metadata_model_display_resource")
-     * @Route("/dashboard/metadata-models/{model}/{version}/modules", name="dashboard_metadata_model_modules")
-     * @Route("/dashboard/metadata-models/{model}/{version}/modules/{moduleId}", name="dashboard_metadata_model_module")
-     * @Route("/dashboard/metadata-models/{model}/{version}/forms", name="dashboard_metadata_model_forms")
-     * @Route("/dashboard/metadata-models/{model}/{version}/forms/{form_id}", name="dashboard_metadata_model_form")
-     * @Route("/dashboard/metadata-models/{model}/{version}/option-group", name="dashboard_metadata_model_option_groups")
-     * @Route("/dashboard/metadata-models/{model}/{version}/prefixes", name="dashboard_metadata_model_prefixes")
-     * @Route("/dashboard/metadata-models/{model}/{version}/preview", name="dashboard_metadata_model_preview")
-     * @Route("/dashboard/metadata-models/{model}/{version}/import-export", name="dashboard_metadata_model_importexport")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadataModel", "version": "version"}})
-     */
-    public function adminModelVersion(MetadataModel $metadataModel, MetadataModelVersion $metadataModelVersion): Response
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/display', name: 'dashboard_metadata_model_display')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/display/{resourceType}', name: 'dashboard_metadata_model_display_resource')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/modules', name: 'dashboard_metadata_model_modules')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/modules/{moduleId}', name: 'dashboard_metadata_model_module')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/forms', name: 'dashboard_metadata_model_forms')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/forms/{form_id}', name: 'dashboard_metadata_model_form')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/option-group', name: 'dashboard_metadata_model_option_groups')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/prefixes', name: 'dashboard_metadata_model_prefixes')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/preview', name: 'dashboard_metadata_model_preview')]
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/import-export', name: 'dashboard_metadata_model_importexport')]
+    public function adminModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+    MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -75,12 +71,10 @@ final class MetadataModelController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/metadata-models/{model}/{version}/nodes/{nodeType}", name="dashboard_metadata_model_nodes")
-     * @ParamConverter("metadataModel", options={"mapping": {"model": "id"}})
-     * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadataModel", "version": "version"}})
-     */
-    public function adminModelVersionNodes(MetadataModel $metadataModel, MetadataModelVersion $metadataModelVersion, string $nodeType): Response
+    #[Route(path: '/dashboard/metadata-models/{model}/{version}/nodes/{nodeType}', name: 'dashboard_metadata_model_nodes')]
+    public function adminModelVersionNodes(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+    MetadataModelVersion $metadataModelVersion, string $nodeType): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 

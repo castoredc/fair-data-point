@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CatalogController extends FAIRDataController
 {
-    /** @Route("/fdp/{catalog}", name="redirect_old_catalog") */
+    #[Route(path: '/fdp/{catalog}', name: 'redirect_old_catalog')]
     public function catalogRedirect(string $catalog, Request $request): Response
     {
         return $this->redirectToRoute('catalog', [
@@ -21,11 +21,9 @@ class CatalogController extends FAIRDataController
         ], Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    /**
-     * @Route("/fdp/catalog/{catalog}", name="catalog")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function catalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/catalog/{catalog}', name: 'catalog')]
+    public function catalog(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 

@@ -13,12 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DistributionController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}", name="distribution")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function distribution(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}', name: 'distribution')]
+    public function distribution(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset->getStudy());
 

@@ -27,13 +27,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dictionary/{dataDictionary}")
- * @ParamConverter("dataDictionary", options={"mapping": {"dataDictionary": "id"}})
- */
+#[Route(path: '/api/dictionary/{dataDictionary}')]
+#[ParamConverter('dataDictionary', options: ['mapping' => ['dataDictionary' => 'id']])]
 class DataDictionaryApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dictionary") */
+    #[Route(path: '', methods: ['GET'], name: 'api_dictionary')]
     public function dataDictionary(DataDictionary $dataDictionary): Response
     {
         $this->denyAccessUnlessGranted('view', $dataDictionary);
@@ -41,7 +39,7 @@ class DataDictionaryApiController extends ApiController
         return new JsonResponse((new DataDictionaryApiResource($dataDictionary))->toArray());
     }
 
-    /** @Route("/import", methods={"POST"}, name="api_dictionary_import") */
+    #[Route(path: '/import', methods: ['POST'], name: 'api_dictionary_import')]
     public function importDataDictionaryVersion(DataDictionary $dataDictionary, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataDictionary);

@@ -15,11 +15,10 @@ class CastorOAuthController extends AbstractController
 {
     /**
      * Link to this controller to start the "connect" process
-     *
-     * @Route("/connect/castor/{server}", name="connect_castor_start")
-     * @ParamConverter("server", options={"mapping": {"server": "id"}})
      */
-    public function connect(CastorServer $server, Request $request, ClientRegistry $clientRegistry): Response
+    #[Route(path: '/connect/castor/{server}', name: 'connect_castor_start')]
+    public function connect(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['server' => 'id'])]
+    CastorServer $server, Request $request, ClientRegistry $clientRegistry): Response
     {
         $request->getSession()->set('previous', $request->get('target_path'));
         $request->getSession()->set('castor.server', $server->getUrl()->getValue());
@@ -43,9 +42,8 @@ class CastorOAuthController extends AbstractController
      *
      * From https://github.com/knpuniversity/oauth2-client-bundle#step-3-use-the-client-service:
      * If you want to *authenticate* the user, then leave this method blank and create a Guard authenticator
-     *
-     * @Route("/login/check-castor", name="connect_castor_check")
      */
+    #[Route(path: '/login/check-castor', name: 'connect_castor_check')]
     public function connectCheck(ClientRegistry $clientRegistry): void
     {
     }

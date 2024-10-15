@@ -26,13 +26,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dataset/{dataset}")
- * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
- */
+#[Route(path: '/api/dataset/{dataset}')]
+#[ParamConverter('dataset', options: ['mapping' => ['dataset' => 'slug']])]
 class DatasetApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_dataset") */
+    #[Route(path: '', methods: ['GET'], name: 'api_dataset')]
     public function dataset(Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
@@ -44,7 +42,7 @@ class DatasetApiController extends ApiController
         );
     }
 
-    /** @Route("", methods={"POST"}, name="api_dataset_update") */
+    #[Route(path: '', methods: ['POST'], name: 'api_dataset_update')]
     public function updateDataset(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
@@ -78,7 +76,7 @@ class DatasetApiController extends ApiController
         }
     }
 
-    /** @Route("/distribution", methods={"GET"}, name="api_dataset_distributions") */
+    #[Route(path: '/distribution', methods: ['GET'], name: 'api_dataset_distributions')]
     public function distributions(Dataset $dataset, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);

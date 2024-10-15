@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/display")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/display')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class MetadataModelDisplaySettingApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_displaySetting") */
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_displaySetting')]
     public function getDisplaySettings(MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -36,7 +34,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
         return new JsonResponse((new MetadataModelDisplaySettingsApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_displaySetting_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_displaySetting_add')]
     public function addDisplaySetting(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
@@ -67,12 +65,10 @@ class MetadataModelDisplaySettingApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{displaySetting}", methods={"POST"}, name="api_metadata_model_displaySetting_update")
-     * @ParamConverter("displaySetting", options={"mapping": {"displaySetting": "id"}})
-     */
+    #[Route(path: '/{displaySetting}', methods: ['POST'], name: 'api_metadata_model_displaySetting_update')]
     public function updateDisplaySetting(
         MetadataModelVersion $metadataModelVersion,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         Request $request,
         MessageBusInterface $bus,
@@ -114,12 +110,10 @@ class MetadataModelDisplaySettingApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{displaySetting}", methods={"DELETE"}, name="api_metadata_model_displaySetting_delete")
-     * @ParamConverter("displaySetting", options={"mapping": {"displaySetting": "id"}})
-     */
+    #[Route(path: '/{displaySetting}', methods: ['DELETE'], name: 'api_metadata_model_displaySetting_delete')]
     public function deleteDisplaySetting(
         MetadataModelVersion $metadataModelVersion,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         MessageBusInterface $bus,
     ): Response {

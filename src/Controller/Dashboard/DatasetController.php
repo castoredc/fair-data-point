@@ -12,22 +12,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class DatasetController extends AbstractController
 {
-    /**
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}", name="dashboard_study_dataset")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/metadata", name="dashboard_study_dataset_metadata")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/permissions", name="dashboard_study_dataset_permissions")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions", name="dashboard_study_dataset_distributions")
-     * @Route("/dashboard/studies/{studyId}/datasets/{dataset}/distributions/add", name="dashboard_study_dataset_distributions_add")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}", name="dashboard_catalog_dataset")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/metadata", name="dashboard_catalog_dataset_metadata")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/permissions", name="dashboard_catalog_dataset_permissions")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions", name="dashboard_catalog_dataset_distributions")
-     * @Route("/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add", name="dashboard_catalog_dataset_distributions_add")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     */
-    public function dataset(Dataset $dataset): Response
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}', name: 'dashboard_study_dataset')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/metadata', name: 'dashboard_study_dataset_metadata')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/permissions', name: 'dashboard_study_dataset_permissions')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions', name: 'dashboard_study_dataset_distributions')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets/{dataset}/distributions/add', name: 'dashboard_study_dataset_distributions_add')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}', name: 'dashboard_catalog_dataset')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/metadata', name: 'dashboard_catalog_dataset_metadata')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/permissions', name: 'dashboard_catalog_dataset_permissions')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions', name: 'dashboard_catalog_dataset_distributions')]
+    #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add', name: 'dashboard_catalog_dataset_distributions_add')]
+    public function dataset(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset): Response
     {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 

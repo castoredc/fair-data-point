@@ -27,10 +27,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/permissions/{type}/{objectId}") */
+#[Route(path: '/api/permissions/{type}/{objectId}')]
 class PermissionsApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_permissions") */
+    #[Route(path: '', methods: ['GET'], name: 'api_permissions')]
     public function permissions(string $type, string $objectId): Response
     {
         $object = $this->getObject($type, $objectId);
@@ -44,7 +44,7 @@ class PermissionsApiController extends ApiController
         ));
     }
 
-    /** @Route("", methods={"POST"}, name="api_permissions_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_permissions_add')]
     public function addPermissions(string $type, string $objectId, Request $request, MessageBusInterface $bus): Response
     {
         $object = $this->getObject($type, $objectId);
@@ -83,11 +83,9 @@ class PermissionsApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{user}", methods={"POST"}, name="api_model_permissions_edit")
-     * @ParamConverter("user", options={"mapping": {"user": "id"}})
-     */
-    public function editPermissions(string $type, string $objectId, User $user, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{user}', methods: ['POST'], name: 'api_model_permissions_edit')]
+    public function editPermissions(string $type, string $objectId, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['user' => 'id'])]
+    User $user, Request $request, MessageBusInterface $bus): Response
     {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
@@ -120,11 +118,9 @@ class PermissionsApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{user}", methods={"DELETE"}, name="api_model_permissions_remove")
-     * @ParamConverter("user", options={"mapping": {"user": "id"}})
-     */
-    public function removePermissions(string $type, string $objectId, User $user, MessageBusInterface $bus): Response
+    #[Route(path: '/{user}', methods: ['DELETE'], name: 'api_model_permissions_remove')]
+    public function removePermissions(string $type, string $objectId, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['user' => 'id'])]
+    User $user, MessageBusInterface $bus): Response
     {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);

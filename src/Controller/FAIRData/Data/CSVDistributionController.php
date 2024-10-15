@@ -27,13 +27,11 @@ use function time;
 
 class CSVDistributionController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/{catalog}/{dataset}/{distribution}/distribution/csv", name="distribution_csv")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function csvDistribution(Catalog $catalog, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/{catalog}/{dataset}/{distribution}/distribution/csv', name: 'distribution_csv')]
+    public function csvDistribution(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();

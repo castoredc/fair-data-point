@@ -25,13 +25,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/catalog/{catalog}/dataset")
- * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
- */
+#[Route(path: '/api/catalog/{catalog}/dataset')]
+#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'slug']])]
 class CatalogDatasetsApiController extends ApiController
 {
-    /** @Route("/add", methods={"POST"}, name="api_add_dataset_to_catalog") */
+    #[Route(path: '/add', methods: ['POST'], name: 'api_add_dataset_to_catalog')]
     public function addDatasetToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);

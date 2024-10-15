@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/data-model/{model}/v/{version}/module")
- * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
- */
+#[Route(path: '/api/data-model/{model}/v/{version}/module')]
+#[ParamConverter('dataModelVersion', options: ['mapping' => ['model' => 'data_model', 'version' => 'id']])]
 class DataModelModuleApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_data_model_modules") */
+    #[Route(path: '', methods: ['GET'], name: 'api_data_model_modules')]
     public function getModules(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -36,7 +34,7 @@ class DataModelModuleApiController extends ApiController
         return new JsonResponse((new DataModelModulesApiResource($dataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_data_model_module_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_data_model_module_add')]
     public function addModule(DataModelVersion $dataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
@@ -57,11 +55,9 @@ class DataModelModuleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{module}", methods={"POST"}, name="api_data_model_module_update")
-     * @ParamConverter("module", options={"mapping": {"module": "id"}})
-     */
-    public function updateModule(DataModelVersion $dataModelVersion, DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{module}', methods: ['POST'], name: 'api_data_model_module_update')]
+    public function updateModule(DataModelVersion $dataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['module' => 'id'])]
+    DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -88,11 +84,9 @@ class DataModelModuleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{module}", methods={"DELETE"}, name="api_data_model_module_delete")
-     * @ParamConverter("module", options={"mapping": {"module": "id"}})
-     */
-    public function deleteModule(DataModelVersion $dataModelVersion, DataModelGroup $module, MessageBusInterface $bus): Response
+    #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_data_model_module_delete')]
+    public function deleteModule(DataModelVersion $dataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['module' => 'id'])]
+    DataModelGroup $module, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 

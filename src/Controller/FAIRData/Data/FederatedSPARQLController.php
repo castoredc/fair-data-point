@@ -19,7 +19,7 @@ use function assert;
 
 class FederatedSPARQLController extends ApiController
 {
-    /** @Route("/fdp/distributions/sparql", name="federated_sparql") */
+    #[Route(path: '/fdp/distributions/sparql', name: 'federated_sparql')]
     public function rdfDistributionSparql(Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -53,7 +53,7 @@ class FederatedSPARQLController extends ApiController
         }
     }
 
-    /** @Route("/fdp/distributions/query", name="federated_query") */
+    #[Route(path: '/fdp/distributions/query', name: 'federated_query')]
     public function rdfDistributionQuery(): Response
     {
         return $this->render('react.html.twig');

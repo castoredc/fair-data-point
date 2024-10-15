@@ -41,13 +41,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/agent/details/{agent}")
- * @ParamConverter("agent", options={"mapping": {"agent": "slug"}})
- */
+#[Route(path: '/api/agent/details/{agent}')]
+#[ParamConverter('agent', options: ['mapping' => ['agent' => 'slug']])]
 class AgentApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_agent_details") */
+    #[Route(path: '', methods: ['GET'], name: 'api_agent_details')]
     public function agentDetails(Agent $agent, MessageBusInterface $bus): Response
     {
         try {
@@ -80,7 +78,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /** @Route("/study", methods={"GET"}, name="api_agent_studies") */
+    #[Route(path: '/study', methods: ['GET'], name: 'api_agent_studies')]
     public function agentStudies(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -124,7 +122,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /** @Route("/study/filters", methods={"GET"}, name="api_agent_study_filters") */
+    #[Route(path: '/study/filters', methods: ['GET'], name: 'api_agent_study_filters')]
     public function agentStudiesFilters(Agent $agent, MessageBusInterface $bus): Response
     {
         try {
@@ -146,7 +144,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /** @Route("/dataset", methods={"GET"}, name="api_agent_datasets") */
+    #[Route(path: '/dataset', methods: ['GET'], name: 'api_agent_datasets')]
     public function agentDatasets(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         $user = $this->getUser();
@@ -189,7 +187,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /** @Route("/catalog", methods={"GET"}, name="api_agent_catalogs") */
+    #[Route(path: '/catalog', methods: ['GET'], name: 'api_agent_catalogs')]
     public function agentCatalogs(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -228,7 +226,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /** @Route("/distribution", methods={"GET"}, name="api_agent_distribution") */
+    #[Route(path: '/distribution', methods: ['GET'], name: 'api_agent_distribution')]
     public function agentDistributions(Agent $agent, Request $request, MessageBusInterface $bus, UriHelper $uriHelper): Response
     {
         $user = $this->getUser();
@@ -272,7 +270,7 @@ class AgentApiController extends ApiController
         }
     }
 
-    /** @Route("/map", methods={"GET"}, name="api_agent_map") */
+    #[Route(path: '/map', methods: ['GET'], name: 'api_agent_map')]
     public function agentMap(Agent $agent, Request $request, MessageBusInterface $bus): Response
     {
         try {

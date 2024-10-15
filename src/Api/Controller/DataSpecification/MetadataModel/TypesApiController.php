@@ -11,13 +11,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/types")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/types')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class TypesApiController extends ApiController
 {
-    /** @Route("", name="api_metadata_model_types") */
+    #[Route(path: '', name: 'api_metadata_model_types')]
     public function nodes(MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());

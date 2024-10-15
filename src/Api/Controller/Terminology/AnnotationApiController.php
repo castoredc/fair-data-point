@@ -28,13 +28,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/study/{study}/annotations")
- * @ParamConverter("study", options={"mapping": {"study": "id"}})
- */
+#[Route(path: '/api/study/{study}/annotations')]
+#[ParamConverter('study', options: ['mapping' => ['study' => 'id']])]
 class AnnotationApiController extends ApiController
 {
-    /** @Route("/add", name="api_study_annotations_add") */
+    #[Route(path: '/add', name: 'api_study_annotations_add')]
     public function addAnnotation(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
@@ -83,11 +81,9 @@ class AnnotationApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{annotation}", methods={"DELETE"}, name="api_study_annotations_delete")
-     * @ParamConverter("annotation", options={"mapping": {"annotation": "id"}})
-     */
-    public function deleteAnnotation(Annotation $annotation, Study $study, MessageBusInterface $bus): Response
+    #[Route(path: '/{annotation}', methods: ['DELETE'], name: 'api_study_annotations_delete')]
+    public function deleteAnnotation(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['annotation' => 'id'])]
+    Annotation $annotation, Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 

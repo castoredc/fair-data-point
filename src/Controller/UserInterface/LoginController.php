@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
 {
-    /** @Route("/login", name="login") */
+    #[Route(path: '/login', name: 'login')]
     public function react(): Response
     {
         return $this->render(
@@ -21,16 +21,14 @@ class LoginController extends AbstractController
         );
     }
 
-    /** @Route("/logout", name="logout") */
+    #[Route(path: '/logout', name: 'logout')]
     public function logout(): void
     {
     }
 
-    /**
-     * @Route("/login/{catalog}", name="login_catalog")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function catalogLogin(Catalog $catalog): Response
+    #[Route(path: '/login/{catalog}', name: 'login_catalog')]
+    public function catalogLogin(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog): Response
     {
         if (! $catalog->isAcceptingSubmissions()) {
             throw new NotFoundHttpException();
@@ -42,7 +40,7 @@ class LoginController extends AbstractController
         );
     }
 
-    /** @Route("/redirect-login", name="redirect_login") */
+    #[Route(path: '/redirect-login', name: 'redirect_login')]
     public function loginRedirect(): Response
     {
         return $this->redirectToRoute('fdp');

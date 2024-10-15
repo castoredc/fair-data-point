@@ -14,10 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class StudiesController extends AbstractController
 {
-    /**
-     * @Route("/dashboard/studies", name="dashboard_studies")
-     * @Route("/dashboard/studies/add", name="dashboard_study_add")
-     */
+    #[Route(path: '/dashboard/studies', name: 'dashboard_studies')]
+    #[Route(path: '/dashboard/studies/add', name: 'dashboard_study_add')]
     public function studies(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -28,11 +26,9 @@ final class StudiesController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/studies/add/{catalog}", name="dashboard_study_add_catalog")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function addStudy(Catalog $catalog): Response
+    #[Route(path: '/dashboard/studies/add/{catalog}', name: 'dashboard_study_add_catalog')]
+    public function addStudy(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
@@ -42,14 +38,12 @@ final class StudiesController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/dashboard/studies/{studyId}", name="dashboard_study")
-     * @Route("/dashboard/studies/{studyId}/metadata", name="dashboard_study_metadata")
-     * @Route("/dashboard/studies/{studyId}/annotations", name="dashboard_study_annotations")
-     * @Route("/dashboard/studies/{studyId}/datasets", name="dashboard_study_datasets")
-     * @ParamConverter("study", options={"mapping": {"studyId": "id"}})
-     */
-    public function studyMetadata(Study $study): Response
+    #[Route(path: '/dashboard/studies/{studyId}', name: 'dashboard_study')]
+    #[Route(path: '/dashboard/studies/{studyId}/metadata', name: 'dashboard_study_metadata')]
+    #[Route(path: '/dashboard/studies/{studyId}/annotations', name: 'dashboard_study_annotations')]
+    #[Route(path: '/dashboard/studies/{studyId}/datasets', name: 'dashboard_study_datasets')]
+    public function studyMetadata(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['studyId' => 'id'])]
+    Study $study): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 

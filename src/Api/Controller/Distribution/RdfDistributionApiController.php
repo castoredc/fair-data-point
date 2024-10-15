@@ -35,15 +35,13 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}")
- * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
- * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
- * @ParamConverter("dataModelVersion", options={"mapping": {"version": "id"}})
- */
+#[Route(path: '/api/dataset/{dataset}/distribution/{distribution}/contents/rdf/v/{version}/{type}')]
+#[ParamConverter('dataset', options: ['mapping' => ['dataset' => 'slug']])]
+#[ParamConverter('distribution', options: ['mapping' => ['distribution' => 'slug']])]
+#[ParamConverter('dataModelVersion', options: ['mapping' => ['version' => 'id']])]
 class RdfDistributionApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_distribution_contents_rdf") */
+    #[Route(path: '', methods: ['GET'], name: 'api_distribution_contents_rdf')]
     public function distributionRdfContents(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
@@ -71,7 +69,7 @@ class RdfDistributionApiController extends ApiController
         return $this->getPaginatedResponse(DataModelMappingApiResource::class, $results);
     }
 
-    /** @Route("", methods={"POST"}, name="api_distribution_contents_rdf_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_distribution_contents_rdf_add')]
     public function addMapping(string $type, DataModelVersion $dataModelVersion, Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);

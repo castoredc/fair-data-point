@@ -19,10 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 use function count;
 
-/** @Route("/api/study") */
+#[Route(path: '/api/study')]
 class MyStudiesApiController extends ApiController
 {
-    /** @Route("/my", methods={"GET"}, name="api_my_studies") */
+    #[Route(path: '/my', methods: ['GET'], name: 'api_my_studies')]
     public function myStudies(MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

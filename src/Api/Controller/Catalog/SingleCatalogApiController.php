@@ -28,13 +28,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/catalog/{catalog}")
- * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
- */
+#[Route(path: '/api/catalog/{catalog}')]
+#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'slug']])]
 class SingleCatalogApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_catalog") */
+    #[Route(path: '', methods: ['GET'], name: 'api_catalog')]
     public function catalog(Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
@@ -46,7 +44,7 @@ class SingleCatalogApiController extends ApiController
         );
     }
 
-    /** @Route("", methods={"POST"}, name="api_catalog_update") */
+    #[Route(path: '', methods: ['POST'], name: 'api_catalog_update')]
     public function updateCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
@@ -82,11 +80,9 @@ class SingleCatalogApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/dataset", name="api_catalog_datasets")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function datasets(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/dataset', name: 'api_catalog_datasets')]
+    public function datasets(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
         $user = $this->getUser();
@@ -134,11 +130,9 @@ class SingleCatalogApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/map", name="api_catalog_datasets_map")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function studiesMap(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/map', name: 'api_catalog_datasets_map')]
+    public function studiesMap(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 

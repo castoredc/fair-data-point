@@ -23,14 +23,12 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/form/{form}/field")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- * @ParamConverter("form", options={"mapping": {"form": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/form/{form}/field')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
+#[ParamConverter('form', options: ['mapping' => ['form' => 'id']])]
 class MetadataModelFieldApiController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_model_field_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_field_add')]
     public function addField(
         MetadataModelVersion $metadataModelVersion,
         MetadataModelForm $form,
@@ -73,13 +71,11 @@ class MetadataModelFieldApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{field}", methods={"POST"}, name="api_metadata_model_field_update")
-     * @ParamConverter("field", options={"mapping": {"field": "id"}})
-     */
+    #[Route(path: '/{field}', methods: ['POST'], name: 'api_metadata_model_field_update')]
     public function updateField(
         MetadataModelVersion $metadataModelVersion,
         MetadataModelForm $form,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['field' => 'id'])]
         MetadataModelField $field,
         Request $request,
         MessageBusInterface $bus,
@@ -130,13 +126,11 @@ class MetadataModelFieldApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{field}", methods={"DELETE"}, name="api_metadata_model_field_delete")
-     * @ParamConverter("field", options={"mapping": {"field": "id"}})
-     */
+    #[Route(path: '/{field}', methods: ['DELETE'], name: 'api_metadata_model_field_delete')]
     public function deleteField(
         MetadataModelVersion $metadataModelVersion,
         MetadataModelForm $form,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['field' => 'id'])]
         MetadataModelField $field,
         MessageBusInterface $bus,
     ): Response {

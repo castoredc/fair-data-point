@@ -22,10 +22,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/agent/organization") */
+#[Route(path: '/api/agent/organization')]
 class OrganizationApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_agent_find_organization") */
+    #[Route(path: '', methods: ['GET'], name: 'api_agent_find_organization')]
     public function findOrganization(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -55,22 +55,18 @@ class OrganizationApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{organization}", methods={"GET"}, name="api_agent_organization")
-     * @ParamConverter("organization", options={"mapping": {"organization": "id"}})
-     */
-    public function organization(Organization $organization): Response
+    #[Route(path: '/{organization}', methods: ['GET'], name: 'api_agent_organization')]
+    public function organization(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['organization' => 'id'])]
+    Organization $organization): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         return new JsonResponse((new OrganizationApiResource($organization))->toArray());
     }
 
-    /**
-     * @Route("/{organization}/department", methods={"GET"}, name="api_agent_organization_department")
-     * @ParamConverter("organization", options={"mapping": {"organization": "id"}})
-     */
-    public function departments(Organization $organization): Response
+    #[Route(path: '/{organization}/department', methods: ['GET'], name: 'api_agent_organization_department')]
+    public function departments(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['organization' => 'id'])]
+    Organization $organization): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 

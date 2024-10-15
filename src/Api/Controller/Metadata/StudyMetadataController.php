@@ -18,13 +18,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/study/{study}")
- * @ParamConverter("study", options={"mapping": {"study": "id"}})
- */
+#[Route(path: '/api/metadata/study/{study}')]
+#[ParamConverter('study', options: ['mapping' => ['study' => 'id']])]
 class StudyMetadataController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_study_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_study_add')]
     public function addStudyMetadata(Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);

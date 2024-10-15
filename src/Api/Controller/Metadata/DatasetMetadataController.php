@@ -18,13 +18,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/dataset/{dataset}")
- * @ParamConverter("dataset", options={"mapping": {"dataset": "id"}})
- */
+#[Route(path: '/api/metadata/dataset/{dataset}')]
+#[ParamConverter('dataset', options: ['mapping' => ['dataset' => 'id']])]
 class DatasetMetadataController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_dataset_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_dataset_add')]
     public function addDatasetMetadata(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);

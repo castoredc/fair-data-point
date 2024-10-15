@@ -12,11 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DatasetController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/dataset/{dataset}", name="dataset")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     */
-    public function dataset(Dataset $dataset, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/dataset/{dataset}', name: 'dataset')]
+    public function dataset(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 

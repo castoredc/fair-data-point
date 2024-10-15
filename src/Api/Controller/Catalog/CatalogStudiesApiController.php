@@ -29,13 +29,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/catalog/{catalog}/study")
- * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
- */
+#[Route(path: '/api/catalog/{catalog}/study')]
+#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'slug']])]
 class CatalogStudiesApiController extends ApiController
 {
-    /** @Route("", name="api_catalog_studies") */
+    #[Route(path: '', name: 'api_catalog_studies')]
     public function studies(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
@@ -81,7 +79,7 @@ class CatalogStudiesApiController extends ApiController
         }
     }
 
-    /** @Route("/filters", name="api_catalog_studies_filters") */
+    #[Route(path: '/filters', name: 'api_catalog_studies_filters')]
     public function studyFilters(Catalog $catalog): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::VIEW, $catalog);
@@ -90,7 +88,7 @@ class CatalogStudiesApiController extends ApiController
         return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
     }
 
-    /** @Route("/add", methods={"POST"}, name="api_add_study_to_catalog") */
+    #[Route(path: '/add', methods: ['POST'], name: 'api_add_study_to_catalog')]
     public function addStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
@@ -135,7 +133,7 @@ class CatalogStudiesApiController extends ApiController
         }
     }
 
-    /** @Route("/import", methods={"POST"}, name="api_import_study_to_catalog") */
+    #[Route(path: '/import', methods: ['POST'], name: 'api_import_study_to_catalog')]
     public function importStudyToCatalog(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);

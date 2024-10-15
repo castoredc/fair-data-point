@@ -28,13 +28,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/castor/study/{study}")
- * @ParamConverter("study", options={"mapping": {"study": "id"}})
- */
+#[Route(path: '/api/castor/study/{study}')]
+#[ParamConverter('study', options: ['mapping' => ['study' => 'id']])]
 class CastorStudyStructureApiController extends ApiController
 {
-    /** @Route("/structure", name="api_study_structure") */
+    #[Route(path: '/structure', name: 'api_study_structure')]
     public function studyStructure(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
@@ -78,7 +76,7 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /** @Route("/structure/step/{step}/fields", name="api_study_structure_step") */
+    #[Route(path: '/structure/step/{step}/fields', name: 'api_study_structure_step')]
     public function studyStructureStep(CastorStudy $study, string $step, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
@@ -123,7 +121,7 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /** @Route("/optiongroups", name="api_study_optiongroups") */
+    #[Route(path: '/optiongroups', name: 'api_study_optiongroups')]
     public function optionGroups(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
@@ -170,7 +168,7 @@ class CastorStudyStructureApiController extends ApiController
         return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /** @Route("/institutes", name="api_study_institutes") */
+    #[Route(path: '/institutes', name: 'api_study_institutes')]
     public function institutes(CastorStudy $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);

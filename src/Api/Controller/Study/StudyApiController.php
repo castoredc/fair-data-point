@@ -19,14 +19,12 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/study") */
+#[Route(path: '/api/study')]
 class StudyApiController extends ApiController
 {
-    /**
-     * @Route("/slug/{study}", methods={"GET"}, name="api_study_byslug")
-     * @ParamConverter("study", options={"mapping": {"study": "slug"}})
-     */
-    public function studyBySlug(Study $study): Response
+    #[Route(path: '/slug/{study}', methods: ['GET'], name: 'api_study_byslug')]
+    public function studyBySlug(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'slug'])]
+    Study $study): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 
@@ -37,11 +35,9 @@ class StudyApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/{study}", methods={"GET"}, name="api_study")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
-     */
-    public function study(Study $study): Response
+    #[Route(path: '/{study}', methods: ['GET'], name: 'api_study')]
+    public function study(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'id'])]
+    Study $study): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 
@@ -52,11 +48,9 @@ class StudyApiController extends ApiController
         );
     }
 
-    /**
-     * @Route("/{study}", methods={"POST"}, name="api_update_study")
-     * @ParamConverter("study", options={"mapping": {"study": "id"}})
-     */
-    public function updateStudy(Study $study, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{study}', methods: ['POST'], name: 'api_update_study')]
+    public function updateStudy(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'id'])]
+    Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 

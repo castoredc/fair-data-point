@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/form")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/form')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class MetadataModelFormApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_forms") */
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_forms')]
     public function getForms(MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -36,7 +34,7 @@ class MetadataModelFormApiController extends ApiController
         return new JsonResponse((new MetadataModelFormsApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_form_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_form_add')]
     public function addForm(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
@@ -64,12 +62,10 @@ class MetadataModelFormApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{form}", methods={"POST"}, name="api_metadata_model_form_update")
-     * @ParamConverter("form", options={"mapping": {"form": "id"}})
-     */
+    #[Route(path: '/{form}', methods: ['POST'], name: 'api_metadata_model_form_update')]
     public function updateForm(
         MetadataModelVersion $metadataModelVersion,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         Request $request,
         MessageBusInterface $bus,
@@ -109,12 +105,10 @@ class MetadataModelFormApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{form}", methods={"DELETE"}, name="api_metadata_model_form_delete")
-     * @ParamConverter("form", options={"mapping": {"form": "id"}})
-     */
+    #[Route(path: '/{form}', methods: ['DELETE'], name: 'api_metadata_model_form_delete')]
     public function deleteForm(
         MetadataModelVersion $metadataModelVersion,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         MessageBusInterface $bus,
     ): Response {

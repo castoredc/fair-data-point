@@ -17,7 +17,7 @@ use function assert;
 
 class LanguagesApiController extends ApiController
 {
-    /** @Route("/api/languages", name="api_languages") */
+    #[Route(path: '/api/languages', name: 'api_languages')]
     public function languages(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetLanguagesCommand());
@@ -28,11 +28,9 @@ class LanguagesApiController extends ApiController
         return new JsonResponse($handledStamp->getResult()->toArray());
     }
 
-    /**
-     * @Route("/api/language/{code}", name="api_language")
-     * @ParamConverter("language", options={"mapping": {"code": "code"}})
-     */
-    public function language(Language $language): Response
+    #[Route(path: '/api/language/{code}', name: 'api_language')]
+    public function language(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['code' => 'code'])]
+    Language $language): Response
     {
         return new JsonResponse((new LanguageApiResource($language))->toArray());
     }

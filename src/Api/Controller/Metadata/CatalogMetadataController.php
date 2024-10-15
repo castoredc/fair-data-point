@@ -18,13 +18,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/catalog/{catalog}")
- * @ParamConverter("catalog", options={"mapping": {"catalog": "id"}})
- */
+#[Route(path: '/api/metadata/catalog/{catalog}')]
+#[ParamConverter('catalog', options: ['mapping' => ['catalog' => 'id']])]
 class CatalogMetadataController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_catalog_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_catalog_add')]
     public function addCatalogMetadata(Catalog $catalog, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);

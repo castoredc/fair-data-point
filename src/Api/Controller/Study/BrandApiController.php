@@ -14,11 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BrandApiController extends ApiController
 {
-    /**
-     * @Route("/api/brand/{catalog}", name="api_catalog_brand")
-     * @ParamConverter("catalog", options={"mapping": {"catalog": "slug"}})
-     */
-    public function brand(Catalog $catalog, MessageBusInterface $bus): Response
+    #[Route(path: '/api/brand/{catalog}', name: 'api_catalog_brand')]
+    public function brand(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 

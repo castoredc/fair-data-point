@@ -18,13 +18,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata/distribution/{distribution}")
- * @ParamConverter("distribution", options={"mapping": {"distribution": "id"}})
- */
+#[Route(path: '/api/metadata/distribution/{distribution}')]
+#[ParamConverter('distribution', options: ['mapping' => ['distribution' => 'id']])]
 class DistributionMetadataController extends ApiController
 {
-    /** @Route("", methods={"POST"}, name="api_metadata_distribution_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_distribution_add')]
     public function addDistributionMetadata(Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);

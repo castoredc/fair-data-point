@@ -20,7 +20,7 @@ use function assert;
 
 class CastorStudyApiController extends ApiController
 {
-    /** @Route("/api/castor/studies", name="api_castor_studies") */
+    #[Route(path: '/api/castor/studies', name: 'api_castor_studies')]
     public function castorStudies(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/data-model/{model}/v/{version}/module/{module}/triple")
- * @ParamConverter("module", options={"mapping": {"module": "id", "version": "version"}})
- */
+#[Route(path: '/api/data-model/{model}/v/{version}/module/{module}/triple')]
+#[ParamConverter('module', options: ['mapping' => ['module' => 'id', 'version' => 'version']])]
 class TripleApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_data_model_module") */
+    #[Route(path: '', methods: ['GET'], name: 'api_data_model_module')]
     public function getTriples(DataModelGroup $module): Response
     {
         $this->denyAccessUnlessGranted('view', $module->getVersion()->getDataSpecification());
@@ -36,7 +34,7 @@ class TripleApiController extends ApiController
         return new JsonResponse((new TriplesApiResource($module))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_data_model_triple_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_data_model_triple_add')]
     public function addTriple(DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
@@ -57,11 +55,9 @@ class TripleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{triple}", methods={"POST"}, name="api_data_model_triple_update")
-     * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
-     */
-    public function updateTriple(DataModelGroup $module, Triple $triple, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{triple}', methods: ['POST'], name: 'api_data_model_triple_update')]
+    public function updateTriple(DataModelGroup $module, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['triple' => 'id'])]
+    Triple $triple, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -88,11 +84,9 @@ class TripleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{triple}", methods={"DELETE"}, name="api_data_model_triple_delete")
-     * @ParamConverter("triple", options={"mapping": {"triple": "id"}})
-     */
-    public function deleteTriple(DataModelGroup $module, Triple $triple, MessageBusInterface $bus): Response
+    #[Route(path: '/{triple}', methods: ['DELETE'], name: 'api_data_model_triple_delete')]
+    public function deleteTriple(DataModelGroup $module, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['triple' => 'id'])]
+    Triple $triple, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 

@@ -17,7 +17,7 @@ use function assert;
 
 class LicensesApiController extends ApiController
 {
-    /** @Route("/api/licenses", name="api_licenses") */
+    #[Route(path: '/api/licenses', name: 'api_licenses')]
     public function countries(MessageBusInterface $bus): Response
     {
         $envelope = $bus->dispatch(new GetLicensesCommand());
@@ -28,11 +28,9 @@ class LicensesApiController extends ApiController
         return new JsonResponse($handledStamp->getResult()->toArray());
     }
 
-    /**
-     * @Route("/api/license/{slug}", name="api_license")
-     * @ParamConverter("license", options={"mapping": {"slug": "slug"}})
-     */
-    public function license(License $license): Response
+    #[Route(path: '/api/license/{slug}', name: 'api_license')]
+    public function license(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['slug' => 'slug'])]
+    License $license): Response
     {
         return new JsonResponse((new LicenseApiResource($license))->toArray());
     }

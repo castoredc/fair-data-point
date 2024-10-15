@@ -12,11 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StudyController extends FAIRDataController
 {
-    /**
-     * @Route("/study/{study}", name="study")
-     * @ParamConverter("study", options={"mapping": {"study": "slug"}})
-     */
-    public function study(Study $study, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/study/{study}', name: 'study')]
+    public function study(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'slug'])]
+    Study $study, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 

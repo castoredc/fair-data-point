@@ -35,12 +35,10 @@ class RDFDistributionSPARQLController extends ApiController
         parent::__construct($apiClient, $validator, $logger, $em);
     }
 
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/sparql", name="distribution_sparql")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfDistributionSparql(Dataset $dataset, Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/sparql', name: 'distribution_sparql')]
+    public function rdfDistributionSparql(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();
@@ -100,12 +98,10 @@ class RDFDistributionSPARQLController extends ApiController
         }
     }
 
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/query", name="distribution_query")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfDistributionQuery(Dataset $dataset, Distribution $distribution, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/query', name: 'distribution_query')]
+    public function rdfDistributionQuery(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();

@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ToolsController extends AbstractController
 {
-    /** @Route("/tools/metadata-xml-parse", name="tools_metadata_xml_parse") */
+    #[Route(path: '/tools/metadata-xml-parse', name: 'tools_metadata_xml_parse')]
     public function metadataXmlParse(): Response
     {
         return $this->render(

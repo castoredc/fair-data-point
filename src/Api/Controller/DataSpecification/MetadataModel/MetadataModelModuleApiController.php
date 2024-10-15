@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/module")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/module')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class MetadataModelModuleApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_modules") */
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_modules')]
     public function getModules(MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -36,7 +34,7 @@ class MetadataModelModuleApiController extends ApiController
         return new JsonResponse((new MetadataModelModulesApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_module_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_module_add')]
     public function addModule(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
@@ -64,12 +62,10 @@ class MetadataModelModuleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{module}", methods={"POST"}, name="api_metadata_model_module_update")
-     * @ParamConverter("module", options={"mapping": {"module": "id"}})
-     */
+    #[Route(path: '/{module}', methods: ['POST'], name: 'api_metadata_model_module_update')]
     public function updateModule(
         MetadataModelVersion $metadataModelVersion,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
         Request $request,
         MessageBusInterface $bus,
@@ -109,12 +105,10 @@ class MetadataModelModuleApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{module}", methods={"DELETE"}, name="api_metadata_model_module_delete")
-     * @ParamConverter("module", options={"mapping": {"module": "id"}})
-     */
+    #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_metadata_model_module_delete')]
     public function deleteModule(
         MetadataModelVersion $metadataModelVersion,
+        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
         MessageBusInterface $bus,
     ): Response {

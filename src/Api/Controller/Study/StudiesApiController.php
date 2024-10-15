@@ -33,10 +33,10 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/** @Route("/api/study") */
+#[Route(path: '/api/study')]
 class StudiesApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_studies") */
+    #[Route(path: '', methods: ['GET'], name: 'api_studies')]
     public function studies(Request $request, MessageBusInterface $bus): Response
     {
         try {
@@ -76,7 +76,7 @@ class StudiesApiController extends ApiController
         }
     }
 
-    /** @Route("/filters", name="api_studies_filters") */
+    #[Route(path: '/filters', name: 'api_studies_filters')]
     public function studiesFilters(MessageBusInterface $bus): Response
     {
         $user = $this->getUser();
@@ -91,7 +91,7 @@ class StudiesApiController extends ApiController
         }
     }
 
-    /** @Route("", methods={"POST"}, name="api_add_study") */
+    #[Route(path: '', methods: ['POST'], name: 'api_add_study')]
     public function addStudy(Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

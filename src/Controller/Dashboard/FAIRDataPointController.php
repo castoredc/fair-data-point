@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class FAIRDataPointController extends AbstractController
 {
-    /** @Route("/dashboard/fdp", name="dashboard_fdp") */
+    #[Route(path: '/dashboard/fdp', name: 'dashboard_fdp')]
     public function fdp(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

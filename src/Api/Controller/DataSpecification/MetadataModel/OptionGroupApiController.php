@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/option-group")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/option-group')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class OptionGroupApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_option_groups") */
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_option_groups')]
     public function getOptionGroups(MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModelVersion->getMetadataModel());
@@ -36,7 +34,7 @@ class OptionGroupApiController extends ApiController
         return new JsonResponse((new OptionGroupsApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_option_group_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_option_group_add')]
     public function addOptionGroup(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
@@ -62,11 +60,9 @@ class OptionGroupApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{optionGroup}", methods={"POST"}, name="api_metadata_model_option_group_update")
-     * @ParamConverter("optionGroup", options={"mapping": {"optionGroup": "id"}})
-     */
-    public function updateOptionGroup(MetadataModelVersion $metadataModelVersion, MetadataModelOptionGroup $optionGroup, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{optionGroup}', methods: ['POST'], name: 'api_metadata_model_option_group_update')]
+    public function updateOptionGroup(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['optionGroup' => 'id'])]
+    MetadataModelOptionGroup $optionGroup, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -98,11 +94,9 @@ class OptionGroupApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{optionGroup}", methods={"DELETE"}, name="api_metadata_model_option_group_delete")
-     * @ParamConverter("optionGroup", options={"mapping": {"optionGroup": "id"}})
-     */
-    public function deletePrefix(MetadataModelVersion $metadataModelVersion, MetadataModelOptionGroup $optionGroup, MessageBusInterface $bus): Response
+    #[Route(path: '/{optionGroup}', methods: ['DELETE'], name: 'api_metadata_model_option_group_delete')]
+    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['optionGroup' => 'id'])]
+    MetadataModelOptionGroup $optionGroup, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 

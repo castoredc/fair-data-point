@@ -22,13 +22,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/metadata-model/{model}/v/{version}/prefix")
- * @ParamConverter("metadataModelVersion", options={"mapping": {"model": "metadata_model", "version": "id"}})
- */
+#[Route(path: '/api/metadata-model/{model}/v/{version}/prefix')]
+#[ParamConverter('metadataModelVersion', options: ['mapping' => ['model' => 'metadata_model', 'version' => 'id']])]
 class MetadataModelPrefixApiController extends ApiController
 {
-    /** @Route("", methods={"GET"}, name="api_metadata_model_prefixes") */
+    #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_prefixes')]
     public function getPrefixes(MetadataModelVersion $metadataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -36,7 +34,7 @@ class MetadataModelPrefixApiController extends ApiController
         return new JsonResponse((new MetadataModelPrefixesApiResource($metadataModelVersion))->toArray());
     }
 
-    /** @Route("", methods={"POST"}, name="api_metadata_model_prefix_add") */
+    #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_prefix_add')]
     public function addPrefix(MetadataModelVersion $metadataModelVersion, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
@@ -57,11 +55,9 @@ class MetadataModelPrefixApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{prefix}", methods={"POST"}, name="api_metadata_model_prefix_update")
-     * @ParamConverter("prefix", options={"mapping": {"prefix": "id"}})
-     */
-    public function updatePrefix(MetadataModelVersion $metadataModelVersion, NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/{prefix}', methods: ['POST'], name: 'api_metadata_model_prefix_update')]
+    public function updatePrefix(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['prefix' => 'id'])]
+    NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -88,11 +84,9 @@ class MetadataModelPrefixApiController extends ApiController
         }
     }
 
-    /**
-     * @Route("/{prefix}", methods={"DELETE"}, name="api_metadata_model_prefix_delete")
-     * @ParamConverter("prefix", options={"mapping": {"prefix": "id"}})
-     */
-    public function deletePrefix(MetadataModelVersion $metadataModelVersion, NamespacePrefix $prefix, MessageBusInterface $bus): Response
+    #[Route(path: '/{prefix}', methods: ['DELETE'], name: 'api_metadata_model_prefix_delete')]
+    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['prefix' => 'id'])]
+    NamespacePrefix $prefix, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 

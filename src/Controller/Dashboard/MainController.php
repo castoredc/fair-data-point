@@ -12,9 +12,8 @@ final class MainController extends AbstractController
 {
     /**
      * @return RedirectResponse
-     *
-     * @Route("/dashboard", name="redirect_dashboard")
      */
+    #[Route(path: '/dashboard', name: 'redirect_dashboard')]
     public function redirectToStudies(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

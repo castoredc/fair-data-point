@@ -19,13 +19,11 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use function assert;
 
-/**
- * @Route("/api/study/{study}")
- * @ParamConverter("study", options={"mapping": {"study": "id"}})
- */
+#[Route(path: '/api/study/{study}')]
+#[ParamConverter('study', options: ['mapping' => ['study' => 'id']])]
 class StudyDatasetApiController extends ApiController
 {
-    /** @Route("/dataset", methods={"GET"}, name="api_study_datasets") */
+    #[Route(path: '/dataset', methods: ['GET'], name: 'api_study_datasets')]
     public function datasets(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
@@ -44,7 +42,7 @@ class StudyDatasetApiController extends ApiController
         );
     }
 
-    /** @Route("/dataset", methods={"POST"}, name="api_study_create_dataset") */
+    #[Route(path: '/dataset', methods: ['POST'], name: 'api_study_create_dataset')]
     public function createDataset(Study $study, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);

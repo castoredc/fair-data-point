@@ -29,13 +29,11 @@ use function urlencode;
 
 class RDFDistributionController extends FAIRDataController
 {
-    /**
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf", name="distribution_rdf")
-     * @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}", name="distribution_rdf_record")
-     * @ParamConverter("dataset", options={"mapping": {"dataset": "slug"}})
-     * @ParamConverter("distribution", options={"mapping": {"distribution": "slug"}})
-     */
-    public function rdfDistribution(Dataset $dataset, Distribution $distribution, ?string $record, Request $request, MessageBusInterface $bus): Response
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf', name: 'distribution_rdf')]
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}', name: 'distribution_rdf_record')]
+    public function rdfDistribution(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, ?string $record, Request $request, MessageBusInterface $bus): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
 
@@ -108,7 +106,7 @@ class RDFDistributionController extends FAIRDataController
         return $this->getTurtleResponse($distribution, $turtle, $request->query->getBoolean('download'));
     }
 
-    /** @Route("/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}/{element}", name="distribution_rdf_record_element") */
+    #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}/{element}', name: 'distribution_rdf_record_element')]
     public function rdfDistributionElement(string $dataset, string $distribution, string $record, string $element): Response
     {
         return $this->redirectToRoute('distribution_rdf_record', [

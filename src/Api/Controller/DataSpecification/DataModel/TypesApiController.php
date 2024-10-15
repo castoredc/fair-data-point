@@ -11,13 +11,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/api/data-model/{model}/v/{version}/types")
- * @ParamConverter("dataModelVersion", options={"mapping": {"model": "data_model", "version": "id"}})
- */
+#[Route(path: '/api/data-model/{model}/v/{version}/types')]
+#[ParamConverter('dataModelVersion', options: ['mapping' => ['model' => 'data_model', 'version' => 'id']])]
 class TypesApiController extends ApiController
 {
-    /** @Route("", name="api_data_model_types") */
+    #[Route(path: '', name: 'api_data_model_types')]
     public function nodes(DataModelVersion $dataModelVersion): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
