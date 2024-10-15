@@ -17,7 +17,7 @@ use App\Exception\UserAlreadyExists;
 use App\Exception\UserNotFound;
 use App\Security\PermissionsEnabledEntity;
 use App\Security\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,8 +84,8 @@ class PermissionsApiController extends ApiController
     }
 
     #[Route(path: '/{user}', methods: ['POST'], name: 'api_model_permissions_edit')]
-    public function editPermissions(string $type, string $objectId, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['user' => 'id'])]
-    User $user, Request $request, MessageBusInterface $bus): Response
+    public function editPermissions(string $type, string $objectId, #[MapEntity(mapping: ['user' => 'id'])]
+    User $user, Request $request, MessageBusInterface $bus,): Response
     {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);
@@ -119,8 +119,8 @@ class PermissionsApiController extends ApiController
     }
 
     #[Route(path: '/{user}', methods: ['DELETE'], name: 'api_model_permissions_remove')]
-    public function removePermissions(string $type, string $objectId, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['user' => 'id'])]
-    User $user, MessageBusInterface $bus): Response
+    public function removePermissions(string $type, string $objectId, #[MapEntity(mapping: ['user' => 'id'])]
+    User $user, MessageBusInterface $bus,): Response
     {
         $object = $this->getObject($type, $objectId);
         $this->denyAccessUnlessGranted('manage', $object);

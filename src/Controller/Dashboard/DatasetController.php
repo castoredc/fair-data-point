@@ -5,7 +5,7 @@ namespace App\Controller\Dashboard;
 
 use App\Entity\FAIRData\Dataset;
 use App\Security\Authorization\Voter\DatasetVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +22,8 @@ final class DatasetController extends AbstractController
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/permissions', name: 'dashboard_catalog_dataset_permissions')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions', name: 'dashboard_catalog_dataset_distributions')]
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/{dataset}/distributions/add', name: 'dashboard_catalog_dataset_distributions_add')]
-    public function dataset(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset): Response
+    public function dataset(#[MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset,): Response
     {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 

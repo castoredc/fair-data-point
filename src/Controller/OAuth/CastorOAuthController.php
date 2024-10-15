@@ -5,7 +5,7 @@ namespace App\Controller\OAuth;
 
 use App\Security\CastorServer;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +17,8 @@ class CastorOAuthController extends AbstractController
      * Link to this controller to start the "connect" process
      */
     #[Route(path: '/connect/castor/{server}', name: 'connect_castor_start')]
-    public function connect(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['server' => 'id'])]
-    CastorServer $server, Request $request, ClientRegistry $clientRegistry): Response
+    public function connect(#[MapEntity(mapping: ['server' => 'id'])]
+    CastorServer $server, Request $request, ClientRegistry $clientRegistry,): Response
     {
         $request->getSession()->set('previous', $request->get('target_path'));
         $request->getSession()->set('castor.server', $server->getUrl()->getValue());

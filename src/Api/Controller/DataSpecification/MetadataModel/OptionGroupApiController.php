@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,8 +62,8 @@ class OptionGroupApiController extends ApiController
     }
 
     #[Route(path: '/{optionGroup}', methods: ['POST'], name: 'api_metadata_model_option_group_update')]
-    public function updateOptionGroup(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['optionGroup' => 'id'])]
-    MetadataModelOptionGroup $optionGroup, Request $request, MessageBusInterface $bus): Response
+    public function updateOptionGroup(MetadataModelVersion $metadataModelVersion, #[MapEntity(mapping: ['optionGroup' => 'id'])]
+    MetadataModelOptionGroup $optionGroup, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -95,8 +96,8 @@ class OptionGroupApiController extends ApiController
     }
 
     #[Route(path: '/{optionGroup}', methods: ['DELETE'], name: 'api_metadata_model_option_group_delete')]
-    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['optionGroup' => 'id'])]
-    MetadataModelOptionGroup $optionGroup, MessageBusInterface $bus): Response
+    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[MapEntity(mapping: ['optionGroup' => 'id'])]
+    MetadataModelOptionGroup $optionGroup, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 

@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,7 +66,7 @@ class MetadataModelFormApiController extends ApiController
     #[Route(path: '/{form}', methods: ['POST'], name: 'api_metadata_model_form_update')]
     public function updateForm(
         MetadataModelVersion $metadataModelVersion,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['form' => 'id'])]
+        #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         Request $request,
         MessageBusInterface $bus,
@@ -108,7 +109,7 @@ class MetadataModelFormApiController extends ApiController
     #[Route(path: '/{form}', methods: ['DELETE'], name: 'api_metadata_model_form_delete')]
     public function deleteForm(
         MetadataModelVersion $metadataModelVersion,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['form' => 'id'])]
+        #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
         MessageBusInterface $bus,
     ): Response {

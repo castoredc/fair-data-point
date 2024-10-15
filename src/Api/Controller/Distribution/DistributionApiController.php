@@ -29,6 +29,7 @@ use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\Authorization\Voter\DistributionVoter;
 use App\Service\UriHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,8 +44,8 @@ use function assert;
 class DistributionApiController extends ApiController
 {
     #[Route(path: '/{distribution}', methods: ['GET'], name: 'api_distribution')]
-    public function distribution(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, UriHelper $uriHelper): Response
+    public function distribution(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, UriHelper $uriHelper,): Response
     {
         $this->denyAccessUnlessGranted('view', $dataset);
 
@@ -60,8 +61,8 @@ class DistributionApiController extends ApiController
     }
 
     #[Route(path: '/{distribution}/contents', methods: ['GET'], name: 'api_distribution_contents')]
-    public function distributionContents(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution): Response
+    public function distributionContents(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution,): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
@@ -73,8 +74,8 @@ class DistributionApiController extends ApiController
     }
 
     #[Route(path: '/{distribution}/log', methods: ['GET'], name: 'api_distribution_logs')]
-    public function distributionGenerationLogs(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function distributionGenerationLogs(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
         $contents = $distribution->getContents();
@@ -117,9 +118,9 @@ class DistributionApiController extends ApiController
     }
 
     #[Route(path: '/{distribution}/log/{log}', methods: ['GET'], name: 'api_distribution_log')]
-    public function distributionGenerationLog(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['log' => 'id'])]
-    DistributionGenerationLog $log): Response
+    public function distributionGenerationLog(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, #[MapEntity(mapping: ['log' => 'id'])]
+    DistributionGenerationLog $log,): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
@@ -131,9 +132,9 @@ class DistributionApiController extends ApiController
     }
 
     #[Route(path: '/{distribution}/log/{log}/records', methods: ['GET'], name: 'api_distribution_log_records')]
-    public function distributionGenerationLogRecords(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['log' => 'id'])]
-    DistributionGenerationLog $log, Request $request, MessageBusInterface $bus): Response
+    public function distributionGenerationLogRecords(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, #[MapEntity(mapping: ['log' => 'id'])]
+    DistributionGenerationLog $log, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DistributionVoter::EDIT, $distribution);
 
@@ -241,8 +242,8 @@ class DistributionApiController extends ApiController
     }
 
     #[Route(path: '/{distribution}', methods: ['POST'], name: 'api_distribution_update')]
-    public function updateDistribution(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function updateDistribution(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 
@@ -307,8 +308,8 @@ class DistributionApiController extends ApiController
     }
 
     #[Route(path: '/{distribution}/subset', methods: ['POST'], name: 'api_distribution_subset')]
-    public function subsetDistribution(Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, Request $request, MessageBusInterface $bus): Response
+    public function subsetDistribution(Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DatasetVoter::EDIT, $dataset);
 

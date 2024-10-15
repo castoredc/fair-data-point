@@ -19,6 +19,7 @@ use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\DatasetVoter;
 use App\Security\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,8 +82,8 @@ class SingleCatalogApiController extends ApiController
     }
 
     #[Route(path: '/dataset', name: 'api_catalog_datasets')]
-    public function datasets(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    public function datasets(#[MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
         $user = $this->getUser();
@@ -131,8 +132,8 @@ class SingleCatalogApiController extends ApiController
     }
 
     #[Route(path: '/map', name: 'api_catalog_datasets_map')]
-    public function studiesMap(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, Request $request, MessageBusInterface $bus): Response
+    public function studiesMap(#[MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted('view', $catalog);
 

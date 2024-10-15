@@ -5,7 +5,7 @@ namespace App\Controller\Dashboard;
 
 use App\Entity\FAIRData\Catalog;
 use App\Security\Authorization\Voter\CatalogVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,8 +31,8 @@ final class CatalogController extends AbstractController
     #[Route(path: '/dashboard/catalogs/{catalog}/datasets/add', name: 'dashboard_catalog_dataset_add')]
     #[Route(path: '/dashboard/catalogs/{catalog}/studies', name: 'dashboard_catalog_studies')]
     #[Route(path: '/dashboard/catalogs/{catalog}/studies/add', name: 'dashboard_catalog_study_add')]
-    public function catalog(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog): Response
+    public function catalog(#[MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog,): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::EDIT, $catalog);
 

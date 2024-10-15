@@ -7,7 +7,7 @@ use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\StudyVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,8 +27,8 @@ final class StudiesController extends AbstractController
     }
 
     #[Route(path: '/dashboard/studies/add/{catalog}', name: 'dashboard_study_add_catalog')]
-    public function addStudy(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog): Response
+    public function addStudy(#[MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog,): Response
     {
         $this->denyAccessUnlessGranted(CatalogVoter::ADD, $catalog);
 
@@ -42,8 +42,8 @@ final class StudiesController extends AbstractController
     #[Route(path: '/dashboard/studies/{studyId}/metadata', name: 'dashboard_study_metadata')]
     #[Route(path: '/dashboard/studies/{studyId}/annotations', name: 'dashboard_study_annotations')]
     #[Route(path: '/dashboard/studies/{studyId}/datasets', name: 'dashboard_study_datasets')]
-    public function studyMetadata(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['studyId' => 'id'])]
-    Study $study): Response
+    public function studyMetadata(#[MapEntity(mapping: ['studyId' => 'id'])]
+    Study $study,): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 

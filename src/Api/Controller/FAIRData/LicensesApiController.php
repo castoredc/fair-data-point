@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Resource\License\LicenseApiResource;
 use App\Command\License\GetLicensesCommand;
 use App\Entity\FAIRData\License;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -29,8 +29,8 @@ class LicensesApiController extends ApiController
     }
 
     #[Route(path: '/api/license/{slug}', name: 'api_license')]
-    public function license(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['slug' => 'slug'])]
-    License $license): Response
+    public function license(#[MapEntity(mapping: ['slug' => 'slug'])]
+    License $license,): Response
     {
         return new JsonResponse((new LicenseApiResource($license))->toArray());
     }

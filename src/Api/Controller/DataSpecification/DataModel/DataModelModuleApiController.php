@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\DataModel\DataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +57,8 @@ class DataModelModuleApiController extends ApiController
     }
 
     #[Route(path: '/{module}', methods: ['POST'], name: 'api_data_model_module_update')]
-    public function updateModule(DataModelVersion $dataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['module' => 'id'])]
-    DataModelGroup $module, Request $request, MessageBusInterface $bus): Response
+    public function updateModule(DataModelVersion $dataModelVersion, #[MapEntity(mapping: ['module' => 'id'])]
+    DataModelGroup $module, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -85,8 +86,8 @@ class DataModelModuleApiController extends ApiController
     }
 
     #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_data_model_module_delete')]
-    public function deleteModule(DataModelVersion $dataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['module' => 'id'])]
-    DataModelGroup $module, MessageBusInterface $bus): Response
+    public function deleteModule(DataModelVersion $dataModelVersion, #[MapEntity(mapping: ['module' => 'id'])]
+    DataModelGroup $module, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 

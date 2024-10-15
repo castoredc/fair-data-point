@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,7 +69,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
     #[Route(path: '/{displaySetting}', methods: ['POST'], name: 'api_metadata_model_displaySetting_update')]
     public function updateDisplaySetting(
         MetadataModelVersion $metadataModelVersion,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['displaySetting' => 'id'])]
+        #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         Request $request,
         MessageBusInterface $bus,
@@ -113,7 +114,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
     #[Route(path: '/{displaySetting}', methods: ['DELETE'], name: 'api_metadata_model_displaySetting_delete')]
     public function deleteDisplaySetting(
         MetadataModelVersion $metadataModelVersion,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['displaySetting' => 'id'])]
+        #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
         MessageBusInterface $bus,
     ): Response {

@@ -118,7 +118,6 @@ class CastorAuthenticator extends Authenticator
         return new Response($message, Response::HTTP_FORBIDDEN);
     }
 
-    /** @inheritDoc */
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $url = '/login';

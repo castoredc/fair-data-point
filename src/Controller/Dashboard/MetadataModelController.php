@@ -6,7 +6,7 @@ namespace App\Controller\Dashboard;
 use App\Entity\DataSpecification\MetadataModel\MetadataModel;
 use App\Entity\DataSpecification\MetadataModel\MetadataModelVersion;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,8 +38,8 @@ final class MetadataModelController extends AbstractController
     #[Route(path: '/dashboard/metadata-models/{model}', name: 'dashboard_metadata_model')]
     #[Route(path: '/dashboard/metadata-models/{model}/versions', name: 'dashboard_metadata_model_versions')]
     #[Route(path: '/dashboard/metadata-models/{model}/permissions', name: 'dashboard_metadata_model_permissions')]
-    public function adminModel(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    MetadataModel $metadataModel): Response
+    public function adminModel(#[MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -59,9 +59,9 @@ final class MetadataModelController extends AbstractController
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/prefixes', name: 'dashboard_metadata_model_prefixes')]
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/preview', name: 'dashboard_metadata_model_preview')]
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/import-export', name: 'dashboard_metadata_model_importexport')]
-    public function adminModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    MetadataModel $metadataModel, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
-    MetadataModelVersion $metadataModelVersion): Response
+    public function adminModelVersion(#[MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+    MetadataModelVersion $metadataModelVersion,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 
@@ -72,9 +72,9 @@ final class MetadataModelController extends AbstractController
     }
 
     #[Route(path: '/dashboard/metadata-models/{model}/{version}/nodes/{nodeType}', name: 'dashboard_metadata_model_nodes')]
-    public function adminModelVersionNodes(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    MetadataModel $metadataModel, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
-    MetadataModelVersion $metadataModelVersion, string $nodeType): Response
+    public function adminModelVersionNodes(#[MapEntity(mapping: ['model' => 'id'])]
+    MetadataModel $metadataModel, #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+    MetadataModelVersion $metadataModelVersion, string $nodeType,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);
 

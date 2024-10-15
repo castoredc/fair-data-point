@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-    /**
-     * @return RedirectResponse
-     */
+    /** @return RedirectResponse */
     #[Route(path: '/', name: 'redirect_homepage')]
     public function redirectToIndex(): Response
     {

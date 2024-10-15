@@ -16,7 +16,7 @@ use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\NotFound;
 use App\Exception\SessionTimedOut;
 use EasyRdf\Graph;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,9 +31,9 @@ class RDFDistributionController extends FAIRDataController
 {
     #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf', name: 'distribution_rdf')]
     #[Route(path: '/fdp/dataset/{dataset}/distribution/{distribution}/rdf/{record}', name: 'distribution_rdf_record')]
-    public function rdfDistribution(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, ?string $record, Request $request, MessageBusInterface $bus): Response
+    public function rdfDistribution(#[MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, ?string $record, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
 

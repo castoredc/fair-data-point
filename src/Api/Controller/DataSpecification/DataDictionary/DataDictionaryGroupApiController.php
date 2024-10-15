@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\DataDictionary\DataDictionaryVersion;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +57,8 @@ class DataDictionaryGroupApiController extends ApiController
     }
 
     #[Route(path: '/{group}', methods: ['POST'], name: 'api_dictionary_group_update')]
-    public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['group' => 'id'])]
-    DataDictionaryGroup $group, Request $request, MessageBusInterface $bus): Response
+    public function updateGroup(DataDictionaryVersion $dataDictionaryVersion, #[MapEntity(mapping: ['group' => 'id'])]
+    DataDictionaryGroup $group, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $group->getVersion()->getDataSpecification());
 
@@ -85,8 +86,8 @@ class DataDictionaryGroupApiController extends ApiController
     }
 
     #[Route(path: '/{group}', methods: ['DELETE'], name: 'api_dictionary_group_delete')]
-    public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['group' => 'id'])]
-    DataDictionaryGroup $group, MessageBusInterface $bus): Response
+    public function deleteGroup(DataDictionaryVersion $dataDictionaryVersion, #[MapEntity(mapping: ['group' => 'id'])]
+    DataDictionaryGroup $group, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $group->getVersion()->getDataSpecification());
 

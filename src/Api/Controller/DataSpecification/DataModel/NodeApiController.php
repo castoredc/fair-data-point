@@ -17,6 +17,7 @@ use App\Exception\DataSpecification\Common\Model\InvalidNodeType;
 use App\Exception\DataSpecification\Common\Model\NodeInUseByTriples;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,7 +91,7 @@ class NodeApiController extends ApiController
     public function editNode(
         DataModelVersion $dataModelVersion,
         string $type,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
+        #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
         Node $node,
         Request $request,
         MessageBusInterface $bus,
@@ -136,8 +137,8 @@ class NodeApiController extends ApiController
     }
 
     #[Route(path: '/{type}/{id}', methods: ['DELETE'], name: 'api_data_model_node_remove')]
-    public function removeNode(DataModelVersion $dataModelVersion, string $type, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
-    Node $node, MessageBusInterface $bus): Response
+    public function removeNode(DataModelVersion $dataModelVersion, string $type, #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
+    Node $node, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 

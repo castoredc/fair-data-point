@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Resource\Language\LanguageApiResource;
 use App\Command\Language\GetLanguagesCommand;
 use App\Entity\FAIRData\Language;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -29,8 +29,8 @@ class LanguagesApiController extends ApiController
     }
 
     #[Route(path: '/api/language/{code}', name: 'api_language')]
-    public function language(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['code' => 'code'])]
-    Language $language): Response
+    public function language(#[MapEntity(mapping: ['code' => 'code'])]
+    Language $language,): Response
     {
         return new JsonResponse((new LanguageApiResource($language))->toArray());
     }

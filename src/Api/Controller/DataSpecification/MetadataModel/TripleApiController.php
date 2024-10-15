@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\MetadataModel\Triple;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +57,8 @@ class TripleApiController extends ApiController
     }
 
     #[Route(path: '/{triple}', methods: ['POST'], name: 'api_metadata_model_triple_update')]
-    public function updateTriple(MetadataModelGroup $module, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['triple' => 'id'])]
-    Triple $triple, Request $request, MessageBusInterface $bus): Response
+    public function updateTriple(MetadataModelGroup $module, #[MapEntity(mapping: ['triple' => 'id'])]
+    Triple $triple, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 
@@ -85,8 +86,8 @@ class TripleApiController extends ApiController
     }
 
     #[Route(path: '/{triple}', methods: ['DELETE'], name: 'api_metadata_model_triple_delete')]
-    public function deleteTriple(MetadataModelGroup $module, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['triple' => 'id'])]
-    Triple $triple, MessageBusInterface $bus): Response
+    public function deleteTriple(MetadataModelGroup $module, #[MapEntity(mapping: ['triple' => 'id'])]
+    Triple $triple, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $module->getVersion()->getDataSpecification());
 

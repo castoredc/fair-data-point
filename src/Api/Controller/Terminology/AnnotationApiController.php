@@ -19,6 +19,7 @@ use App\Exception\OntologyConceptNotFound;
 use App\Exception\OntologyNotFound;
 use App\Security\Authorization\Voter\StudyVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,8 +83,8 @@ class AnnotationApiController extends ApiController
     }
 
     #[Route(path: '/{annotation}', methods: ['DELETE'], name: 'api_study_annotations_delete')]
-    public function deleteAnnotation(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['annotation' => 'id'])]
-    Annotation $annotation, Study $study, MessageBusInterface $bus): Response
+    public function deleteAnnotation(#[MapEntity(mapping: ['annotation' => 'id'])]
+    Annotation $annotation, Study $study, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(StudyVoter::EDIT, $study);
 

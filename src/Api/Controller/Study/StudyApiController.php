@@ -10,7 +10,7 @@ use App\Command\Study\UpdateStudyCommand;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\StudyVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +23,8 @@ use function assert;
 class StudyApiController extends ApiController
 {
     #[Route(path: '/slug/{study}', methods: ['GET'], name: 'api_study_byslug')]
-    public function studyBySlug(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'slug'])]
-    Study $study): Response
+    public function studyBySlug(#[MapEntity(mapping: ['study' => 'slug'])]
+    Study $study,): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 
@@ -36,8 +36,8 @@ class StudyApiController extends ApiController
     }
 
     #[Route(path: '/{study}', methods: ['GET'], name: 'api_study')]
-    public function study(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'id'])]
-    Study $study): Response
+    public function study(#[MapEntity(mapping: ['study' => 'id'])]
+    Study $study,): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 
@@ -49,8 +49,8 @@ class StudyApiController extends ApiController
     }
 
     #[Route(path: '/{study}', methods: ['POST'], name: 'api_update_study')]
-    public function updateStudy(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['study' => 'id'])]
-    Study $study, Request $request, MessageBusInterface $bus): Response
+    public function updateStudy(#[MapEntity(mapping: ['study' => 'id'])]
+    Study $study, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted('view', $study);
 

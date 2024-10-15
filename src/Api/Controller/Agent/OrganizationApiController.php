@@ -12,7 +12,7 @@ use App\Command\Agent\FindOrganizationsCommand;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Exception\ApiRequestParseError;
 use App\Exception\NotFound;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +56,8 @@ class OrganizationApiController extends ApiController
     }
 
     #[Route(path: '/{organization}', methods: ['GET'], name: 'api_agent_organization')]
-    public function organization(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['organization' => 'id'])]
-    Organization $organization): Response
+    public function organization(#[MapEntity(mapping: ['organization' => 'id'])]
+    Organization $organization,): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -65,8 +65,8 @@ class OrganizationApiController extends ApiController
     }
 
     #[Route(path: '/{organization}/department', methods: ['GET'], name: 'api_agent_organization_department')]
-    public function departments(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['organization' => 'id'])]
-    Organization $organization): Response
+    public function departments(#[MapEntity(mapping: ['organization' => 'id'])]
+    Organization $organization,): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 

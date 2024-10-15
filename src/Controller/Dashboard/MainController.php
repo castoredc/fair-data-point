@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class MainController extends AbstractController
 {
-    /**
-     * @return RedirectResponse
-     */
+    /** @return RedirectResponse */
     #[Route(path: '/dashboard', name: 'redirect_dashboard')]
     public function redirectToStudies(): Response
     {

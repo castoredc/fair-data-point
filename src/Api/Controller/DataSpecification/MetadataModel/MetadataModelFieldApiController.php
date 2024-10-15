@@ -15,6 +15,7 @@ use App\Exception\ApiRequestParseError;
 use App\Exception\DataSpecification\MetadataModel\NodeAlreadyUsed;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,7 +76,7 @@ class MetadataModelFieldApiController extends ApiController
     public function updateField(
         MetadataModelVersion $metadataModelVersion,
         MetadataModelForm $form,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['field' => 'id'])]
+        #[MapEntity(mapping: ['field' => 'id'])]
         MetadataModelField $field,
         Request $request,
         MessageBusInterface $bus,
@@ -130,7 +131,7 @@ class MetadataModelFieldApiController extends ApiController
     public function deleteField(
         MetadataModelVersion $metadataModelVersion,
         MetadataModelForm $form,
-        #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['field' => 'id'])]
+        #[MapEntity(mapping: ['field' => 'id'])]
         MetadataModelField $field,
         MessageBusInterface $bus,
     ): Response {

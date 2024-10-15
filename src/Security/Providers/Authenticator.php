@@ -45,7 +45,6 @@ abstract class Authenticator extends OAuth2Authenticator implements Authenticati
         }
     }
 
-    /** @inheritDoc */
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $url = '/login';

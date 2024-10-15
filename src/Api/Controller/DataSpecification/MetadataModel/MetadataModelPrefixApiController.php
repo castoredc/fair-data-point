@@ -14,6 +14,7 @@ use App\Entity\DataSpecification\MetadataModel\NamespacePrefix;
 use App\Exception\ApiRequestParseError;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +57,8 @@ class MetadataModelPrefixApiController extends ApiController
     }
 
     #[Route(path: '/{prefix}', methods: ['POST'], name: 'api_metadata_model_prefix_update')]
-    public function updatePrefix(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['prefix' => 'id'])]
-    NamespacePrefix $prefix, Request $request, MessageBusInterface $bus): Response
+    public function updatePrefix(MetadataModelVersion $metadataModelVersion, #[MapEntity(mapping: ['prefix' => 'id'])]
+    NamespacePrefix $prefix, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 
@@ -85,8 +86,8 @@ class MetadataModelPrefixApiController extends ApiController
     }
 
     #[Route(path: '/{prefix}', methods: ['DELETE'], name: 'api_metadata_model_prefix_delete')]
-    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['prefix' => 'id'])]
-    NamespacePrefix $prefix, MessageBusInterface $bus): Response
+    public function deletePrefix(MetadataModelVersion $metadataModelVersion, #[MapEntity(mapping: ['prefix' => 'id'])]
+    NamespacePrefix $prefix, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModelVersion->getMetadataModel());
 

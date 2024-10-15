@@ -7,7 +7,7 @@ use App\Api\Controller\ApiController;
 use App\Api\Resource\Country\CountryApiResource;
 use App\Command\Country\GetCountriesCommand;
 use App\Entity\FAIRData\Country;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -29,8 +29,8 @@ class CountriesApiController extends ApiController
     }
 
     #[Route(path: '/api/country/{code}', name: 'api_country')]
-    public function language(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['code' => 'code'])]
-    Country $country): Response
+    public function language(#[MapEntity(mapping: ['code' => 'code'])]
+    Country $country,): Response
     {
         return new JsonResponse((new CountryApiResource($country))->toArray());
     }

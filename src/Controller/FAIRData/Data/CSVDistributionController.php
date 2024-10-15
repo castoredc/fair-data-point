@@ -14,7 +14,7 @@ use App\Entity\FAIRData\Dataset;
 use App\Entity\FAIRData\Distribution;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\SessionTimedOut;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -28,10 +28,10 @@ use function time;
 class CSVDistributionController extends FAIRDataController
 {
     #[Route(path: '/fdp/{catalog}/{dataset}/{distribution}/distribution/csv', name: 'distribution_csv')]
-    public function csvDistribution(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['catalog' => 'slug'])]
-    Catalog $catalog, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['dataset' => 'slug'])]
-    Dataset $dataset, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['distribution' => 'slug'])]
-    Distribution $distribution, MessageBusInterface $bus): Response
+    public function csvDistribution(#[MapEntity(mapping: ['catalog' => 'slug'])]
+    Catalog $catalog, #[MapEntity(mapping: ['dataset' => 'slug'])]
+    Dataset $dataset, #[MapEntity(mapping: ['distribution' => 'slug'])]
+    Distribution $distribution, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted('access_data', $distribution);
         $contents = $distribution->getContents();

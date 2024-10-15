@@ -29,7 +29,7 @@ use App\Exception\Upload\NoFileSpecified;
 use App\Security\Authorization\Voter\DataSpecificationVoter;
 use App\Security\User;
 use Cocur\Slugify\Slugify;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,8 +99,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}', methods: ['GET'], name: 'api_data_model')]
-    public function dataModel(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel): Response
+    public function dataModel(#[MapEntity(mapping: ['model' => 'id'])]
+    DataModel $dataModel,): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModel);
 
@@ -112,8 +112,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}', methods: ['POST'], name: 'api_data_model_update')]
-    public function updateDataModel(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function updateDataModel(#[MapEntity(mapping: ['model' => 'id'])]
+    DataModel $dataModel, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
@@ -134,8 +134,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}/v/{version}', methods: ['GET'], name: 'api_data_model_version')]
-    public function dataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
-    DataModelVersion $dataModelVersion): Response
+    public function dataModelVersion(#[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+    DataModelVersion $dataModelVersion,): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
@@ -143,8 +143,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}/v', methods: ['POST'], name: 'api_data_model_version_create')]
-    public function createDataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function createDataModelVersion(#[MapEntity(mapping: ['model' => 'id'])]
+    DataModel $dataModel, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
@@ -171,8 +171,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}/import', methods: ['POST'], name: 'api_data_model_import')]
-    public function importDataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'id'])]
-    DataModel $dataModel, Request $request, MessageBusInterface $bus): Response
+    public function importDataModelVersion(#[MapEntity(mapping: ['model' => 'id'])]
+    DataModel $dataModel, Request $request, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModel);
 
@@ -214,8 +214,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}/v/{version}/export', methods: ['GET'], name: 'api_data_model_version_export')]
-    public function exportDataModelVersion(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
-    DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
+    public function exportDataModelVersion(#[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+    DataModelVersion $dataModelVersion, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $dataModelVersion->getDataModel());
 
@@ -232,8 +232,8 @@ class DataModelApiController extends ApiController
     }
 
     #[Route(path: '/{model}/v/{version}/rdf', methods: ['GET'], name: 'api_data_model_rdf_preview')]
-    public function dataModelRDFPreview(#[\Symfony\Bridge\Doctrine\Attribute\MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
-    DataModelVersion $dataModelVersion, MessageBusInterface $bus): Response
+    public function dataModelRDFPreview(#[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+    DataModelVersion $dataModelVersion, MessageBusInterface $bus,): Response
     {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
 
