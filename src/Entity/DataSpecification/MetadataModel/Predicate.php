@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Predicate extends CommonPredicate
 {
     #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \MetadataModelVersion::class, inversedBy: 'predicates', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'predicates', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
     public function __construct(MetadataModelVersion $metadataModelVersion, Iri $iri)

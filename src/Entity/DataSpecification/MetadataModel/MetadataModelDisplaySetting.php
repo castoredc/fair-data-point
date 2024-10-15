@@ -26,7 +26,7 @@ class MetadataModelDisplaySetting
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \MetadataModelVersion::class, inversedBy: 'displaySettings', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'displaySettings', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
     #[ORM\Column(type: 'string')]

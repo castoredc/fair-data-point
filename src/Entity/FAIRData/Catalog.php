@@ -43,12 +43,12 @@ class Catalog implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     private string $slug;
 
     #[ORM\JoinColumn(name: 'fdp', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \FAIRDataPoint::class, inversedBy: 'catalogs', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: FAIRDataPoint::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private ?FAIRDataPoint $fairDataPoint = null;
 
     /** @var Collection<Dataset> */
     #[ORM\JoinTable(name: 'catalogs_datasets')]
-    #[ORM\ManyToMany(targetEntity: \Dataset::class, inversedBy: 'catalogs', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Dataset::class, inversedBy: 'catalogs', cascade: ['persist'])]
     private Collection $datasets;
 
     /** @var Collection<Study> */

@@ -43,7 +43,7 @@ class Dataset implements AccessibleEntity, MetadataEnrichedEntity, PermissionsEn
     private string $slug;
 
     /** @var Collection<string, Catalog> */
-    #[ORM\ManyToMany(targetEntity: \Catalog::class, mappedBy: 'datasets', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Catalog::class, mappedBy: 'datasets', cascade: ['persist'])]
     private Collection $catalogs;
 
     /** @var Collection<Distribution> */

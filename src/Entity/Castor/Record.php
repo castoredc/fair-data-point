@@ -18,13 +18,13 @@ class Record
 
     #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \CastorStudy::class)]
+    #[ORM\ManyToOne(targetEntity: CastorStudy::class)]
     private CastorStudy $study;
 
     /** phpcs:enable */
     #[ORM\JoinColumn(name: 'institute_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\JoinColumn(name: 'study_id', referencedColumnName: 'study_id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Institute::class, inversedBy: 'records', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Institute::class, inversedBy: 'records', cascade: ['persist'])]
     private Institute $institute;
 
     private ?RecordDataCollection $data = null;

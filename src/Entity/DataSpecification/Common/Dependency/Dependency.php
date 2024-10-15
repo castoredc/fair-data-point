@@ -23,7 +23,7 @@ class Dependency
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \DependencyGroup::class, inversedBy: 'rules', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: DependencyGroup::class, inversedBy: 'rules', cascade: ['persist', 'remove'])]
     private ?DependencyGroup $group = null;
 
     public function getId(): string

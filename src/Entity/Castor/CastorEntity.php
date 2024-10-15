@@ -41,7 +41,7 @@ abstract class CastorEntity
     protected Collection $annotations;
 
     #[ORM\JoinColumn(name: 'parent', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \CastorEntity::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: self::class, cascade: ['persist'])]
     private ?CastorEntity $parent = null;
 
     public function __construct(string $id, string $label, CastorStudy $study, ?StructureType $structureType)

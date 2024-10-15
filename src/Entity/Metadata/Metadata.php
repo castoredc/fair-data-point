@@ -44,7 +44,7 @@ abstract class Metadata
     private Version $version;
 
     /** @var Collection<MetadataValue> */
-    #[ORM\OneToMany(targetEntity: \MetadataValue::class, mappedBy: 'metadata')]
+    #[ORM\OneToMany(targetEntity: MetadataValue::class, mappedBy: 'metadata')]
     protected Collection $values;
 
     #[ORM\JoinColumn(name: 'description', referencedColumnName: 'id')]

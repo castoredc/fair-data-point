@@ -48,7 +48,7 @@ class Person extends Agent
     private NameOrigin $nameOrigin;
 
     /** @var Collection<Affiliation> */
-    #[ORM\OneToMany(targetEntity: \Affiliation::class, mappedBy: 'person', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Affiliation::class, mappedBy: 'person', cascade: ['persist'])]
     private Collection $affiliations;
 
     public function __construct(string $firstName, ?string $middleName, string $lastName, ?string $email, ?string $phoneNumber, ?Iri $orcid, NameOrigin $nameOrigin)

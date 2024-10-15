@@ -7,7 +7,6 @@ use App\Traits\CreatedAndUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Element;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
 
@@ -34,11 +33,11 @@ abstract class OptionGroup
     private ?string $description = null;
 
     #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Version::class, inversedBy: 'optionGroups', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Version::class, inversedBy: 'optionGroups', cascade: ['persist'])]
     private Version $version;
 
     /** @var Collection<OptionGroupOption> */
-    #[ORM\OneToMany(targetEntity: \OptionGroupOption::class, mappedBy: 'optionGroup', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: OptionGroupOption::class, mappedBy: 'optionGroup', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $options;
 

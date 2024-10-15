@@ -18,7 +18,7 @@ class DependencyGroup extends Dependency
     private DependencyCombinatorType $combinator;
 
     /** @var Collection<Dependency> */
-    #[ORM\OneToMany(targetEntity: \Dependency::class, mappedBy: 'group', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Dependency::class, mappedBy: 'group', cascade: ['persist', 'remove'])]
     private Collection $rules;
 
     public function __construct(DependencyCombinatorType $combinator)

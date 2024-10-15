@@ -18,14 +18,14 @@ class LocalizedTextItem
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'parent', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \LocalizedText::class, inversedBy: 'texts', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: LocalizedText::class, inversedBy: 'texts', cascade: ['persist'])]
     private ?LocalizedText $parent = null;
 
     #[ORM\Column(type: 'text')]
     private string $text;
 
     #[ORM\JoinColumn(name: 'language', referencedColumnName: 'code')]
-    #[ORM\ManyToOne(targetEntity: \Language::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Language::class, cascade: ['persist'])]
     private ?Language $language = null;
 
     private ?string $languageCode = null;

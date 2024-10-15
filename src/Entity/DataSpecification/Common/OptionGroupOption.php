@@ -33,7 +33,7 @@ abstract class OptionGroupOption
     protected ?int $order;
 
     #[ORM\JoinColumn(name: 'option_group', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \OptionGroup::class, inversedBy: 'options', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: OptionGroup::class, inversedBy: 'options', cascade: ['persist'])]
     private OptionGroup $optionGroup;
 
     public function __construct(string $title, ?string $description, string $value, ?int $order)

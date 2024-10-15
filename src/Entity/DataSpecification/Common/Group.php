@@ -28,7 +28,7 @@ abstract class Group
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Version::class, inversedBy: 'groups', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Version::class, inversedBy: 'groups', cascade: ['persist'])]
     private Version $version;
 
     #[ORM\Column(type: 'string')]
@@ -44,11 +44,11 @@ abstract class Group
     private bool $isDependent = false;
 
     /** @var Collection<Element> */
-    #[ORM\OneToMany(targetEntity: \Element::class, mappedBy: 'group', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Element::class, mappedBy: 'group', cascade: ['persist'])]
     private Collection $elements;
 
     /** @var Collection<ElementGroup> */
-    #[ORM\OneToMany(targetEntity: \ElementGroup::class, mappedBy: 'group', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: ElementGroup::class, mappedBy: 'group', cascade: ['persist'])]
     private Collection $elementGroups;
 
     #[ORM\JoinColumn(name: 'dependencies', referencedColumnName: 'id')]

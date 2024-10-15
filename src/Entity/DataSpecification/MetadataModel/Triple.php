@@ -22,7 +22,7 @@ class Triple extends ElementGroup implements CommonTriple
     private Node $subject;
 
     #[ORM\JoinColumn(name: 'predicate', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Predicate::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Predicate::class, cascade: ['persist'])]
     private Predicate $predicate;
 
     #[ORM\JoinColumn(name: 'object', referencedColumnName: 'id', nullable: false)]

@@ -19,7 +19,7 @@ class DataSpecificationPermission extends Permission
 
     #[ORM\JoinColumn(name: 'data_specification_id', referencedColumnName: 'id')]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \DataSpecification::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: DataSpecification::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'permissions')]
     private DataSpecification $dataSpecification;
 
     public function __construct(User $user, PermissionType $type, DataSpecification $dataSpecification)

@@ -31,7 +31,7 @@ class DistributionGenerationLog
     private DistributionContents $distribution;
 
     /** @var Collection<DistributionGenerationRecordLog> */
-    #[ORM\OneToMany(targetEntity: \DistributionGenerationRecordLog::class, mappedBy: 'log', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: DistributionGenerationRecordLog::class, mappedBy: 'log', cascade: ['persist'])]
     private Collection $records;
 
     #[ORM\Column(type: 'DistributionGenerationStatusType')]

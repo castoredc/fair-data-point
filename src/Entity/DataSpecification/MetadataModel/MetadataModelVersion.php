@@ -19,7 +19,6 @@ use App\Entity\Version as VersionNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use MetadataModelField;
 use function array_merge;
 use function assert;
 use function count;
@@ -41,16 +40,16 @@ class MetadataModelVersion extends Version implements ModelVersion
     ];
 
     /** @var Collection<NamespacePrefix> */
-    #[ORM\OneToMany(targetEntity: \NamespacePrefix::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: NamespacePrefix::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['prefix' => 'ASC'])]
     private Collection $prefixes;
 
     /** @var Collection<Predicate> */
-    #[ORM\OneToMany(targetEntity: \Predicate::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Predicate::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     private Collection $predicates;
 
     /** @var Collection<MetadataModelForm> */
-    #[ORM\OneToMany(targetEntity: \MetadataModelForm::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: MetadataModelForm::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $forms;
 
@@ -59,7 +58,7 @@ class MetadataModelVersion extends Version implements ModelVersion
     private Collection $fields;
 
     /** @var Collection<MetadataModelDisplaySetting> */
-    #[ORM\OneToMany(targetEntity: \MetadataModelDisplaySetting::class, mappedBy: 'metadataModel', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: MetadataModelDisplaySetting::class, mappedBy: 'metadataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $displaySettings;
 

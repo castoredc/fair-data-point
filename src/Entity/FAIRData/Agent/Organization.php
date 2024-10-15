@@ -7,7 +7,6 @@ use App\Entity\FAIRData\Country;
 use App\Entity\Iri;
 use App\Repository\OrganizationRepository;
 use Cocur\Slugify\Slugify;
-use Department;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

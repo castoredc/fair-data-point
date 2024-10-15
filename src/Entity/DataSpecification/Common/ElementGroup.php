@@ -25,7 +25,7 @@ abstract class ElementGroup
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'groupId', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Group::class, inversedBy: 'elementGroups', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: 'elementGroups', cascade: ['persist'])]
     private Group $group;
 
     public function __construct(Group $group)

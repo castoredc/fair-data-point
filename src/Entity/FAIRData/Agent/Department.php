@@ -13,7 +13,7 @@ class Department extends Agent
     public const TYPE = 'department';
 
     #[ORM\JoinColumn(name: 'organization', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Organization::class, cascade: ['persist'], inversedBy: 'departments')]
+    #[ORM\ManyToOne(targetEntity: Organization::class, cascade: ['persist'], inversedBy: 'departments')]
     private ?Organization $organization = null;
 
     #[ORM\Column(type: 'text', nullable: true)]

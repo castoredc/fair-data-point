@@ -25,7 +25,7 @@ class MetadataModelField
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'metadata_model', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \MetadataModelVersion::class, inversedBy: 'fields', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: MetadataModelVersion::class, inversedBy: 'fields', cascade: ['persist'])]
     private MetadataModelVersion $metadataModel;
 
     #[ORM\Column(type: 'string')]
@@ -41,7 +41,7 @@ class MetadataModelField
     private ResourceType $resourceType;
 
     #[ORM\JoinColumn(name: 'form_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \MetadataModelForm::class, inversedBy: 'fields', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: MetadataModelForm::class, inversedBy: 'fields', cascade: ['persist'])]
     private MetadataModelForm $form;
 
     #[ORM\Column(type: 'MetadataFieldType')]

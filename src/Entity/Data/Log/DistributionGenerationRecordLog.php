@@ -30,7 +30,7 @@ class DistributionGenerationRecordLog
     private Record $record;
 
     #[ORM\JoinColumn(name: 'log', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \DistributionGenerationLog::class, inversedBy: 'records', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: DistributionGenerationLog::class, inversedBy: 'records', cascade: ['persist'])]
     private DistributionGenerationLog $log;
 
     #[ORM\Column(type: 'DistributionGenerationStatusType')]

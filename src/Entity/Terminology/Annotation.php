@@ -23,7 +23,7 @@ class Annotation
     private CastorEntity $entity;
 
     #[ORM\JoinColumn(name: 'concept', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \OntologyConcept::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: OntologyConcept::class, cascade: ['persist'])]
     private OntologyConcept $concept;
 
     public function __construct(CastorEntity $entity, OntologyConcept $concept)

@@ -20,7 +20,7 @@ class LocalizedText
     private UuidInterface|string $id;
 
     /** @var Collection<LocalizedTextItem> */
-    #[ORM\OneToMany(targetEntity: \LocalizedTextItem::class, mappedBy: 'parent', cascade: ['persist'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: LocalizedTextItem::class, mappedBy: 'parent', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $texts;
 
     /** @param Collection<LocalizedTextItem> $texts */

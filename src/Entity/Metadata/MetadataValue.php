@@ -23,7 +23,7 @@ class MetadataValue
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'metadata_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Metadata::class, inversedBy: 'values', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Metadata::class, inversedBy: 'values', cascade: ['persist'])]
     private Metadata $metadata;
 
     #[ORM\JoinColumn(name: 'value_node_id', referencedColumnName: 'id', nullable: false)]

@@ -29,7 +29,7 @@ abstract class Version
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'data_specification', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \DataSpecification::class, inversedBy: 'versions', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: DataSpecification::class, inversedBy: 'versions', cascade: ['persist'])]
     protected DataSpecification $dataSpecification;
 
     #[ORM\Column(type: 'version')]
@@ -40,17 +40,17 @@ abstract class Version
     private Collection $distributionContents;
 
     /** @var Collection<Group> */
-    #[ORM\OneToMany(targetEntity: \Group::class, mappedBy: 'version', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Group::class, mappedBy: 'version', cascade: ['persist'])]
     #[ORM\OrderBy(['order' => 'ASC', 'id' => 'ASC'])]
     private Collection $groups;
 
     /** @var Collection<Element> */
-    #[ORM\OneToMany(targetEntity: \Element::class, mappedBy: 'version', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Element::class, mappedBy: 'version', cascade: ['persist'])]
     #[ORM\OrderBy(['title' => 'ASC'])]
     protected Collection $elements;
 
     /** @var Collection<OptionGroup> */
-    #[ORM\OneToMany(targetEntity: \OptionGroup::class, mappedBy: 'version', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: OptionGroup::class, mappedBy: 'version', cascade: ['persist'])]
     #[ORM\OrderBy(['title' => 'ASC'])]
     protected Collection $optionGroups;
 

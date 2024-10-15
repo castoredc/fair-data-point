@@ -43,7 +43,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     private Collection $distributionContents;
 
     /** @var Collection<Version> */
-    #[ORM\OneToMany(targetEntity: \Version::class, mappedBy: 'dataSpecification', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Version::class, mappedBy: 'dataSpecification', cascade: ['persist'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $versions;
 
@@ -51,7 +51,7 @@ abstract class DataSpecification implements PermissionsEnabledEntity
     private bool $isPublic = false;
 
     /** @var Collection<DataSpecificationPermission> */
-    #[ORM\OneToMany(targetEntity: \DataSpecificationPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'dataSpecification')]
+    #[ORM\OneToMany(targetEntity: DataSpecificationPermission::class, cascade: ['persist', 'remove'], orphanRemoval: true, mappedBy: 'dataSpecification')]
     private Collection $permissions;
 
     public function __construct(string $title, ?string $description)

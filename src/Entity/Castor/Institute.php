@@ -7,7 +7,6 @@ use App\Entity\FAIRData\Country;
 use App\Repository\CastorInstituteRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Record;
 
 #[ORM\Table(name: 'castor_institute')]
 #[ORM\Entity(repositoryClass: CastorInstituteRepository::class)]

@@ -23,12 +23,12 @@ use function is_a;
 class DataModelVersion extends Version implements ModelVersion
 {
     /** @var Collection<NamespacePrefix> */
-    #[ORM\OneToMany(targetEntity: \NamespacePrefix::class, mappedBy: 'dataModel', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: NamespacePrefix::class, mappedBy: 'dataModel', cascade: ['persist'])]
     #[ORM\OrderBy(['prefix' => 'ASC'])]
     private Collection $prefixes;
 
     /** @var Collection<Predicate> */
-    #[ORM\OneToMany(targetEntity: \Predicate::class, mappedBy: 'dataModel', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Predicate::class, mappedBy: 'dataModel', cascade: ['persist'])]
     private Collection $predicates;
 
     public function __construct(VersionNumber $version)

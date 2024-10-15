@@ -17,15 +17,15 @@ class Affiliation
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'person', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Person::class, cascade: ['persist'], inversedBy: 'affiliations')]
+    #[ORM\ManyToOne(targetEntity: Person::class, cascade: ['persist'], inversedBy: 'affiliations')]
     private Person $person;
 
     #[ORM\JoinColumn(name: 'organization', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Organization::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Organization::class, cascade: ['persist'])]
     private Organization $organization;
 
     #[ORM\JoinColumn(name: 'department', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Department::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Department::class, cascade: ['persist'])]
     private Department $department;
 
     #[ORM\Column(type: 'string')]

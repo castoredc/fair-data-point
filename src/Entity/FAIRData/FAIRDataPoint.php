@@ -39,7 +39,7 @@ class FAIRDataPoint implements AccessibleEntity, MetadataEnrichedEntity
     private Collection $metadata;
 
     /** @var Collection<string, Catalog> */
-    #[ORM\OneToMany(targetEntity: \Catalog::class, mappedBy: 'fairDataPoint', cascade: ['persist'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: Catalog::class, mappedBy: 'fairDataPoint', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $catalogs;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]

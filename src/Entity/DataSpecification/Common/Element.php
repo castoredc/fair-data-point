@@ -25,11 +25,11 @@ abstract class Element
     private UuidInterface|string $id;
 
     #[ORM\JoinColumn(name: 'groupId', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Group::class, inversedBy: 'elements', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: 'elements', cascade: ['persist'])]
     protected ?Group $group = null;
 
     #[ORM\JoinColumn(name: 'version', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Version::class, inversedBy: 'elements', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Version::class, inversedBy: 'elements', cascade: ['persist'])]
     private Version $version;
 
     #[ORM\Column(type: 'string')]
@@ -42,7 +42,7 @@ abstract class Element
     protected ?int $order;
 
     #[ORM\JoinColumn(name: 'option_group', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \OptionGroup::class, inversedBy: 'elements')]
+    #[ORM\ManyToOne(targetEntity: OptionGroup::class, inversedBy: 'elements')]
     private ?OptionGroup $optionGroup = null;
 
     public function __construct(Version $version, string $title, ?string $description)

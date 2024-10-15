@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class NamespacePrefix extends CommonNamespacePrefix
 {
     #[ORM\JoinColumn(name: 'data_model', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \DataModelVersion::class, inversedBy: 'prefixes', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: DataModelVersion::class, inversedBy: 'prefixes', cascade: ['persist'])]
     private DataModelVersion $dataModel;
 
     public function getDataModelVersion(): DataModelVersion

@@ -27,7 +27,7 @@ class OntologyConcept
     private string $code;
 
     #[ORM\JoinColumn(name: 'ontology', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Ontology::class, cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Ontology::class, cascade: ['persist'])]
     private Ontology $ontology;
 
     #[ORM\Column(type: 'string')]
