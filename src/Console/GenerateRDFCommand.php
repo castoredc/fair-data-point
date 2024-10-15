@@ -66,7 +66,7 @@ class GenerateRDFCommand extends Command
     }
 
     /** @inheritDoc */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $output->writeln(
