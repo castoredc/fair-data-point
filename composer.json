@@ -16,7 +16,7 @@
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "2.19.5",
-        "fresh/doctrine-enum-bundle": "^9.0",
+        "fresh/doctrine-enum-bundle": "^10.0",
         "guzzlehttp/guzzle": "^6.5.8",
         "knpuniversity/oauth2-client-bundle": "^2.18",
         "league/oauth2-client": "^2.5",
@@ -26,14 +26,14 @@
         "sentry/sentry-symfony": "^4.13",
         "stof/doctrine-extensions-bundle": "^1.4",
         "sweetrdf/easyrdf": "^1.0.0",
-        "symfony/console": "^6.4",
+        "symfony/console": "^7.1",
         "symfony/dotenv": "^7.1",
         "symfony/flex": "^2.4.3",
-        "symfony/framework-bundle": "^6.4",
-        "symfony/intl": "^6.4",
+        "symfony/framework-bundle": "^7.1",
+        "symfony/intl": "^7.1",
         "symfony/messenger": "^7.1",
         "symfony/monolog-bundle": "^3.10",
-        "symfony/security-bundle": "^6.4",
+        "symfony/security-bundle": "^7.1",
         "symfony/twig-bundle": "^7.1",
         "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "^7.1",
@@ -99,7 +99,7 @@
         "symfony": {
             "id": "01C7DW182PBTWMYDZJYFFWM0MP",
             "allow-contrib": false,
-            "require": "6.4.*"
+            "require": "7.1.*"
         }
     },
     "repositories": [
