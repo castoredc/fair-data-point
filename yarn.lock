@@ -5110,10 +5110,10 @@ react-fast-compare@^3.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
   integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
-react-form-validator-core@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/react-form-validator-core/-/react-form-validator-core-0.6.5.tgz#5f74b20b2be1e6e2ed04585bf81557eb26b37eec"
-  integrity sha512-TOGksWHld6wHrCpAoTJBeS6xc6iOXWYCmNb3GPHCY8IjnMpJY2Uv/t73w/gCYWJgv3ucA+jxUsf4qKmx1f3QEQ==
+react-form-validator-core@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/react-form-validator-core/-/react-form-validator-core-0.7.0.tgz#b8d70177052cfe9da59e92536849e5c5a6875343"
+  integrity sha512-heataxyIwZSELexArCXlf72mGdg3sx3kNbxyhTqQBMvH3JdKJ5xmKJZt5gtETm6ItPQYXUjaWvFkY+0HRIdJXQ==
   dependencies:
     promise-polyfill "8.1.0"
     prop-types "^15.0.0"
