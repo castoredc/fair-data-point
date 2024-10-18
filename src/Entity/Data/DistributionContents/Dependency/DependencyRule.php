@@ -83,7 +83,11 @@ class DependencyRule extends Dependency
     /** @param array<mixed> $data */
     public static function fromData(array $data): self
     {
-        $type = DistributionContentsDependencyType::fromString($data['field']['valueType']);
+        if ($data['field'] === DistributionContentsDependencyType::institute()->toString()) {
+            $type = DistributionContentsDependencyType::institute();
+        } else {
+            $type = DistributionContentsDependencyType::valueNode();
+        }
 
         $rule = new self(
             $type,
@@ -92,7 +96,7 @@ class DependencyRule extends Dependency
         );
 
         if ($type->isValueNode()) {
-            $rule->setNodeId($data['field']['value']);
+            $rule->setNodeId($data['value']);
         }
 
         return $rule;
