@@ -43,7 +43,7 @@ export default class ImportExport extends Component<ImportExportProps, ImportExp
             responseType: 'blob',
         }).then(response => {
             const contentDisposition = response.headers['content-disposition'];
-            const match = contentDisposition.match(/filename\s*=\s*"(.+)"/i);
+            const match = contentDisposition ? contentDisposition.match(/filename\s*=\s*"(.+)"/i) : null;
             const filename = match?.[1];
 
             this.setState({ isExporting: false });

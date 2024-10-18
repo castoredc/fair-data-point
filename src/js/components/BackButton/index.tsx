@@ -6,7 +6,7 @@ import { classNames } from '../../util';
 import { useHistory } from 'react-router-dom';
 
 export interface BackButtonProps {
-    to?: string;
+    to?: string | (() => void);
     returnButton?: boolean;
     children?: React.ReactNode;
     sidebar?: boolean;
@@ -15,31 +15,21 @@ export interface BackButtonProps {
 const BackButton: FC<BackButtonProps> = ({ to, returnButton, children, sidebar }) => {
     if (returnButton) {
         let history = useHistory();
-
-        return (
-            <div className={classNames('BackButton', sidebar && 'Sidebar')}>
-                <button onClick={() => history.go(-1)}>
-                    <span className="circle">
-                        <ArrowLeftIcon height="10px" width="10px" />
-                    </span>
-
-                    {children}
-                </button>
-            </div>
-        );
+        to = () => history.go(-1);
     }
+
+    const button = (
+        <button onClick={typeof to === 'function' ? to : undefined}>
+            <span className="circle">
+                <ArrowLeftIcon height="10px" width="10px" />
+            </span>
+            {children}
+        </button>
+    );
 
     return (
         <div className={classNames('BackButton', sidebar && 'Sidebar')}>
-            <LinkContainer to={to}>
-                <button>
-                    <span className="circle">
-                        <ArrowLeftIcon height="10px" width="10px" />
-                    </span>
-
-                    {children}
-                </button>
-            </LinkContainer>
+            {typeof to === 'string' ? <LinkContainer to={to}>{button}</LinkContainer> : button}
         </div>
     );
 };

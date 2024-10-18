@@ -5,7 +5,6 @@ import MainBody from '../../../components/Layout/MainBody';
 import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import DatasetList from '../../../components/List/DatasetList';
-import LegacyStudyList from 'components/List/LegacyStudyList';
 import useGetFdp from '../../../hooks/useGetFdp';
 import useGetCatalog from '../../../hooks/useGetCatalog';
 import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
@@ -30,7 +29,7 @@ const Catalog: React.FC<CatalogProps> = ({ user, embedded, location, match }) =>
     const title = catalog ? localizedText(catalog.metadata.title, 'en') : null;
 
     return (
-        <Layout className="Catalog" title={title} isLoading={isLoading} embedded={embedded}>
+        <Layout className="Catalog" embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoading}>

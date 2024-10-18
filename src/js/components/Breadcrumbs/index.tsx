@@ -3,16 +3,10 @@ import React from 'react';
 import './Breadcrumbs.scss';
 import Breadcrumb from './Breadcrumb';
 import { localizedText } from '../../util';
-
-interface BreadcrumbProps {
-    type: string;
-    path: string;
-    state?: any;
-    title: string;
-}
+import { BreadcrumbType } from 'types/BreadcrumbType';
 
 interface BreadcrumbsProps {
-    breadcrumbs: BreadcrumbProps[];
+    breadcrumbs: BreadcrumbType[];
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
@@ -26,9 +20,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs }) => {
                             pathname: crumb.path,
                             state: crumb.state,
                         }}
-                    >
-                        {localizedText(crumb.title, 'en')}
-                    </Breadcrumb>
+                        title={localizedText(crumb.title, 'en')}
+                    />
                 ))}
             </div>
         </div>

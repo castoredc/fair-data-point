@@ -46,7 +46,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
             languages: [],
             licenses: [],
             countries: [],
-            metadataModels: [],
+            metadataModels: undefined,
             forms: undefined,
             optionGroups: [],
         };
@@ -226,11 +226,16 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
         const { validation, languages, licenses, countries, currentVersion, showModal, metadataModels, forms, optionGroups } = this.state;
         const { type, object } = this.props;
 
+        if(metadataModels === undefined) {
+            return <LoadingOverlay accessibleLabel="Loading metadata models" />
+        }
+
         if(!object.hasMetadata || object.hasMetadata && (object.metadata.model === null || object.metadata.modelVersion === null)) {
             return (<>
                     <MetadataVersionModal
                         open={showModal}
                         currentVersion={currentVersion}
+                        defaultMetadataModel={object.defaultMetadataModel}
                         onClose={this.closeModal}
                         handleSave={this.handleVersionUpdate}
                         metadataModels={metadataModels}
@@ -262,6 +267,7 @@ export default class MetadataForm extends Component<MetadataFormProps, MetadataF
                 <MetadataVersionModal
                     open={showModal}
                     currentVersion={currentVersion}
+                    defaultMetadataModel={object.defaultMetadataModel}
                     onClose={this.closeModal}
                     handleSave={this.handleVersionUpdate}
                     metadataModels={metadataModels}

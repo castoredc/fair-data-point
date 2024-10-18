@@ -11,6 +11,7 @@ import ToastItem from 'components/ToastItem';
 
 type MetadataVersionModalProps = {
     currentVersion: string;
+    defaultMetadataModel: string|null;
     open: boolean;
     onClose: () => void;
     handleSave: (versionType: string) => void;
@@ -66,17 +67,19 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
     };
 
     render() {
-        const { open, onClose, handleSave, currentVersion, metadataModels } = this.props;
+        const { open, onClose, handleSave, currentVersion, metadataModels, defaultMetadataModel } = this.props;
 
-        const title = 'New metadata version';
+        const title = currentVersion ? 'New metadata version' : 'Add metadata';
+
+        console.log(defaultMetadataModel);
 
         return (
             <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
                 <Formik initialValues={{
-                    versionType: '',
-                    model: '',
+                    versionType: currentVersion ? '' : 'patch',
+                    model: defaultMetadataModel ? defaultMetadataModel : '',
                     modelVersion: '',
-                    newVersion: '',
+                    newVersion: currentVersion ? '' : '0.0.1',
                 }} onSubmit={this.handleSubmit} validationSchema={VersionSchema}>
                     {({
                           values,
@@ -89,14 +92,12 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                           setValues,
                           setFieldValue,
                       }) => {
-
                         const model = values.model ? metadataModels.find((metadataModel => metadataModel.value === values.model)) : null;
-
                         const versions = model ? model.versions : [];
 
                         return (
                             <Form style={{ width: 400 }}>
-                                <FormItem
+                                {currentVersion && <FormItem
                                     label="Please indicate to what extent you are going to make changes to the metadata, in order to generate a version number">
                                     <Field
                                         component={Choice}
@@ -111,7 +112,7 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                                         }}
                                         name="versionType"
                                     />
-                                </FormItem>
+                                </FormItem>}
 
                                 <FormItem label="Metadata model">
                                     <Field
@@ -141,7 +142,7 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
                                 {values.newVersion !== '' && <FormItem label="New version">{values.newVersion}</FormItem>}
 
                                 <Button type="submit" disabled={isSubmitting}>
-                                    Create new version
+                                    {currentVersion ? 'Create new version' : 'Add metadata'}
                                 </Button>
                             </Form>
 

@@ -23,7 +23,7 @@ const FAIRDataPointMain: React.FC<FAIRDataPointMainProps> = ({ user, embedded, l
     const title = fdp ? localizedText(fdp.metadata.title, 'en') : null;
 
     return (
-        <Layout className="FAIRDataPoint" title={title} embedded={embedded} isLoading={isLoading}>
+        <Layout className="FAIRDataPoint" embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoading}>

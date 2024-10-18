@@ -130,6 +130,33 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
             return <LoadingOverlay accessibleLabel="Loading studies" />;
         }
 
+        if(selectedStudy) {
+            return (
+                <SelectPage
+                    title="Add a study"
+                    description={`Please choose an item from your list of studies that you’d like to include in the ${localizedText(
+                        catalog.metadata.title,
+                        'en'
+                    )}.`}
+                    backButton={{
+                        to: () => this.handleStudySelect(null),
+                        label: 'Back to study list',
+                    }}
+                >
+                    <div>
+                        <ListItem key={selectedStudy.sourceId} title={selectedStudy.name} selectable={true} active={true} icon="study" />
+
+                        <Stack distribution="center">
+                            <Button disabled={submitDisabled} onClick={this.importStudy}>
+                                Next
+                            </Button>
+                        </Stack>
+                    </div>
+                </SelectPage>
+            );
+        }
+
+
         return (
             <SelectPage
                 title="Add a study"
@@ -142,42 +169,19 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     label: 'Back to catalogs',
                 }}
             >
-            
-                        {studies.length > 0 && selectedStudy && (
-                            <div>
-                                <ListItem key={selectedStudy.sourceId} title={selectedStudy.name} selectable={true} active={true} icon="study" />
-
-                                <Stack distribution="trailing" alignment="end">
-                                    <Button buttonType="contentOnly" onClick={() => this.handleStudySelect(null)} style={{ padding: 0 }}>
-                                        Select another study
-                                    </Button>
-                                </Stack>
-
-                                <Space top="condensed" />
-
-                                <Stack distribution="center">
-                                    <Button disabled={submitDisabled} onClick={this.importStudy}>
-                                        Next
-                                    </Button>
-                                </Stack>
-                            </div>
-                        )}
-
-                        {studies.length > 0 &&
-                            !selectedStudy &&
-                            studies.map(study => {
-                                return (
-                                    <ListItem
-                                        key={study.sourceId}
-                                        title={study.name}
-                                        selectable={true}
-                                        onClick={() => this.handleStudySelect(study.sourceId)}
-                                        icon="study"
-                                    />
-                                );
-                            })}
-
-                        {studies.length == 0 && <div className="NoResults">No studies found.</div>}
+                {studies.length > 0 ? (
+                    studies.map(study => {
+                        return (
+                            <ListItem
+                                key={study.sourceId}
+                                title={study.name}
+                                selectable={true}
+                                onClick={() => this.handleStudySelect(study.sourceId)}
+                                icon="study"
+                            />
+                        );
+                    })
+                ) : <div className="NoResults">No studies found.</div> }
             </SelectPage>
         );
     }

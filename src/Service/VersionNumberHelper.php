@@ -8,7 +8,12 @@ use App\Entity\Version;
 
 class VersionNumberHelper
 {
-    public const DEFAULT_VERSION_NUMBER = '1.0.0';
+    public const DEFAULT_VERSION_NUMBER = '0.0.1';
+
+    public function getDefaultVersion(): Version
+    {
+        return new Version(self::DEFAULT_VERSION_NUMBER);
+    }
 
     public function getNewVersion(?Version $currentVersion, VersionType $versionUpdate): Version
     {

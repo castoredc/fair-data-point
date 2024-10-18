@@ -1,8 +1,13 @@
 import React from 'react';
-import SplitWrapper from 'react-split';
+import {default as SplitWrapper} from 'react-split';
 import './Split.scss';
 
-const Split = ({ sizes, children }) => {
+interface SplitProps {
+    sizes: number[];
+    children: React.ReactNode;
+}
+
+const Split: React.FC<SplitProps> = ({ sizes, children }) => {
     return (
         <SplitWrapper
             className="Split"

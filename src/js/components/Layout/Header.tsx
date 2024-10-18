@@ -8,8 +8,35 @@ import './Header.scss';
 import { Button, CastorLogo, Stack } from '@castoredc/matter';
 import LoginModal from '../../modals/LoginModal';
 import DropdownButton from '../DropdownButton';
+import { BreadcrumbsType } from 'types/BreadcrumbType';
+import { UserType } from 'types/UserType';
 
-export default class Header extends Component {
+interface HeaderProps {
+    embedded?: boolean;
+    className?: string;
+    title?: string;
+    badge?: string;
+    breadcrumbs?: BreadcrumbsType; // Adjust based on breadcrumb structure
+    user?: UserType | null;
+    hideTitle?: boolean;
+    forceSmallHeader?: boolean;
+    showLoginModal?: boolean;
+    loginModalUrl?: string;
+    loginModalView?: string;
+    loginModalServer?: string;
+    onModalClose?: () => void;
+}
+
+interface HeaderState {
+    mobile: boolean | null;
+    smallHeader: boolean;
+    showModal: boolean;
+    loginModalUrl?: string;
+    loginModalView?: string;
+    loginModalServer?: string;
+}
+
+class Header extends Component<HeaderProps, HeaderState> {
     constructor(props) {
         super(props);
 
@@ -17,9 +44,9 @@ export default class Header extends Component {
             mobile: null,
             smallHeader: false,
             showModal: false,
-            loginModalUrl: null,
-            loginModalView: null,
-            loginModalServer: null,
+            loginModalUrl: undefined,
+            loginModalView: undefined,
+            loginModalServer: undefined,
         };
     }
 
@@ -95,7 +122,7 @@ export default class Header extends Component {
     };
 
     render() {
-        const { embedded, className, title, badge, location, data, breadcrumbs, user, hideTitle = false, forceSmallHeader = false } = this.props;
+        const { embedded, className, title, badge, breadcrumbs, user, hideTitle = false, forceSmallHeader = false } = this.props;
         const { mobile, smallHeader, showModal, loginModalUrl, loginModalServer, loginModalView } = this.state;
 
         const adminMenuItems = [];
@@ -141,7 +168,7 @@ export default class Header extends Component {
                                             {user ? (
                                                 <div>
                                                     <DropdownButton
-                                                        text={user.details.fullName}
+                                                        text={user.details ? user.details.fullName : ''}
                                                         items={menuItems}
                                                         icon="account"
                                                         buttonType="primary"
@@ -191,7 +218,7 @@ export default class Header extends Component {
                                             {user ? (
                                                 <div>
                                                     <DropdownButton
-                                                        iconDescription={user.details.fullName}
+                                                        iconDescription={user.details ? user.details.fullName : ''}
                                                         items={menuItems}
                                                         icon="account"
                                                         buttonType="primary"
@@ -232,3 +259,5 @@ export default class Header extends Component {
         );
     }
 }
+
+export default Header;

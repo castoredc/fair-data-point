@@ -3,6 +3,7 @@ export type PersonType = {
     firstName: string;
     middleName: string | null;
     lastName: string;
+    fullName?: string;
     email: string;
     orcid: string | null;
 };

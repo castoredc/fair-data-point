@@ -24,7 +24,7 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
     const title = dataset ? localizedText(dataset.metadata.title, 'en') : null;
 
     return (
-        <Layout className="Dataset" title={title} isLoading={isLoading} embedded={embedded}>
+        <Layout className="Dataset" embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoading}>
