@@ -1,9 +1,6 @@
 import React from 'react';
 import { localizedText, paragraphText } from '../../../util';
 import Header from '../../../components/Layout/Header';
-import { RecruitmentStatus } from '../../../components/MetadataItem/EnumMappings';
-import Tags from '../../../components/Tags';
-import Contacts from '../../../components/MetadataItem/Contacts';
 import DatasetList from '../../../components/List/DatasetList';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
@@ -25,7 +22,7 @@ const Study: React.FC<StudyProps> = ({ user, embedded, location, match }) => {
     const title = study ? localizedText(study.metadata.title, 'en') : null;
 
     return (
-        <Layout className="Study" title={title} isLoading={isLoadingStudy} embedded={embedded}>
+        <Layout className="Study" embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoadingStudy}>

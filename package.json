@@ -80,6 +80,7 @@
     "yup": "^0.32.9"
   },
   "resolutions": {
-    "webpack": "*"
+    "webpack": "*",
+    "@types/react": "^16.14.0"
   }
 }

@@ -4,17 +4,17 @@ import { Button, Modal, Stack } from '@castoredc/matter';
 import ConfirmModal from '../../../../modals/ConfirmModal';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import StudyForm from 'components/Form/Admin/StudyForm';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from 'src/js/network';
 import { localizedText } from '../../../../util';
+import { AuthorizedRouteComponentProps } from 'components/Route';
 
-interface AddStudyProps {
+interface AddStudyProps extends AuthorizedRouteComponentProps {
     catalog: string;
 }
 
 interface AddStudyState {
-    showModal: any;
+    showModal: boolean;
     selectedStudy: any;
     addedStudy: any;
 }
@@ -23,34 +23,15 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: {
-                newStudy: false,
-                confirm: false,
-            },
+            showModal: false,
             selectedStudy: null,
             addedStudy: null,
         };
     }
 
-    openModal = type => {
-        const { showModal } = this.state;
-
+    closeModal = () => {
         this.setState({
-            showModal: {
-                ...showModal,
-                [type]: true,
-            },
-        });
-    };
-
-    closeModal = type => {
-        const { showModal } = this.state;
-
-        this.setState({
-            showModal: {
-                ...showModal,
-                [type]: false,
-            },
+            showModal: false,
         });
     };
 
@@ -60,7 +41,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                 selectedStudy: study,
             },
             () => {
-                this.openModal('confirm');
+                this.setState({
+                    showModal: true
+                });
             }
         );
     };
@@ -78,7 +61,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     position: 'top-right',
                 });
 
-                this.closeModal('confirm');
+                this.closeModal();
 
                 this.setState({
                     addedStudy: selectedStudy,
@@ -94,22 +77,11 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
     };
 
     render() {
-        const { catalog } = this.props;
+        const { catalog, history } = this.props;
         const { showModal, selectedStudy, addedStudy } = this.state;
 
         return (
             <PageBody>
-                <Modal
-                    open={showModal.newStudy}
-                    onClose={() => {
-                        this.closeModal('newStudy');
-                    }}
-                    title="Add new study"
-                    accessibleName="Add new study"
-                >
-                    <StudyForm />
-                </Modal>
-
                 {selectedStudy && (
                     <ConfirmModal
                         title="Add study"
@@ -117,9 +89,9 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         variant="primary"
                         onConfirm={this.handleAdd}
                         onCancel={() => {
-                            this.closeModal('confirm');
+                            this.closeModal();
                         }}
-                        show={showModal.confirm}
+                        show={showModal}
                     >
                         Are you sure you want to add <strong>{selectedStudy.hasMetadata ? localizedText(selectedStudy.metadata.title, 'en') : selectedStudy.name}</strong> to this catalog?
                     </ConfirmModal>
@@ -130,9 +102,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         <Button
                             icon="add"
                             className="AddButton"
-                            onClick={() => {
-                                this.openModal('newStudy');
-                            }}
+                            onClick={() => history.push(`/dashboard/studies/add/${catalog}`)}
                         >
                             Create new study
                         </Button>

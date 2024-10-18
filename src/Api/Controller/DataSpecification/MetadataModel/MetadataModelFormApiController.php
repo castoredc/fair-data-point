@@ -27,7 +27,7 @@ class MetadataModelFormApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_forms')]
     public function getForms(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -37,7 +37,7 @@ class MetadataModelFormApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_form_add')]
     public function addForm(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -69,7 +69,7 @@ class MetadataModelFormApiController extends ApiController
 
     #[Route(path: '/{form}', methods: ['POST'], name: 'api_metadata_model_form_update')]
     public function updateForm(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
@@ -116,7 +116,7 @@ class MetadataModelFormApiController extends ApiController
 
     #[Route(path: '/{form}', methods: ['DELETE'], name: 'api_metadata_model_form_delete')]
     public function deleteForm(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,

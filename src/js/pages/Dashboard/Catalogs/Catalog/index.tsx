@@ -182,7 +182,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                         <Route
                             path="/dashboard/catalogs/:catalog/studies/add"
                             exact
-                            render={props => <AddStudy {...props} catalog={catalog.slug} />}
+                            render={props => <AddStudy {...props} catalog={catalog.slug} user={user} />}
                         />
                         <Route path="/dashboard/catalogs/:catalog/studies" exact render={props => <Studies {...props} catalog={catalog.slug} />} />
                         <Route path="/dashboard/catalogs/:catalog/datasets" exact render={props => <Datasets {...props} catalog={catalog.slug} />} />

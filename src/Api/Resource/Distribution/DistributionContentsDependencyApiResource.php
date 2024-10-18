@@ -51,7 +51,8 @@ class DistributionContentsDependencyApiResource implements ApiResource
             $array['description'] = '';
 
             if ($this->dependency->getType()->isValueNode()) {
-                $array['field'] = [
+                $array['field'] = $this->dependency->getNode()->getId();
+                $array['fieldDetails'] = [
                     'type' => 'valueNode',
                     'value' => $this->dependency->getNode()->getId(),
                     'name' => $this->dependency->getNode()->getId(),
@@ -60,7 +61,8 @@ class DistributionContentsDependencyApiResource implements ApiResource
                 ];
                 $array['description'] = $this->dependency->getNode()->getTitle() . ' ' . $array['operator'] . ' ' . $array['value'];
             } elseif ($this->dependency->getType()->isInstitute()) {
-                $array['field'] = [
+                $array['field'] = $this->dependency->getType()->toString();
+                $array['fieldDetails'] = [
                     'type' => 'recordDetails',
                     'value' => $this->dependency->getType()->toString(),
                     'name' => $this->dependency->getType()->toString(),

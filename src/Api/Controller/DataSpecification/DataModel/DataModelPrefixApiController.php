@@ -27,7 +27,7 @@ class DataModelPrefixApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_data_model_prefixes')]
     public function getPrefixes(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -37,7 +37,7 @@ class DataModelPrefixApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_data_model_prefix_add')]
     public function addPrefix(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -64,7 +64,7 @@ class DataModelPrefixApiController extends ApiController
 
     #[Route(path: '/{prefix}', methods: ['POST'], name: 'api_data_model_prefix_update')]
     public function updatePrefix(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,
@@ -101,7 +101,7 @@ class DataModelPrefixApiController extends ApiController
 
     #[Route(path: '/{prefix}', methods: ['DELETE'], name: 'api_data_model_prefix_delete')]
     public function deletePrefix(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,

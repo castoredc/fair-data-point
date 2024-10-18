@@ -28,7 +28,7 @@ class MetadataModelFieldApiController extends ApiController
 {
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_field_add')]
     public function addField(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
@@ -73,7 +73,7 @@ class MetadataModelFieldApiController extends ApiController
 
     #[Route(path: '/{field}', methods: ['POST'], name: 'api_metadata_model_field_update')]
     public function updateField(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,
@@ -133,7 +133,7 @@ class MetadataModelFieldApiController extends ApiController
 
     #[Route(path: '/{field}', methods: ['DELETE'], name: 'api_metadata_model_field_delete')]
     public function deleteField(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['form' => 'id'])]
         MetadataModelForm $form,

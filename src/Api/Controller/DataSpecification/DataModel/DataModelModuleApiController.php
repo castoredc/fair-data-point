@@ -27,7 +27,7 @@ class DataModelModuleApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_data_model_modules')]
     public function getModules(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -37,7 +37,7 @@ class DataModelModuleApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_data_model_module_add')]
     public function addModule(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -71,7 +71,7 @@ class DataModelModuleApiController extends ApiController
 
     #[Route(path: '/{module}', methods: ['POST'], name: 'api_data_model_module_update')]
     public function updateModule(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         #[MapEntity(mapping: ['module' => 'id'])]
         DataModelGroup $module,
@@ -117,7 +117,7 @@ class DataModelModuleApiController extends ApiController
 
     #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_data_model_module_delete')]
     public function deleteModule(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         #[MapEntity(mapping: ['module' => 'id'])]
         DataModelGroup $module,

@@ -5,7 +5,7 @@ import Header from '../../../components/Layout/Header';
 import { Banner } from '@castoredc/matter';
 import Layout from '../../../components/Layout';
 import MainBody from '../../../components/Layout/MainBody';
-import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
+import { getBreadCrumbs } from 'utils/BreadcrumbUtils';
 import { isGranted } from 'utils/PermissionHelper';
 import { LockIcon } from '@castoredc/matter-icons';
 import useGetDistribution from '../../../hooks/useGetDistribution';
@@ -25,7 +25,7 @@ const Distribution: React.FC<DistributionProps> = ({ user, embedded, location, m
     const title = distribution ? localizedText(distribution.metadata.title, 'en') : null;
 
     return (
-        <Layout className="Distribution" title={title} isLoading={isLoading} embedded={embedded}>
+        <Layout className="Distribution" embedded={embedded}>
             <Header user={user} embedded={embedded} breadcrumbs={breadcrumbs} title={title} />
 
             <MainBody isLoading={isLoading}>

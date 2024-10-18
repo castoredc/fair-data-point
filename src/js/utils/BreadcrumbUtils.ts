@@ -1,6 +1,7 @@
 import { localizedText } from '../util';
+import { BreadcrumbsType, BreadcrumbType } from 'types/BreadcrumbType';
 
-export const getBreadCrumbs = (location, data) => {
+export const getBreadCrumbs = (location, data): BreadcrumbsType => {
     const fdp = 'fdp' in data ? data.fdp : location.state && 'fdp' in location.state ? location.state.fdp : null;
     const catalog = 'catalog' in data ? data.catalog : location.state && 'catalog' in location.state ? location.state.catalog : null;
     const study = 'study' in data ? data.study : location.state && 'study' in location.state ? location.state.study : null;
@@ -84,6 +85,6 @@ export const getBreadCrumbs = (location, data) => {
     return {
         current,
         previous,
-        crumbs,
+        crumbs: crumbs as BreadcrumbType[]
     };
 };

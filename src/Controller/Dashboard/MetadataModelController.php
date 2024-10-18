@@ -63,7 +63,7 @@ final class MetadataModelController extends AbstractController
     public function adminModelVersion(
         #[MapEntity(mapping: ['model' => 'id'])]
         MetadataModel $metadataModel,
-        #[MapEntity(mapping: ['model' => 'metadataModel', 'version' => 'version'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'version'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::EDIT, $metadataModel);

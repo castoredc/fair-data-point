@@ -158,3 +158,19 @@ export const getType = (type) => {
             return '';
     }
 }
+
+export const findOptionByValue = (value, options) => {
+    for (const option of options) {
+        // Check if it's a grouped option
+        if (option.options) {
+            // Search within this group
+            const foundOption = option.options.find(opt => opt.value === value);
+            if (foundOption) return foundOption;
+        } else {
+            // It's a non-grouped option
+            if (option.value === value) return option;
+        }
+    }
+    return null; // Return null if not found
+};
+

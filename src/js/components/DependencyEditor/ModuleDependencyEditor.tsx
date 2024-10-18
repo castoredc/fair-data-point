@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { Button, Dropdown } from '@castoredc/matter';
-import '../DependencyEditor.scss';
+import './DependencyEditor.scss';
 import QueryBuilder from 'react-querybuilder';
-import { RuleGroup } from './RuleGroup';
-import { Rule } from './Rule';
-import { ValueEditor } from './ValueEditor';
+import { RuleGroup } from '../QueryBuilder/RuleGroup';
+import { Rule } from '../QueryBuilder/Rule';
 import { NodeType, NodeValueType } from 'types/NodeType';
 import { PrefixType } from 'types/PrefixType';
 import { DependenciesType, DependencyGroupType } from 'types/ModuleType';
 import { RuleGroupType } from 'react-querybuilder/types/types';
+import { ValueEditor } from 'components/QueryBuilder/ValueEditor';
+import CombinatorSelector from 'components/QueryBuilder/CombinatorSelector';
+import FieldSelector from 'components/QueryBuilder/FieldSelector';
+import OperatorSelector from 'components/QueryBuilder/OperatorSelector';
 
 type ModuleDependencyEditorProps = {
     modelType: string;
@@ -31,6 +34,7 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
             fields: props.valueNodes.map((node: NodeType) => {
                 return {
                     name: node.id,
+                    value: node.id,
                     label: node.title,
                     dataType: (node.value !== null && 'dataType' in node.value) ? node.value.dataType : null,
                     valueType: node.value !== null ? node.value.value : null,
@@ -81,42 +85,36 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
                             removeRuleAction: props => (
                                 <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete condition" />
                             ),
-                            combinatorSelector: props => (
-                                <Dropdown
-                                    value={props.options.find(option => option.name === props.value)}
-                                    onChange={e => props.handleOnChange(e != null ? e.value : '')}
-                                    menuPosition="fixed"
-                                    width="minimum"
+                            combinatorSelector: (props) => {
+                                return <CombinatorSelector
                                     options={props.options.map(option => {
                                         return { value: option.name, label: option.label, name: option.name };
                                     })}
+                                    value={props.value}
+                                    handleOnChange={props.handleOnChange}
                                 />
-                            ),
-                            fieldSelector: props => (
-                                <Dropdown
-                                    value={props.options.find(option => option.name === props.value)}
-                                    onChange={e => props.handleOnChange(e != null ? e.value : '')}
-                                    menuPosition="fixed"
-                                    width="tiny"
+                            },
+                            fieldSelector: (props) => {
+                                return <FieldSelector
                                     options={props.options.map(option => {
                                         return { value: option.name, label: option.label, name: option.name };
                                     })}
+                                    value={props.value}
+                                    handleOnChange={props.handleOnChange}
                                 />
-                            ),
-                            operatorSelector: props => (
-                                <Dropdown
-                                    value={props.options.find(option => option.name === props.value)}
-                                    onChange={e => props.handleOnChange(e != null ? e.value : '')}
-                                    menuPosition="fixed"
-                                    width="minimum"
+                            },
+                            operatorSelector: (props) => {
+                                return <OperatorSelector
                                     options={props.options.map(option => {
                                         return { value: option.name, label: option.label, name: option.name };
                                     })}
+                                    value={props.value}
+                                    handleOnChange={props.handleOnChange}
                                 />
-                            ),
+                            },
                             ruleGroup: props => <RuleGroup {...props} />,
-                            rule: props => <Rule {...props} />,
-                            valueEditor: props => <ValueEditor prefixes={prefixes} {...props} />,
+                            rule: props => <Rule prefixes={prefixes} institutes={[]} {...props} />,
+                            valueEditor: props => <ValueEditor prefixes={prefixes} institutes={[]} {...props} />,
                         }}
                         operators={operators}
                         getOperators={this.getOperators}
