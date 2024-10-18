@@ -6,7 +6,6 @@ namespace App\Api\Controller\Catalog;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Catalog\AddStudyToCatalogApiRequest;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
-use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Castor\ImportStudyCommand;
 use App\Command\Study\AddStudyToCatalogCommand;
@@ -51,10 +50,6 @@ class CatalogStudiesApiController extends ApiController
                     $parsed->getPage(),
                     $catalog,
                     null,
-                    $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry(),
                     null
                 )
             );
@@ -83,17 +78,6 @@ class CatalogStudiesApiController extends ApiController
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    #[Route(path: '/filters', name: 'api_catalog_studies_filters')]
-    public function studyFilters(
-        #[MapEntity(mapping: ['catalog' => 'slug'])]
-        Catalog $catalog,
-    ): Response {
-        $this->denyAccessUnlessGranted(CatalogVoter::VIEW, $catalog);
-        $studies = $catalog->getStudies($this->isGranted(CatalogVoter::EDIT, $catalog));
-
-        return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
     }
 
     #[Route(path: '/add', methods: ['POST'], name: 'api_add_study_to_catalog')]

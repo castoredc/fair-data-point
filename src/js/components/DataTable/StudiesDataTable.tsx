@@ -6,7 +6,6 @@ import { MethodType, StudyType } from '../MetadataItem/EnumMappings';
 import './DataTable.scss';
 import DataGridHelper from './DataGridHelper';
 import DataGridContainer from './DataGridContainer';
-import StudyFilters from '../Filters/StudyFilters';
 import { apiClient } from 'src/js/network';
 import { localizedText } from '../../util';
 
@@ -23,10 +22,6 @@ interface StudiesDataTableState {
     hasLoadedStudies: boolean;
     studies: any[];
     pagination: any;
-    isLoadingFilters: boolean;
-    hasLoadedFilters: boolean;
-    filterOptions: any[];
-    appliedFilters: any;
 }
 
 export default class StudiesDataTable extends Component<StudiesDataTableProps, StudiesDataTableState> {
@@ -39,10 +34,6 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
             hasLoadedStudies: false,
             studies: [],
             pagination: DataGridHelper.getDefaultState(25),
-            isLoadingFilters: true,
-            hasLoadedFilters: false,
-            filterOptions: [],
-            appliedFilters: {},
         };
 
         this.tableRef = createRef<HTMLDivElement>();
@@ -50,7 +41,6 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
 
     componentDidMount() {
         this.getStudies();
-        this.getFilters();
     }
 
     componentDidUpdate(prevProps: StudiesDataTableProps) {
@@ -58,17 +48,16 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
 
         if (lastHandledStudy !== prevProps.lastHandledStudy) {
             this.getStudies();
-            this.getFilters();
         }
     }
 
     getStudies = () => {
-        const { appliedFilters, pagination, hasLoadedStudies } = this.state;
+        const { pagination, hasLoadedStudies } = this.state;
         const { catalog, hideCatalog } = this.props;
 
         this.setState({ isLoadingStudies: true });
 
-        let filters = { ...appliedFilters };
+        let filters = { };
         filters['page'] = pagination.currentPage;
         filters['perPage'] = pagination.perPage;
 
@@ -101,41 +90,6 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
             });
     };
 
-    getFilters = () => {
-        const { catalog } = this.props;
-
-        this.setState({ isLoadingStudies: true });
-
-        apiClient
-            .get(catalog ? `/api/catalog/${catalog}/study/filters` : '/api/study/filters')
-            .then(response => {
-                this.setState({
-                    filterOptions: response.data,
-                    isLoadingFilters: false,
-                    hasLoadedFilters: true,
-                });
-            })
-            .catch(error => {
-                this.setState({ isLoadingFilters: false });
-
-                const message =
-                    error.response && typeof error.response.data.error !== 'undefined'
-                        ? error.response.data.error
-                        : 'An error occurred while loading the filters';
-                toast.error(<ToastItem type="error" title={message} />);
-            });
-    };
-
-    handleFilter = (filters: any) => {
-        this.setState(
-            prevState => ({
-                appliedFilters: filters,
-                pagination: { ...prevState.pagination, currentPage: 0 },
-            }),
-            this.getStudies
-        );
-    };
-
     handlePagination = (paginationCount: { currentPage: number; pageSize: number }) => {
         this.setState(
             prevState => ({
@@ -163,12 +117,10 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
     };
 
     render() {
-        const { studies, isLoadingStudies, hasLoadedStudies, hasLoadedFilters, filterOptions, pagination } = this.state;
+        const { studies, isLoadingStudies, hasLoadedStudies, pagination } = this.state;
         const { hideCatalog } = this.props;
 
-        const hasLoaded = hasLoadedStudies && hasLoadedFilters;
-
-        if (!hasLoaded) {
+        if (!hasLoadedStudies) {
             return <LoadingOverlay accessibleLabel="Loading studies" />;
         }
 
@@ -235,7 +187,6 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
                 </div>
                 <div className="Filters FilterCol">
                     <Heading type="Subsection">Search studies</Heading>
-                    <StudyFilters filters={filterOptions} onFilter={this.handleFilter} />
                 </div>
             </div>
         );

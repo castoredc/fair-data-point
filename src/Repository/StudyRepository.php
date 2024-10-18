@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Enum\MethodType;
 use App\Entity\Enum\StudySource;
-use App\Entity\Enum\StudyType;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\Metadata\StudyMetadata;
@@ -21,20 +19,11 @@ class StudyRepository extends MetadataEnrichedEntityRepository
     protected const METADATA_CLASS = StudyMetadata::class;
     protected const TYPE = 'study';
 
-    /**
-     * @param StudyType[]|null  $studyType
-     * @param string[]|null     $hideCatalogs
-     * @param MethodType[]|null $methodType
-     * @param string[]|null     $country
-     */
+    /** @param string[]|null $hideCatalogs */
     public function findStudies(
         ?Catalog $catalog,
         ?Agent $agent,
         ?array $hideCatalogs,
-        ?string $search,
-        ?array $studyType,
-        ?array $methodType,
-        ?array $country,
         ?int $perPage,
         ?int $page,
         bool $admin,
@@ -42,7 +31,7 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         $qb = $this->createQueryBuilder('study')
                    ->select('study');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $admin);
 
         $firstResult = $page !== null && $perPage !== null ? ($page - 1) * $perPage : 0;
         $qb->setFirstResult($firstResult);
@@ -60,23 +49,18 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         $qb = $this->createQueryBuilder('study')
             ->select('study');
 
-        $qb = $this->getStudyQuery($qb, null, $agent, null, null, null, null, null, false);
+        $qb = $this->getStudyQuery($qb, null, $agent, null, false);
 
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @param StudyType[]|null  $studyType
-     * @param string[]|null     $hideCatalogs
-     * @param MethodType[]|null $methodType
-     * @param string[]|null     $country
-     */
-    public function countStudies(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, ?string $search, ?array $studyType, ?array $methodType, ?array $country, bool $admin): int
+    /** @param string[]|null $hideCatalogs */
+    public function countStudies(?Catalog $catalog, ?Agent $agent, ?array $hideCatalogs, bool $admin): int
     {
         $qb = $this->createQueryBuilder('study')
                    ->select('count(study.id)');
 
-        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $search, $studyType, $methodType, $country, $admin);
+        $qb = $this->getStudyQuery($qb, $catalog, $agent, $hideCatalogs, $admin);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -89,24 +73,15 @@ class StudyRepository extends MetadataEnrichedEntityRepository
 
     public function countByAgent(Agent $agent): int
     {
-        return $this->countStudies(null, $agent, null, null, null, null, null, false);
+        return $this->countStudies(null, $agent, null, false);
     }
 
-    /**
-     * @param string[]|null     $hideCatalogs
-     * @param StudyType[]|null  $studyType
-     * @param MethodType[]|null $methodType
-     * @param string[]|null     $country
-     */
+    /** @param string[]|null $hideCatalogs */
     private function getStudyQuery(
         QueryBuilder $qb,
         ?Catalog $catalog,
         ?Agent $agent,
         ?array $hideCatalogs,
-        ?string $search,
-        ?array $studyType,
-        ?array $methodType,
-        ?array $country,
         bool $admin,
     ): QueryBuilder {
         $qb = $this->getQuery($qb);
@@ -124,17 +99,6 @@ class StudyRepository extends MetadataEnrichedEntityRepository
         if (! $admin) {
             $qb->andWhere('study.isPublished = 1');
         }
-
-//        if ($search !== null) {
-//            $qb->andWhere(
-//                $qb->expr()->orX(
-//                    $qb->expr()->like('metadata.briefName', ':search'),
-//                    $qb->expr()->like('metadata.briefSummary', ':search'),
-//                    $qb->expr()->like('metadata.summary', ':search')
-//                )
-//            );
-//            $qb->setParameter('search', '%' . $search . '%');
-//        }
 
         if ($agent !== null) {
             $qb = $this->getAgentQuery($qb, $agent);

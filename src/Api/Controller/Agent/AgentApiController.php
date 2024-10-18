@@ -11,16 +11,12 @@ use App\Api\Resource\Agent\Person\PersonApiResource;
 use App\Api\Resource\Catalog\CatalogApiResource;
 use App\Api\Resource\Dataset\DatasetApiResource;
 use App\Api\Resource\Distribution\DistributionApiResource;
-use App\Api\Resource\Study\StudiesFilterApiResource;
-use App\Api\Resource\Study\StudiesMapApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Agent\GetAgentAssociatedMetadataCountCommand;
 use App\Command\Catalog\GetPaginatedCatalogsCommand;
 use App\Command\Dataset\GetPaginatedDatasetsCommand;
 use App\Command\Distribution\GetPaginatedDistributionsCommand;
-use App\Command\Study\FilterStudiesCommand;
 use App\Command\Study\GetPaginatedStudiesCommand;
-use App\Command\Study\GetStudiesForAgentCommand;
 use App\Entity\FAIRData\Agent\Agent;
 use App\Entity\FAIRData\Agent\Organization;
 use App\Entity\FAIRData\Agent\Person;
@@ -100,10 +96,6 @@ class AgentApiController extends ApiController
                     $parsed->getPage(),
                     null,
                     $agent,
-                    $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry(),
                     null
                 )
             );
@@ -123,34 +115,6 @@ class AgentApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical(
                 'An error occurred while getting the studies for an agent',
-                [
-                    'exception' => $e,
-                    'Agent' => $agent->getSlug(),
-                    'AgentID' => $agent->getId(),
-                ]
-            );
-
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route(path: '/study/filters', methods: ['GET'], name: 'api_agent_study_filters')]
-    public function agentStudiesFilters(
-        #[MapEntity(mapping: ['agent' => 'slug'])]
-        Agent $agent,
-        MessageBusInterface $bus,
-    ): Response {
-        try {
-            $envelope = $bus->dispatch(new GetStudiesForAgentCommand($agent));
-            $handledStamp = $envelope->last(HandledStamp::class);
-            assert($handledStamp instanceof HandledStamp);
-
-            $studies = $handledStamp->getResult();
-
-            return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
-        } catch (HandlerFailedException $e) {
-            $this->logger->critical(
-                'An error occurred while getting the study filters for an agent',
                 [
                     'exception' => $e,
                     'Agent' => $agent->getSlug(),
@@ -305,48 +269,6 @@ class AgentApiController extends ApiController
         } catch (HandlerFailedException $e) {
             $this->logger->critical(
                 'An error occurred while getting the distributions for an agent',
-                [
-                    'exception' => $e,
-                    'Agent' => $agent->getSlug(),
-                    'AgentID' => $agent->getId(),
-                ]
-            );
-
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route(path: '/map', methods: ['GET'], name: 'api_agent_map')]
-    public function agentMap(
-        #[MapEntity(mapping: ['agent' => 'slug'])]
-        Agent $agent,
-        Request $request,
-        MessageBusInterface $bus,
-    ): Response {
-        try {
-            $parsed = $this->parseRequest(StudyMetadataFilterApiRequest::class, $request);
-            assert($parsed instanceof StudyMetadataFilterApiRequest);
-
-            $envelope = $bus->dispatch(
-                new FilterStudiesCommand(
-                    null,
-                    $agent,
-                    $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry()
-                )
-            );
-
-            $handledStamp = $envelope->last(HandledStamp::class);
-            assert($handledStamp instanceof HandledStamp);
-
-            return new JsonResponse((new StudiesMapApiResource($handledStamp->getResult()))->toArray());
-        } catch (ApiRequestParseError $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_BAD_REQUEST);
-        } catch (HandlerFailedException $e) {
-            $this->logger->critical(
-                'An error occurred while getting the map information for an agent',
                 [
                     'exception' => $e,
                     'Agent' => $agent->getSlug(),
