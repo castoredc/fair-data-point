@@ -139,7 +139,7 @@ class DataModelApiController extends ApiController
 
     #[Route(path: '/{model}/v/{version}', methods: ['GET'], name: 'api_data_model_version')]
     public function dataModelVersion(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -232,7 +232,7 @@ class DataModelApiController extends ApiController
 
     #[Route(path: '/{model}/v/{version}/export', methods: ['GET'], name: 'api_data_model_version_export')]
     public function exportDataModelVersion(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         MessageBusInterface $bus,
     ): Response {
@@ -256,7 +256,7 @@ class DataModelApiController extends ApiController
 
     #[Route(path: '/{model}/v/{version}/rdf', methods: ['GET'], name: 'api_data_model_rdf_preview')]
     public function dataModelRDFPreview(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         MessageBusInterface $bus,
     ): Response {

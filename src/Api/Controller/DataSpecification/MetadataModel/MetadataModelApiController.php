@@ -153,7 +153,7 @@ class MetadataModelApiController extends ApiController
 
     #[Route(path: '/{model}/v/{version}', methods: ['GET'], name: 'api_metadata_model_version')]
     public function dataModelVersion(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -250,7 +250,7 @@ class MetadataModelApiController extends ApiController
 
     #[Route(path: '/{model}/v/{version}/export', methods: ['GET'], name: 'api_metadata_model_version_export')]
     public function exportMetadataModelVersion(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         MessageBusInterface $bus,
     ): Response {
@@ -274,7 +274,7 @@ class MetadataModelApiController extends ApiController
 
     #[Route(path: '/{model}/v/{version}/rdf', methods: ['GET'], name: 'api_metadata_model_rdf_preview')]
     public function dataModelRDFPreview(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         MessageBusInterface $bus,
     ): Response {

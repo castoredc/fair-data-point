@@ -16,7 +16,7 @@ class TypesApiController extends ApiController
 {
     #[Route(path: '', name: 'api_data_model_types')]
     public function nodes(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());

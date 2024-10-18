@@ -16,7 +16,7 @@ class TypesApiController extends ApiController
 {
     #[Route(path: '', name: 'api_metadata_model_types')]
     public function nodes(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());

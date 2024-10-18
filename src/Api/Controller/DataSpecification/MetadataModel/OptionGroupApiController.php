@@ -27,7 +27,7 @@ class OptionGroupApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_option_groups')]
     public function getOptionGroups(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted(DataSpecificationVoter::USE, $metadataModelVersion->getMetadataModel());
@@ -37,7 +37,7 @@ class OptionGroupApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_option_group_add')]
     public function addOptionGroup(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -69,7 +69,7 @@ class OptionGroupApiController extends ApiController
 
     #[Route(path: '/{optionGroup}', methods: ['POST'], name: 'api_metadata_model_option_group_update')]
     public function updateOptionGroup(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['optionGroup' => 'id'])]
         MetadataModelOptionGroup $optionGroup,
@@ -113,7 +113,7 @@ class OptionGroupApiController extends ApiController
 
     #[Route(path: '/{optionGroup}', methods: ['DELETE'], name: 'api_metadata_model_option_group_delete')]
     public function deletePrefix(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['optionGroup' => 'id'])]
         MetadataModelOptionGroup $optionGroup,

@@ -27,7 +27,7 @@ class MetadataModelModuleApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_modules')]
     public function getModules(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -37,7 +37,7 @@ class MetadataModelModuleApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_module_add')]
     public function addModule(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -69,7 +69,7 @@ class MetadataModelModuleApiController extends ApiController
 
     #[Route(path: '/{module}', methods: ['POST'], name: 'api_metadata_model_module_update')]
     public function updateModule(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,
@@ -113,7 +113,7 @@ class MetadataModelModuleApiController extends ApiController
 
     #[Route(path: '/{module}', methods: ['DELETE'], name: 'api_metadata_model_module_delete')]
     public function deleteModule(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['module' => 'id'])]
         MetadataModelGroup $module,

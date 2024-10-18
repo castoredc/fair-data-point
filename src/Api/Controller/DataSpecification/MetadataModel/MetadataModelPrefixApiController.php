@@ -27,7 +27,7 @@ class MetadataModelPrefixApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_prefixes')]
     public function getPrefixes(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -37,7 +37,7 @@ class MetadataModelPrefixApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_prefix_add')]
     public function addPrefix(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -64,7 +64,7 @@ class MetadataModelPrefixApiController extends ApiController
 
     #[Route(path: '/{prefix}', methods: ['POST'], name: 'api_metadata_model_prefix_update')]
     public function updatePrefix(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,
@@ -101,7 +101,7 @@ class MetadataModelPrefixApiController extends ApiController
 
     #[Route(path: '/{prefix}', methods: ['DELETE'], name: 'api_metadata_model_prefix_delete')]
     public function deletePrefix(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['prefix' => 'id'])]
         NamespacePrefix $prefix,

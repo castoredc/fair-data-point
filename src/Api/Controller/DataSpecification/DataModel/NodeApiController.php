@@ -30,7 +30,7 @@ class NodeApiController extends ApiController
 {
     #[Route(path: '', name: 'api_data_model_node')]
     public function nodes(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $dataModelVersion->getDataModel());
@@ -40,7 +40,7 @@ class NodeApiController extends ApiController
 
     #[Route(path: '/{type}', methods: ['GET'], name: 'api_data_model_node_type')]
     public function nodesByType(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         string $type,
     ): Response {
@@ -53,7 +53,7 @@ class NodeApiController extends ApiController
 
     #[Route(path: '/{type}', methods: ['POST'], name: 'api_data_model_node_add')]
     public function addNode(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         string $type,
         Request $request,
@@ -97,7 +97,7 @@ class NodeApiController extends ApiController
 
     #[Route(path: '/{type}/{id}', methods: ['POST'], name: 'api_data_model_node_edit')]
     public function editNode(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         string $type,
         #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]
@@ -147,7 +147,7 @@ class NodeApiController extends ApiController
 
     #[Route(path: '/{type}/{id}', methods: ['DELETE'], name: 'api_data_model_node_remove')]
     public function removeNode(
-        #[MapEntity(mapping: ['model' => 'data_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         DataModelVersion $dataModelVersion,
         string $type,
         #[MapEntity(mapping: ['id' => 'id', 'version' => 'version'])]

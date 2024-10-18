@@ -27,7 +27,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
 {
     #[Route(path: '', methods: ['GET'], name: 'api_metadata_model_displaySetting')]
     public function getDisplaySettings(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
     ): Response {
         $this->denyAccessUnlessGranted('view', $metadataModelVersion->getMetadataModel());
@@ -37,7 +37,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
 
     #[Route(path: '', methods: ['POST'], name: 'api_metadata_model_displaySetting_add')]
     public function addDisplaySetting(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         Request $request,
         MessageBusInterface $bus,
@@ -72,7 +72,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
 
     #[Route(path: '/{displaySetting}', methods: ['POST'], name: 'api_metadata_model_displaySetting_update')]
     public function updateDisplaySetting(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
@@ -121,7 +121,7 @@ class MetadataModelDisplaySettingApiController extends ApiController
 
     #[Route(path: '/{displaySetting}', methods: ['DELETE'], name: 'api_metadata_model_displaySetting_delete')]
     public function deleteDisplaySetting(
-        #[MapEntity(mapping: ['model' => 'metadata_model', 'version' => 'id'])]
+        #[MapEntity(mapping: ['model' => 'dataSpecification', 'version' => 'id'])]
         MetadataModelVersion $metadataModelVersion,
         #[MapEntity(mapping: ['displaySetting' => 'id'])]
         MetadataModelDisplaySetting $displaySetting,
