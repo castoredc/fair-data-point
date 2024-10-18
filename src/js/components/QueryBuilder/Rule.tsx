@@ -35,6 +35,10 @@ export const Rule: React.FC<RuleProps> = ({
     const level = getLevel(id);
     const fieldData = findOptionByValue(field, fields);
 
+    console.log(field);
+    console.log(fields);
+    console.log(fieldData);
+
     return (
         <div className={`rule`} data-rule-id={id} data-level={level}>
             <Stack>

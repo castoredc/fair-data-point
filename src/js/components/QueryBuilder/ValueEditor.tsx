@@ -42,9 +42,6 @@ export const ValueEditor: React.FC<ValueEditorProps> = ({ field, fieldData, oper
             });
             const selectedValue = findOptionByValue(value, parsedInstitutes);
 
-            console.log(value);
-            console.log(selectedValue);
-
             return (
                 <Dropdown
                     value={selectedValue}

@@ -1,27 +1,24 @@
-import React, { Component, createRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Network } from 'vis-network';
 import { classNames } from '../../util';
 import './Network.scss';
 
-class VisNetwork extends Component {
-    constructor(props) {
-        super(props);
-        this.network = {};
-        this.appRef = createRef();
-    }
+type VisNetworkProps = {
+    className?: string;
+    nodes: any[];
+    edges: any[];
+};
 
-    componentDidMount() {
-        this.renderNetwork();
-    }
+const VisNetwork: React.FC<VisNetworkProps> = ({ className, nodes, edges }) => {
+    const appRef = useRef<HTMLDivElement>(null);
+    const networkRef = useRef<Network | null>(null);
 
-    componentDidUpdate(prevProps) {
-        if (this.props.nodes !== prevProps.nodes || this.props.edges !== prevProps.edges) {
-            this.renderNetwork();
-        }
-    }
+    useEffect(() => {
+        renderNetwork();
+    }, [nodes, edges]); // Run effect when nodes or edges change
 
-    renderNetwork = () => {
-        const { nodes, edges } = this.props;
+    const renderNetwork = () => {
+        if (!appRef.current) return;
 
         const data = {
             nodes: nodes,
@@ -57,13 +54,10 @@ class VisNetwork extends Component {
             },
         };
 
-        this.network = new Network(this.appRef.current, data, options);
+        networkRef.current = new Network(appRef.current, data, options);
     };
 
-    render() {
-        const { className } = this.props;
-        return <div className={classNames('Network', className)} ref={this.appRef} />;
-    }
-}
+    return <div className={classNames('Network', className)} ref={appRef} />;
+};
 
 export default VisNetwork;

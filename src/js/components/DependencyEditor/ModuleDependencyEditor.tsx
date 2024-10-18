@@ -34,6 +34,7 @@ export default class ModuleDependencyEditor extends Component<ModuleDependencyEd
             fields: props.valueNodes.map((node: NodeType) => {
                 return {
                     name: node.id,
+                    value: node.id,
                     label: node.title,
                     dataType: (node.value !== null && 'dataType' in node.value) ? node.value.dataType : null,
                     valueType: node.value !== null ? node.value.value : null,

@@ -71,8 +71,6 @@ export default class MetadataVersionModal extends Component<MetadataVersionModal
 
         const title = currentVersion ? 'New metadata version' : 'Add metadata';
 
-        console.log(defaultMetadataModel);
-
         return (
             <Modal open={open} title={title} accessibleName={title} onClose={onClose}>
                 <Formik initialValues={{
