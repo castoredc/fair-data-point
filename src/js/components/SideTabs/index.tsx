@@ -34,7 +34,7 @@ const SideTabs: FC<SideTabsProps> = ({ tabs, hasButtons = false, hasTabs = false
     const changeTab = (index: number) => {
         setActiveTab(index);
 
-        if(url) {
+        if (url) {
             history.push(`${url}/${tabs[index].id}`);
         }
     };

@@ -30,15 +30,6 @@ export default class OrganizationForm extends Component<OrganizationFormProps, O
         };
     }
 
-    handleOrganizationSelect = organization => {
-        return {
-            source: organization.source,
-            id: organization.value,
-            name: organization.label,
-            city: organization.data.city,
-        };
-    };
-
     render() {
         const { countries, handleSubmit } = this.props;
         const { initialValues, validation } = this.state;

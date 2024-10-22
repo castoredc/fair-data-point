@@ -4,7 +4,7 @@ import { Dropdown } from '@castoredc/matter';
 import React, { FC } from 'react';
 
 interface CombinatorSelectorProps {
-    options: NameLabelPair[],
+    options: NameLabelPair[];
     value?: string;
     handleOnChange(value: any): void;
 }
@@ -18,16 +18,22 @@ const CombinatorSelector: FC<CombinatorSelectorProps> = ({ options, value, handl
 
     const selectedValue = findOptionByValue(value, parsedOptions);
 
-    return <Dropdown
-        value={value ? {
-            value: selectedValue.name,
-            label: selectedValue.label
-        }: null}
-        onChange={(e) => handleOnChange(e ? e.value : '')}
-        menuPosition="fixed"
-        width="minimum"
-        options={parsedOptions}
-    />
+    return (
+        <Dropdown
+            value={
+                value
+                    ? {
+                          value: selectedValue.name,
+                          label: selectedValue.label,
+                      }
+                    : null
+            }
+            onChange={e => handleOnChange(e ? e.value : '')}
+            menuPosition="fixed"
+            width="minimum"
+            options={parsedOptions}
+        />
+    );
 };
 
 export default CombinatorSelector;

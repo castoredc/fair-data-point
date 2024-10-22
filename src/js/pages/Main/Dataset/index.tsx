@@ -7,7 +7,6 @@ import { getBreadCrumbs } from '../../../utils/BreadcrumbUtils';
 import DistributionList from '../../../components/List/DistributionList';
 import AssociatedItemsBar from '../../../components/AssociatedItemsBar';
 import { AuthorizedRouteComponentProps } from 'components/Route';
-import useJsonLdRepresentation from '../../../hooks/useJsonLdRepresentation';
 import useGetDataset from '../../../hooks/useGetDataset';
 import MetadataSideBar from 'components/MetadataSideBar';
 import MetadataDescription from 'components/MetadataSideBar/MetadataDescription';
@@ -35,10 +34,7 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
                         </div>
 
                         <div className="SideCol">
-                            <MetadataSideBar
-                                metadata={dataset.metadata}
-                                title={title}
-                            />
+                            <MetadataSideBar metadata={dataset.metadata} title={title} />
                         </div>
 
                         <AssociatedItemsBar items={dataset.count} current="distribution" />
@@ -54,6 +50,6 @@ const Dataset: React.FC<DatasetProps> = ({ user, embedded, location, match }) =>
             </MainBody>
         </Layout>
     );
-}
+};
 
 export default Dataset;

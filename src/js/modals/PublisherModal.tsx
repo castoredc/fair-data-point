@@ -1,4 +1,4 @@
-import React, { Component, FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Choice, Modal } from '@castoredc/matter';
 import PersonForm from 'components/Form/Agent/PersonForm';
 import OrganizationForm from 'components/Form/Agent/OrganizationForm';
@@ -62,7 +62,7 @@ const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, co
                 ]}
                 name="type"
                 collapse={true}
-                onChange={(e) => setType('value' in e.target ? e.target.value as string : '')}
+                onChange={e => setType('value' in e.target ? (e.target.value as string) : '')}
             />
 
             {type === 'person' && <PersonForm handleSubmit={handleSubmit} />}
@@ -70,6 +70,6 @@ const PublisherModal: FC<PublisherModalProps> = ({ open, onClose, handleSave, co
             {type === 'organization' && <OrganizationForm countries={countries} handleSubmit={handleSubmit} />}
         </Modal>
     );
-}
+};
 
 export default PublisherModal;

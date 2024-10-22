@@ -246,12 +246,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                             ]}
                             exact
                             render={() => (
-                                <Permissions
-                                    contents={contents}
-                                    distribution={distribution}
-                                    getDistribution={this.getDistribution}
-                                    user={user}
-                                />
+                                <Permissions contents={contents} distribution={distribution} getDistribution={this.getDistribution} user={user} />
                             )}
                         />
 

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import List from './List';
 import { CommonListProps } from 'components/List/types';
 
-const CatalogList: React.FC<CommonListProps> = (props) => {
+const CatalogList: React.FC<CommonListProps> = props => {
     const { agent } = props;
 
     let apiEndpoint = '/api/catalog';
@@ -13,12 +13,7 @@ const CatalogList: React.FC<CommonListProps> = (props) => {
         noResultsText = 'This agent does not have any associated catalogs.';
     }
 
-    return <List
-        {...props}
-        apiEndpoint={apiEndpoint}
-        filterFunction={item => item.hasMetadata}
-        noResultsText={noResultsText}
-    />;
+    return <List {...props} apiEndpoint={apiEndpoint} filterFunction={item => item.hasMetadata} noResultsText={noResultsText} />;
 };
 
 export default CatalogList;

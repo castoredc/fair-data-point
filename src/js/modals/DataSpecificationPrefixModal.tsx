@@ -9,7 +9,7 @@ import Input from 'components/Input/Formik/Input';
 import { apiClient } from '../network';
 
 type DataSpecificationPrefixModalProps = {
-    type: string,
+    type: string;
     show: boolean;
     handleClose: () => void;
     data: any;

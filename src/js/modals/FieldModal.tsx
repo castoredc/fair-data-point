@@ -3,14 +3,11 @@ import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button, Modal } from '@castoredc/matter';
-import { DataType } from 'components/MetadataItem/EnumMappings';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
-import Choice from 'components/Input/Formik/Choice';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
-import { getType, mergeData } from '../util';
 import { apiClient } from '../network';
 import { Types } from 'types/Types';
 
@@ -21,7 +18,7 @@ type FieldModalProps = {
     onSaved: () => void;
     modelId: string;
     versionId: string;
-    types: Types,
+    types: Types;
     nodes: any;
     optionGroups: any;
     form: any;
@@ -66,7 +63,7 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
             newData.order = this.getOrderOptions().slice(-1)[0].value;
         }
 
-        const selectedNode = nodes.value.find((node) => node.id === newData.node);
+        const selectedNode = nodes.value.find(node => node.id === newData.node);
         newData.nodeData = selectedNode ? selectedNode.value : null;
 
         return newData;
@@ -75,10 +72,12 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
     getOrderOptions = () => {
         const { data, form } = this.props;
 
-        let order = [{
-            value: 1,
-            label: 'At the beginning',
-        }];
+        let order = [
+            {
+                value: 1,
+                label: 'At the beginning',
+            },
+        ];
 
         if (form === null || form.fields.length === 0) {
             return order;
@@ -134,30 +133,30 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
             <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
                 <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                        const isPlainValue = values.nodeData && (values.nodeData.value === 'plain');
-                        const isAnnotatedValue = values.nodeData && (values.nodeData.value === 'annotated');
+                        const isPlainValue = values.nodeData && values.nodeData.value === 'plain';
+                        const isAnnotatedValue = values.nodeData && values.nodeData.value === 'annotated';
                         const orderOptions = this.getOrderOptions();
 
-                        let fieldTypes: { value: string; label: string }[]  = [];
+                        let fieldTypes: { value: string; label: string }[] = [];
 
-                        if(isPlainValue) {
+                        if (isPlainValue) {
                             fieldTypes = types.fieldTypes.plain[values.nodeData.dataType];
-                        } else if(isAnnotatedValue) {
+                        } else if (isAnnotatedValue) {
                             fieldTypes = types.fieldTypes.annotated;
                         }
 
-                        const nodeItems = nodes.value.map((node) => {
+                        const nodeItems = nodes.value.map(node => {
                             return {
                                 value: node.id,
                                 label: node.title,
-                            }
-                        })
+                            };
+                        });
 
-                        const optionGroupItems = optionGroups.map((optionGroup) => {
+                        const optionGroupItems = optionGroups.map(optionGroup => {
                             return {
                                 value: optionGroup.id,
                                 label: optionGroup.title,
-                            }
+                            };
                         });
 
                         return (
@@ -175,21 +174,33 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
                                 </FormItem>
 
                                 <FormItem label="Node">
-                                    <Field component={Select} options={nodeItems} serverError={validation} name="node" onChange={(e) => {
-                                        setFieldValue('node', e.value);
-                                        setFieldValue('fieldType', '');
-                                        setFieldValue('optionGroup', '');
+                                    <Field
+                                        component={Select}
+                                        options={nodeItems}
+                                        serverError={validation}
+                                        name="node"
+                                        onChange={e => {
+                                            setFieldValue('node', e.value);
+                                            setFieldValue('fieldType', '');
+                                            setFieldValue('optionGroup', '');
 
-                                        const selectedNode = nodes.value.find((node) => node.id === e.value);
-                                        setFieldValue('nodeData', selectedNode.value);
-                                    }}/>
+                                            const selectedNode = nodes.value.find(node => node.id === e.value);
+                                            setFieldValue('nodeData', selectedNode.value);
+                                        }}
+                                    />
                                 </FormItem>
 
                                 <FormItem label="Field type">
-                                    <Field component={Select} options={fieldTypes} serverError={validation} name="fieldType" onChange={(e) => {
-                                        setFieldValue('fieldType', e.value);
-                                        setFieldValue('optionGroup', '');
-                                    }}/>
+                                    <Field
+                                        component={Select}
+                                        options={fieldTypes}
+                                        serverError={validation}
+                                        name="fieldType"
+                                        onChange={e => {
+                                            setFieldValue('fieldType', e.value);
+                                            setFieldValue('optionGroup', '');
+                                        }}
+                                    />
                                 </FormItem>
 
                                 {isAnnotatedValue && optionGroupFields.includes(values.fieldType) && (
@@ -199,11 +210,7 @@ export default class FieldModal extends Component<FieldModalProps, FieldModalSta
                                 )}
 
                                 <FormItem>
-                                    <Field
-                                        component={SingleChoice}
-                                        labelText="Required"
-                                        name="isRequired"
-                                    />
+                                    <Field component={SingleChoice} labelText="Required" name="isRequired" />
                                 </FormItem>
 
                                 <Button buttonType="primary" type="submit" disabled={isSubmitting}>
@@ -234,13 +241,13 @@ const NodeSchema = Yup.object().shape({
     description: Yup.string().nullable(),
     node: Yup.string().required('Please select a node'),
     fieldType: Yup.string().required('Please select a field type'),
-    optionGroup: Yup.string().nullable().when(['nodeData', 'fieldType'], {
-        is: (nodeData, fieldType) => (nodeData && nodeData.value === 'annotated') && optionGroupFields.includes(fieldType),
-        then: schema => schema.required('Please select an option group'),
-    }),
+    optionGroup: Yup.string()
+        .nullable()
+        .when(['nodeData', 'fieldType'], {
+            is: (nodeData, fieldType) => nodeData && nodeData.value === 'annotated' && optionGroupFields.includes(fieldType),
+            then: schema => schema.required('Please select an option group'),
+        }),
     isRequired: Yup.boolean().required('Please select if this field is required'),
 });
 
-const optionGroupFields = [
-    'checkboxes', 'radioButtons', 'dropdown'
-]
+const optionGroupFields = ['checkboxes', 'radioButtons', 'dropdown'];

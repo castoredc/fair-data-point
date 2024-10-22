@@ -1,16 +1,9 @@
 import { RenderedMetadataFormType } from 'types/RenderedMetadataFormType';
 import * as Yup from 'yup';
 
-const LocaleFieldTypes = [
-    'inputLocale',
-    'textareaLocale',
-];
+const LocaleFieldTypes = ['inputLocale', 'textareaLocale'];
 
-const ArrayFieldTypes = [
-    'ontologyConceptBrowser',
-    'checkboxes',
-    'agentSelector'
-];
+const ArrayFieldTypes = ['ontologyConceptBrowser', 'checkboxes', 'agentSelector'];
 
 const LocaleFieldTypeMappings = {
     required: {
@@ -20,14 +13,16 @@ const LocaleFieldTypeMappings = {
                     text: Yup.string().required('Please enter text'),
                     language: Yup.string().nullable().required('Please select a language'),
                 })
-            ).nullable(),
+            )
+            .nullable(),
         textareaLocale: Yup.array()
             .of(
                 Yup.object().shape({
                     text: Yup.string().required('Please enter text'),
                     language: Yup.string().nullable().required('Please select a language'),
                 })
-            ).nullable(),
+            )
+            .nullable(),
     },
     notRequired: {
         inputLocale: Yup.array()
@@ -36,16 +31,18 @@ const LocaleFieldTypeMappings = {
                     text: Yup.string(),
                     language: Yup.string().nullable(),
                 })
-            ).nullable(),
+            )
+            .nullable(),
         textareaLocale: Yup.array()
             .of(
                 Yup.object().shape({
                     text: Yup.string(),
                     language: Yup.string().nullable(),
                 })
-            ).nullable(),
-    }
-}
+            )
+            .nullable(),
+    },
+};
 
 const YupFieldTypeMappings = {
     input: Yup.string(),
@@ -79,34 +76,33 @@ const YupFieldTypeMappings = {
 };
 
 export const getFields = (forms: RenderedMetadataFormType[]) => {
-    return forms.map((form) => form.fields).flat();
-}
+    return forms.map(form => form.fields).flat();
+};
 
 export const getInitialValues = (forms: RenderedMetadataFormType[]) => {
     return Object.fromEntries(
-        getFields(forms).map((field) => {
+        getFields(forms).map(field => {
             return [field.id, field.value];
         })
     );
-}
+};
 
 export const getSchema = (forms: RenderedMetadataFormType[]) => {
     const fields = getFields(forms);
 
     const schema = Object.fromEntries(
-        fields.map((field) => {
+        fields.map(field => {
             let fieldSchema = YupFieldTypeMappings[field.fieldType];
 
-            if(LocaleFieldTypes.includes(field.fieldType)) {
-                if(field.isRequired) {
+            if (LocaleFieldTypes.includes(field.fieldType)) {
+                if (field.isRequired) {
                     fieldSchema = LocaleFieldTypeMappings.required[field.fieldType];
                 } else {
                     fieldSchema = LocaleFieldTypeMappings.notRequired[field.fieldType];
                 }
-            }
-            else if(ArrayFieldTypes.includes(field.fieldType) && field.isRequired) {
+            } else if (ArrayFieldTypes.includes(field.fieldType) && field.isRequired) {
                 fieldSchema = fieldSchema.min(1, 'Please add at least one item');
-            } else if(field.isRequired) {
+            } else if (field.isRequired) {
                 fieldSchema = fieldSchema.required('This is a required field');
             }
 
@@ -115,4 +111,4 @@ export const getSchema = (forms: RenderedMetadataFormType[]) => {
     );
 
     return Yup.object().shape(schema);
-}
+};

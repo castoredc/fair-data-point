@@ -5,8 +5,12 @@ export type UserType = {
     details: PersonType | null;
     isAdmin: boolean;
     linkedAccounts: LinkedAccountsType;
-    wizards: string;
+    wizards: WizardsType;
     suggestions: any;
+};
+
+export type WizardsType = {
+    [key: string]: boolean;
 };
 
 export type LinkedAccountsType = {

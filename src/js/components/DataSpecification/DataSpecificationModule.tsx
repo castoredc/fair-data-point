@@ -20,11 +20,11 @@ type DataSpecificationModuleProps = {
 };
 
 const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
-                                                                             groupedTriples,
-                                                                             openModuleModal,
-                                                                             openTripleModal,
-                                                                             openRemoveTripleModal,
-                                                                         }) => {
+    groupedTriples,
+    openModuleModal,
+    openTripleModal,
+    openRemoveTripleModal,
+}) => {
     return (
         <div className="DataSpecificationModule">
             <div className="ButtonBar">
@@ -60,7 +60,7 @@ const DataSpecificationModule: React.FC<DataSpecificationModuleProps> = ({
                     <div className="NoResults">This group does not contain triples.</div>
                 ) : (
                     <div className="DataSpecificationTableBody TableBody">
-                        {groupedTriples.map((element) => (
+                        {groupedTriples.map(element => (
                             <TripleGroup
                                 key={element.id}
                                 id={element.id}

@@ -125,7 +125,10 @@ export default class DepartmentSelect extends Component<DepartmentSelectProps, D
                             options={options}
                             menuPosition="fixed"
                             isDisabled={disabled}
-                            onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, false>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
+                            onChange={(
+                                value: ReactSelectTypes.OnChangeValue<DefaultOptionType, false>,
+                                action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                            ) => {
                                 const department = value && options.find((option: DefaultOptionType) => value.value === option.value);
                                 form.setFieldValue(field.name, {
                                     ...department.data,

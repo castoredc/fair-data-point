@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Fdp } from 'types/Resources';
 import { CountryType } from 'types/CountryType';
 
 const useGetCountry = (code: string) => {
@@ -25,6 +24,6 @@ const useGetCountry = (code: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, country };
-}
+};
 
-export default useGetCountry
+export default useGetCountry;

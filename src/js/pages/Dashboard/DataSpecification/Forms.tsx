@@ -12,7 +12,6 @@ import { getType } from '../../../util';
 import MetadataFormModal from 'modals/MetadataFormModal';
 import DataSpecificationForm from 'components/DataSpecification/DataSpecificationForm';
 import FieldModal from 'modals/FieldModal';
-import { ResourceType } from 'components/MetadataItem/EnumMappings';
 import { Types } from 'types/Types';
 
 interface FormsProps extends AuthorizedRouteComponentProps {
@@ -22,7 +21,7 @@ interface FormsProps extends AuthorizedRouteComponentProps {
     dataSpecification: any;
     version: any;
     type: string;
-    types: Types,
+    types: Types;
     optionGroups: any;
 }
 
@@ -52,10 +51,12 @@ export default class Forms extends Component<FormsProps, FormsState> {
         const { forms, type } = this.props;
         const { currentForm } = this.state;
 
-        let order = [{
-            value: 1,
-            label: 'At the beginning',
-        }];
+        let order = [
+            {
+                value: 1,
+                label: 'At the beginning',
+            },
+        ];
 
         if (forms.length === 0) {
             return order;
@@ -169,7 +170,7 @@ export default class Forms extends Component<FormsProps, FormsState> {
             return null;
         }
 
-        const initialTab = match.params.formId ? forms.findIndex((form) => form.id === match.params.formId) : 0;
+        const initialTab = match.params.formId ? forms.findIndex(form => form.id === match.params.formId) : 0;
 
         const orderOptions = this.getOrderOptions();
 

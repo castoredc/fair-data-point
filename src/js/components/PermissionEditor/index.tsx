@@ -15,7 +15,7 @@ interface PermissionEditorProps {
     getObject: () => void;
     object: any;
     type: string;
-    permissions: PermissionOptionType[],
+    permissions: PermissionOptionType[];
 }
 
 interface PermissionEditorState {
@@ -180,17 +180,17 @@ export default class PermissionEditor extends Component<PermissionEditorProps, P
                 name: (
                     <CellText>
                         <Stack wrap={false} withoutExternalMargins>
-                            { /* @ts-ignore */ }
+                            {/* @ts-ignore */}
                             <Avatar name={permission.user.name} size="34px" round />
-                            <span style={{lineHeight: '34px'}}>{permission.user.name}</span>
+                            <span style={{ lineHeight: '34px' }}>{permission.user.name}</span>
                         </Stack>
                     </CellText>
                 ),
-                type: <CellText>
-                    <span style={{lineHeight: '34px'}}>
-                        {Permissions[permission.type].labelText}
-                    </span>
-                </CellText>,
+                type: (
+                    <CellText>
+                        <span style={{ lineHeight: '34px' }}>{Permissions[permission.type].labelText}</span>
+                    </CellText>
+                ),
                 menu: (
                     <ActionsCell
                         items={[

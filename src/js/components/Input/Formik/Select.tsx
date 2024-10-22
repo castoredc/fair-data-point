@@ -3,11 +3,10 @@ import React, { FC } from 'react';
 import { DefaultOptionType, Dropdown, Icon, ReactSelectTypes } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
-import { components } from 'react-select/dist/react-select.esm';
 
 type IsMulti = boolean;
 
-interface SelectProps extends FieldProps, Omit<ReactSelectTypes.Props, "form"> {
+interface SelectProps extends FieldProps, Omit<ReactSelectTypes.Props, 'form'> {
     readOnly?: boolean;
     autoFocus?: boolean;
     serverError?: any;
@@ -20,7 +19,9 @@ interface AsyncSelectProps extends SelectProps {
 type MultiValue<DefaultOptionType> = readonly DefaultOptionType[];
 type SingleValue<DefaultOptionType> = DefaultOptionType;
 
-export function isMultipleOption<DefaultOptionType>(arg: MultiValue<DefaultOptionType> | SingleValue<DefaultOptionType>): arg is MultiValue<DefaultOptionType> {
+export function isMultipleOption<DefaultOptionType>(
+    arg: MultiValue<DefaultOptionType> | SingleValue<DefaultOptionType>
+): arg is MultiValue<DefaultOptionType> {
     return Array.isArray(arg);
 }
 
@@ -33,7 +34,10 @@ const Select: FC<SelectProps> = ({ field, form, meta, readOnly, onChange, autoFo
         <>
             <Dropdown
                 value={options && options.find((option: DefaultOptionType) => field.value === option.value)}
-                onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
+                onChange={(
+                    value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>,
+                    action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                ) => {
                     const returnValue = value && (isMultipleOption(value) ? value.map(rawValue => rawValue.value) : value.value);
 
                     if (onChange) {
@@ -79,7 +83,10 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
                 components={{ DropdownIndicator: AsyncDropdownIndicator }}
                 placeholder=""
                 value={field.value}
-                onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
+                onChange={(
+                    value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>,
+                    action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                ) => {
                     if (onChange) {
                         onChange(value, action);
                     }
@@ -99,9 +106,7 @@ export const AsyncSelect: FC<AsyncSelectProps> = ({
 export const AsyncDropdownIndicator = props => {
     return (
         <div>
-            <Icon
-                type="search"
-            />
+            <Icon type="search" />
         </div>
     );
 };

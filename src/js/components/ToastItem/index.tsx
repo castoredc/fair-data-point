@@ -6,14 +6,11 @@ import './ToastItem.scss';
 const ToastItem: FC<ToastMessageProps> = ({ ...props }) => {
     const [hide, setHide] = useState(false);
 
-    if(hide) {
+    if (hide) {
         return null;
     }
 
-    return <ToastMessage
-        {...props}
-        onClose={() => setHide(true)}
-    />;
+    return <ToastMessage {...props} onClose={() => setHide(true)} />;
 };
 
 export default ToastItem;

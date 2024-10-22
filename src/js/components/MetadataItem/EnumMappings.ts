@@ -55,7 +55,7 @@ export const MetadataFieldType = {
     languagePicker: 'Language picker',
     licensePicker: 'License picker',
     countryPicker: 'Country picker',
-    agentSelector: 'Agent selector'
+    agentSelector: 'Agent selector',
 };
 
 export const ResourceType = {
@@ -98,4 +98,3 @@ export const MetadataDisplayType = {
     country: 'Country',
     agents: 'Agents',
 };
-

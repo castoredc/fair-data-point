@@ -15,10 +15,10 @@ import ConfirmModal from 'modals/ConfirmModal';
 interface EDCServersProps extends AuthorizedRouteComponentProps {}
 
 interface EDCServersState {
-    edcServers: any,
-    showModal: any,
-    selectedServer: any,
-    isLoading: boolean,
+    edcServers: any;
+    showModal: any;
+    selectedServer: any;
+    isLoading: boolean;
 }
 
 export default class EDCServers extends Component<EDCServersProps, EDCServersState> {
@@ -37,7 +37,7 @@ export default class EDCServers extends Component<EDCServersProps, EDCServersSta
         };
     }
 
-    openModal = (type) => {
+    openModal = type => {
         const { showModal } = this.state;
 
         this.setState({
@@ -82,7 +82,7 @@ export default class EDCServers extends Component<EDCServersProps, EDCServersSta
                     toast.error(<ToastItem type="error" title="An error occurred while loading the EDC Servers information" />);
                 }
             });
-    }
+    };
 
     handleDelete = () => {
         const { selectedServer } = this.state;
@@ -112,7 +112,7 @@ export default class EDCServers extends Component<EDCServersProps, EDCServersSta
     openServerModal = (type, existingServer) => {
         this.openModal(type);
         this.setState({
-            selectedServer: existingServer
+            selectedServer: existingServer,
         });
     };
 

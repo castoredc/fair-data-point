@@ -7,8 +7,8 @@ import MetadataItem from 'components/MetadataItem';
 import './MetadataSideBar.scss';
 
 interface MetadataSideBarProps {
-    metadata: Metadata,
-    title: string,
+    metadata: Metadata;
+    title: string;
 }
 
 const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) => {
@@ -16,8 +16,8 @@ const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) =>
 
     return (
         <div className="MetadataSideBar">
-            {metadata.contents.sidebar.map((item) => {
-                return <MetadataItem title={item.title} type={item.type} dataType={item.dataType} value={item.value} />
+            {metadata.contents.sidebar.map(item => {
+                return <MetadataItem title={item.title} type={item.type} dataType={item.dataType} value={item.value} />;
             })}
 
             <Button icon="openNewWindow" buttonType="bare" onClick={() => setOpen(true)} className="ViewMetadata">
@@ -25,16 +25,17 @@ const MetadataSideBar: React.FC<MetadataSideBarProps> = ({ metadata, title }) =>
             </Button>
 
             <Modal accessibleName="Test" open={isOpen} title={`Metadata for ${title}`} onClose={() => setOpen(false)}>
-
-                {metadata.contents.modal.map((item) => {
-                    return <MetadataItem
-                        key={`modal-${item.order}`}
-                        title={item.title}
-                        type={item.type}
-                        dataType={item.dataType}
-                        value={item.value}
-                        table
-                    />;
+                {metadata.contents.modal.map(item => {
+                    return (
+                        <MetadataItem
+                            key={`modal-${item.order}`}
+                            title={item.title}
+                            type={item.type}
+                            dataType={item.dataType}
+                            value={item.value}
+                            table
+                        />
+                    );
                 })}
 
                 {metadata.contents.modal.length > 0 && <Separator spacing="comfortable" />}

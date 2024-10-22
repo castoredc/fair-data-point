@@ -19,8 +19,10 @@ export default class AddDistribution extends Component<AddDistributionProps> {
             ? `/dashboard/studies/${match.params.study}/datasets/${match.params.dataset}`
             : `/dashboard/catalogs/${match.params.catalog}/datasets/${match.params.dataset}`;
 
-        return <PageBody>
-            <DistributionForm dataset={match.params.dataset} mainUrl={mainUrl} history={history} />
-        </PageBody>;
+        return (
+            <PageBody>
+                <DistributionForm dataset={match.params.dataset} mainUrl={mainUrl} history={history} />
+            </PageBody>
+        );
     }
 }

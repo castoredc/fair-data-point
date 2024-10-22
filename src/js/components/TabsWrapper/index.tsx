@@ -6,11 +6,7 @@ import './TabsWrapper.scss';
 const TabsWrapper: FC<TabsProps> = ({ tabs, selected, onChange }) => {
     return (
         <div className="TabsWrapper">
-            <Tabs
-                tabs={tabs}
-                selected={selected}
-                onChange={onChange}
-            />
+            <Tabs tabs={tabs} selected={selected} onChange={onChange} />
         </div>
     );
 };

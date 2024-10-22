@@ -1,16 +1,5 @@
 import React, { Component } from 'react';
-import {
-    ActionsCell,
-    Button,
-    CellText,
-    DataGrid, FormLabel,
-    Icon,
-    IconCell,
-    LoadingOverlay, Separator, Space,
-    Stack,
-    ToastMessage,
-} from '@castoredc/matter';
-import NodeModal from 'modals/NodeModal';
+import { ActionsCell, CellText, LoadingOverlay, Separator, ToastMessage } from '@castoredc/matter';
 import ConfirmModal from 'modals/ConfirmModal';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
@@ -18,8 +7,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import PageBody from 'components/Layout/Dashboard/PageBody';
 import { apiClient } from '../../../network';
 import PageTabs from 'components/PageTabs';
-import { getType, ucfirst } from '../../../util';
-import { MetadataDisplayType, MetadataFieldType, ResourceType } from 'components/MetadataItem/EnumMappings';
+import { MetadataDisplayType, ResourceType } from 'components/MetadataItem/EnumMappings';
 import MetadataDisplaySetting from 'components/Form/DataSpecification/MetadataDisplaySetting';
 import { Types } from 'types/Types';
 import DisplaySettingModal from 'modals/DisplaySettingModal';
@@ -31,7 +19,7 @@ interface DisplayProps extends AuthorizedRouteComponentProps {
     getDisplaySettings: () => void;
     dataSpecification: any;
     version: any;
-    types: Types,
+    types: Types;
 }
 
 interface DisplayState {
@@ -89,15 +77,9 @@ export default class Display extends Component<DisplayProps, DisplayState> {
         apiClient
             .delete('/api/metadata-model/' + dataSpecification.id + '/v/' + version.value + '/display' + `/${modalData.id}`)
             .then(() => {
-                toast.success(
-                    <ToastMessage
-                        type="success"
-                        title={`The item was successfully removed`}
-                    />,
-                    {
-                        position: 'top-right',
-                    },
-                );
+                toast.success(<ToastMessage type="success" title={`The item was successfully removed`} />, {
+                    position: 'top-right',
+                });
 
                 this.onSaved('remove');
             })
@@ -122,12 +104,12 @@ export default class Display extends Component<DisplayProps, DisplayState> {
 
         let rows = {};
 
-        Object.keys(displaySettings).map((resourceType) => {
+        Object.keys(displaySettings).map(resourceType => {
             rows[resourceType] = {};
 
-            Object.keys(displaySettings[resourceType]).map((position) => {
-                rows[resourceType][position] = displaySettings[resourceType][position].map((item) => {
-                    const node = nodes.value.find((node) => node.id === item.node);
+            Object.keys(displaySettings[resourceType]).map(position => {
+                rows[resourceType][position] = displaySettings[resourceType][position].map(item => {
+                    const node = nodes.value.find(node => node.id === item.node);
 
                     return {
                         title: <CellText>{item.title}</CellText>,
@@ -138,29 +120,37 @@ export default class Display extends Component<DisplayProps, DisplayState> {
                                 items={[
                                     {
                                         destination: () => {
-                                            this.openModal('add', {
-                                                id: item.id,
-                                                title: item.title,
-                                                node: item.node,
-                                                order: item.order,
-                                                displayType: item.type,
-                                                position: item.position,
-                                                resourceType: item.resourceType,
-                                            }, position);
+                                            this.openModal(
+                                                'add',
+                                                {
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    node: item.node,
+                                                    order: item.order,
+                                                    displayType: item.type,
+                                                    position: item.position,
+                                                    resourceType: item.resourceType,
+                                                },
+                                                position
+                                            );
                                         },
                                         label: 'Edit item',
                                     },
                                     {
                                         destination: () => {
-                                            this.openModal('remove', {
-                                                id: item.id,
-                                                title: item.title,
-                                                node: item.node,
-                                                order: item.order,
-                                                displayType: item.type,
-                                                position: item.position,
-                                                resourceType: item.resourceType,
-                                            }, position);
+                                            this.openModal(
+                                                'remove',
+                                                {
+                                                    id: item.id,
+                                                    title: item.title,
+                                                    node: item.node,
+                                                    order: item.order,
+                                                    displayType: item.type,
+                                                    position: item.position,
+                                                    resourceType: item.resourceType,
+                                                },
+                                                position
+                                            );
                                         },
                                         label: 'Delete item',
                                     },
@@ -170,11 +160,11 @@ export default class Display extends Component<DisplayProps, DisplayState> {
                     };
                 });
             });
-        })
+        });
 
         let tabs = {};
 
-        Object.keys(displaySettings).forEach((resourceType) => {
+        Object.keys(displaySettings).forEach(resourceType => {
             tabs[resourceType] = {
                 title: ResourceType[resourceType],
                 content: (

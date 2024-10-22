@@ -6,11 +6,7 @@ type DashboardTabProps = {
 };
 
 const DashboardTab: FC<DashboardTabProps> = ({ children }) => {
-    return (
-        <div className="DashboardTab">
-            {children}
-        </div>
-    );
+    return <div className="DashboardTab">{children}</div>;
 };
 
 export default DashboardTab;

@@ -17,8 +17,8 @@ const Routes: FC<RoutesProps> = ({ user, embedded }) => {
     return (
         <Switch>
             <Redirect exact from="/" to="/fdp" />
-            <Route path="/login" exact render={props => <Login  {...props} />} />
-            <Route path="/login/:catalogSlug" exact render={props => <Login  {...props} />} />
+            <Route path="/login" exact render={props => <Login {...props} />} />
+            <Route path="/login/:catalogSlug" exact render={props => <Login {...props} />} />
             /* FAIR Data Point */
             <Route path="/fdp" render={props => <Main {...props} embedded={embedded} user={user} />} />
             <Route path="/study" render={props => <Main {...props} embedded={embedded} user={user} />} />

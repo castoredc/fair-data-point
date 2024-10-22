@@ -1,15 +1,5 @@
 import React, { Component } from 'react';
-import {
-    ActionsCell,
-    Button,
-    CellText,
-    DataGrid,
-    Icon,
-    IconCell,
-    LoadingOverlay,
-    Stack,
-    ToastMessage,
-} from '@castoredc/matter';
+import { ActionsCell, Button, CellText, DataGrid, Icon, IconCell, LoadingOverlay, Stack, ToastMessage } from '@castoredc/matter';
 import NodeModal from 'modals/NodeModal';
 import ConfirmModal from 'modals/ConfirmModal';
 import { toast } from 'react-toastify';
@@ -27,7 +17,7 @@ interface NodesProps extends AuthorizedRouteComponentProps {
     getNodes: () => void;
     dataSpecification: any;
     version: any;
-    types: Types,
+    types: Types;
     optionGroups: any;
     prefixes: any;
 }
@@ -87,15 +77,9 @@ export default class Nodes extends Component<NodesProps, NodesState> {
         apiClient
             .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version.value + '/node/' + modalData.type + `/${modalData.id}`)
             .then(() => {
-                toast.success(
-                    <ToastMessage
-                        type="success"
-                        title={`The ${modalData.title} node was successfully removed`}
-                    />,
-                    {
-                        position: 'top-right',
-                    },
-                );
+                toast.success(<ToastMessage type="success" title={`The ${modalData.title} node was successfully removed`} />, {
+                    position: 'top-right',
+                });
 
                 this.onSaved('remove');
             })
@@ -199,14 +183,16 @@ export default class Nodes extends Component<NodesProps, NodesState> {
         const valueNodeRows = nodes.value.map(item => {
             const dataType = item.value.dataType && types.dataTypes.find(dataType => dataType.value === item.value.dataType);
 
-            let fieldType: {
-                value: string,
-                label: string
-            } | undefined = undefined;
+            let fieldType:
+                | {
+                      value: string;
+                      label: string;
+                  }
+                | undefined = undefined;
 
-            if(item.value.fieldType && item.value.value === 'plain') {
+            if (item.value.fieldType && item.value.value === 'plain') {
                 fieldType = types.fieldTypes.plain[item.value.dataType].find(fieldType => fieldType.value === item.value.fieldType);
-            } else if(item.value.fieldType && item.value.value === 'annotated') {
+            } else if (item.value.fieldType && item.value.value === 'annotated') {
                 fieldType = types.fieldTypes.annotated.find(fieldType => fieldType.value === item.value.fieldType);
             }
 
@@ -214,13 +200,17 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                 title: <CellText>{item.title}</CellText>,
                 type: <CellText>{ucfirst(item.value.value)}</CellText>,
                 dataType: <CellText>{dataType ? dataType.label : ''}</CellText>,
-                ...(type === 'data-model' ? {
-                    repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined
-                }: {}),
-                ...(type === 'metadata-model' ? {
-                    fieldType: <CellText>{fieldType ? fieldType.label : ''}</CellText>,
-                    optionGroup: <CellText>{item.value.optionGroup ? item.value.optionGroup.title : ''}</CellText>,
-                }: {}),
+                ...(type === 'data-model'
+                    ? {
+                          repeated: item.repeated ? <IconCell icon={{ type: 'tickSmall' }} /> : undefined,
+                      }
+                    : {}),
+                ...(type === 'metadata-model'
+                    ? {
+                          fieldType: <CellText>{fieldType ? fieldType.label : ''}</CellText>,
+                          optionGroup: <CellText>{item.value.optionGroup ? item.value.optionGroup.title : ''}</CellText>,
+                      }
+                    : {}),
                 menu: (
                     <ActionsCell
                         items={[
@@ -419,13 +409,17 @@ export default class Nodes extends Component<NodesProps, NodesState> {
                                             Header: 'Data type',
                                             accessor: 'dataType',
                                         },
-                                        ...(type === 'data-model' ? [{
-                                            Header: <Icon description="Repeated" type="tickSmall" />,
-                                            accessor: 'repeated',
-                                            disableResizing: true,
-                                            isInteractive: true,
-                                            width: 32,
-                                        }] : []),
+                                        ...(type === 'data-model'
+                                            ? [
+                                                  {
+                                                      Header: <Icon description="Repeated" type="tickSmall" />,
+                                                      accessor: 'repeated',
+                                                      disableResizing: true,
+                                                      isInteractive: true,
+                                                      width: 32,
+                                                  },
+                                              ]
+                                            : []),
                                         {
                                             accessor: 'menu',
                                             disableGroupBy: true,

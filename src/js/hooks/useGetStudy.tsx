@@ -28,6 +28,6 @@ const useGetStudy = (slug: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, study };
-}
+};
 
-export default useGetStudy
+export default useGetStudy;

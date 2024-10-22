@@ -19,4 +19,4 @@ export const Permissions = {
     edit: Edit,
     manage: Manage,
     access_data: AccessData,
-}
+};

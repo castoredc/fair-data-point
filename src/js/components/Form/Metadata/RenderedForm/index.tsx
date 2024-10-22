@@ -17,19 +17,23 @@ type RenderedFormProps = {
 };
 
 const RenderedForm: FC<RenderedFormProps> = ({ form, validation, optionGroups, languages, licenses, countries }) => {
-    return <Card title={form.title}>
-        {form.fields.map((field) => {
-            return <RenderedFormField
-                key={field.id}
-                field={field}
-                validation={validation}
-                optionGroups={optionGroups}
-                languages={languages}
-                licenses={licenses}
-                countries={countries}
-            />
-        })}
-    </Card>
+    return (
+        <Card title={form.title}>
+            {form.fields.map(field => {
+                return (
+                    <RenderedFormField
+                        key={field.id}
+                        field={field}
+                        validation={validation}
+                        optionGroups={optionGroups}
+                        languages={languages}
+                        licenses={licenses}
+                        countries={countries}
+                    />
+                );
+            })}
+        </Card>
+    );
 };
 
 export default RenderedForm;

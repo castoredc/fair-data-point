@@ -4,7 +4,7 @@ import { formatQuery } from 'react-querybuilder';
 import { Banner, Modal } from '@castoredc/matter';
 import { PrefixType } from 'types/PrefixType';
 import { NodeType } from 'types/NodeType';
-import { DependenciesType, DependencyGroupType } from 'types/ModuleType';
+import { DependencyGroupType } from 'types/ModuleType';
 import { RuleGroupType } from 'react-querybuilder/types/types';
 
 type DependencyModalProps = {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../network';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
-import { Fdp } from 'types/Resources';
 import { LicenseType } from 'types/LicenseType';
 
 const useGetLicense = (slug: string) => {
@@ -25,6 +24,6 @@ const useGetLicense = (slug: string) => {
     }, []); // Only run once on mount
 
     return { isLoading, license };
-}
+};
 
-export default useGetLicense
+export default useGetLicense;

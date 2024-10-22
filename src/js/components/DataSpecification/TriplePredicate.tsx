@@ -2,7 +2,7 @@ import React from 'react';
 import TripleObject from './TripleObject';
 import { TriplePredicateProps } from './types';
 
-const TriplePredicate: React.FC<TriplePredicateProps> = (props) => {
+const TriplePredicate: React.FC<TriplePredicateProps> = props => {
     const { id, value, objects, data, openTripleModal, openRemoveTripleModal } = props;
 
     const newData = {
@@ -13,9 +13,7 @@ const TriplePredicate: React.FC<TriplePredicateProps> = (props) => {
     return (
         <div className="TriplePredicateObject">
             <div className="DataSpecificationPredicate">
-                <div>
-                    {value.prefixedValue ? value.prefixedValue : value.value}
-                </div>
+                <div>{value.prefixedValue ? value.prefixedValue : value.value}</div>
             </div>
 
             <div className="DataSpecificationObjects">

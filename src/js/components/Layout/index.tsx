@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { classNames } from '../../util';
 
 interface LayoutProps extends RouteComponentProps {
@@ -14,11 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className, embedded, fullWidt
         window.scrollTo(0, 0);
     }, [location.pathname]); // Run this effect whenever the pathname changes
 
-    return (
-        <div className={classNames('MainApp', className, embedded && 'Embedded', fullWidth && 'FullWidthApp')}>
-            {children}
-        </div>
-    );
+    return <div className={classNames('MainApp', className, embedded && 'Embedded', fullWidth && 'FullWidthApp')}>{children}</div>;
 };
 
 export default withRouter(Layout);

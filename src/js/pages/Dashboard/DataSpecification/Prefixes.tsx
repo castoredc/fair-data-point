@@ -75,15 +75,9 @@ export default class Prefixes extends Component<PrefixesProps, PrefixesState> {
         apiClient
             .delete('/api/' + type + '/' + dataSpecification.id + '/v/' + version + '/prefix/' + prefixModalData.id)
             .then(() => {
-                toast.success(
-                    <ToastMessage
-                        type="success"
-                        title={`The prefix was successfully removed`}
-                    />,
-                    {
-                        position: 'top-right',
-                    }
-                );
+                toast.success(<ToastMessage type="success" title={`The prefix was successfully removed`} />, {
+                    position: 'top-right',
+                });
 
                 this.onSaved('remove');
             })

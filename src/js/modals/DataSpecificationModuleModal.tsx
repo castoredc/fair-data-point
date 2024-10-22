@@ -14,7 +14,7 @@ import { NodeType } from 'types/NodeType';
 import { PrefixType } from 'types/PrefixType';
 import * as Yup from 'yup';
 import { apiClient } from '../network';
-import { DataType, ResourceType } from 'components/MetadataItem/EnumMappings';
+import { ResourceType } from 'components/MetadataItem/EnumMappings';
 
 type DataModelModuleModalProps = {
     show: boolean;
@@ -160,21 +160,33 @@ export default class DataSpecificationModuleModal extends Component<DataModelMod
                                     <Field component={Select} options={orderOptions} name="order" serverError={validation} menuPosition="fixed" />
                                 </FormItem>
 
-                                <FormItem label="Type">
-                                    <Field component={Select} options={resourceTypes} name="resourceType" serverError={validation} menuPosition="fixed" />
-                                </FormItem>
+                                {type === 'metadata-model' && (
+                                    <>
+                                        <FormItem label="Type">
+                                            <Field
+                                                component={Select}
+                                                options={resourceTypes}
+                                                name="resourceType"
+                                                serverError={validation}
+                                                menuPosition="fixed"
+                                            />
+                                        </FormItem>
+                                    </>
+                                )}
 
-                                {type === 'data-model' && <>
-                                    <FormItem>
-                                        <Field
-                                            component={SingleChoice}
-                                            labelText="Repeated"
-                                            name="repeated"
-                                            serverError={validation}
-                                            details="This group should be repeated for every instance of a specific survey or report"
-                                        />
-                                    </FormItem>
-                                </>}
+                                {type === 'data-model' && (
+                                    <>
+                                        <FormItem>
+                                            <Field
+                                                component={SingleChoice}
+                                                labelText="Repeated"
+                                                name="repeated"
+                                                serverError={validation}
+                                                details="This group should be repeated for every instance of a specific survey or report"
+                                            />
+                                        </FormItem>
+                                    </>
+                                )}
 
                                 <FormItem>
                                     {!showDependencies ? (

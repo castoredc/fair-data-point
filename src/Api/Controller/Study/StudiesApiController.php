@@ -6,13 +6,11 @@ namespace App\Api\Controller\Study;
 use App\Api\Controller\ApiController;
 use App\Api\Request\Metadata\StudyMetadataFilterApiRequest;
 use App\Api\Request\Study\StudyApiRequest;
-use App\Api\Resource\Study\StudiesFilterApiResource;
 use App\Api\Resource\Study\StudyApiResource;
 use App\Command\Catalog\GetCatalogBySlugCommand;
 use App\Command\Study\AddStudyToCatalogCommand;
 use App\Command\Study\CreateStudyCommand;
 use App\Command\Study\GetPaginatedStudiesCommand;
-use App\Command\Study\GetStudiesCommand;
 use App\Entity\FAIRData\Catalog;
 use App\Entity\Study;
 use App\Exception\ApiRequestParseError;
@@ -20,10 +18,8 @@ use App\Exception\CatalogNotFound;
 use App\Exception\NoAccessPermission;
 use App\Exception\NoAccessPermissionToStudy;
 use App\Exception\StudyAlreadyExists;
-use App\Exception\UserNotACastorUser;
 use App\Security\Authorization\Voter\CatalogVoter;
 use App\Security\Authorization\Voter\StudyVoter;
-use App\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,10 +45,6 @@ class StudiesApiController extends ApiController
                     $parsed->getPage(),
                     null,
                     null,
-                    $parsed->getSearch(),
-                    $parsed->getStudyType(),
-                    $parsed->getMethodType(),
-                    $parsed->getCountry(),
                     $parsed->getHideCatalogs()
                 )
             );
@@ -73,21 +65,6 @@ class StudiesApiController extends ApiController
             $this->logger->critical('An error occurred while getting the studies', ['exception' => $e]);
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route(path: '/filters', name: 'api_studies_filters')]
-    public function studiesFilters(MessageBusInterface $bus): Response
-    {
-        $user = $this->getUser();
-        assert($user instanceof User || $user === null);
-
-        try {
-            $studies = $this->getStudies($user, $bus);
-
-            return new JsonResponse((new StudiesFilterApiResource($studies))->toArray());
-        } catch (UserNotACastorUser $e) {
-            return new JsonResponse($e->toArray(), Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -160,24 +137,5 @@ class StudiesApiController extends ApiController
 
             return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    /**
-     * @return Study[]
-     *
-     * @throws UserNotACastorUser
-     */
-    private function getStudies(User $user, MessageBusInterface $bus): array
-    {
-        if (! $user->hasCastorUser()) {
-            throw new UserNotACastorUser();
-        }
-
-        $envelope = $bus->dispatch(new GetStudiesCommand());
-
-        $handledStamp = $envelope->last(HandledStamp::class);
-        assert($handledStamp instanceof HandledStamp);
-
-        return $handledStamp->getResult();
     }
 }

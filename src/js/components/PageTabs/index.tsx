@@ -6,11 +6,7 @@ import './PageTabs.scss';
 const PageTabs: FC<TabsProps> = ({ tabs, selected, onChange }) => {
     return (
         <div className="PageTabs">
-            <Tabs
-                tabs={tabs}
-                selected={selected}
-                onChange={onChange}
-            />
+            <Tabs tabs={tabs} selected={selected} onChange={onChange} />
         </div>
     );
 };

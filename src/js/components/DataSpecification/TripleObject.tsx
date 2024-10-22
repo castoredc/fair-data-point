@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import { ActionMenu, Icon } from '@castoredc/matter';
+import { ActionMenu } from '@castoredc/matter';
 import { TripleObjectProps } from './types';
 import { Node } from './Node';
 
-const TripleObject: React.FC<TripleObjectProps> = (props) => {
+const TripleObject: React.FC<TripleObjectProps> = props => {
     const { tripleId, id, type, title, repeated, value, openTripleModal, data, openRemoveTripleModal } = props;
     const ref = useRef<HTMLDivElement>(null);
 

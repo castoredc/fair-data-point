@@ -1,5 +1,5 @@
 import React from 'react';
-import {default as SplitWrapper} from 'react-split';
+import { default as SplitWrapper } from 'react-split';
 import './Split.scss';
 
 interface SplitProps {

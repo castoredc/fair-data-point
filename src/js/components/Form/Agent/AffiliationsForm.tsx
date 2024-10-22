@@ -108,7 +108,7 @@ export default class AffiliationsForm extends Component<AffiliationsFormProps, A
                             <Form>
                                 {isLoading && <LoadingOverlay accessibleLabel="Submitting affiliations" />}
                                 <div className="FormContent">
-                                    { /* @ts-ignore */ }
+                                    {/* @ts-ignore */}
                                     <FieldArray
                                         name="affiliations"
                                         render={arrayHelpers => (

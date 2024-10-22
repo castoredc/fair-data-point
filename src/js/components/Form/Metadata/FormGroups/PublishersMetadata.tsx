@@ -147,9 +147,7 @@ export default class PublishersMetadata extends Component<PublishersMetadataProp
                 </ConfirmModal>
 
                 <Stack distribution="space-between">
-                    <div className="FormItemDetails">
-                        Publishers are the entities (person or organization) responsible for the {type}.
-                    </div>
+                    <div className="FormItemDetails">Publishers are the entities (person or organization) responsible for the {type}.</div>
                     <Button
                         icon="add"
                         onClick={() => {

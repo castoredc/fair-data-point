@@ -12,8 +12,8 @@ export default class AddDataModel extends Component<AddDataModelProps> {
             <SelectPage
                 title="Add a data model"
                 backButton={{
-                    label: "Back to data models",
-                    to: "/dashboard/data-models"
+                    label: 'Back to data models',
+                    to: '/dashboard/data-models',
                 }}
             >
                 <DataModelForm history={history} />

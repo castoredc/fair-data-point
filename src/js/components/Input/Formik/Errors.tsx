@@ -6,7 +6,7 @@ import { isUndefined } from 'lodash';
 const FieldErrors: FC<{ field: FieldInputProps<any>; serverErrors?: any; index?: number }> = ({ field, serverErrors, index }) => {
     return (
         <>
-            { /* @ts-ignore */ }
+            {/* @ts-ignore */}
             <ErrorMessage
                 name={!isUndefined(index) ? `${field.name}[${index}]` : field.name}
                 render={msg => {

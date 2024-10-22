@@ -27,7 +27,7 @@ const DatePicker: FC<DatePickerProps> = ({ field, form, meta, readOnly, onChange
                 selected={value !== '' ? new Date(value) : null}
                 dateFormat="dd-MM-yyyy"
                 onChange={(date, event) => {
-                    const formattedDate = format(date, 'yyyy-MM-dd')
+                    const formattedDate = format(date, 'yyyy-MM-dd');
                     field.onChange({ target: { name: field.name, value: formattedDate } });
                 }}
                 onBlur={field.onBlur}

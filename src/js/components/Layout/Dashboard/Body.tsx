@@ -6,11 +6,7 @@ type BodyProps = {
 };
 
 const Body: FC<BodyProps> = ({ children }) => {
-    return (
-        <div className="DashboardBody">
-            {children}
-        </div>
-    );
+    return <div className="DashboardBody">{children}</div>;
 };
 
 export default Body;

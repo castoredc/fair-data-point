@@ -49,10 +49,12 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
         const { modules, type } = this.props;
         const { currentModule } = this.state;
 
-        let order = [{
-            value: 1,
-            label: 'At the beginning of the ' + getType(type),
-        }];
+        let order = [
+            {
+                value: 1,
+                label: 'At the beginning of the ' + getType(type),
+            },
+        ];
 
         if (modules.length === 0) {
             return order;
@@ -166,7 +168,7 @@ export default class Modules extends Component<ModulesProps, ModulesState> {
             return null;
         }
 
-        const initialTab = match.params.moduleId ? modules.findIndex((module) => module.id === match.params.moduleId) : 0;
+        const initialTab = match.params.moduleId ? modules.findIndex(module => module.id === match.params.moduleId) : 0;
 
         const orderOptions = this.getOrderOptions();
 

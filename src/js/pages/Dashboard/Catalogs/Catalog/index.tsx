@@ -152,12 +152,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                             exact
                             render={props => (
                                 <PageBody>
-                                    <MetadataForm
-                                        type="catalog"
-                                        object={catalog}
-                                        onCreate={this.getCatalog}
-                                        onSave={this.getCatalog}
-                                    />
+                                    <MetadataForm type="catalog" object={catalog} onCreate={this.getCatalog} onSave={this.getCatalog} />
                                 </PageBody>
                             )}
                         />

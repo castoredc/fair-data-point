@@ -27,10 +27,6 @@ class GetPaginatedStudiesCommandHandler
             $command->getCatalog(),
             $command->getAgent(),
             $command->getHideCatalogs(),
-            $command->getSearch(),
-            $command->getStudyType(),
-            $command->getMethodType(),
-            $command->getCountry(),
             $isAdmin
         );
 
@@ -38,10 +34,6 @@ class GetPaginatedStudiesCommandHandler
             $command->getCatalog(),
             $command->getAgent(),
             $command->getHideCatalogs(),
-            $command->getSearch(),
-            $command->getStudyType(),
-            $command->getMethodType(),
-            $command->getCountry(),
             $command->getPerPage(),
             $command->getPage(),
             $isAdmin

@@ -9,8 +9,7 @@ import { AuthorizedRouteComponentProps } from 'components/Route';
 import { apiClient } from 'src/js/network';
 import SelectPage from 'components/SelectPage';
 
-interface SelectCatalogProps extends AuthorizedRouteComponentProps {
-}
+interface SelectCatalogProps extends AuthorizedRouteComponentProps {}
 
 interface SelectCatalogState {
     catalogs: any;
@@ -77,7 +76,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
             },
             () => {
                 this.getCatalogs();
-            },
+            }
         );
     };
 

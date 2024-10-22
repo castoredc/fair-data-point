@@ -3,14 +3,13 @@ import FormItem from 'components/Form/FormItem';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import { Button, Modal } from '@castoredc/matter';
-import { DataType, ResourceType } from 'components/MetadataItem/EnumMappings';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import Input from 'components/Input/Formik/Input';
 import Choice from 'components/Input/Formik/Choice';
 import SingleChoice from 'components/Input/Formik/SingleChoice';
 import Select from 'components/Input/Formik/Select';
-import { getType, mergeData } from '../util';
+import { mergeData } from '../util';
 import { apiClient } from '../network';
 import UriInput from 'components/Input/Formik/UriInput';
 import { Types } from 'types/Types';
@@ -24,7 +23,7 @@ type AddNodeModalProps = {
     versionId: string;
     type: string;
     modelType: string;
-    types: Types,
+    types: Types;
     optionGroups: any;
     prefixes: any;
 };
@@ -110,13 +109,13 @@ export default class NodeModal extends Component<AddNodeModalProps, AddNodeModal
             <Modal accessibleName={title} open={open} title={title} onClose={onClose}>
                 <Formik initialValues={initialValues} validationSchema={NodeSchema} onSubmit={this.handleSubmit} enableReinitialize>
                     {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, setFieldValue }) => {
-                        const isPlainValue = (values.type === 'value' && values.value === 'plain');
-                        const isAnnotatedValue = (values.type === 'value' && values.value === 'annotated');
+                        const isPlainValue = values.type === 'value' && values.value === 'plain';
+                        const isAnnotatedValue = values.type === 'value' && values.value === 'annotated';
 
                         const showDataTypes = values.type === 'literal' || isPlainValue;
                         const showRepeated =
-                            modelType === 'data-model' && (values.type === 'internal' || values.type === 'value') ||
-                            modelType === 'metadata-model' && (values.type === 'internal');
+                            (modelType === 'data-model' && (values.type === 'internal' || values.type === 'value')) ||
+                            (modelType === 'metadata-model' && values.type === 'internal');
 
                         return (
                             <Form>

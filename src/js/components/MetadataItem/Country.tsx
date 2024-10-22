@@ -7,7 +7,7 @@ interface CountryProps {
     code: string;
 }
 
-const Country: React.FC<CountryProps> = ({code}) => {
+const Country: React.FC<CountryProps> = ({ code }) => {
     const { country, isLoading } = useGetCountry(code);
 
     if (isLoading || !country) {
@@ -15,6 +15,6 @@ const Country: React.FC<CountryProps> = ({code}) => {
     }
 
     return <div className="Country">{country.label}</div>;
-}
+};
 
 export default Country;

@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
-import { Formik, Form } from 'formik';
-import { Button, Dropdown } from '@castoredc/matter';
+import { Form, Formik } from 'formik';
+import { Button } from '@castoredc/matter';
 import QueryBuilder, { Field } from 'react-querybuilder';
 import { Rule } from '../QueryBuilder/Rule';
 import { ValueEditor } from '../QueryBuilder/ValueEditor';
 import './DependencyEditor.scss';
-import { NameLabelPair } from 'react-querybuilder/types/types';
 import { findOptionByValue } from '../../util';
 import CombinatorSelector from 'components/QueryBuilder/CombinatorSelector';
 import FieldSelector from 'components/QueryBuilder/FieldSelector';
@@ -13,6 +12,7 @@ import OperatorSelector from 'components/QueryBuilder/OperatorSelector';
 import { PrefixType } from 'types/PrefixType';
 import { InstituteType } from 'types/InstituteType';
 import { RuleGroup } from 'components/QueryBuilder/RuleGroup';
+import { NodeType } from 'types/NodeType';
 
 interface Operator {
     name: string;
@@ -26,22 +26,59 @@ interface DistributionContentsDependencyEditorProps {
     handleChange: (query: any) => void;
     save: () => void;
     value: any;
+    type: 'rdf' | 'csv';
+    valueNodes?: NodeType[];
 }
 
 const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEditorProps> = ({
-                                                                                                 prefixes,
-                                                                                                 institutes,
-                                                                                                 handleChange,
-                                                                                                 save,
-                                                                                                 value,
-                                                                                             }) => {
+    prefixes,
+    institutes,
+    handleChange,
+    save,
+    value,
+    type,
+    valueNodes,
+}) => {
+    let fields: Field[] = [
+        {
+            label: 'Record details',
+            name: 'recordDetails',
+            options: [
+                {
+                    type: 'recordDetails',
+                    value: 'institute',
+                    name: 'institute',
+                    label: 'Institute',
+                    valueType: 'institute',
+                },
+            ],
+        },
+    ];
+
+    if (type === 'rdf' && valueNodes) {
+        fields = fields.concat({
+            label: 'Value nodes',
+            name: 'valueNodes',
+            options: valueNodes.map(node => {
+                return {
+                    type: 'valueNode',
+                    name: node.id,
+                    value: node.id,
+                    label: node.title,
+                    dataType: node.value !== null && 'dataType' in node.value ? node.value.dataType : null,
+                    valueType: node.value !== null ? node.value.value : null,
+                };
+            }),
+        });
+    }
+
     const getOperators = (fieldName: string): Operator[] => {
         const field = findOptionByValue(fieldName, fields);
 
         if (!field) {
             return operators;
         }
-        return operators.filter((operator) => operator.types.includes(field.valueType));
+        return operators.filter(operator => operator.types.includes(field.valueType));
     };
 
     return (
@@ -59,51 +96,39 @@ const DistributionContentsDependencyEditor: FC<DistributionContentsDependencyEdi
                             query={values.query}
                             fields={fields}
                             showCombinatorsBetweenRules
-                            onQueryChange={(newQuery) => {
+                            onQueryChange={newQuery => {
                                 setFieldValue('query', newQuery);
                                 handleChange(newQuery);
                             }}
                             controlElements={{
-                                addGroupAction: (props) => (
+                                addGroupAction: props => (
                                     <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
                                         Group
                                     </Button>
                                 ),
-                                removeGroupAction: (props) => (
+                                removeGroupAction: props => (
                                     <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete group" />
                                 ),
-                                addRuleAction: (props) => (
+                                addRuleAction: props => (
                                     <Button icon="add" buttonType="primary" onClick={props.handleOnClick}>
                                         Condition
                                     </Button>
                                 ),
-                                removeRuleAction: (props) => (
+                                removeRuleAction: props => (
                                     <Button icon="trash" buttonType="danger" onClick={props.handleOnClick} iconDescription="Delete condition" />
                                 ),
-                                combinatorSelector: (props) => {
-                                    return <CombinatorSelector
-                                        options={props.options}
-                                        value={props.value}
-                                        handleOnChange={props.handleOnChange}
-                                    />
+                                combinatorSelector: props => {
+                                    return <CombinatorSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
-                                fieldSelector: (props) => {
-                                    return <FieldSelector
-                                        options={props.options}
-                                        value={props.value}
-                                        handleOnChange={props.handleOnChange}
-                                    />
+                                fieldSelector: props => {
+                                    return <FieldSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
-                                operatorSelector: (props) => {
-                                    return <OperatorSelector
-                                        options={props.options}
-                                        value={props.value}
-                                        handleOnChange={props.handleOnChange}
-                                    />
+                                operatorSelector: props => {
+                                    return <OperatorSelector options={props.options} value={props.value} handleOnChange={props.handleOnChange} />;
                                 },
-                                ruleGroup: (props) => <RuleGroup {...props} />,
-                                rule: (props) => <Rule prefixes={prefixes} institutes={institutes} {...props} />,
-                                valueEditor: (props) => <ValueEditor prefixes={prefixes} institutes={institutes} {...props} />,
+                                ruleGroup: props => <RuleGroup {...props} />,
+                                rule: props => <Rule prefixes={prefixes} institutes={institutes} {...props} />,
+                                valueEditor: props => <ValueEditor prefixes={prefixes} institutes={institutes} {...props} />,
                             }}
                             operators={operators}
                             getOperators={getOperators}
@@ -131,22 +156,6 @@ const operators: Operator[] = [
     { name: '>=', label: '>=', types: ['plain'] },
     { name: 'null', label: 'is empty', types: ['plain', 'annotated'] },
     { name: 'notNull', label: 'is not empty', types: ['plain', 'annotated'] },
-];
-
-const fields: Field[] = [
-    {
-        label: 'Record details',
-        name: 'recordDetails',
-        options: [
-            {
-                type: 'recordDetails',
-                value: 'institute',
-                name: 'institute',
-                label: 'Institute',
-                valueType: 'institute',
-            },
-        ],
-    },
 ];
 
 export default DistributionContentsDependencyEditor;

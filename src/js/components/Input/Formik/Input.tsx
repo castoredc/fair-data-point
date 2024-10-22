@@ -3,6 +3,7 @@ import React, { ChangeEvent, FC } from 'react';
 import { TextInput } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import FieldErrors from 'components/Input/Formik/Errors';
+import '../Input.scss';
 
 interface InputProps extends FieldProps {
     readOnly?: boolean;

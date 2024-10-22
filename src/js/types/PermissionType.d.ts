@@ -9,6 +9,6 @@ type PermissionUserType = {
 };
 
 type PermissionOptionType = {
-    labelText: string,
-    value: string,
-}
+    labelText: string;
+    value: string;
+};

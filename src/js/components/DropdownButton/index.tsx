@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, ButtonVariants, Icon, Menu } from '@castoredc/matter';
 import './DropdownButton.scss';
 import { classNames } from '../../util';
-import EventListener from '../EventListener';
 import { MatterIcon } from '@castoredc/matter-icons';
 
 interface DropdownButtonProps {
@@ -16,14 +15,14 @@ interface DropdownButtonProps {
 }
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
-                                                           className,
-                                                           icon,
-                                                           iconDescription,
-                                                           text,
-                                                           buttonType = 'contentOnly',
-                                                           hideDropdown = false,
-                                                           items,
-                                                       }) => {
+    className,
+    icon,
+    iconDescription,
+    text,
+    buttonType = 'contentOnly',
+    hideDropdown = false,
+    items,
+}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const menuRef = useRef<HTMLUListElement | null>(null);

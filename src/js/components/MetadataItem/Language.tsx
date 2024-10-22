@@ -7,7 +7,7 @@ interface LanguageProps {
     code: string;
 }
 
-const Language: React.FC<LanguageProps> = ({code}) => {
+const Language: React.FC<LanguageProps> = ({ code }) => {
     const { language, isLoading } = useGetLanguage(code);
 
     if (isLoading || !language) {
@@ -15,6 +15,6 @@ const Language: React.FC<LanguageProps> = ({code}) => {
     }
 
     return <div className="Language">{language.label}</div>;
-}
+};
 
 export default Language;

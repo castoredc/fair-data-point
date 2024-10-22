@@ -53,13 +53,7 @@ type Props = {
     visualization: Visualization;
 };
 
-const DataSpecificationModulePreview: React.FC<Props> = ({
-                                                             repeated,
-                                                             dependent,
-                                                             dependencies,
-                                                             rdf,
-                                                             visualization,
-                                                         }) => {
+const DataSpecificationModulePreview: React.FC<Props> = ({ repeated, dependent, dependencies, rdf, visualization }) => {
     const [selectedTab, setSelectedTab] = useState('visualization');
 
     const changeTab = (tabIndex: string) => {
@@ -72,7 +66,7 @@ const DataSpecificationModulePreview: React.FC<Props> = ({
                 return (
                     <span className="DependencyGroup" key={index}>
                         {dependency.rules !== undefined && renderDependencies(dependency.rules)}
-                      </span>
+                    </span>
                 );
             } else if (dependency.type === 'combinator') {
                 return (
@@ -93,11 +87,7 @@ const DataSpecificationModulePreview: React.FC<Props> = ({
     const alerts = (
         <div className="DataModelModuleAlerts">
             {repeated && (
-                <Banner
-                    compact
-                    customIcon={<CopyIcon />}
-                    description="This group is repeated for every instance of a specific survey or report"
-                />
+                <Banner compact customIcon={<CopyIcon />} description="This group is repeated for every instance of a specific survey or report" />
             )}
             {dependent && (
                 <Banner

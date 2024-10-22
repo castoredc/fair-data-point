@@ -1,6 +1,3 @@
-import { NodeType } from 'types/NodeType';
-import { IriType } from 'types/IriType';
-
 export type DataSpecificationOptionGroupType = {
     id: string;
     title: string;
@@ -14,4 +11,4 @@ export type DataSpecificationOptionGroupOptionType = {
     description?: string;
     value: string;
     order: number;
-}
+};

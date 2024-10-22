@@ -69,12 +69,7 @@ export default class FAIRDataPoint extends Component<FAIRDataPointProps, FAIRDat
 
                 <DashboardTabHeader type="Section" title={title} />
 
-                {fdp && <MetadataForm
-                    type="fdp"
-                    object={fdp}
-                    onSave={this.getFairDataPoint}
-                    onCreate={this.getFairDataPoint}
-                />}
+                {fdp && <MetadataForm type="fdp" object={fdp} onSave={this.getFairDataPoint} onCreate={this.getFairDataPoint} />}
             </DashboardTab>
         );
     }

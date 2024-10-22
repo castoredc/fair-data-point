@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import ToastItem from 'components/ToastItem';
 import debounce from 'lodash/debounce';
-import { Button, Choice, DefaultOptionType, Dropdown, Icon, ReactSelectTypes } from '@castoredc/matter';
-import FormItem from 'components/Form/FormItem';
+import { Button, Choice, DefaultOptionType, Dropdown, ReactSelectTypes } from '@castoredc/matter';
 import { FieldProps } from 'formik';
 import { apiClient } from 'src/js/network';
 import { AsyncDropdownIndicator, isMultipleOption } from 'components/Input/Formik/Select';
@@ -134,78 +133,87 @@ export default class OntologyConceptFormBlock extends Component<OntologyConceptF
 
         return (
             <>
-            <div className="OntologyConceptFormBlock">
-                <div className="Header Row">
-                    <div className="Ontology">Ontology</div>
-                    <div className="Concept">Concept</div>
-                </div>
+                <div className="OntologyConceptFormBlock">
+                    <div className="Header Row">
+                        <div className="Ontology">Ontology</div>
+                        <div className="Concept">Concept</div>
+                    </div>
 
-                <div className="Concepts">
-                    {value.map((concept, index) => {
-                        const ontology = typeof concept.ontology === 'string' ? ontologies.find((ontology) => ontology.id === concept.ontology) : concept.ontology;
+                    <div className="Concepts">
+                        {value.map((concept, index) => {
+                            const ontology =
+                                typeof concept.ontology === 'string'
+                                    ? ontologies.find(ontology => ontology.id === concept.ontology)
+                                    : concept.ontology;
 
-                        return (
-                            <div className="Row" key={index}>
-                                <div className="Ontology">{ontology.name}</div>
-                                <div className="ConceptCode">{concept.code}</div>
-                                <div className="Concept">{concept.displayName}</div>
-                                <div className="Buttons">
-                                    <Button
-                                        buttonType="contentOnly"
-                                        icon="cross"
-                                        className="RemoveButton"
-                                        onClick={() => this.removeConcept(field, form, index)}
-                                        iconDescription="Remove"
-                                    />
+                            return (
+                                <div className="Row" key={index}>
+                                    <div className="Ontology">{ontology.name}</div>
+                                    <div className="ConceptCode">{concept.code}</div>
+                                    <div className="Concept">{concept.displayName}</div>
+                                    <div className="Buttons">
+                                        <Button
+                                            buttonType="contentOnly"
+                                            icon="cross"
+                                            className="RemoveButton"
+                                            onClick={() => this.removeConcept(field, form, index)}
+                                            iconDescription="Remove"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
+
+                    <div className="AddNew Row">
+                        <div className="Ontology">
+                            <Dropdown
+                                options={options}
+                                value={selectedOntology}
+                                onChange={(
+                                    value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>,
+                                    action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                                ) => {
+                                    const returnValue = value && (isMultipleOption(value) ? value[0] : value);
+                                    this.handleOntologyChange(returnValue);
+                                }}
+                                width="tiny"
+                                menuPlacement={'auto'}
+                                menuPosition="fixed"
+                            />
+                        </div>
+                        <div className="Concept">
+                            <Dropdown
+                                openMenuOnClick={false}
+                                value={null}
+                                loadOptions={this.loadConcepts}
+                                options={[]}
+                                onChange={(
+                                    value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>,
+                                    action: ReactSelectTypes.ActionMeta<DefaultOptionType>
+                                ) => {
+                                    const returnValue = value && (isMultipleOption(value) ? value[0] : value);
+                                    this.addConcept(field, form, returnValue);
+                                }}
+                                isDisabled={selectedOntology === null}
+                                menuPosition="fixed"
+                                components={{ DropdownIndicator: AsyncDropdownIndicator }}
+                                placeholder=""
+                            />
+
+                            <Choice
+                                options={[{ value: '1', labelText: 'Include individuals' }]}
+                                name="includeIndividuals"
+                                onChange={this.setIncludeIndividuals}
+                                hideLabel={true}
+                                labelText=""
+                                multiple={true}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <div className="AddNew Row">
-                    <div className="Ontology">
-                        <Dropdown
-                            options={options}
-                            value={selectedOntology}
-                            onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
-                                const returnValue = value && (isMultipleOption(value) ? value[0] : value);
-                                this.handleOntologyChange(returnValue);
-                            }}
-                            width="tiny"
-                            menuPlacement={'auto'}
-                            menuPosition="fixed"
-                        />
-                    </div>
-                    <div className="Concept">
-                        <Dropdown
-                            openMenuOnClick={false}
-                            value={null}
-                            loadOptions={this.loadConcepts}
-                            options={[]}
-                            onChange={(value: ReactSelectTypes.OnChangeValue<DefaultOptionType, IsMulti>, action: ReactSelectTypes.ActionMeta<DefaultOptionType>) => {
-                                const returnValue = value && (isMultipleOption(value) ? value[0] : value);
-                                this.addConcept(field, form, returnValue);
-                            }}
-                            isDisabled={selectedOntology === null}
-                            menuPosition="fixed"
-                            components={{ DropdownIndicator: AsyncDropdownIndicator }}
-                            placeholder=""
-                        />
-
-                        <Choice
-                            options={[{ value: '1', labelText: 'Include individuals' }]}
-                            name="includeIndividuals"
-                            onChange={this.setIncludeIndividuals}
-                            hideLabel={true}
-                            labelText=""
-                            multiple={true}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <FieldErrors field={field} serverErrors={serverErrors} />
+                <FieldErrors field={field} serverErrors={serverErrors} />
             </>
         );
     }

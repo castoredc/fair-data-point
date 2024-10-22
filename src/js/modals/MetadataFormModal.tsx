@@ -119,7 +119,13 @@ export default class MetadataFormModal extends Component<MetadataFormModalProps,
                                 </FormItem>
 
                                 <FormItem label="Type">
-                                    <Field component={Select} options={resourceTypes} name="resourceType" serverError={validation} menuPosition="fixed" />
+                                    <Field
+                                        component={Select}
+                                        options={resourceTypes}
+                                        name="resourceType"
+                                        serverError={validation}
+                                        menuPosition="fixed"
+                                    />
                                 </FormItem>
 
                                 <div className={classNames(values.id && 'HasConfirmButton')}>

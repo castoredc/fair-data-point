@@ -15,9 +15,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ title, to }) => {
         <div className="Breadcrumb">
             {to ? (
                 /* @ts-ignore */
-                <Link to={{ pathname: to.pathname, state: to.state }}>
-                    {title}
-                </Link>
+                <Link to={{ pathname: to.pathname, state: to.state }}>{title}</Link>
             ) : (
                 title
             )}
