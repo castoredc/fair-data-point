@@ -176,9 +176,6 @@ export default class StudiesDataTable extends Component<StudiesDataTableProps, S
                         />
                     </DataGridContainer>
                 </div>
-                <div className="Filters FilterCol">
-                    <Heading type="Subsection">Search studies</Heading>
-                </div>
             </div>
         );
     }
