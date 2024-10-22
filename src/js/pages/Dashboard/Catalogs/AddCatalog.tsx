@@ -15,6 +15,7 @@ export default class AddCatalog extends Component<AddCatalogProps> {
                     label: 'Back to catalogs',
                     to: '/dashboard/catalogs',
                 }}
+                history={history}
             >
                 <CatalogForm history={history} />
             </SelectPage>

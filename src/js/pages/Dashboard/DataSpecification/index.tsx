@@ -462,6 +462,7 @@ export default class DataSpecification extends Component<DataSpecificationProps,
                             customIcon: 'preview',
                         },
                     ]}
+                    history={history}
                 />
                 <Body>
                     <Header title={dataSpecification.title} />

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
 import StudiesDataTable from 'components/DataTable/StudiesDataTable';
 import { Button, Stack } from '@castoredc/matter';
 import * as H from 'history';
@@ -18,11 +17,9 @@ export default class Studies extends Component<StudiesProps> {
             <PageBody>
                 <div className="PageButtons">
                     <Stack distribution="trailing" alignment="end">
-                        <LinkContainer to={'/dashboard/catalogs/' + catalog + '/studies/add'}>
-                            <Button icon="add" className="AddButton">
-                                Add study
-                            </Button>
-                        </LinkContainer>
+                        <Button icon="add" className="AddButton" onClick={() => history.push('/dashboard/catalogs/' + catalog + '/studies/add')}>
+                            Add study
+                        </Button>
                     </Stack>
                 </div>
 

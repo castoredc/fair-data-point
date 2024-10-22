@@ -15,14 +15,15 @@ interface SideBarProps {
     items: any;
     back?: any;
     onVersionChange?: (value: any, action: ActionMeta<any>) => void;
+    history: H.History;
 }
 
-const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange }) => {
+const SideBar: FC<SideBarProps> = ({ location, items, back, onVersionChange, history }) => {
     return (
         <div className="SideBar">
             {back && (
                 <div className="Back">
-                    <BackButton to={back.to} sidebar>
+                    <BackButton to={back.to} sidebar history={history}>
                         {back.title}
                     </BackButton>
                 </div>

@@ -195,6 +195,7 @@ export default class Distribution extends Component<DistributionProps, Distribut
                     }}
                     location={location}
                     items={sidebarItems}
+                    history={history}
                 />
 
                 <Body>
