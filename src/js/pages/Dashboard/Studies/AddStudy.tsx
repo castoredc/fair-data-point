@@ -123,6 +123,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
 
     render() {
         const { isLoading, studies, selectedStudyId, catalog, submitDisabled } = this.state;
+        const { history } = this.props;
 
         const selectedStudy = selectedStudyId ? studies.find(study => study.sourceId == selectedStudyId) : null;
 
@@ -142,6 +143,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                         to: () => this.handleStudySelect(null),
                         label: 'Back to study list',
                     }}
+                    history={history}
                 >
                     <div>
                         <ListItem key={selectedStudy.sourceId} title={selectedStudy.name} selectable={true} active={true} icon="study" />
@@ -167,6 +169,7 @@ export default class AddStudy extends Component<AddStudyProps, AddStudyState> {
                     to: '/dashboard/studies/add',
                     label: 'Back to catalogs',
                 }}
+                history={history}
             >
                 {studies.length > 0 ? (
                     studies.map(study => {

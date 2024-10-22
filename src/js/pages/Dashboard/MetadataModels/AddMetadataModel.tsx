@@ -15,6 +15,7 @@ export default class AddMetadataModel extends Component<AddMetadataModelProps> {
                     label: 'Back to metadata models',
                     to: '/dashboard/metadata-models',
                 }}
+                history={history}
             >
                 <MetadataModelForm history={history} />
             </SelectPage>

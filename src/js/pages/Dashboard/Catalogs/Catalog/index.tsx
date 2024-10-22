@@ -132,6 +132,7 @@ export default class Catalog extends Component<CatalogProps, CatalogState> {
                             icon: 'study',
                         },
                     ]}
+                    history={history}
                 />
 
                 <Body>

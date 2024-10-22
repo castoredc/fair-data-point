@@ -15,6 +15,7 @@ export default class AddDataModel extends Component<AddDataModelProps> {
                     label: 'Back to data models',
                     to: '/dashboard/data-models',
                 }}
+                history={history}
             >
                 <DataModelForm history={history} />
             </SelectPage>

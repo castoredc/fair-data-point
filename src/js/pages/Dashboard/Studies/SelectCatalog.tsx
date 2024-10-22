@@ -86,6 +86,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
 
     render() {
         const { isLoading, catalogs, pagination } = this.state;
+        const { history } = this.props;
 
         return (
             <SelectPage
@@ -95,6 +96,7 @@ export default class SelectCatalog extends Component<SelectCatalogProps, SelectC
                     to: '/dashboard/studies',
                     label: 'Back to studies',
                 }}
+                history={history}
             >
                 {isLoading && <LoadingOverlay accessibleLabel="Loading catalogs" />}
 

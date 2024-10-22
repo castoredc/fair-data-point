@@ -117,6 +117,7 @@ export default class Study extends Component<StudyProps, StudyState> {
                             customIcon: 'dataset',
                         },
                     ]}
+                    history={history}
                 />
 
                 <Body>

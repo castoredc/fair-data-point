@@ -136,6 +136,7 @@ export default class Dataset extends Component<DatasetProps, DatasetState> {
                             customIcon: 'distribution',
                         },
                     ]}
+                    history={history}
                 />
 
                 <Body>
